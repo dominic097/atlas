@@ -13,6 +13,7 @@ func newMCPCmd() *cobra.Command {
 	var (
 		transport string
 		httpAddr  string
+		sseAddr   string
 	)
 	cmd := &cobra.Command{
 		Use:   "mcp",
@@ -25,6 +26,14 @@ func newMCPCmd() *cobra.Command {
 			defer eng.Close()
 			srv := mcp.NewServer(eng)
 
+			// --sse: serve the legacy HTTP+SSE transport for older clients.
+			if sseAddr != "" || transport == "sse" {
+				addr := sseAddr
+				if addr == "" {
+					addr = "127.0.0.1:8766"
+				}
+				return serveMCPSSE(cmd, srv, addr)
+			}
 			// --http wins over --transport: serve MCP over Streamable HTTP.
 			if httpAddr != "" || transport == "http" {
 				addr := httpAddr
@@ -36,8 +45,9 @@ func newMCPCmd() *cobra.Command {
 			return srv.ServeStdio(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout())
 		},
 	}
-	cmd.Flags().StringVar(&transport, "transport", "stdio", "transport: stdio|http")
-	cmd.Flags().StringVar(&httpAddr, "http", "", "serve MCP over HTTP on this address (e.g. 127.0.0.1:8765); empty = stdio")
+	cmd.Flags().StringVar(&transport, "transport", "stdio", "transport: stdio|http|sse")
+	cmd.Flags().StringVar(&httpAddr, "http", "", "serve MCP over Streamable HTTP on this address (e.g. 127.0.0.1:8765); empty = stdio")
+	cmd.Flags().StringVar(&sseAddr, "sse", "", "serve the legacy MCP HTTP+SSE transport on this address (e.g. 127.0.0.1:8766); empty = stdio")
 	return cmd
 }
 
@@ -52,6 +62,38 @@ func serveMCPHTTP(cmd *cobra.Command, srv *mcp.Server, addr string) error {
 	errCh := make(chan error, 1)
 	go func() {
 		cmd.Printf("atlas mcp listening on http://%s/mcp\n", addr)
+		err := httpSrv.ListenAndServe()
+		if err == http.ErrServerClosed {
+			err = nil
+		}
+		errCh <- err
+	}()
+
+	select {
+	case <-ctx.Done():
+		shutdownCtx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+		_ = httpSrv.Shutdown(shutdownCtx)
+		return nil
+	case err := <-errCh:
+		return err
+	}
+}
+
+// serveMCPSSE runs an http.Server that mounts the legacy MCP HTTP+SSE transport
+// (GET /sse opens the event-stream; POST /message delivers JSON-RPC requests)
+// and shuts down gracefully when the command context is cancelled.
+func serveMCPSSE(cmd *cobra.Command, srv *mcp.Server, addr string) error {
+	handler := srv.SSEHandler()
+	mux := http.NewServeMux()
+	mux.Handle("/sse", handler)
+	mux.Handle("/message", handler)
+	httpSrv := &http.Server{Addr: addr, Handler: mux}
+
+	ctx := cmd.Context()
+	errCh := make(chan error, 1)
+	go func() {
+		cmd.Printf("atlas mcp (legacy SSE) listening on http://%s/sse\n", addr)
 		err := httpSrv.ListenAndServe()
 		if err == http.ErrServerClosed {
 			err = nil

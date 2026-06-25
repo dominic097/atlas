@@ -12,9 +12,14 @@ import (
 	"bufio"
 	"bytes"
 	"context"
+	"crypto/rand"
+	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
+	"sync"
+	"time"
 
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/engine"
 )
@@ -57,11 +62,11 @@ func coreTools() []Tool {
 			InputSchema: obj(map[string]any{"symbol": str, "repo_id": str}, "symbol")},
 		{Name: "path", Description: "Shortest forward call path from one symbol (from) to another (to).",
 			InputSchema: obj(map[string]any{"from": str, "to": str, "repo_id": str, "max_depth": map[string]any{"type": "integer"}}, "from", "to")},
-		{Name: "refs", Description: "Call-site references to a symbol (Atlas has call + import edges; reference edges land later).",
+		{Name: "refs", Description: "Call-site and type-use references to a symbol (resolved callers over call edges, unioned with symbols that name it as a type).",
 			InputSchema: obj(map[string]any{"symbol": str, "repo_id": str}, "symbol")},
 		{Name: "explain", Description: "Deterministic context bundle for a symbol (no LLM): definitions, callers/callees, imports, served routes, cross-repo consumers.",
 			InputSchema: obj(map[string]any{"symbol": str, "repo_id": str}, "symbol")},
-		{Name: "coverage", Description: "Static call-graph reachability coverage: tests reaching a symbol, or non-test symbols a test exercises. Not runtime coverage.",
+		{Name: "coverage", Description: "Coverage for a symbol: real RUNTIME coverage (covered/total lines) when a profile was imported, else static call-graph reachability.",
 			InputSchema: obj(map[string]any{"target": str, "repo_id": str, "direction": str}, "target")},
 		{Name: "impact", Description: "Single-repo blast radius: reverse call-graph BFS from changed paths/symbols.",
 			InputSchema: obj(map[string]any{"changed_paths": map[string]any{"type": "array"}, "symbols": map[string]any{"type": "array"}, "max_depth": map[string]any{"type": "integer"}, "repo_id": str})},
@@ -331,4 +336,203 @@ func mustJSON(v any) string {
 		return "{}"
 	}
 	return string(b)
+}
+
+// ── Legacy HTTP+SSE transport (deprecated 2024-11-05) ───────────────────────
+//
+// Modern clients use the Streamable HTTP transport (HTTPHandler). The legacy SSE
+// transport is a two-channel design for older clients:
+//
+//   1. GET /sse opens a long-lived text/event-stream. The server immediately
+//      emits an `endpoint` event whose data is the relative POST-back URL
+//      (/message?sessionId=<id>), then keeps the stream open with periodic ping
+//      comment lines until the client disconnects.
+//   2. POST /message?sessionId=<id> carries a single JSON-RPC request. The
+//      handler routes it via s.dispatch (the same catalog/op routing as stdio
+//      and Streamable HTTP) and delivers the JSON-RPC RESPONSE as a `message`
+//      event on the GET stream that owns that session.
+//
+// Sessions live in an in-memory registry mapping sessionId to the GET stream's
+// response channel, guarded by a mutex; entries are removed on disconnect.
+
+// sseSession is one open GET /sse stream awaiting POST-delivered responses.
+type sseSession struct {
+	ch   chan []byte   // serialized JSON-RPC responses to emit as `message` events
+	done chan struct{} // closed when the GET stream tears down
+}
+
+// sseRegistry maps sessionId -> session for cross-request response delivery.
+type sseRegistry struct {
+	mu       sync.Mutex
+	sessions map[string]*sseSession
+}
+
+func (r *sseRegistry) add(id string, s *sseSession) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	if r.sessions == nil {
+		r.sessions = make(map[string]*sseSession)
+	}
+	r.sessions[id] = s
+}
+
+func (r *sseRegistry) get(id string) (*sseSession, bool) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	s, ok := r.sessions[id]
+	return s, ok
+}
+
+func (r *sseRegistry) remove(id string) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	delete(r.sessions, id)
+}
+
+// sseHandler implements the legacy GET /sse + POST /message endpoints over a
+// shared session registry. It reuses the Server's dispatch and rpc types — no
+// catalog duplication.
+type sseHandler struct {
+	srv      *Server
+	registry *sseRegistry
+	ssePath  string // path of the GET stream endpoint, e.g. "/sse"
+	msgPath  string // path of the POST endpoint, e.g. "/message"
+}
+
+// SSEHandler returns an http.Handler implementing the legacy MCP HTTP+SSE
+// transport. Mount it so that GET /sse and POST /message both reach this handler
+// (a single mux entry at "/" works, or two entries — the handler routes by
+// method+path). ServeStdio and HTTPHandler are unaffected.
+func (s *Server) SSEHandler() http.Handler {
+	return &sseHandler{
+		srv:      s,
+		registry: &sseRegistry{sessions: make(map[string]*sseSession)},
+		ssePath:  "/sse",
+		msgPath:  "/message",
+	}
+}
+
+func (h *sseHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	switch {
+	case r.Method == http.MethodGet && r.URL.Path == h.ssePath:
+		h.serveSSE(w, r)
+	case r.Method == http.MethodPost && r.URL.Path == h.msgPath:
+		h.serveMessage(w, r)
+	default:
+		w.Header().Set("Allow", "GET, POST")
+		http.Error(w, "not found: use GET "+h.ssePath+" or POST "+h.msgPath, http.StatusNotFound)
+	}
+}
+
+// serveSSE opens the event-stream, registers the session, emits the `endpoint`
+// event, and pumps `message` events (POST-delivered responses) plus periodic
+// ping comments until the client disconnects.
+func (h *sseHandler) serveSSE(w http.ResponseWriter, r *http.Request) {
+	flusher, ok := w.(http.Flusher)
+	if !ok {
+		http.Error(w, "streaming unsupported", http.StatusInternalServerError)
+		return
+	}
+
+	id, err := newSessionID()
+	if err != nil {
+		http.Error(w, "session id generation failed", http.StatusInternalServerError)
+		return
+	}
+
+	sess := &sseSession{ch: make(chan []byte, 16), done: make(chan struct{})}
+	h.registry.add(id, sess)
+	defer func() {
+		h.registry.remove(id)
+		close(sess.done)
+	}()
+
+	w.Header().Set("Content-Type", "text/event-stream")
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Connection", "keep-alive")
+	w.Header().Set("X-Accel-Buffering", "no")
+	w.WriteHeader(http.StatusOK)
+
+	// Tell the client where to POST its JSON-RPC requests for this session.
+	fmt.Fprintf(w, "event: endpoint\ndata: %s?sessionId=%s\n\n", h.msgPath, id)
+	flusher.Flush()
+
+	ping := time.NewTicker(25 * time.Second)
+	defer ping.Stop()
+
+	ctx := r.Context()
+	for {
+		select {
+		case <-ctx.Done():
+			return // client disconnected
+		case <-ping.C:
+			fmt.Fprint(w, ": ping\n\n")
+			flusher.Flush()
+		case payload := <-sess.ch:
+			fmt.Fprintf(w, "event: message\ndata: %s\n\n", payload)
+			flusher.Flush()
+		}
+	}
+}
+
+// serveMessage routes a POSTed JSON-RPC request through s.dispatch and delivers
+// the response on the SSE stream owning the sessionId. The HTTP POST itself
+// returns 202 Accepted with no body — the response is the SSE `message` event.
+func (h *sseHandler) serveMessage(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Query().Get("sessionId")
+	if id == "" {
+		http.Error(w, "missing sessionId", http.StatusBadRequest)
+		return
+	}
+	sess, ok := h.registry.get(id)
+	if !ok {
+		http.Error(w, "unknown sessionId", http.StatusNotFound)
+		return
+	}
+
+	body, err := io.ReadAll(io.LimitReader(r.Body, 16*1024*1024))
+	if err != nil {
+		http.Error(w, "read error: "+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	var req rpcRequest
+	if err := json.Unmarshal(bytes.TrimSpace(body), &req); err != nil {
+		// Deliver a parse-error response on the stream so the client sees it.
+		h.deliver(sess, rpcResponse{JSONRPC: "2.0", Error: &rpcError{Code: -32700, Message: "parse error: " + err.Error()}})
+		w.WriteHeader(http.StatusAccepted)
+		return
+	}
+
+	// Notifications (no id) get no response — just acknowledge the POST.
+	if len(req.ID) == 0 {
+		w.WriteHeader(http.StatusAccepted)
+		return
+	}
+
+	resp := h.srv.dispatch(r.Context(), &req)
+	h.deliver(sess, resp)
+	w.WriteHeader(http.StatusAccepted)
+}
+
+// deliver pushes a JSON-RPC response onto the session's stream channel, dropping
+// it only if the stream has already torn down (avoids blocking the POST).
+func (h *sseHandler) deliver(sess *sseSession, resp rpcResponse) {
+	payload, err := json.Marshal(resp)
+	if err != nil {
+		return
+	}
+	select {
+	case sess.ch <- payload:
+	case <-sess.done:
+	}
+}
+
+// newSessionID returns a random 128-bit hex session identifier.
+func newSessionID() (string, error) {
+	var b [16]byte
+	if _, err := rand.Read(b[:]); err != nil {
+		return "", err
+	}
+	return hex.EncodeToString(b[:]), nil
 }

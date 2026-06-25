@@ -18,3 +18,7 @@ coverage.html
 
 # test corpus (cloned, not committed)
 .testdata/
+
+# python bytecode
+__pycache__/
+*.pyc

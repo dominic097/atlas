@@ -1,0 +1,27 @@
+{
+  "name": "@aziron/atlas-client",
+  "version": "0.1.0",
+  "description": "Hand-written TypeScript client for the Atlas deterministic code-intelligence REST API.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "atlas.ts",
+  "types": "atlas.ts",
+  "files": [
+    "atlas.ts",
+    "tsconfig.json",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "check": "tsc --noEmit"
+  },
+  "keywords": [
+    "atlas",
+    "code-intelligence",
+    "rest",
+    "client"
+  ],
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}
