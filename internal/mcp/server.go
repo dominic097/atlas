@@ -46,11 +46,11 @@ func coreTools() []Tool {
 	str := map[string]any{"type": "string"}
 	return []Tool{
 		{Name: "search", Description: "Code-aware lexical search over indexed symbols.",
-			InputSchema: obj(map[string]any{"query": str, "repo_id": str, "kind": str}, "query")},
+			InputSchema: obj(map[string]any{"query": str, "repo_id": str, "kind": str, "limit": map[string]any{"type": "integer"}}, "query")},
 		{Name: "symbol", Description: "Full context bundle for one symbol.",
 			InputSchema: obj(map[string]any{"symbol": str, "repo_id": str}, "symbol")},
-		{Name: "impact", Description: "Single-repo blast radius for a change.",
-			InputSchema: obj(map[string]any{"changed_paths": map[string]any{"type": "array"}, "repo_id": str})},
+		{Name: "impact", Description: "Single-repo blast radius: reverse call-graph BFS from changed paths/symbols.",
+			InputSchema: obj(map[string]any{"changed_paths": map[string]any{"type": "array"}, "symbols": map[string]any{"type": "array"}, "max_depth": map[string]any{"type": "integer"}, "repo_id": str})},
 		{Name: "status", Description: "Engine health and per-repo index freshness.",
 			InputSchema: obj(map[string]any{"repo_id": str})},
 	}
@@ -129,17 +129,53 @@ func (s *Server) callTool(ctx context.Context, params json.RawMessage) map[strin
 	}
 	_ = json.Unmarshal(params, &p)
 
+	args := map[string]any{}
+	if len(p.Arguments) > 0 {
+		_ = json.Unmarshal(p.Arguments, &args)
+	}
+	str := func(k string) string {
+		if v, ok := args[k].(string); ok {
+			return v
+		}
+		return ""
+	}
+	strs := func(k string) []string {
+		raw, ok := args[k].([]any)
+		if !ok {
+			return nil
+		}
+		out := make([]string, 0, len(raw))
+		for _, v := range raw {
+			if s, ok := v.(string); ok {
+				out = append(out, s)
+			}
+		}
+		return out
+	}
+	intOr := func(k string, d int) int {
+		if v, ok := args[k].(float64); ok {
+			return int(v)
+		}
+		return d
+	}
+
 	var (
 		payload any
 		err     error
 	)
 	switch p.Name {
 	case "search":
-		payload, err = s.eng.Search(ctx, engine.SearchInput{Mode: "lexical"})
+		payload, err = s.eng.Search(ctx, engine.SearchInput{
+			Query: str("query"), RepoID: str("repo_id"), Kind: str("kind"),
+			Limit: intOr("limit", 20), Mode: "lexical",
+		})
 	case "impact":
-		payload, err = s.eng.Impact(ctx, engine.ImpactInput{MaxDepth: 3, IncludeTests: true})
+		payload, err = s.eng.Impact(ctx, engine.ImpactInput{
+			ChangedPaths: strs("changed_paths"), Symbols: strs("symbols"),
+			RepoID: str("repo_id"), MaxDepth: intOr("max_depth", 3), IncludeTests: true,
+		})
 	case "status":
-		payload, err = s.eng.Status(ctx, engine.StatusInput{})
+		payload, err = s.eng.Status(ctx, engine.StatusInput{RepoID: str("repo_id")})
 	default:
 		err = engine.ErrNotImplemented
 	}

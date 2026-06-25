@@ -15,3 +15,6 @@ coverage.html
 *.swp
 .idea/
 .vscode/
+
+# test corpus (cloned, not committed)
+.testdata/
