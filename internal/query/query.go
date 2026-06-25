@@ -778,3 +778,92 @@ func itoa(n int) string {
 	}
 	return string(buf[i:])
 }
+
+// CallersGraph returns the symbols that directly call the symbol(s) named `name`,
+// resolved through indexed store reads (one hop). Receiver-type / qualifier
+// precision applies via resolveTargets. Deduped by identity, sorted.
+func CallersGraph(ctx context.Context, drv store.StorageDriver, snapshotID, name string) ([]graph.CodeSymbol, error) {
+	if strings.TrimSpace(name) == "" {
+		return nil, nil
+	}
+	edges, err := drv.CallEdgesByToRefs(ctx, snapshotID, []string{name})
+	if err != nil {
+		return nil, err
+	}
+	cache := newSymbolCache(ctx, drv, snapshotID)
+	byName, err := cache.lowerMap(name)
+	if err != nil {
+		return nil, err
+	}
+	seen := map[string]bool{}
+	var out []graph.CodeSymbol
+	for _, e := range edges {
+		if e.Kind != graph.EdgeCalls {
+			continue
+		}
+		resolved := false
+		for _, t := range resolveTargets(e, byName, cache.isRepoType) {
+			if strings.EqualFold(t.Name, name) {
+				resolved = true
+				break
+			}
+		}
+		if !resolved {
+			continue
+		}
+		caller, err := cache.resolveCaller(e)
+		if err != nil {
+			return nil, err
+		}
+		if caller == nil {
+			continue
+		}
+		if k := symbolKey(*caller); !seen[k] {
+			seen[k] = true
+			out = append(out, *caller)
+		}
+	}
+	sortSymbols(out)
+	return out, nil
+}
+
+// CalleesGraph returns the symbols the symbol(s) named `fromName` directly call,
+// resolved through indexed store reads (one hop). Deduped by identity, sorted.
+func CalleesGraph(ctx context.Context, drv store.StorageDriver, snapshotID, fromName string) ([]graph.CodeSymbol, error) {
+	if strings.TrimSpace(fromName) == "" {
+		return nil, nil
+	}
+	edges, err := drv.CallEdgesByFromSymbols(ctx, snapshotID, []string{fromName})
+	if err != nil {
+		return nil, err
+	}
+	cache := newSymbolCache(ctx, drv, snapshotID)
+	seen := map[string]bool{}
+	var out []graph.CodeSymbol
+	for _, e := range edges {
+		if e.Kind != graph.EdgeCalls {
+			continue
+		}
+		byName, err := cache.lowerMap(e.ToRef)
+		if err != nil {
+			return nil, err
+		}
+		for _, t := range resolveTargets(e, byName, cache.isRepoType) {
+			if k := symbolKey(t); !seen[k] {
+				seen[k] = true
+				out = append(out, t)
+			}
+		}
+	}
+	sortSymbols(out)
+	return out, nil
+}
+
+func sortSymbols(s []graph.CodeSymbol) {
+	sort.Slice(s, func(i, j int) bool {
+		if s[i].Path == s[j].Path {
+			return s[i].Name < s[j].Name
+		}
+		return s[i].Path < s[j].Path
+	})
+}

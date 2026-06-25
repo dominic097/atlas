@@ -12,7 +12,6 @@ import (
 	"errors"
 	"fmt"
 	"path/filepath"
-	"sort"
 	"strings"
 
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
@@ -128,6 +127,52 @@ type StatusResult struct {
 	Repos         []RepoStatus `json:"repos"`
 }
 
+// SymbolRef is a lightweight pointer to a symbol used in callers/callees lists.
+type SymbolRef struct {
+	SymbolID  string `json:"symbol_id"`
+	Name      string `json:"symbol"`
+	Kind      string `json:"kind"`
+	Path      string `json:"path"`
+	Line      int    `json:"line"`
+	Signature string `json:"signature,omitempty"`
+}
+
+type CallersInput struct {
+	Name   string
+	RepoID string
+	Limit  int
+}
+
+type CallersResult struct {
+	Symbol  string      `json:"symbol"`
+	Callers []SymbolRef `json:"callers"`
+	Total   int         `json:"total"`
+}
+
+type SymbolInput struct {
+	Name   string
+	RepoID string
+}
+
+type SymbolDef struct {
+	SymbolID  string      `json:"symbol_id"`
+	Name      string      `json:"symbol"`
+	Kind      string      `json:"kind"`
+	RepoID    string      `json:"repo_id"`
+	Path      string      `json:"path"`
+	Line      int         `json:"line"`
+	EndLine   int         `json:"end_line"`
+	Signature string      `json:"signature,omitempty"`
+	Doc       string      `json:"doc,omitempty"`
+	Callers   []SymbolRef `json:"callers"`
+	Callees   []SymbolRef `json:"callees"`
+}
+
+type SymbolResult struct {
+	Query   string      `json:"query"`
+	Matches []SymbolDef `json:"matches"`
+}
+
 // ── The Engine interface ────────────────────────────────────────────────────
 
 // Engine is the single contract all surfaces depend on. The full catalog
@@ -138,6 +183,8 @@ type Engine interface {
 	Index(ctx context.Context, in IndexInput) (*IndexResult, error)
 	Search(ctx context.Context, in SearchInput) (*SearchResult, error)
 	Impact(ctx context.Context, in ImpactInput) (*ImpactResult, error)
+	Callers(ctx context.Context, in CallersInput) (*CallersResult, error)
+	Symbol(ctx context.Context, in SymbolInput) (*SymbolResult, error)
 	Status(ctx context.Context, in StatusInput) (*StatusResult, error)
 	Close() error
 }
@@ -403,7 +450,63 @@ func (e *localEngine) resolveSnapshot(ctx context.Context, repoID string) (*grap
 	return best, nil
 }
 
-// sortHitsByScore is a stable helper kept for callers that post-merge hit lists.
-func sortHitsByScore(h []SearchHit) {
-	sort.SliceStable(h, func(i, j int) bool { return h[i].Score > h[j].Score })
+func (e *localEngine) Callers(ctx context.Context, in CallersInput) (*CallersResult, error) {
+	snap, err := e.resolveSnapshot(ctx, in.RepoID)
+	if err != nil {
+		return nil, err
+	}
+	syms, err := query.CallersGraph(ctx, e.store, snap.ID, in.Name)
+	if err != nil {
+		return nil, fmt.Errorf("engine: callers: %w", err)
+	}
+	limit := in.Limit
+	if limit <= 0 {
+		limit = 50
+	}
+	return &CallersResult{Symbol: in.Name, Callers: refsOf(syms, limit), Total: len(syms)}, nil
+}
+
+func (e *localEngine) Symbol(ctx context.Context, in SymbolInput) (*SymbolResult, error) {
+	snap, err := e.resolveSnapshot(ctx, in.RepoID)
+	if err != nil {
+		return nil, err
+	}
+	defs, err := e.store.SymbolsByName(ctx, snap.ID, in.Name)
+	if err != nil {
+		return nil, fmt.Errorf("engine: symbol: %w", err)
+	}
+	callers, err := query.CallersGraph(ctx, e.store, snap.ID, in.Name)
+	if err != nil {
+		return nil, err
+	}
+	callees, err := query.CalleesGraph(ctx, e.store, snap.ID, in.Name)
+	if err != nil {
+		return nil, err
+	}
+	callerRefs, calleeRefs := refsOf(callers, 50), refsOf(callees, 50)
+	matches := make([]SymbolDef, 0, len(defs))
+	for _, s := range defs {
+		matches = append(matches, SymbolDef{
+			SymbolID: s.ID, Name: s.Name, Kind: s.Kind, RepoID: s.RepoID,
+			Path: s.Path, Line: s.StartLine, EndLine: s.EndLine,
+			Signature: s.Signature, Doc: s.Doc,
+			Callers: callerRefs, Callees: calleeRefs,
+		})
+	}
+	return &SymbolResult{Query: in.Name, Matches: matches}, nil
+}
+
+func symRef(s graph.CodeSymbol) SymbolRef {
+	return SymbolRef{SymbolID: s.ID, Name: s.Name, Kind: s.Kind, Path: s.Path, Line: s.StartLine, Signature: s.Signature}
+}
+
+func refsOf(syms []graph.CodeSymbol, limit int) []SymbolRef {
+	out := make([]SymbolRef, 0, len(syms))
+	for _, s := range syms {
+		out = append(out, symRef(s))
+		if len(out) >= limit {
+			break
+		}
+	}
+	return out
 }

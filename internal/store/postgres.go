@@ -66,3 +66,6 @@ func (d *postgresDriver) SymbolsByPath(ctx context.Context, snapshotID, path str
 func (d *postgresDriver) CallEdgesByToRefs(ctx context.Context, snapshotID string, toRefs []string) ([]graph.DependencyEdge, error) {
 	return nil, ErrNotImplemented
 }
+func (d *postgresDriver) CallEdgesByFromSymbols(ctx context.Context, snapshotID string, fromSymbols []string) ([]graph.DependencyEdge, error) {
+	return nil, ErrNotImplemented
+}

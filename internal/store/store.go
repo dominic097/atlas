@@ -61,6 +61,10 @@ type StorageDriver interface {
 	// under SQLite's bound-parameter limit; all matching edges are returned with
 	// Metadata populated (no dedupe).
 	CallEdgesByToRefs(ctx context.Context, snapshotID string, toRefs []string) ([]graph.DependencyEdge, error)
+	// CallEdgesByFromSymbols returns every "calls" edge whose from_symbol is in the
+	// given set, using the (snapshot_id, from_symbol) index — the callees side, for
+	// the `symbol` op's outgoing-call context. Same chunking/Metadata semantics.
+	CallEdgesByFromSymbols(ctx context.Context, snapshotID string, fromSymbols []string) ([]graph.DependencyEdge, error)
 }
 
 // Options configures Open().

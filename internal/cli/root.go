@@ -43,6 +43,8 @@ func NewRootCmd() *cobra.Command {
 		newIndexCmd(),
 		newSearchCmd(),
 		newImpactCmd(),
+		newCallersCmd(),
+		newSymbolCmd(),
 		newStatusCmd(),
 		newServeCmd(),
 		newMCPCmd(),

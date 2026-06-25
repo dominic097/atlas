@@ -32,6 +32,13 @@ type (
 
 	StatusInput  = engine.StatusInput
 	StatusResult = engine.StatusResult
+
+	CallersInput  = engine.CallersInput
+	CallersResult = engine.CallersResult
+	SymbolInput   = engine.SymbolInput
+	SymbolResult  = engine.SymbolResult
+	SymbolDef     = engine.SymbolDef
+	SymbolRef     = engine.SymbolRef
 )
 
 // ErrNotImplemented is returned by stub operations in this scaffold.

@@ -47,8 +47,10 @@ func coreTools() []Tool {
 	return []Tool{
 		{Name: "search", Description: "Code-aware lexical search over indexed symbols.",
 			InputSchema: obj(map[string]any{"query": str, "repo_id": str, "kind": str, "limit": map[string]any{"type": "integer"}}, "query")},
-		{Name: "symbol", Description: "Full context bundle for one symbol.",
+		{Name: "symbol", Description: "Definition(s) of a symbol with its callers and callees.",
 			InputSchema: obj(map[string]any{"symbol": str, "repo_id": str}, "symbol")},
+		{Name: "callers", Description: "Symbols that directly call a given symbol.",
+			InputSchema: obj(map[string]any{"symbol": str, "repo_id": str, "limit": map[string]any{"type": "integer"}}, "symbol")},
 		{Name: "impact", Description: "Single-repo blast radius: reverse call-graph BFS from changed paths/symbols.",
 			InputSchema: obj(map[string]any{"changed_paths": map[string]any{"type": "array"}, "symbols": map[string]any{"type": "array"}, "max_depth": map[string]any{"type": "integer"}, "repo_id": str})},
 		{Name: "status", Description: "Engine health and per-repo index freshness.",
@@ -174,6 +176,10 @@ func (s *Server) callTool(ctx context.Context, params json.RawMessage) map[strin
 			ChangedPaths: strs("changed_paths"), Symbols: strs("symbols"),
 			RepoID: str("repo_id"), MaxDepth: intOr("max_depth", 3), IncludeTests: true,
 		})
+	case "callers":
+		payload, err = s.eng.Callers(ctx, engine.CallersInput{Name: str("symbol"), RepoID: str("repo_id"), Limit: intOr("limit", 50)})
+	case "symbol":
+		payload, err = s.eng.Symbol(ctx, engine.SymbolInput{Name: str("symbol"), RepoID: str("repo_id")})
 	case "status":
 		payload, err = s.eng.Status(ctx, engine.StatusInput{RepoID: str("repo_id")})
 	default:

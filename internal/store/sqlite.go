@@ -716,6 +716,47 @@ func (d *sqliteDriver) CallEdgesByToRefs(ctx context.Context, snapshotID string,
 	return out, nil
 }
 
+func (d *sqliteDriver) CallEdgesByFromSymbols(ctx context.Context, snapshotID string, fromSymbols []string) ([]graph.DependencyEdge, error) {
+	if len(fromSymbols) == 0 {
+		return nil, nil
+	}
+	var out []graph.DependencyEdge
+	for start := 0; start < len(fromSymbols); start += callEdgesChunk {
+		end := start + callEdgesChunk
+		if end > len(fromSymbols) {
+			end = len(fromSymbols)
+		}
+		chunk := fromSymbols[start:end]
+		placeholders := strings.Repeat("?,", len(chunk))
+		placeholders = placeholders[:len(placeholders)-1]
+		args := make([]any, 0, len(chunk)+1)
+		args = append(args, snapshotID)
+		for _, fs := range chunk {
+			args = append(args, fs)
+		}
+		query := `SELECT ` + edgeCols + `
+			FROM edges WHERE snapshot_id = ? AND kind = 'calls' AND from_symbol IN (` + placeholders + `)`
+		rows, err := d.db.QueryContext(ctx, query, args...)
+		if err != nil {
+			return nil, fmt.Errorf("store: call edges by from_symbols: %w", err)
+		}
+		for rows.Next() {
+			e, err := scanEdgeRow(rows)
+			if err != nil {
+				rows.Close()
+				return nil, fmt.Errorf("store: scan edge: %w", err)
+			}
+			out = append(out, e)
+		}
+		if err := rows.Err(); err != nil {
+			rows.Close()
+			return nil, fmt.Errorf("store: call edges by from_symbols: %w", err)
+		}
+		rows.Close()
+	}
+	return out, nil
+}
+
 func (d *sqliteDriver) ListRoutes(ctx context.Context, snapshotID, role string) ([]graph.Route, error) {
 	var (
 		rows *sql.Rows
