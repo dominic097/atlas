@@ -25,6 +25,7 @@ import (
 	"strings"
 
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
+	tree_sitter "github.com/tree-sitter/go-tree-sitter"
 )
 
 // Result is the parse output for a single file.
@@ -91,14 +92,20 @@ func Parse(repoID, repoFullName, filePath, language string, content []byte) (Res
 	var (
 		rawSyms []symbolDraft
 		imports []string
+		// tsRoot is the live tree-sitter AST root for non-Go languages, reused
+		// by extractCallEdges below so we never re-parse. tsCleanup releases the
+		// parser/tree and MUST run before Parse returns.
+		tsRoot    *tree_sitter.Node
+		tsCleanup = func() {}
 	)
+	defer func() { tsCleanup() }()
 
 	switch language {
 	case "go":
 		// Native go/parser is the highest-fidelity path.
 		rawSyms, imports = parseGoSymbols(filePath, content)
 	case "python", "javascript", "typescript", "java", "c", "cpp":
-		rawSyms, imports = parseTreeSitterSymbols(filePath, language, content)
+		rawSyms, imports, tsRoot, tsCleanup = parseTreeSitter(filePath, language, content)
 	default:
 		return Result{}, nil
 	}
@@ -137,9 +144,10 @@ func Parse(repoID, repoFullName, filePath, language string, content []byte) (Res
 	}
 
 	// Call edges (Atlas keystone): per call expression, FromSymbol = enclosing
-	// symbol, ToRef = callee. Computed against the raw drafts so the enclosing
-	// lookup uses line spans.
-	edges := callEdges(filePath, language, content, rawSyms)
+	// symbol, ToRef = callee. Go uses the native go/parser path; the tree-sitter
+	// languages walk the ALREADY-PARSED root (tsRoot) and attribute calls to the
+	// promoted symbols by line span.
+	edges := callEdges(repoID, repoFullName, filePath, language, content, tsRoot, symbols)
 
 	// Import edges, one EdgeImports per imported module.
 	imports = uniqueStrings(imports)
@@ -177,12 +185,22 @@ func (d symbolDraft) key() string {
 }
 
 // callEdges dispatches to the language-appropriate call-edge extractor.
-func callEdges(filePath, language string, content []byte, syms []symbolDraft) []graph.DependencyEdge {
+//
+//   - go: native go/parser (precise qualified_ref + recv_type).
+//   - java/cpp/python/javascript/typescript: AST-based extractCallEdges over the
+//     already-parsed tree-sitter root (tsRoot), deduped here. This REPLACES the
+//     old line-scan textCallEdges, which is retained only as a fallback for any
+//     future language that has no AST extractor (none of the five use it now).
+func callEdges(repoID, repoFullName, filePath, language string, content []byte, tsRoot *tree_sitter.Node, symbols []graph.CodeSymbol) []graph.DependencyEdge {
 	switch language {
 	case "go":
 		return goCallEdges(filePath, content)
-	case "python", "javascript", "typescript", "java", "c", "cpp":
-		return textCallEdges(filePath, language, string(content), syms)
+	case "java", "cpp", "python", "javascript", "typescript":
+		return dedupeEdges(extractCallEdges(language, tsRoot, content, repoID, repoFullName, filePath, symbols))
+	case "c":
+		// C shares the cpp grammar walker for symbols; route call edges through
+		// the cpp extractor as well (same call_expression node shape).
+		return dedupeEdges(extractCallEdges("cpp", tsRoot, content, repoID, repoFullName, filePath, symbols))
 	default:
 		return nil
 	}

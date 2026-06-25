@@ -34,51 +34,69 @@ func languagePointer(lang string) unsafe.Pointer {
 	}
 }
 
-// parseTreeSitterSymbols parses a non-Go file with tree-sitter, returning symbol
-// drafts and import paths. Ported from pulse walk*AST + extract*Import.
-func parseTreeSitterSymbols(path, language string, content []byte) ([]symbolDraft, []string) {
+// parseTreeSitter parses a non-Go file with tree-sitter ONCE and returns the
+// symbol drafts, import paths, the AST root, and a cleanup func the caller MUST
+// invoke when done with the root. Keeping the parser/tree alive lets the caller
+// reuse the SAME root for AST-based call-edge extraction (see calls.go) instead
+// of re-parsing. The returned root is nil (and cleanup is a no-op) when parsing
+// is not possible. Ported from pulse walk*AST + extract*Import.
+func parseTreeSitter(path, language string, content []byte) (syms []symbolDraft, imports []string, root *tree_sitter.Node, cleanup func()) {
+	cleanup = func() {}
 	ptr := languagePointer(language)
 	if ptr == nil {
-		return nil, nil
+		return nil, nil, nil, cleanup
 	}
 	lang := tree_sitter.NewLanguage(ptr)
 	if lang == nil {
-		return nil, nil
+		return nil, nil, nil, cleanup
 	}
 
 	p := tree_sitter.NewParser()
-	defer p.Close()
 	if err := p.SetLanguage(lang); err != nil {
-		return nil, nil
+		p.Close()
+		return nil, nil, nil, cleanup
 	}
 
 	tree := p.Parse(content, nil)
 	if tree == nil {
-		return nil, nil
+		p.Close()
+		return nil, nil, nil, cleanup
 	}
-	defer tree.Close()
 
-	root := tree.RootNode()
+	root = tree.RootNode()
 	if root == nil {
-		return nil, nil
+		tree.Close()
+		p.Close()
+		return nil, nil, nil, cleanup
+	}
+	cleanup = func() {
+		tree.Close()
+		p.Close()
 	}
 
 	switch language {
 	case "python":
-		return walkPythonAST(root, content)
-	case "javascript":
-		return walkJSAST(root, content)
-	case "typescript":
-		return walkJSAST(root, content)
+		syms, imports = walkPythonAST(root, content)
+	case "javascript", "typescript":
+		syms, imports = walkJSAST(root, content)
 	case "java":
-		return walkJavaAST(root, content)
-	case "c":
-		return walkCAST(root, content)
-	case "cpp":
-		return walkCAST(root, content)
+		syms, imports = walkJavaAST(root, content)
+	case "c", "cpp":
+		syms, imports = walkCAST(root, content)
 	default:
-		return nil, nil
+		cleanup()
+		return nil, nil, nil, func() {}
 	}
+	return syms, imports, root, cleanup
+}
+
+// parseTreeSitterSymbols parses a non-Go file with tree-sitter, returning symbol
+// drafts and import paths. Thin wrapper over parseTreeSitter that discards the
+// root (kept for callers that only need symbols/imports).
+func parseTreeSitterSymbols(path, language string, content []byte) ([]symbolDraft, []string) {
+	syms, imports, _, cleanup := parseTreeSitter(path, language, content)
+	cleanup()
+	return syms, imports
 }
 
 // ── Python ──────────────────────────────────────────────────────────────────
@@ -250,9 +268,10 @@ func javaTypeSymbols(node *tree_sitter.Node, src []byte) []symbolDraft {
 		kind = "enum"
 	}
 
-	if name := childText(node, "identifier", src); name != "" {
+	typeName := childText(node, "identifier", src)
+	if typeName != "" {
 		out = append(out, symbolDraft{
-			name:      name,
+			name:      typeName,
 			kind:      kind,
 			startLine: int(node.StartPosition().Row) + 1,
 			endLine:   int(node.EndPosition().Row) + 1,
@@ -275,6 +294,10 @@ func javaTypeSymbols(node *tree_sitter.Node, src []byte) []symbolDraft {
 					kind:      "method",
 					startLine: int(member.StartPosition().Row) + 1,
 					endLine:   int(member.EndPosition().Row) + 1,
+					// SHARED METADATA CONTRACT: the enclosing type lets the
+					// query layer disambiguate same-named methods on different
+					// classes (best-effort; "" when the type name is unknown).
+					recvType: typeName,
 				})
 			}
 		}
@@ -304,9 +327,74 @@ func walkCAST(root *tree_sitter.Node, src []byte) ([]symbolDraft, []string) {
 			if sym, ok := cFunctionSymbol(child, src); ok {
 				symbols = append(symbols, sym)
 			}
+		case "class_specifier", "struct_specifier":
+			symbols = append(symbols, cppTypeSymbols(child, src)...)
 		}
 	}
 	return symbols, imports
+}
+
+// cppTypeSymbols extracts a C++ class/struct symbol plus its member functions,
+// stamping each member's recv_type with the enclosing type name (SHARED METADATA
+// CONTRACT) so the query layer can disambiguate same-named methods across types.
+// Best-effort: leaves recv_type "" when the type name is not determinable.
+func cppTypeSymbols(node *tree_sitter.Node, src []byte) []symbolDraft {
+	var out []symbolDraft
+	kind := "class"
+	if node.Kind() == "struct_specifier" {
+		kind = "struct"
+	}
+
+	typeName := childText(node, "type_identifier", src)
+	if typeName != "" {
+		out = append(out, symbolDraft{
+			name:      typeName,
+			kind:      kind,
+			startLine: int(node.StartPosition().Row) + 1,
+			endLine:   int(node.EndPosition().Row) + 1,
+		})
+	}
+
+	body := node.ChildByFieldName("body")
+	if body == nil {
+		return out
+	}
+	for i := uint(0); i < body.ChildCount(); i++ {
+		member := body.Child(i)
+		if member == nil || member.Kind() != "function_definition" {
+			continue
+		}
+		name := cppFunctionName(member, src)
+		if name == "" {
+			continue
+		}
+		out = append(out, symbolDraft{
+			name:      name,
+			kind:      "method",
+			startLine: int(member.StartPosition().Row) + 1,
+			endLine:   int(member.EndPosition().Row) + 1,
+			recvType:  typeName,
+		})
+	}
+	return out
+}
+
+// cppFunctionName pulls the declared name out of a C++ function_definition's
+// function_declarator, handling plain identifiers and field identifiers.
+func cppFunctionName(node *tree_sitter.Node, src []byte) string {
+	for i := uint(0); i < node.ChildCount(); i++ {
+		child := node.Child(i)
+		if child == nil || child.Kind() != "function_declarator" {
+			continue
+		}
+		if name := childText(child, "identifier", src); name != "" {
+			return name
+		}
+		if name := childText(child, "field_identifier", src); name != "" {
+			return name
+		}
+	}
+	return ""
 }
 
 func cFunctionSymbol(node *tree_sitter.Node, src []byte) (symbolDraft, bool) {
