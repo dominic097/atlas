@@ -29,6 +29,7 @@ import (
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/lexical"
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/parser"
+	"github.com/MsysTechnologiesllc/aziron-atlas/internal/routes"
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/store"
 )
 
@@ -106,6 +107,7 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 		files     []graph.File
 		symbols   []graph.CodeSymbol
 		edges     []graph.DependencyEdge
+		rawRoutes []routes.RawRoute
 		languages = map[string]int{}
 	)
 
@@ -176,6 +178,11 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 		languages[lang]++
 		symbols = append(symbols, res.Symbols...)
 		edges = append(edges, res.Edges...)
+		// Cross-repo moat: pull producer routes + consumer calls from the same
+		// content the parser just consumed (cheap — the bytes are already in hand).
+		// Handler resolution is deferred to routes.Resolve below, once the full
+		// symbol set is known.
+		rawRoutes = append(rawRoutes, routes.ExtractFile(lang, rel, string(content))...)
 		return nil
 	})
 	if walkErr != nil {
@@ -197,6 +204,23 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 		return edges[i].FromFile < edges[j].FromFile
 	})
 
+	// Resolve raw route facts now that the full symbol set is available: producer
+	// handler names bind to their defining file, consumer calls keep their calling
+	// file. Sorted for deterministic snapshots.
+	graphRoutes := routes.Resolve(repoFullName, rawRoutes, symbols)
+	sort.SliceStable(graphRoutes, func(i, j int) bool {
+		if graphRoutes[i].Role != graphRoutes[j].Role {
+			return graphRoutes[i].Role < graphRoutes[j].Role
+		}
+		if graphRoutes[i].PathPattern != graphRoutes[j].PathPattern {
+			return graphRoutes[i].PathPattern < graphRoutes[j].PathPattern
+		}
+		if graphRoutes[i].Method != graphRoutes[j].Method {
+			return graphRoutes[i].Method < graphRoutes[j].Method
+		}
+		return graphRoutes[i].HandlerFile < graphRoutes[j].HandlerFile
+	})
+
 	commitSHA := resolveCommitSHA(ctx, absRoot)
 
 	mode := "full"
@@ -211,7 +235,7 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 		FileCount:   len(files),
 		SymbolCount: len(symbols),
 		EdgeCount:   len(edges),
-		RouteCount:  0,
+		RouteCount:  len(graphRoutes),
 		Metadata: graph.JSONBMap{
 			"languages": languages,
 			"mode":      mode,
@@ -229,6 +253,9 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 	}
 	for i := range edges {
 		edges[i].SnapshotID = snapshot.ID
+	}
+	for i := range graphRoutes {
+		graphRoutes[i].SnapshotID = snapshot.ID
 	}
 
 	now := time.Now().UTC()
@@ -255,7 +282,7 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 		}
 	}
 
-	if err := drv.SaveSnapshot(ctx, snapshot, files, symbols, edges, nil); err != nil {
+	if err := drv.SaveSnapshot(ctx, snapshot, files, symbols, edges, graphRoutes); err != nil {
 		return nil, Stats{}, fmt.Errorf("index: save snapshot: %w", err)
 	}
 
@@ -271,7 +298,7 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 		Files:      len(files),
 		Symbols:    len(symbols),
 		Edges:      len(edges),
-		Routes:     0,
+		Routes:     len(graphRoutes),
 		Languages:  languages,
 		DurationMS: time.Since(start).Milliseconds(),
 		Mode:       mode,

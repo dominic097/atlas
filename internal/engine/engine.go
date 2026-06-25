@@ -15,6 +15,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/MsysTechnologiesllc/aziron-atlas/internal/crossrepo"
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/export"
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/index"
@@ -236,6 +237,59 @@ type SnapshotDiffResult struct {
 	RemovedEdges  []query.EdgeChange   `json:"removed_edges"`
 }
 
+// ── Cross-repo (the USP) ─────────────────────────────────────────────────────
+
+type CrossRepoImpactInput struct {
+	Repo         string   // producer repo full_name; empty = single/most-recent repo
+	ChangedPaths []string // changed handler files; empty = the whole repo's contract
+}
+
+// ConsumerHit is one calling site in another repo impacted by the change.
+type ConsumerHit struct {
+	Repo          string `json:"repo"`
+	CallingFile   string `json:"calling_file"`
+	CallingSymbol string `json:"calling_symbol,omitempty"`
+	MatchedRoute  string `json:"matched_route"`
+	Endpoint      string `json:"endpoint"`
+}
+
+// RouteContract is a producer route a repo serves (JSON-friendly projection of graph.Route).
+type RouteContract struct {
+	Method        string `json:"method"`
+	PathPattern   string `json:"path_pattern"`
+	HandlerFile   string `json:"handler_file,omitempty"`
+	HandlerSymbol string `json:"handler_symbol,omitempty"`
+	Source        string `json:"source,omitempty"`
+	Confidence    string `json:"confidence,omitempty"`
+}
+
+type CrossRepoImpactResult struct {
+	Repo          string          `json:"repo"`
+	ServedRoutes  []RouteContract `json:"served_routes"`
+	Impacted      []ConsumerHit   `json:"impacted"`
+	ConsumerRepos []string        `json:"consumer_repos"`
+}
+
+type ConsumersInput struct {
+	Repo string // producer repo full_name; empty = single/most-recent repo
+}
+
+type ConsumersResult struct {
+	Repo          string        `json:"repo"`
+	Impacted      []ConsumerHit `json:"impacted"`
+	ConsumerRepos []string      `json:"consumer_repos"`
+}
+
+type RouteContractsInput struct {
+	Repo string // repo full_name; empty = single/most-recent repo
+}
+
+type RouteContractsResult struct {
+	Repo   string          `json:"repo"`
+	Routes []RouteContract `json:"routes"`
+	Total  int             `json:"total"`
+}
+
 // ── The Engine interface ────────────────────────────────────────────────────
 
 // Engine is the single contract all surfaces depend on. The full catalog
@@ -251,6 +305,9 @@ type Engine interface {
 	GraphExport(ctx context.Context, in GraphExportInput) (*GraphExportResult, error)
 	History(ctx context.Context, in HistoryInput) (*HistoryResult, error)
 	SnapshotDiff(ctx context.Context, in SnapshotDiffInput) (*SnapshotDiffResult, error)
+	CrossRepoImpact(ctx context.Context, in CrossRepoImpactInput) (*CrossRepoImpactResult, error)
+	Consumers(ctx context.Context, in ConsumersInput) (*ConsumersResult, error)
+	RouteContracts(ctx context.Context, in RouteContractsInput) (*RouteContractsResult, error)
 	Status(ctx context.Context, in StatusInput) (*StatusResult, error)
 	Close() error
 }
@@ -759,6 +816,135 @@ func (e *localEngine) SnapshotDiff(ctx context.Context, in SnapshotDiffInput) (*
 		ChangedFiles: d.ChangedFiles,
 		AddedEdges:   capEdges(d.AddedEdges, cap), RemovedEdges: capEdges(d.RemovedEdges, cap),
 	}, nil
+}
+
+// crossRepoCap bounds the lists returned by the cross-repo ops so a hub repo's
+// fan-out can't return an unbounded payload.
+const crossRepoCap = 200
+
+// resolveRepoFullName resolves the repo full_name a cross-repo op runs against:
+// the named one, else the single/most-recent indexed repo (reusing resolveRepo).
+func (e *localEngine) resolveRepoFullName(ctx context.Context, repo string) (string, error) {
+	if strings.TrimSpace(repo) != "" {
+		return repo, nil
+	}
+	r, err := e.resolveRepo(ctx, "")
+	if err != nil {
+		return "", err
+	}
+	return r.FullName, nil
+}
+
+func (e *localEngine) CrossRepoImpact(ctx context.Context, in CrossRepoImpactInput) (*CrossRepoImpactResult, error) {
+	repo, err := e.resolveRepoFullName(ctx, in.Repo)
+	if err != nil {
+		return nil, err
+	}
+	r, err := crossrepo.Impact(ctx, e.store, repo, in.ChangedPaths)
+	if err != nil {
+		if errors.Is(err, crossrepo.ErrRepoNotFound) {
+			return nil, ErrNoIndex
+		}
+		return nil, fmt.Errorf("engine: cross-repo impact: %w", err)
+	}
+	return &CrossRepoImpactResult{
+		Repo:          r.Repo,
+		ServedRoutes:  routeContracts(r.ServedRoutes, crossRepoCap),
+		Impacted:      consumerHits(r.Impacted, crossRepoCap),
+		ConsumerRepos: capStrings(r.ConsumerRepos, crossRepoCap),
+	}, nil
+}
+
+func (e *localEngine) Consumers(ctx context.Context, in ConsumersInput) (*ConsumersResult, error) {
+	repo, err := e.resolveRepoFullName(ctx, in.Repo)
+	if err != nil {
+		return nil, err
+	}
+	r, err := crossrepo.Consumers(ctx, e.store, repo)
+	if err != nil {
+		if errors.Is(err, crossrepo.ErrRepoNotFound) {
+			return nil, ErrNoIndex
+		}
+		return nil, fmt.Errorf("engine: consumers: %w", err)
+	}
+	return &ConsumersResult{
+		Repo:          r.Repo,
+		Impacted:      consumerHits(r.Impacted, crossRepoCap),
+		ConsumerRepos: capStrings(r.ConsumerRepos, crossRepoCap),
+	}, nil
+}
+
+func (e *localEngine) RouteContracts(ctx context.Context, in RouteContractsInput) (*RouteContractsResult, error) {
+	repo, err := e.resolveRepoFullName(ctx, in.Repo)
+	if err != nil {
+		return nil, err
+	}
+	routes, err := crossrepo.RouteContracts(ctx, e.store, repo)
+	if err != nil {
+		return nil, fmt.Errorf("engine: route contracts: %w", err)
+	}
+	return &RouteContractsResult{
+		Repo:   repo,
+		Routes: routeContracts(routes, crossRepoCap),
+		Total:  len(routes),
+	}, nil
+}
+
+// routeContracts maps producer graph.Routes to JSON-friendly RouteContracts, capped at n.
+func routeContracts(routes []graph.Route, n int) []RouteContract {
+	out := make([]RouteContract, 0, len(routes))
+	for _, r := range routes {
+		out = append(out, RouteContract{
+			Method:        r.Method,
+			PathPattern:   r.PathPattern,
+			HandlerFile:   r.HandlerFile,
+			HandlerSymbol: metaStr(r.Metadata, "handler_symbol"),
+			Source:        r.Source,
+			Confidence:    r.Confidence,
+		})
+		if len(out) >= n {
+			break
+		}
+	}
+	return out
+}
+
+// consumerHits maps crossrepo hits to engine ConsumerHits, capped at n.
+func consumerHits(hits []crossrepo.ConsumerHit, n int) []ConsumerHit {
+	out := make([]ConsumerHit, 0, len(hits))
+	for _, h := range hits {
+		out = append(out, ConsumerHit{
+			Repo:          h.Repo,
+			CallingFile:   h.CallingFile,
+			CallingSymbol: h.CallingSymbol,
+			MatchedRoute:  h.MatchedRoute,
+			Endpoint:      h.Endpoint,
+		})
+		if len(out) >= n {
+			break
+		}
+	}
+	return out
+}
+
+func capStrings(s []string, n int) []string {
+	if s == nil {
+		return []string{}
+	}
+	if len(s) > n {
+		return s[:n]
+	}
+	return s
+}
+
+func metaStr(m graph.JSONBMap, key string) string {
+	if m == nil {
+		return ""
+	}
+	if v, ok := m[key].(string); ok {
+		return v
+	}
+	return ""
 }
 
 // resolveRepo selects the repo a temporal op runs against: the named one, the

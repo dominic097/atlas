@@ -51,6 +51,16 @@ type (
 	SnapshotDiffResult = engine.SnapshotDiffResult
 	SymbolChange       = query.SymbolChange
 	EdgeChange         = query.EdgeChange
+
+	// Cross-repo (the USP): producer route contracts ↔ consumer HTTP calls.
+	CrossRepoImpactInput  = engine.CrossRepoImpactInput
+	CrossRepoImpactResult = engine.CrossRepoImpactResult
+	ConsumersInput        = engine.ConsumersInput
+	ConsumersResult       = engine.ConsumersResult
+	RouteContractsInput   = engine.RouteContractsInput
+	RouteContractsResult  = engine.RouteContractsResult
+	RouteContract         = engine.RouteContract
+	ConsumerHit           = engine.ConsumerHit
 )
 
 // ErrNotImplemented is returned by stub operations in this scaffold.

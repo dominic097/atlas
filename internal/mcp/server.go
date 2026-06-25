@@ -59,6 +59,12 @@ func coreTools() []Tool {
 			InputSchema: obj(map[string]any{"repo_id": str, "limit": map[string]any{"type": "integer"}})},
 		{Name: "snapshot_diff", Description: "Structural diff between two snapshots: symbols/edges added/removed/modified.",
 			InputSchema: obj(map[string]any{"from": str, "to": str, "repo_id": str})},
+		{Name: "route_contracts", Description: "Producer HTTP routes a repo serves (its public contract: method/path/handler).",
+			InputSchema: obj(map[string]any{"repo": str})},
+		{Name: "consumers", Description: "Other repos that call any route this repo serves (cross-repo dependents).",
+			InputSchema: obj(map[string]any{"repo": str})},
+		{Name: "cross_repo_impact", Description: "Cross-repo blast radius (the USP): which OTHER repos call routes that the changed handler files serve.",
+			InputSchema: obj(map[string]any{"repo": str, "changed_paths": map[string]any{"type": "array"}})},
 		{Name: "status", Description: "Engine health and per-repo index freshness.",
 			InputSchema: obj(map[string]any{"repo_id": str})},
 	}
@@ -196,6 +202,12 @@ func (s *Server) callTool(ctx context.Context, params json.RawMessage) map[strin
 		payload, err = s.eng.History(ctx, engine.HistoryInput{RepoID: str("repo_id"), Limit: intOr("limit", 50)})
 	case "snapshot_diff":
 		payload, err = s.eng.SnapshotDiff(ctx, engine.SnapshotDiffInput{From: str("from"), To: str("to"), RepoID: str("repo_id")})
+	case "route_contracts":
+		payload, err = s.eng.RouteContracts(ctx, engine.RouteContractsInput{Repo: str("repo")})
+	case "consumers":
+		payload, err = s.eng.Consumers(ctx, engine.ConsumersInput{Repo: str("repo")})
+	case "cross_repo_impact":
+		payload, err = s.eng.CrossRepoImpact(ctx, engine.CrossRepoImpactInput{Repo: str("repo"), ChangedPaths: strs("changed_paths")})
 	case "status":
 		payload, err = s.eng.Status(ctx, engine.StatusInput{RepoID: str("repo_id")})
 	default:
