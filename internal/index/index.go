@@ -56,20 +56,22 @@ type Stats struct {
 }
 
 // skipDirs are directory names pruned wholesale during the walk: VCS metadata,
-// dependency caches, build output, and Atlas's own on-disk state.
+// third-party dependency caches, and Atlas's own on-disk state.
+//
+// Build-output names ("build"/"out"/"target"/"dist") are deliberately NOT
+// skipped: they collide with real SOURCE-package directories (e.g. bazel's whole
+// Java tree lives under com/google/devtools/build/...), and genuine build
+// artifacts are non-source extensions the parser already ignores. Correctness of
+// the graph beats a marginal walk-speed win.
 var skipDirs = map[string]struct{}{
 	".git":         {},
 	"node_modules": {},
 	"vendor":       {},
-	"dist":         {},
-	"build":        {},
-	".atlas":       {},
-	".testdata":    {},
-	"target":       {},
 	".venv":        {},
 	"__pycache__":  {},
 	".next":        {},
-	"out":          {},
+	".atlas":       {},
+	".testdata":    {},
 }
 
 // Run indexes the repository rooted at root and persists a snapshot.
