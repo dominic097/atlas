@@ -44,6 +44,7 @@ func NewRootCmd() *cobra.Command {
 	root.AddCommand(
 		newIndexCmd(),
 		newSearchCmd(),
+		newSemanticSearchCmd(),
 		newImpactCmd(),
 		newCallersCmd(),
 		newSymbolCmd(),
@@ -59,6 +60,7 @@ func NewRootCmd() *cobra.Command {
 		newConsumersCmd(),
 		newCrossRepoImpactCmd(),
 		newStatusCmd(),
+		newLinkCmd(),
 		newServeCmd(),
 		newMCPCmd(),
 		newInstallCmd(),

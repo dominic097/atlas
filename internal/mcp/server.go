@@ -54,6 +54,8 @@ func coreTools() []Tool {
 	return []Tool{
 		{Name: "search", Description: "Code-aware lexical search over indexed symbols.",
 			InputSchema: obj(map[string]any{"query": str, "repo_id": str, "kind": str, "limit": map[string]any{"type": "integer"}}, "query")},
+		{Name: "semantic_search", Description: "Optional vector nearest-neighbor search over indexed symbols. Degrades to lexical (degraded=true, mode_used=lexical) when vectors are off or the snapshot has no embeddings.",
+			InputSchema: obj(map[string]any{"query": str, "repo_id": str, "limit": map[string]any{"type": "integer"}, "min_score": map[string]any{"type": "number"}}, "query")},
 		{Name: "symbol", Description: "Definition(s) of a symbol with its callers and callees.",
 			InputSchema: obj(map[string]any{"symbol": str, "repo_id": str}, "symbol")},
 		{Name: "callers", Description: "Symbols that directly call a given symbol.",
@@ -84,6 +86,8 @@ func coreTools() []Tool {
 			InputSchema: obj(map[string]any{"repo": str, "changed_paths": map[string]any{"type": "array"}})},
 		{Name: "status", Description: "Engine health and per-repo index freshness.",
 			InputSchema: obj(map[string]any{"repo_id": str})},
+		{Name: "link", Description: "Register a repo into the graph WITHOUT indexing it (path, git remote URL, or org/name), so it participates in cross-repo and shows in status.",
+			InputSchema: obj(map[string]any{"repo": str, "branch": str}, "repo")},
 	}
 }
 
@@ -268,6 +272,12 @@ func (s *Server) callTool(ctx context.Context, params json.RawMessage) map[strin
 		}
 		return d
 	}
+	floatOr := func(k string, d float64) float64 {
+		if v, ok := args[k].(float64); ok {
+			return v
+		}
+		return d
+	}
 
 	var (
 		payload any
@@ -278,6 +288,11 @@ func (s *Server) callTool(ctx context.Context, params json.RawMessage) map[strin
 		payload, err = s.eng.Search(ctx, engine.SearchInput{
 			Query: str("query"), RepoID: str("repo_id"), Kind: str("kind"),
 			Limit: intOr("limit", 20), Mode: "lexical",
+		})
+	case "semantic_search":
+		payload, err = s.eng.SemanticSearch(ctx, engine.SemanticSearchInput{
+			Query: str("query"), RepoID: str("repo_id"),
+			Limit: intOr("limit", 20), MinScore: floatOr("min_score", 0),
 		})
 	case "impact":
 		payload, err = s.eng.Impact(ctx, engine.ImpactInput{
@@ -316,6 +331,8 @@ func (s *Server) callTool(ctx context.Context, params json.RawMessage) map[strin
 		payload, err = s.eng.CrossRepoImpact(ctx, engine.CrossRepoImpactInput{Repo: str("repo"), ChangedPaths: strs("changed_paths")})
 	case "status":
 		payload, err = s.eng.Status(ctx, engine.StatusInput{RepoID: str("repo_id")})
+	case "link":
+		payload, err = s.eng.Link(ctx, engine.LinkInput{Repo: str("repo"), Branch: str("branch")})
 	default:
 		err = engine.ErrNotImplemented
 	}

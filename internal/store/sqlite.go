@@ -1033,5 +1033,80 @@ func (d *sqliteDriver) ListCoverage(ctx context.Context, snapshotID, symbolName 
 	return out, rows.Err()
 }
 
+// ---- embeddings (optional semantic-search substrate) -----------------------
+
+// SaveEmbeddings replaces every embedding row for snapshotID (delete-then-insert)
+// and persists the given per-symbol vectors, all in one transaction so a re-index
+// with vectors enabled is idempotent. Vectors are stored little-endian via the
+// shared encodeVector.
+func (d *sqliteDriver) SaveEmbeddings(ctx context.Context, snapshotID string, embs []graph.SymbolEmbedding) error {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+
+	tx, err := d.db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("store: begin embeddings tx: %w", err)
+	}
+	defer tx.Rollback()
+
+	if _, err := tx.ExecContext(ctx, `DELETE FROM embeddings WHERE snapshot_id = ?`, snapshotID); err != nil {
+		return fmt.Errorf("store: clear embeddings: %w", err)
+	}
+
+	if len(embs) > 0 {
+		stmt, err := tx.PrepareContext(ctx, `
+			INSERT INTO embeddings (`+embeddingsCols+`)
+			VALUES (?, ?, ?, ?)`)
+		if err != nil {
+			return fmt.Errorf("store: prepare embeddings insert: %w", err)
+		}
+		defer stmt.Close()
+		for i := range embs {
+			e := &embs[i]
+			if _, err := stmt.ExecContext(ctx, snapshotID, e.SymbolID, e.Dim, encodeVector(e.Vector)); err != nil {
+				return fmt.Errorf("store: save embedding for %s: %w", e.SymbolID, err)
+			}
+		}
+	}
+
+	if err := tx.Commit(); err != nil {
+		return fmt.Errorf("store: commit embeddings: %w", err)
+	}
+	return nil
+}
+
+// NearestSymbols loads the snapshot's embedding rows, decodes each vector, and
+// ranks them by cosine (== dot, both L2-normalized) against vec via the shared
+// brute-force rankEmbeddings. (Brute-force is acceptable at Atlas's per-snapshot
+// symbol counts on both tiers.)
+func (d *sqliteDriver) NearestSymbols(ctx context.Context, snapshotID string, vec []float32, limit int, minScore float64) ([]graph.ScoredSymbol, error) {
+	rows, err := d.db.QueryContext(ctx,
+		`SELECT symbol_id, vec FROM embeddings WHERE snapshot_id = ?`, snapshotID)
+	if err != nil {
+		return nil, fmt.Errorf("store: list embeddings: %w", err)
+	}
+	defer rows.Close()
+
+	var (
+		ids  []string
+		vecs [][]float32
+	)
+	for rows.Next() {
+		var (
+			id   string
+			blob []byte
+		)
+		if err := rows.Scan(&id, &blob); err != nil {
+			return nil, fmt.Errorf("store: scan embedding: %w", err)
+		}
+		ids = append(ids, id)
+		vecs = append(vecs, decodeVector(blob))
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return rankEmbeddings(vec, ids, vecs, limit, minScore), nil
+}
+
 // compile-time assertion that sqliteDriver satisfies the contract.
 var _ StorageDriver = (*sqliteDriver)(nil)

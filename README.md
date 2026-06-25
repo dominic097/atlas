@@ -11,7 +11,7 @@ which consumes Atlas via its SDK / API / MCP.
 
 - Module: `github.com/MsysTechnologiesllc/aziron-atlas`
 - Binary: `atlas`
-- Go 1.23+
+- Go 1.25+ (matches the `go` directive in `go.mod`)
 
 > This repository is currently a **compiling scaffold**: every operation stub
 > returns `ErrNotImplemented`. It exists to lock the architecture across all

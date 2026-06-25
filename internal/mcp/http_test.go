@@ -23,6 +23,9 @@ func (stubEngine) Index(context.Context, engine.IndexInput) (*engine.IndexResult
 func (stubEngine) Search(context.Context, engine.SearchInput) (*engine.SearchResult, error) {
 	return &engine.SearchResult{}, nil
 }
+func (stubEngine) SemanticSearch(context.Context, engine.SemanticSearchInput) (*engine.SemanticSearchResult, error) {
+	return &engine.SemanticSearchResult{}, nil
+}
 func (stubEngine) Impact(context.Context, engine.ImpactInput) (*engine.ImpactResult, error) {
 	return &engine.ImpactResult{}, nil
 }
@@ -70,6 +73,9 @@ func (stubEngine) RouteContracts(context.Context, engine.RouteContractsInput) (*
 }
 func (stubEngine) Status(context.Context, engine.StatusInput) (*engine.StatusResult, error) {
 	return &engine.StatusResult{Tier: "test-tier", StorageDriver: "memory", ReposIndexed: 7}, nil
+}
+func (stubEngine) Link(context.Context, engine.LinkInput) (*engine.LinkResult, error) {
+	return &engine.LinkResult{}, nil
 }
 func (stubEngine) Close() error { return nil }
 

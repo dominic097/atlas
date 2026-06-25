@@ -89,6 +89,16 @@ type StorageDriver interface {
 	// for a snapshot, optionally filtered to a single symbol name (empty = all).
 	SaveCoverage(ctx context.Context, rows []graph.Coverage) error
 	ListCoverage(ctx context.Context, snapshotID, symbolName string) ([]graph.Coverage, error)
+
+	// embeddings (OPTIONAL semantic-search substrate; written only when vectors
+	// are enabled — the deterministic core never touches these)
+	//
+	// SaveEmbeddings replaces the embedding rows for snapshotID (delete-then-insert)
+	// and persists the given per-symbol vectors. NearestSymbols loads the snapshot's
+	// vectors, scores each by cosine (== dot, since both sides are L2-normalized)
+	// against vec, keeps Score>=minScore, and returns the top-`limit` descending.
+	SaveEmbeddings(ctx context.Context, snapshotID string, embs []graph.SymbolEmbedding) error
+	NearestSymbols(ctx context.Context, snapshotID string, vec []float32, limit int, minScore float64) ([]graph.ScoredSymbol, error)
 }
 
 // Options configures Open().

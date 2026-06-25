@@ -4,7 +4,7 @@
 // onto symbols to report RUNTIME coverage (as opposed to static call-graph
 // reachability).
 //
-// Two input formats are auto-detected and supported:
+// Four input formats are auto-detected and supported:
 //
 //   - Go coverprofile (`go test -coverprofile`): a leading "mode:" line followed
 //     by data lines of the form
@@ -13,11 +13,18 @@
 //   - LCOV: records delimited by "end_of_record", each opened by "SF:<file>"
 //     and carrying "DA:<line>,<count>" entries. count > 0 marks the line
 //     covered.
+//   - Cobertura XML (also emitted by coverage.py): a <coverage> root whose
+//     <class filename=..> elements carry <line number=.. hits=..> entries.
+//     hits > 0 marks the line covered.
+//   - JaCoCo XML: a <report> root whose <sourcefile name=..> elements (nested
+//     under <package name=..>) carry <line nr=.. ci=..> entries. ci (covered
+//     instructions) > 0 marks the line covered.
 package coverage
 
 import (
 	"bufio"
 	"bytes"
+	"encoding/xml"
 	"fmt"
 	"strconv"
 	"strings"
@@ -35,13 +42,27 @@ type FileCoverage struct {
 }
 
 // Parse auto-detects the coverage format of content and returns the detected
-// format ("go" or "lcov") together with the per-file covered line sets. Files
-// are returned in first-seen order so output is deterministic for a given
-// input. Content that matches neither format yields an error.
+// format ("go", "lcov", "cobertura", or "jacoco") together with the per-file
+// covered line sets. Files are returned in first-seen order so output is
+// deterministic for a given input. Content that matches no format yields an
+// error.
 func Parse(content []byte) (format string, files []FileCoverage, err error) {
 	trimmed := bytes.TrimLeft(content, " \t\r\n")
 	if len(trimmed) == 0 {
 		return "", nil, fmt.Errorf("coverage: empty content")
+	}
+
+	// XML-based formats (Cobertura / coverage.py, JaCoCo) start with an XML
+	// declaration or a bare root element.
+	if trimmed[0] == '<' {
+		switch xmlFormat(trimmed) {
+		case "jacoco":
+			files, err = parseJacoco(content)
+			return "jacoco", files, err
+		case "cobertura":
+			files, err = parseCobertura(content)
+			return "cobertura", files, err
+		}
 	}
 
 	switch {
@@ -52,7 +73,33 @@ func Parse(content []byte) (format string, files []FileCoverage, err error) {
 		files, err = parseLCOV(content)
 		return "lcov", files, err
 	default:
-		return "", nil, fmt.Errorf("coverage: unrecognized format (expected Go coverprofile 'mode:' header or LCOV records)")
+		return "", nil, fmt.Errorf("coverage: unrecognized format (expected Go coverprofile 'mode:' header, LCOV records, or Cobertura/JaCoCo XML)")
+	}
+}
+
+// xmlFormat sniffs XML content by its actual ROOT element rather than a
+// substring scan (which would misfire on a tag name appearing inside a comment
+// or attribute value): a <report> root is JaCoCo, a <coverage> root is Cobertura
+// (and the schema-compatible coverage.py output). Anything else returns "".
+func xmlFormat(trimmed []byte) string {
+	dec := xml.NewDecoder(bytes.NewReader(trimmed))
+	for {
+		tok, err := dec.Token()
+		if err != nil {
+			return ""
+		}
+		// The first StartElement is the document root; the XML declaration, any
+		// comments, and the DOCTYPE are non-StartElement tokens we skip over.
+		if se, ok := tok.(xml.StartElement); ok {
+			switch se.Name.Local {
+			case "report":
+				return "jacoco"
+			case "coverage":
+				return "cobertura"
+			default:
+				return ""
+			}
+		}
 	}
 }
 
@@ -304,4 +351,102 @@ func parseLCOVData(line string) (lineNo, count int, err error) {
 		return 0, 0, fmt.Errorf("coverage: bad count in %q: %w", line, err)
 	}
 	return lineNo, count, nil
+}
+
+// coberturaReport models the subset of the Cobertura XML schema (also emitted by
+// coverage.py) that we need: per-class filenames and their per-line hit counts.
+type coberturaReport struct {
+	XMLName xml.Name         `xml:"coverage"`
+	Classes []coberturaClass `xml:"packages>package>classes>class"`
+}
+
+type coberturaClass struct {
+	Filename string          `xml:"filename,attr"`
+	Lines    []coberturaLine `xml:"lines>line"`
+}
+
+type coberturaLine struct {
+	Number int `xml:"number,attr"`
+	Hits   int `xml:"hits,attr"`
+}
+
+// parseCobertura parses Cobertura/coverage.py XML. For each <class> the filename
+// attribute is the file and each <line number=.. hits=..> with hits > 0 marks
+// that line covered. Multiple <class> blocks sharing a filename are unioned.
+func parseCobertura(content []byte) ([]FileCoverage, error) {
+	var report coberturaReport
+	if err := xml.Unmarshal(content, &report); err != nil {
+		return nil, fmt.Errorf("coverage: parse cobertura xml: %w", err)
+	}
+	fs := newFileSet()
+	for _, class := range report.Classes {
+		file := strings.TrimSpace(class.Filename)
+		if file == "" {
+			continue
+		}
+		fs.lines(file) // register the file even if it has no line entries
+		for _, ln := range class.Lines {
+			fs.mark(file, ln.Number, ln.Hits > 0)
+		}
+	}
+	if len(fs.order) == 0 {
+		return nil, fmt.Errorf("coverage: cobertura xml contained no <class filename=..> entries")
+	}
+	return fs.result(), nil
+}
+
+// jacocoReport models the subset of the JaCoCo XML schema that we need: per
+// package name plus its sourcefiles, each carrying per-line covered-instruction
+// counts. We use <sourcefile> (reliable per-line) rather than <class>.
+type jacocoReport struct {
+	XMLName  xml.Name        `xml:"report"`
+	Packages []jacocoPackage `xml:"package"`
+}
+
+type jacocoPackage struct {
+	Name        string             `xml:"name,attr"`
+	Sourcefiles []jacocoSourcefile `xml:"sourcefile"`
+}
+
+type jacocoSourcefile struct {
+	Name  string       `xml:"name,attr"`
+	Lines []jacocoLine `xml:"line"`
+}
+
+type jacocoLine struct {
+	Nr int `xml:"nr,attr"`
+	Ci int `xml:"ci,attr"`
+}
+
+// parseJacoco parses JaCoCo XML. The file path is the package name joined to the
+// sourcefile name (e.g. "com/foo" + "Bar.java" -> "com/foo/Bar.java"). A line is
+// covered when its ci (covered instructions) count is > 0. Sourcefiles sharing a
+// resolved path are unioned.
+func parseJacoco(content []byte) ([]FileCoverage, error) {
+	var report jacocoReport
+	if err := xml.Unmarshal(content, &report); err != nil {
+		return nil, fmt.Errorf("coverage: parse jacoco xml: %w", err)
+	}
+	fs := newFileSet()
+	for _, pkg := range report.Packages {
+		pkgName := strings.Trim(strings.TrimSpace(pkg.Name), "/")
+		for _, sf := range pkg.Sourcefiles {
+			name := strings.TrimSpace(sf.Name)
+			if name == "" {
+				continue
+			}
+			file := name
+			if pkgName != "" {
+				file = pkgName + "/" + name
+			}
+			fs.lines(file) // register the file even if it has no line entries
+			for _, ln := range sf.Lines {
+				fs.mark(file, ln.Nr, ln.Ci > 0)
+			}
+		}
+	}
+	if len(fs.order) == 0 {
+		return nil, fmt.Errorf("coverage: jacoco xml contained no <sourcefile name=..> entries")
+	}
+	return fs.result(), nil
 }

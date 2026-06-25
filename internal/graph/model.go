@@ -143,6 +143,24 @@ type Coverage struct {
 	Strength     string `json:"strength,omitempty"`
 }
 
+// SymbolEmbedding is the OPTIONAL vector for one symbol under one snapshot — the
+// substrate for the gated semantic_search op. It is written only when vectors are
+// enabled (`atlas index --enable-vectors`); the deterministic core never reads or
+// writes it. Vector is L2-normalized so cosine similarity == dot product.
+type SymbolEmbedding struct {
+	SnapshotID string    `json:"snapshot_id"`
+	SymbolID   string    `json:"symbol_id"`
+	Dim        int       `json:"dim"`
+	Vector     []float32 `json:"vector"`
+}
+
+// ScoredSymbol pairs a symbol id with its similarity score, the return shape of
+// the store's nearest-neighbor query backing semantic_search.
+type ScoredSymbol struct {
+	SymbolID string  `json:"symbol_id"`
+	Score    float64 `json:"score"`
+}
+
 // CrossDep is a detected consumer call-site that depends on another service.
 type CrossDep struct {
 	ID            string `json:"id"`

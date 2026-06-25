@@ -13,6 +13,7 @@ import (
 	"context"
 
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/engine"
+	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/query"
 )
 
@@ -28,11 +29,20 @@ type (
 	SearchInput  = engine.SearchInput
 	SearchResult = engine.SearchResult
 
+	// Optional, gated semantic search (off by default; needs vectors enabled).
+	SemanticSearchInput  = engine.SemanticSearchInput
+	SemanticSearchResult = engine.SemanticSearchResult
+	SymbolEmbedding      = graph.SymbolEmbedding
+	ScoredSymbol         = graph.ScoredSymbol
+
 	ImpactInput  = engine.ImpactInput
 	ImpactResult = engine.ImpactResult
 
 	StatusInput  = engine.StatusInput
 	StatusResult = engine.StatusResult
+
+	LinkInput  = engine.LinkInput
+	LinkResult = engine.LinkResult
 
 	CallersInput  = engine.CallersInput
 	CallersResult = engine.CallersResult
@@ -99,6 +109,12 @@ func WithPostgres(dsn string) Option { return engine.WithPostgres(dsn) }
 // Empty scope ("") keeps single-tenant / all-repo behaviour (the local default).
 // It is orthogonal to the tier — combine it with WithSQLite or WithPostgres.
 func WithScope(scope string) Option { return engine.WithScope(scope) }
+
+// WithVectors enables the OPTIONAL semantic layer: the index pass builds
+// per-symbol embeddings and query-time SemanticSearch runs vector nearest-neighbor
+// instead of degrading to lexical. Off by default — the deterministic core is
+// unchanged. ATLAS_ENABLE_VECTORS=1 sets the same flag from the environment.
+func WithVectors(enabled bool) Option { return engine.WithVectors(enabled) }
 
 // New builds an Engine. With zero options it is the LOCAL tier: embedded SQLite
 // under ./.atlas, lexical search on, vectors off, code never leaves the machine.

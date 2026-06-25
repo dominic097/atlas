@@ -113,4 +113,13 @@ CREATE TABLE IF NOT EXISTS coverage (
 );
 CREATE INDEX IF NOT EXISTS idx_coverage_snapshot ON coverage (snapshot_id);
 CREATE INDEX IF NOT EXISTS idx_coverage_snapshot_symbol ON coverage (snapshot_id, symbol_ref);
+
+CREATE TABLE IF NOT EXISTS embeddings (
+	snapshot_id TEXT NOT NULL DEFAULT '',
+	symbol_id   TEXT NOT NULL DEFAULT '',
+	dim         INTEGER NOT NULL DEFAULT 0,
+	vec         BLOB,
+	PRIMARY KEY (snapshot_id, symbol_id)
+);
+CREATE INDEX IF NOT EXISTS idx_embeddings_snapshot ON embeddings (snapshot_id);
 `

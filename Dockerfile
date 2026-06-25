@@ -7,9 +7,12 @@
 #      for delta indexing), so the final image installs git + ca-certificates.
 #
 # Build metadata is injected via the same -X seams `atlas version` reads
-# (main.Version / main.Commit / main.Date). When built by goreleaser the
-# binary is supplied prebuilt (see .goreleaser.yaml `dockers:`); this file is
-# also a self-contained `docker build .` for local/dev images.
+# (main.Version / main.Commit / main.Date), passed in as --build-args. The
+# release pipeline builds this image from source with buildx + QEMU (the
+# `container` job in .github/workflows/release.yml) so the multi-arch image is
+# a real CGO build, not a repackaged binary; goreleaser handles only the
+# archives/checksums/SBOMs/signatures. This file is also a self-contained
+# `docker build .` for local/dev images.
 
 # ---- build stage --------------------------------------------------------------
 FROM golang:1.25-bookworm AS build

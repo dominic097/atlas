@@ -20,6 +20,7 @@ import (
 
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/coverage"
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/crossrepo"
+	"github.com/MsysTechnologiesllc/aziron-atlas/internal/embed"
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/export"
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/index"
@@ -90,6 +91,25 @@ type SearchResult struct {
 	Total    int         `json:"total"`
 }
 
+// SemanticSearchInput drives the OPTIONAL, gated semantic_search op. When vectors
+// are disabled or the snapshot has no embeddings, the op degrades to lexical and
+// reports it (Degraded:true) rather than erroring.
+type SemanticSearchInput struct {
+	Query    string
+	RepoID   string
+	Limit    int
+	MinScore float64
+}
+
+// SemanticSearchResult carries the hits plus an honest mode report: ModeUsed is
+// "semantic" when vector nearest-neighbor ran, "lexical" when it degraded;
+// Degraded mirrors that for a quick boolean check.
+type SemanticSearchResult struct {
+	Results  []SearchHit `json:"results"`
+	Degraded bool        `json:"degraded"`
+	ModeUsed string      `json:"mode_used"`
+}
+
 type ImpactInput struct {
 	Symbols      []string
 	ChangedPaths []string
@@ -132,6 +152,27 @@ type StatusResult struct {
 	VectorBackend string       `json:"vector_backend"`
 	ReposIndexed  int          `json:"repos_indexed"`
 	Repos         []RepoStatus `json:"repos"`
+}
+
+// LinkInput registers a repo into the graph WITHOUT indexing it. Repo may be a
+// filesystem path, a git remote URL (git@host:Org/Repo.git or
+// https://host/Org/Repo(.git)), or a bare org/name. Branch defaults to "main".
+type LinkInput struct {
+	Repo   string
+	Branch string
+}
+
+// LinkResult reports the registered (or already-present) repo. Created is true
+// when this call inserted a new repo row; Indexed is true when the repo already
+// has at least one snapshot. Link never indexes — Indexed reflects prior state.
+type LinkResult struct {
+	RepoID        string `json:"repo_id"`
+	FullName      string `json:"repo_full_name"`
+	Root          string `json:"root"`
+	DefaultBranch string `json:"default_branch"`
+	Scope         string `json:"scope,omitempty"`
+	Created       bool   `json:"created"`
+	Indexed       bool   `json:"indexed"`
 }
 
 // SymbolRef is a lightweight pointer to a symbol used in callers/callees lists.
@@ -426,6 +467,7 @@ type CoverageImportResult struct {
 type Engine interface {
 	Index(ctx context.Context, in IndexInput) (*IndexResult, error)
 	Search(ctx context.Context, in SearchInput) (*SearchResult, error)
+	SemanticSearch(ctx context.Context, in SemanticSearchInput) (*SemanticSearchResult, error)
 	Impact(ctx context.Context, in ImpactInput) (*ImpactResult, error)
 	Callers(ctx context.Context, in CallersInput) (*CallersResult, error)
 	Symbol(ctx context.Context, in SymbolInput) (*SymbolResult, error)
@@ -442,6 +484,7 @@ type Engine interface {
 	Consumers(ctx context.Context, in ConsumersInput) (*ConsumersResult, error)
 	RouteContracts(ctx context.Context, in RouteContractsInput) (*RouteContractsResult, error)
 	Status(ctx context.Context, in StatusInput) (*StatusResult, error)
+	Link(ctx context.Context, in LinkInput) (*LinkResult, error)
 	Close() error
 }
 
@@ -480,8 +523,28 @@ func WithScope(scope string) Option {
 	return func(c *Config) { c.Scope = scope }
 }
 
+// WithVectors enables the OPTIONAL semantic layer for this engine: the index pass
+// builds per-symbol embeddings (when --enable-vectors / IndexInput.EnableVectors
+// also asks for them) and query-time semantic_search runs vector nearest-neighbor
+// instead of degrading to lexical. Off by default — the deterministic core is
+// unchanged. ATLAS_ENABLE_VECTORS=1 sets the same flag from the environment.
+func WithVectors(enabled bool) Option {
+	return func(c *Config) { c.EnableVector = enabled }
+}
+
 func defaultConfig() Config {
 	return Config{Tier: "local", StorageKind: "sqlite", SQLitePath: "./.atlas/atlas.db"}
+}
+
+// envTrue reports whether an env value is a truthy flag ("1"/"true"/"yes"/"on",
+// case-insensitive). Used to read ATLAS_ENABLE_VECTORS.
+func envTrue(v string) bool {
+	switch strings.ToLower(strings.TrimSpace(v)) {
+	case "1", "true", "yes", "on":
+		return true
+	default:
+		return false
+	}
 }
 
 // New builds the local engine: opens the StorageDriver (the one-line tier swap),
@@ -490,6 +553,12 @@ func New(ctx context.Context, opts ...Option) (Engine, error) {
 	cfg := defaultConfig()
 	for _, o := range opts {
 		o(&cfg)
+	}
+	// ATLAS_ENABLE_VECTORS=1 enables the optional semantic layer at query time even
+	// when no explicit WithVectors option was passed (e.g. from the CLI/SDK env). An
+	// explicit option still wins — this only flips the default on, never off.
+	if envTrue(os.Getenv("ATLAS_ENABLE_VECTORS")) {
+		cfg.EnableVector = true
 	}
 	drv, err := store.Open(ctx, store.Options{
 		Kind:        cfg.StorageKind,
@@ -540,8 +609,10 @@ func (e *localEngine) Index(ctx context.Context, in IndexInput) (*IndexResult, e
 		fullName = filepath.Base(abs)
 	}
 	// repoID left empty: the store resolves/mints the canonical id by full_name,
-	// so re-indexing the same repo reuses its row.
-	snap, stats, err := index.Run(ctx, e.store, e.lexical, "", fullName, abs, index.Options{Reindex: in.Reindex, Scope: e.cfg.Scope})
+	// so re-indexing the same repo reuses its row. The embedding pass runs only when
+	// vectors are enabled (per-call flag OR the engine's query-time vector config).
+	enableVectors := in.EnableVectors || e.cfg.EnableVector
+	snap, stats, err := index.Run(ctx, e.store, e.lexical, "", fullName, abs, index.Options{Reindex: in.Reindex, Scope: e.cfg.Scope, EnableVectors: enableVectors})
 	if err != nil {
 		return nil, err
 	}
@@ -560,25 +631,145 @@ func (e *localEngine) Index(ctx context.Context, in IndexInput) (*IndexResult, e
 	}, nil
 }
 
+// Search is the catalog entry point. The default is deterministic lexical (BM25)
+// search. "semantic" delegates to SemanticSearch (degrading to lexical when
+// vectors are off or the snapshot has no embeddings). "hybrid" blends lexical and
+// semantic when vectors are on, else runs lexical and notes the degrade in
+// ModeUsed. Vectors are never required for Search to succeed.
 func (e *localEngine) Search(ctx context.Context, in SearchInput) (*SearchResult, error) {
-	if in.Mode == "semantic" || in.Mode == "hybrid" {
-		if !e.cfg.EnableVector {
-			return nil, errors.New("atlas: semantic mode requires vectors enabled (off by default)")
+	switch in.Mode {
+	case "semantic":
+		sr, err := e.SemanticSearch(ctx, SemanticSearchInput{Query: in.Query, RepoID: in.RepoID, Limit: in.Limit})
+		if err != nil {
+			return nil, err
 		}
+		hits := filterByKind(sr.Results, in.Kind)
+		return &SearchResult{Results: hits, ModeUsed: sr.ModeUsed, Total: len(hits)}, nil
+	case "hybrid":
+		return e.hybridSearch(ctx, in)
 	}
 	snap, err := e.resolveSnapshot(ctx, in.RepoID)
 	if err != nil {
 		return nil, err
 	}
-	limit := in.Limit
-	if limit <= 0 {
-		limit = 20
+	limit := searchLimit(in.Limit)
+	out, err := e.lexicalSearch(ctx, snap.ID, in.Query, in.Kind, limit)
+	if err != nil {
+		return nil, err
 	}
-	hits, err := e.lexical.Search(snap.ID, in.Query, limit*2) // over-fetch for post-filtering
+	return &SearchResult{Results: out, ModeUsed: "lexical", Total: len(out)}, nil
+}
+
+// SemanticSearch is the OPTIONAL, gated semantic op. When vectors are disabled OR
+// the snapshot has no embeddings, it runs the lexical path and returns
+// Degraded:true, ModeUsed:"lexical" — an honest fallback, never an error. With
+// vectors on and embeddings present, it embeds the query, finds the nearest
+// symbols by cosine, loads those symbols, and returns Degraded:false,
+// ModeUsed:"semantic".
+func (e *localEngine) SemanticSearch(ctx context.Context, in SemanticSearchInput) (*SemanticSearchResult, error) {
+	snap, err := e.resolveSnapshot(ctx, in.RepoID)
+	if err != nil {
+		return nil, err
+	}
+	limit := searchLimit(in.Limit)
+
+	// Degrade to lexical when this snapshot has no embeddings — which is the case
+	// unless it was indexed with --enable-vectors. Presence of embeddings is the
+	// gate (not a global flag), so a user who runs `index --enable-vectors` then
+	// `semantic-search` gets real ranking without any extra env/flag. The
+	// nearest-neighbor probe with limit=1 is the cheap "are there embeddings?" check.
+	degrade := false
+	probe, perr := e.store.NearestSymbols(ctx, snap.ID, nil, 1, -1)
+	if perr != nil || len(probe) == 0 {
+		degrade = true
+	}
+	if degrade {
+		out, lerr := e.lexicalSearch(ctx, snap.ID, in.Query, "", limit)
+		if lerr != nil {
+			return nil, lerr
+		}
+		return &SemanticSearchResult{Results: out, Degraded: true, ModeUsed: "lexical"}, nil
+	}
+
+	qvecs, err := embed.NewProvider().Embed(ctx, []string{in.Query})
+	if err != nil || len(qvecs) == 0 {
+		// Embedding the query failed (e.g. HTTP provider down): degrade rather than
+		// fail — lexical still answers.
+		out, lerr := e.lexicalSearch(ctx, snap.ID, in.Query, "", limit)
+		if lerr != nil {
+			return nil, lerr
+		}
+		return &SemanticSearchResult{Results: out, Degraded: true, ModeUsed: "lexical"}, nil
+	}
+
+	// Default (MinScore<=0): exclude orthogonal, zero-similarity symbols so they
+	// don't pad the results out to --limit; any positive cosine is still kept.
+	minScore := in.MinScore
+	if minScore <= 0 {
+		minScore = 1e-9
+	}
+	scored, err := e.store.NearestSymbols(ctx, snap.ID, qvecs[0], limit, minScore)
+	if err != nil {
+		return nil, fmt.Errorf("engine: semantic search: %w", err)
+	}
+	syms, err := e.store.ListSymbols(ctx, snap.ID)
+	if err != nil {
+		return nil, fmt.Errorf("engine: load symbols: %w", err)
+	}
+	byID := make(map[string]graph.CodeSymbol, len(syms))
+	for _, s := range syms {
+		byID[s.ID] = s
+	}
+	out := make([]SearchHit, 0, len(scored))
+	for _, sc := range scored {
+		s, ok := byID[sc.SymbolID]
+		if !ok {
+			continue
+		}
+		out = append(out, symbolToHit(s, sc.Score))
+	}
+	return &SemanticSearchResult{Results: out, Degraded: false, ModeUsed: "semantic"}, nil
+}
+
+// hybridSearch blends lexical and semantic results when vectors are on, else runs
+// lexical and reports ModeUsed:"lexical (degraded)". The blend unions the two hit
+// lists by symbol id, keeping the higher score, then sorts descending and caps to
+// the limit.
+func (e *localEngine) hybridSearch(ctx context.Context, in SearchInput) (*SearchResult, error) {
+	snap, err := e.resolveSnapshot(ctx, in.RepoID)
+	if err != nil {
+		return nil, err
+	}
+	limit := searchLimit(in.Limit)
+
+	lex, err := e.lexicalSearch(ctx, snap.ID, in.Query, in.Kind, limit)
+	if err != nil {
+		return nil, err
+	}
+	// SemanticSearch self-degrades (sem.Degraded) when this snapshot has no
+	// embeddings, so no global-flag gate is needed here — the check below blends
+	// only when a real semantic ranking came back.
+	sem, err := e.SemanticSearch(ctx, SemanticSearchInput{Query: in.Query, RepoID: in.RepoID, Limit: limit})
+	if err != nil {
+		return nil, err
+	}
+	if sem.Degraded {
+		// No embeddings for this snapshot: hybrid is just lexical, said honestly.
+		return &SearchResult{Results: lex, ModeUsed: "lexical (degraded)", Total: len(lex)}, nil
+	}
+	blended := blendHits(lex, filterByKind(sem.Results, in.Kind), limit)
+	return &SearchResult{Results: blended, ModeUsed: "hybrid", Total: len(blended)}, nil
+}
+
+// lexicalSearch runs the BM25 lexical query for a snapshot and maps hits to
+// SearchHits, applying the optional kind filter. It is the shared core behind
+// Search (lexical mode), the semantic degrade path, and hybrid's lexical leg.
+func (e *localEngine) lexicalSearch(ctx context.Context, snapshotID, query, kind string, limit int) ([]SearchHit, error) {
+	hits, err := e.lexical.Search(snapshotID, query, limit*2) // over-fetch for post-filtering
 	if err != nil {
 		return nil, fmt.Errorf("engine: search: %w", err)
 	}
-	syms, err := e.store.ListSymbols(ctx, snap.ID)
+	syms, err := e.store.ListSymbols(ctx, snapshotID)
 	if err != nil {
 		return nil, fmt.Errorf("engine: load symbols: %w", err)
 	}
@@ -592,25 +783,84 @@ func (e *localEngine) Search(ctx context.Context, in SearchInput) (*SearchResult
 		if !ok {
 			continue
 		}
-		if in.Kind != "" && !strings.EqualFold(s.Kind, in.Kind) {
+		if kind != "" && !strings.EqualFold(s.Kind, kind) {
 			continue
 		}
-		out = append(out, SearchHit{
-			SymbolID:  s.ID,
-			Name:      s.Name,
-			Kind:      s.Kind,
-			RepoID:    s.RepoID,
-			Path:      s.Path,
-			Line:      s.StartLine,
-			Signature: s.Signature,
-			Doc:       s.Doc,
-			Score:     h.Score,
-		})
+		out = append(out, symbolToHit(s, h.Score))
 		if len(out) >= limit {
 			break
 		}
 	}
-	return &SearchResult{Results: out, ModeUsed: "lexical", Total: len(out)}, nil
+	return out, nil
+}
+
+// searchLimit applies the default result cap (20) for a non-positive request.
+func searchLimit(limit int) int {
+	if limit <= 0 {
+		return 20
+	}
+	return limit
+}
+
+// symbolToHit projects a symbol + score into a SearchHit.
+func symbolToHit(s graph.CodeSymbol, score float64) SearchHit {
+	return SearchHit{
+		SymbolID:  s.ID,
+		Name:      s.Name,
+		Kind:      s.Kind,
+		RepoID:    s.RepoID,
+		Path:      s.Path,
+		Line:      s.StartLine,
+		Signature: s.Signature,
+		Doc:       s.Doc,
+		Score:     score,
+	}
+}
+
+// filterByKind keeps only hits whose Kind matches (case-insensitive); an empty
+// kind passes everything through unchanged.
+func filterByKind(hits []SearchHit, kind string) []SearchHit {
+	if kind == "" {
+		return hits
+	}
+	out := make([]SearchHit, 0, len(hits))
+	for _, h := range hits {
+		if strings.EqualFold(h.Kind, kind) {
+			out = append(out, h)
+		}
+	}
+	return out
+}
+
+// blendHits unions lexical and semantic hits by symbol id (keeping the higher
+// score), sorts descending (ties broken by symbol id for determinism), and caps
+// to limit. Lexical and semantic scores live on different scales, so this is a
+// best-effort recall union, not a calibrated rank fusion.
+func blendHits(lex, sem []SearchHit, limit int) []SearchHit {
+	best := make(map[string]SearchHit, len(lex)+len(sem))
+	merge := func(hits []SearchHit) {
+		for _, h := range hits {
+			if cur, ok := best[h.SymbolID]; !ok || h.Score > cur.Score {
+				best[h.SymbolID] = h
+			}
+		}
+	}
+	merge(lex)
+	merge(sem)
+	out := make([]SearchHit, 0, len(best))
+	for _, h := range best {
+		out = append(out, h)
+	}
+	sort.Slice(out, func(i, j int) bool {
+		if out[i].Score == out[j].Score {
+			return out[i].SymbolID < out[j].SymbolID
+		}
+		return out[i].Score > out[j].Score
+	})
+	if limit > 0 && len(out) > limit {
+		out = out[:limit]
+	}
+	return out
 }
 
 func (e *localEngine) Impact(ctx context.Context, in ImpactInput) (*ImpactResult, error) {
@@ -667,6 +917,148 @@ func (e *localEngine) Status(ctx context.Context, in StatusInput) (*StatusResult
 		ReposIndexed:  len(repos),
 		Repos:         out,
 	}, nil
+}
+
+// Link registers a repo into the graph WITHOUT indexing it, so it participates
+// in cross-repo and shows in status/repos. (Webhooks and index jobs are Pulse's
+// job — Atlas link is declarative repo registration only.) It derives the
+// full_name/root from the ref (path vs remote URL vs bare org/name), upserts the
+// repo via EnsureRepo with a pending status, and reports whether the row was
+// newly created and whether it already had an index.
+func (e *localEngine) Link(ctx context.Context, in LinkInput) (*LinkResult, error) {
+	ref := strings.TrimSpace(in.Repo)
+	if ref == "" {
+		return nil, errors.New("atlas: link needs a repo (path, remote URL, or org/name)")
+	}
+	branch := strings.TrimSpace(in.Branch)
+	if branch == "" {
+		branch = "main"
+	}
+	fullName, root := deriveRepoRef(ref)
+
+	// Created = the repo did not already exist under this scope (case-insensitive
+	// full_name match), checked BEFORE the upsert.
+	created := true
+	if repos, err := e.store.ListRepos(ctx, e.cfg.Scope); err == nil {
+		for i := range repos {
+			if strings.EqualFold(repos[i].FullName, fullName) {
+				created = false
+				break
+			}
+		}
+	}
+
+	repo, err := e.store.EnsureRepo(ctx, &graph.Repo{
+		FullName:      fullName,
+		Root:          root,
+		DefaultBranch: branch,
+		Scope:         e.cfg.Scope,
+		Status:        graph.StatusPending,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("engine: link: %w", err)
+	}
+
+	indexed := false
+	if snap, _ := e.store.LatestSnapshot(ctx, repo.ID); snap != nil {
+		indexed = true
+	}
+
+	return &LinkResult{
+		RepoID:        repo.ID,
+		FullName:      repo.FullName,
+		Root:          repo.Root,
+		DefaultBranch: repo.DefaultBranch,
+		Scope:         e.cfg.Scope,
+		Created:       created,
+		Indexed:       indexed,
+	}, nil
+}
+
+// deriveRepoRef resolves a link ref into a (full_name, root) pair. A git remote
+// URL (git@host:Org/Repo.git or https://host/Org/Repo(.git)) yields full_name
+// "Org/Repo" and the remote URL string as root. An existing path or a
+// path-looking ref yields filepath.Base(filepath.Abs(ref)) as full_name and the
+// absolute path as root. Anything else (a bare org/name) is taken verbatim as
+// both full_name and root.
+func deriveRepoRef(ref string) (fullName, root string) {
+	ref = strings.TrimSpace(ref)
+	if name, ok := remoteURLFullName(ref); ok {
+		return name, ref
+	}
+	if looksLikePath(ref) {
+		abs, err := filepath.Abs(ref)
+		if err != nil {
+			abs = ref
+		}
+		return filepath.Base(abs), abs
+	}
+	return ref, ref
+}
+
+// remoteURLFullName extracts "Org/Repo" from a git remote URL. It recognizes the
+// scp-like SSH form (git@host:Org/Repo.git) and the http(s)/ssh/git URL forms
+// (scheme://host/Org/Repo(.git)). It returns ok=false for non-URL refs.
+func remoteURLFullName(ref string) (string, bool) {
+	// scp-like SSH: git@host:Org/Repo(.git) — has a colon before any slash and no scheme.
+	if !strings.Contains(ref, "://") && strings.Contains(ref, "@") && strings.Contains(ref, ":") {
+		if i := strings.Index(ref, ":"); i >= 0 {
+			if name, ok := orgRepoFromPath(ref[i+1:]); ok {
+				return name, true
+			}
+		}
+		return "", false
+	}
+	// scheme://host/Org/Repo(.git)
+	for _, scheme := range []string{"https://", "http://", "ssh://", "git://"} {
+		if strings.HasPrefix(ref, scheme) {
+			rest := strings.TrimPrefix(ref, scheme)
+			if i := strings.Index(rest, "/"); i >= 0 {
+				return orgRepoFromPath(rest[i+1:])
+			}
+			return "", false
+		}
+	}
+	return "", false
+}
+
+// orgRepoFromPath turns a "Org/Repo(.git)" remote path (possibly with extra
+// leading/trailing slashes) into "Org/Repo". It returns ok=false when it cannot
+// recover both an org and a repo segment.
+func orgRepoFromPath(p string) (string, bool) {
+	p = strings.Trim(strings.TrimSpace(p), "/")
+	p = strings.TrimSuffix(p, ".git")
+	parts := strings.Split(p, "/")
+	if len(parts) < 2 {
+		return "", false
+	}
+	org := parts[len(parts)-2]
+	repo := parts[len(parts)-1]
+	if org == "" || repo == "" {
+		return "", false
+	}
+	return org + "/" + repo, true
+}
+
+// looksLikePath reports whether a ref should be treated as a filesystem path: it
+// already exists on disk, or it carries an unambiguous path shape (absolute,
+// relative "./"/"../", or "~"). A bare "org/name" is NOT a path.
+func looksLikePath(ref string) bool {
+	if ref == "" {
+		return false
+	}
+	if _, err := os.Stat(ref); err == nil {
+		return true
+	}
+	if filepath.IsAbs(ref) {
+		return true
+	}
+	if strings.HasPrefix(ref, "./") || strings.HasPrefix(ref, "../") ||
+		strings.HasPrefix(ref, ".\\") || strings.HasPrefix(ref, "..\\") ||
+		strings.HasPrefix(ref, "~") {
+		return true
+	}
+	return false
 }
 
 func (e *localEngine) Close() error {

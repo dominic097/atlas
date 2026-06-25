@@ -12,11 +12,16 @@ concurrency:
 jobs:
   build-test:
     runs-on: ubuntu-latest
+    # Atlas is a CGO binary (tree-sitter grammars are C, sqlite is C). ubuntu-latest
+    # ships gcc, so CGO_ENABLED=1 is set explicitly to keep the build honest and to
+    # ensure the CGO test suite actually runs (tree-sitter + sqlite).
+    env:
+      CGO_ENABLED: 1
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
-          go-version: '1.23.x'
+          go-version: '1.25.x' # must track `go` directive in go.mod
           cache: true
       - name: build
         run: go build ./...

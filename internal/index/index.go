@@ -26,6 +26,7 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/MsysTechnologiesllc/aziron-atlas/internal/embed"
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/gotypes"
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/lexical"
@@ -47,6 +48,11 @@ type Options struct {
 	// Scope stamps the tenant/org id onto the indexed repo so EnsureRepo keys it by
 	// (scope, full_name). Empty means single-tenant / no scope — the local default.
 	Scope string
+	// EnableVectors runs the OPTIONAL embedding pass after the snapshot is persisted:
+	// embed each symbol's text with embed.NewProvider() and SaveEmbeddings. Off by
+	// default — the deterministic lexical core is unchanged. A provider/embeddings
+	// failure is non-fatal (logged, indexing still succeeds).
+	EnableVectors bool
 }
 
 // Stats is the human-facing summary of an indexing run.
@@ -311,6 +317,13 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 		}
 	}
 
+	// OPTIONAL, gated semantic-search pass. Off by default; only runs with
+	// --enable-vectors. Non-fatal by design — a provider/embeddings hiccup must
+	// never fail the deterministic index.
+	if opts.EnableVectors {
+		buildEmbeddings(ctx, drv, snapshot.ID, symbols)
+	}
+
 	stats := Stats{
 		Files:      len(files),
 		Symbols:    len(symbols),
@@ -321,6 +334,63 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 		Mode:       mode,
 	}
 	return snapshot, stats, nil
+}
+
+// buildEmbeddings runs the optional embedding pass: it builds embed.NewProvider()
+// (offline Hashing by default, HTTP when ATLAS_EMBED_URL is set), embeds each
+// symbol's text (Name + " " + Signature + " " + Doc), and persists the vectors
+// via SaveEmbeddings. Every failure mode is non-fatal — it logs to stderr and
+// returns, leaving the deterministic snapshot intact. Symbols with no id are
+// skipped (they have no stable key to retrieve them by).
+func buildEmbeddings(ctx context.Context, drv store.StorageDriver, snapshotID string, symbols []graph.CodeSymbol) {
+	if len(symbols) == 0 {
+		return
+	}
+	provider := embed.NewProvider()
+
+	texts := make([]string, 0, len(symbols))
+	ids := make([]string, 0, len(symbols))
+	for i := range symbols {
+		s := &symbols[i]
+		if strings.TrimSpace(s.ID) == "" {
+			continue
+		}
+		texts = append(texts, symbolText(s))
+		ids = append(ids, s.ID)
+	}
+	if len(texts) == 0 {
+		return
+	}
+
+	vecs, err := provider.Embed(ctx, texts)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "index: embeddings skipped (provider %q failed): %v\n", provider.Name(), err)
+		return
+	}
+	if len(vecs) != len(ids) {
+		fmt.Fprintf(os.Stderr, "index: embeddings skipped (provider %q returned %d vectors for %d symbols)\n", provider.Name(), len(vecs), len(ids))
+		return
+	}
+
+	embs := make([]graph.SymbolEmbedding, 0, len(ids))
+	for i := range ids {
+		embs = append(embs, graph.SymbolEmbedding{
+			SnapshotID: snapshotID,
+			SymbolID:   ids[i],
+			Dim:        len(vecs[i]),
+			Vector:     vecs[i],
+		})
+	}
+	if err := drv.SaveEmbeddings(ctx, snapshotID, embs); err != nil {
+		fmt.Fprintf(os.Stderr, "index: embeddings skipped (save failed): %v\n", err)
+	}
+}
+
+// symbolText is the document an embedder sees for a symbol: its name, signature,
+// and doc joined with spaces. It mirrors the lexical index's searched fields so
+// semantic and lexical search rank over comparable content.
+func symbolText(s *graph.CodeSymbol) string {
+	return strings.TrimSpace(s.Name + " " + s.Signature + " " + s.Doc)
 }
 
 // enrichGoTypes runs the precise go/types analyzer over the repo and folds its

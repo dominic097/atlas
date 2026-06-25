@@ -6,13 +6,17 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/cli"
 )
 
 func main() {
 	if err := cli.NewRootCmd().Execute(); err != nil {
-		fmt.Fprintln(os.Stderr, "atlas:", err)
+		// Many engine errors already carry an "atlas:" prefix; trim it so the
+		// message reads "atlas: <msg>" rather than "atlas: atlas: <msg>".
+		msg := strings.TrimPrefix(err.Error(), "atlas: ")
+		fmt.Fprintln(os.Stderr, "atlas:", msg)
 		os.Exit(1)
 	}
 }
