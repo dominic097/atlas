@@ -92,6 +92,12 @@ func WithSQLite(path string) Option { return engine.WithSQLite(path) }
 // WithPostgres selects the hosted Postgres StorageDriver.
 func WithPostgres(dsn string) Option { return engine.WithPostgres(dsn) }
 
+// WithScope isolates the engine to a tenant/org scope: every repo read and write
+// is confined to that scope, and cross-repo matching only spans the same tenant.
+// Empty scope ("") keeps single-tenant / all-repo behaviour (the local default).
+// It is orthogonal to the tier — combine it with WithSQLite or WithPostgres.
+func WithScope(scope string) Option { return engine.WithScope(scope) }
+
 // New builds an Engine. With zero options it is the LOCAL tier: embedded SQLite
 // under ./.atlas, lexical search on, vectors off, code never leaves the machine.
 func New(ctx context.Context, opts ...Option) (Engine, error) {

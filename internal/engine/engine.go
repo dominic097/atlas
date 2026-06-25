@@ -426,6 +426,10 @@ type Config struct {
 	PostgresDSN  string
 	LexicalDir   string
 	EnableVector bool
+	// Scope is the tenant/org id every repo read/write is scoped to. Empty means
+	// single-tenant / all repos — the local default, so existing behaviour and the
+	// SQLite flow are unchanged.
+	Scope string
 }
 
 // Option mutates a Config during New().
@@ -437,6 +441,14 @@ func WithSQLite(path string) Option {
 
 func WithPostgres(dsn string) Option {
 	return func(c *Config) { c.Tier, c.StorageKind, c.PostgresDSN = "hosted", "postgres", dsn }
+}
+
+// WithScope sets the tenant/org scope every repo read/write is isolated to. It
+// does NOT change the tier: a scoped local SQLite engine and a scoped hosted
+// Postgres engine are both valid. Empty scope ("") keeps single-tenant / all-repo
+// behaviour.
+func WithScope(scope string) Option {
+	return func(c *Config) { c.Scope = scope }
 }
 
 func defaultConfig() Config {
@@ -500,7 +512,7 @@ func (e *localEngine) Index(ctx context.Context, in IndexInput) (*IndexResult, e
 	}
 	// repoID left empty: the store resolves/mints the canonical id by full_name,
 	// so re-indexing the same repo reuses its row.
-	snap, stats, err := index.Run(ctx, e.store, e.lexical, "", fullName, abs, index.Options{Reindex: in.Reindex})
+	snap, stats, err := index.Run(ctx, e.store, e.lexical, "", fullName, abs, index.Options{Reindex: in.Reindex, Scope: e.cfg.Scope})
 	if err != nil {
 		return nil, err
 	}
@@ -601,7 +613,7 @@ func (e *localEngine) Impact(ctx context.Context, in ImpactInput) (*ImpactResult
 }
 
 func (e *localEngine) Status(ctx context.Context, in StatusInput) (*StatusResult, error) {
-	repos, err := e.store.ListRepos(ctx, "")
+	repos, err := e.store.ListRepos(ctx, e.cfg.Scope)
 	if err != nil {
 		return nil, fmt.Errorf("engine: list repos: %w", err)
 	}
@@ -657,7 +669,7 @@ func (e *localEngine) resolveSnapshot(ctx context.Context, repoID string) (*grap
 		}
 		return snap, nil
 	}
-	repos, err := e.store.ListRepos(ctx, "")
+	repos, err := e.store.ListRepos(ctx, e.cfg.Scope)
 	if err != nil {
 		return nil, err
 	}
@@ -865,7 +877,7 @@ func (e *localEngine) Explain(ctx context.Context, in ExplainInput) (*ExplainRes
 	// hits whose matched route is one of the served routes.
 	if len(servedLabels) > 0 {
 		if repo, rerr := e.resolveRepo(ctx, in.RepoID); rerr == nil {
-			cr, cerr := crossrepo.Consumers(ctx, e.store, repo.FullName)
+			cr, cerr := crossrepo.Consumers(ctx, e.store, e.cfg.Scope, repo.FullName)
 			if cerr == nil {
 				seen := map[string]bool{}
 				for _, h := range cr.Impacted {
@@ -1183,7 +1195,7 @@ func (e *localEngine) CrossRepoImpact(ctx context.Context, in CrossRepoImpactInp
 	if err != nil {
 		return nil, err
 	}
-	r, err := crossrepo.Impact(ctx, e.store, repo, in.ChangedPaths)
+	r, err := crossrepo.Impact(ctx, e.store, e.cfg.Scope, repo, in.ChangedPaths)
 	if err != nil {
 		if errors.Is(err, crossrepo.ErrRepoNotFound) {
 			return nil, ErrNoIndex
@@ -1203,7 +1215,7 @@ func (e *localEngine) Consumers(ctx context.Context, in ConsumersInput) (*Consum
 	if err != nil {
 		return nil, err
 	}
-	r, err := crossrepo.Consumers(ctx, e.store, repo)
+	r, err := crossrepo.Consumers(ctx, e.store, e.cfg.Scope, repo)
 	if err != nil {
 		if errors.Is(err, crossrepo.ErrRepoNotFound) {
 			return nil, ErrNoIndex
@@ -1222,7 +1234,7 @@ func (e *localEngine) RouteContracts(ctx context.Context, in RouteContractsInput
 	if err != nil {
 		return nil, err
 	}
-	routes, err := crossrepo.RouteContracts(ctx, e.store, repo)
+	routes, err := crossrepo.RouteContracts(ctx, e.store, e.cfg.Scope, repo)
 	if err != nil {
 		return nil, fmt.Errorf("engine: route contracts: %w", err)
 	}
@@ -1293,7 +1305,7 @@ func metaStr(m graph.JSONBMap, key string) string {
 // resolveRepo selects the repo a temporal op runs against: the named one, the
 // single indexed repo, or the most recently indexed.
 func (e *localEngine) resolveRepo(ctx context.Context, repoID string) (*graph.Repo, error) {
-	repos, err := e.store.ListRepos(ctx, "")
+	repos, err := e.store.ListRepos(ctx, e.cfg.Scope)
 	if err != nil {
 		return nil, err
 	}

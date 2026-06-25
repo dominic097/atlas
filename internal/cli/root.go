@@ -15,6 +15,7 @@ import (
 type globalFlags struct {
 	db     string
 	repo   string
+	tenant string
 	format string
 	json   bool
 }
@@ -36,6 +37,7 @@ func NewRootCmd() *cobra.Command {
 	pf := root.PersistentFlags()
 	pf.StringVar(&gf.db, "db", "sqlite://./.atlas/atlas.db", "storage DSN (sqlite://PATH or postgres://...)")
 	pf.StringVar(&gf.repo, "repo", "", "default repo (path, org/name, or repo_id)")
+	pf.StringVar(&gf.tenant, "tenant", "", "tenant/org scope to isolate repos to (hosted multi-tenant; empty = all repos)")
 	pf.StringVar(&gf.format, "format", "", "output format: table|plain|json|ndjson (auto by default)")
 	pf.BoolVar(&gf.json, "json", false, "shorthand for --format json")
 
@@ -75,7 +77,11 @@ func resolveEngine(ctx context.Context) (atlas.Engine, error) {
 	case len(gf.db) > len("sqlite://") && gf.db[:len("sqlite://")] == "sqlite://":
 		opt = atlas.WithSQLite(gf.db[len("sqlite://"):])
 	}
-	return atlas.New(ctx, opt)
+	opts := []atlas.Option{opt}
+	if gf.tenant != "" {
+		opts = append(opts, atlas.WithScope(gf.tenant))
+	}
+	return atlas.New(ctx, opts...)
 }
 
 func newVersionCmd() *cobra.Command {

@@ -18,6 +18,7 @@ func newImpactCmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			in.ChangedPaths = paths
 			in.Symbols = syms
+			in.RepoID = gf.repo
 			eng, err := resolveEngine(cmd.Context())
 			if err != nil {
 				return err

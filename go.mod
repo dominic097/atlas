@@ -46,6 +46,7 @@ require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/json-iterator/go v0.0.0-20171115153421-f7279a603ede // indirect
+	github.com/lib/pq v1.10.9 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-pointer v0.0.1 // indirect
 	github.com/mschoch/smat v0.2.0 // indirect

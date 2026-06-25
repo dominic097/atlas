@@ -98,7 +98,7 @@ func TestImpactCrossRepo(t *testing.T) {
 	}
 
 	// Change the handler file in A → B must surface as an impacted consumer.
-	res, err := Impact(ctx, d, "org/service-a", []string{"handlers/users.go"})
+	res, err := Impact(ctx, d, "", "org/service-a", []string{"handlers/users.go"})
 	if err != nil {
 		t.Fatalf("Impact: %v", err)
 	}
@@ -123,7 +123,7 @@ func TestImpactCrossRepo(t *testing.T) {
 	}
 
 	// A changed path that touches no handler → no served routes, no impact.
-	none, err := Impact(ctx, d, "org/service-a", []string{"README.md"})
+	none, err := Impact(ctx, d, "", "org/service-a", []string{"README.md"})
 	if err != nil {
 		t.Fatalf("Impact(no-handler): %v", err)
 	}
@@ -133,7 +133,7 @@ func TestImpactCrossRepo(t *testing.T) {
 	}
 
 	// Empty changedPaths → use ALL producer routes (whole-repo contract).
-	all, err := Consumers(ctx, d, "org/service-a")
+	all, err := Consumers(ctx, d, "", "org/service-a")
 	if err != nil {
 		t.Fatalf("Consumers: %v", err)
 	}
@@ -142,7 +142,7 @@ func TestImpactCrossRepo(t *testing.T) {
 	}
 
 	// RouteContracts returns the producer routes.
-	rc, err := RouteContracts(ctx, d, "org/service-a")
+	rc, err := RouteContracts(ctx, d, "", "org/service-a")
 	if err != nil {
 		t.Fatalf("RouteContracts: %v", err)
 	}
@@ -151,7 +151,7 @@ func TestImpactCrossRepo(t *testing.T) {
 	}
 
 	// Unknown repo → ErrRepoNotFound.
-	if _, err := Impact(ctx, d, "org/does-not-exist", nil); err != ErrRepoNotFound {
+	if _, err := Impact(ctx, d, "", "org/does-not-exist", nil); err != ErrRepoNotFound {
 		t.Errorf("Impact(unknown) err = %v, want ErrRepoNotFound", err)
 	}
 }

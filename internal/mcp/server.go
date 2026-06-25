@@ -10,9 +10,11 @@ package mcp
 
 import (
 	"bufio"
+	"bytes"
 	"context"
 	"encoding/json"
 	"io"
+	"net/http"
 
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/engine"
 )
@@ -123,6 +125,85 @@ func (s *Server) ServeStdio(ctx context.Context, r io.Reader, w io.Writer) error
 		_ = enc.Encode(s.dispatch(ctx, &req))
 	}
 	return sc.Err()
+}
+
+// HTTPHandler returns an http.Handler implementing the MCP Streamable HTTP
+// transport. A POST carries a single JSON-RPC request object or a batch array in
+// the body; the response is the JSON-RPC response object (or array) as
+// application/json. Notifications (requests without an id) produce no response:
+// a lone notification yields 202 Accepted with no body. GET is answered with 405
+// (Atlas does not push server-initiated SSE events on the GET stream).
+//
+// It reuses s.dispatch — the same catalog and op routing as the stdio transport.
+func (s *Server) HTTPHandler() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodPost:
+			s.serveHTTPPost(w, r)
+		case http.MethodGet:
+			// Minimal Streamable HTTP: no standing SSE stream to offer.
+			w.Header().Set("Allow", "POST")
+			http.Error(w, "method not allowed: open a POST stream", http.StatusMethodNotAllowed)
+		default:
+			w.Header().Set("Allow", "POST")
+			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		}
+	})
+}
+
+func (s *Server) serveHTTPPost(w http.ResponseWriter, r *http.Request) {
+	body, err := io.ReadAll(io.LimitReader(r.Body, 16*1024*1024))
+	if err != nil {
+		writeRPCError(w, nil, -32700, "parse error: "+err.Error())
+		return
+	}
+	ctx := r.Context()
+
+	// A JSON-RPC batch is a top-level array; a single call is an object.
+	trimmed := bytes.TrimSpace(body)
+	if len(trimmed) > 0 && trimmed[0] == '[' {
+		var batch []rpcRequest
+		if err := json.Unmarshal(trimmed, &batch); err != nil {
+			writeRPCError(w, nil, -32700, "parse error: "+err.Error())
+			return
+		}
+		responses := make([]rpcResponse, 0, len(batch))
+		for i := range batch {
+			if len(batch[i].ID) == 0 {
+				continue // notification: no response
+			}
+			responses = append(responses, s.dispatch(ctx, &batch[i]))
+		}
+		if len(responses) == 0 {
+			// Batch of only notifications: nothing to return.
+			w.WriteHeader(http.StatusAccepted)
+			return
+		}
+		writeJSON(w, http.StatusOK, responses)
+		return
+	}
+
+	var req rpcRequest
+	if err := json.Unmarshal(trimmed, &req); err != nil {
+		writeRPCError(w, nil, -32700, "parse error: "+err.Error())
+		return
+	}
+	if len(req.ID) == 0 {
+		// Notification: acknowledge with no body.
+		w.WriteHeader(http.StatusAccepted)
+		return
+	}
+	writeJSON(w, http.StatusOK, s.dispatch(ctx, &req))
+}
+
+func writeJSON(w http.ResponseWriter, status int, v any) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	_ = json.NewEncoder(w).Encode(v)
+}
+
+func writeRPCError(w http.ResponseWriter, id json.RawMessage, code int, msg string) {
+	writeJSON(w, http.StatusOK, rpcResponse{JSONRPC: "2.0", ID: id, Error: &rpcError{Code: code, Message: msg}})
 }
 
 func (s *Server) dispatch(ctx context.Context, req *rpcRequest) rpcResponse {

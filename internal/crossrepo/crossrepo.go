@@ -197,14 +197,18 @@ func isAllDigits(s string) bool {
 // changedPaths is empty), then scans every OTHER indexed repo's consumer routes
 // for EndpointMatch hits — returning the impacted consumer repos and calling
 // files.
-func Impact(ctx context.Context, drv store.StorageDriver, repoFullName string, changedPaths []string) (CrossRepoResult, error) {
+//
+// scope confines the cross-repo match to one tenant: only repos under scope are
+// considered, so a producer's blast radius never crosses tenant boundaries. An
+// empty scope ("") spans all repos — the single-tenant / local default.
+func Impact(ctx context.Context, drv store.StorageDriver, scope, repoFullName string, changedPaths []string) (CrossRepoResult, error) {
 	res := CrossRepoResult{
 		Repo:          repoFullName,
 		ServedRoutes:  []graph.Route{},
 		Impacted:      []ConsumerHit{},
 		ConsumerRepos: []string{},
 	}
-	repos, err := drv.ListRepos(ctx, "")
+	repos, err := drv.ListRepos(ctx, scope)
 	if err != nil {
 		return res, err
 	}
@@ -302,15 +306,15 @@ func Impact(ctx context.Context, drv store.StorageDriver, repoFullName string, c
 }
 
 // Consumers is Impact with no changed-path filter: every consumer of any route
-// this repo serves.
-func Consumers(ctx context.Context, drv store.StorageDriver, repoFullName string) (CrossRepoResult, error) {
-	return Impact(ctx, drv, repoFullName, nil)
+// this repo serves. scope confines the match to one tenant (empty = all repos).
+func Consumers(ctx context.Context, drv store.StorageDriver, scope, repoFullName string) (CrossRepoResult, error) {
+	return Impact(ctx, drv, scope, repoFullName, nil)
 }
 
 // RouteContracts returns the producer routes the repo serves (its public HTTP
-// contract).
-func RouteContracts(ctx context.Context, drv store.StorageDriver, repoFullName string) ([]graph.Route, error) {
-	repos, err := drv.ListRepos(ctx, "")
+// contract). scope confines the repo lookup to one tenant (empty = all repos).
+func RouteContracts(ctx context.Context, drv store.StorageDriver, scope, repoFullName string) ([]graph.Route, error) {
+	repos, err := drv.ListRepos(ctx, scope)
 	if err != nil {
 		return nil, err
 	}

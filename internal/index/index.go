@@ -43,6 +43,9 @@ type Options struct {
 	// snapshot's child rows idempotently per (repo_id, commit_sha), so this is a
 	// hint surfaced in Stats.Mode rather than a divergent code path today.
 	Reindex bool
+	// Scope stamps the tenant/org id onto the indexed repo so EnsureRepo keys it by
+	// (scope, full_name). Empty means single-tenant / no scope — the local default.
+	Scope string
 }
 
 // Stats is the human-facing summary of an indexing run.
@@ -267,6 +270,7 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 		Languages:     languages,
 		LastCommit:    commitSHA,
 		LastIndexedAt: &now,
+		Scope:         opts.Scope,
 	}
 	ensured, err := drv.EnsureRepo(ctx, repo)
 	if err != nil {
