@@ -39,6 +39,9 @@ type (
 	SymbolResult  = engine.SymbolResult
 	SymbolDef     = engine.SymbolDef
 	SymbolRef     = engine.SymbolRef
+
+	GraphExportInput  = engine.GraphExportInput
+	GraphExportResult = engine.GraphExportResult
 )
 
 // ErrNotImplemented is returned by stub operations in this scaffold.

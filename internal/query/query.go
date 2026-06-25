@@ -962,3 +962,100 @@ func sortSymbols(s []graph.CodeSymbol) {
 		return s[i].Path < s[j].Path
 	})
 }
+
+// SubEdge is a directed caller->callee relationship in a subgraph, by symbol name.
+type SubEdge struct{ From, To string }
+
+// SubgraphResult is the call-graph neighborhood around a symbol: representative
+// symbols (one per distinct name) and the directed call edges among them.
+type SubgraphResult struct {
+	Nodes []graph.CodeSymbol
+	Edges []SubEdge
+}
+
+// Subgraph builds the call-graph neighborhood around the symbol(s) named `name`:
+// up to `depth` hops of BOTH callers and callees, bounded by maxNodes. Nodes are
+// deduped by name (one representative symbol each); edges are caller->callee. It
+// reuses the precise CallersGraph/CalleesGraph resolution, so external/mismatched
+// calls never enter the subgraph.
+func Subgraph(ctx context.Context, drv store.StorageDriver, snapshotID, name string, depth, maxNodes int) (SubgraphResult, error) {
+	if depth < 1 {
+		depth = 1
+	}
+	if maxNodes <= 0 {
+		maxNodes = 200
+	}
+	res := SubgraphResult{}
+	seed, err := drv.SymbolsByName(ctx, snapshotID, name)
+	if err != nil {
+		return res, err
+	}
+	if len(seed) == 0 {
+		return res, nil
+	}
+
+	nodes := map[string]graph.CodeSymbol{} // lowername -> representative symbol
+	addNode := func(s graph.CodeSymbol) {
+		if k := strings.ToLower(strings.TrimSpace(s.Name)); k != "" {
+			if _, ok := nodes[k]; !ok {
+				nodes[k] = s
+			}
+		}
+	}
+	for _, s := range seed {
+		addNode(s)
+	}
+
+	edgeSeen := map[string]bool{}
+	addEdge := func(from, to string) {
+		fk, tk := strings.ToLower(from), strings.ToLower(to)
+		if fk == "" || tk == "" || fk == tk {
+			return
+		}
+		if key := fk + "\x00" + tk; !edgeSeen[key] {
+			edgeSeen[key] = true
+			res.Edges = append(res.Edges, SubEdge{From: from, To: to})
+		}
+	}
+
+	visited := map[string]bool{strings.ToLower(name): true}
+	frontier := []string{name}
+	for d := 1; d <= depth && len(frontier) > 0 && len(nodes) < maxNodes; d++ {
+		var next []string
+		for _, fn := range frontier {
+			callees, err := CalleesGraph(ctx, drv, snapshotID, fn)
+			if err != nil {
+				return res, err
+			}
+			for _, c := range callees {
+				addNode(c)
+				addEdge(fn, c.Name)
+				if lk := strings.ToLower(c.Name); !visited[lk] {
+					visited[lk] = true
+					next = append(next, c.Name)
+				}
+			}
+			callers, err := CallersGraph(ctx, drv, snapshotID, fn)
+			if err != nil {
+				return res, err
+			}
+			for _, r := range callers {
+				addNode(r)
+				addEdge(r.Name, fn)
+				if lk := strings.ToLower(r.Name); !visited[lk] {
+					visited[lk] = true
+					next = append(next, r.Name)
+				}
+			}
+			if len(nodes) >= maxNodes {
+				break
+			}
+		}
+		frontier = next
+	}
+	for _, s := range nodes {
+		res.Nodes = append(res.Nodes, s)
+	}
+	sortSymbols(res.Nodes)
+	return res, nil
+}

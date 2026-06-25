@@ -45,6 +45,7 @@ func NewRootCmd() *cobra.Command {
 		newImpactCmd(),
 		newCallersCmd(),
 		newSymbolCmd(),
+		newExportCmd(),
 		newStatusCmd(),
 		newServeCmd(),
 		newMCPCmd(),

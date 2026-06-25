@@ -53,6 +53,8 @@ func coreTools() []Tool {
 			InputSchema: obj(map[string]any{"symbol": str, "repo_id": str, "limit": map[string]any{"type": "integer"}}, "symbol")},
 		{Name: "impact", Description: "Single-repo blast radius: reverse call-graph BFS from changed paths/symbols.",
 			InputSchema: obj(map[string]any{"changed_paths": map[string]any{"type": "array"}, "symbols": map[string]any{"type": "array"}, "max_depth": map[string]any{"type": "integer"}, "repo_id": str})},
+		{Name: "graph_export", Description: "Export the call-graph neighborhood around a symbol (json|mermaid|dot).",
+			InputSchema: obj(map[string]any{"symbol": str, "depth": map[string]any{"type": "integer"}, "format": str, "repo_id": str}, "symbol")},
 		{Name: "status", Description: "Engine health and per-repo index freshness.",
 			InputSchema: obj(map[string]any{"repo_id": str})},
 	}
@@ -180,6 +182,12 @@ func (s *Server) callTool(ctx context.Context, params json.RawMessage) map[strin
 		payload, err = s.eng.Callers(ctx, engine.CallersInput{Name: str("symbol"), RepoID: str("repo_id"), Limit: intOr("limit", 50)})
 	case "symbol":
 		payload, err = s.eng.Symbol(ctx, engine.SymbolInput{Name: str("symbol"), RepoID: str("repo_id")})
+	case "graph_export":
+		f := str("format")
+		if f == "" {
+			f = "mermaid"
+		}
+		payload, err = s.eng.GraphExport(ctx, engine.GraphExportInput{Symbol: str("symbol"), RepoID: str("repo_id"), Depth: intOr("depth", 2), Format: f, MaxNodes: 200})
 	case "status":
 		payload, err = s.eng.Status(ctx, engine.StatusInput{RepoID: str("repo_id")})
 	default:

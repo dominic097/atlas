@@ -14,6 +14,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/MsysTechnologiesllc/aziron-atlas/internal/export"
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/index"
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/lexical"
@@ -173,6 +174,22 @@ type SymbolResult struct {
 	Matches []SymbolDef `json:"matches"`
 }
 
+type GraphExportInput struct {
+	RepoID   string
+	Symbol   string // export the neighborhood around this symbol
+	Depth    int    // hops of callers+callees (default 2)
+	MaxNodes int    // subgraph node cap (default 200)
+	Format   string // json | mermaid | dot
+	All      bool   // export the whole snapshot instead of a subgraph
+}
+
+type GraphExportResult struct {
+	Format  string `json:"format"`
+	Nodes   int    `json:"nodes"`
+	Edges   int    `json:"edges"`
+	Content string `json:"content"`
+}
+
 // ── The Engine interface ────────────────────────────────────────────────────
 
 // Engine is the single contract all surfaces depend on. The full catalog
@@ -185,6 +202,7 @@ type Engine interface {
 	Impact(ctx context.Context, in ImpactInput) (*ImpactResult, error)
 	Callers(ctx context.Context, in CallersInput) (*CallersResult, error)
 	Symbol(ctx context.Context, in SymbolInput) (*SymbolResult, error)
+	GraphExport(ctx context.Context, in GraphExportInput) (*GraphExportResult, error)
 	Status(ctx context.Context, in StatusInput) (*StatusResult, error)
 	Close() error
 }
@@ -509,4 +527,99 @@ func refsOf(syms []graph.CodeSymbol, limit int) []SymbolRef {
 		}
 	}
 	return out
+}
+
+func (e *localEngine) GraphExport(ctx context.Context, in GraphExportInput) (*GraphExportResult, error) {
+	snap, err := e.resolveSnapshot(ctx, in.RepoID)
+	if err != nil {
+		return nil, err
+	}
+	var g export.Graph
+	if in.All {
+		syms, err := e.store.ListSymbols(ctx, snap.ID)
+		if err != nil {
+			return nil, fmt.Errorf("engine: export load symbols: %w", err)
+		}
+		edges, err := e.store.ListEdges(ctx, snap.ID)
+		if err != nil {
+			return nil, fmt.Errorf("engine: export load edges: %w", err)
+		}
+		g = fullGraph(syms, edges)
+	} else {
+		if strings.TrimSpace(in.Symbol) == "" {
+			return nil, errors.New("atlas: graph export needs --symbol (a focus symbol) or --all")
+		}
+		depth := in.Depth
+		if depth <= 0 {
+			depth = 2
+		}
+		maxN := in.MaxNodes
+		if maxN <= 0 {
+			maxN = 200
+		}
+		sg, err := query.Subgraph(ctx, e.store, snap.ID, in.Symbol, depth, maxN)
+		if err != nil {
+			return nil, fmt.Errorf("engine: subgraph: %w", err)
+		}
+		g = subgraphToExport(sg)
+	}
+	content, err := g.Render(in.Format)
+	if err != nil {
+		return nil, err
+	}
+	format := strings.ToLower(strings.TrimSpace(in.Format))
+	if format == "" {
+		format = "json"
+	}
+	return &GraphExportResult{Format: format, Nodes: len(g.Nodes), Edges: len(g.Edges), Content: content}, nil
+}
+
+// subgraphToExport maps a name-level neighborhood subgraph to an export.Graph.
+func subgraphToExport(sg query.SubgraphResult) export.Graph {
+	byName := make(map[string]string, len(sg.Nodes))
+	g := export.Graph{}
+	for _, s := range sg.Nodes {
+		g.Nodes = append(g.Nodes, export.Node{ID: s.ID, Name: s.Name, Kind: s.Kind, Path: s.Path, Line: s.StartLine, Language: s.Language})
+		byName[strings.ToLower(s.Name)] = s.ID
+	}
+	for _, e := range sg.Edges {
+		f, ok1 := byName[strings.ToLower(e.From)]
+		t, ok2 := byName[strings.ToLower(e.To)]
+		if ok1 && ok2 {
+			g.Edges = append(g.Edges, export.Edge{From: f, To: t, Kind: "calls"})
+		}
+	}
+	return g
+}
+
+// fullGraph maps a whole snapshot to an export.Graph: every symbol is a node;
+// call edges connect by name to a representative node (external callees, whose
+// to_ref is not an indexed symbol, are dropped).
+func fullGraph(syms []graph.CodeSymbol, edges []graph.DependencyEdge) export.Graph {
+	g := export.Graph{}
+	rep := make(map[string]string, len(syms))
+	for _, s := range syms {
+		g.Nodes = append(g.Nodes, export.Node{ID: s.ID, Name: s.Name, Kind: s.Kind, Path: s.Path, Line: s.StartLine, Language: s.Language})
+		if k := strings.ToLower(s.Name); k != "" {
+			if _, ok := rep[k]; !ok {
+				rep[k] = s.ID
+			}
+		}
+	}
+	seen := map[string]bool{}
+	for _, e := range edges {
+		if e.Kind != graph.EdgeCalls {
+			continue
+		}
+		f, ok1 := rep[strings.ToLower(strings.TrimSpace(e.FromSymbol))]
+		t, ok2 := rep[strings.ToLower(strings.TrimSpace(e.ToRef))]
+		if !ok1 || !ok2 || f == t {
+			continue
+		}
+		if key := f + "\x00" + t; !seen[key] {
+			seen[key] = true
+			g.Edges = append(g.Edges, export.Edge{From: f, To: t, Kind: "calls"})
+		}
+	}
+	return g
 }
