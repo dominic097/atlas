@@ -206,6 +206,10 @@ func ImpactGraph(ctx context.Context, drv store.StorageDriver, snapshotID string
 			addSeed(s)
 		}
 	}
+	// Bulk-resolve the seed names in one batched query before per-name reads.
+	if err := cache.prefetchNames(changedSymbols); err != nil {
+		return result, err
+	}
 	for _, n := range changedSymbols {
 		name := strings.TrimSpace(n)
 		if name == "" {
@@ -258,12 +262,33 @@ func ImpactGraph(ctx context.Context, drv store.StorageDriver, snapshotID string
 			frontierSet[symbolKey(s)] = true
 		}
 
-		var nextSyms []graph.CodeSymbol
+		// HOP PASS 1 — frontier-hit resolution. The lazy path, for EVERY edge,
+		// fetches its to_ref (lowerMap) then resolveTargets, which only reaches a
+		// receiver-type lookup (isRepoType) for the qualified-method-collision case.
+		// We BATCH the to_refs of this hop in ONE query (the high-cardinality class,
+		// and the latency cliff) before resolving, then resolve each edge exactly as
+		// the lazy loop does — leaving the rare receiver-type lookups lazy so their
+		// fetch order (and thus the first-casing-wins cache key) is byte-identical to
+		// the lazy path. We collect the hitting edges so pass 2 resolves only their
+		// callers, mirroring the lazy path's "resolveCaller only on hit".
+		var toRefNames []string
 		for _, e := range edges {
 			if e.Kind != graph.EdgeCalls {
 				continue
 			}
-			// Does this edge resolve to a symbol on the current frontier?
+			if r := strings.TrimSpace(e.ToRef); r != "" {
+				toRefNames = append(toRefNames, r)
+			}
+		}
+		if err := cache.prefetchNames(toRefNames); err != nil {
+			return result, err
+		}
+
+		var hitting []graph.DependencyEdge
+		for _, e := range edges {
+			if e.Kind != graph.EdgeCalls {
+				continue
+			}
 			byName, err := cache.lowerMap(e.ToRef)
 			if err != nil {
 				return result, err
@@ -275,9 +300,27 @@ func ImpactGraph(ctx context.Context, drv store.StorageDriver, snapshotID string
 					break
 				}
 			}
-			if !hits {
-				continue
+			if hits {
+				hitting = append(hitting, e)
 			}
+		}
+
+		// HOP PASS 2 — caller resolution. The lazy path calls resolveCaller (which
+		// fetches from_symbol) ONLY for edges that hit the frontier, AFTER the hit
+		// pass above. We BATCH those from_symbols in ONE query (in edge order, so the
+		// first-casing-wins key matches lazy) before resolving the callers.
+		var fromNames []string
+		for _, e := range hitting {
+			if fs := strings.TrimSpace(e.FromSymbol); fs != "" {
+				fromNames = append(fromNames, fs)
+			}
+		}
+		if err := cache.prefetchNames(fromNames); err != nil {
+			return result, err
+		}
+
+		var nextSyms []graph.CodeSymbol
+		for _, e := range hitting {
 			caller, err := cache.resolveCaller(e)
 			if err != nil {
 				return result, err
@@ -402,6 +445,58 @@ func (c *symbolCache) byOriginalName(name string) ([]graph.CodeSymbol, error) {
 		c.put(s)
 	}
 	return syms, nil
+}
+
+// prefetchNames bulk-loads every not-yet-fetched name in ONE chunked
+// SymbolsByNames query, populating the by-name cache for each (so the whole BFS
+// hop costs a single round-trip instead of one point query per distinct name).
+// This is the latency keystone for hub symbols: thousands of distinct caller /
+// callee / receiver-type names collapse into batched IN-list reads.
+//
+// It preserves byOriginalName's exact semantics: each requested-but-unfetched
+// name gets a cache entry (empty slice when it has no symbols, so a later
+// byOriginalName never re-queries it), keyed by the lowercased name — the same
+// authoritative "fetched" marker. Names already cached are skipped; passing them
+// through SymbolsByNames would not change the result, but skipping keeps reads
+// minimal and idempotent across hops.
+func (c *symbolCache) prefetchNames(names []string) error {
+	// Distinct, not-yet-fetched original names (dedup on lowercase to match the
+	// cache key while querying with the verbatim case the index expects).
+	seen := map[string]bool{}
+	var todo []string
+	for _, n := range names {
+		name := strings.TrimSpace(n)
+		lower := strings.ToLower(name)
+		if lower == "" || seen[lower] {
+			continue
+		}
+		seen[lower] = true
+		if _, ok := c.byLower[lower]; ok {
+			continue // already fetched
+		}
+		todo = append(todo, name)
+	}
+	if len(todo) == 0 {
+		return nil
+	}
+	// Seed empty entries so unmatched names are marked fetched (never re-queried),
+	// matching byOriginalName's "present even if empty == fetched" contract.
+	for _, n := range todo {
+		c.byLower[strings.ToLower(n)] = nil
+	}
+	syms, err := c.drv.SymbolsByNames(c.ctx, c.snapshotID, todo)
+	if err != nil {
+		return err
+	}
+	for _, s := range syms {
+		lower := strings.ToLower(strings.TrimSpace(s.Name))
+		if lower == "" {
+			continue
+		}
+		c.byLower[lower] = append(c.byLower[lower], s)
+		c.put(s)
+	}
+	return nil
 }
 
 // lowerMap returns a transient map[lowername][]symbol covering the single name

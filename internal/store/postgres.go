@@ -60,6 +60,9 @@ func (d *postgresDriver) ListRoutes(ctx context.Context, snapshotID, role string
 func (d *postgresDriver) SymbolsByName(ctx context.Context, snapshotID, name string) ([]graph.CodeSymbol, error) {
 	return nil, ErrNotImplemented
 }
+func (d *postgresDriver) SymbolsByNames(ctx context.Context, snapshotID string, names []string) ([]graph.CodeSymbol, error) {
+	return nil, ErrNotImplemented
+}
 func (d *postgresDriver) SymbolsByPath(ctx context.Context, snapshotID, path string) ([]graph.CodeSymbol, error) {
 	return nil, ErrNotImplemented
 }

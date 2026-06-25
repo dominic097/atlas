@@ -55,6 +55,12 @@ type StorageDriver interface {
 	// (snapshot_id, name) index. SymbolsByPath does the same on path. Both feed
 	// the reverse-BFS seed/expansion so a query touches only the rows it needs.
 	SymbolsByName(ctx context.Context, snapshotID, name string) ([]graph.CodeSymbol, error)
+	// SymbolsByNames is the batched form of SymbolsByName: it returns every symbol
+	// whose name is in the given set, in ONE chunked IN-list query (mirroring
+	// CallEdgesByToRefs) instead of one round-trip per name. It backs the impact
+	// reverse-BFS, which would otherwise issue thousands of one-name point queries
+	// against a hub symbol's blast radius. Uses idx_symbols_snapshot_name; no dedupe.
+	SymbolsByNames(ctx context.Context, snapshotID string, names []string) ([]graph.CodeSymbol, error)
 	SymbolsByPath(ctx context.Context, snapshotID, path string) ([]graph.CodeSymbol, error)
 	// CallEdgesByToRefs returns every "calls" edge whose to_ref is in the given
 	// set, using the (snapshot_id, to_ref) index. The IN-list is chunked to stay

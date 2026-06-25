@@ -640,6 +640,64 @@ func (d *sqliteDriver) SymbolsByName(ctx context.Context, snapshotID, name strin
 	return out, rows.Err()
 }
 
+// symbolsChunk is the IN-list batch size for SymbolsByNames; same rationale as
+// callEdgesChunk — 400 names + the snapshot_id stays under SQLite's bound-param cap.
+const symbolsChunk = 400
+
+// SymbolsByNames returns every symbol whose name is in `names`, served by
+// idx_symbols_snapshot_name. The IN-list is chunked so a large blast radius never
+// blows the bound-parameter limit; all matching rows are returned with node_id +
+// decoded metadata (no dedupe), exactly like SymbolsByName. This batched form
+// replaces the per-name point queries the impact reverse-BFS used to issue.
+func (d *sqliteDriver) SymbolsByNames(ctx context.Context, snapshotID string, names []string) ([]graph.CodeSymbol, error) {
+	if len(names) == 0 {
+		return nil, nil
+	}
+	var out []graph.CodeSymbol
+	for start := 0; start < len(names); start += symbolsChunk {
+		end := start + symbolsChunk
+		if end > len(names) {
+			end = len(names)
+		}
+		chunk := names[start:end]
+
+		placeholders := strings.Repeat("?,", len(chunk))
+		placeholders = placeholders[:len(placeholders)-1] // trim trailing comma
+		args := make([]any, 0, len(chunk)+1)
+		args = append(args, snapshotID)
+		for _, n := range chunk {
+			args = append(args, n)
+		}
+
+		// ORDER BY name, path, start_line so that, within any single name, rows
+		// arrive in the SAME order SymbolsByName (path, start_line) yields — the
+		// per-name candidate ordering resolveTargets/resolveCaller depend on for
+		// deterministic "first candidate" selection. The leading name keeps each
+		// name's rows contiguous.
+		query := `SELECT ` + symbolCols + `
+			FROM symbols WHERE snapshot_id = ? AND name IN (` + placeholders + `)
+			ORDER BY name, path, start_line`
+		rows, err := d.db.QueryContext(ctx, query, args...)
+		if err != nil {
+			return nil, fmt.Errorf("store: symbols by names: %w", err)
+		}
+		for rows.Next() {
+			sym, err := scanSymbolRow(rows)
+			if err != nil {
+				rows.Close()
+				return nil, fmt.Errorf("store: scan symbol: %w", err)
+			}
+			out = append(out, sym)
+		}
+		if err := rows.Err(); err != nil {
+			rows.Close()
+			return nil, fmt.Errorf("store: symbols by names: %w", err)
+		}
+		rows.Close()
+	}
+	return out, nil
+}
+
 // SymbolsByPath returns symbols in a given file, served by the
 // idx_symbols_snapshot_path index.
 func (d *sqliteDriver) SymbolsByPath(ctx context.Context, snapshotID, path string) ([]graph.CodeSymbol, error) {
