@@ -42,18 +42,20 @@ type (
 	SymbolRef     = engine.SymbolRef
 
 	// Local navigation ops (deterministic, single-repo).
-	NeighborsInput  = engine.NeighborsInput
-	NeighborsResult = engine.NeighborsResult
-	PathInput       = engine.PathInput
-	PathResult      = engine.PathResult
-	RefsInput       = engine.RefsInput
-	RefsResult      = engine.RefsResult
-	ExplainInput    = engine.ExplainInput
-	ExplainResult   = engine.ExplainResult
-	ExplainDef      = engine.ExplainDef
-	ExplainRoute    = engine.ExplainRoute
-	CoverageInput   = engine.CoverageInput
-	CoverageResult  = engine.CoverageResult
+	NeighborsInput       = engine.NeighborsInput
+	NeighborsResult      = engine.NeighborsResult
+	PathInput            = engine.PathInput
+	PathResult           = engine.PathResult
+	RefsInput            = engine.RefsInput
+	RefsResult           = engine.RefsResult
+	ExplainInput         = engine.ExplainInput
+	ExplainResult        = engine.ExplainResult
+	ExplainDef           = engine.ExplainDef
+	ExplainRoute         = engine.ExplainRoute
+	CoverageInput        = engine.CoverageInput
+	CoverageResult       = engine.CoverageResult
+	CoverageImportInput  = engine.CoverageImportInput
+	CoverageImportResult = engine.CoverageImportResult
 
 	GraphExportInput  = engine.GraphExportInput
 	GraphExportResult = engine.GraphExportResult

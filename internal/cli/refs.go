@@ -10,7 +10,7 @@ func newRefsCmd() *cobra.Command {
 	var in atlas.RefsInput
 	cmd := &cobra.Command{
 		Use:   "refs SYMBOL",
-		Short: "List the call-site references to a symbol",
+		Short: "List references to a symbol: call sites plus type-use references (params, fields, returns)",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			in.Name = args[0]

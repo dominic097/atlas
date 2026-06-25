@@ -100,4 +100,17 @@ CREATE TABLE IF NOT EXISTS routes (
 	metadata       TEXT NOT NULL DEFAULT '{}'
 );
 CREATE INDEX IF NOT EXISTS idx_routes_snapshot_role ON routes (snapshot_id, role);
+
+CREATE TABLE IF NOT EXISTS coverage (
+	id             TEXT PRIMARY KEY,
+	snapshot_id    TEXT NOT NULL DEFAULT '',
+	repo_full_name TEXT NOT NULL DEFAULT '',
+	symbol_ref     TEXT NOT NULL DEFAULT '',
+	test_id        TEXT NOT NULL DEFAULT '',
+	test_file      TEXT NOT NULL DEFAULT '',
+	coverage_type  TEXT NOT NULL DEFAULT '',
+	strength       TEXT NOT NULL DEFAULT ''
+);
+CREATE INDEX IF NOT EXISTS idx_coverage_snapshot ON coverage (snapshot_id);
+CREATE INDEX IF NOT EXISTS idx_coverage_snapshot_symbol ON coverage (snapshot_id, symbol_ref);
 `

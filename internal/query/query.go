@@ -922,6 +922,48 @@ func CallersGraph(ctx context.Context, drv store.StorageDriver, snapshotID, name
 	return out, nil
 }
 
+// ReferencesGraph returns the symbols that REFERENCE the type named `name` as a
+// type-use (not a call), resolved through indexed store reads over the
+// "references" edges emitted by the go/types analyzer. Each such edge carries
+// FromSymbol/FromFile of the enclosing declaration, so the caller-resolution
+// rule reuses resolveCaller exactly like CallersGraph. Deduped by identity,
+// sorted. Type-use edges already point at a concrete type name, so — unlike
+// CallersGraph — no resolveTargets receiver-type disambiguation is needed.
+func ReferencesGraph(ctx context.Context, drv store.StorageDriver, snapshotID, name string) ([]graph.CodeSymbol, error) {
+	if strings.TrimSpace(name) == "" {
+		return nil, nil
+	}
+	edges, err := drv.RefEdgesByToRefs(ctx, snapshotID, []string{name})
+	if err != nil {
+		return nil, err
+	}
+	cache := newSymbolCache(ctx, drv, snapshotID)
+	target := strings.ToLower(strings.TrimSpace(name))
+	seen := map[string]bool{}
+	var out []graph.CodeSymbol
+	for _, e := range edges {
+		if e.Kind != graph.EdgeReferences {
+			continue
+		}
+		if strings.ToLower(strings.TrimSpace(e.ToRef)) != target {
+			continue
+		}
+		caller, err := cache.resolveCaller(e)
+		if err != nil {
+			return nil, err
+		}
+		if caller == nil {
+			continue
+		}
+		if k := symbolKey(*caller); !seen[k] {
+			seen[k] = true
+			out = append(out, *caller)
+		}
+	}
+	sortSymbols(out)
+	return out, nil
+}
+
 // CalleesGraph returns the symbols the symbol(s) named `fromName` directly call,
 // resolved through indexed store reads (one hop). Deduped by identity, sorted.
 func CalleesGraph(ctx context.Context, drv store.StorageDriver, snapshotID, fromName string) ([]graph.CodeSymbol, error) {

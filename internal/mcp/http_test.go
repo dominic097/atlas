@@ -47,6 +47,9 @@ func (stubEngine) Explain(context.Context, engine.ExplainInput) (*engine.Explain
 func (stubEngine) Coverage(context.Context, engine.CoverageInput) (*engine.CoverageResult, error) {
 	return &engine.CoverageResult{}, nil
 }
+func (stubEngine) CoverageImport(context.Context, engine.CoverageImportInput) (*engine.CoverageImportResult, error) {
+	return &engine.CoverageImportResult{}, nil
+}
 func (stubEngine) GraphExport(context.Context, engine.GraphExportInput) (*engine.GraphExportResult, error) {
 	return &engine.GraphExportResult{}, nil
 }

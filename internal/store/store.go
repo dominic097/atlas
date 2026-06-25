@@ -74,6 +74,21 @@ type StorageDriver interface {
 	// given set, using the (snapshot_id, from_symbol) index — the callees side, for
 	// the `symbol` op's outgoing-call context. Same chunking/Metadata semantics.
 	CallEdgesByFromSymbols(ctx context.Context, snapshotID string, fromSymbols []string) ([]graph.DependencyEdge, error)
+	// RefEdgesByToRefs returns every "references" (type-use) edge whose to_ref is in
+	// the given set, using the (snapshot_id, to_ref) index. It mirrors
+	// CallEdgesByToRefs exactly but filters kind="references" instead of "calls", so
+	// `refs` can return TRUE type-use references alongside call-site callers. Same
+	// chunking/Metadata semantics (no dedupe).
+	RefEdgesByToRefs(ctx context.Context, snapshotID string, toRefs []string) ([]graph.DependencyEdge, error)
+
+	// coverage (runtime test-coverage facts)
+	//
+	// SaveCoverage replaces the coverage rows for the affected snapshot(s) and
+	// persists the given runtime coverage facts (symbol<->span coverage from an
+	// ingested coverprofile / LCOV). ListCoverage returns the stored coverage rows
+	// for a snapshot, optionally filtered to a single symbol name (empty = all).
+	SaveCoverage(ctx context.Context, rows []graph.Coverage) error
+	ListCoverage(ctx context.Context, snapshotID, symbolName string) ([]graph.Coverage, error)
 }
 
 // Options configures Open().

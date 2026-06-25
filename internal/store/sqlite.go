@@ -826,6 +826,53 @@ func (d *sqliteDriver) CallEdgesByFromSymbols(ctx context.Context, snapshotID st
 	return out, nil
 }
 
+// RefEdgesByToRefs returns every "references" (type-use) edge whose to_ref is in
+// toRefs, served by idx_edges_snapshot_toref. It is identical to
+// CallEdgesByToRefs except for the kind filter ('references' instead of 'calls'),
+// so `refs` returns true type-use references alongside call-site callers.
+func (d *sqliteDriver) RefEdgesByToRefs(ctx context.Context, snapshotID string, toRefs []string) ([]graph.DependencyEdge, error) {
+	if len(toRefs) == 0 {
+		return nil, nil
+	}
+	var out []graph.DependencyEdge
+	for start := 0; start < len(toRefs); start += callEdgesChunk {
+		end := start + callEdgesChunk
+		if end > len(toRefs) {
+			end = len(toRefs)
+		}
+		chunk := toRefs[start:end]
+
+		placeholders := strings.Repeat("?,", len(chunk))
+		placeholders = placeholders[:len(placeholders)-1] // trim trailing comma
+		args := make([]any, 0, len(chunk)+1)
+		args = append(args, snapshotID)
+		for _, ref := range chunk {
+			args = append(args, ref)
+		}
+
+		query := `SELECT ` + edgeCols + `
+			FROM edges WHERE snapshot_id = ? AND kind = 'references' AND to_ref IN (` + placeholders + `)`
+		rows, err := d.db.QueryContext(ctx, query, args...)
+		if err != nil {
+			return nil, fmt.Errorf("store: ref edges by to_refs: %w", err)
+		}
+		for rows.Next() {
+			e, err := scanEdgeRow(rows)
+			if err != nil {
+				rows.Close()
+				return nil, fmt.Errorf("store: scan edge: %w", err)
+			}
+			out = append(out, e)
+		}
+		if err := rows.Err(); err != nil {
+			rows.Close()
+			return nil, fmt.Errorf("store: ref edges by to_refs: %w", err)
+		}
+		rows.Close()
+	}
+	return out, nil
+}
+
 func (d *sqliteDriver) ListRoutes(ctx context.Context, snapshotID, role string) ([]graph.Route, error) {
 	var (
 		rows *sql.Rows
@@ -890,6 +937,98 @@ func (d *sqliteDriver) ListFiles(ctx context.Context, snapshotID string) ([]grap
 		}
 		f.DocSummary = docS.String
 		out = append(out, f)
+	}
+	return out, rows.Err()
+}
+
+// ---- coverage --------------------------------------------------------------
+
+const coverageCols = `id, snapshot_id, repo_full_name, symbol_ref, test_id, test_file, coverage_type, strength`
+
+// SaveCoverage replaces the coverage rows of every snapshot referenced by `rows`
+// and inserts the given runtime coverage facts, all inside one transaction so a
+// re-import of the same snapshot is idempotent (the prior runtime facts for that
+// snapshot are wiped and rebuilt).
+func (d *sqliteDriver) SaveCoverage(ctx context.Context, rows []graph.Coverage) error {
+	if len(rows) == 0 {
+		return nil
+	}
+	d.mu.Lock()
+	defer d.mu.Unlock()
+
+	tx, err := d.db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("store: begin coverage tx: %w", err)
+	}
+	defer tx.Rollback()
+
+	// Clear existing rows for each distinct snapshot before rebuilding.
+	wiped := map[string]bool{}
+	for i := range rows {
+		sid := rows[i].SnapshotID
+		if wiped[sid] {
+			continue
+		}
+		wiped[sid] = true
+		if _, err := tx.ExecContext(ctx, `DELETE FROM coverage WHERE snapshot_id = ?`, sid); err != nil {
+			return fmt.Errorf("store: clear coverage: %w", err)
+		}
+	}
+
+	stmt, err := tx.PrepareContext(ctx, `
+		INSERT INTO coverage (`+coverageCols+`)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?)`)
+	if err != nil {
+		return fmt.Errorf("store: prepare coverage insert: %w", err)
+	}
+	defer stmt.Close()
+	for i := range rows {
+		c := &rows[i]
+		id := c.ID
+		if id == "" {
+			id = uuid.NewString()
+		}
+		if _, err := stmt.ExecContext(ctx, id, c.SnapshotID, c.RepoFullName, c.SymbolRef,
+			c.TestID, c.TestFile, c.CoverageType, c.Strength); err != nil {
+			return fmt.Errorf("store: save coverage for %s: %w", c.SymbolRef, err)
+		}
+	}
+
+	if err := tx.Commit(); err != nil {
+		return fmt.Errorf("store: commit coverage: %w", err)
+	}
+	return nil
+}
+
+// ListCoverage returns the coverage rows for a snapshot, optionally filtered to a
+// single symbol name (empty symbolName = all rows).
+func (d *sqliteDriver) ListCoverage(ctx context.Context, snapshotID, symbolName string) ([]graph.Coverage, error) {
+	var (
+		rows *sql.Rows
+		err  error
+	)
+	if strings.TrimSpace(symbolName) == "" {
+		rows, err = d.db.QueryContext(ctx,
+			`SELECT `+coverageCols+` FROM coverage WHERE snapshot_id = ? ORDER BY symbol_ref`,
+			snapshotID)
+	} else {
+		rows, err = d.db.QueryContext(ctx,
+			`SELECT `+coverageCols+` FROM coverage WHERE snapshot_id = ? AND symbol_ref = ? ORDER BY symbol_ref`,
+			snapshotID, symbolName)
+	}
+	if err != nil {
+		return nil, fmt.Errorf("store: list coverage: %w", err)
+	}
+	defer rows.Close()
+
+	var out []graph.Coverage
+	for rows.Next() {
+		var c graph.Coverage
+		if err := rows.Scan(&c.ID, &c.SnapshotID, &c.RepoFullName, &c.SymbolRef,
+			&c.TestID, &c.TestFile, &c.CoverageType, &c.Strength); err != nil {
+			return nil, fmt.Errorf("store: scan coverage: %w", err)
+		}
+		out = append(out, c)
 	}
 	return out, rows.Err()
 }

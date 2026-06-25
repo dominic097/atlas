@@ -20,12 +20,13 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"sort"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/google/uuid"
 
+	"github.com/MsysTechnologiesllc/aziron-atlas/internal/gotypes"
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/lexical"
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/parser"
@@ -57,6 +58,10 @@ type Stats struct {
 	Languages  map[string]int `json:"languages"`
 	DurationMS int64          `json:"duration_ms"`
 	Mode       string         `json:"mode"`
+	// ChangedFiles is the number of files re-parsed on a delta run (0 on full /
+	// reindex). It is purely additive — the engine maps Stats field-by-field, so a
+	// new field is safe and simply unmapped until the engine opts in.
+	ChangedFiles int `json:"changed_files"`
 }
 
 // skipDirs are directory names pruned wholesale during the walk: VCS metadata,
@@ -106,11 +111,30 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 		return nil, Stats{}, fmt.Errorf("index: root %q is not a directory", absRoot)
 	}
 
+	head := resolveCommitSHA(ctx, absRoot)
+
+	// Try an incremental delta: re-parse only the files that changed since the
+	// latest snapshot's commit and carry the rest of the graph forward. Eligibility
+	// is conservative (see deltaEligible); on any miss or error we fall through to
+	// the full walk below, so a delta never fails the run.
+	if !opts.Reindex {
+		if base, baseErr := resolveDeltaBase(ctx, drv, repoFullName); baseErr == nil && base != nil {
+			if deltaEligible(ctx, absRoot, base, head) {
+				snap, stats, derr := runDelta(ctx, drv, lx, base, repoFullName, absRoot, head, opts, start)
+				if derr == nil {
+					return snap, stats, nil
+				}
+				// Delta failed mid-flight (git/diff/store hiccup): fall back to full.
+			}
+		}
+	}
+
 	var (
 		files     []graph.File
 		symbols   []graph.CodeSymbol
 		edges     []graph.DependencyEdge
 		rawRoutes []routes.RawRoute
+		goFiles   []string // repo-relative paths of indexed Go files, for the go/types pass
 		languages = map[string]int{}
 	)
 
@@ -179,6 +203,9 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 			Imports:   res.Imports,
 		})
 		languages[lang]++
+		if lang == "go" {
+			goFiles = append(goFiles, rel)
+		}
 		symbols = append(symbols, res.Symbols...)
 		edges = append(edges, res.Edges...)
 		// Cross-repo moat: pull producer routes + consumer calls from the same
@@ -192,39 +219,25 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 		return nil, Stats{}, fmt.Errorf("index: walk %q: %w", absRoot, walkErr)
 	}
 
-	// Deterministic ordering so identical trees produce identical snapshots.
-	sort.Slice(files, func(i, j int) bool { return files[i].Path < files[j].Path })
-	sort.SliceStable(symbols, func(i, j int) bool {
-		if symbols[i].Path == symbols[j].Path {
-			return symbols[i].StartLine < symbols[j].StartLine
-		}
-		return symbols[i].Path < symbols[j].Path
-	})
-	sort.SliceStable(edges, func(i, j int) bool {
-		if edges[i].FromFile == edges[j].FromFile {
-			return edges[i].ToRef < edges[j].ToRef
-		}
-		return edges[i].FromFile < edges[j].FromFile
-	})
+	// Precise Go analysis (go/types): refine heuristic recv_type on call edges and
+	// add real type-use reference edges. Non-regressing — on any miss the heuristic
+	// edges stand untouched (see enrichGoTypes).
+	edges = enrichGoTypes(ctx, absRoot, goFiles, edges)
+
+	// Deterministic ordering so identical trees produce identical snapshots. The
+	// same helpers order the delta path's merged rows, guaranteeing a delta
+	// snapshot equals a full reindex of the same HEAD.
+	sortFiles(files)
+	sortSymbols(symbols)
+	sortEdges(edges)
 
 	// Resolve raw route facts now that the full symbol set is available: producer
 	// handler names bind to their defining file, consumer calls keep their calling
 	// file. Sorted for deterministic snapshots.
 	graphRoutes := routes.Resolve(repoFullName, rawRoutes, symbols)
-	sort.SliceStable(graphRoutes, func(i, j int) bool {
-		if graphRoutes[i].Role != graphRoutes[j].Role {
-			return graphRoutes[i].Role < graphRoutes[j].Role
-		}
-		if graphRoutes[i].PathPattern != graphRoutes[j].PathPattern {
-			return graphRoutes[i].PathPattern < graphRoutes[j].PathPattern
-		}
-		if graphRoutes[i].Method != graphRoutes[j].Method {
-			return graphRoutes[i].Method < graphRoutes[j].Method
-		}
-		return graphRoutes[i].HandlerFile < graphRoutes[j].HandlerFile
-	})
+	sortRoutes(graphRoutes)
 
-	commitSHA := resolveCommitSHA(ctx, absRoot)
+	commitSHA := head
 
 	mode := "full"
 	if opts.Reindex {
@@ -308,6 +321,87 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 		Mode:       mode,
 	}
 	return snapshot, stats, nil
+}
+
+// enrichGoTypes runs the precise go/types analyzer over the repo and folds its
+// results into the accumulated edge set:
+//
+//   - recv_type refinement: every result CallRecv (file\x00line\x00callee ->
+//     precise receiver base type) overwrites the heuristic recv_type on the
+//     matching Go EdgeCalls edge. Edges with no precise match keep their heuristic
+//     value, so this is a pure refinement — never a downgrade.
+//   - reference edges: each RefEdge (a type-use, not a call) is appended as a new
+//     graph.EdgeReferences edge so `refs` returns true references, not just
+//     callers.
+//
+// If the analyzer declines (oversized repo, load error, panic, timeout) it
+// returns OK:false and we return the edges unchanged — the heuristic stands and
+// there is no regression. Returns the (possibly augmented) edge slice.
+func enrichGoTypes(ctx context.Context, absRoot string, goFiles []string, edges []graph.DependencyEdge) []graph.DependencyEdge {
+	if len(goFiles) == 0 {
+		return edges
+	}
+	res := gotypes.Analyze(ctx, absRoot, len(goFiles))
+	if !res.OK {
+		return edges
+	}
+
+	// Index precise receiver types by (relfile\x00line\x00callee). The AST call
+	// edge carries the same file (repo-relative), Line, and ToRef (bare callee),
+	// so this key joins them exactly.
+	recvByCall := make(map[string]string, len(res.CallRecvs))
+	for _, cr := range res.CallRecvs {
+		if cr.Type == "" {
+			continue
+		}
+		recvByCall[cr.File+"\x00"+strconv.Itoa(cr.Line)+"\x00"+cr.Callee] = cr.Type
+	}
+
+	if len(recvByCall) > 0 {
+		for i := range edges {
+			e := &edges[i]
+			if e.Language != "go" || e.Kind != graph.EdgeCalls {
+				continue
+			}
+			key := e.FromFile + "\x00" + strconv.Itoa(e.Line) + "\x00" + e.ToRef
+			precise, ok := recvByCall[key]
+			if !ok {
+				continue
+			}
+			if e.Metadata == nil {
+				e.Metadata = graph.JSONBMap{}
+			}
+			// Record whether go/types changed the heuristic value (a true
+			// refinement) or merely confirmed it. Either way recv_source marks
+			// this receiver as type-checker-grounded, not heuristic — so the
+			// precision of any given edge is auditable after the fact.
+			if prev, _ := e.Metadata["recv_type"].(string); prev != precise {
+				e.Metadata["recv_type_heuristic"] = prev
+			}
+			e.Metadata["recv_type"] = precise
+			e.Metadata["recv_source"] = "go_types"
+		}
+	}
+
+	// Append type-use reference edges. These have no caller-side counterpart in the
+	// AST parser, so there is nothing to dedup against the call edges.
+	for _, r := range res.RefEdges {
+		edges = append(edges, graph.DependencyEdge{
+			ID:         uuid.NewString(),
+			FromFile:   r.FromFile,
+			FromSymbol: r.FromSymbol,
+			ToRef:      r.ToRef,
+			Kind:       graph.EdgeReferences,
+			Language:   "go",
+			Line:       r.Line,
+			Metadata: graph.JSONBMap{
+				"qualified_ref":  r.Qualified,
+				"source":         "go_types",
+				"analysis_level": "type_use",
+			},
+		})
+	}
+	return edges
 }
 
 // hashContent returns the lowercase sha256 hex digest of a file's bytes.

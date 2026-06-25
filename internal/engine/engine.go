@@ -11,11 +11,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 
+	"github.com/MsysTechnologiesllc/aziron-atlas/internal/coverage"
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/crossrepo"
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/export"
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
@@ -326,8 +329,9 @@ type RefsInput struct {
 	RepoID string
 }
 
-// RefsResult is the call-site references to a symbol. (Atlas has call + import
-// edges; first-class reference edges land later — this returns call sites.)
+// RefsResult is the call-site AND type-use references to a symbol: the union of
+// resolved callers (over call edges) and the symbols that name it as a type (over
+// the go/types reference edges), deduped by identity.
 type RefsResult struct {
 	Symbol     string      `json:"symbol"`
 	References []SymbolRef `json:"references"`
@@ -378,15 +382,39 @@ type CoverageInput struct {
 	MaxDepth  int
 }
 
-// CoverageResult is static call-graph reachability coverage (NOT runtime
-// coverage): the transitive test callers of a symbol, or the non-test symbols a
-// test transitively exercises.
+// CoverageResult reports coverage for a target. When runtime coverage has been
+// imported for the target (mode="runtime") it reports the real covered/total line
+// ratio from the ingested profile. Otherwise it falls back to STATIC call-graph
+// reachability (mode="static"): the transitive test callers of a symbol, or the
+// non-test symbols a test transitively exercises.
 type CoverageResult struct {
 	Target    string      `json:"target"`
-	Direction string      `json:"direction"`
+	Mode      string      `json:"mode"` // runtime | static
+	Direction string      `json:"direction,omitempty"`
 	Covered   bool        `json:"covered"`
+	Strength  string      `json:"strength,omitempty"` // runtime mode: "coveredLines/totalLines"
 	Tests     []SymbolRef `json:"tests,omitempty"`
 	Symbols   []SymbolRef `json:"symbols,omitempty"`
+}
+
+// CoverageImportInput points at a coverage profile to ingest (a Go coverprofile
+// or an LCOV tracefile) and the repo it belongs to (empty = single/most-recent).
+type CoverageImportInput struct {
+	Path   string
+	RepoID string
+}
+
+// CoverageImportResult summarizes a coverage import: the resolved snapshot, the
+// auto-detected profile format, how many profile files were parsed, and how many
+// indexed symbols received a runtime coverage fact.
+type CoverageImportResult struct {
+	SnapshotID     string `json:"snapshot_id"`
+	RepoFullName   string `json:"repo_full_name"`
+	Format         string `json:"format"`
+	ProfileFiles   int    `json:"profile_files"`
+	SymbolsTotal   int    `json:"symbols_total"`
+	SymbolsCovered int    `json:"symbols_covered"`
+	FactsWritten   int    `json:"facts_written"`
 }
 
 // ── The Engine interface ────────────────────────────────────────────────────
@@ -406,6 +434,7 @@ type Engine interface {
 	Refs(ctx context.Context, in RefsInput) (*RefsResult, error)
 	Explain(ctx context.Context, in ExplainInput) (*ExplainResult, error)
 	Coverage(ctx context.Context, in CoverageInput) (*CoverageResult, error)
+	CoverageImport(ctx context.Context, in CoverageImportInput) (*CoverageImportResult, error)
 	GraphExport(ctx context.Context, in GraphExportInput) (*GraphExportResult, error)
 	History(ctx context.Context, in HistoryInput) (*HistoryResult, error)
 	SnapshotDiff(ctx context.Context, in SnapshotDiffInput) (*SnapshotDiffResult, error)
@@ -660,7 +689,14 @@ func (e *localEngine) Close() error {
 // repo in the DB (the common single-repo local case).
 func (e *localEngine) resolveSnapshot(ctx context.Context, repoID string) (*graph.Snapshot, error) {
 	if repoID != "" {
-		snap, err := e.store.LatestSnapshot(ctx, repoID)
+		// Resolve the ref (repo_id, org/name, or path) to a canonical repo
+		// first — LatestSnapshot keys on the repo UUID, so a bare full_name or
+		// path would otherwise miss. Mirrors resolveRepo used by the other ops.
+		repo, err := e.resolveRepo(ctx, repoID)
+		if err != nil {
+			return nil, err
+		}
+		snap, err := e.store.LatestSnapshot(ctx, repo.ID)
 		if err != nil {
 			return nil, err
 		}
@@ -800,13 +836,59 @@ func (e *localEngine) Refs(ctx context.Context, in RefsInput) (*RefsResult, erro
 	if err != nil {
 		return nil, err
 	}
-	// Call-site references = the resolved callers of the symbol (Atlas has call +
-	// import edges; first-class reference edges land later).
-	syms, err := query.CallersGraph(ctx, e.store, snap.ID, in.Name)
+	// True references = the UNION of call-site references (resolved callers over
+	// EdgeCalls) and type-use references (symbols that name this symbol as a type,
+	// over the EdgeReferences edges emitted by the go/types analyzer). Deduped by
+	// symbol identity so a symbol that both calls AND type-references appears once.
+	callers, err := query.CallersGraph(ctx, e.store, snap.ID, in.Name)
 	if err != nil {
-		return nil, fmt.Errorf("engine: refs: %w", err)
+		return nil, fmt.Errorf("engine: refs call-sites: %w", err)
 	}
+	typeUses, err := query.ReferencesGraph(ctx, e.store, snap.ID, in.Name)
+	if err != nil {
+		return nil, fmt.Errorf("engine: refs type-uses: %w", err)
+	}
+	syms := unionSymbols(callers, typeUses)
 	return &RefsResult{Symbol: in.Name, References: refsOf(syms, navCap), Total: len(syms)}, nil
+}
+
+// unionSymbols merges two symbol slices, deduping by symbol identity and keeping
+// a deterministic (path, then name) order. The identity key mirrors query's
+// symbolKey rule (id, then node_id, else path+name+start-line).
+func unionSymbols(a, b []graph.CodeSymbol) []graph.CodeSymbol {
+	seen := make(map[string]bool, len(a)+len(b))
+	out := make([]graph.CodeSymbol, 0, len(a)+len(b))
+	add := func(syms []graph.CodeSymbol) {
+		for _, s := range syms {
+			k := symbolIdentity(s)
+			if seen[k] {
+				continue
+			}
+			seen[k] = true
+			out = append(out, s)
+		}
+	}
+	add(a)
+	add(b)
+	sort.Slice(out, func(i, j int) bool {
+		if out[i].Path == out[j].Path {
+			return out[i].Name < out[j].Name
+		}
+		return out[i].Path < out[j].Path
+	})
+	return out
+}
+
+// symbolIdentity is a stable dedup key for a symbol: prefer ID, then NodeID, else
+// path + name + start-line (mirroring query.symbolKey).
+func symbolIdentity(s graph.CodeSymbol) string {
+	if s.ID != "" {
+		return "id:" + s.ID
+	}
+	if s.NodeID != "" {
+		return "node:" + string(s.NodeID)
+	}
+	return "fnl:" + s.Path + "\x00" + s.Name + "\x00" + strconv.Itoa(s.StartLine)
 }
 
 func (e *localEngine) Explain(ctx context.Context, in ExplainInput) (*ExplainResult, error) {
@@ -905,6 +987,36 @@ func (e *localEngine) Coverage(ctx context.Context, in CoverageInput) (*Coverage
 	if err != nil {
 		return nil, err
 	}
+
+	// Runtime-first: if a coverage profile was imported for this target, report the
+	// real covered/total line ratio (mode="runtime"). Multiple symbols can share a
+	// name (overloads / per-package); a target is "covered" when ANY of its facts
+	// reports a covered line, and the reported strength sums covered/total lines
+	// across the matching facts.
+	if facts, ferr := e.store.ListCoverage(ctx, snap.ID, in.Target); ferr == nil && len(facts) > 0 {
+		coveredLines, totalLines := 0, 0
+		coverageType := ""
+		for _, f := range facts {
+			c, t := parseStrengthRatio(f.Strength)
+			coveredLines += c
+			totalLines += t
+			if coverageType == "" {
+				coverageType = f.CoverageType
+			}
+		}
+		dir := coverageType
+		if dir == "" {
+			dir = "runtime"
+		}
+		return &CoverageResult{
+			Target:    in.Target,
+			Mode:      "runtime",
+			Direction: dir,
+			Covered:   coveredLines > 0,
+			Strength:  fmt.Sprintf("%d/%d", coveredLines, totalLines),
+		}, nil
+	}
+
 	depth := in.MaxDepth
 	if depth <= 0 {
 		depth = 8
@@ -915,11 +1027,161 @@ func (e *localEngine) Coverage(ctx context.Context, in CoverageInput) (*Coverage
 	}
 	return &CoverageResult{
 		Target:    r.Target,
+		Mode:      "static",
 		Direction: r.Direction,
 		Covered:   r.Covered,
 		Tests:     coverageRefsToEngine(r.Tests, navCap),
 		Symbols:   coverageRefsToEngine(r.Symbols, navCap),
 	}, nil
+}
+
+// parseStrengthRatio parses a "covered/total" strength string into its two
+// integer parts, returning (0,0) on any malformed input.
+func parseStrengthRatio(s string) (covered, total int) {
+	parts := strings.SplitN(strings.TrimSpace(s), "/", 2)
+	if len(parts) != 2 {
+		return 0, 0
+	}
+	c, err1 := strconv.Atoi(strings.TrimSpace(parts[0]))
+	t, err2 := strconv.Atoi(strings.TrimSpace(parts[1]))
+	if err1 != nil || err2 != nil {
+		return 0, 0
+	}
+	return c, t
+}
+
+// CoverageImport ingests a runtime coverage profile (Go coverprofile or LCOV),
+// maps the covered line sets onto the indexed symbols of the resolved snapshot,
+// and persists one graph.Coverage fact per symbol. For each symbol the covered
+// fraction is (#covered lines in [StartLine,EndLine]) / (line span); the fact's
+// Strength is "coveredLines/spanLines" and CoverageType is "runtime_<format>".
+// Re-importing replaces the snapshot's prior runtime facts (idempotent).
+func (e *localEngine) CoverageImport(ctx context.Context, in CoverageImportInput) (*CoverageImportResult, error) {
+	if strings.TrimSpace(in.Path) == "" {
+		return nil, errors.New("atlas: coverage import needs a profile path")
+	}
+	// Resolve the repo first (accepts an ID OR a full_name), then the snapshot from
+	// its canonical id — so `--repo org/name` works as well as a raw repo_id.
+	repo, err := e.resolveRepo(ctx, in.RepoID)
+	if err != nil {
+		return nil, err
+	}
+	snap, err := e.resolveSnapshot(ctx, repo.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	content, err := os.ReadFile(in.Path)
+	if err != nil {
+		return nil, fmt.Errorf("engine: read coverage profile: %w", err)
+	}
+	format, files, err := coverage.Parse(content)
+	if err != nil {
+		return nil, fmt.Errorf("engine: parse coverage profile: %w", err)
+	}
+
+	// Index covered-line sets by canonical file path, joining absolute /
+	// repo-relative profile paths against the (repo-relative) symbol paths via a
+	// suffix match so a "github.com/org/repo/internal/x.go" coverprofile path lines
+	// up with the stored "internal/x.go".
+	coveredByFile := make(map[string]map[int]bool, len(files))
+	var profilePaths []string
+	for _, fc := range files {
+		p := normalizeCoveragePath(fc.File)
+		if p == "" {
+			continue
+		}
+		if coveredByFile[p] == nil {
+			coveredByFile[p] = map[int]bool{}
+			profilePaths = append(profilePaths, p)
+		}
+		for ln, cov := range fc.Covered {
+			if cov {
+				coveredByFile[p][ln] = true
+			}
+		}
+	}
+
+	syms, err := e.store.ListSymbols(ctx, snap.ID)
+	if err != nil {
+		return nil, fmt.Errorf("engine: coverage import load symbols: %w", err)
+	}
+
+	coverageType := "runtime_" + format
+	rows := make([]graph.Coverage, 0, len(syms))
+	covered := 0
+	for _, s := range syms {
+		if s.StartLine <= 0 || s.EndLine < s.StartLine {
+			continue
+		}
+		lineSet := coveredLinesForSymbol(coveredByFile, profilePaths, s.Path)
+		if lineSet == nil {
+			continue // no profile data for this file
+		}
+		span := s.EndLine - s.StartLine + 1
+		hit := 0
+		for ln := s.StartLine; ln <= s.EndLine; ln++ {
+			if lineSet[ln] {
+				hit++
+			}
+		}
+		if hit > 0 {
+			covered++
+		}
+		rows = append(rows, graph.Coverage{
+			SnapshotID:   snap.ID,
+			RepoFullName: repo.FullName,
+			SymbolRef:    s.Name,
+			CoverageType: coverageType,
+			Strength:     fmt.Sprintf("%d/%d", hit, span),
+		})
+	}
+
+	if err := e.store.SaveCoverage(ctx, rows); err != nil {
+		return nil, fmt.Errorf("engine: save coverage: %w", err)
+	}
+
+	return &CoverageImportResult{
+		SnapshotID:     snap.ID,
+		RepoFullName:   repo.FullName,
+		Format:         format,
+		ProfileFiles:   len(files),
+		SymbolsTotal:   len(rows),
+		SymbolsCovered: covered,
+		FactsWritten:   len(rows),
+	}, nil
+}
+
+// normalizeCoveragePath canonicalizes a coverage-profile file path: trim, convert
+// backslashes, and strip a leading "./" — matching query.canonicalPath so the
+// suffix join lines up with stored symbol paths.
+func normalizeCoveragePath(p string) string {
+	p = strings.TrimSpace(p)
+	if p == "" {
+		return ""
+	}
+	p = strings.ReplaceAll(p, "\\", "/")
+	return strings.TrimPrefix(p, "./")
+}
+
+// coveredLinesForSymbol returns the covered-line set for a symbol's file. It
+// first tries an exact canonical match, then a suffix match in either direction
+// (profile path ends with the symbol path, or vice-versa) so absolute or
+// module-qualified coverprofile paths join the repo-relative symbol paths.
+func coveredLinesForSymbol(coveredByFile map[string]map[int]bool, profilePaths []string, symbolPath string) map[int]bool {
+	sp := normalizeCoveragePath(symbolPath)
+	if sp == "" {
+		return nil
+	}
+	if m, ok := coveredByFile[sp]; ok {
+		return m
+	}
+	for _, pp := range profilePaths {
+		if strings.HasSuffix(pp, "/"+sp) || strings.HasSuffix(sp, "/"+pp) {
+			return coveredByFile[pp]
+		}
+	}
+	return nil
 }
 
 // namesOf returns the distinct symbol names (capped), order-preserving.
@@ -1315,6 +1577,14 @@ func (e *localEngine) resolveRepo(ctx context.Context, repoID string) (*graph.Re
 	if repoID != "" {
 		for i := range repos {
 			if repos[i].ID == repoID || strings.EqualFold(repos[i].FullName, repoID) {
+				return &repos[i], nil
+			}
+		}
+		// Path or bare-name ref: match on basename, mirroring the index-time
+		// derivation (full_name defaults to filepath.Base of the indexed path).
+		base := filepath.Base(repoID)
+		for i := range repos {
+			if strings.EqualFold(repos[i].FullName, base) || strings.EqualFold(filepath.Base(repos[i].FullName), base) {
 				return &repos[i], nil
 			}
 		}
