@@ -28,7 +28,7 @@ func openSQLite(ctx context.Context, path string) (StorageDriver, error) {
 func (d *sqliteDriver) Migrate(ctx context.Context) error { return ErrNotImplemented }
 func (d *sqliteDriver) Dialect() string                   { return "sqlite" }
 func (d *sqliteDriver) Capabilities() Capabilities {
-	return Capabilities{DurableQueue: false, CrossScope: false, ConcurrentWrite: false, Webhooks: false}
+	return Capabilities{DurableQueue: false, CrossScope: false, ConcurrentWrite: false, PushReindex: false}
 }
 func (d *sqliteDriver) Close() error { return nil }
 

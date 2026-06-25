@@ -33,8 +33,11 @@ func NewServer(eng engine.Engine, cfg Config) *Server {
 	return s
 }
 
-// routes maps the canonical Atlas catalog onto /api/v1. Hosted-only ops are
-// registered too; their handlers return tier_unavailable on a local engine.
+// routes maps the canonical Atlas catalog onto /api/v1. Atlas is the
+// deterministic code-intelligence layer: no agentic (rca/fix/review) or webhook
+// routes — those live in Pulse, which consumes this API. Hosted-only ops
+// (cross-repo) are registered too; they return honest-empty on a single-repo
+// local engine.
 func (s *Server) routes() {
 	m := s.mux
 
@@ -63,11 +66,7 @@ func (s *Server) routes() {
 		"GET /api/v1/route-contracts",                    // hosted
 		"GET /api/v1/history",
 		"GET /api/v1/repos/{repo_id}/snapshots/diff",
-		"POST /api/v1/repos/{repo_id}/tests-for-change",
 		"GET /api/v1/coverage",
-		"POST /api/v1/repos/{repo_id}/rca",    // hosted
-		"POST /api/v1/repos/{repo_id}/fix",    // hosted
-		"POST /api/v1/repos/{repo_id}/review", // hosted
 		"GET /api/v1/repos",
 		"POST /api/v1/repos", // link (hosted)
 	} {

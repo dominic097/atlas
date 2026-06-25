@@ -121,8 +121,9 @@ type StatusResult struct {
 // Engine is the single contract all surfaces depend on. Only the ops exercised
 // by the scaffold's surfaces are spelled out; the full catalog (callers, refs,
 // neighbors, path, explain, graph_export, cross_repo_impact, consumers,
-// route_contracts, history, snapshot_diff, tests_for_change, coverage, rca, fix,
-// review, repos, link) extends this interface following the same pattern.
+// route_contracts, history, snapshot_diff, coverage, repos, link) extends this
+// interface following the same pattern. Atlas is deterministic and LLM-free; the
+// agentic ops (rca/fix/review) and risk-scored test selection live in Pulse.
 type Engine interface {
 	Index(ctx context.Context, in IndexInput) (*IndexResult, error)
 	Search(ctx context.Context, in SearchInput) (*SearchResult, error)

@@ -121,44 +121,12 @@
       "outputs": "{ from, to, added:{symbols[],edges[],routes[]}, modified:{...}, removed:{...}, counts{} }"
     },
     {
-      "name": "tests_for_change",
-      "category": "test-intel",
-      "tier": "both",
-      "summary": "Predictive test selection: given a change (paths/symbols/diff), return the ranked minimal set of tests to run, derived from symbol->test coverage edges + impact graph + cross-repo reach. The CI cost/safety lever and PR blast-radius gate. Atlas-only vs graphify (test-blind).",
-      "inputs": "repo_id; changed_paths[] OR symbols[] OR diff; coverage_types[] (ut|e2e|integration, default all); cross_repo (bool, hosted, default true); budget (optional max tests); min_confidence (optional)",
-      "outputs": "{ selected_tests:[{test_id, name, path, repo_id, coverage_type, reason, confidence, directness}], recall_estimate, total_candidates, skipped }"
-    },
-    {
       "name": "coverage",
       "category": "test-intel",
       "tier": "both",
       "summary": "The symbol<->test coverage map: which tests cover a given symbol/file, or which symbols a given test exercises. The substrate tests_for_change is built on; also answers coverage-gap queries. Uses CodeSearchService coverage edges (coverage_type ut|e2e|integration).",
       "inputs": "target (symbol|file|test_id); repo_id (optional); direction (tests_for_symbol|symbols_for_test, default tests_for_symbol); coverage_types[] (optional)",
       "outputs": "{ target, coverage:[{test_id|symbol, path, line, coverage_type, strength}], covered (bool), gap (bool) }"
-    },
-    {
-      "name": "rca",
-      "category": "agentic",
-      "tier": "hosted",
-      "summary": "Graph-driven root-cause analysis: given a failing test/incident/symptom, walk the graph in REVERSE (symptom -> candidate cause) using impact + cross-repo reach + history to produce a cited, ranked causal hypothesis set. Atlas ACTS \u2014 graphify is read-only. Ports SessionRunner.StartRCA wired to the impact engine.",
-      "inputs": "symptom (failing test id | stack trace | error | changed_paths); repo_id; commit/ref (optional); depth (default 4); include_cross_repo (bool, default true); async (bool, hosted job)",
-      "outputs": "{ run_id, hypotheses:[{candidate_symbol, repo_id, path, line, causal_path[], confidence, citations[], ruled_out:bool}], summary }"
-    },
-    {
-      "name": "fix",
-      "category": "agentic",
-      "tier": "hosted",
-      "summary": "Graph-grounded autonomous fix: take an RCA hypothesis or a finding, generate a patch with the impacted graph + covering tests as context, validate against tests_for_change, and open/draft a PR. The action surface. Ports SessionRunner.StartFix / StartFixFromPRReviewFinding.",
-      "inputs": "target (rca run_id | finding_id | symbol + intent); repo_id; mode (draft_pr|comment|patch_only, default draft_pr); validate (bool, run selected tests, default true); async (bool)",
-      "outputs": "{ run_id, status, patch|diff, pr_url?, files_changed[], tests_run[], validation:{passed,failed} }"
-    },
-    {
-      "name": "review",
-      "category": "agentic",
-      "tier": "hosted",
-      "summary": "Graph-aware PR review hook: for a PR/diff, compute single- and cross-repo impact + selected tests, assemble cited review context, and emit (and optionally post) findings + a merge-gate verdict. The CI/webhook entrypoint. Ports BuildReviewContext + impact + StartFixFromPRReview wiring.",
-      "inputs": "repo_id; pr_number OR diff/base..head; post (bool, post to GitHub, default false); gate (bool, return pass/block merge verdict, default true); cross_repo (bool, default true)",
-      "outputs": "{ run_id, findings:[{path,line,severity,what_changed,risk,citation}], impact_summary, cross_repo_impact, selected_tests[], verdict:pass|block, posted:bool }"
     },
     {
       "name": "status",
@@ -183,6 +151,22 @@
       "summary": "Register/link a repository (and its git webhook) into the org-wide hosted graph so it participates in cross-repo impact, durable indexing queue, and webhook-driven delta reindexing. The hosted-tier onboarding op; local tier resolves this to a no-op/path-add. Backed by RepoIndexJob + webhook wiring.",
       "inputs": "repo (remote url|org/name OR local path); default_branch (optional); webhook (bool, default true on hosted); index_now (bool, default true)",
       "outputs": "{ repo_id, linked:bool, webhook_registered:bool, initial_job_id, status }"
+    },
+    {
+      "name": "semantic_search",
+      "summary": "OPTIONAL, gated vector/semantic search over symbol embeddings \u2014 only when VectorStore is enabled (off by default). Atlas core stays lexical; this is the opt-in semantic layer, and Pulse (the LLM layer) is its primary consumer.",
+      "inputs": "query; repo_id (optional); limit; min_score",
+      "outputs": "{ results, degraded }",
+      "tier": "both",
+      "category": "core"
+    },
+    {
+      "name": "job",
+      "summary": "Indexing-job lifecycle: poll status / stream progress for a long-running index/reindex. Deterministic, index-only \u2014 NOT the agentic run lifecycle, which lives in Pulse.",
+      "inputs": "job_id; action (get|events)",
+      "outputs": "{ job_id, status, stage, progress }",
+      "tier": "both",
+      "category": "admin"
     }
   ]
 }

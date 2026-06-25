@@ -61,4 +61,6 @@ interface in `internal/engine`, so behavior is shared, not re-implemented.
 - `internal/query` — graph algorithms (callers/refs/neighbors/path/impact/explain).
 - `internal/analysis` — route-contract + cross-service analyzers.
 - `internal/vectorstore` — optional, off by default, behind a separate interface.
-- `internal/cloud` — BUSL-1.1 hosted-only RCA/fix/review/webhook.
+- `internal/cloud` — BUSL-1.1 hosted-only org features (multi-tenant cross-repo,
+  durable queue). The agentic layer (RCA/fix/review) and GitHub webhooks are
+  **not** part of Atlas — they live in Pulse, which consumes Atlas.

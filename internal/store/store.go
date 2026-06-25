@@ -20,13 +20,13 @@ type Capabilities struct {
 	DurableQueue    bool
 	CrossScope      bool
 	ConcurrentWrite bool
-	Webhooks        bool
+	PushReindex     bool // push-driven delta reindex; Pulse/CI triggers it, Atlas owns the indexing
 }
 
 // StorageDriver is the single persistence contract. The full engine adds the
-// rest of the catalog's read/write methods (cross-repo, coverage, jobs); the
-// scaffold pins the lifecycle + the core snapshot/graph reads so the shape is
-// concrete and compiling.
+// rest of the catalog's read/write methods (cross-repo, coverage, index
+// lifecycle); the scaffold pins the lifecycle + the core snapshot/graph reads so
+// the shape is concrete and compiling.
 type StorageDriver interface {
 	// lifecycle
 	Migrate(ctx context.Context) error

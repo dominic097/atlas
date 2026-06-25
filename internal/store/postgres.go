@@ -28,7 +28,7 @@ func openPostgres(ctx context.Context, dsn string) (StorageDriver, error) {
 func (d *postgresDriver) Migrate(ctx context.Context) error { return ErrNotImplemented }
 func (d *postgresDriver) Dialect() string                   { return "postgres" }
 func (d *postgresDriver) Capabilities() Capabilities {
-	return Capabilities{DurableQueue: true, CrossScope: true, ConcurrentWrite: true, Webhooks: true}
+	return Capabilities{DurableQueue: true, CrossScope: true, ConcurrentWrite: true, PushReindex: true}
 }
 func (d *postgresDriver) Close() error { return nil }
 

@@ -8,18 +8,22 @@
 
 ### 1.1 Thesis
 
-> **graphify is a static map of one folder you read; Atlas is a live, org-wide code brain that ACTS.**
+> **graphify is a static map of one folder you read; Atlas is a live, org-wide, DETERMINISTIC code brain.**
 
-Atlas is a code knowledge-graph engine spun out of the Aziron Pulse code-intelligence subsystem. It must **strictly dominate** [graphify](https://github.com/safishamsi/graphify) (the local-first, single-folder code knowledge graph distributed as an AI-assistant skill + MCP server, built on tree-sitter, emitting a portable `graph.json` and exposing MCP tools like `query_graph` / `get_neighbors` / `shortest_path` / `get_pr_impact`).
+Atlas is the **deterministic code-intelligence layer** (a library + service) spun out of the Aziron Pulse code-intelligence subsystem. It does **ZERO LLM reasoning** and is fully reproducible: the same repo at the same commit always yields the same graph, the same impact set, the same citations. It must **strictly dominate** [graphify](https://github.com/safishamsi/graphify) (the local-first, single-folder code knowledge graph distributed as an AI-assistant skill + MCP server, built on tree-sitter, emitting a portable `graph.json` and exposing MCP tools like `query_graph` / `get_neighbors` / `shortest_path` / `get_pr_impact`) **on the code-intelligence axis**.
 
-graphify's structural ceilings — the gaps Atlas exists to close:
+**Atlas is the intelligence; Pulse is the agent.** The LLM / agentic layer (RCA, autonomous fix, PR review, predictive/risk-scored test selection) lives in **Pulse**, a separate existing product that **consumes Atlas** via its SDK / API / MCP and then acts. Atlas hands Pulse deterministic facts (impacted symbols, cross-repo blast radius, coverage edges, cited context); Pulse layers LLM reasoning on top. The agentic moat is Pulse's, built on Atlas's intelligence moat.
+
+graphify's structural ceilings — the gaps Atlas exists to close (all on the deterministic intelligence axis):
 
 | graphify ceiling | Atlas answer |
 |---|---|
 | Single graph per folder (no cross-repo) | Org-wide multi-repo graph + HTTP route-contract matching |
 | Point-in-time (no history) | Per-commit immutable snapshots + delta indexing + structural diff |
-| Test-blind | Symbol→test coverage edges + predictive test selection + CI gate |
-| Read-only (never acts) | Graph-driven RCA, autonomous fix, PR review hooks |
+| Test-blind | Symbol→test coverage edges (deterministic coverage map) + CI gate |
+| Shallow call graph | Deeper symbol-granular call edges, cited and reproducible |
+
+*(Agentic action — RCA / fix / PR review — is not an Atlas capability; it is handled in Pulse, which consumes the facts above. See §1.3.)*
 
 ### 1.2 Two tiers off one shared Go core
 
@@ -27,19 +31,23 @@ graphify's structural ceilings — the gaps Atlas exists to close:
 |---|---|---|
 | Distribution | Single static-ish Go binary, zero infra | Org-wide service + container image |
 | Graph store | Embedded SQLite | Postgres |
-| Index queue | In-process (synchronous default) | Durable Postgres queue + git webhooks |
-| Cross-repo / agentic | Single-DB only (degrades honestly) | Full moat (RCA/fix/review/webhooks) |
+| Index queue | In-process (synchronous default) | Durable Postgres queue |
+| Cross-repo | Single-DB only (degrades honestly) | Org-wide cross-repo at scale (durable indexing) |
 | Privacy | Code never leaves the machine | Org-managed |
-| Strategic role | OSS adoption wedge | The moat + monetization |
+| Strategic role | OSS adoption wedge | The intelligence moat + monetization (org-scale cross-repo) |
+
+*(Indexing lifecycle is Atlas's; **when** to (re)index is decided by Pulse / CI / cron calling Atlas — there is no GitHub/webhook coupling inside Atlas. The agentic moat — RCA / fix / review — is Pulse, layered on top of the hosted tier, not a tier of Atlas itself.)*
 
 ### 1.3 What is locked (do not relitigate)
 
+0. **Atlas is LLM-FREE and deterministic.** No model call, no NL generation, no risk scoring, no hypothesis or patch generation lives in Atlas. Every op is reproducible from the indexed graph alone. Any semantic / natural-language / risk / hypothesis / patch generation is **Pulse** (the LLM layer), which consumes Atlas. This is the boundary the whole plan enforces.
 1. **Two tiers off one shared Go core**, selected by a one-line driver swap.
 2. **Retrieval core = GRAPH + SYMBOL INDEX + CODE-AWARE LEXICAL SEARCH** (BM25 via bleve + trigram, camelCase/snake_case tokenization). This is the default path.
-3. **Vector/semantic search is OPTIONAL, OFF BY DEFAULT, PLUGGABLE.** Never on the core MCP-to-LLM path. pgvector (hosted) / sqlite-vec / chromem-go (local) behind a `VectorStore` interface. Never a mandatory Qdrant dependency.
+3. **Vector/semantic search is OPTIONAL, OFF BY DEFAULT, PLUGGABLE.** Never on the core retrieval path. pgvector (hosted) / sqlite-vec / chromem-go (local) behind a `VectorStore` interface. Never a mandatory Qdrant dependency. Because **Pulse is the LLM layer, it is the primary semantic consumer** — Atlas offers vectors as an optional capability, but does no reasoning over them itself.
 4. **Storage abstraction = `StorageDriver` interface, two impls (SQLite, Postgres).** This is the keystone of the spin-out. `VectorStore` is a separate optional interface.
-5. **The four moats** graphify structurally lacks, all ported from Pulse: (a) cross-repo blast radius via HTTP route contracts; (b) temporal history via per-commit snapshots + delta indexing; (c) test intelligence (coverage map + predictive selection + CI gate); (d) agentic action (RCA / fix / review).
-6. **Parsing = tree-sitter** (7 langs today: Go, Python, JS, TS, Java, C, C++; roadmap to graphify-parity 36). CGO is mandatory.
+5. **The three intelligence moats** graphify structurally lacks, all deterministic and all ported from Pulse: (a) cross-repo blast radius via HTTP route contracts; (b) temporal history via per-commit snapshots + delta indexing; (c) test intelligence as deterministic FACTS (symbol↔test coverage map + CI gate via `impact` joining coverage edges). **The agentic moat — RCA / fix / review, and predictive/risk-scored test selection — is Pulse, layered on top of these facts; it is not part of Atlas.**
+6. **Atlas owns its indexing LIFECYCLE** (index / reindex + status), but **Pulse / CI / cron decide WHEN** to run it. No GitHub / webhook coupling lives inside Atlas; Pulse already owns the GitHub integration.
+7. **Parsing = tree-sitter** (7 langs today: Go, Python, JS, TS, Java, C, C++; roadmap to graphify-parity 36). CGO is mandatory.
 
 ### 1.4 What this plan ADDS to the locked decisions (resolving the feasibility critique)
 
@@ -53,18 +61,22 @@ These are the three highest-risk items and they gate the product's core value. T
 
 ---
 
-## 2. Positioning vs graphify (parity + four moats)
+## 2. Positioning vs graphify (parity + three deterministic intelligence moats)
+
+Atlas wins on the **deterministic code-intelligence axis** — it beats graphify purely on what can be computed reproducibly from the graph, over CLI / API / MCP / SDK / binary. The agentic layer (RCA / fix / review / predictive selection) is **Pulse, layered on top of Atlas**, and is therefore not an Atlas-vs-graphify row.
 
 | Capability | graphify | Atlas | Atlas surface |
 |---|---|---|---|
 | Single-folder graph: neighbors, shortest-path, `graph.json` | ✅ | ✅ (drop-in compatible) | `neighbors` `path` `graph_export` |
 | Local-first zero-infra binary + MCP + skill installer | ✅ | ✅ (parity) | `atlas mcp`, `atlas install` |
+| Deterministic, reproducible (no LLM in the path) | ✅ | ✅ | every op |
 | **Cross-repo blast radius (route contracts)** | ❌ | ✅ | `cross_repo_impact` `consumers` `route_contracts` |
 | **Temporal history / structural snapshot diff** | ❌ | ✅ | `history` `snapshot_diff` |
-| **Test selection + coverage map + CI gate** | ❌ | ✅ | `tests_for_change` `coverage` `impact --gate` |
-| **Agentic RCA / fix / PR review** | ❌ | ✅ | `rca` `fix` `review` |
+| **Deterministic impacted-tests + coverage map + CI gate** | ❌ | ✅ | `impact` (joins coverage edges) `coverage` `impact --gate` |
+| **Deeper symbol-granular call graph** | partial | ✅ | `callers` `refs` `impact` |
+| Agentic RCA / fix / PR review, predictive/risk test selection | ❌ | **handled in Pulse** (consumes Atlas) | — (Pulse, not an Atlas surface) |
 
-**Parity is table stakes; the four moats are the wedge.** Atlas must be a graphify drop-in (`atlas graph_export --format graphjson` produces a graphify-compatible `graph.json`; the same MCP tool surface plus `neighbors`/`path`) so a graphify user loses nothing by switching — then gains four capability classes graphify cannot structurally provide.
+**Parity is table stakes; the three deterministic moats are the wedge.** Atlas must be a graphify drop-in (`atlas graph_export --format graphjson` produces a graphify-compatible `graph.json`; the same MCP tool surface plus `neighbors`/`path`) so a graphify user loses nothing by switching — then gains three reproducible intelligence classes graphify cannot structurally provide. The agentic differentiation is Pulse's, built on these Atlas facts.
 
 ---
 
@@ -72,22 +84,30 @@ These are the three highest-risk items and they gate the product's core value. T
 
 ### 3.1 Core (both tiers)
 
-- **Index** — tree-sitter parse, extract symbols/imports/**call-edges**/doc-comments; persist graph + symbol index + lexical (BM25/trigram) index. Full first run, git-diff delta thereafter.
+- **Index** — tree-sitter parse, extract symbols/imports/**call-edges**/doc-comments; persist graph + symbol index + lexical (BM25/trigram) index. Full first run, git-diff delta thereafter. Deterministic.
 - **Code-aware lexical search** — BM25 (bleve) + trigram, identifier-splitting. The default retrieval path. No vectors required.
-- **Symbol context, callers, refs, neighbors, path, impact, explain, graph_export** — the graph-query primitives.
+- **Symbol context, callers, refs, neighbors, path, impact, explain, graph_export** — the graph-query primitives. `explain` returns a **deterministic structured context bundle** (symbol + edges + provenance/citations); it contains **NO LLM narrative** — narration is Pulse's job.
+- **impact** — single-repo blast radius; **still returns deterministic `impacted_tests` by joining coverage edges** (a fact derived from the graph, not a prediction).
 - **History, snapshot_diff** — temporal moat.
-- **tests_for_change, coverage** — test-intel moat (single-repo on local).
+- **coverage** — the symbol↔test coverage MAP as graph facts (single-repo on local). *(Predictive / risk-scored test selection — P(fail|change), budgets, recall estimates — is **not** an Atlas op; it is Pulse SignalChain consuming `coverage` + `impact`. See §3.4.)*
 - **status, repos** — admin.
 
 ### 3.2 Hosted-only
 
-- **cross_repo_impact, consumers, route_contracts** — cross-repo moat.
-- **rca, fix, review** — agentic moat (write-capable; `internal/cloud`, BUSL-licensed).
-- **link** — repo + webhook onboarding (local = path-add no-op, see §4).
+- **cross_repo_impact, consumers, route_contracts** — cross-repo moat (deterministic, org-scale).
+- **link** — register a repo for indexing (local = path-add no-op, see §4). **No webhook** — Atlas does not ingest GitHub events; Pulse/CI/cron trigger reindex.
 
-### 3.3 Vector / semantic search — OPTIONAL, OFF BY DEFAULT
+### 3.3 Handled in Pulse (Atlas is consumed, not extended)
 
-> **Locked decision #3, restated as an engineering constraint:** the packages `query`, `impact`, `analysis`, `lexical` **must not import `vectorstore`**. This is enforced by package boundaries, not convention. The default `VectorStore` is `NoopVectorStore` (`IsAvailable() == false`). Vectors earn a place only for: human NL search in the hosted console, cross-vocabulary discovery, and find-similar-code.
+The following are **NOT Atlas features** — they belong to **Pulse**, the LLM / agentic layer, which calls Atlas (`impact`, `cross_repo_impact`, `coverage`, `explain`) over SDK / API / MCP and then reasons + acts:
+
+- **rca, fix, review** — agentic, LLM-driven, write-capable actions (open PRs, post findings). Pulse already owns the GitHub integration that triggers and posts these.
+- **Predictive / risk-scored test selection** — `P(fail|change)`, risk budgets, ML, recall estimates → Pulse SignalChain (see §3.4).
+- **Async job machinery for the above** (poll / events / cancel `run`s) — Pulse-side; Atlas ops are synchronous.
+
+### 3.4 Vector / semantic search — OPTIONAL, OFF BY DEFAULT
+
+> **Locked decision #3, restated as an engineering constraint:** the packages `query`, `impact`, `analysis`, `lexical` **must not import `vectorstore`**. This is enforced by package boundaries, not convention. The default `VectorStore` is `NoopVectorStore` (`IsAvailable() == false`). Vectors earn a place only for: human NL search in the hosted console, cross-vocabulary discovery, and find-similar-code. **Because Pulse is the LLM layer, Pulse is the primary semantic consumer** — Atlas exposes optional embeddings as a deterministic retrieval aid and does no reasoning over them.
 
 Surface exposure of semantic search is reconciled here (resolving the critique's "search mode" divergence):
 
@@ -142,20 +162,20 @@ Defined once in `pkg/apitypes` as `ErrorCode string`. Every surface maps to/from
 
 **`degraded`/`unlinked` is represented on every surface** (the critique flagged HTTP/SDK gaps): HTTP returns `200` with `meta.degraded` + an `unlinked_dependencies[]` body block; SDK exposes `Result.Degraded` + (under `WithStrict`) `ErrDegraded`; MCP sets `_meta.degraded`; CLI exits `8` (and `1` under `--strict`).
 
-#### 4.0.3 Async lifecycle (one model, mapped to the catalog)
+#### 4.0.3 Async lifecycle (indexing only — every other Atlas op is synchronous)
 
-The critique flagged that jobs/runs/webhooks were unmapped to the catalog. Resolution: add three **canonical sub-resource ops** to the catalog (§6), explicitly transport-level:
+**Atlas ops are synchronous.** The only asynchronous Atlas operation is **indexing** (a repo parse can be long). Resolution: add exactly one **canonical sub-resource op** to the catalog (§6), explicitly transport-level:
 
-- `job` — `get` / `events` (SSE) / `cancel`. Index async lifecycle.
-- `run` — `get` / `events` (SSE) / `cancel`. Agentic (rca/fix/review/link) lifecycle.
-- `webhook` — git webhook ingestion (hosted).
+- `job` — `get` / `events` (SSE) / `cancel`. **Index** async lifecycle only.
 
-`status` is extended with an optional `run_id` poll that returns the run/job payload. SDK `Job[T]` (`Status/Await/Events/Cancel`) maps 1:1 onto `run`/`job`. CLI `--run <id>` polls via `status`.
+`status` is extended with an optional `job_id` poll that returns the job payload. CLI `--job <id>` polls via `status`.
+
+*(There is no `run` op and no agentic async machinery in Atlas. The async `run` lifecycle — poll/events/cancel for rca/fix/review — existed only to serve agentic ops and now lives in **Pulse**. Likewise there is no `webhook` op: Pulse owns the GitHub integration and triggers Atlas indexing itself.)*
 
 #### 4.0.4 Pagination & truncation (one policy per op-category)
 
 - **List ops** (`search`, `callers`, `refs`, `neighbors`, `consumers`, `route_contracts`, `history`, `coverage`): cursor pagination. Cursor = HMAC-signed `{snapshot_id, last_sort_key, last_id}`, pinned to one snapshot. Stale cursor → `invalid_cursor`/`cursor_stale`. Per-op `limit` defaults: search 15–20, refs 200, neighbors 100, callers 100; hard max 500.
-- **Fan-out ops** (`impact`, `cross_repo_impact`, `tests_for_change`): bounded by `depth`/`max_depth` + per-level cap, **not** cursor. Each emits an explicit `{total, returned, truncated}` trio on **every** array it returns (`impacted_symbols`, `impacted_files`, `impacted_tests`, `impacted` consumers, `selected_tests`). MCP additionally hard-caps every list server-side before marshal (default 200 items) and sets `_meta.truncated`.
+- **Fan-out ops** (`impact`, `cross_repo_impact`): bounded by `depth`/`max_depth` + per-level cap, **not** cursor. Each emits an explicit `{total, returned, truncated}` trio on **every** array it returns (`impacted_symbols`, `impacted_files`, `impacted_tests` — the deterministic coverage-edge join — and `impacted` consumers). MCP additionally hard-caps every list server-side before marshal (default 200 items) and sets `_meta.truncated`.
 
 #### 4.0.5 `graph_export` transport (reconciled across surfaces)
 
@@ -177,11 +197,10 @@ The critique flagged that HTTP claims structural tenant enforcement but the `Sto
 
 | Op | Local behavior | Rationale |
 |---|---|---|
-| `cross_repo_impact`, `consumers`, `route_contracts` | **Honest-empty, not error.** Matching runs across all repos in the single local DB; if only one repo is indexed, results are empty (never fabricated). `_meta.degraded` notes single-repo scope. | A local user who indexes sibling folders into one `.atlas` DB *can* get cross-repo matches; capability is `CrossScope` (org webhooks/scale), not a hard 404. |
-| `rca`, `fix`, `review` | `tier_unavailable` (these require the BUSL `internal/cloud` runners, not compiled into the local binary). | Genuine tier boundary. |
-| `link` | **Path-add no-op**, returns `{repo_id, linked:true, webhook_registered:false}`. **NOT** a `tier_unavailable` 404. | Carve-out from the hosted-only-404 rule, explicitly. |
+| `cross_repo_impact`, `consumers`, `route_contracts` | **Honest-empty, not error.** Matching runs across all repos in the single local DB; if only one repo is indexed, results are empty (never fabricated). `_meta.degraded` notes single-repo scope. | A local user who indexes sibling folders into one `.atlas` DB *can* get cross-repo matches; capability is `CrossScope` (org scale + durable indexing), not a hard 404. |
+| `link` | **Path-add no-op**, returns `{repo_id, linked:true}`. **NOT** a `tier_unavailable` 404. | Carve-out from the hosted-only-404 rule, explicitly. No webhook registration — Atlas registers a repo for indexing only. |
 
-> This corrects the SDK-vs-Core contradiction: cross-repo/consumers/route_contracts on local are **honest-empty**, not `ErrTierUnsupported`. Only `rca`/`fix`/`review` are tier errors.
+> This corrects the SDK-vs-Core contradiction: cross-repo/consumers/route_contracts on local are **honest-empty**, not `ErrTierUnsupported`. (Agentic ops — rca/fix/review — are not Atlas ops at all; they are handled in Pulse, which consumes Atlas.)
 
 ---
 
@@ -215,11 +234,11 @@ cobra root, one command per canonical op, uniform output/exit contract.
 ```
 atlas index | search | symbol | callers | refs | neighbors | path | impact
             | explain | export | history | snapshot {list,diff}
-            | tests-for-change (tfc) | coverage | status | repos
+            | coverage | status | repos
             | cross-repo {impact,consumers,contracts}        # hosted/honest-empty local
-            | rca | fix | review                            # hosted
             | link | serve | mcp | install {hook,skill,completion,mcp-config}
             | config {init,get,set,view,path} | version
+# (no rca/fix/review/tests-for-change verbs — those are Pulse, which consumes Atlas)
 ```
 
 **Persistent flags:** `--db <dsn>` (`sqlite://`|`postgres://`, scheme selects tier), `--tier`, `--repo`, `--config`, `--format`/`--json`/`--ndjson`/`--compact`, `--color`, `--vectors`, `--vector-backend`, `--token`, `--server <url>` (thin HTTP client mode), `--timeout`, `-q/-v/-vv`, `--strict`, `--no-progress`.
@@ -228,13 +247,14 @@ atlas index | search | symbol | callers | refs | neighbors | path | impact
 
 **Headline CI commands:**
 ```bash
-# blast-radius gate
+# deterministic blast-radius gate
 git diff origin/main... | atlas impact --diff - --gate --max-files 25 --json
-# predictive test selection → runner
-git diff origin/main... | atlas tfc --diff - --print runner | xargs go test -run
-# local git-hook gate (brings the hosted PR-gate to local, zero server)
+# deterministic impacted-tests (coverage-edge join, NOT a prediction) → runner
+git diff origin/main... | atlas impact --diff - --print tests | xargs go test -run
+# local git-hook gate (brings the CI impact-gate to local, zero server)
 atlas install hook --type pre-push --max-files 40
 ```
+*(Predictive / risk-scored selection — which subset to actually run under a budget — is Pulse SignalChain, which calls `atlas impact`/`coverage` and then scores. Atlas only emits the deterministic coverage-edge join.)*
 
 ---
 
@@ -263,22 +283,18 @@ REST for the hosted tier and remote clients. `gorilla/mux`. Handlers thin; logic
 | route_contracts | GET | `/route-contracts` | H* |
 | history | GET | `/history` | B |
 | snapshot_diff | GET | `/repos/{repo_id}/snapshots/diff` | B |
-| tests_for_change | POST | `/repos/{repo_id}/tests-for-change` | B |
 | coverage | GET | `/coverage` | B |
-| rca | POST | `/repos/{repo_id}/rca` | H |
-| fix | POST | `/repos/{repo_id}/fix` | H |
-| review | POST | `/repos/{repo_id}/review` | H |
-| run (poll/events/cancel) | GET/GET/DELETE | `/runs/{run_id}` `/runs/{run_id}/events` `/runs/{run_id}` | H |
 | status | GET | `/status` | B |
 | repos | GET | `/repos` ; `/repos/{repo_id}` | B |
-| link | POST | `/repos` | B (path-add on local) |
+| link | POST | `/repos` | B (path-add on local; registers for indexing, no webhook) |
 | unlink | DELETE | `/repos/{repo_id}` | H |
-| webhook | POST | `/webhooks/github` | H (HMAC, no bearer) |
 | infra | GET | `/healthz` `/readyz` `/metrics` `/openapi.json` `/docs` | B |
 
 \* honest-empty on local single-repo, not a 404 (§4.0.7).
 
-**Action-route rationale:** `impact`/`cross_repo_impact`/`tests_for_change`/`explain`/`review` accept diffs/symbol arrays too large for a query string → `POST` to a sub-resource, declared **idempotent & safe to retry**.
+*(No `rca`/`fix`/`review`/`tests_for_change` routes, no `/runs/...` agentic run lifecycle, no `/webhooks/github` route — all of that is **Pulse**, which calls the routes above and acts. Atlas ops are synchronous; the only async lifecycle is `job` for indexing.)*
+
+**Action-route rationale:** `impact`/`cross_repo_impact`/`explain` accept diffs/symbol arrays too large for a query string → `POST` to a sub-resource, declared **idempotent & safe to retry** (and, being deterministic, byte-stable across retries).
 
 **Envelope:**
 ```jsonc
@@ -289,27 +305,31 @@ REST for the hosted tier and remote clients. `gorilla/mux`. Handlers thin; logic
             "page": { "next_cursor":"…", "limit":20, "has_more":true } } }
 ```
 
-**Auth** (pluggable `Authenticator`): API keys (`atlas_sk_live_…`, argon2id-hashed, scoped `tenant_id`+`scopes`+`repos[]`+`expires_at`); JWT/SSO (HS256 shared-secret or RS256/JWKS OIDC, claims `sub`/`tenant_id`/`exp`); service tokens (M2M, `kind:service`); webhook HMAC (`X-Hub-Signature-256`, constant-time). Local default = `NoopAuthenticator` (loopback) or `--api-token-file`.
+**Auth** (pluggable `Authenticator`): API keys (`atlas_sk_live_…`, argon2id-hashed, scoped `tenant_id`+`scopes`+`repos[]`+`expires_at`); JWT/SSO (HS256 shared-secret or RS256/JWKS OIDC, claims `sub`/`tenant_id`/`exp`); service tokens (M2M, `kind:service`). Local default = `NoopAuthenticator` (loopback) or `--api-token-file`. *(No webhook HMAC — Atlas has no webhook ingestion endpoint. Pulse is a typical service-token caller.)*
 
-**RBAC scopes:** `read` ⊂ `impact` ⊂ … ; `write`; `agent` (rca/fix/review, separately gated — opens PRs); `admin`. Middleware `RequireScope` → `403 insufficient_scope` + `WWW-Authenticate`.
+**RBAC scopes:** `read` ⊂ `impact` ⊂ … ; `index`/`write` (index, link); `admin`. Middleware `RequireScope` → `403 insufficient_scope` + `WWW-Authenticate`. *(No `agent` scope — Atlas never opens PRs or posts; the actor that does is Pulse, governed by Pulse's own RBAC.)*
 
 **Error model:** RFC 9457 `application/problem+json` with the canonical `code` (§4.0.2) + `request_id`.
 
-**Streaming (SSE):** `/jobs/{id}/events` (index progress) and `/runs/{id}/events` (agentic). Named events `progress`/`stage`/`done`/`error`; `: ping` heartbeat 15s; `Last-Event-ID` resume from a bounded ring buffer.
+**Streaming (SSE):** `/jobs/{id}/events` (**index progress only**). Named events `progress`/`stage`/`done`/`error`; `: ping` heartbeat 15s; `Last-Event-ID` resume from a bounded ring buffer. *(No agentic `/runs/{id}/events` stream — that was Pulse's.)*
 
-**Idempotency:** `Idempotency-Key` on `index`/`link`/`rca`/`fix`/`review` (24h store, verbatim replay + `Idempotency-Replayed: true`). Natural dedupe: `index` by `(repo_id, commit_sha)`; webhooks by `X-GitHub-Delivery`.
+**Idempotency:** `Idempotency-Key` on `index`/`link` (24h store, verbatim replay + `Idempotency-Replayed: true`). Natural dedupe: `index` by `(repo_id, commit_sha)`. Read ops are deterministic and intrinsically idempotent.
 
-**Rate limiting:** token-bucket per `(tenant, principal, route-class)`. Classes `read`/`impact`/`agent`/`write`; `RateLimit-*` headers + `Retry-After`; `agent` adds a concurrency cap.
+**Rate limiting:** token-bucket per `(tenant, principal, route-class)`. Classes `read`/`impact`/`index`; `RateLimit-*` headers + `Retry-After`.
 
 **Middleware order:** `RequestID → Recover → Logger(zap) → CORS → Authenticate → TenantScope → RequireScope → RateLimit → BodyLimit → Idempotency → Handler`. `TenantScope` is the security keystone (§4.0.6).
 
 **OpenAPI:** source of truth = Go DTOs in `pkg/apitypes`; spec generated via `kin-openapi` builders (typed control over problem+json + SSE media types). `GET /openapi.json` (3.1) + `/docs`. The spec drives the S4 client SDKs (one spec → 3 clients). CI `atlas openapi --check` fails on drift; `oasdiff` gates breaking changes.
 
+#### 4.2.1 Pulse integration (Atlas is the deterministic substrate Pulse calls)
+
+Pulse (the LLM / agentic layer) is a first-class **consumer** of this API. The integration is one-directional: **Pulse calls Atlas, Atlas never calls Pulse.** Pulse authenticates with a service token (`kind:service`) and calls the deterministic read ops — `impact`, `cross_repo_impact`, `coverage`, `explain` (plus `search`/`symbol`/`callers`/`history` as needed) — over the HTTP API or MCP (or links Atlas in-process via the Go SDK). It receives reproducible facts (impacted symbols, cross-repo blast radius, coverage edges, cited context) and then **does the agentic work itself**: RCA hypotheses, fix patches, PR review verdicts, and predictive/risk-scored test selection (SignalChain). All LLM calls, GitHub writes, and async run lifecycle live on the Pulse side; Atlas stays synchronous, deterministic, and write-free.
+
 ---
 
 ### 4.3 Surface S3 — MCP (`internal/mcp`)
 
-Exposes graph/search/impact/temporal/test/agentic as MCP tools to Claude Code / Cursor / Codex / Gemini / Copilot. Ported from Pulse `handlers/mcp.go`, stripped of Pulse-specific tools (`datasource_introspect`, canvas). Protocol `2025-06-18` (advertise `2024-11-05` fallback).
+Exposes graph/search/impact/temporal/coverage as deterministic MCP tools to Claude Code / Cursor / Codex / Gemini / Copilot (and to Pulse). Ported from Pulse `handlers/mcp.go`, stripped of Pulse-specific tools (`datasource_introspect`, canvas). Protocol `2025-06-18` (advertise `2024-11-05` fallback). **No tool in this surface invokes an LLM, writes code, or opens a PR** — those are Pulse's, layered on top.
 
 **Architecture: one handler, two backends, three transports.**
 
@@ -319,7 +339,7 @@ stdio | streamable-http | legacy-SSE  →  mcp.Server  →  ToolBackend
                                                           └─ HostedBackend (HTTP → atlas serve, JWT)
 ```
 
-**`ToolBackend` seam — the upgrade funnel keystone.** The Server never knows which backend it holds; tool names/schemas/results are identical. `LocalBackend.Has(op)` returns `false` for the hosted moats (`rca`/`fix`/`review`) and for `semantic_search` unless vectors are enabled; cross-repo ops are **present but honest-empty** locally (§4.0.7). The capability handshake at `initialize` advertises only supported tools — so a local user does not *see* `rca`/`fix`/`review`, and the moment they upgrade, the tools appear. **That visible appearance is the funnel.**
+**`ToolBackend` seam — the upgrade funnel keystone.** The Server never knows which backend it holds; tool names/schemas/results are identical. `LocalBackend.Has(op)` returns `false` for `semantic_search` unless vectors are enabled; cross-repo ops are **present but honest-empty** locally (§4.0.7). The capability handshake at `initialize` advertises only supported tools — so on upgrade to the hosted tier the org-scale cross-repo tools light up against real org data. **That visible enrichment is the funnel.** *(There are no agentic tools to funnel — rca/fix/review are Pulse's, not Atlas MCP tools.)*
 
 **Design principles (LLM-optimized):** stable `symbol_id`/`repo_id` everywhere; token-aware defaults (small `limit`, snippets ≤3 lines / 240 chars unless `include_source`); **server-side hard cap before marshal** (default 200 items) + `_meta.truncated`; compact `json.Marshal` (not Indent); cursor pagination; graceful degrade (`isError:false` + `_meta.degraded` + `hint`); MCP `annotations` (`readOnlyHint` etc.) so agents auto-run vs confirm.
 
@@ -327,16 +347,17 @@ stdio | streamable-http | legacy-SSE  →  mcp.Server  →  ToolBackend
 
 **Transports:** `atlas mcp` (stdio, default — **stderr-only logging**, stdout is the protocol channel); `atlas mcp --http` (Streamable HTTP, `POST /mcp` + `Mcp-Session-Id`); `atlas mcp --sse` (legacy, ported handshake + 25s keepalive + the **long-lived `conn.ctx` tool-call fix** from Pulse).
 
-**Tool catalog** (bare verbs, no `code_` prefix; 1:1 with canonical ops):
-- Core/both: `search`, `symbol`, `callers`, `refs`, `neighbors`, `path`, `impact`, `explain`, `graph_export`, `history`, `snapshot_diff`, `tests_for_change`, `coverage`, `status`, `repos`, `index`.
+**Tool catalog** (bare verbs, no `code_` prefix; 1:1 with canonical ops; **every tool is read-only/deterministic — `readOnlyHint:true`, no `destructiveHint`**):
+- Core/both: `search`, `symbol`, `callers`, `refs`, `neighbors`, `path`, `impact`, `explain`, `graph_export`, `history`, `snapshot_diff`, `coverage`, `status`, `repos`, `index`.
 - Cross-repo (advertised on hosted; honest-empty local): `cross_repo_impact`, `consumers`, `route_contracts`.
-- Agentic (hosted + `AllowWrite`; `readOnlyHint:false`, `fix`/`review` `post:true` → `destructiveHint:true`): `rca`, `fix`, `review`.
 - Optional, gated: `semantic_search` (advertised only when `VectorStore.IsAvailable()`).
 - Admin: `link` (local path-add no-op).
 
-**Resources** (`atlas://repo/...`, `atlas://graph/{repo}/{snapshot}.json`, `atlas://symbol/{id}/source`, subscribable `atlas://snapshot/{repo}/latest` → `notifications/resources/updated` on webhook reindex — the temporal moat surfaced to MCP).
+*(No `rca`/`fix`/`review` MCP tools and no predictive `tests_for_change` tool — those are Pulse, which consumes these deterministic tools. `impact`/`coverage` give Pulse the coverage-edge facts it scores; `explain` gives Pulse the cited context bundle it narrates.)*
 
-**Prompts** (recipes that teach the moat call-order): `triage_failure`, `safe_to_change`, `pr_gate`, `understand_symbol`.
+**Resources** (`atlas://repo/...`, `atlas://graph/{repo}/{snapshot}.json`, `atlas://symbol/{id}/source`, subscribable `atlas://snapshot/{repo}/latest` → `notifications/resources/updated` on each reindex — the temporal moat surfaced to MCP; reindex is triggered by Pulse/CI/cron, not a webhook inside Atlas).
+
+**Prompts** (recipes that teach the deterministic call-order): `triage_context`, `safe_to_change`, `impact_gate`, `understand_symbol`. *(These compose Atlas read ops to assemble context; the LLM consuming them — e.g. Pulse — does the reasoning.)*
 
 **`graph_export` in MCP:** `scope:full` → resource link (rejected inline by the handler); `scope:subgraph` requires `root` (handler cross-field check).
 
@@ -368,15 +389,11 @@ type Engine interface {
     CrossRepoImpact(ctx, CrossRepoImpactInput) (*CrossRepoImpactResult, error)
     Consumers(ctx, ConsumersInput) (*ConsumersResult, error)
     RouteContracts(ctx, RouteContractsInput) (*RouteContractsResult, error)
-    // temporal / test-intel (both)
+    // temporal (both)
     History(ctx, HistoryInput) (*HistoryResult, error)
     SnapshotDiff(ctx, SnapshotDiffInput) (*SnapshotDiffResult, error)
-    TestsForChange(ctx, TestsForChangeInput) (*TestsForChangeResult, error)
+    // coverage facts (both) — symbol↔test map; NOT predictive selection
     Coverage(ctx, CoverageInput) (*CoverageResult, error)
-    // agentic (hosted; ErrTierUnsupported on local) — return job handles
-    RCA(ctx, RCAInput) (*Job[RCAResult], error)
-    Fix(ctx, FixInput) (*Job[FixResult], error)
-    Review(ctx, ReviewInput) (*Job[ReviewResult], error)
     // admin
     Status(ctx, StatusInput) (*StatusResult, error)
     Repos(ctx, ReposInput) (*ReposResult, error)
@@ -387,13 +404,13 @@ type Engine interface {
 func New(ctx, ...Option) (Engine, error) // zero opts = local SQLite, no vectors, sync
 ```
 
-**Critical layering fix (resolving the SDK/BUSL critique):** all DTO result types (`RCAResult`, `FixResult`, `ReviewResult`, …) live in `pkg/apitypes` (Apache, **always** compiled). Only the *runners* live in `internal/cloud` (BUSL, `//go:build hosted`). The `Engine` interface compiles in the Apache-only build; local impls of `RCA`/`Fix`/`Review` return `ErrTierUnsupported`. **CI builds `pkg/atlas` with no `hosted` tag** to prove this.
+**Every method is synchronous** — Atlas does deterministic computation, not long agentic runs, so there are no `Job[T]` handles on the facade (the only long op, `Index`, reports progress via the `job` lifecycle on the service surfaces, but the library call returns when indexing completes). **There are no `RCA`/`Fix`/`Review` methods and no predictive `TestsForChange` method on the Engine** — those are Pulse, which embeds this `Engine` (or calls `atlas serve`) to get the deterministic facts and then reasons + acts itself.
+
+**Layering note (BUSL boundary still holds, now smaller):** all DTO result types live in `pkg/apitypes` (Apache, **always** compiled). The hosted-only code in `internal/cloud` (BUSL, `//go:build hosted`) is the org-scale cross-repo / durable-queue machinery — **not** agentic runners (there are none in Atlas). The `Engine` interface compiles in the Apache-only build; **CI builds `pkg/atlas` with no `hosted` tag** to prove self-containment.
 
 **Options:** `WithSQLite(path)` / `WithPostgres(dsn)` (the keystone swap) / `WithStorageDriver(d)`; `WithVectors(v)` / `WithEmbeddingClient(c)`; `WithLanguages` / `WithParserConcurrency`; `WithIndexQueue` / `WithRetention`; `WithLogger` / `WithMetrics` / `WithStrict`.
 
-**`Job[T]`** (generic): `ID()`, `Status(ctx)`, `Await(ctx)`, `Events(ctx) <-chan JobEvent`, `Cancel(ctx)`. Core ops are synchronous in-library; only the three agentic ops return jobs.
-
-**Sentinel errors:** the canonical set (§4.0.2). `SemanticSearch`/`Search(mode:semantic)` with no vectors → `ErrVectorsDisabled` (explicit); `mode:hybrid` degrades silently to lexical with `Result.Degraded`.
+**Sentinel errors:** the canonical set (§4.0.2). `SemanticSearch`/`Search(mode:semantic)` with no vectors → `ErrVectorsDisabled` (explicit); `mode:hybrid` degrades silently to lexical with `Result.Degraded`. *(No `Job[T]` type — every Engine call is synchronous. `Index` progress, when surfaced over HTTP/MCP, uses the transport-level `job` lifecycle, not a library handle.)*
 
 #### S4(b) — Client SDKs (Go / TS / Python)
 
@@ -406,7 +423,7 @@ internal/api/openapi.yaml
    └─ openapi-python-client → sdk/python (aziron-atlas)
 ```
 
-Each = generated core + a hand-written facade (auth, retry/backoff, pagination iterators, `Job` await/events). **Method-isomorphic with the library**: `engine.Impact(...)` ⇄ `POST /impact` ⇄ `client.Impact(...)` in all three languages, so prototyping in-process and shipping remote is a type-compatible swap. Idioms: Go (`ctx`, `io.Writer` streams, `*Job`); TS (camelCase via typed transform, `Promise`, async-iterator, `EventEmitter` `Job`); Python (snake_case native, pydantic v2, sync `AtlasClient` + `AsyncAtlasClient`, context-manager streams).
+Each = generated core + a hand-written facade (auth, retry/backoff, pagination iterators, index-`job` poll/events for the one async op). **Method-isomorphic with the library**: `engine.Impact(...)` ⇄ `POST /impact` ⇄ `client.Impact(...)` in all three languages, so prototyping in-process and shipping remote is a type-compatible swap. Idioms: Go (`ctx`, `io.Writer` streams); TS (camelCase via typed transform, `Promise`, async-iterator for index progress); Python (snake_case native, pydantic v2, sync `AtlasClient` + `AsyncAtlasClient`, context-manager streams). These clients are exactly how an external consumer like **Pulse** calls Atlas remotely.
 
 **Decision guide:** *if your process must own the SQLite/Postgres file and tree-sitter CGO → library. If you just want answers from a running Atlas → client SDK.* The HTTP API is the seam; the OpenAPI doc is the contract keeping them isomorphic.
 
@@ -416,8 +433,8 @@ Each = generated core + a hand-written facade (auth, retry/backoff, pagination i
 
 One static-ish binary + container image hosting all of the above.
 
-- `atlas serve` — boots REST (`/api/v1/*`); `--mcp` also mounts MCP-over-HTTP on the same listener; `--webhook` mounts `/webhooks/github`; `--workers N` runs durable-queue workers (hosted).
-- `atlas mcp` — the LLM-agent surface (stdio default; `--http`/`--sse`).
+- `atlas serve` — boots REST (`/api/v1/*`); `--mcp` also mounts MCP-over-HTTP on the same listener; `--workers N` runs durable-queue indexing workers (hosted). *(No `--webhook` mount — Atlas has no GitHub ingestion; reindex is triggered by callers like Pulse/CI/cron hitting `POST /repos/{repo_id}/index`.)*
+- `atlas mcp` — the surface for LLM-agent *clients* (Claude Code / Cursor / Pulse) to consume Atlas's deterministic tools (stdio default; `--http`/`--sse`). Atlas itself runs no LLM.
 - `atlas daemon` — local in-process worker over the in-memory queue (single-writer, lock-file enforced — see §5.6).
 - **Distribution:** goreleaser matrix (darwin/linux × amd64/arm64), Homebrew tap, **npm wrapper** (`npx @aziron/atlas` downloads the signed release asset + installs the skill — graphify's exact adoption surface), GHCR container (`:X.Y.Z` local + `:X.Y.Z-hosted`), `go install`, signed raw archives + SBOM, and `atlas install` skill/MCP-config writers for all five agent clients.
 
@@ -430,7 +447,7 @@ One static-ish binary + container image hosting all of the above.
 ```
 pkg/atlas      → public Engine facade (Apache, SemVer)
 pkg/graphjson  → graph.json schema (graphify-compatible + Atlas ext)
-pkg/apitypes   → shared DTOs (source of truth for OpenAPI + all result types incl. RCA/Fix/Review)
+pkg/apitypes   → shared DTOs (source of truth for OpenAPI + all deterministic result types)
 
 internal/graph        → pure data model (no I/O); JSONBMap; NodeID derivation
 internal/storage      → StorageDriver iface + sqlite/ + postgres/ + migrate/
@@ -440,15 +457,15 @@ internal/lexical      → bleve BM25 + code-aware tokenizer + trigram (net-new a
 internal/index        → IndexService (full/delta/reuse), git ops, snapshots, retention GC
 internal/search       → graph queries: callers/refs/neighbors/path/impact + lexical fusion
 internal/analysis     → route-contract + cross-service analyzers + matcher
-internal/testintel    → tests_for_change + coverage
-internal/queue        → Queue iface + memory + postgres (hosted)
+internal/coverage     → symbol↔test coverage map (deterministic facts; no prediction)
+internal/queue        → Queue iface + memory + postgres (hosted) — indexing jobs only
 internal/engine       → composition root
 internal/cli|api|mcp  → surfaces
-internal/cloud        → BUSL, //go:build hosted: rca/fix/review/webhook/tenancy runners
+internal/cloud        → BUSL, //go:build hosted: hosted org features (multi-tenant cross-repo at scale, durable queue, tenancy). NO LLM/agentic runners — those live in Pulse.
 internal/auth|observability
 ```
 
-**Strict dependency rule:** `graph` imports nothing internal. `storage`/`vectorstore`/`parser`/`lexical` import only `graph`. `query`/`analysis`/`index` import `graph`+`storage` (+optional `lexical`). **`query`/`impact`/`analysis`/`lexical` never import `vectorstore`** — the structural guarantee that vectors stay off the LLM path.
+**Strict dependency rule:** `graph` imports nothing internal. `storage`/`vectorstore`/`parser`/`lexical` import only `graph`. `query`/`analysis`/`index` import `graph`+`storage` (+optional `lexical`). **`query`/`impact`/`analysis`/`lexical` never import `vectorstore`** — the structural guarantee that vectors stay off the core deterministic path. **No package imports an LLM client** — Atlas is LLM-free; any model call is Pulse's.
 
 ### 5.2 Data model (`internal/graph`) — with the net-new fields called out
 
@@ -542,14 +559,14 @@ type StorageDriver interface {
     // cross-repo
     SaveRoutes / SaveCrossDeps / ListCrossDeps / ListProducerRoutes(scope, method, path)
     UpsertRepoLink / ListRepoLinks / UpsertServiceAlias / ListServiceAliases(scope)
-    // test-intel
+    // coverage facts (symbol↔test map; deterministic, no prediction)
     SaveCoverage / ListCoverageForSymbols / ListCoverageForTest
-    // job queue
+    // index job queue (Atlas's only async work)
     EnqueueJob / ClaimNextJob / CompleteJob / ReapStaleJobs / ListJobs / QueueDepth
     // portable multi-value predicate (resolves the =ANY()/pq.Array critique)
     InClause(col string, vals []string) (sqlFrag string, args []any)
 }
-type Capabilities struct { DurableQueue, CrossScope, ConcurrentWrite, Webhooks bool }
+type Capabilities struct { DurableQueue, CrossScope, ConcurrentWrite bool }
 ```
 
 **Delta carry-forward keyed on `node_id`, not `path`** (critique fix): `SaveSnapshotDelta` inserts the new snapshot, carries forward unchanged rows from base via `node_id NOT IN (changed)`, inserts re-parsed changed rows with their stable `node_id`, recomputes counts. `UNIQUE(snapshot_id, node_id)` enables symbol-level diff (a moved/renamed symbol with a stable `node_id` is "modified", not "removed+added").
@@ -576,7 +593,7 @@ type Capabilities struct { DurableQueue, CrossScope, ConcurrentWrite, Webhooks b
 - **Graph queries** (`internal/search`/`query`): `GraphView` materialized from `StorageDriver` lists; `callers`/`refs`/`neighbors` (depth-bounded BFS with the ported **ambiguity guard** so generic-named symbols don't cartesian-explode); `path` (bidirectional BFS + cross-repo route-contract bridge edges); `impact` (identity-seeded blast radius from changed-file *definitions* by `node_id`, directness-ranked, `seenFile` memoization). **All pure; never import `vectorstore`.**
 - **Lexical** (`internal/lexical`, **net-new**): custom bleve analyzer `atlas_code` (camelCase/snake_case/dotted split → emits original + sub-tokens + lowercased + edge-ngram; per-field boosts name×3/sig×1.5/doc×1) + a trigram side-index (roaring bitmaps) for substring/fuzzy identifier match. Query construction uses **constructed MatchQuery disjunctions, NOT `NewQueryStringQuery`** (so `foo:bar`/unbalanced parens can't trip the parser). RRF fusion of BM25+trigram(+semantic only in hybrid). Hydrate hits from `GetSymbolsByIDs` so each result carries signature/doc/snippet inline.
 - **`ApplyDelta`** is gated on stable `node_id` as the bleve doc id (you cannot delete-old-docs-by-id when ids churn). Until `node_id` lands, search index is **full rebuild per snapshot** (documented honestly; the incremental claim is not made before then).
-- **Vectors** (`internal/vectorstore`, optional): `NoopVectorStore` default; pgvector (hosted) / sqlite-vec→chromem (local) behind build tags. Semantic only runs when `IsAvailable()` AND the caller asked (`mode:semantic|hybrid` / `semantic_search`).
+- **Vectors** (`internal/vectorstore`, optional): `NoopVectorStore` default; pgvector (hosted) / sqlite-vec→chromem (local) behind build tags. Semantic only runs when `IsAvailable()` AND the caller asked (`mode:semantic|hybrid` / `semantic_search`). Embeddings are a deterministic retrieval aid only — Atlas runs no LLM reasoning over them; the LLM consumer is Pulse.
 
 ### 5.6 Concurrency model
 
@@ -593,7 +610,7 @@ type Capabilities struct { DurableQueue, CrossScope, ConcurrentWrite, Webhooks b
 |---|---|---|
 | Process | one binary, `atlas index`/`mcp`/`serve` | `atlas serve --workers N` + Postgres(+pgvector) + GHCR image |
 | Store | `.atlas/atlas.db` (WAL, flock) | Postgres schema `atlas` |
-| Queue | in-process (sync default) | durable `SKIP LOCKED` + webhooks |
+| Queue | in-process (sync default) | durable `SKIP LOCKED` indexing queue (triggered by callers, not webhooks) |
 | Auth | none / file token | API key + JWT/SSO + service token |
 | Vectors | off (opt-in sqlite-vec/chromem) | off (opt-in pgvector) |
 
@@ -611,25 +628,23 @@ type Capabilities struct { DurableQueue, CrossScope, ConcurrentWrite, Webhooks b
 | `refs` | core | both | All usages (call/read/write/type/import). |
 | `neighbors` | core | both | Adjacent nodes by edge kind/direction (multi-repo aware). |
 | `path` | core | both | Shortest path; cross-repo via route-contract bridge. |
-| `impact` | core | both | Single-repo blast radius (symbols/files/tests), directness-ranked. |
-| `explain` | core | both | Cited, LLM-ready context bundle. |
+| `impact` | core | both | Single-repo blast radius (symbols/files + **impacted_tests via coverage-edge join — a deterministic fact**), directness-ranked. |
+| `explain` | core | both | **Deterministic** structured context bundle: symbol + edges + provenance/citations. NO LLM narrative. |
 | `graph_export` | core | both | Portable graph.json (graphify-compatible + ext). |
 | `cross_repo_impact` | cross-repo | hosted† | Org-wide blast radius via route contracts. †honest-empty local. |
 | `consumers` | cross-repo | hosted† | Who consumes a route/symbol/interface. |
 | `route_contracts` | cross-repo | hosted† | List resolved producer/consumer contracts. |
 | `history` | temporal | both | Per-commit snapshot chain for a target. |
 | `snapshot_diff` | temporal | both | Structural (graph-level) diff between two snapshots. |
-| `tests_for_change` | test-intel | both | Predictive minimal test set + recall estimate. |
-| `coverage` | test-intel | both | Symbol↔test map; coverage gaps. |
-| `rca` | agentic | hosted | Reverse graph walk → cited causal hypotheses (job). |
-| `fix` | agentic | hosted | Graph-grounded patch + validate + PR (job). |
-| `review` | agentic | hosted | Impact + tests + cited findings + merge verdict (job). |
-| `status` | admin | both | Health, freshness, queue depth; `run_id` poll. |
+| `coverage` | coverage | both | Symbol↔test map as graph facts; coverage gaps. |
+| `status` | admin | both | Health, freshness, queue depth; `job_id` poll. |
 | `repos` | admin | both | List repos + index/snapshot metadata. |
-| `link` | admin | both‡ | Register repo + webhook. ‡local = path-add no-op. |
-| `job` | lifecycle | both | get / events(SSE) / cancel — index async. |
-| `run` | lifecycle | hosted | get / events(SSE) / cancel — agentic async. |
-| `webhook` | lifecycle | hosted | Git webhook ingestion (HMAC). |
+| `link` | admin | both‡ | Register repo for indexing (no webhook). ‡local = path-add no-op. |
+| `job` | lifecycle | both | get / events(SSE) / cancel — **index** async (the only async Atlas op). |
+
+**Op count: 21 canonical ops** (16 core/temporal/coverage/admin + 3 cross-repo + `semantic_search` gated + `job` lifecycle).
+
+> **Not Atlas ops — handled in Pulse** (which consumes the table above): `rca`, `fix`, `review` (agentic, LLM-driven, write-capable) and predictive/risk-scored `tests_for_change` (P(fail|change), budgets, recall — Pulse SignalChain). There is also no `run` lifecycle (agentic async) and no `webhook` op inside Atlas; Pulse owns the GitHub integration and triggers Atlas indexing.
 
 ---
 
@@ -647,7 +662,7 @@ aziron-atlas/                                  # github.com/MsysTechnologiesllc/
 ├── pkg/                                        # PUBLIC, SemVer, Apache
 │   ├── atlas/{atlas.go,config.go,options.go,results.go}   # Engine facade (S4a)
 │   ├── graphjson/schema.go                    # SchemaVersion = "atlas-1"
-│   └── apitypes/types.go                      # DTOs incl. RCA/Fix/Review results (always compiled)
+│   └── apitypes/types.go                      # deterministic DTOs (always compiled); no agentic result types
 │
 ├── internal/
 │   ├── graph/{model.go,ids.go,jsonb.go,stringlist.go}     # net-new: NodeID, StringList; fixed JSONBMap
@@ -658,12 +673,12 @@ aziron-atlas/                                  # github.com/MsysTechnologiesllc/
 │   ├── index/{service.go,full.go,delta.go,reuse.go,git.go,scan.go,snapshot.go,source.go}
 │   ├── search/{service.go,graphwalk.go,impact.go,fusion.go}
 │   ├── analysis/{routes.go,crossservice.go,match.go,hosts.go}
-│   ├── testintel/{selection.go,coverage.go}
-│   ├── queue/{queue.go,memory.go,postgres.go(//go:build hosted)}
+│   ├── coverage/coverage.go                    # symbol↔test map (deterministic facts; no prediction)
+│   ├── queue/{queue.go,memory.go,postgres.go(//go:build hosted)}   # index jobs only
 │   ├── engine/engine.go                       # composition root
 │   ├── cli/  api/(openapi.yaml,handlers,middleware)  mcp/(server,transports,catalog,skills/)
 │   ├── auth/  observability/{log.go,metrics.go,trace.go}
-│   └── cloud/(//go:build hosted, BUSL: rca/ fix/ review/ webhook/ tenancy/)
+│   └── cloud/(//go:build hosted, BUSL: hosted org features — multi-tenant cross-repo at scale, durable queue, tenancy/. NO rca/fix/review/webhook — those are Pulse.)
 │
 ├── sdk/{go,ts,python}/                         # S4b generated clients
 ├── npm/atlas/{package.json,install.js,skill/SKILL.md}  # S5 npm wedge
@@ -689,9 +704,9 @@ Engine at `/Users/damirdarasu/workspace/Aziron/aziron-pulse/internal`. **Effort 
 | Lexical/graph search | `service/code_search_service.go` | `internal/search`+`internal/lexical` | **M** (graph) + **L** (lexical NET-NEW) | Graph traversals + impact + ambiguity guard port. **Code-aware analyzer + trigram + MatchQuery-disjunction = net-new.** `ApplyDelta` gated on `node_id`. |
 | Cross-service + route contracts | `service/cross_service_analyzer.go` + `route_contract_analyzer.go` | `internal/analysis` | **S** | Port; known-hosts map → config. Typed `CrossRepoImpactResult` (map→struct) = **M** net-new. |
 | Vector store + embedder | `service/qdrant_code_store.go` + `embedding_client.go` | `internal/vectorstore` | **M** | Extract `VectorStore` iface; sqlite-vec/chromem local; nil-safe; build-tagged. |
-| MCP surface | `handlers/mcp.go` | `internal/mcp` | **M** | Drop datasource/canvas; collapse keyword/semantic→`search`+gated `semantic_search`; add 11 net-new tools; `ToolBackend` seam; compact `_meta` envelope; keep JWT `authSession`, SSE `conn.ctx` fix, keepalive. |
-| Job queue | service + repository | `internal/queue` | **M** | memory (local, single-writer+flock) / PG (`SKIP LOCKED`). |
-| RCA/fix/review | `service/session_runner.go` (`StartRCA`/`StartFix`/`BuildReviewContext`) | `internal/cloud` | **L** | BUSL; compose `impact`+`cross_repo_impact`+`explain`+`tests_for_change`. |
+| MCP surface | `handlers/mcp.go` | `internal/mcp` | **M** | Drop datasource/canvas **and the agentic rca/fix/review tools (those move to Pulse)**; collapse keyword/semantic→`search`+gated `semantic_search`; add the deterministic net-new tools; `ToolBackend` seam; compact `_meta` envelope; keep JWT `authSession`, SSE `conn.ctx` fix, keepalive. |
+| Job queue | service + repository | `internal/queue` | **M** | **Indexing jobs only.** memory (local, single-writer+flock) / PG (`SKIP LOCKED`). |
+| ~~RCA/fix/review~~ | — | **Pulse** (not Atlas) | — | **Removed from Atlas scope.** `StartRCA`/`StartFix`/`BuildReviewContext` stay in Pulse, which composes Atlas's `impact`+`cross_repo_impact`+`explain`+`coverage` over the SDK/API/MCP. |
 
 ---
 
@@ -721,44 +736,44 @@ Engine at `/Users/damirdarasu/workspace/Aziron/aziron-pulse/internal`. **Effort 
 
 ### P1 — Moats on the local tier + remaining surfaces
 
-**Goal:** temporal + test-intel + (single-DB) cross-repo working locally; MCP + HTTP + SDK shipped.
+**Goal:** temporal + coverage facts + (single-DB) cross-repo working locally; MCP + HTTP + SDK shipped.
 
 | Workstream | Deliverable | Sizing |
 |---|---|---|
 | Temporal | `history` + `snapshot_diff` via node_id set-diff; `ApplyDelta` incremental lexical (now that node_id is the doc id) | M |
 | Cross-repo analysis | route/cross-service analyzers + matcher; typed `CrossRepoImpactResult` (map→struct); honest-empty on single-DB | L |
-| Test-intel | coverage edges + `tests_for_change` (+ recall estimate, truncation trio) | M |
-| MCP | full tool catalog + `ToolBackend(Local)` + stdio/http/sse + resources + prompts + `atlas install` | L |
-| HTTP API | REST routes + envelope + problem+json + cursor pagination + SSE + OpenAPI gen | L |
-| SDK | `pkg/atlas` complete (incl. `Job[T]`, agentic methods returning `ErrTierUnsupported` locally); Apache-only build CI; generated Go/TS/Python clients | M |
-| `explain`, `graph_export` | cited bundle + graphify-compatible export (+ MCP resource-link for full) | M |
+| Coverage facts | coverage edges + `coverage` op + `impact` joins coverage → deterministic `impacted_tests` (truncation trio). **No predictive selection** (that's Pulse SignalChain). | M |
+| MCP | full deterministic tool catalog + `ToolBackend(Local)` + stdio/http/sse + resources + prompts + `atlas install` | L |
+| HTTP API | REST routes + envelope + problem+json + cursor pagination + index-`job` SSE + OpenAPI gen | L |
+| SDK | `pkg/atlas` complete (synchronous; no `Job[T]`, no agentic methods); Apache-only build CI; generated Go/TS/Python clients | M |
+| `explain`, `graph_export` | deterministic cited context bundle (no LLM narrative) + graphify-compatible export (+ MCP resource-link for full) | M |
 
 **Exit criteria:**
 - Two sibling folders indexed into one local DB → `cross_repo_impact` finds a real route-contract match (not fabricated).
 - `history`/`snapshot_diff` show symbol-level added/modified/removed across 3 commits.
-- `tests_for_change` selects a known covering test for an injected change; recall estimate emitted.
+- `impact --diff` returns the known covering test(s) for an injected change via the coverage-edge join (deterministic; reproducible run-to-run).
 - Claude Code picks up Atlas via `atlas install skill --agent claude`; an agent completes the find→symbol→impact trace over stdio.
 - `pkg/atlas` compiles with **no `hosted` tag** (proves DTO layering).
 - OpenAPI spec generates all three clients; `atlas openapi --check` green.
 
-### P2 — Hosted tier + the agentic moat
+### P2 — Hosted tier: org-wide Postgres + durable queue + cross-repo at scale + Pulse integration
 
-**Goal:** org-wide Postgres, durable queue, webhooks, RCA/fix/review.
+**Goal:** org-wide Postgres, durable indexing queue, deterministic cross-repo at org scale, multi-tenancy — and a proven integration path for **Pulse** (the LLM/agentic layer) to consume Atlas. (Agentic ops — rca/fix/review, predictive selection — are built in Pulse, not here.)
 
 | Workstream | Deliverable | Sizing |
 |---|---|---|
 | StorageDriver (Postgres) | lift `code_intelligence_repository.go`; **same contract test** runs green against PG (testcontainers/pgvector) | L |
-| Durable queue + webhooks | PG `SKIP LOCKED` queue + `/webhooks/github` (HMAC) + delta reindex workers | M |
-| Tenancy + auth | API keys + JWT/SSO + `TenantScope` (snapshot-bound enforcement) + RBAC scopes + rate limiting | L |
-| `internal/cloud` (BUSL) | `rca` (reverse walk), `fix` (patch+validate+PR), `review` (cited findings + verdict) — compose existing facade ops | L |
+| Durable indexing queue | PG `SKIP LOCKED` queue + delta reindex workers (triggered by callers — Pulse/CI/cron — not webhooks) | M |
+| Tenancy + auth | API keys + JWT/SSO + service tokens + `TenantScope` (snapshot-bound enforcement) + RBAC scopes + rate limiting | L |
 | Cross-repo at org scale | `ListProducerRoutes` across linked repos; `link` + service-alias resolution; `unlinked_dependencies` honesty | M |
-| HostedBackend (MCP) + `run` lifecycle | hosted MCP funnel; `run`/`job` SSE; SDK `Job[T]` over HTTP | M |
+| HostedBackend (MCP) | hosted MCP funnel (org-scale cross-repo tools light up); index-`job` SSE over HTTP | M |
+| Pulse integration | service-token auth path proven; Pulse consumes `impact`/`cross_repo_impact`/`coverage`/`explain` over API + MCP; documented in `docs/pulse-integration.md` | M |
 
 **Exit criteria:**
 - Identical `storagecontract_test.go` green on **both** drivers (the spin-out claim proven).
-- A change in repo A → `cross_repo_impact` reaches a test in repo B via route contract, org-wide.
-- `review --pr N --gate` returns a `block` verdict on an unsafe API change and posts cited findings; `rca`→`fix` opens a validated draft PR.
-- Upgrade funnel demonstrated: a tool absent locally appears after `atlas link`.
+- A change in repo A → `cross_repo_impact` reaches a test in repo B via route contract, org-wide — deterministically reproducible.
+- Pulse calls `cross_repo_impact` + `coverage` + `explain` with a service token and assembles its own RCA/review context from the returned facts (integration test against a running `atlas serve`).
+- Upgrade funnel demonstrated: org-scale cross-repo enriches after `atlas link`.
 - Tenant isolation test: tenant-A `repo_id` → `not_found` for tenant-B principal.
 
 ### P3 — Distribution, vectors, parity polish
@@ -772,7 +787,7 @@ Engine at `/Users/damirdarasu/workspace/Aziron/aziron-pulse/internal`. **Effort 
 
 **Exit criteria:**
 - `npx @aziron/atlas` installs the binary (cosign-verified) + skill on mac/linux.
-- Benchmark doc shows graphify `N/A (structural)` on all four moats, parity on single-repo.
+- Benchmark doc shows graphify `N/A (structural)` on all three intelligence moats, parity on single-repo.
 - Vectors prove off-by-default: default build links no vector code; `--vectors` enables `semantic_search`.
 
 ---
@@ -780,7 +795,7 @@ Engine at `/Users/damirdarasu/workspace/Aziron/aziron-pulse/internal`. **Effort 
 ## 10. Cross-Cutting Concerns
 
 ### 10.1 Auth
-`Authenticator` interface (local noop/file-token; hosted API-key/JWT/SSO/service). RBAC scopes `read⊂impact⊂…`, `write`, `agent`, `admin`. Same pluggable-impl pattern as `StorageDriver`/`VectorStore`.
+`Authenticator` interface (local noop/file-token; hosted API-key/JWT/SSO/service). RBAC scopes `read⊂impact⊂…`, `index`/`write` (index, link), `admin`. Same pluggable-impl pattern as `StorageDriver`/`VectorStore`. *(No `agent` scope and no webhook HMAC — Atlas neither acts nor ingests GitHub events; the acting principal is Pulse, calling Atlas with a service token.)*
 
 ### 10.2 Config
 Functional options (library) ⇄ `.atlas/config.yaml` + `ATLAS_*` env + flags (CLI), one precedence chain. Zero-value = working local engine.
@@ -796,12 +811,12 @@ Functional options (library) ⇄ `.atlas/config.yaml` + `ATLAS_*` env + flags (C
 One canonical `ErrorCode` enum (§4.0.2) in `pkg/apitypes`, mapped to HTTP problem+json `code`, SDK sentinels, MCP `degraded.status`, CLI exit codes. `degraded`/`unlinked` represented on every surface.
 
 ### 10.5 Observability (one cross-cutting contract)
-- **One request/trace-id** (`X-Request-Id`) propagated CLI→SDK→HTTP→engine→job; surfaced in CLI `--json` `meta.request_id` and MCP `_meta`.
+- **One request/trace-id** (`X-Request-Id`) propagated CLI→SDK→HTTP→engine→index-job; surfaced in CLI `--json` `meta.request_id` and MCP `_meta`.
 - **Named engine metrics** emitted regardless of surface: `index_duration_ms`, `search_latency_ms`, `impact_depth_reached`, `queue_depth`, `snapshot_count`, `cross_repo_match_count`. zap logger (stderr for CLI/MCP; structured for HTTP); Prometheus `/metrics` (hosted), no-op (local).
 - **OTel tracing**: scoped to hosted, behind a flag (documented as optional in `docs/observability.md`).
 
 ### 10.6 Security
-Webhook HMAC; API-key argon2id hashing + revocation; tenant isolation (existence not leaked); `govulncheck` + CodeQL in CI; cosign-signed releases + SBOM; SPDX headers; secret handling via env-var references in skill installers (`chmod 600` fallback warning).
+API-key argon2id hashing + revocation; service-token (M2M) auth for callers like Pulse; tenant isolation (existence not leaked); `govulncheck` + CodeQL in CI; cosign-signed releases + SBOM; SPDX headers; secret handling via env-var references in skill installers (`chmod 600` fallback warning). *(No webhook HMAC surface — Atlas exposes no GitHub ingestion endpoint.)*
 
 ### 10.7 Performance targets
 | Op | Local target | Notes |
@@ -841,10 +856,10 @@ goreleaser (darwin/linux × amd64/arm64, CGO via zig-cc/osxcross cross toolchain
 ### 11.4 OSS / cloud licensing boundary (open-core, single repo)
 | Scope | License | Mechanism |
 |---|---|---|
-| Everything except `internal/cloud/**` | **Apache-2.0** | default; parser, storage, search, cross-repo *analysis*, MCP, CLI, REST core, SDKs, local tier |
-| `internal/cloud/**` (rca/fix/review/webhook/tenancy) | **BUSL-1.1** (→Apache after 4y) | per-package `LICENSE` + SPDX header; compiled only under `//go:build hosted` |
+| Everything except `internal/cloud/**` | **Apache-2.0** | default; parser, storage, search, cross-repo *analysis*, coverage facts, MCP, CLI, REST core, SDKs, local tier |
+| `internal/cloud/**` (hosted org features: multi-tenant cross-repo at scale, durable queue, tenancy) | **BUSL-1.1** (→Apache after 4y) | per-package `LICENSE` + SPDX header; compiled only under `//go:build hosted` |
 
-**The OSS local binary cannot include moat code** — `internal/cloud/**` is `//go:build hosted`, so default `go build` neither compiles nor links it (CI `local` flavor proves self-containment). Reading the graph (incl. cross-repo analysis) is open; **acting** on it at org scale (RCA/fix/review + durable webhook graph) is the paid moat. SPDX headers checked in `make lint`.
+**The OSS local binary cannot include the hosted-org moat code** — `internal/cloud/**` is `//go:build hosted`, so default `go build` neither compiles nor links it (CI `local` flavor proves self-containment). Reading the graph (incl. single-DB cross-repo analysis) is open; the paid moat is **org-scale cross-repo + durable indexing** (multi-tenant, at scale) — **not** RCA/fix/review, which are not part of Atlas at all (they live in Pulse, layered on top). SPDX headers checked in `make lint`.
 
 ---
 
@@ -859,23 +874,26 @@ goreleaser (darwin/linux × amd64/arm64, CGO via zig-cc/osxcross cross toolchain
 | CGO cross-compile pain (release) | Medium | zig-cc/osxcross in goreleaser; budgeted in P3 as the largest release item. |
 | Cross-repo precision (route-contract false matches) | Medium | Confidence scoring + `unlinked_dependencies` honesty + `matched_only` introspection via `route_contracts`. |
 | MCP context blowups (full graph / hub impact) | Medium | Server-side hard cap before marshal; `scope:full`→resource link; truncation trio on every fan-out array. |
-| **Open:** does local single-DB multi-repo cross-matching ship in P1 or is it hosted-only? | — | **Decided:** ships P1 as honest-empty/honest-match; `CrossScope` capability is about webhooks/org-scale, not a hard gate. (Resolves the licensing-vs-SDK contradiction.) |
+| **Open:** does local single-DB multi-repo cross-matching ship in P1 or is it hosted-only? | — | **Decided:** ships P1 as honest-empty/honest-match; `CrossScope` capability is about org-scale + durable indexing, not a hard gate. |
+| **Open:** boundary with Pulse (which layer owns agentic/LLM work)? | — | **Decided:** Atlas is the LLM-free deterministic intelligence layer; **Pulse owns all LLM/agentic work (rca/fix/review) and predictive/risk-scored test selection**, consuming Atlas via SDK/API/MCP. No model call, GitHub write, or async agentic run lives in Atlas. |
 | **Open:** semantic search exposure shape | — | **Decided:** `semantic_search` is a first-class catalog op; CLI/HTTP via `--mode`, MCP via separate gated tool. |
 
 ---
 
-## 13. The 10× Acceptance Demo vs graphify
+## 13. The 10× Acceptance Demo vs graphify (pure cross-repo INTELLIGENCE)
+
+This is a **deterministic intelligence** demo: it answers what graphify *structurally cannot* — cross-repo impact, temporal history, the coverage-edge join — all reproducibly, with no LLM in the path. (Agentic action on these facts is Pulse's job, demonstrated separately; it is not part of this Atlas demo.)
 
 **Scenario:** an engineer edits `src/api/order.ts` in `aziron-ui` (an HTTP call to `POST /v1/orders`) and wants to know what breaks before pushing.
 
-**graphify** (single-folder, point-in-time, test-blind, read-only):
+**graphify** (single-folder, point-in-time, test-blind):
 ```
 $ graphify query get_pr_impact --files src/api/order.ts
 impacted (aziron-ui only): src/api/order.ts, src/components/Cart.tsx, src/store/order.ts
-# stops at the repo boundary. no tests. no history. cannot act.
+# stops at the repo boundary. no tests. no history.
 ```
 
-**Atlas** — same change, strictly more, in one command + three follow-ups:
+**Atlas** — same change, strictly more, deterministic, in one command + two follow-ups:
 ```
 $ git diff | atlas cross-repo impact --repo aziron-ui --diff - --tests --gate --json | jq .
 
@@ -883,35 +901,35 @@ ORIGIN  repo_aziron-ui @ a1b9c3d
 within-repo impact   : 6 symbols, 3 files                          # ≡ graphify's answer
 CROSS-REPO impact    : orders-svc CreateOrder   (route POST /v1/orders,  conf 0.94)   # graphify CANNOT see this
                        payments-svc ChargeHandler(route POST /v1/charge,  conf 0.88)
-selected tests       : aziron-ui:2 ut · orders-svc:4 · payments-svc:2 e2e             # graphify is test-blind
-history              : order.ts last changed in c4d2e1f (auth refactor, 3d ago)       # graphify is point-in-time
+impacted tests       : aziron-ui:2 ut · orders-svc:4 · payments-svc:2 e2e   # coverage-edge join — graphify is test-blind
 unlinked             : notifications-svc reached but not_indexed (impact unknown)      # honest blind-spot
-verdict (merge-gate) : BLOCK — touches a producer route 2 consumers depend on          # graphify is read-only
+verdict (merge-gate) : BLOCK — touches a producer route 2 consumers depend on          # deterministic gate
 
-# And Atlas ACTS — none of which graphify can do:
-$ atlas rca    --repo orders-svc --symptom 'orders-svc:TestCreateOrder' --cross-repo
-$ atlas review --repo aziron-ui --pr 686 --post --gate
-$ atlas fix    --rca run_8f1c --mode draft_pr --validate
+# Atlas answers what graphify structurally cannot — temporal + cross-repo facts:
+$ atlas history    --repo aziron-ui --path src/api/order.ts        # point-in-time graphify can't do
+$ atlas cross-repo consumers --route 'POST /v1/orders'            # repo-boundary graphify can't cross
 ```
 
-**Acceptance:** the demo passes when each Atlas claim is backed by a real ground-truth run (cross-repo match resolved via a route contract, a covering test in another repo selected, a structural history entry, a posted cited review with a `block` verdict), the `unlinked_dependencies` honesty block is present, and the four moat columns read `N/A (structural)` for graphify in the published benchmark.
+*(What comes next — RCA, a cited PR review verdict, an autonomous fix — is **Pulse** consuming exactly these facts. That is a separate Pulse demo, not an Atlas command.)*
+
+**Acceptance:** the demo passes when each Atlas claim is backed by a real, reproducible ground-truth run (cross-repo match resolved via a route contract, a covering test in another repo surfaced via the coverage-edge join, a structural history entry), the `unlinked_dependencies` honesty block is present, the same inputs yield byte-identical outputs run-to-run, and the three intelligence-moat columns read `N/A (structural)` for graphify in the published benchmark.
 
 ---
 
 ## 14. Appendices
 
 ### 14.A Tool catalog (MCP) outline
-`search`, `semantic_search`(gated), `symbol`, `callers`, `refs`, `neighbors`, `path`, `impact`, `explain`, `graph_export`, `cross_repo_impact`, `consumers`, `route_contracts`, `history`, `snapshot_diff`, `tests_for_change`, `coverage`, `rca`(write), `fix`(write), `review`(write), `status`, `repos`, `index`, `link`. Each carries JSON Schema `inputSchema`, `annotations` (`readOnlyHint`/`destructiveHint`/`idempotentHint`/`openWorldHint`), and the `_meta` envelope. Resources: `atlas://repo/...`, `atlas://graph/...`, `atlas://symbol/.../source`, subscribable `atlas://snapshot/.../latest`. Prompts: `triage_failure`, `safe_to_change`, `pr_gate`, `understand_symbol`.
+`search`, `semantic_search`(gated), `symbol`, `callers`, `refs`, `neighbors`, `path`, `impact`, `explain`, `graph_export`, `cross_repo_impact`, `consumers`, `route_contracts`, `history`, `snapshot_diff`, `coverage`, `status`, `repos`, `index`, `link`. **Every tool is read-only/deterministic** (`readOnlyHint:true`); each carries JSON Schema `inputSchema`, `annotations` (`readOnlyHint`/`idempotentHint`/`openWorldHint`), and the `_meta` envelope. Resources: `atlas://repo/...`, `atlas://graph/...`, `atlas://symbol/.../source`, subscribable `atlas://snapshot/.../latest`. Prompts: `triage_context`, `safe_to_change`, `impact_gate`, `understand_symbol`. *(No `rca`/`fix`/`review` tools and no predictive `tests_for_change` tool — those are Pulse, which consumes these deterministic tools.)*
 
 ### 14.B HTTP API reference outline
-Base `/api/v1`. Routes per §4.2 table. Envelope `{data, meta}`. Auth: Bearer (API key / JWT / service) + webhook HMAC. Errors: RFC 9457 + canonical `code`. Pagination: cursor (`meta.page`). Streaming: `/jobs/{id}/events`, `/runs/{id}/events` (SSE). Idempotency: `Idempotency-Key`. Rate limit: `RateLimit-*`. Spec: `GET /openapi.json` (3.1) + `/docs`.
+Base `/api/v1`. Routes per §4.2 table. Envelope `{data, meta}`. Auth: Bearer (API key / JWT / service token — Pulse is a service-token caller). Errors: RFC 9457 + canonical `code`. Pagination: cursor (`meta.page`). Streaming: `/jobs/{id}/events` (index progress only — SSE). Idempotency: `Idempotency-Key`. Rate limit: `RateLimit-*`. Spec: `GET /openapi.json` (3.1) + `/docs`. *(No `/runs/...` agentic stream, no `/webhooks/github` — those are not Atlas.)*
 
 ### 14.C CLI reference outline
 `atlas <verb>` per §4.1 tree. Global flags `--db/--tier/--repo/--config/--format/--json/--ndjson/--vectors/--vector-backend/--token/--server/--timeout/--strict/-q/-v`. Output: table(TTY)/plain(pipe)/json/ndjson. Exit codes per §4.0.2. `atlas config {init,get,set,view,path}`. `atlas install {hook,skill,completion,mcp-config}`.
 
 ### 14.D SDK reference outline
-- **S4a library** (`pkg/atlas`): `Engine` interface (§4.4), `New(...Option)`, `Job[T]`, sentinel errors. DTO results in `pkg/apitypes` (Apache, always compiled).
-- **S4b clients** (`sdk/{go,ts,python}`): generated from one OpenAPI spec, method-isomorphic with the library. Hand facade adds auth/retry/pagination/`Job`. Go (`ctx`+`io.Writer`+`*Job`); TS (`Promise`+async-iterator+`EventEmitter Job`); Python (pydantic + sync/async + context-manager streams).
+- **S4a library** (`pkg/atlas`): `Engine` interface (§4.4), `New(...Option)`, sentinel errors. **All methods synchronous (no `Job[T]`, no agentic methods).** DTO results in `pkg/apitypes` (Apache, always compiled). This is the in-process embedding path (e.g. for Pulse).
+- **S4b clients** (`sdk/{go,ts,python}`): generated from one OpenAPI spec, method-isomorphic with the library. Hand facade adds auth/retry/pagination/index-`job` poll. Go (`ctx`+`io.Writer`); TS (`Promise`+async-iterator for index progress); Python (pydantic + sync/async + context-manager streams). These are how an external consumer like Pulse calls Atlas remotely.
 
 ### 14.E ADR index
 - ADR-0001 — two-tier StorageDriver (keystone).
@@ -924,7 +942,7 @@ Base `/api/v1`. Routes per §4.2 table. Envelope `{data, meta}`. Auth: Bearer (A
 ---
 
 **Source anchors (absolute, for implementers):**
-- `/Users/damirdarasu/workspace/Aziron/aziron-pulse/internal/service/code_intelligence_service.go` — `IndexRepository`, `CrossRepoImpactForChangedPaths` (~:1145, returns `map[string]any` → typed in P1), `cloneFetchCheckout`/`gitDiffNameStatus`/`lockRepoPath`, `BuildReviewContext`, `RunRetentionGC`.
+- `/Users/damirdarasu/workspace/Aziron/aziron-pulse/internal/service/code_intelligence_service.go` — `IndexRepository`, `CrossRepoImpactForChangedPaths` (~:1145, returns `map[string]any` → typed in P1), `cloneFetchCheckout`/`gitDiffNameStatus`/`lockRepoPath`, `RunRetentionGC`. *(`BuildReviewContext` stays in Pulse — it is agentic review context assembly, not an Atlas port target.)*
 - `/Users/damirdarasu/workspace/Aziron/aziron-pulse/internal/repository/code_intelligence_repository.go` — `SaveSnapshotDelta` carry-forward (`=ANY()`/`pq.Array` → `InClause`), `EnqueueIndexJob`/`ClaimNextJob`/`ReapStaleRunningJobs`, list methods.
 - `/Users/damirdarasu/workspace/Aziron/aziron-pulse/internal/service/code_search_service.go` — `Search` (default bleve mapping + `NewQueryStringQuery` → net-new analyzer + MatchQuery), `GetCallers`/`GetReferences`/`GetImpactForChangedSymbols`, `blastRadiusGuardedCtx` ambiguity guard, `SearchResult`/`FileImpact`/`CrossRepoImpact`/`UnlinkedDependency` DTOs.
 - `/Users/damirdarasu/workspace/Aziron/aziron-pulse/internal/service/tree_sitter_parser.go` — parser port (CGO `import "C"`/`unsafe`, official `github.com/tree-sitter/*`); **emits no call edges → net-new**.

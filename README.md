@@ -1,10 +1,13 @@
 # Aziron Atlas
 
-**A live, org-wide code knowledge graph that acts.**
+**The deterministic code-intelligence layer — a live, org-wide code knowledge graph.**
 
 Graphify gives you a static map of one folder you read. Atlas is a live,
-org-wide code *brain* that answers impact/search/cross-repo/test questions and
-acts on them — root-cause analysis, autonomous fix, PR review.
+org-wide, **deterministic** code-intelligence engine: it answers
+impact / search / cross-repo / temporal / coverage questions over a real code
+graph. It does **no LLM reasoning** — the agentic layer (root-cause analysis,
+autonomous fix, PR review, risk-scored test selection) lives in **Aziron Pulse**,
+which consumes Atlas via its SDK / API / MCP.
 
 - Module: `github.com/MsysTechnologiesllc/aziron-atlas`
 - Binary: `atlas`
@@ -19,17 +22,22 @@ acts on them — root-cause analysis, autonomous fix, PR review.
 | Tier | Storage | Infra | Use |
 |------|---------|-------|-----|
 | **Local** (default) | embedded SQLite | none | OSS adoption wedge; code never leaves the machine |
-| **Hosted** | Postgres + queue + webhooks | org-wide | cross-repo moat + monetization |
+| **Hosted** | Postgres + durable queue | org-wide | cross-repo + temporal moat; consumed by Pulse |
 
 The keystone is one `StorageDriver` interface with two implementations. Tier
 selection is a one-line swap (`--db sqlite://...` vs `--db postgres://...`).
 
-## The four moats over graphify
+## The moats over graphify (intelligence axis)
 
 1. **Cross-repo** blast radius via HTTP route-contract matching.
 2. **Temporal** history via per-commit snapshots + delta indexing.
-3. **Test intelligence**: symbol→test coverage + predictive selection + CI gate.
-4. **Agentic action**: graph-driven RCA / autonomous fix / PR review.
+3. **Deeper graph + code-aware lexical**: symbol-granular call edges, the
+   symbol↔test coverage map (facts), and BM25 + trigram search with
+   camel/snake tokenization.
+
+All deterministic and LLM-free. The **agentic moat** — graph-driven RCA,
+autonomous fix, PR review, and risk-scored test *selection* — is layered on top
+by **Pulse**, which calls Atlas for the underlying intelligence.
 
 ## The five consumption surfaces
 
@@ -99,5 +107,7 @@ go build ./...  # the whole scaffold compiles with stdlib + cobra only
 
 ## License
 
-Apache-2.0 for the core (`LICENSE`). The hosted-only agentic moat under
-`internal/cloud/**` is BUSL-1.1 in the full build. See `docs/ARCHITECTURE.md`.
+Apache-2.0 for the core (`LICENSE`). Hosted-only org features (multi-tenant
+cross-repo, durable queue) under `internal/cloud/**` are BUSL-1.1 in the full
+build. The agentic layer (RCA/fix/review) is **not** part of Atlas — it lives in
+Pulse. See `docs/ARCHITECTURE.md`.

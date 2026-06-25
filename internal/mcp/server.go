@@ -35,9 +35,10 @@ func NewServer(eng engine.Engine) *Server {
 	return &Server{eng: eng, tools: coreTools()}
 }
 
-// coreTools advertises the tier-agnostic tools. The hosted moats
-// (cross_repo_impact, consumers, route_contracts, rca, fix, review) are added
-// by the full build when the backend reports the capability.
+// coreTools advertises the tier-agnostic tools. The hosted/cross-scope ops
+// (cross_repo_impact, consumers, route_contracts) are added by the full build
+// when the backend reports the capability. Atlas exposes deterministic
+// intelligence only; agentic tools (rca/fix/review) live in Pulse.
 func coreTools() []Tool {
 	obj := func(props map[string]any, required ...string) map[string]any {
 		return map[string]any{"type": "object", "properties": props, "required": required}
