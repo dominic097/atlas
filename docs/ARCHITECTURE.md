@@ -1,7 +1,8 @@
 # Atlas Architecture
 
 This document is the short map. The full implementation plan (operation catalog,
-port manifest, per-surface specs) is produced separately.
+port manifest, per-surface specs) lives at [`plan/IMPLEMENTATION_PLAN.md`](../plan/IMPLEMENTATION_PLAN.md),
+with supporting data in `plan/{catalog,portManifest,critiques}.json`.
 
 ## Status
 
