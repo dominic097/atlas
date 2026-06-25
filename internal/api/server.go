@@ -478,9 +478,21 @@ func writeError(w http.ResponseWriter, err error) {
 		writeProblem(w, http.StatusNotImplemented, "not_implemented", err.Error())
 	case errors.Is(err, engine.ErrTierUnsupported):
 		writeProblem(w, http.StatusNotImplemented, "tier_unsupported", err.Error())
+	case isUnprocessable(err):
+		writeProblem(w, http.StatusUnprocessableEntity, "unprocessable", err.Error())
 	default:
 		writeProblem(w, http.StatusInternalServerError, "internal", err.Error())
 	}
+}
+
+// isUnprocessable recognises engine precondition failures that reflect the
+// caller's data state, not a server fault — e.g. a snapshot diff requested on a
+// repo with only one snapshot. 422 is the honest status (not 500).
+func isUnprocessable(err error) bool {
+	if err == nil {
+		return false
+	}
+	return strings.Contains(err.Error(), "two snapshots")
 }
 
 // isNotFound recognises the engine's not-found errors that are plain fmt.Errorf
