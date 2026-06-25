@@ -69,12 +69,29 @@ func EndpointMatch(prodMethod, prodPath, consMethod, consPath string) bool {
 	// A producer route registered with a trailing slash (net/http subtree, e.g.
 	// "/api/v1/users/") serves every deeper path, so it PREFIX-matches a consumer
 	// call like "/api/v1/users/{id}" that has extra trailing segments.
-	if isSubtree(prodPath) {
+	switch {
+	case isSubtree(prodPath):
 		if len(cs) < len(ps) {
 			return false
 		}
 		cs = cs[:len(ps)]
-	} else if len(ps) != len(cs) {
+	case isSubtree(consPath):
+		// Symmetric case: a CONSUMER URL captured with a trailing slash usually
+		// lost its concatenated dynamic tail (e.g. "…/orders/" + id, where only
+		// the "/orders/" literal survives). The consumer base then prefix-matches
+		// a producer that adds one or more trailing {param} segments
+		// ("/api/v1/orders/{id}"). Require the extra producer segments to be
+		// dynamic so a base "/orders/" can't match an unrelated "/orders/export".
+		if len(ps) < len(cs) {
+			return false
+		}
+		for i := len(cs); i < len(ps); i++ {
+			if !isWildcardSegment(ps[i]) {
+				return false
+			}
+		}
+		ps = ps[:len(cs)]
+	case len(ps) != len(cs):
 		return false
 	}
 	for i := range ps {

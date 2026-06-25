@@ -28,6 +28,11 @@ func TestEndpointMatch(t *testing.T) {
 		{"host stripped", "GET", "/api/v1/users/{id}", "GET", "https://svc.internal/api/v1/users/7", true},
 		// unknown consumer method matches any producer method.
 		{"unknown method", "DELETE", "/api/v1/users/{id}", "", "/api/v1/users/9", true},
+		// consumer-subtree: a concat URL "…/orders/" + id keeps only the trailing-slash
+		// base literal; it must still hit a producer {id} route (cross-lang Go->Python).
+		{"consumer concat trailing-slash vs param", "GET", "/api/v1/orders/{id}", "GET", "/api/v1/orders/", true},
+		// but a consumer base must not match an unrelated longer LITERAL producer path.
+		{"consumer subtree literal mismatch", "GET", "/api/v1/orders/export", "GET", "/api/v1/orders/", false},
 
 		// clear non-matches:
 		{"different path", "GET", "/api/v1/users/{id}", "GET", "/api/v1/orders/1", false},

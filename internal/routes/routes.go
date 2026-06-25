@@ -90,10 +90,18 @@ func Resolve(repoFullName string, raws []RawRoute, syms []graph.CodeSymbol) []gr
 	for _, rr := range raws {
 		switch rr.Role {
 		case RoleConsumer:
+			// The consumer contract allows Path to be empty (RawURL is the source
+			// of truth). The matcher compares on PathPattern, so derive the path
+			// from RawURL when Path was left blank (the JS extractor does this) —
+			// otherwise such a consumer never matches any producer route.
+			consPath := rr.Path
+			if consPath == "" {
+				consPath = extractPath(rr.RawURL)
+			}
 			rt := graph.Route{
 				RepoFullName: repoFullName,
 				Method:       strings.ToUpper(strings.TrimSpace(rr.Method)),
-				PathPattern:  rr.Path,
+				PathPattern:  consPath,
 				HandlerFile:  rr.File,
 				Role:         RoleConsumer,
 				Source:       "outbound_call",
