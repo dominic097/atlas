@@ -55,6 +55,10 @@ func coreTools() []Tool {
 			InputSchema: obj(map[string]any{"changed_paths": map[string]any{"type": "array"}, "symbols": map[string]any{"type": "array"}, "max_depth": map[string]any{"type": "integer"}, "repo_id": str})},
 		{Name: "graph_export", Description: "Export the call-graph neighborhood around a symbol (json|mermaid|dot).",
 			InputSchema: obj(map[string]any{"symbol": str, "depth": map[string]any{"type": "integer"}, "format": str, "repo_id": str}, "symbol")},
+		{Name: "history", Description: "Per-commit snapshot timeline for a repo (temporal).",
+			InputSchema: obj(map[string]any{"repo_id": str, "limit": map[string]any{"type": "integer"}})},
+		{Name: "snapshot_diff", Description: "Structural diff between two snapshots: symbols/edges added/removed/modified.",
+			InputSchema: obj(map[string]any{"from": str, "to": str, "repo_id": str})},
 		{Name: "status", Description: "Engine health and per-repo index freshness.",
 			InputSchema: obj(map[string]any{"repo_id": str})},
 	}
@@ -188,6 +192,10 @@ func (s *Server) callTool(ctx context.Context, params json.RawMessage) map[strin
 			f = "mermaid"
 		}
 		payload, err = s.eng.GraphExport(ctx, engine.GraphExportInput{Symbol: str("symbol"), RepoID: str("repo_id"), Depth: intOr("depth", 2), Format: f, MaxNodes: 200})
+	case "history":
+		payload, err = s.eng.History(ctx, engine.HistoryInput{RepoID: str("repo_id"), Limit: intOr("limit", 50)})
+	case "snapshot_diff":
+		payload, err = s.eng.SnapshotDiff(ctx, engine.SnapshotDiffInput{From: str("from"), To: str("to"), RepoID: str("repo_id")})
 	case "status":
 		payload, err = s.eng.Status(ctx, engine.StatusInput{RepoID: str("repo_id")})
 	default:

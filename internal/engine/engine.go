@@ -13,6 +13,7 @@ import (
 	"fmt"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/export"
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
@@ -190,6 +191,51 @@ type GraphExportResult struct {
 	Content string `json:"content"`
 }
 
+// ── Temporal (the moat graphify lacks) ──────────────────────────────────────
+
+type HistoryInput struct {
+	RepoID string
+	Limit  int
+}
+
+type SnapshotInfo struct {
+	SnapshotID string `json:"snapshot_id"`
+	CommitSHA  string `json:"commit_sha"`
+	Branch     string `json:"branch,omitempty"`
+	Files      int    `json:"files"`
+	Symbols    int    `json:"symbols"`
+	Edges      int    `json:"edges"`
+	CreatedAt  string `json:"created_at"`
+}
+
+type HistoryResult struct {
+	RepoID    string         `json:"repo_id"`
+	FullName  string         `json:"repo_full_name"`
+	Snapshots []SnapshotInfo `json:"snapshots"`
+}
+
+type SnapshotDiffInput struct {
+	RepoID string
+	From   string // commit sha (prefix) or snapshot id; default = the snapshot before To
+	To     string // commit sha (prefix) or snapshot id; default = latest snapshot
+}
+
+type SnapshotDiffResult struct {
+	FromCommit    string               `json:"from_commit"`
+	FromSnapshot  string               `json:"from_snapshot"`
+	ToCommit      string               `json:"to_commit"`
+	ToSnapshot    string               `json:"to_snapshot"`
+	AddedCount    int                  `json:"added_count"`
+	RemovedCount  int                  `json:"removed_count"`
+	ModifiedCount int                  `json:"modified_count"`
+	Added         []query.SymbolChange `json:"added_symbols"`
+	Removed       []query.SymbolChange `json:"removed_symbols"`
+	Modified      []query.SymbolChange `json:"modified_symbols"`
+	ChangedFiles  []string             `json:"changed_files"`
+	AddedEdges    []query.EdgeChange   `json:"added_edges"`
+	RemovedEdges  []query.EdgeChange   `json:"removed_edges"`
+}
+
 // ── The Engine interface ────────────────────────────────────────────────────
 
 // Engine is the single contract all surfaces depend on. The full catalog
@@ -203,6 +249,8 @@ type Engine interface {
 	Callers(ctx context.Context, in CallersInput) (*CallersResult, error)
 	Symbol(ctx context.Context, in SymbolInput) (*SymbolResult, error)
 	GraphExport(ctx context.Context, in GraphExportInput) (*GraphExportResult, error)
+	History(ctx context.Context, in HistoryInput) (*HistoryResult, error)
+	SnapshotDiff(ctx context.Context, in SnapshotDiffInput) (*SnapshotDiffResult, error)
 	Status(ctx context.Context, in StatusInput) (*StatusResult, error)
 	Close() error
 }
@@ -622,4 +670,173 @@ func fullGraph(syms []graph.CodeSymbol, edges []graph.DependencyEdge) export.Gra
 		}
 	}
 	return g
+}
+
+func (e *localEngine) History(ctx context.Context, in HistoryInput) (*HistoryResult, error) {
+	repo, err := e.resolveRepo(ctx, in.RepoID)
+	if err != nil {
+		return nil, err
+	}
+	limit := in.Limit
+	if limit <= 0 {
+		limit = 50
+	}
+	snaps, err := e.store.ListSnapshots(ctx, repo.ID, limit)
+	if err != nil {
+		return nil, fmt.Errorf("engine: history: %w", err)
+	}
+	out := make([]SnapshotInfo, 0, len(snaps))
+	for _, s := range snaps {
+		out = append(out, SnapshotInfo{
+			SnapshotID: s.ID, CommitSHA: s.CommitSHA, Branch: s.Branch,
+			Files: s.FileCount, Symbols: s.SymbolCount, Edges: s.EdgeCount,
+			CreatedAt: s.CreatedAt.Format(time.RFC3339),
+		})
+	}
+	return &HistoryResult{RepoID: repo.ID, FullName: repo.FullName, Snapshots: out}, nil
+}
+
+func (e *localEngine) SnapshotDiff(ctx context.Context, in SnapshotDiffInput) (*SnapshotDiffResult, error) {
+	repo, err := e.resolveRepo(ctx, in.RepoID)
+	if err != nil {
+		return nil, err
+	}
+	snaps, err := e.store.ListSnapshots(ctx, repo.ID, 500) // newest first
+	if err != nil {
+		return nil, fmt.Errorf("engine: diff: %w", err)
+	}
+	if len(snaps) == 0 {
+		return nil, ErrNoIndex
+	}
+	// Resolve the head ("to") snapshot, default = latest.
+	toSnap := &snaps[0]
+	if in.To != "" {
+		if m := matchSnapshot(snaps, in.To); m != nil {
+			toSnap = m
+		} else {
+			return nil, fmt.Errorf("atlas: snapshot %q not found", in.To)
+		}
+	}
+	// Resolve the base ("from") snapshot, default = the one indexed just before To.
+	var fromSnap *graph.Snapshot
+	if in.From != "" {
+		if fromSnap = matchSnapshot(snaps, in.From); fromSnap == nil {
+			return nil, fmt.Errorf("atlas: snapshot %q not found", in.From)
+		}
+	} else {
+		fromSnap = snapshotBefore(snaps, toSnap.ID)
+	}
+	if fromSnap == nil {
+		return nil, errors.New("atlas: need two snapshots to diff — index the repo at two commits, or pass --from")
+	}
+
+	symsA, err := e.store.ListSymbols(ctx, fromSnap.ID)
+	if err != nil {
+		return nil, fmt.Errorf("engine: diff load base symbols: %w", err)
+	}
+	symsB, err := e.store.ListSymbols(ctx, toSnap.ID)
+	if err != nil {
+		return nil, fmt.Errorf("engine: diff load head symbols: %w", err)
+	}
+	edgesA, err := e.store.ListEdges(ctx, fromSnap.ID)
+	if err != nil {
+		return nil, fmt.Errorf("engine: diff load base edges: %w", err)
+	}
+	edgesB, err := e.store.ListEdges(ctx, toSnap.ID)
+	if err != nil {
+		return nil, fmt.Errorf("engine: diff load head edges: %w", err)
+	}
+	d := query.Diff(symsA, symsB, edgesA, edgesB)
+	if d.ChangedFiles == nil {
+		d.ChangedFiles = []string{}
+	}
+	const cap = 100
+	return &SnapshotDiffResult{
+		FromCommit: fromSnap.CommitSHA, FromSnapshot: fromSnap.ID,
+		ToCommit: toSnap.CommitSHA, ToSnapshot: toSnap.ID,
+		AddedCount: len(d.Added), RemovedCount: len(d.Removed), ModifiedCount: len(d.Modified),
+		Added: capChanges(d.Added, cap), Removed: capChanges(d.Removed, cap), Modified: capChanges(d.Modified, cap),
+		ChangedFiles: d.ChangedFiles,
+		AddedEdges:   capEdges(d.AddedEdges, cap), RemovedEdges: capEdges(d.RemovedEdges, cap),
+	}, nil
+}
+
+// resolveRepo selects the repo a temporal op runs against: the named one, the
+// single indexed repo, or the most recently indexed.
+func (e *localEngine) resolveRepo(ctx context.Context, repoID string) (*graph.Repo, error) {
+	repos, err := e.store.ListRepos(ctx, "")
+	if err != nil {
+		return nil, err
+	}
+	if len(repos) == 0 {
+		return nil, ErrNoIndex
+	}
+	if repoID != "" {
+		for i := range repos {
+			if repos[i].ID == repoID || strings.EqualFold(repos[i].FullName, repoID) {
+				return &repos[i], nil
+			}
+		}
+		return nil, fmt.Errorf("atlas: repo %q not found", repoID)
+	}
+	if len(repos) == 1 {
+		return &repos[0], nil
+	}
+	best := &repos[0]
+	for i := range repos {
+		if repos[i].LastIndexedAt != nil && (best.LastIndexedAt == nil || repos[i].LastIndexedAt.After(*best.LastIndexedAt)) {
+			best = &repos[i]
+		}
+	}
+	return best, nil
+}
+
+// matchSnapshot finds a snapshot by exact ID, exact commit SHA, then commit-SHA prefix.
+func matchSnapshot(snaps []graph.Snapshot, ref string) *graph.Snapshot {
+	ref = strings.TrimSpace(ref)
+	if ref == "" {
+		return nil
+	}
+	for i := range snaps {
+		if snaps[i].ID == ref || snaps[i].CommitSHA == ref {
+			return &snaps[i]
+		}
+	}
+	for i := range snaps {
+		if strings.HasPrefix(snaps[i].CommitSHA, ref) {
+			return &snaps[i]
+		}
+	}
+	return nil
+}
+
+// snapshotBefore returns the snapshot indexed immediately before the one with id
+// (snaps is newest-first, so that's the next index).
+func snapshotBefore(snaps []graph.Snapshot, id string) *graph.Snapshot {
+	for i := range snaps {
+		if snaps[i].ID == id && i+1 < len(snaps) {
+			return &snaps[i+1]
+		}
+	}
+	return nil
+}
+
+func capChanges(c []query.SymbolChange, n int) []query.SymbolChange {
+	if c == nil {
+		return []query.SymbolChange{}
+	}
+	if len(c) > n {
+		return c[:n]
+	}
+	return c
+}
+
+func capEdges(c []query.EdgeChange, n int) []query.EdgeChange {
+	if c == nil {
+		return []query.EdgeChange{}
+	}
+	if len(c) > n {
+		return c[:n]
+	}
+	return c
 }

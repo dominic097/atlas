@@ -13,6 +13,7 @@ import (
 	"context"
 
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/engine"
+	"github.com/MsysTechnologiesllc/aziron-atlas/internal/query"
 )
 
 // Re-export the canonical engine types so SDK consumers never reach into internal/.
@@ -42,6 +43,14 @@ type (
 
 	GraphExportInput  = engine.GraphExportInput
 	GraphExportResult = engine.GraphExportResult
+
+	HistoryInput       = engine.HistoryInput
+	HistoryResult      = engine.HistoryResult
+	SnapshotInfo       = engine.SnapshotInfo
+	SnapshotDiffInput  = engine.SnapshotDiffInput
+	SnapshotDiffResult = engine.SnapshotDiffResult
+	SymbolChange       = query.SymbolChange
+	EdgeChange         = query.EdgeChange
 )
 
 // ErrNotImplemented is returned by stub operations in this scaffold.

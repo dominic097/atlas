@@ -963,6 +963,133 @@ func sortSymbols(s []graph.CodeSymbol) {
 	})
 }
 
+// SymbolChange is one symbol added/removed/modified between two snapshots.
+type SymbolChange struct {
+	Name   string `json:"name"`
+	Path   string `json:"path"`
+	Kind   string `json:"kind"`
+	Change string `json:"change"` // added | removed | modified
+}
+
+// EdgeChange is one call relationship added/removed between two snapshots.
+type EdgeChange struct {
+	From   string `json:"from"`
+	To     string `json:"to"`
+	Change string `json:"change"` // added | removed
+}
+
+// DiffResult is the structural delta from a base snapshot to a head snapshot.
+type DiffResult struct {
+	Added        []SymbolChange `json:"added_symbols"`
+	Removed      []SymbolChange `json:"removed_symbols"`
+	Modified     []SymbolChange `json:"modified_symbols"`
+	ChangedFiles []string       `json:"changed_files"`
+	AddedEdges   []EdgeChange   `json:"added_edges"`
+	RemovedEdges []EdgeChange   `json:"removed_edges"`
+}
+
+// Diff computes the structural delta from base (A) to head (B): symbols added /
+// removed / modified, the distinct changed files, and added/removed call edges.
+// Symbols are matched by their slot (path|kind|name); "modified" = same slot with
+// a different NodeID (the content-stable identity changed, i.e. the signature/
+// shape changed) — this is exactly what NodeID was designed for. Renames/moves
+// surface as remove+add (P0). Edges are matched by caller|callee name.
+func Diff(symsA, symsB []graph.CodeSymbol, edgesA, edgesB []graph.DependencyEdge) DiffResult {
+	slotKey := func(s graph.CodeSymbol) string {
+		return canonicalPath(s.Path) + "\x00" + strings.ToLower(strings.TrimSpace(s.Kind)) + "\x00" + strings.TrimSpace(s.Name)
+	}
+	a := make(map[string]graph.CodeSymbol, len(symsA))
+	for _, s := range symsA {
+		a[slotKey(s)] = s
+	}
+	b := make(map[string]graph.CodeSymbol, len(symsB))
+	for _, s := range symsB {
+		b[slotKey(s)] = s
+	}
+
+	var res DiffResult
+	files := map[string]bool{}
+	mark := func(p string) {
+		if p = canonicalPath(p); p != "" {
+			files[p] = true
+		}
+	}
+	for k, sb := range b {
+		if sa, ok := a[k]; !ok {
+			res.Added = append(res.Added, symChange(sb, "added"))
+			mark(sb.Path)
+		} else if string(sa.NodeID) != string(sb.NodeID) {
+			res.Modified = append(res.Modified, symChange(sb, "modified"))
+			mark(sb.Path)
+		}
+	}
+	for k, sa := range a {
+		if _, ok := b[k]; !ok {
+			res.Removed = append(res.Removed, symChange(sa, "removed"))
+			mark(sa.Path)
+		}
+	}
+
+	edgeKey := func(e graph.DependencyEdge) string {
+		return strings.ToLower(strings.TrimSpace(e.FromSymbol)) + "\x00" + strings.ToLower(strings.TrimSpace(e.ToRef))
+	}
+	ea := map[string]graph.DependencyEdge{}
+	for _, e := range edgesA {
+		if e.Kind == graph.EdgeCalls && e.FromSymbol != "" && e.ToRef != "" {
+			ea[edgeKey(e)] = e
+		}
+	}
+	eb := map[string]graph.DependencyEdge{}
+	for _, e := range edgesB {
+		if e.Kind == graph.EdgeCalls && e.FromSymbol != "" && e.ToRef != "" {
+			eb[edgeKey(e)] = e
+		}
+	}
+	for k, e := range eb {
+		if _, ok := ea[k]; !ok {
+			res.AddedEdges = append(res.AddedEdges, EdgeChange{From: e.FromSymbol, To: e.ToRef, Change: "added"})
+		}
+	}
+	for k, e := range ea {
+		if _, ok := eb[k]; !ok {
+			res.RemovedEdges = append(res.RemovedEdges, EdgeChange{From: e.FromSymbol, To: e.ToRef, Change: "removed"})
+		}
+	}
+
+	for f := range files {
+		res.ChangedFiles = append(res.ChangedFiles, f)
+	}
+	sort.Strings(res.ChangedFiles)
+	sortChanges(res.Added)
+	sortChanges(res.Removed)
+	sortChanges(res.Modified)
+	sortEdgeChanges(res.AddedEdges)
+	sortEdgeChanges(res.RemovedEdges)
+	return res
+}
+
+func symChange(s graph.CodeSymbol, ch string) SymbolChange {
+	return SymbolChange{Name: s.Name, Path: s.Path, Kind: s.Kind, Change: ch}
+}
+
+func sortChanges(c []SymbolChange) {
+	sort.Slice(c, func(i, j int) bool {
+		if c[i].Path == c[j].Path {
+			return c[i].Name < c[j].Name
+		}
+		return c[i].Path < c[j].Path
+	})
+}
+
+func sortEdgeChanges(c []EdgeChange) {
+	sort.Slice(c, func(i, j int) bool {
+		if c[i].From == c[j].From {
+			return c[i].To < c[j].To
+		}
+		return c[i].From < c[j].From
+	})
+}
+
 // SubEdge is a directed caller->callee relationship in a subgraph, by symbol name.
 type SubEdge struct{ From, To string }
 
