@@ -522,9 +522,56 @@ func (d *sqliteDriver) ListSnapshots(ctx context.Context, repoID string, limit i
 
 // ---- graph reads -----------------------------------------------------------
 
+// symbolCols / edgeCols are the canonical column lists; SymbolsByName,
+// SymbolsByPath, CallEdgesByToRefs and the List* readers all share them so every
+// path returns the SAME graph shape (node_id + decoded metadata).
+const symbolCols = `id, snapshot_id, node_id, repo_id, path, language, kind, name, signature, doc, start_line, end_line, metadata`
+const edgeCols = `id, snapshot_id, from_file, from_symbol, to_ref, kind, language, line, metadata`
+
+// scanSymbolRow decodes one symbols row into a graph.CodeSymbol (node_id +
+// metadata included), matching ListSymbols exactly.
+func scanSymbolRow(sc interface{ Scan(...any) error }) (graph.CodeSymbol, error) {
+	var (
+		sym    graph.CodeSymbol
+		nodeID string
+		meta   sql.NullString
+	)
+	if err := sc.Scan(&sym.ID, &sym.SnapshotID, &nodeID, &sym.RepoID, &sym.Path, &sym.Language,
+		&sym.Kind, &sym.Name, &sym.Signature, &sym.Doc, &sym.StartLine, &sym.EndLine, &meta); err != nil {
+		return graph.CodeSymbol{}, err
+	}
+	sym.NodeID = graph.NodeID(nodeID)
+	m, err := unmarshalJSONMap(meta.String)
+	if err != nil {
+		return graph.CodeSymbol{}, err
+	}
+	sym.Metadata = m
+	return sym, nil
+}
+
+// scanEdgeRow decodes one edges row into a graph.DependencyEdge (metadata
+// included), matching ListEdges exactly.
+func scanEdgeRow(sc interface{ Scan(...any) error }) (graph.DependencyEdge, error) {
+	var (
+		e    graph.DependencyEdge
+		kind string
+		meta sql.NullString
+	)
+	if err := sc.Scan(&e.ID, &e.SnapshotID, &e.FromFile, &e.FromSymbol, &e.ToRef, &kind, &e.Language, &e.Line, &meta); err != nil {
+		return graph.DependencyEdge{}, err
+	}
+	e.Kind = graph.EdgeKind(kind)
+	m, err := unmarshalJSONMap(meta.String)
+	if err != nil {
+		return graph.DependencyEdge{}, err
+	}
+	e.Metadata = m
+	return e, nil
+}
+
 func (d *sqliteDriver) ListSymbols(ctx context.Context, snapshotID string) ([]graph.CodeSymbol, error) {
 	rows, err := d.db.QueryContext(ctx, `
-		SELECT id, snapshot_id, node_id, repo_id, path, language, kind, name, signature, doc, start_line, end_line, metadata
+		SELECT `+symbolCols+`
 		FROM symbols WHERE snapshot_id = ?
 		ORDER BY path, start_line, name`,
 		snapshotID,
@@ -536,18 +583,9 @@ func (d *sqliteDriver) ListSymbols(ctx context.Context, snapshotID string) ([]gr
 
 	var out []graph.CodeSymbol
 	for rows.Next() {
-		var (
-			sym    graph.CodeSymbol
-			nodeID string
-			meta   sql.NullString
-		)
-		if err := rows.Scan(&sym.ID, &sym.SnapshotID, &nodeID, &sym.RepoID, &sym.Path, &sym.Language,
-			&sym.Kind, &sym.Name, &sym.Signature, &sym.Doc, &sym.StartLine, &sym.EndLine, &meta); err != nil {
+		sym, err := scanSymbolRow(rows)
+		if err != nil {
 			return nil, fmt.Errorf("store: scan symbol: %w", err)
-		}
-		sym.NodeID = graph.NodeID(nodeID)
-		if sym.Metadata, err = unmarshalJSONMap(meta.String); err != nil {
-			return nil, fmt.Errorf("store: unmarshal symbol metadata: %w", err)
 		}
 		out = append(out, sym)
 	}
@@ -556,7 +594,7 @@ func (d *sqliteDriver) ListSymbols(ctx context.Context, snapshotID string) ([]gr
 
 func (d *sqliteDriver) ListEdges(ctx context.Context, snapshotID string) ([]graph.DependencyEdge, error) {
 	rows, err := d.db.QueryContext(ctx, `
-		SELECT id, snapshot_id, from_file, from_symbol, to_ref, kind, language, line, metadata
+		SELECT `+edgeCols+`
 		FROM edges WHERE snapshot_id = ?
 		ORDER BY from_file, to_ref, kind`,
 		snapshotID,
@@ -568,21 +606,114 @@ func (d *sqliteDriver) ListEdges(ctx context.Context, snapshotID string) ([]grap
 
 	var out []graph.DependencyEdge
 	for rows.Next() {
-		var (
-			e    graph.DependencyEdge
-			kind string
-			meta sql.NullString
-		)
-		if err := rows.Scan(&e.ID, &e.SnapshotID, &e.FromFile, &e.FromSymbol, &e.ToRef, &kind, &e.Language, &e.Line, &meta); err != nil {
+		e, err := scanEdgeRow(rows)
+		if err != nil {
 			return nil, fmt.Errorf("store: scan edge: %w", err)
-		}
-		e.Kind = graph.EdgeKind(kind)
-		if e.Metadata, err = unmarshalJSONMap(meta.String); err != nil {
-			return nil, fmt.Errorf("store: unmarshal edge metadata: %w", err)
 		}
 		out = append(out, e)
 	}
 	return out, rows.Err()
+}
+
+// SymbolsByName returns symbols whose name matches exactly, served by the
+// idx_symbols_snapshot_name index — the indexed seed for impact's reverse-BFS.
+func (d *sqliteDriver) SymbolsByName(ctx context.Context, snapshotID, name string) ([]graph.CodeSymbol, error) {
+	rows, err := d.db.QueryContext(ctx, `
+		SELECT `+symbolCols+`
+		FROM symbols WHERE snapshot_id = ? AND name = ?
+		ORDER BY path, start_line`,
+		snapshotID, name,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("store: symbols by name: %w", err)
+	}
+	defer rows.Close()
+
+	var out []graph.CodeSymbol
+	for rows.Next() {
+		sym, err := scanSymbolRow(rows)
+		if err != nil {
+			return nil, fmt.Errorf("store: scan symbol: %w", err)
+		}
+		out = append(out, sym)
+	}
+	return out, rows.Err()
+}
+
+// SymbolsByPath returns symbols in a given file, served by the
+// idx_symbols_snapshot_path index.
+func (d *sqliteDriver) SymbolsByPath(ctx context.Context, snapshotID, path string) ([]graph.CodeSymbol, error) {
+	rows, err := d.db.QueryContext(ctx, `
+		SELECT `+symbolCols+`
+		FROM symbols WHERE snapshot_id = ? AND path = ?
+		ORDER BY start_line, name`,
+		snapshotID, path,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("store: symbols by path: %w", err)
+	}
+	defer rows.Close()
+
+	var out []graph.CodeSymbol
+	for rows.Next() {
+		sym, err := scanSymbolRow(rows)
+		if err != nil {
+			return nil, fmt.Errorf("store: scan symbol: %w", err)
+		}
+		out = append(out, sym)
+	}
+	return out, rows.Err()
+}
+
+// callEdgesChunk is the IN-list batch size: SQLite caps bound parameters
+// (default 999); 400 to_refs + the snapshot_id stays comfortably under it.
+const callEdgesChunk = 400
+
+// CallEdgesByToRefs returns every "calls" edge whose to_ref is in toRefs, served
+// by idx_edges_snapshot_toref. The IN-list is chunked so a large blast radius
+// never blows the bound-parameter limit; all matching edges are returned with
+// Metadata populated (no dedupe).
+func (d *sqliteDriver) CallEdgesByToRefs(ctx context.Context, snapshotID string, toRefs []string) ([]graph.DependencyEdge, error) {
+	if len(toRefs) == 0 {
+		return nil, nil
+	}
+	var out []graph.DependencyEdge
+	for start := 0; start < len(toRefs); start += callEdgesChunk {
+		end := start + callEdgesChunk
+		if end > len(toRefs) {
+			end = len(toRefs)
+		}
+		chunk := toRefs[start:end]
+
+		placeholders := strings.Repeat("?,", len(chunk))
+		placeholders = placeholders[:len(placeholders)-1] // trim trailing comma
+		args := make([]any, 0, len(chunk)+1)
+		args = append(args, snapshotID)
+		for _, ref := range chunk {
+			args = append(args, ref)
+		}
+
+		query := `SELECT ` + edgeCols + `
+			FROM edges WHERE snapshot_id = ? AND kind = 'calls' AND to_ref IN (` + placeholders + `)`
+		rows, err := d.db.QueryContext(ctx, query, args...)
+		if err != nil {
+			return nil, fmt.Errorf("store: call edges by to_refs: %w", err)
+		}
+		for rows.Next() {
+			e, err := scanEdgeRow(rows)
+			if err != nil {
+				rows.Close()
+				return nil, fmt.Errorf("store: scan edge: %w", err)
+			}
+			out = append(out, e)
+		}
+		if err := rows.Err(); err != nil {
+			rows.Close()
+			return nil, fmt.Errorf("store: call edges by to_refs: %w", err)
+		}
+		rows.Close()
+	}
+	return out, nil
 }
 
 func (d *sqliteDriver) ListRoutes(ctx context.Context, snapshotID, role string) ([]graph.Route, error) {

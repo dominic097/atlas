@@ -303,19 +303,17 @@ func (e *localEngine) Impact(ctx context.Context, in ImpactInput) (*ImpactResult
 	if err != nil {
 		return nil, err
 	}
-	syms, err := e.store.ListSymbols(ctx, snap.ID)
-	if err != nil {
-		return nil, fmt.Errorf("engine: load symbols: %w", err)
-	}
-	edges, err := e.store.ListEdges(ctx, snap.ID)
-	if err != nil {
-		return nil, fmt.Errorf("engine: load edges: %w", err)
-	}
 	depth := in.MaxDepth
 	if depth <= 0 {
 		depth = 3
 	}
-	r := query.Impact(syms, edges, in.ChangedPaths, in.Symbols, depth)
+	// Scalable reverse-BFS: ImpactGraph drives the traversal through INDEXED store
+	// reads (SymbolsByName/SymbolsByPath/CallEdgesByToRefs), touching only the blast
+	// radius instead of loading the whole snapshot into memory.
+	r, err := query.ImpactGraph(ctx, e.store, snap.ID, in.ChangedPaths, in.Symbols, depth)
+	if err != nil {
+		return nil, fmt.Errorf("engine: impact: %w", err)
+	}
 	files := make([]FileImpact, 0, len(r.ImpactedFiles))
 	for _, p := range r.ImpactedFiles {
 		files = append(files, FileImpact{Path: p, Reason: "caller"})

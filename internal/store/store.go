@@ -48,6 +48,19 @@ type StorageDriver interface {
 	ListSymbols(ctx context.Context, snapshotID string) ([]graph.CodeSymbol, error)
 	ListEdges(ctx context.Context, snapshotID string) ([]graph.DependencyEdge, error)
 	ListRoutes(ctx context.Context, snapshotID, role string) ([]graph.Route, error)
+
+	// indexed graph reads (scale impact to the blast radius, not the whole repo)
+	//
+	// SymbolsByName returns symbols with an exact name match, using the
+	// (snapshot_id, name) index. SymbolsByPath does the same on path. Both feed
+	// the reverse-BFS seed/expansion so a query touches only the rows it needs.
+	SymbolsByName(ctx context.Context, snapshotID, name string) ([]graph.CodeSymbol, error)
+	SymbolsByPath(ctx context.Context, snapshotID, path string) ([]graph.CodeSymbol, error)
+	// CallEdgesByToRefs returns every "calls" edge whose to_ref is in the given
+	// set, using the (snapshot_id, to_ref) index. The IN-list is chunked to stay
+	// under SQLite's bound-parameter limit; all matching edges are returned with
+	// Metadata populated (no dedupe).
+	CallEdgesByToRefs(ctx context.Context, snapshotID string, toRefs []string) ([]graph.DependencyEdge, error)
 }
 
 // Options configures Open().

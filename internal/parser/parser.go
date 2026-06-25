@@ -127,6 +127,12 @@ func Parse(repoID, repoFullName, filePath, language string, content []byte) (Res
 			Metadata:  graph.JSONBMap{},
 		}
 		sym.NodeID = ComputeNodeID(repoFullName, filePath, d.kind, d.name, sig)
+		// SHARED METADATA CONTRACT: method symbols carry the base receiver
+		// type so resolveTargets can match a call's receiver type to the
+		// declaring type (defeats method-name collisions).
+		if d.recvType != "" {
+			sym.Metadata["recv_type"] = d.recvType
+		}
 		symbols = append(symbols, sym)
 	}
 
@@ -159,6 +165,11 @@ type symbolDraft struct {
 	signature string
 	startLine int
 	endLine   int
+	// recvType is the base receiver type a method is declared on (Go only,
+	// per the SHARED METADATA CONTRACT). Empty for non-methods. Promoted to
+	// CodeSymbol.Metadata["recv_type"] so the query layer can disambiguate
+	// same-named methods on different types.
+	recvType string
 }
 
 func (d symbolDraft) key() string {

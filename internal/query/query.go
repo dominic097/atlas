@@ -17,10 +17,12 @@
 package query
 
 import (
+	"context"
 	"sort"
 	"strings"
 
 	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
+	"github.com/MsysTechnologiesllc/aziron-atlas/internal/store"
 )
 
 // Callers returns the symbols that call the symbol(s) named `name` — i.e. the
@@ -92,6 +94,7 @@ func Impact(syms []graph.CodeSymbol, edges []graph.DependencyEdge, changedPaths,
 	}
 
 	// Reverse adjacency: resolved-target-identity -> caller symbols.
+	repoType := repoTypePredicate(syms)
 	radj := map[string][]graph.CodeSymbol{}
 	for _, e := range edges {
 		if e.Kind != graph.EdgeCalls {
@@ -101,7 +104,7 @@ func Impact(syms []graph.CodeSymbol, edges []graph.DependencyEdge, changedPaths,
 		if caller == nil {
 			continue
 		}
-		for _, t := range resolveTargets(e, symsByName) {
+		for _, t := range resolveTargets(e, symsByName, repoType) {
 			tk := symbolKey(t)
 			radj[tk] = append(radj[tk], *caller)
 		}
@@ -147,14 +150,344 @@ func Impact(syms []graph.CodeSymbol, edges []graph.DependencyEdge, changedPaths,
 	return result
 }
 
+// ImpactGraph computes the SAME reverse blast radius as Impact, but driven by
+// INDEXED store queries so a query touches only the blast radius — never the
+// whole snapshot. It resolves the seed via SymbolsByPath/SymbolsByName, then per
+// hop collects the distinct callee names of the current frontier, fetches only
+// the matching call edges via CallEdgesByToRefs, and resolves each edge's
+// targets/caller with the SAME resolveTargets/resolveCaller logic Impact uses
+// (so the receiver-type precision fix applies identically). Symbols fetched by
+// name are cached so each name is queried at most once across the whole BFS.
+func ImpactGraph(ctx context.Context, drv store.StorageDriver, snapshotID string, changedPaths, changedSymbols []string, maxDepth int) (ImpactResult, error) {
+	if maxDepth < 1 {
+		maxDepth = 1
+	}
+	result := ImpactResult{ImpactedSymbols: []string{}, ImpactedFiles: []string{}}
+
+	cache := newSymbolCache(ctx, drv, snapshotID)
+
+	// Seed identities + seed files, resolved through indexed reads only.
+	seed := map[string]bool{}      // symbol identity -> true
+	seedFiles := map[string]bool{} // canonical seed file path -> true
+	// frontierSyms holds the actual CodeSymbols on the current frontier so we can
+	// read their (callee) Name to find callers in the next hop.
+	var frontierSyms []graph.CodeSymbol
+
+	addSeed := func(s graph.CodeSymbol) {
+		k := symbolKey(s)
+		if seed[k] {
+			return
+		}
+		seed[k] = true
+		if fp := canonicalPath(s.Path); fp != "" {
+			seedFiles[fp] = true
+		}
+		frontierSyms = append(frontierSyms, s)
+	}
+
+	for _, p := range changedPaths {
+		cp := canonicalPath(p)
+		if cp == "" {
+			continue
+		}
+		syms, err := drv.SymbolsByPath(ctx, snapshotID, p)
+		if err != nil {
+			return result, err
+		}
+		// SymbolsByPath matches the stored path verbatim; also try the canonical
+		// form when it differs (e.g. a leading "./" the caller passed).
+		if len(syms) == 0 && cp != p {
+			if syms, err = drv.SymbolsByPath(ctx, snapshotID, cp); err != nil {
+				return result, err
+			}
+		}
+		for _, s := range syms {
+			cache.put(s)
+			addSeed(s)
+		}
+	}
+	for _, n := range changedSymbols {
+		name := strings.TrimSpace(n)
+		if name == "" {
+			continue
+		}
+		syms, err := cache.byOriginalName(name)
+		if err != nil {
+			return result, err
+		}
+		for _, s := range syms {
+			addSeed(s)
+		}
+	}
+	if len(seed) == 0 {
+		return result, nil
+	}
+
+	impactedNames := map[string]bool{}
+	impactedFiles := map[string]bool{}
+	visited := map[string]bool{}
+	for k := range seed {
+		visited[k] = true
+	}
+
+	depthReached := 0
+	for d := 1; d <= maxDepth && len(frontierSyms) > 0; d++ {
+		// Distinct callee names of the current frontier — the only to_refs whose
+		// edges can point AT something on the frontier.
+		nameSet := map[string]bool{}
+		var names []string
+		for _, s := range frontierSyms {
+			if s.Name == "" || nameSet[s.Name] {
+				continue
+			}
+			nameSet[s.Name] = true
+			names = append(names, s.Name)
+		}
+		if len(names) == 0 {
+			break
+		}
+		edges, err := drv.CallEdgesByToRefs(ctx, snapshotID, names)
+		if err != nil {
+			return result, err
+		}
+
+		// Frontier identities, so we only advance edges that actually resolve to
+		// the frontier (not merely share a bare callee name).
+		frontierSet := make(map[string]bool, len(frontierSyms))
+		for _, s := range frontierSyms {
+			frontierSet[symbolKey(s)] = true
+		}
+
+		var nextSyms []graph.CodeSymbol
+		for _, e := range edges {
+			if e.Kind != graph.EdgeCalls {
+				continue
+			}
+			// Does this edge resolve to a symbol on the current frontier?
+			byName, err := cache.lowerMap(e.ToRef)
+			if err != nil {
+				return result, err
+			}
+			hits := false
+			for _, t := range resolveTargets(e, byName, cache.isRepoType) {
+				if frontierSet[symbolKey(t)] {
+					hits = true
+					break
+				}
+			}
+			if !hits {
+				continue
+			}
+			caller, err := cache.resolveCaller(e)
+			if err != nil {
+				return result, err
+			}
+			if caller == nil {
+				continue
+			}
+			ck := symbolKey(*caller)
+			if visited[ck] {
+				continue
+			}
+			visited[ck] = true
+			depthReached = d
+			if caller.Name != "" {
+				impactedNames[caller.Name] = true
+			}
+			if fp := canonicalPath(caller.Path); fp != "" && !seedFiles[fp] {
+				impactedFiles[fp] = true
+			}
+			nextSyms = append(nextSyms, *caller)
+		}
+		frontierSyms = nextSyms
+	}
+
+	result.ImpactedSymbols = sortedKeys(impactedNames)
+	result.ImpactedFiles = sortedKeys(impactedFiles)
+	result.DepthReached = depthReached
+	return result, nil
+}
+
+// symbolCache fetches symbols-by-name from the store on demand and memoizes the
+// result, so each distinct name is queried at most once across a whole BFS. It
+// maintains a lowercase-keyed view for the resolveTargets/resolveCaller helpers
+// (which key by lowercased name) alongside a canonical-path index for caller
+// file resolution.
+type symbolCache struct {
+	ctx        context.Context
+	drv        store.StorageDriver
+	snapshotID string
+	// byLower[lowercased name] = symbols with that name (the form resolveTargets
+	// and resolveCaller expect). A present (even if empty) entry means "fetched".
+	byLower map[string][]graph.CodeSymbol
+	// byFile[canonical path] = symbols in that file, populated opportunistically
+	// from every symbol we observe; feeds resolveCaller's file fallback.
+	byFile      map[string][]graph.CodeSymbol
+	fileSeen    map[string]map[string]bool // path -> symbolKey set, for byFile dedup
+	fileFetched map[string]bool            // canonical path -> SymbolsByPath already run
+	// repoType[lowered name] = is it an in-repo type (memoized for isRepoType).
+	repoType map[string]bool
+}
+
+func newSymbolCache(ctx context.Context, drv store.StorageDriver, snapshotID string) *symbolCache {
+	return &symbolCache{
+		ctx:         ctx,
+		drv:         drv,
+		snapshotID:  snapshotID,
+		byLower:     map[string][]graph.CodeSymbol{},
+		byFile:      map[string][]graph.CodeSymbol{},
+		fileSeen:    map[string]map[string]bool{},
+		fileFetched: map[string]bool{},
+		repoType:    map[string]bool{},
+	}
+}
+
+// symbolsInFile returns all symbols in canonical path `fp`, fetching them once
+// via the indexed SymbolsByPath read and memoizing. The store matches the path
+// verbatim; we query with the canonical form (paths are stored canonically).
+func (c *symbolCache) symbolsInFile(fp string) ([]graph.CodeSymbol, error) {
+	if fp == "" {
+		return nil, nil
+	}
+	if c.fileFetched[fp] {
+		return c.byFile[fp], nil
+	}
+	c.fileFetched[fp] = true
+	syms, err := c.drv.SymbolsByPath(c.ctx, c.snapshotID, fp)
+	if err != nil {
+		return nil, err
+	}
+	for _, s := range syms {
+		c.put(s)
+	}
+	return c.byFile[fp], nil
+}
+
+// put records a symbol into the by-file index (and, since it's already in hand,
+// pre-warms the by-name cache for its lowercased name without a store round-trip
+// only when that name was not yet fetched — otherwise leaves the authoritative
+// fetched set untouched).
+func (c *symbolCache) put(s graph.CodeSymbol) {
+	if fp := canonicalPath(s.Path); fp != "" {
+		k := symbolKey(s)
+		seen := c.fileSeen[fp]
+		if seen == nil {
+			seen = map[string]bool{}
+			c.fileSeen[fp] = seen
+		}
+		if !seen[k] {
+			seen[k] = true
+			c.byFile[fp] = append(c.byFile[fp], s)
+		}
+	}
+}
+
+// byOriginalName fetches symbols whose stored name == name (verbatim case, as
+// the store's idx_symbols_snapshot_name index expects), memoized by lowercased
+// name. Returns the fetched symbols.
+func (c *symbolCache) byOriginalName(name string) ([]graph.CodeSymbol, error) {
+	lower := strings.ToLower(strings.TrimSpace(name))
+	if lower == "" {
+		return nil, nil
+	}
+	if got, ok := c.byLower[lower]; ok {
+		return got, nil
+	}
+	syms, err := c.drv.SymbolsByName(c.ctx, c.snapshotID, name)
+	if err != nil {
+		return nil, err
+	}
+	c.byLower[lower] = syms
+	for _, s := range syms {
+		c.put(s)
+	}
+	return syms, nil
+}
+
+// lowerMap returns a transient map[lowername][]symbol covering the single name
+// `name` (lowercased), shaped exactly like indexSymbols' byName output, so
+// resolveTargets can be reused unchanged. Fetched-and-cached on first use.
+func (c *symbolCache) lowerMap(name string) (map[string][]graph.CodeSymbol, error) {
+	lower := strings.ToLower(strings.TrimSpace(name))
+	if lower == "" {
+		return map[string][]graph.CodeSymbol{}, nil
+	}
+	if _, ok := c.byLower[lower]; !ok {
+		if _, err := c.byOriginalName(name); err != nil {
+			return nil, err
+		}
+	}
+	return map[string][]graph.CodeSymbol{lower: c.byLower[lower]}, nil
+}
+
+// isRepoType reports whether `name` is an in-repo type/interface, enabling
+// interface-dispatch resolution (a call on an in-repo interface variable resolves
+// to any implementor's method). Cache-backed; false on lookup error.
+func (c *symbolCache) isRepoType(name string) bool {
+	lower := strings.ToLower(strings.TrimSpace(name))
+	if lower == "" {
+		return false
+	}
+	if v, ok := c.repoType[lower]; ok {
+		return v
+	}
+	v := false
+	if syms, err := c.byOriginalName(name); err == nil {
+		for _, s := range syms {
+			if isTypeKind(s.Kind) {
+				v = true
+				break
+			}
+		}
+	}
+	c.repoType[lower] = v
+	return v
+}
+
+// resolveCaller maps an edge's caller side back to a concrete symbol using the
+// same prefer-same-file/then-any-same-name/then-first-in-file rule as the
+// in-memory resolveCaller, but fetching candidates through the cache.
+func (c *symbolCache) resolveCaller(e graph.DependencyEdge) (*graph.CodeSymbol, error) {
+	fromFile := canonicalPath(e.FromFile)
+	fromName := strings.TrimSpace(e.FromSymbol)
+	if fromName != "" {
+		cands, err := c.byOriginalName(fromName)
+		if err != nil {
+			return nil, err
+		}
+		for i := range cands {
+			if fromFile != "" && canonicalPath(cands[i].Path) == fromFile {
+				return &cands[i], nil
+			}
+		}
+		if len(cands) > 0 {
+			return &cands[0], nil
+		}
+	}
+	if fromFile != "" {
+		fileSyms, err := c.symbolsInFile(fromFile)
+		if err != nil {
+			return nil, err
+		}
+		if len(fileSyms) > 0 {
+			return &fileSyms[0], nil
+		}
+	}
+	return nil, nil
+}
+
 // resolveTargets returns the indexed symbol(s) an EdgeCalls edge plausibly
 // targets, using the qualified_ref to disambiguate name collisions:
 //   - callee name not indexed at all            -> external, nothing
 //   - unqualified call (foo())                   -> same-package candidate(s), else any
 //   - qualified pkg.Foo() where pkg is a package -> that package's candidate(s)
-//   - qualified x.Foo() with no package match    -> indexed METHOD(s) named Foo
-//     (a method call on a value), else external (dropped)
-func resolveTargets(e graph.DependencyEdge, symsByName map[string][]graph.CodeSymbol) []graph.CodeSymbol {
+//   - qualified x.Foo() with no package match    -> indexed METHOD(s) named Foo,
+//     filtered by RECEIVER TYPE: when the edge carries Metadata["recv_type"], only
+//     methods declared on that exact type match (so bleve.Index() does NOT attribute
+//     to our localEngine.Index method); when the receiver type is unknown ("") we
+//     keep the best-effort set of all same-named methods. No method match (or a
+//     known receiver type with no matching method) -> external (dropped).
+func resolveTargets(e graph.DependencyEdge, symsByName map[string][]graph.CodeSymbol, isRepoType func(string) bool) []graph.CodeSymbol {
 	bare := strings.ToLower(strings.TrimSpace(e.ToRef))
 	if bare == "" {
 		return nil
@@ -189,10 +522,53 @@ func resolveTargets(e graph.DependencyEdge, symsByName map[string][]graph.CodeSy
 	if len(pkgMatch) > 0 {
 		return pkgMatch
 	}
-	if len(methods) > 0 {
-		return methods // method call on a variable of unknown type
+	if len(methods) == 0 {
+		return nil // qualified, non-method, non-matching package -> external
 	}
-	return nil // qualified, non-method, non-matching package -> external
+	// Method call on a value. Use the statically inferred receiver type to defeat
+	// method-name collisions across unrelated types (the keystone precision fix).
+	callRecv := edgeRecvType(e)
+	if callRecv == "" {
+		return methods // receiver type unknown -> best-effort over all same-named methods
+	}
+	var typed []graph.CodeSymbol
+	for _, m := range methods {
+		if symbolRecvType(m) == callRecv {
+			typed = append(typed, m)
+		}
+	}
+	if len(typed) > 0 {
+		return typed // exact concrete receiver-type match
+	}
+	// No concrete match. If the receiver names an IN-REPO type (typically an
+	// interface, e.g. `drv StorageDriver`), this is interface dispatch -> resolve
+	// to any implementor's method. If the receiver is EXTERNAL (bleve.Batch,
+	// sql.Rows), the call leaves the repo -> drop it (the collision fix still holds).
+	if isRepoType != nil && isRepoType(callRecv) {
+		return methods
+	}
+	return nil
+}
+
+// edgeRecvType returns the trimmed Metadata["recv_type"] of a call edge — the
+// statically inferred base type of the call's receiver, or "" when unknown / a
+// package call (per the SHARED METADATA CONTRACT).
+func edgeRecvType(e graph.DependencyEdge) string {
+	if e.Metadata == nil {
+		return ""
+	}
+	rt, _ := e.Metadata["recv_type"].(string)
+	return strings.TrimSpace(rt)
+}
+
+// symbolRecvType returns the trimmed Metadata["recv_type"] of a method symbol —
+// the base type it is declared on, or "" when absent.
+func symbolRecvType(s graph.CodeSymbol) string {
+	if s.Metadata == nil {
+		return ""
+	}
+	rt, _ := s.Metadata["recv_type"].(string)
+	return strings.TrimSpace(rt)
 }
 
 // edgeQualifier returns the lowercased segment immediately before the final name
@@ -223,6 +599,7 @@ func callersMatching(edges []graph.DependencyEdge, syms []graph.CodeSymbol, name
 		return nil
 	}
 	symsByName, symsByFile := indexSymbols(syms)
+	repoType := repoTypePredicate(syms)
 
 	seen := map[string]bool{}
 	var out []graph.CodeSymbol
@@ -236,7 +613,7 @@ func callersMatching(edges []graph.DependencyEdge, syms []graph.CodeSymbol, name
 		// For EdgeCalls, demand a real resolution to a symbol named `target`.
 		if e.Kind == graph.EdgeCalls {
 			resolved := false
-			for _, t := range resolveTargets(e, symsByName) {
+			for _, t := range resolveTargets(e, symsByName, repoType) {
 				if strings.EqualFold(t.Name, name) {
 					resolved = true
 					break
@@ -279,6 +656,29 @@ func indexSymbols(syms []graph.CodeSymbol) (byName, byFile map[string][]graph.Co
 		}
 	}
 	return byName, byFile
+}
+
+// isTypeKind reports whether a symbol kind denotes a type declaration (struct,
+// interface, class, ...) rather than a function/method/variable.
+func isTypeKind(k string) bool {
+	switch strings.ToLower(strings.TrimSpace(k)) {
+	case "type", "interface", "struct", "class", "enum", "trait":
+		return true
+	}
+	return false
+}
+
+// repoTypePredicate returns a predicate reporting whether a name is an in-repo
+// type — used to allow interface-dispatch method calls. Built once from a loaded
+// symbol set; the ImpactGraph path uses symbolCache.isRepoType instead.
+func repoTypePredicate(syms []graph.CodeSymbol) func(string) bool {
+	set := map[string]bool{}
+	for _, s := range syms {
+		if isTypeKind(s.Kind) {
+			set[strings.ToLower(strings.TrimSpace(s.Name))] = true
+		}
+	}
+	return func(n string) bool { return set[strings.ToLower(strings.TrimSpace(n))] }
 }
 
 // resolveCaller maps an edge's caller side (FromFile + FromSymbol) back to a

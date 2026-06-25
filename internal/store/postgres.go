@@ -57,3 +57,12 @@ func (d *postgresDriver) ListEdges(ctx context.Context, snapshotID string) ([]gr
 func (d *postgresDriver) ListRoutes(ctx context.Context, snapshotID, role string) ([]graph.Route, error) {
 	return nil, ErrNotImplemented
 }
+func (d *postgresDriver) SymbolsByName(ctx context.Context, snapshotID, name string) ([]graph.CodeSymbol, error) {
+	return nil, ErrNotImplemented
+}
+func (d *postgresDriver) SymbolsByPath(ctx context.Context, snapshotID, path string) ([]graph.CodeSymbol, error) {
+	return nil, ErrNotImplemented
+}
+func (d *postgresDriver) CallEdgesByToRefs(ctx context.Context, snapshotID string, toRefs []string) ([]graph.DependencyEdge, error) {
+	return nil, ErrNotImplemented
+}
