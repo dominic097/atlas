@@ -963,6 +963,489 @@ func sortSymbols(s []graph.CodeSymbol) {
 	})
 }
 
+// Path finds the SHORTEST forward call path from a symbol named `from` to a
+// symbol named `to`, walking FORWARD over resolved call edges (caller -> callee).
+// It is a BFS over symbol identities seeded by every symbol named `from`; each
+// hop expands the frontier's callees via CallEdgesByFromSymbols + resolveTargets
+// (so the receiver-type / qualifier precision applies), recording a parent
+// pointer per symbolKey. When a callee's Name == `to` (case-insensitive) the
+// chain is reconstructed from parent pointers and returned, from-symbol first.
+// Bounded by maxDepth (default 6). Returns nil when `to` is unreachable.
+func Path(ctx context.Context, drv store.StorageDriver, snapshotID, from, to string, maxDepth int) ([]graph.CodeSymbol, error) {
+	from = strings.TrimSpace(from)
+	to = strings.TrimSpace(to)
+	if from == "" || to == "" {
+		return nil, nil
+	}
+	if maxDepth < 1 {
+		maxDepth = 6
+	}
+	target := strings.ToLower(to)
+
+	cache := newSymbolCache(ctx, drv, snapshotID)
+	seeds, err := cache.byOriginalName(from)
+	if err != nil {
+		return nil, err
+	}
+	if len(seeds) == 0 {
+		return nil, nil
+	}
+
+	// parent[symbolKey] = the predecessor symbolKey on the discovered path; the
+	// seeds map to "" (no predecessor). node[symbolKey] holds the symbol itself.
+	parent := map[string]string{}
+	node := map[string]graph.CodeSymbol{}
+	visited := map[string]bool{}
+	var frontier []graph.CodeSymbol
+	for _, s := range seeds {
+		k := symbolKey(s)
+		if visited[k] {
+			continue
+		}
+		visited[k] = true
+		parent[k] = ""
+		node[k] = s
+		frontier = append(frontier, s)
+		// A seed that is itself named `to` is a zero-length path to itself.
+		if strings.EqualFold(s.Name, to) {
+			return reconstructPath(k, parent, node), nil
+		}
+	}
+
+	for d := 1; d <= maxDepth && len(frontier) > 0; d++ {
+		// Distinct frontier names — the only from_symbols whose edges leave it.
+		nameSet := map[string]bool{}
+		var names []string
+		for _, s := range frontier {
+			if s.Name == "" || nameSet[strings.ToLower(s.Name)] {
+				continue
+			}
+			nameSet[strings.ToLower(s.Name)] = true
+			names = append(names, s.Name)
+		}
+		if len(names) == 0 {
+			break
+		}
+		edges, err := drv.CallEdgesByFromSymbols(ctx, snapshotID, names)
+		if err != nil {
+			return nil, err
+		}
+		// Batch the to_refs of this hop in one query before resolving.
+		var toRefNames []string
+		for _, e := range edges {
+			if e.Kind == graph.EdgeCalls {
+				if r := strings.TrimSpace(e.ToRef); r != "" {
+					toRefNames = append(toRefNames, r)
+				}
+			}
+		}
+		if err := cache.prefetchNames(toRefNames); err != nil {
+			return nil, err
+		}
+
+		// frontierKeys maps a caller symbolKey present on the frontier so an edge's
+		// caller can be attributed to the exact predecessor node.
+		frontierKeys := make(map[string]bool, len(frontier))
+		for _, s := range frontier {
+			frontierKeys[symbolKey(s)] = true
+		}
+
+		var next []graph.CodeSymbol
+		for _, e := range edges {
+			if e.Kind != graph.EdgeCalls {
+				continue
+			}
+			caller, err := cache.resolveCaller(e)
+			if err != nil {
+				return nil, err
+			}
+			if caller == nil {
+				continue
+			}
+			ck := symbolKey(*caller)
+			if !frontierKeys[ck] {
+				continue // this edge's caller is not on the current frontier
+			}
+			byName, err := cache.lowerMap(e.ToRef)
+			if err != nil {
+				return nil, err
+			}
+			for _, t := range resolveTargets(e, byName, cache.isRepoType) {
+				tk := symbolKey(t)
+				if visited[tk] {
+					continue
+				}
+				visited[tk] = true
+				parent[tk] = ck
+				node[tk] = t
+				if strings.EqualFold(t.Name, to) || strings.ToLower(t.Name) == target {
+					return reconstructPath(tk, parent, node), nil
+				}
+				next = append(next, t)
+			}
+		}
+		frontier = next
+	}
+	return nil, nil
+}
+
+// reconstructPath walks parent pointers from `endKey` back to a seed and returns
+// the symbol chain in forward order (seed first, target last).
+func reconstructPath(endKey string, parent map[string]string, node map[string]graph.CodeSymbol) []graph.CodeSymbol {
+	var rev []graph.CodeSymbol
+	for k := endKey; k != ""; k = parent[k] {
+		rev = append(rev, node[k])
+		if parent[k] == "" {
+			break
+		}
+	}
+	// reverse
+	out := make([]graph.CodeSymbol, len(rev))
+	for i := range rev {
+		out[len(rev)-1-i] = rev[i]
+	}
+	return out
+}
+
+// isTestSymbol reports whether a symbol is a test: its file path matches a
+// conventional test-file pattern (_test.go / *_test.py / test_*.py /
+// *.test.{js,ts} / *.spec.{js,ts} / *Test.java / *Tests.java / *IT.java), OR its
+// name has a Test / test_ prefix.
+func isTestSymbol(s graph.CodeSymbol) bool {
+	name := strings.TrimSpace(s.Name)
+	if strings.HasPrefix(name, "Test") || strings.HasPrefix(name, "test_") {
+		return true
+	}
+	return isTestPath(s.Path)
+}
+
+// isTestPath reports whether a file path matches a conventional test-file naming.
+func isTestPath(path string) bool {
+	p := canonicalPath(path)
+	if p == "" {
+		return false
+	}
+	base := p
+	if i := strings.LastIndex(p, "/"); i >= 0 {
+		base = p[i+1:]
+	}
+	lower := strings.ToLower(base)
+	switch {
+	case strings.HasSuffix(lower, "_test.go"):
+		return true
+	case strings.HasSuffix(lower, "_test.py"):
+		return true
+	case strings.HasPrefix(lower, "test_") && strings.HasSuffix(lower, ".py"):
+		return true
+	case strings.HasSuffix(lower, ".test.js"), strings.HasSuffix(lower, ".test.ts"),
+		strings.HasSuffix(lower, ".test.jsx"), strings.HasSuffix(lower, ".test.tsx"):
+		return true
+	case strings.HasSuffix(lower, ".spec.js"), strings.HasSuffix(lower, ".spec.ts"),
+		strings.HasSuffix(lower, ".spec.jsx"), strings.HasSuffix(lower, ".spec.tsx"):
+		return true
+	case strings.HasSuffix(base, "Test.java"), strings.HasSuffix(base, "Tests.java"),
+		strings.HasSuffix(base, "IT.java"):
+		return true
+	}
+	return false
+}
+
+// CoverageRef is a lightweight pointer to a covering test / covered symbol.
+type CoverageRef struct {
+	SymbolID string `json:"symbol_id"`
+	Name     string `json:"symbol"`
+	Kind     string `json:"kind"`
+	Path     string `json:"path"`
+	Line     int    `json:"line"`
+}
+
+// CoverageResult is static call-graph reachability "coverage": for
+// tests_for_symbol, the transitive test CALLERS reaching TARGET; for
+// symbols_for_test, the transitive NON-test CALLEES TARGET exercises. This is
+// STATIC call-graph reachability, not runtime coverage.
+type CoverageResult struct {
+	Target    string        `json:"target"`
+	Direction string        `json:"direction"`
+	Covered   bool          `json:"covered"`
+	Tests     []CoverageRef `json:"tests,omitempty"`
+	Symbols   []CoverageRef `json:"symbols,omitempty"`
+}
+
+const coverageCap = 200
+
+// Coverage computes static call-graph reachability coverage for TARGET.
+//
+// direction is resolved as follows: "tests_for_symbol" walks the transitive
+// CALLERS of TARGET (reverse reachability over call edges, bounded by maxDepth,
+// default 8) and keeps those that are tests; "symbols_for_test" walks the
+// transitive CALLEES of TARGET and keeps the non-test symbols it exercises. When
+// direction is empty/"auto", it is inferred from TARGET: if every resolved
+// TARGET symbol is a test -> symbols_for_test, else tests_for_symbol.
+//
+// The reachability BFS reuses resolveTargets/resolveCaller via the symbolCache
+// (mirroring ImpactGraph/Subgraph) so receiver-type/qualifier precision applies.
+func Coverage(ctx context.Context, drv store.StorageDriver, snapshotID, target, direction string, maxDepth int) (CoverageResult, error) {
+	target = strings.TrimSpace(target)
+	if maxDepth < 1 {
+		maxDepth = 8
+	}
+	res := CoverageResult{Target: target}
+	if target == "" {
+		return res, nil
+	}
+
+	cache := newSymbolCache(ctx, drv, snapshotID)
+	seeds, err := cache.byOriginalName(target)
+	if err != nil {
+		return res, err
+	}
+
+	dir := strings.ToLower(strings.TrimSpace(direction))
+	if dir == "" || dir == "auto" {
+		dir = "tests_for_symbol"
+		if len(seeds) > 0 {
+			allTests := true
+			for _, s := range seeds {
+				if !isTestSymbol(s) {
+					allTests = false
+					break
+				}
+			}
+			if allTests {
+				dir = "symbols_for_test"
+			}
+		}
+	}
+	res.Direction = dir
+	if len(seeds) == 0 {
+		return res, nil
+	}
+
+	if dir == "symbols_for_test" {
+		reached, err := reachableCallees(ctx, drv, cache, seeds, maxDepth)
+		if err != nil {
+			return res, err
+		}
+		var out []graph.CodeSymbol
+		for _, s := range reached {
+			if !isTestSymbol(s) {
+				out = append(out, s)
+			}
+		}
+		sortSymbols(out)
+		res.Symbols = coverageRefs(out, coverageCap)
+		return res, nil
+	}
+
+	// tests_for_symbol: transitive callers filtered to tests.
+	reached, err := reachableCallers(ctx, drv, cache, seeds, maxDepth)
+	if err != nil {
+		return res, err
+	}
+	var tests []graph.CodeSymbol
+	for _, s := range reached {
+		if isTestSymbol(s) {
+			tests = append(tests, s)
+		}
+	}
+	sortSymbols(tests)
+	res.Tests = coverageRefs(tests, coverageCap)
+	res.Covered = len(tests) > 0
+	return res, nil
+}
+
+// reachableCallers returns every distinct symbol that transitively CALLS any of
+// the seeds (reverse reachability over resolved call edges), bounded by maxDepth.
+// Seeds themselves are excluded from the result.
+func reachableCallers(ctx context.Context, drv store.StorageDriver, cache *symbolCache, seeds []graph.CodeSymbol, maxDepth int) ([]graph.CodeSymbol, error) {
+	visited := map[string]bool{}
+	var frontier []graph.CodeSymbol
+	for _, s := range seeds {
+		k := symbolKey(s)
+		if !visited[k] {
+			visited[k] = true
+			frontier = append(frontier, s)
+		}
+	}
+	out := map[string]graph.CodeSymbol{}
+	for d := 1; d <= maxDepth && len(frontier) > 0; d++ {
+		nameSet := map[string]bool{}
+		var names []string
+		for _, s := range frontier {
+			if s.Name == "" || nameSet[s.Name] {
+				continue
+			}
+			nameSet[s.Name] = true
+			names = append(names, s.Name)
+		}
+		if len(names) == 0 {
+			break
+		}
+		edges, err := drv.CallEdgesByToRefs(ctx, snapshotID(cache), names)
+		if err != nil {
+			return nil, err
+		}
+		var toRefNames []string
+		for _, e := range edges {
+			if e.Kind == graph.EdgeCalls {
+				if r := strings.TrimSpace(e.ToRef); r != "" {
+					toRefNames = append(toRefNames, r)
+				}
+			}
+		}
+		if err := cache.prefetchNames(toRefNames); err != nil {
+			return nil, err
+		}
+		frontierSet := make(map[string]bool, len(frontier))
+		for _, s := range frontier {
+			frontierSet[symbolKey(s)] = true
+		}
+		var hitting []graph.DependencyEdge
+		for _, e := range edges {
+			if e.Kind != graph.EdgeCalls {
+				continue
+			}
+			byName, err := cache.lowerMap(e.ToRef)
+			if err != nil {
+				return nil, err
+			}
+			for _, t := range resolveTargets(e, byName, cache.isRepoType) {
+				if frontierSet[symbolKey(t)] {
+					hitting = append(hitting, e)
+					break
+				}
+			}
+		}
+		var fromNames []string
+		for _, e := range hitting {
+			if fs := strings.TrimSpace(e.FromSymbol); fs != "" {
+				fromNames = append(fromNames, fs)
+			}
+		}
+		if err := cache.prefetchNames(fromNames); err != nil {
+			return nil, err
+		}
+		var next []graph.CodeSymbol
+		for _, e := range hitting {
+			caller, err := cache.resolveCaller(e)
+			if err != nil {
+				return nil, err
+			}
+			if caller == nil {
+				continue
+			}
+			ck := symbolKey(*caller)
+			if visited[ck] {
+				continue
+			}
+			visited[ck] = true
+			out[ck] = *caller
+			next = append(next, *caller)
+		}
+		frontier = next
+	}
+	return mapValues(out), nil
+}
+
+// reachableCallees returns every distinct symbol any of the seeds transitively
+// CALLS (forward reachability over resolved call edges), bounded by maxDepth.
+// Seeds themselves are excluded from the result.
+func reachableCallees(ctx context.Context, drv store.StorageDriver, cache *symbolCache, seeds []graph.CodeSymbol, maxDepth int) ([]graph.CodeSymbol, error) {
+	visited := map[string]bool{}
+	var frontier []graph.CodeSymbol
+	for _, s := range seeds {
+		k := symbolKey(s)
+		if !visited[k] {
+			visited[k] = true
+			frontier = append(frontier, s)
+		}
+	}
+	out := map[string]graph.CodeSymbol{}
+	for d := 1; d <= maxDepth && len(frontier) > 0; d++ {
+		nameSet := map[string]bool{}
+		var names []string
+		for _, s := range frontier {
+			if s.Name == "" || nameSet[strings.ToLower(s.Name)] {
+				continue
+			}
+			nameSet[strings.ToLower(s.Name)] = true
+			names = append(names, s.Name)
+		}
+		if len(names) == 0 {
+			break
+		}
+		edges, err := drv.CallEdgesByFromSymbols(ctx, snapshotID(cache), names)
+		if err != nil {
+			return nil, err
+		}
+		var toRefNames []string
+		for _, e := range edges {
+			if e.Kind == graph.EdgeCalls {
+				if r := strings.TrimSpace(e.ToRef); r != "" {
+					toRefNames = append(toRefNames, r)
+				}
+			}
+		}
+		if err := cache.prefetchNames(toRefNames); err != nil {
+			return nil, err
+		}
+		frontierKeys := make(map[string]bool, len(frontier))
+		for _, s := range frontier {
+			frontierKeys[symbolKey(s)] = true
+		}
+		var next []graph.CodeSymbol
+		for _, e := range edges {
+			if e.Kind != graph.EdgeCalls {
+				continue
+			}
+			caller, err := cache.resolveCaller(e)
+			if err != nil {
+				return nil, err
+			}
+			if caller == nil || !frontierKeys[symbolKey(*caller)] {
+				continue
+			}
+			byName, err := cache.lowerMap(e.ToRef)
+			if err != nil {
+				return nil, err
+			}
+			for _, t := range resolveTargets(e, byName, cache.isRepoType) {
+				tk := symbolKey(t)
+				if visited[tk] {
+					continue
+				}
+				visited[tk] = true
+				out[tk] = t
+				next = append(next, t)
+			}
+		}
+		frontier = next
+	}
+	return mapValues(out), nil
+}
+
+// snapshotID exposes the cache's bound snapshot id for the reachability helpers.
+func snapshotID(c *symbolCache) string { return c.snapshotID }
+
+func mapValues(m map[string]graph.CodeSymbol) []graph.CodeSymbol {
+	out := make([]graph.CodeSymbol, 0, len(m))
+	for _, v := range m {
+		out = append(out, v)
+	}
+	return out
+}
+
+func coverageRefs(syms []graph.CodeSymbol, limit int) []CoverageRef {
+	out := make([]CoverageRef, 0, len(syms))
+	for _, s := range syms {
+		out = append(out, CoverageRef{SymbolID: s.ID, Name: s.Name, Kind: s.Kind, Path: s.Path, Line: s.StartLine})
+		if len(out) >= limit {
+			break
+		}
+	}
+	return out
+}
+
 // SymbolChange is one symbol added/removed/modified between two snapshots.
 type SymbolChange struct {
 	Name   string `json:"name"`

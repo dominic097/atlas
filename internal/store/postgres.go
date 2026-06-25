@@ -57,6 +57,9 @@ func (d *postgresDriver) ListEdges(ctx context.Context, snapshotID string) ([]gr
 func (d *postgresDriver) ListRoutes(ctx context.Context, snapshotID, role string) ([]graph.Route, error) {
 	return nil, ErrNotImplemented
 }
+func (d *postgresDriver) ListFiles(ctx context.Context, snapshotID string) ([]graph.File, error) {
+	return nil, ErrNotImplemented
+}
 func (d *postgresDriver) SymbolsByName(ctx context.Context, snapshotID, name string) ([]graph.CodeSymbol, error) {
 	return nil, ErrNotImplemented
 }

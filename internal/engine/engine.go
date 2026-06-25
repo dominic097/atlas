@@ -12,6 +12,7 @@ import (
 	"errors"
 	"fmt"
 	"path/filepath"
+	"sort"
 	"strings"
 	"time"
 
@@ -290,6 +291,104 @@ type RouteContractsResult struct {
 	Total  int             `json:"total"`
 }
 
+// ── Local navigation ops (deterministic, single-repo) ───────────────────────
+
+type NeighborsInput struct {
+	Name   string
+	RepoID string
+}
+
+// NeighborsResult is the depth-1 call neighborhood of a symbol.
+type NeighborsResult struct {
+	Symbol  string      `json:"symbol"`
+	Callers []SymbolRef `json:"callers"`
+	Callees []SymbolRef `json:"callees"`
+}
+
+type PathInput struct {
+	From     string
+	To       string
+	RepoID   string
+	MaxDepth int
+}
+
+// PathResult is the shortest forward call path from From to To.
+type PathResult struct {
+	From   string      `json:"from"`
+	To     string      `json:"to"`
+	Found  bool        `json:"found"`
+	Length int         `json:"length"`
+	Steps  []SymbolRef `json:"steps"`
+}
+
+type RefsInput struct {
+	Name   string
+	RepoID string
+}
+
+// RefsResult is the call-site references to a symbol. (Atlas has call + import
+// edges; first-class reference edges land later — this returns call sites.)
+type RefsResult struct {
+	Symbol     string      `json:"symbol"`
+	References []SymbolRef `json:"references"`
+	Total      int         `json:"total"`
+}
+
+type ExplainInput struct {
+	Name   string
+	RepoID string
+}
+
+// ExplainDef is one definition of the explained symbol with its location/doc.
+type ExplainDef struct {
+	SymbolID  string `json:"symbol_id"`
+	Kind      string `json:"kind"`
+	Path      string `json:"path"`
+	Line      int    `json:"line"`
+	EndLine   int    `json:"end_line"`
+	Signature string `json:"signature,omitempty"`
+	Doc       string `json:"doc,omitempty"`
+}
+
+// ExplainRoute is a producer route served by the explained symbol.
+type ExplainRoute struct {
+	Method      string `json:"method"`
+	Path        string `json:"path"`
+	HandlerFile string `json:"handler_file,omitempty"`
+}
+
+// ExplainResult is a DETERMINISTIC context bundle for a symbol (no LLM narrative):
+// definitions, caller/callee names, the defining files' imports, any producer
+// routes it serves, and — when it serves routes — the cross-repo consumers of
+// those routes.
+type ExplainResult struct {
+	Symbol             string         `json:"symbol"`
+	Definitions        []ExplainDef   `json:"definitions"`
+	Callers            []string       `json:"callers"`
+	Callees            []string       `json:"callees"`
+	Imports            []string       `json:"imports,omitempty"`
+	ServedRoutes       []ExplainRoute `json:"served_routes,omitempty"`
+	CrossRepoConsumers []string       `json:"cross_repo_consumers,omitempty"`
+}
+
+type CoverageInput struct {
+	Target    string
+	RepoID    string
+	Direction string // tests_for_symbol | symbols_for_test | "" (auto)
+	MaxDepth  int
+}
+
+// CoverageResult is static call-graph reachability coverage (NOT runtime
+// coverage): the transitive test callers of a symbol, or the non-test symbols a
+// test transitively exercises.
+type CoverageResult struct {
+	Target    string      `json:"target"`
+	Direction string      `json:"direction"`
+	Covered   bool        `json:"covered"`
+	Tests     []SymbolRef `json:"tests,omitempty"`
+	Symbols   []SymbolRef `json:"symbols,omitempty"`
+}
+
 // ── The Engine interface ────────────────────────────────────────────────────
 
 // Engine is the single contract all surfaces depend on. The full catalog
@@ -302,6 +401,11 @@ type Engine interface {
 	Impact(ctx context.Context, in ImpactInput) (*ImpactResult, error)
 	Callers(ctx context.Context, in CallersInput) (*CallersResult, error)
 	Symbol(ctx context.Context, in SymbolInput) (*SymbolResult, error)
+	Neighbors(ctx context.Context, in NeighborsInput) (*NeighborsResult, error)
+	Path(ctx context.Context, in PathInput) (*PathResult, error)
+	Refs(ctx context.Context, in RefsInput) (*RefsResult, error)
+	Explain(ctx context.Context, in ExplainInput) (*ExplainResult, error)
+	Coverage(ctx context.Context, in CoverageInput) (*CoverageResult, error)
 	GraphExport(ctx context.Context, in GraphExportInput) (*GraphExportResult, error)
 	History(ctx context.Context, in HistoryInput) (*HistoryResult, error)
 	SnapshotDiff(ctx context.Context, in SnapshotDiffInput) (*SnapshotDiffResult, error)
@@ -627,6 +731,245 @@ func refsOf(syms []graph.CodeSymbol, limit int) []SymbolRef {
 	out := make([]SymbolRef, 0, len(syms))
 	for _, s := range syms {
 		out = append(out, symRef(s))
+		if len(out) >= limit {
+			break
+		}
+	}
+	return out
+}
+
+// navCap bounds the lists the local navigation ops return.
+const navCap = 200
+
+func (e *localEngine) Neighbors(ctx context.Context, in NeighborsInput) (*NeighborsResult, error) {
+	snap, err := e.resolveSnapshot(ctx, in.RepoID)
+	if err != nil {
+		return nil, err
+	}
+	callers, err := query.CallersGraph(ctx, e.store, snap.ID, in.Name)
+	if err != nil {
+		return nil, fmt.Errorf("engine: neighbors callers: %w", err)
+	}
+	callees, err := query.CalleesGraph(ctx, e.store, snap.ID, in.Name)
+	if err != nil {
+		return nil, fmt.Errorf("engine: neighbors callees: %w", err)
+	}
+	return &NeighborsResult{
+		Symbol:  in.Name,
+		Callers: refsOf(callers, navCap),
+		Callees: refsOf(callees, navCap),
+	}, nil
+}
+
+func (e *localEngine) Path(ctx context.Context, in PathInput) (*PathResult, error) {
+	snap, err := e.resolveSnapshot(ctx, in.RepoID)
+	if err != nil {
+		return nil, err
+	}
+	depth := in.MaxDepth
+	if depth <= 0 {
+		depth = 6
+	}
+	chain, err := query.Path(ctx, e.store, snap.ID, in.From, in.To, depth)
+	if err != nil {
+		return nil, fmt.Errorf("engine: path: %w", err)
+	}
+	res := &PathResult{From: in.From, To: in.To, Steps: []SymbolRef{}}
+	if len(chain) > 0 {
+		res.Found = true
+		res.Length = len(chain) - 1 // edges, not nodes
+		res.Steps = refsOf(chain, navCap)
+	}
+	return res, nil
+}
+
+func (e *localEngine) Refs(ctx context.Context, in RefsInput) (*RefsResult, error) {
+	snap, err := e.resolveSnapshot(ctx, in.RepoID)
+	if err != nil {
+		return nil, err
+	}
+	// Call-site references = the resolved callers of the symbol (Atlas has call +
+	// import edges; first-class reference edges land later).
+	syms, err := query.CallersGraph(ctx, e.store, snap.ID, in.Name)
+	if err != nil {
+		return nil, fmt.Errorf("engine: refs: %w", err)
+	}
+	return &RefsResult{Symbol: in.Name, References: refsOf(syms, navCap), Total: len(syms)}, nil
+}
+
+func (e *localEngine) Explain(ctx context.Context, in ExplainInput) (*ExplainResult, error) {
+	snap, err := e.resolveSnapshot(ctx, in.RepoID)
+	if err != nil {
+		return nil, err
+	}
+	defs, err := e.store.SymbolsByName(ctx, snap.ID, in.Name)
+	if err != nil {
+		return nil, fmt.Errorf("engine: explain defs: %w", err)
+	}
+	callers, err := query.CallersGraph(ctx, e.store, snap.ID, in.Name)
+	if err != nil {
+		return nil, fmt.Errorf("engine: explain callers: %w", err)
+	}
+	callees, err := query.CalleesGraph(ctx, e.store, snap.ID, in.Name)
+	if err != nil {
+		return nil, fmt.Errorf("engine: explain callees: %w", err)
+	}
+
+	res := &ExplainResult{
+		Symbol:      in.Name,
+		Definitions: make([]ExplainDef, 0, len(defs)),
+		Callers:     namesOf(callers, navCap),
+		Callees:     namesOf(callees, navCap),
+	}
+	defPaths := map[string]bool{}
+	for _, s := range defs {
+		res.Definitions = append(res.Definitions, ExplainDef{
+			SymbolID: s.ID, Kind: s.Kind, Path: s.Path, Line: s.StartLine,
+			EndLine: s.EndLine, Signature: s.Signature, Doc: s.Doc,
+		})
+		if p := strings.TrimSpace(s.Path); p != "" {
+			defPaths[p] = true
+		}
+		if len(res.Definitions) >= navCap {
+			break
+		}
+	}
+
+	// Imports of the defining file(s), via the indexed file rows.
+	res.Imports = capStrings(e.importsForPaths(ctx, snap.ID, defPaths), navCap)
+	if len(res.Imports) == 0 {
+		res.Imports = nil
+	}
+
+	// Producer routes served by this symbol: handler_symbol == SYMBOL OR the
+	// route's handler file is one of the definition paths.
+	routes, err := e.store.ListRoutes(ctx, snap.ID, "producer")
+	if err != nil {
+		return nil, fmt.Errorf("engine: explain routes: %w", err)
+	}
+	servedLabels := map[string]bool{}
+	for _, r := range routes {
+		if metaStr(r.Metadata, "handler_symbol") == in.Name ||
+			(r.HandlerFile != "" && defPaths[r.HandlerFile]) {
+			res.ServedRoutes = append(res.ServedRoutes, ExplainRoute{
+				Method: r.Method, Path: r.PathPattern, HandlerFile: r.HandlerFile,
+			})
+			servedLabels[routeLabelEng(r.Method, r.PathPattern)] = true
+			if len(res.ServedRoutes) >= navCap {
+				break
+			}
+		}
+	}
+
+	// Cross-repo consumers — only when this symbol actually serves routes; keep
+	// hits whose matched route is one of the served routes.
+	if len(servedLabels) > 0 {
+		if repo, rerr := e.resolveRepo(ctx, in.RepoID); rerr == nil {
+			cr, cerr := crossrepo.Consumers(ctx, e.store, repo.FullName)
+			if cerr == nil {
+				seen := map[string]bool{}
+				for _, h := range cr.Impacted {
+					if !servedLabels[h.MatchedRoute] {
+						continue
+					}
+					rk := strings.ToLower(h.Repo)
+					if seen[rk] {
+						continue
+					}
+					seen[rk] = true
+					res.CrossRepoConsumers = append(res.CrossRepoConsumers, h.Repo)
+					if len(res.CrossRepoConsumers) >= navCap {
+						break
+					}
+				}
+			}
+		}
+	}
+	return res, nil
+}
+
+func (e *localEngine) Coverage(ctx context.Context, in CoverageInput) (*CoverageResult, error) {
+	snap, err := e.resolveSnapshot(ctx, in.RepoID)
+	if err != nil {
+		return nil, err
+	}
+	depth := in.MaxDepth
+	if depth <= 0 {
+		depth = 8
+	}
+	r, err := query.Coverage(ctx, e.store, snap.ID, in.Target, in.Direction, depth)
+	if err != nil {
+		return nil, fmt.Errorf("engine: coverage: %w", err)
+	}
+	return &CoverageResult{
+		Target:    r.Target,
+		Direction: r.Direction,
+		Covered:   r.Covered,
+		Tests:     coverageRefsToEngine(r.Tests, navCap),
+		Symbols:   coverageRefsToEngine(r.Symbols, navCap),
+	}, nil
+}
+
+// namesOf returns the distinct symbol names (capped), order-preserving.
+func namesOf(syms []graph.CodeSymbol, limit int) []string {
+	seen := map[string]bool{}
+	out := make([]string, 0, len(syms))
+	for _, s := range syms {
+		if s.Name == "" || seen[s.Name] {
+			continue
+		}
+		seen[s.Name] = true
+		out = append(out, s.Name)
+		if len(out) >= limit {
+			break
+		}
+	}
+	return out
+}
+
+// importsForPaths aggregates the dedup'd import list of the given files from the
+// indexed file rows of the snapshot. Best-effort: an empty result is fine.
+func (e *localEngine) importsForPaths(ctx context.Context, snapshotID string, paths map[string]bool) []string {
+	if len(paths) == 0 {
+		return nil
+	}
+	files, err := e.store.ListFiles(ctx, snapshotID)
+	if err != nil {
+		return nil
+	}
+	seen := map[string]bool{}
+	var out []string
+	for _, f := range files {
+		if !paths[f.Path] {
+			continue
+		}
+		for _, imp := range f.Imports {
+			imp = strings.TrimSpace(imp)
+			if imp == "" || seen[imp] {
+				continue
+			}
+			seen[imp] = true
+			out = append(out, imp)
+		}
+	}
+	sort.Strings(out)
+	return out
+}
+
+// routeLabelEng renders "METHOD path" (METHOD omitted when unknown), matching
+// the cross-repo MatchedRoute label so the served/consumer join lines up.
+func routeLabelEng(method, path string) string {
+	m := strings.TrimSpace(strings.ToUpper(method))
+	if m == "" {
+		return path
+	}
+	return m + " " + path
+}
+
+func coverageRefsToEngine(refs []query.CoverageRef, limit int) []SymbolRef {
+	out := make([]SymbolRef, 0, len(refs))
+	for _, r := range refs {
+		out = append(out, SymbolRef{SymbolID: r.SymbolID, Name: r.Name, Kind: r.Kind, Path: r.Path, Line: r.Line})
 		if len(out) >= limit {
 			break
 		}

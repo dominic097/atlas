@@ -125,6 +125,17 @@ func marshalStrings(s []string) (string, error) {
 	return string(b), nil
 }
 
+func unmarshalStrings(v sql.NullString) ([]string, error) {
+	if !v.Valid || v.String == "" || v.String == "[]" {
+		return nil, nil
+	}
+	var out []string
+	if err := json.Unmarshal([]byte(v.String), &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func marshalLanguages(m map[string]int) (string, error) {
 	if len(m) == 0 {
 		return "{}", nil
@@ -849,6 +860,36 @@ func (d *sqliteDriver) ListRoutes(ctx context.Context, snapshotID, role string) 
 			return nil, fmt.Errorf("store: unmarshal route metadata: %w", err)
 		}
 		out = append(out, rt)
+	}
+	return out, rows.Err()
+}
+
+// ListFiles returns the indexed file rows of a snapshot (path/language/imports).
+func (d *sqliteDriver) ListFiles(ctx context.Context, snapshotID string) ([]graph.File, error) {
+	rows, err := d.db.QueryContext(ctx,
+		`SELECT id, snapshot_id, path, language, size_bytes, hash, imports, doc_summary
+		 FROM files WHERE snapshot_id = ? ORDER BY path`,
+		snapshotID)
+	if err != nil {
+		return nil, fmt.Errorf("store: list files: %w", err)
+	}
+	defer rows.Close()
+
+	var out []graph.File
+	for rows.Next() {
+		var (
+			f    graph.File
+			imp  sql.NullString
+			docS sql.NullString
+		)
+		if err := rows.Scan(&f.ID, &f.SnapshotID, &f.Path, &f.Language, &f.SizeBytes, &f.Hash, &imp, &docS); err != nil {
+			return nil, fmt.Errorf("store: scan file: %w", err)
+		}
+		if f.Imports, err = unmarshalStrings(imp); err != nil {
+			return nil, fmt.Errorf("store: unmarshal file imports: %w", err)
+		}
+		f.DocSummary = docS.String
+		out = append(out, f)
 	}
 	return out, rows.Err()
 }

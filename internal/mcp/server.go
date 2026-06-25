@@ -51,6 +51,16 @@ func coreTools() []Tool {
 			InputSchema: obj(map[string]any{"symbol": str, "repo_id": str}, "symbol")},
 		{Name: "callers", Description: "Symbols that directly call a given symbol.",
 			InputSchema: obj(map[string]any{"symbol": str, "repo_id": str, "limit": map[string]any{"type": "integer"}}, "symbol")},
+		{Name: "neighbors", Description: "Depth-1 call neighborhood of a symbol: its direct callers and callees.",
+			InputSchema: obj(map[string]any{"symbol": str, "repo_id": str}, "symbol")},
+		{Name: "path", Description: "Shortest forward call path from one symbol (from) to another (to).",
+			InputSchema: obj(map[string]any{"from": str, "to": str, "repo_id": str, "max_depth": map[string]any{"type": "integer"}}, "from", "to")},
+		{Name: "refs", Description: "Call-site references to a symbol (Atlas has call + import edges; reference edges land later).",
+			InputSchema: obj(map[string]any{"symbol": str, "repo_id": str}, "symbol")},
+		{Name: "explain", Description: "Deterministic context bundle for a symbol (no LLM): definitions, callers/callees, imports, served routes, cross-repo consumers.",
+			InputSchema: obj(map[string]any{"symbol": str, "repo_id": str}, "symbol")},
+		{Name: "coverage", Description: "Static call-graph reachability coverage: tests reaching a symbol, or non-test symbols a test exercises. Not runtime coverage.",
+			InputSchema: obj(map[string]any{"target": str, "repo_id": str, "direction": str}, "target")},
 		{Name: "impact", Description: "Single-repo blast radius: reverse call-graph BFS from changed paths/symbols.",
 			InputSchema: obj(map[string]any{"changed_paths": map[string]any{"type": "array"}, "symbols": map[string]any{"type": "array"}, "max_depth": map[string]any{"type": "integer"}, "repo_id": str})},
 		{Name: "graph_export", Description: "Export the call-graph neighborhood around a symbol (json|mermaid|dot).",
@@ -192,6 +202,16 @@ func (s *Server) callTool(ctx context.Context, params json.RawMessage) map[strin
 		payload, err = s.eng.Callers(ctx, engine.CallersInput{Name: str("symbol"), RepoID: str("repo_id"), Limit: intOr("limit", 50)})
 	case "symbol":
 		payload, err = s.eng.Symbol(ctx, engine.SymbolInput{Name: str("symbol"), RepoID: str("repo_id")})
+	case "neighbors":
+		payload, err = s.eng.Neighbors(ctx, engine.NeighborsInput{Name: str("symbol"), RepoID: str("repo_id")})
+	case "path":
+		payload, err = s.eng.Path(ctx, engine.PathInput{From: str("from"), To: str("to"), RepoID: str("repo_id"), MaxDepth: intOr("max_depth", 6)})
+	case "refs":
+		payload, err = s.eng.Refs(ctx, engine.RefsInput{Name: str("symbol"), RepoID: str("repo_id")})
+	case "explain":
+		payload, err = s.eng.Explain(ctx, engine.ExplainInput{Name: str("symbol"), RepoID: str("repo_id")})
+	case "coverage":
+		payload, err = s.eng.Coverage(ctx, engine.CoverageInput{Target: str("target"), RepoID: str("repo_id"), Direction: str("direction")})
 	case "graph_export":
 		f := str("format")
 		if f == "" {

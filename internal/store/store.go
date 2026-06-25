@@ -48,6 +48,9 @@ type StorageDriver interface {
 	ListSymbols(ctx context.Context, snapshotID string) ([]graph.CodeSymbol, error)
 	ListEdges(ctx context.Context, snapshotID string) ([]graph.DependencyEdge, error)
 	ListRoutes(ctx context.Context, snapshotID, role string) ([]graph.Route, error)
+	// ListFiles returns the indexed file rows of a snapshot (path/language/imports),
+	// feeding explain's defining-file import bundle.
+	ListFiles(ctx context.Context, snapshotID string) ([]graph.File, error)
 
 	// indexed graph reads (scale impact to the blast radius, not the whole repo)
 	//
