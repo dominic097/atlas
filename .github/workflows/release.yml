@@ -1,0 +1,90 @@
+name: release
+
+# Cut a release by pushing a semver tag:  git tag v0.1.0 && git push origin v0.1.0
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  # Binaries + archives + checksums + SBOMs + keyless cosign signatures + the
+  # Homebrew formula + the GitHub Release. CGO (tree-sitter) is cross-compiled
+  # inside goreleaser-cross, which carries the linux gcc cross toolchains, the
+  # darwin osxcross toolchain, and cosign + syft.
+  goreleaser:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # create the GitHub Release + upload artifacts
+      id-token: write # keyless cosign (Fulcio/Rekor OIDC)
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history so the changelog + version are correct
+
+      - name: goreleaser release (cross-compiled CGO)
+        run: |
+          docker run --rm \
+            -e GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}" \
+            -e HOMEBREW_TAP_TOKEN="${{ secrets.HOMEBREW_TAP_TOKEN }}" \
+            -e COSIGN_YES=true \
+            -e ACTIONS_ID_TOKEN_REQUEST_URL \
+            -e ACTIONS_ID_TOKEN_REQUEST_TOKEN \
+            -v "$PWD":/src \
+            -w /src \
+            ghcr.io/goreleaser/goreleaser-cross:v1.25.0 \
+            release --clean
+
+  # Multi-arch container image to GHCR, signed with keyless cosign. Decoupled
+  # from goreleaser so the image is a real CGO build (buildx + QEMU) rather than
+  # a repackaged linux binary.
+  container:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write # push to ghcr.io
+      id-token: write # keyless cosign image signature
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/msystechnologiesllc/aziron-atlas
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=raw,value=latest
+
+      - uses: sigstore/cosign-installer@v3
+
+      - id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            VERSION=${{ github.ref_name }}
+            COMMIT=${{ github.sha }}
+          provenance: true
+          sbom: true
+
+      - name: Sign image (keyless)
+        env:
+          COSIGN_YES: "true"
+        run: |
+          cosign sign "ghcr.io/msystechnologiesllc/aziron-atlas@${{ steps.build.outputs.digest }}"

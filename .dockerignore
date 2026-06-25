@@ -1,0 +1,16 @@
+# Keep the build context small + reproducible: ship only source.
+.git
+.github
+.testdata
+.atlas
+bin
+dist
+*.db
+*.db-*
+**/node_modules
+clients/typescript/dist
+plan
+prototypes
+*.md
+!go.mod
+!go.sum

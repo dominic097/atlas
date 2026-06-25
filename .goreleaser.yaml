@@ -1,0 +1,135 @@
+# goreleaser configuration for Atlas.
+#
+# Atlas is a CGO binary (tree-sitter grammars are C), so cross-compilation needs
+# real cross toolchains, not just GOOS/GOARCH. This config is built to run inside
+# the `ghcr.io/goreleaser/goreleaser-cross` image (see .github/workflows/release.yml),
+# which bundles the linux gcc cross-compilers and osxcross for darwin CGO, plus
+# cosign + syft for signing and SBOMs. The per-target CC/CXX overrides below map
+# each GOOS/GOARCH onto the toolchain that image provides.
+#
+# Run locally (snapshot, no publish):
+#   docker run --rm -v "$PWD":/src -w /src ghcr.io/goreleaser/goreleaser-cross:v1.25.0 \
+#       release --snapshot --clean
+version: 2
+
+project_name: atlas
+
+before:
+  hooks:
+    - go mod download
+
+builds:
+  - id: atlas
+    main: ./cmd/atlas
+    binary: atlas
+    env:
+      - CGO_ENABLED=1
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
+      - -X main.Version={{ .Version }}
+      - -X main.Commit={{ .Commit }}
+      - -X main.Date={{ .Date }}
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    overrides:
+      - goos: linux
+        goarch: amd64
+        env:
+          - CC=x86_64-linux-gnu-gcc
+          - CXX=x86_64-linux-gnu-g++
+      - goos: linux
+        goarch: arm64
+        env:
+          - CC=aarch64-linux-gnu-gcc
+          - CXX=aarch64-linux-gnu-g++
+      - goos: darwin
+        goarch: amd64
+        env:
+          - CC=o64-clang
+          - CXX=o64-clang++
+      - goos: darwin
+        goarch: arm64
+        env:
+          - CC=oa64-clang
+          - CXX=oa64-clang++
+
+archives:
+  - id: atlas
+    formats:
+      - tar.gz
+    name_template: >-
+      {{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}
+    files:
+      - LICENSE
+      - README.md
+
+checksum:
+  name_template: checksums.txt
+  algorithm: sha256
+
+# Supply-chain attestation: an SBOM per release archive (syft) ...
+sboms:
+  - id: archive
+    artifacts: archive
+
+# ... and a keyless cosign signature over the checksums file. Verifiable with:
+#   cosign verify-blob --certificate checksums.txt.pem \
+#       --signature checksums.txt.sig \
+#       --certificate-identity-regexp '.*' \
+#       --certificate-oidc-issuer https://token.actions.githubusercontent.com checksums.txt
+signs:
+  - cmd: cosign
+    artifacts: checksum
+    output: true
+    certificate: "${artifact}.pem"
+    signature: "${artifact}.sig"
+    args:
+      - sign-blob
+      - "--output-certificate=${certificate}"
+      - "--output-signature=${signature}"
+      - "${artifact}"
+      - "--yes"
+
+# Homebrew tap: pushes a Formula/atlas.rb to MsysTechnologiesllc/homebrew-atlas.
+# Requires a HOMEBREW_TAP_TOKEN secret (PAT with write access to that tap repo).
+brews:
+  - name: atlas
+    repository:
+      owner: MsysTechnologiesllc
+      name: homebrew-atlas
+      token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
+    directory: Formula
+    homepage: "https://github.com/MsysTechnologiesllc/aziron-atlas"
+    description: "Atlas — deterministic code-intelligence: symbols, calls, routes, impact, cross-repo."
+    license: "Apache-2.0"
+    dependencies:
+      - name: git
+    install: |
+      bin.install "atlas"
+    test: |
+      system "#{bin}/atlas", "version"
+
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"
+      - "Merge pull request"
+      - "Merge branch"
+
+release:
+  github:
+    owner: MsysTechnologiesllc
+    name: aziron-atlas
+  draft: false
+  prerelease: auto
+  name_template: "Atlas {{ .Tag }}"
