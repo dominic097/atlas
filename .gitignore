@@ -1,0 +1,17 @@
+# build artifacts
+/bin/
+/dist/
+
+# local Atlas store (embedded SQLite + lexical index)
+.atlas/
+
+# test / coverage
+*.test
+coverage.out
+coverage.html
+
+# editor / OS
+.DS_Store
+*.swp
+.idea/
+.vscode/
