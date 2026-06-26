@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 	"sync"
 	"time"
 
@@ -51,13 +52,18 @@ func coreTools() []Tool {
 		return map[string]any{"type": "object", "properties": props, "required": required}
 	}
 	str := map[string]any{"type": "string"}
+	format := map[string]any{"type": "string", "enum": []string{"json", "plain", "terse", "text"}}
+	withFormat := func(props map[string]any) map[string]any {
+		props["format"] = format
+		return props
+	}
 	return []Tool{
 		{Name: "search", Description: "Code-aware lexical search over indexed symbols.",
-			InputSchema: obj(map[string]any{"query": str, "repo_id": str, "kind": str, "limit": map[string]any{"type": "integer"}}, "query")},
+			InputSchema: obj(withFormat(map[string]any{"query": str, "repo_id": str, "kind": str, "limit": map[string]any{"type": "integer"}}), "query")},
 		{Name: "semantic_search", Description: "Optional vector nearest-neighbor search over indexed symbols. Degrades to lexical (degraded=true, mode_used=lexical) when vectors are off or the snapshot has no embeddings.",
-			InputSchema: obj(map[string]any{"query": str, "repo_id": str, "limit": map[string]any{"type": "integer"}, "min_score": map[string]any{"type": "number"}}, "query")},
+			InputSchema: obj(withFormat(map[string]any{"query": str, "repo_id": str, "limit": map[string]any{"type": "integer"}, "min_score": map[string]any{"type": "number"}}), "query")},
 		{Name: "context", Description: "Bounded code-review context for changed paths: changed symbols, retrieval hits, impact files, and scoped edges.",
-			InputSchema: obj(map[string]any{"changed_paths": map[string]any{"type": "array"}, "query": str, "repo_id": str, "limit": map[string]any{"type": "integer"}, "max_files": map[string]any{"type": "integer"}, "max_edges": map[string]any{"type": "integer"}, "max_depth": map[string]any{"type": "integer"}})},
+			InputSchema: obj(withFormat(map[string]any{"changed_paths": map[string]any{"type": "array"}, "query": str, "repo_id": str, "limit": map[string]any{"type": "integer"}, "max_files": map[string]any{"type": "integer"}, "max_edges": map[string]any{"type": "integer"}, "max_depth": map[string]any{"type": "integer"}}))},
 		{Name: "symbol", Description: "Definition(s) of a symbol with its callers and callees.",
 			InputSchema: obj(map[string]any{"symbol": str, "repo_id": str}, "symbol")},
 		{Name: "callers", Description: "Symbols that directly call a given symbol.",
@@ -73,7 +79,7 @@ func coreTools() []Tool {
 		{Name: "coverage", Description: "Coverage for a symbol: real RUNTIME coverage (covered/total lines) when a profile was imported, else static call-graph reachability.",
 			InputSchema: obj(map[string]any{"target": str, "repo_id": str, "direction": str}, "target")},
 		{Name: "impact", Description: "Single-repo blast radius: reverse call-graph BFS from changed paths/symbols.",
-			InputSchema: obj(map[string]any{"changed_paths": map[string]any{"type": "array"}, "symbols": map[string]any{"type": "array"}, "max_depth": map[string]any{"type": "integer"}, "repo_id": str})},
+			InputSchema: obj(withFormat(map[string]any{"changed_paths": map[string]any{"type": "array"}, "symbols": map[string]any{"type": "array"}, "max_depth": map[string]any{"type": "integer"}, "repo_id": str}))},
 		{Name: "graph_export", Description: "Export the call-graph neighborhood around a symbol (json|mermaid|dot|html). html returns a self-contained interactive visualization.",
 			InputSchema: obj(map[string]any{"symbol": str, "depth": map[string]any{"type": "integer"}, "format": str, "repo_id": str}, "symbol")},
 		{Name: "history", Description: "Per-commit snapshot timeline for a repo (temporal).",
@@ -81,19 +87,19 @@ func coreTools() []Tool {
 		{Name: "snapshot_diff", Description: "Structural diff between two snapshots: symbols/edges added/removed/modified.",
 			InputSchema: obj(map[string]any{"from": str, "to": str, "repo_id": str})},
 		{Name: "route_contracts", Description: "Producer HTTP routes a repo serves (its public contract: method/path/handler).",
-			InputSchema: obj(map[string]any{"repo": str})},
+			InputSchema: obj(withFormat(map[string]any{"repo": str}))},
 		{Name: "consumers", Description: "Other repos that call any route this repo serves (cross-repo dependents).",
 			InputSchema: obj(map[string]any{"repo": str})},
 		{Name: "cross_repo_impact", Description: "Cross-repo blast radius (the USP): which OTHER repos call routes that the changed handler files serve.",
 			InputSchema: obj(map[string]any{"repo": str, "changed_paths": map[string]any{"type": "array"}})},
 		{Name: "communities", Description: "Deterministic graph communities: clusters of densely-connected symbols (label propagation), size-ranked with representative members.",
-			InputSchema: obj(map[string]any{"repo_id": str, "limit": map[string]any{"type": "integer"}})},
+			InputSchema: obj(withFormat(map[string]any{"repo_id": str, "limit": map[string]any{"type": "integer"}}))},
 		{Name: "hubs", Description: "Graph hubs (\"god nodes\"): top symbols by call-graph degree centrality (in/out/total).",
-			InputSchema: obj(map[string]any{"repo_id": str, "limit": map[string]any{"type": "integer"}})},
+			InputSchema: obj(withFormat(map[string]any{"repo_id": str, "limit": map[string]any{"type": "integer"}}))},
 		{Name: "report", Description: "Deterministic graph report: summary stats, top hubs (god nodes), and communities, with a ready-to-render Markdown document.",
-			InputSchema: obj(map[string]any{"repo_id": str})},
+			InputSchema: obj(withFormat(map[string]any{"repo_id": str}))},
 		{Name: "status", Description: "Engine health and per-repo index freshness.",
-			InputSchema: obj(map[string]any{"repo_id": str})},
+			InputSchema: obj(withFormat(map[string]any{"repo_id": str}))},
 		{Name: "link", Description: "Register a repo into the graph WITHOUT indexing it (path, git remote URL, or org/name), so it participates in cross-repo and shows in status.",
 			InputSchema: obj(map[string]any{"repo": str, "branch": str}, "repo")},
 	}
@@ -356,7 +362,7 @@ func (s *Server) callTool(ctx context.Context, params json.RawMessage) map[strin
 		err = engine.ErrNotImplemented
 	}
 
-	text := mustJSON(payload)
+	text := mcpToolText(payload, str("format"))
 	if err != nil {
 		text = mustJSON(map[string]any{"status": "not_implemented", "hint": err.Error()})
 	}
@@ -364,6 +370,16 @@ func (s *Server) callTool(ctx context.Context, params json.RawMessage) map[strin
 		"content": []map[string]any{{"type": "text", "text": text}},
 		"isError": false,
 	}
+}
+
+func mcpToolText(v any, format string) string {
+	switch strings.ToLower(strings.TrimSpace(format)) {
+	case "plain", "terse", "text":
+		if s := mcpPlain(v); s != "" {
+			return s
+		}
+	}
+	return mustJSON(v)
 }
 
 // mustJSON marshals a tool payload to COMPACT (un-indented) JSON. Agents don't
@@ -375,6 +391,216 @@ func mustJSON(v any) string {
 		return "{}"
 	}
 	return string(b)
+}
+
+const mcpListCap = 12
+
+type mcpLines struct {
+	b strings.Builder
+}
+
+func (l *mcpLines) line(s string)               { l.b.WriteString(s); l.b.WriteByte('\n') }
+func (l *mcpLines) linef(f string, args ...any) { l.line(fmt.Sprintf(f, args...)) }
+func (l *mcpLines) String() string              { return l.b.String() }
+
+func mcpPlain(v any) string {
+	switch r := v.(type) {
+	case *engine.SearchResult:
+		return mcpPlainSearch(r)
+	case *engine.SemanticSearchResult:
+		return mcpPlainSemanticSearch(r)
+	case *engine.ContextResult:
+		return mcpPlainContext(r)
+	case *engine.ImpactResult:
+		return mcpPlainImpact(r)
+	case *engine.RouteContractsResult:
+		return mcpPlainRouteContracts(r)
+	case *engine.CommunitiesResult:
+		return mcpPlainCommunities(r)
+	case *engine.HubsResult:
+		return mcpPlainHubs(r)
+	case *engine.ReportResult:
+		return r.Markdown
+	case *engine.StatusResult:
+		return mcpPlainStatus(r)
+	default:
+		return ""
+	}
+}
+
+func mcpPlainSearch(r *engine.SearchResult) string {
+	var l mcpLines
+	l.linef("search  mode %s  total %d", r.ModeUsed, r.Total)
+	mcpWriteHits(&l, r.Results)
+	return l.String()
+}
+
+func mcpPlainSemanticSearch(r *engine.SemanticSearchResult) string {
+	var l mcpLines
+	l.linef("semantic_search  mode %s  degraded %t  results %d", r.ModeUsed, r.Degraded, len(r.Results))
+	mcpWriteHits(&l, r.Results)
+	return l.String()
+}
+
+func mcpPlainContext(r *engine.ContextResult) string {
+	var l mcpLines
+	l.linef("context  mode %s  files %d  symbols %d  edges %d  hits %d  impacted %d",
+		r.Mode, len(r.Files), len(r.Symbols), len(r.Edges), len(r.SearchHits), len(r.ImpactedFiles))
+	if len(r.Files) > 0 {
+		names := make([]string, 0, len(r.Files))
+		for _, f := range r.Files {
+			names = append(names, f.Path)
+		}
+		l.linef("  files(%d)  %s", len(names), mcpCapList(names))
+	}
+	if len(r.Symbols) > 0 {
+		names := make([]string, 0, len(r.Symbols))
+		for _, s := range r.Symbols {
+			names = append(names, s.Name)
+		}
+		l.linef("  symbols(%d)  %s", len(names), mcpCapList(names))
+	}
+	if len(r.ImpactedFiles) > 0 {
+		names := make([]string, 0, len(r.ImpactedFiles))
+		for _, f := range r.ImpactedFiles {
+			names = append(names, f.Path)
+		}
+		l.linef("  impacted(%d)  %s", len(names), mcpCapList(names))
+	}
+	return l.String()
+}
+
+func mcpPlainImpact(r *engine.ImpactResult) string {
+	var l mcpLines
+	l.linef("impact  symbols %d  files %d  tests %d  depth %d",
+		len(r.ImpactedSymbols), len(r.ImpactedFiles), len(r.ImpactedTests), r.DepthReached)
+	if len(r.ImpactedSymbols) > 0 {
+		l.linef("  symbols(%d)  %s", len(r.ImpactedSymbols), mcpCapList(r.ImpactedSymbols))
+	}
+	if len(r.ImpactedFiles) > 0 {
+		names := make([]string, 0, len(r.ImpactedFiles))
+		for _, f := range r.ImpactedFiles {
+			names = append(names, f.Path)
+		}
+		l.linef("  files(%d)  %s", len(names), mcpCapList(names))
+	}
+	if len(r.ImpactedTests) > 0 {
+		l.linef("  tests(%d)  %s", len(r.ImpactedTests), mcpCapList(r.ImpactedTests))
+	}
+	return l.String()
+}
+
+func mcpPlainRouteContracts(r *engine.RouteContractsResult) string {
+	var l mcpLines
+	l.linef("route_contracts %s  total %d", r.Repo, r.Total)
+	routes := r.Routes
+	extra := 0
+	if len(routes) > mcpListCap {
+		extra = len(routes) - mcpListCap
+		routes = routes[:mcpListCap]
+	}
+	for _, rt := range routes {
+		l.line(strings.TrimRight(fmt.Sprintf("  %s %s  %s", rt.Method, rt.PathPattern, rt.HandlerSymbol), " "))
+	}
+	if extra > 0 {
+		l.linef("  (+%d more)", extra)
+	}
+	return l.String()
+}
+
+func mcpPlainCommunities(r *engine.CommunitiesResult) string {
+	var l mcpLines
+	l.linef("communities  total %d  shown %d", r.Total, len(r.Communities))
+	communities := r.Communities
+	extra := 0
+	if len(communities) > mcpListCap {
+		extra = len(communities) - mcpListCap
+		communities = communities[:mcpListCap]
+	}
+	for _, c := range communities {
+		members := c.Representatives
+		if len(members) == 0 {
+			members = c.Members
+		}
+		l.linef("  #%d  size %d  %s", c.ID, c.Size, mcpCapList(members))
+	}
+	if extra > 0 {
+		l.linef("  (+%d more)", extra)
+	}
+	return l.String()
+}
+
+func mcpPlainHubs(r *engine.HubsResult) string {
+	var l mcpLines
+	l.linef("hubs  total %d", len(r.Hubs))
+	hubs := r.Hubs
+	extra := 0
+	if len(hubs) > mcpListCap {
+		extra = len(hubs) - mcpListCap
+		hubs = hubs[:mcpListCap]
+	}
+	for _, h := range hubs {
+		l.line(strings.TrimRight(fmt.Sprintf("  %s  %s  in %d  out %d  total %d  %s",
+			h.Name, h.Kind, h.InDegree, h.OutDegree, h.TotalDegree, h.Path), " "))
+	}
+	if extra > 0 {
+		l.linef("  (+%d more)", extra)
+	}
+	return l.String()
+}
+
+func mcpPlainStatus(r *engine.StatusResult) string {
+	var l mcpLines
+	l.linef("status  tier %s  driver %s  vectors %s  repos %d",
+		r.Tier, r.StorageDriver, r.VectorBackend, r.ReposIndexed)
+	repos := r.Repos
+	extra := 0
+	if len(repos) > mcpListCap {
+		extra = len(repos) - mcpListCap
+		repos = repos[:mcpListCap]
+	}
+	for _, repo := range repos {
+		l.linef("  %s  symbols %d  edges %d  %s", repo.FullName, repo.Symbols, repo.Edges, repo.CommitSHA)
+	}
+	if extra > 0 {
+		l.linef("  (+%d more)", extra)
+	}
+	return l.String()
+}
+
+func mcpWriteHits(l *mcpLines, hits []engine.SearchHit) {
+	capped := hits
+	extra := 0
+	if len(capped) > mcpListCap {
+		extra = len(capped) - mcpListCap
+		capped = capped[:mcpListCap]
+	}
+	for _, h := range capped {
+		l.line(strings.TrimRight(fmt.Sprintf("  %s  %s  %s", h.Name, h.Kind, mcpLoc(h.Path, h.Line)), " "))
+	}
+	if extra > 0 {
+		l.linef("  (+%d more)", extra)
+	}
+}
+
+func mcpCapList(names []string) string {
+	if len(names) == 0 {
+		return ""
+	}
+	if len(names) <= mcpListCap {
+		return strings.Join(names, ", ")
+	}
+	return fmt.Sprintf("%s (+%d more)", strings.Join(names[:mcpListCap], ", "), len(names)-mcpListCap)
+}
+
+func mcpLoc(path string, line int) string {
+	if path == "" {
+		return ""
+	}
+	if line > 0 {
+		return fmt.Sprintf("%s:%d", path, line)
+	}
+	return path
 }
 
 // ── Legacy HTTP+SSE transport (deprecated 2024-11-05) ───────────────────────

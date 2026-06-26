@@ -24,7 +24,26 @@ func (stubEngine) Search(context.Context, engine.SearchInput) (*engine.SearchRes
 	return &engine.SearchResult{}, nil
 }
 func (stubEngine) Context(context.Context, engine.ContextInput) (*engine.ContextResult, error) {
-	return &engine.ContextResult{}, nil
+	return &engine.ContextResult{
+		Mode: "symbol_context",
+		Files: []engine.ContextFile{
+			{Path: "basic/main.go"},
+			{Path: "basic/main_test.go"},
+		},
+		Symbols: []engine.ContextSymbol{
+			{Name: "setupRouter", Kind: "function", Path: "basic/main.go", Line: 11},
+			{Name: "main", Kind: "function", Path: "basic/main.go", Line: 20},
+		},
+		Edges: []engine.ContextEdge{
+			{FromFile: "basic/main.go", FromSymbol: "setupRouter", ToRef: "gin.Default", Kind: "calls"},
+		},
+		SearchHits: []engine.SearchHit{
+			{Name: "setupRouter", Kind: "function", Path: "basic/main.go", Line: 11},
+		},
+		ImpactedFiles: []engine.FileImpact{
+			{Path: "basic/main_test.go", Reason: "test"},
+		},
+	}, nil
 }
 func (stubEngine) SemanticSearch(context.Context, engine.SemanticSearchInput) (*engine.SemanticSearchResult, error) {
 	return &engine.SemanticSearchResult{}, nil
@@ -199,6 +218,45 @@ func TestHTTPHandler_ToolsCallStatus(t *testing.T) {
 	}
 	if sr.Tier != "test-tier" || sr.ReposIndexed != 7 {
 		t.Errorf("status payload = %+v, want tier=test-tier repos_indexed=7", sr)
+	}
+}
+
+func TestHTTPHandler_ToolsCallContextPlainFormat(t *testing.T) {
+	h := newTestHandler()
+	status, body := httpRPC(t, h, `{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"context","arguments":{"format":"plain","changed_paths":["basic/main.go"],"query":"router GET","limit":10}}}`)
+	if status != http.StatusOK {
+		t.Fatalf("status = %d, want 200; body=%s", status, body)
+	}
+
+	var resp struct {
+		Result struct {
+			Content []struct {
+				Text string `json:"text"`
+			} `json:"content"`
+			IsError bool `json:"isError"`
+		} `json:"result"`
+		Error *rpcError `json:"error"`
+	}
+	if err := json.Unmarshal(body, &resp); err != nil {
+		t.Fatalf("unmarshal: %v; body=%s", err, body)
+	}
+	if resp.Error != nil {
+		t.Fatalf("unexpected error: %+v", resp.Error)
+	}
+	if resp.Result.IsError {
+		t.Fatal("tools/call(context) returned isError=true")
+	}
+	if len(resp.Result.Content) == 0 {
+		t.Fatal("tools/call(context) returned no content")
+	}
+	text := resp.Result.Content[0].Text
+	if strings.HasPrefix(strings.TrimSpace(text), "{") {
+		t.Fatalf("context plain output is JSON, want terse text: %s", text)
+	}
+	for _, want := range []string{"context  mode symbol_context", "files(2)", "symbols(2)", "impacted(1)"} {
+		if !strings.Contains(text, want) {
+			t.Fatalf("context plain output missing %q: %s", want, text)
+		}
 	}
 }
 
