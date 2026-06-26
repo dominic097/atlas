@@ -7,7 +7,7 @@
 // other supported language (python, javascript, typescript, java, c, cpp) is
 // parsed with tree-sitter.
 //
-// Ported and adapted from aziron-pulse internal/service:
+// Ported and adapted from the original parser service:
 //   - tree_sitter_parser.go (walk*AST / extract*Import)
 //   - code_intelligence_service.go (parseGoFile, parseGoCallEdges,
 //     parseTextCallEdges, parseCodeFile, languageForPath,
@@ -24,7 +24,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
+	"github.com/dominic097/atlas/internal/graph"
 	tree_sitter "github.com/tree-sitter/go-tree-sitter"
 )
 

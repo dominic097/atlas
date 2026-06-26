@@ -1,6 +1,5 @@
-// Command atlas is the CLI entrypoint for Aziron Atlas — a live, org-wide code
-// knowledge graph that acts. It mounts all five consumption surfaces (CLI, HTTP
-// API, MCP, SDK, runtime) over a single shared Engine.
+// Command atlas is the CLI entrypoint for a local code knowledge graph. It
+// mounts the CLI, HTTP API, MCP, and SDK surfaces over a shared Engine.
 package main
 
 import (
@@ -8,10 +7,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/cli"
+	"github.com/dominic097/atlas/internal/cli"
 )
 
 func main() {
+	cli.SetBuildInfo(Version, Commit, Date)
 	if err := cli.NewRootCmd().Execute(); err != nil {
 		// Many engine errors already carry an "atlas:" prefix; trim it so the
 		// message reads "atlas: <msg>" rather than "atlas: atlas: <msg>".

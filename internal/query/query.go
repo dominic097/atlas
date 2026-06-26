@@ -21,8 +21,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/store"
+	"github.com/dominic097/atlas/internal/graph"
+	"github.com/dominic097/atlas/internal/store"
 )
 
 // Callers returns the symbols that call the symbol(s) named `name` — i.e. the

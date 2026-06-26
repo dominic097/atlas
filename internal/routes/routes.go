@@ -15,15 +15,15 @@
 //
 // This is deliberately regex/content based (NOT tree-sitter): the indexer
 // already holds the file content in hand during its WalkDir, so extraction is a
-// cheap second pass over bytes already read. The Go implementation is ported
-// from aziron-pulse internal/service/{route_contract_analyzer,
-// cross_service_analyzer}.go; other languages are stubbed for a follow-up.
+// cheap second pass over bytes already read. The Go implementation is adapted
+// from the original route and cross-service analyzers; other languages are
+// stubbed for a follow-up.
 package routes
 
 import (
 	"strings"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
+	"github.com/dominic097/atlas/internal/graph"
 )
 
 // Role values for a RawRoute / graph.Route.

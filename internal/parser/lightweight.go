@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
+	"github.com/dominic097/atlas/internal/graph"
 )
 
 // parseDocSymbols mirrors Pulse's doc/config indexing: markdown is chunked by

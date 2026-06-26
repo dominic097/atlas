@@ -12,7 +12,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
+	"github.com/dominic097/atlas/internal/graph"
 	"github.com/google/uuid"
 	_ "modernc.org/sqlite"
 )

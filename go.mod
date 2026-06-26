@@ -1,4 +1,4 @@
-module github.com/MsysTechnologiesllc/aziron-atlas
+module github.com/dominic097/atlas
 
 go 1.25.0
 

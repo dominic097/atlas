@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
+	"github.com/dominic097/atlas/internal/graph"
 )
 
 // newTestStore opens a fresh migrated SQLite driver in a temp dir.

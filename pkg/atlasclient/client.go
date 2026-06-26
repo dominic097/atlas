@@ -2,7 +2,7 @@
 // (consumption surface S2, served by `atlas serve`). It is a thin, typed wrapper
 // over net/http: one method per canonical operation, a base URL plus an optional
 // bearer token, JSON decoding into the shared result types from
-// github.com/MsysTechnologiesllc/aziron-atlas/pkg/atlas, and RFC 9457
+// github.com/dominic097/atlas/pkg/atlas, and RFC 9457
 // application/problem+json error parsing into a typed *APIError.
 //
 //	c, err := atlasclient.New("http://localhost:8080", atlasclient.WithToken("secret"))
@@ -26,7 +26,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/pkg/atlas"
+	"github.com/dominic097/atlas/pkg/atlas"
 )
 
 // Client talks to an Atlas REST API server over HTTP. It is safe for concurrent

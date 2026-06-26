@@ -7,7 +7,7 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
+	"github.com/dominic097/atlas/internal/graph"
 	_ "github.com/lib/pq"
 )
 
@@ -15,7 +15,7 @@ import (
 // a LIVE Postgres. It is gated on ATLAS_PG_DSN so plain `go test ./internal/store/`
 // (the SQLite suite) never touches a database. To run it:
 //
-//	ATLAS_PG_DSN="postgres://aziron:aziron123@localhost:5432/atlas_hosted?sslmode=disable" \
+//	ATLAS_PG_DSN="postgres://atlas:atlas123@localhost:5432/atlas_hosted?sslmode=disable" \
 //	  CGO_ENABLED=1 go test ./internal/store/ -run TestPostgres -v
 //
 // It drops + recreates the atlas tables, saves a 2-repo / 2-snapshot graph with

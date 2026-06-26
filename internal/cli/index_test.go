@@ -3,17 +3,17 @@ package cli
 import (
 	"testing"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/pkg/atlas"
+	"github.com/dominic097/atlas/pkg/atlas"
 )
 
 func TestApplyIndexDefaultsUsesGlobalRepo(t *testing.T) {
 	old := gf
 	t.Cleanup(func() { gf = old })
-	gf.repo = "MsysTechnologiesllc/Aziron"
+	gf.repo = "example/repo"
 
 	in := atlas.IndexInput{}
 	applyIndexDefaults(&in)
-	if in.Repo != "MsysTechnologiesllc/Aziron" {
+	if in.Repo != "example/repo" {
 		t.Fatalf("Repo = %q, want global repo", in.Repo)
 	}
 

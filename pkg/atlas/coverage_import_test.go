@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/pkg/atlas"
+	"github.com/dominic097/atlas/pkg/atlas"
 )
 
 // TestCoverageImportRuntime indexes a tiny Go repo, imports a Go coverprofile

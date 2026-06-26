@@ -25,11 +25,11 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/lexical"
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/parser"
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/routes"
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/store"
+	"github.com/dominic097/atlas/internal/graph"
+	"github.com/dominic097/atlas/internal/lexical"
+	"github.com/dominic097/atlas/internal/parser"
+	"github.com/dominic097/atlas/internal/routes"
+	"github.com/dominic097/atlas/internal/store"
 )
 
 // workingTreeSHA is the sentinel resolveCommitSHA returns for a non-git tree; a

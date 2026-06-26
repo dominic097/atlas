@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/install"
+	"github.com/dominic097/atlas/internal/install"
 )
 
 func newInstallCmd() *cobra.Command {

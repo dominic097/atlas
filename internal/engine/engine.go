@@ -19,15 +19,15 @@ import (
 	"strings"
 	"time"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/coverage"
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/crossrepo"
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/embed"
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/export"
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/index"
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/lexical"
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/query"
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/store"
+	"github.com/dominic097/atlas/internal/coverage"
+	"github.com/dominic097/atlas/internal/crossrepo"
+	"github.com/dominic097/atlas/internal/embed"
+	"github.com/dominic097/atlas/internal/export"
+	"github.com/dominic097/atlas/internal/graph"
+	"github.com/dominic097/atlas/internal/index"
+	"github.com/dominic097/atlas/internal/lexical"
+	"github.com/dominic097/atlas/internal/query"
+	"github.com/dominic097/atlas/internal/store"
 )
 
 // ErrNotImplemented is the sentinel for ops not yet wired.

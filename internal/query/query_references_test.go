@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
+	"github.com/dominic097/atlas/internal/graph"
 )
 
 // TestReferencesGraphTypeUses asserts ReferencesGraph returns the enclosing

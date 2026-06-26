@@ -4,7 +4,7 @@
 // builds the lexical (BM25) symbol index for that snapshot.
 //
 // It is the orchestration seam that ties parser + store + lexical together. The
-// walk/scan shape is ported from the proven aziron-pulse engine
+// walk/scan shape is adapted from the proven indexing engine
 // (internal/service/code_intelligence_service.go: scanRepository ~1321 /
 // parseRepoFile ~1403): a filepath.WalkDir that prunes vendored/build dirs,
 // skips unsupported or oversized files, parses the rest, and accumulates
@@ -26,13 +26,13 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/embed"
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/gotypes"
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/lexical"
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/parser"
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/routes"
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/store"
+	"github.com/dominic097/atlas/internal/embed"
+	"github.com/dominic097/atlas/internal/gotypes"
+	"github.com/dominic097/atlas/internal/graph"
+	"github.com/dominic097/atlas/internal/lexical"
+	"github.com/dominic097/atlas/internal/parser"
+	"github.com/dominic097/atlas/internal/routes"
+	"github.com/dominic097/atlas/internal/store"
 )
 
 // maxFileBytes is the per-file size ceiling; files larger than this are skipped

@@ -1,0 +1,29 @@
+{
+  "name": "atlas",
+  "version": "0.1.0",
+  "description": "Atlas local code-intelligence CLI. Installs the native atlas binary and uses embedded SQLite by default.",
+  "license": "Apache-2.0",
+  "type": "commonjs",
+  "bin": {
+    "atlas": "bin/atlas.js"
+  },
+  "files": [
+    "bin/atlas.js",
+    "scripts/install.js",
+    "README.md"
+  ],
+  "scripts": {
+    "postinstall": "node scripts/install.js",
+    "smoke": "node bin/atlas.js version"
+  },
+  "keywords": [
+    "atlas",
+    "code-intelligence",
+    "cli",
+    "sqlite",
+    "mcp"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}

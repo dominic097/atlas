@@ -7,8 +7,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/api"
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/mcp"
+	"github.com/dominic097/atlas/internal/api"
+	"github.com/dominic097/atlas/internal/mcp"
 )
 
 func newServeCmd() *cobra.Command {

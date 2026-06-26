@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/engine"
+	"github.com/dominic097/atlas/internal/engine"
 )
 
 // stubEngine is a hermetic engine.Engine implementation for transport tests. Only

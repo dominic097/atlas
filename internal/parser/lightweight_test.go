@@ -4,32 +4,32 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
+	"github.com/dominic097/atlas/internal/graph"
 )
 
 func TestLanguageForPathReviewContextTextFormats(t *testing.T) {
 	cases := map[string]string{
-		"go.mod":                 "gomod",
-		"go.sum":                 "gosum",
-		"flow.json":              "json",
-		"Aziron.code-workspace":  "json",
-		"service.proto":          "proto",
-		"README.mdx":             "mdx",
-		"Makefile":               "makefile",
-		"Jenkinsfile.server":     "groovy",
-		"scripts/postinstall":    "bash",
-		".env.example":           "config",
-		".dockerignore":          "config",
-		"systemd/aziron.service": "config",
-		"config.alloy":           "config",
-		"uv.lock":                "config",
-		"scripts/install.bat":    "batch",
-		"scripts/install.ps1":    "powershell",
-		"provider.go.disabled":   "go",
-		"registry.go.backup":     "go",
-		"dump.sql.bak":           "sql",
-		"settings.json.orig":     "json",
-		"data/employees.csv":     "csv",
+		"go.mod":                "gomod",
+		"go.sum":                "gosum",
+		"flow.json":             "json",
+		"Atlas.code-workspace":  "json",
+		"service.proto":         "proto",
+		"README.mdx":            "mdx",
+		"Makefile":              "makefile",
+		"Jenkinsfile.server":    "groovy",
+		"scripts/postinstall":   "bash",
+		".env.example":          "config",
+		".dockerignore":         "config",
+		"systemd/atlas.service": "config",
+		"config.alloy":          "config",
+		"uv.lock":               "config",
+		"scripts/install.bat":   "batch",
+		"scripts/install.ps1":   "powershell",
+		"provider.go.disabled":  "go",
+		"registry.go.backup":    "go",
+		"dump.sql.bak":          "sql",
+		"settings.json.orig":    "json",
+		"data/employees.csv":    "csv",
 	}
 
 	for path, want := range cases {

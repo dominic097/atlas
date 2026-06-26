@@ -3,7 +3,7 @@ package cli
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/pkg/atlas"
+	"github.com/dominic097/atlas/pkg/atlas"
 )
 
 // newSemanticSearchCmd runs the OPTIONAL, gated semantic search. It is honest

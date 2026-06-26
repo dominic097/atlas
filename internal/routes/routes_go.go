@@ -8,7 +8,7 @@ import (
 // goRoutes is the Go-language extractor: PRODUCER route registrations + CONSUMER
 // outbound HTTP calls from one file's content.
 //
-// PRODUCER (ported from aziron-pulse route_contract_analyzer.go): net/http
+// PRODUCER (adapted from the original route analyzer): net/http
 // HandleFunc, gorilla/mux r.HandleFunc(...).Methods(...), chi/gin/echo method
 // calls r.Get/Post/GET/POST(...). Subrouter prefixes declared in the same file
 // (PathPrefix(...).Subrouter()) are chained back to a local mux.NewRouter() root
@@ -17,7 +17,7 @@ import (
 // is intentionally dropped — the in-file prefix chain is resolved with an empty
 // seed.
 //
-// CONSUMER (ported from aziron-pulse cross_service_analyzer.go, Go branch):
+// CONSUMER (adapted from the original cross-service analyzer, Go branch):
 // http.Get/Post/Put/Delete/Patch/Do, http.NewRequest(method, url, ...),
 // client.Do(...), and resty request builders. Each call's method + URL is
 // captured; extractPath strips scheme/host to the path. Every consumer call is

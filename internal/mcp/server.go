@@ -21,7 +21,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/engine"
+	"github.com/dominic097/atlas/internal/engine"
 )
 
 // Server is the Atlas MCP server.

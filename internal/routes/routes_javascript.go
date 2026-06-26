@@ -16,7 +16,7 @@ import (
 //   - NestJS decorators: @Get("/path") / @Post("/:id") above a method, with a
 //     class-level @Controller("/base") prefix combined in when present.
 //
-// CONSUMER (HTTP-client patterns, ported from aziron-pulse
+// CONSUMER (HTTP-client patterns adapted from the original route analyzer
 // cross_service_analyzer.go JS branch + extended): axios.get/post/put/delete/
 // patch(url), axios({ method, url }), axios(url), fetch(url, {method}), got(url),
 // superagent.get(url), http(s).request({...}). RawURL is the first url-ish literal

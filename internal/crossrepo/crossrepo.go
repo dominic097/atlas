@@ -7,7 +7,7 @@
 // ListRoutes) and graph.Route — the producer/consumer extraction is wired in by
 // the indexer in parallel; this package only matches what is already persisted.
 //
-// The matcher (EndpointMatch) is ported from aziron-pulse
+// The matcher (EndpointMatch) is adapted from the original route analysis
 // code_search_service.go endpointMatchesAnyRoute: param/`:name`/`{}` segments
 // are wildcards, query strings + trailing slashes + leading host are stripped,
 // and consumer method "" matches any producer method.
@@ -20,8 +20,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/store"
+	"github.com/dominic097/atlas/internal/graph"
+	"github.com/dominic097/atlas/internal/store"
 )
 
 // ErrRepoNotFound is returned when repoFullName resolves to no indexed repo.

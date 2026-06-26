@@ -1,5 +1,5 @@
 // Package graph holds the pure, persistence-agnostic data model for the Atlas
-// code knowledge graph. These structs are ported from aziron-pulse
+// code knowledge graph. These structs are adapted from the original graph model
 // internal/models/devops.go with SQL `db:` tags stripped — the StorageDriver
 // maps them to SQLite or Postgres columns.
 package graph

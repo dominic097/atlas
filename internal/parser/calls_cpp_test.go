@@ -3,7 +3,7 @@ package parser
 import (
 	"testing"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
+	"github.com/dominic097/atlas/internal/graph"
 )
 
 // cppEdgeFor returns the first edge with the given bare callee (toRef), or nil.

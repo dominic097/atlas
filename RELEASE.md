@@ -1,7 +1,6 @@
-# Cutting an Atlas release
+# Cutting An Atlas Release
 
-Releases are fully automated. Pushing a semver tag fans out into two GitHub
-Actions jobs in [`.github/workflows/release.yml`](.github/workflows/release.yml):
+Releases are automated from semver tags:
 
 ```sh
 git tag v0.1.0
@@ -10,62 +9,79 @@ git push origin v0.1.0
 
 | Job | Produces |
 |-----|----------|
-| `goreleaser` | per-OS/arch binaries, `tar.gz` archives, `checksums.txt`, per-archive SBOMs (syft), a keyless cosign signature over the checksums, the Homebrew formula, and the GitHub Release |
-| `container`  | multi-arch (`linux/amd64,linux/arm64`) image pushed to `ghcr.io/msystechnologiesllc/aziron-atlas`, with provenance + SBOM attestations and a keyless cosign image signature |
+| `goreleaser` | per-OS/arch binaries, `tar.gz` archives, Linux `.deb`/`.rpm`/`.apk` packages, `checksums.txt`, per-archive SBOMs, a keyless cosign signature over the checksums, the Homebrew cask, and the GitHub Release |
+| `npm` | `atlas`, an npm wrapper that installs and runs the local native `atlas` binary from the GitHub Release |
 
-## Why a cross-compile image
+## Release Repositories
 
-Atlas is a **CGO** binary — the tree-sitter grammars are C and sqlite is C — so
-cross-compilation needs real cross toolchains, not just `GOOS`/`GOARCH`. The
-`goreleaser` job runs inside `ghcr.io/goreleaser/goreleaser-cross:v1.25.0`
-(tagged by Go version, here Go 1.25.0), which bundles the linux gcc
-cross-compilers, osxcross for darwin CGO, and cosign + syft. The per-target
-`CC`/`CXX` overrides in [`.goreleaser.yaml`](.goreleaser.yaml) map each
-`GOOS`/`GOARCH` onto that image's toolchains. Keep the image's Go-version tag in
-sync with the `go` directive in `go.mod`.
+- Release assets: `dominic097/atlas`
+- Homebrew tap: `dominic097/homebrew-atlas`
+- Homebrew install name: `dominic097/atlas/atlas`
+- npm package name: `atlas`
 
-The container image is built **separately from source** (buildx + QEMU against
-the [`Dockerfile`](Dockerfile)) so it is a genuine CGO build per architecture,
-not a repackaged linux binary.
+The release-asset repository must exist before a tag is pushed. Homebrew and npm
+both download native archives from that public release URL. Releases are pinned
+to the public repository's `main` branch as `target_commitish`, because the
+source build can run from a private repository while the public release assets
+live in `dominic097/atlas`.
 
-## Required secrets
+## Why A Cross-Compile Image
+
+Atlas is a CGO binary because tree-sitter grammars and SQLite use C. The
+`goreleaser` job runs inside `ghcr.io/goreleaser/goreleaser-cross:v1.25.0`,
+which provides the linux gcc cross-compilers, osxcross for darwin CGO, cosign,
+and syft. The per-target `CC` and `CXX` overrides in `.goreleaser.yaml` map each
+`GOOS` and `GOARCH` to that image's toolchains.
+
+Keep the image's Go-version tag in sync with the `go` directive in `go.mod`.
+
+Atlas itself is local-first after install: the packaged `atlas` CLI defaults to
+embedded SQLite at `sqlite://./.atlas/atlas.db`; no hosted server is required for
+local indexing, search, impact, or MCP.
+
+## Required Secrets
 
 | Secret | Used by | Purpose |
 |--------|---------|---------|
-| `GITHUB_TOKEN` (auto) | both jobs | create the Release, push the GHCR image |
-| `HOMEBREW_TAP_TOKEN`  | `goreleaser` | PAT with write access to `MsysTechnologiesllc/homebrew-atlas` (pushes `Formula/atlas.rb`) |
+| `GITHUB_TOKEN` | `goreleaser` | default token when releases are published from the same repository |
+| `ATLAS_RELEASE_TOKEN` | `goreleaser` | optional PAT with contents write access to `dominic097/atlas` when releasing from another repository |
+| `HOMEBREW_TAP_TOKEN` | `goreleaser` | PAT with contents write access to `dominic097/homebrew-atlas` so GoReleaser can push `Casks/atlas.rb` |
+| `NPM_TOKEN` | `npm` | npm automation token with publish rights for the `atlas` package |
 
-Keyless cosign signing uses GitHub OIDC (`id-token: write` + Fulcio/Rekor) — no
-key secret is needed.
+Keyless cosign signing uses GitHub OIDC (`id-token: write` plus Fulcio/Rekor);
+no signing key secret is needed.
 
-## Validate locally before tagging
+## Current External Prerequisites
+
+- `dominic097/homebrew-atlas` exists and is writable by the current GitHub user.
+- `dominic097/atlas` must be created before the release workflow can publish
+  clean public release assets.
+- The exact npm package name `atlas` is already registered on npm. Publishing
+  under that exact name requires owner access to the existing package.
+
+## Validate Locally Before Tagging
 
 ```sh
-# config schema (matches the version: 2 goreleaser in the cross image)
+go test ./...
+make build
+./bin/atlas version
 go run github.com/goreleaser/goreleaser/v2@latest check
 
-# a full dry-run release into ./dist with no publish, in the same image CI uses
 docker run --rm -v "$PWD":/src -w /src \
-  ghcr.io/goreleaser/goreleaser-cross:v1.25.0 release --snapshot --clean
+  ghcr.io/goreleaser/goreleaser-cross:v1.25.0 \
+  release --snapshot --clean --skip=publish,sign
 
-# the container image (build metadata flows through the -X seams atlas version reads)
-docker build -t atlas:dev \
-  --build-arg VERSION=v0.0.0-dev --build-arg COMMIT="$(git rev-parse --short HEAD)" .
-docker run --rm atlas:dev version
+cd npm/atlas
+ATLAS_BINARY=../../bin/atlas npm run smoke
+ATLAS_SKIP_DOWNLOAD=1 npm publish --dry-run --access public
 ```
 
-## Verifying signatures (consumers)
+## Verifying Signatures
 
 ```sh
-# checksums signature (covers every archive via checksums.txt)
 cosign verify-blob \
   --certificate checksums.txt.pem --signature checksums.txt.sig \
   --certificate-identity-regexp '.*' \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com \
   checksums.txt
-
-# container image signature
-cosign verify ghcr.io/msystechnologiesllc/aziron-atlas:<tag> \
-  --certificate-identity-regexp '.*' \
-  --certificate-oidc-issuer https://token.actions.githubusercontent.com
 ```

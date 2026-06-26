@@ -19,7 +19,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/engine"
+	"github.com/dominic097/atlas/internal/engine"
 )
 
 // Config configures the HTTP server.

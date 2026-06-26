@@ -3,7 +3,7 @@ package parser
 import (
 	"testing"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
+	"github.com/dominic097/atlas/internal/graph"
 )
 
 // jsParseEdges parses a snippet through the public Parse entrypoint and returns

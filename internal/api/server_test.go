@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/pkg/atlas"
+	"github.com/dominic097/atlas/pkg/atlas"
 )
 
 // newTestServer builds a real SQLite-backed engine over a temp dir, indexes a

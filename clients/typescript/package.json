@@ -1,5 +1,5 @@
 {
-  "name": "@aziron/atlas-client",
+  "name": "atlas-client",
   "version": "0.1.0",
   "description": "Hand-written TypeScript client for the Atlas deterministic code-intelligence REST API.",
   "license": "Apache-2.0",

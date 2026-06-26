@@ -5,7 +5,7 @@ import (
 	"hash/fnv"
 	"math"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/lexical"
+	"github.com/dominic097/atlas/internal/lexical"
 )
 
 // hashingProvider is a deterministic, fully offline feature-hash embedder. Each

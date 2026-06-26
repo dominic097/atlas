@@ -1,6 +1,6 @@
 package store
 
-// schemaSQLite is the LOCAL-tier DDL, ported from aziron-pulse
+// schemaSQLite is the LOCAL-tier DDL, adapted from the original storage schema.
 // internal/repository/code_intelligence_repository.go (Postgres) and translated
 // to SQLite: TEXT primary keys (no uuid type / no pq arrays), JSON stored as
 // TEXT, time stored as RFC3339 TEXT. It is applied idempotently by Migrate on

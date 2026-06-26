@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/lexical"
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/store"
+	"github.com/dominic097/atlas/internal/lexical"
+	"github.com/dominic097/atlas/internal/store"
 )
 
 // openTestStore opens a migrated SQLite driver for an index test.

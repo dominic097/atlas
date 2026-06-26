@@ -6,7 +6,7 @@ import (
 	"go/token"
 	"strings"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
+	"github.com/dominic097/atlas/internal/graph"
 )
 
 // parseGoSymbols extracts functions, methods, and types from a Go source file

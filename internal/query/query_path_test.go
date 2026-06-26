@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/store"
+	"github.com/dominic097/atlas/internal/graph"
+	"github.com/dominic097/atlas/internal/store"
 )
 
 // saveGraph persists syms/edges under snapID into a throwaway store and returns

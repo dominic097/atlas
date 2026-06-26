@@ -5,7 +5,7 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
+	"github.com/dominic097/atlas/internal/graph"
 )
 
 // tinyGraph builds the canonical A -> B -> C call chain:

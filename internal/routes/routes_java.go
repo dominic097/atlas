@@ -18,7 +18,7 @@ import (
 //     follows the annotation (public ... name(...)).
 //   - JAX-RS: class @Path("/base") + method @Path("/sub") + @GET/@POST/... .
 //
-// CONSUMER (per-language patterns aligned with aziron-pulse
+// CONSUMER (per-language patterns aligned with the original analyzer
 // cross_service_analyzer.go): Spring RestTemplate (getForObject/getForEntity/
 // postForObject/.../exchange), WebClient (.get()/.post()....uri(url)), OkHttp
 // (Request.Builder().url(url)), java.net.http (HttpRequest.newBuilder().uri(...))

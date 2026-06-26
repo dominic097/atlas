@@ -69,6 +69,29 @@ archives:
       - LICENSE
       - README.md
 
+nfpms:
+  - id: atlas-linux-packages
+    package_name: atlas
+    ids:
+      - atlas
+    vendor: atlas
+    homepage: "https://github.com/dominic097/atlas"
+    maintainer: "atlas maintainers <atlas-maintainers@users.noreply.github.com>"
+    description: "Atlas deterministic local code-intelligence CLI using embedded SQLite by default."
+    license: "Apache-2.0"
+    bindir: /usr/bin
+    formats:
+      - apk
+      - deb
+      - rpm
+    dependencies:
+      - git
+    contents:
+      - src: LICENSE
+        dst: /usr/share/doc/atlas/LICENSE
+      - src: README.md
+        dst: /usr/share/doc/atlas/README.md
+
 checksum:
   name_template: checksums.txt
   algorithm: sha256
@@ -96,24 +119,30 @@ signs:
       - "${artifact}"
       - "--yes"
 
-# Homebrew tap: pushes a Formula/atlas.rb to MsysTechnologiesllc/homebrew-atlas.
+# Homebrew tap: pushes Casks/atlas.rb to dominic097/homebrew-atlas.
 # Requires a HOMEBREW_TAP_TOKEN secret (PAT with write access to that tap repo).
-brews:
+homebrew_casks:
   - name: atlas
+    ids:
+      - atlas
+    binaries:
+      - atlas
     repository:
-      owner: MsysTechnologiesllc
+      owner: dominic097
       name: homebrew-atlas
       token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
-    directory: Formula
-    homepage: "https://github.com/MsysTechnologiesllc/aziron-atlas"
-    description: "Atlas — deterministic code-intelligence: symbols, calls, routes, impact, cross-repo."
+    homepage: "https://github.com/dominic097/atlas"
+    description: "Atlas deterministic code intelligence: symbols, calls, routes, impact, cross-repo."
     license: "Apache-2.0"
-    dependencies:
-      - name: git
-    install: |
-      bin.install "atlas"
-    test: |
-      system "#{bin}/atlas", "version"
+    url:
+      template: "https://github.com/dominic097/atlas/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+      verified: github.com/dominic097/atlas/
+    hooks:
+      post:
+        install: |
+          if OS.mac?
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/atlas"]
+          end
 
 changelog:
   sort: asc
@@ -128,8 +157,9 @@ changelog:
 
 release:
   github:
-    owner: MsysTechnologiesllc
-    name: aziron-atlas
+    owner: dominic097
+    name: atlas
+  target_commitish: main
   draft: false
   prerelease: auto
   name_template: "Atlas {{ .Tag }}"

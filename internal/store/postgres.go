@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
+	"github.com/dominic097/atlas/internal/graph"
 	"github.com/google/uuid"
 	"github.com/lib/pq"
 )

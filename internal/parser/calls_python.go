@@ -1,7 +1,7 @@
 package parser
 
 import (
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
+	"github.com/dominic097/atlas/internal/graph"
 	tree_sitter "github.com/tree-sitter/go-tree-sitter"
 )
 

@@ -1,5 +1,5 @@
 // Package lexical implements an on-disk bleve (BM25) symbol index with a
-// code-aware analyzer. It is ported from the proven aziron-pulse code search
+// code-aware analyzer. It is adapted from the proven code search
 // service (internal/service/code_search_service.go: BuildIndex / bm25Search),
 // adapted to the Atlas graph types and extended with a code-aware analyzer that
 // splits camelCase / snake_case / kebab-case identifiers while preserving the
@@ -23,7 +23,7 @@ import (
 	"github.com/blevesearch/bleve/v2/mapping"
 	"github.com/blevesearch/bleve/v2/registry"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
+	"github.com/dominic097/atlas/internal/graph"
 )
 
 const (

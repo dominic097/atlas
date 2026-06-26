@@ -19,7 +19,7 @@ import (
 //     Path = the route string (regex anchors stripped, <int:id>/<id> -> {id});
 //     HandlerName = the view reference (last dotted segment).
 //
-// CONSUMER (ported from aziron-pulse cross_service_analyzer.go, Python patterns):
+// CONSUMER (adapted from the original cross-service analyzer, Python patterns):
 // requests.get/post/put/delete/patch(url), requests.request(method, url),
 // httpx.get(...) / httpx.AsyncClient().get(...), aiohttp session.get(url),
 // urllib.request.urlopen(url). Method from the verb (or the request() method

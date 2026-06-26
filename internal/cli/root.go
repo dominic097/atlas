@@ -5,10 +5,11 @@ package cli
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/spf13/cobra"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/pkg/atlas"
+	"github.com/dominic097/atlas/pkg/atlas"
 )
 
 // persistent flags shared by every command.
@@ -21,6 +22,31 @@ type globalFlags struct {
 }
 
 var gf globalFlags
+
+var buildInfo = struct {
+	Version string
+	Commit  string
+	Date    string
+}{
+	Version: "dev",
+	Commit:  "none",
+	Date:    "unknown",
+}
+
+// SetBuildInfo wires release metadata from the main package into the command
+// tree. Go ldflags can only target package variables, so cmd/atlas owns the
+// injected values and passes them here before Execute.
+func SetBuildInfo(version, commit, date string) {
+	if version != "" {
+		buildInfo.Version = version
+	}
+	if commit != "" {
+		buildInfo.Commit = commit
+	}
+	if date != "" {
+		buildInfo.Date = date
+	}
+}
 
 // NewRootCmd builds the full command tree.
 func NewRootCmd() *cobra.Command {
@@ -92,7 +118,7 @@ func newVersionCmd() *cobra.Command {
 		Use:   "version",
 		Short: "Print the Atlas version",
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			cmd.Println("atlas (scaffold)")
+			cmd.Println(fmt.Sprintf("atlas %s (%s, %s)", buildInfo.Version, buildInfo.Commit, buildInfo.Date))
 			return nil
 		},
 	}

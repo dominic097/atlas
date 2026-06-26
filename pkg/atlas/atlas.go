@@ -12,9 +12,9 @@ package atlas
 import (
 	"context"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/engine"
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/query"
+	"github.com/dominic097/atlas/internal/engine"
+	"github.com/dominic097/atlas/internal/graph"
+	"github.com/dominic097/atlas/internal/query"
 )
 
 // Re-export the canonical engine types so SDK consumers never reach into internal/.

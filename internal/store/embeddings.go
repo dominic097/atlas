@@ -5,7 +5,7 @@ import (
 	"math"
 	"sort"
 
-	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
+	"github.com/dominic097/atlas/internal/graph"
 )
 
 // embeddingsCols is the column list shared by both drivers' embedding I/O.
