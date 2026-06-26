@@ -34,6 +34,7 @@ type (
 	ContextFile   = engine.ContextFile
 	ContextSymbol = engine.ContextSymbol
 	ContextEdge   = engine.ContextEdge
+	ContextBudget = engine.ContextBudget
 
 	// Optional, gated semantic search (off by default; needs vectors enabled).
 	SemanticSearchInput  = engine.SemanticSearchInput
@@ -122,6 +123,11 @@ func WithScope(scope string) Option { return engine.WithScope(scope) }
 // instead of degrading to lexical. Off by default — the deterministic core is
 // unchanged. ATLAS_ENABLE_VECTORS=1 sets the same flag from the environment.
 func WithVectors(enabled bool) Option { return engine.WithVectors(enabled) }
+
+// WithContextBudget overrides the default `context` op budgets (Limit/MaxFiles/
+// MaxEdges/MaxDepth). Only non-zero fields are applied. The ATLAS_CONTEXT_* env
+// vars override this, and a per-request ContextInput field overrides both.
+func WithContextBudget(b ContextBudget) Option { return engine.WithContextBudget(b) }
 
 // New builds an Engine. With zero options it is the LOCAL tier: embedded SQLite
 // under ./.atlas, lexical search on, vectors off, code never leaves the machine.

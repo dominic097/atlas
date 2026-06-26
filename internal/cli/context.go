@@ -18,6 +18,12 @@ func newContextCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "context",
 		Short: "Token-budgeted review context for changed paths: changed symbols (with body excerpts), retrieval hits, impacted files, and scoped edges",
+		Long: "Build a bounded review-context bundle for the given changed/seed paths.\n\n" +
+			"Budgets are configurable at three levels (highest precedence first):\n" +
+			"  1. these per-request flags (--limit/--max-files/--max-edges/--max-depth)\n" +
+			"  2. the ATLAS_CONTEXT_{LIMIT,MAX_FILES,MAX_EDGES,MAX_DEPTH} env vars\n" +
+			"  3. the built-in defaults (80 / 60 / 500 / 3)\n\n" +
+			"SDK callers can set the defaults with atlas.WithContextBudget(...).",
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			in.Paths = paths
 			in.RepoID = gf.repo

@@ -2,8 +2,10 @@ package engine
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -80,6 +82,78 @@ func TestContextRespectsBudgets(t *testing.T) {
 	}
 	if len(res.Edges) > 1 {
 		t.Errorf("MaxEdges=1 but got %d edges", len(res.Edges))
+	}
+}
+
+// writeManySymbolsFixture writes one Go file with n exported functions so a
+// budget cap is observable (the seed-path symbols alone exceed a small Limit).
+func writeManySymbolsFixture(t *testing.T, n int) string {
+	t.Helper()
+	dir := t.TempDir()
+	var b strings.Builder
+	b.WriteString("package big\n\n")
+	for i := 0; i < n; i++ {
+		fmt.Fprintf(&b, "// Func%d does thing %d.\nfunc Func%d() int { return %d }\n\n", i, i, i, i)
+	}
+	if err := os.WriteFile(filepath.Join(dir, "big.go"), []byte(b.String()), 0o644); err != nil {
+		t.Fatalf("write fixture: %v", err)
+	}
+	return dir
+}
+
+// TestContextBudgetFromOption asserts a WithContextBudget default is applied when
+// the request omits budgets, and that a per-request value still overrides it.
+func TestContextBudgetFromOption(t *testing.T) {
+	ctx := context.Background()
+	repo := writeManySymbolsFixture(t, 8)
+	dbPath := filepath.Join(t.TempDir(), "atlas.db")
+	eng, err := New(ctx, WithSQLite(dbPath), WithContextBudget(ContextBudget{Limit: 3}))
+	if err != nil {
+		t.Fatalf("New: %v", err)
+	}
+	t.Cleanup(func() { _ = eng.Close() })
+	if _, err := eng.Index(ctx, IndexInput{ProjectPath: repo}); err != nil {
+		t.Fatalf("Index: %v", err)
+	}
+
+	res, err := eng.Context(ctx, ContextInput{Paths: []string{"big.go"}}) // no per-request budget
+	if err != nil {
+		t.Fatalf("Context: %v", err)
+	}
+	if len(res.Symbols) > 3 {
+		t.Errorf("configured Limit=3 not applied: got %d symbols", len(res.Symbols))
+	}
+
+	tighter, err := eng.Context(ctx, ContextInput{Paths: []string{"big.go"}, Limit: 1})
+	if err != nil {
+		t.Fatalf("Context(override): %v", err)
+	}
+	if len(tighter.Symbols) > 1 {
+		t.Errorf("per-request Limit=1 should override configured 3: got %d", len(tighter.Symbols))
+	}
+}
+
+// TestContextBudgetFromEnv asserts ATLAS_CONTEXT_LIMIT configures the default.
+func TestContextBudgetFromEnv(t *testing.T) {
+	t.Setenv("ATLAS_CONTEXT_LIMIT", "2")
+	ctx := context.Background()
+	repo := writeManySymbolsFixture(t, 8)
+	dbPath := filepath.Join(t.TempDir(), "atlas.db")
+	eng, err := New(ctx, WithSQLite(dbPath))
+	if err != nil {
+		t.Fatalf("New: %v", err)
+	}
+	t.Cleanup(func() { _ = eng.Close() })
+	if _, err := eng.Index(ctx, IndexInput{ProjectPath: repo}); err != nil {
+		t.Fatalf("Index: %v", err)
+	}
+
+	res, err := eng.Context(ctx, ContextInput{Paths: []string{"big.go"}})
+	if err != nil {
+		t.Fatalf("Context: %v", err)
+	}
+	if len(res.Symbols) > 2 {
+		t.Errorf("ATLAS_CONTEXT_LIMIT=2 not applied: got %d symbols", len(res.Symbols))
 	}
 }
 

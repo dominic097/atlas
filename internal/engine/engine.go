@@ -558,6 +558,20 @@ type Config struct {
 	// single-tenant / all repos — the local default, so existing behaviour and the
 	// SQLite flow are unchanged.
 	Scope string
+	// ContextBudget holds the configurable default budgets for the `context` op.
+	ContextBudget ContextBudget
+}
+
+// ContextBudget bounds the `context` op's output so a caller can cap the token
+// cost. Zero fields fall back to the engine defaults (Limit 80, MaxFiles 60,
+// MaxEdges 500, MaxDepth 3). Configure the defaults with WithContextBudget or the
+// ATLAS_CONTEXT_{LIMIT,MAX_FILES,MAX_EDGES,MAX_DEPTH} env vars; a per-request
+// ContextInput value still overrides whatever is configured here.
+type ContextBudget struct {
+	Limit    int // max symbols packed
+	MaxFiles int // max files referenced
+	MaxEdges int // max scoped edges
+	MaxDepth int // impact traversal depth
 }
 
 // Option mutates a Config during New().
@@ -588,8 +602,32 @@ func WithVectors(enabled bool) Option {
 	return func(c *Config) { c.EnableVector = enabled }
 }
 
+// WithContextBudget overrides the default `context` op budgets. Only non-zero
+// fields are applied, so you can raise just one (e.g. MaxEdges) and leave the
+// rest at their defaults. The ATLAS_CONTEXT_* env vars override this again, and a
+// per-request ContextInput field still wins over everything.
+func WithContextBudget(b ContextBudget) Option {
+	return func(c *Config) {
+		if b.Limit > 0 {
+			c.ContextBudget.Limit = b.Limit
+		}
+		if b.MaxFiles > 0 {
+			c.ContextBudget.MaxFiles = b.MaxFiles
+		}
+		if b.MaxEdges > 0 {
+			c.ContextBudget.MaxEdges = b.MaxEdges
+		}
+		if b.MaxDepth > 0 {
+			c.ContextBudget.MaxDepth = b.MaxDepth
+		}
+	}
+}
+
 func defaultConfig() Config {
-	return Config{Tier: "local", StorageKind: "sqlite", SQLitePath: "./.atlas/atlas.db"}
+	return Config{
+		Tier: "local", StorageKind: "sqlite", SQLitePath: "./.atlas/atlas.db",
+		ContextBudget: ContextBudget{Limit: 80, MaxFiles: 60, MaxEdges: 500, MaxDepth: 3},
+	}
 }
 
 // envTrue reports whether an env value is a truthy flag ("1"/"true"/"yes"/"on",
@@ -601,6 +639,16 @@ func envTrue(v string) bool {
 	default:
 		return false
 	}
+}
+
+// envInt returns a positive integer parsed from an env value, or fallback when
+// the value is unset, non-numeric, or non-positive. Used for the ATLAS_CONTEXT_*
+// budget overrides.
+func envInt(v string, fallback int) int {
+	if n, err := strconv.Atoi(strings.TrimSpace(v)); err == nil && n > 0 {
+		return n
+	}
+	return fallback
 }
 
 // New builds the local engine: opens the StorageDriver (the one-line tier swap),
@@ -616,6 +664,13 @@ func New(ctx context.Context, opts ...Option) (Engine, error) {
 	if envTrue(os.Getenv("ATLAS_ENABLE_VECTORS")) {
 		cfg.EnableVector = true
 	}
+	// ATLAS_CONTEXT_* override the `context` op budget defaults from the
+	// environment (deployment config wins over a WithContextBudget option); a
+	// per-request ContextInput value still overrides these at call time.
+	cfg.ContextBudget.Limit = envInt(os.Getenv("ATLAS_CONTEXT_LIMIT"), cfg.ContextBudget.Limit)
+	cfg.ContextBudget.MaxFiles = envInt(os.Getenv("ATLAS_CONTEXT_MAX_FILES"), cfg.ContextBudget.MaxFiles)
+	cfg.ContextBudget.MaxEdges = envInt(os.Getenv("ATLAS_CONTEXT_MAX_EDGES"), cfg.ContextBudget.MaxEdges)
+	cfg.ContextBudget.MaxDepth = envInt(os.Getenv("ATLAS_CONTEXT_MAX_DEPTH"), cfg.ContextBudget.MaxDepth)
 	drv, err := store.Open(ctx, store.Options{
 		Kind:        cfg.StorageKind,
 		SQLitePath:  cfg.SQLitePath,
@@ -725,13 +780,12 @@ func (e *localEngine) Context(ctx context.Context, in ContextInput) (*ContextRes
 	if err != nil {
 		return nil, err
 	}
-	limit := contextLimit(in.Limit, 80)
-	maxFiles := contextLimit(in.MaxFiles, 60)
-	maxEdges := contextLimit(in.MaxEdges, 500)
-	depth := in.MaxDepth
-	if depth <= 0 {
-		depth = 3
-	}
+	// Budget precedence: a per-request value wins over the configured default
+	// (WithContextBudget / ATLAS_CONTEXT_*), which wins over the built-in floor.
+	limit := firstPositive(in.Limit, e.cfg.ContextBudget.Limit, 80)
+	maxFiles := firstPositive(in.MaxFiles, e.cfg.ContextBudget.MaxFiles, 60)
+	maxEdges := firstPositive(in.MaxEdges, e.cfg.ContextBudget.MaxEdges, 500)
+	depth := firstPositive(in.MaxDepth, e.cfg.ContextBudget.MaxDepth, 3)
 
 	seedPaths := normalizeContextPaths(in.Paths)
 	selectedPaths := make([]string, 0, maxFiles)
@@ -858,11 +912,16 @@ func normalizeContextPaths(paths []string) []string {
 	return out
 }
 
-func contextLimit(value, fallback int) int {
-	if value <= 0 {
-		return fallback
+// firstPositive returns the first argument greater than zero, or 0 if none are.
+// It encodes the context-budget precedence in one place: per-request value, then
+// the configured default, then the built-in floor.
+func firstPositive(vals ...int) int {
+	for _, v := range vals {
+		if v > 0 {
+			return v
+		}
 	}
-	return value
+	return 0
 }
 
 func contextQueryFor(paths []string, symbols []graph.CodeSymbol) string {
