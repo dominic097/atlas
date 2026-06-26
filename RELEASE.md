@@ -10,7 +10,7 @@ git push origin v0.1.0
 | Job | Produces |
 |-----|----------|
 | `goreleaser` | per-OS/arch binaries, `tar.gz` archives, Linux `.deb`/`.rpm`/`.apk` packages, `checksums.txt`, per-archive SBOMs, a keyless cosign signature over the checksums, the Homebrew cask, and the GitHub Release |
-| `npm` | `atlas`, an npm wrapper that installs and runs the local native `atlas` binary from the GitHub Release |
+| `npm` | Configured to publish `atlas`, an npm wrapper that installs and runs the local native `atlas` binary from the GitHub Release, once package ownership and `NPM_TOKEN` are available |
 
 ## Release Repositories
 
@@ -57,7 +57,8 @@ no signing key secret is needed.
 - `dominic097/atlas` must be created before the release workflow can publish
   clean public release assets.
 - The exact npm package name `atlas` is already registered on npm. Publishing
-  under that exact name requires owner access to the existing package.
+  under that exact name requires owner access to the existing package plus an
+  `NPM_TOKEN` automation token with publish rights.
 
 ## Validate Locally Before Tagging
 

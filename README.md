@@ -22,11 +22,12 @@ make build
 
 # after a release is published
 brew install --cask dominic097/atlas/atlas
-npx atlas version
 ```
 
 Homebrew installs from the public `dominic097/homebrew-atlas` tap. The npm
-package installs and runs the same native `atlas` binary.
+wrapper is configured for the exact package name `atlas`, but publishing is
+blocked until the existing npm package owner grants publish access or transfers
+the package.
 
 ## Quickstart
 
@@ -77,7 +78,7 @@ Tagged releases produce:
 - Linux `.deb`, `.rpm`, and `.apk` packages
 - checksums, SBOMs, and keyless cosign signatures
 - a Homebrew cask in `dominic097/homebrew-atlas`
-- an npm wrapper package named `atlas`
+- an npm wrapper package named `atlas` once npm package ownership is available
 
 ## License
 
