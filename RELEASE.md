@@ -65,7 +65,7 @@ no signing key secret is needed.
 go test ./...
 make build
 ./bin/atlas version
-go run github.com/goreleaser/goreleaser/v2@latest check
+go run github.com/goreleaser/goreleaser/v2@v2.11.2 check
 
 docker run --rm -v "$PWD":/src -w /src \
   ghcr.io/goreleaser/goreleaser-cross:v1.25.0 \

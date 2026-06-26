@@ -125,8 +125,7 @@ homebrew_casks:
   - name: atlas
     ids:
       - atlas
-    binaries:
-      - atlas
+    binary: atlas
     repository:
       owner: dominic097
       name: homebrew-atlas
