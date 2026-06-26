@@ -24,12 +24,18 @@ jobs:
         with:
           fetch-depth: 0 # full history so the changelog + version are correct
 
+      - name: Install Syft for SBOM generation
+        run: |
+          mkdir -p .tools
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b .tools
+
       - name: goreleaser release (cross-compiled CGO)
         run: |
           docker run --rm \
             -e GITHUB_TOKEN="${{ secrets.ATLAS_RELEASE_TOKEN || secrets.GITHUB_TOKEN }}" \
             -e HOMEBREW_TAP_TOKEN="${{ secrets.HOMEBREW_TAP_TOKEN }}" \
             -e COSIGN_YES=true \
+            -e PATH="/src/.tools:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
             -e ACTIONS_ID_TOKEN_REQUEST_URL \
             -e ACTIONS_ID_TOKEN_REQUEST_TOKEN \
             -v "$PWD":/src \
