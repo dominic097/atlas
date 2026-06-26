@@ -36,11 +36,10 @@ jobs:
             -e GITHUB_TOKEN="${{ secrets.ATLAS_RELEASE_TOKEN || secrets.GITHUB_TOKEN }}" \
             -e HOMEBREW_TAP_TOKEN="${{ secrets.HOMEBREW_TAP_TOKEN }}" \
             -e COSIGN_YES=true \
-            -e PATH="/tools:/usr/local/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
             -e ACTIONS_ID_TOKEN_REQUEST_URL \
             -e ACTIONS_ID_TOKEN_REQUEST_TOKEN \
             -v "$PWD":/src \
-            -v "$RUNNER_TEMP/atlas-tools":/tools:ro \
+            -v "$RUNNER_TEMP/atlas-tools/syft":/usr/local/bin/syft:ro \
             -w /src \
             ghcr.io/goreleaser/goreleaser-cross:v1.25.0 \
             release --clean
