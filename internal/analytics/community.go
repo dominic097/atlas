@@ -2,17 +2,19 @@ package analytics
 
 import "sort"
 
-// Community is one detected cluster of densely-connected symbol names.
+// Community is one detected cluster of densely-connected symbol identities.
 type Community struct {
-	// ID is assigned by DESCENDING size; ties broken by the smallest member name.
-	// IDs are stable across runs for the same input.
+	// ID is assigned by DESCENDING size; ties broken by the smallest member display
+	// name. IDs are stable across runs for the same input.
 	ID int `json:"id"`
-	// Members are the symbol names in the community, sorted.
+	// Members are the qualified DISPLAY names of the identities in the community,
+	// sorted. Distinct same-named methods appear as distinct members.
 	Members []string `json:"members"`
 	// Size == len(Members).
 	Size int `json:"size"`
 	// Representatives are the highest-degree members (up to a few), descending by
-	// total degree, ties by name — the symbols that best characterize the cluster.
+	// total degree, ties by display name — the symbols that best characterize the
+	// cluster.
 	Representatives []string `json:"representatives"`
 }
 
@@ -23,10 +25,11 @@ const maxLabelPropIterations = 20
 const maxRepresentatives = 3
 
 // Communities partitions the nodes into communities using DETERMINISTIC label
-// propagation over the UNDIRECTED call graph (in+out adjacency unioned):
+// propagation over the UNDIRECTED identity-level call graph (in+out adjacency
+// unioned):
 //
-//   - Every node starts labeled with its own name.
-//   - Nodes are swept in sorted-name order. Each node adopts the label that occurs
+//   - Every node starts labeled with its own identity key.
+//   - Nodes are swept in sorted-key order. Each node adopts the label that occurs
 //     most among its neighbors; on a tie it picks the lexicographically smallest
 //     label. (Including the node's own current label among the candidates keeps
 //     singletons and 2-cliques stable instead of oscillating.)
@@ -35,24 +38,25 @@ const maxRepresentatives = 3
 // Because the sweep order, tie-break, and iteration cap are all fixed, the
 // partition is identical across runs. Isolated nodes (no neighbors) each form a
 // singleton community. Returned communities are ordered by descending size (ties
-// by smallest member name) and get stable integer IDs from that order.
+// by smallest member display name) and get stable integer IDs from that order.
+// Members and Representatives are reported as qualified DISPLAY names.
 func (g *Graph) Communities() []Community {
-	// label[name] = current community label (a node name).
-	label := make(map[string]string, len(g.names))
-	for _, name := range g.names {
-		label[name] = name
+	// label[key] = current community label (a node key).
+	label := make(map[string]string, len(g.keys))
+	for _, key := range g.keys {
+		label[key] = key
 	}
 
 	for iter := 0; iter < maxLabelPropIterations; iter++ {
 		changed := false
-		for _, name := range g.names {
-			neighbors := g.adj[name]
+		for _, key := range g.keys {
+			neighbors := g.adj[key]
 			if len(neighbors) == 0 {
 				continue // isolated node keeps its own label
 			}
-			best := dominantLabel(label, name, neighbors)
-			if best != label[name] {
-				label[name] = best
+			best := dominantLabel(label, key, neighbors)
+			if best != label[key] {
+				label[key] = best
 				changed = true
 			}
 		}
@@ -61,25 +65,29 @@ func (g *Graph) Communities() []Community {
 		}
 	}
 
-	// Group nodes by final label.
+	// Group node keys by final label.
 	groups := make(map[string][]string)
-	for _, name := range g.names {
-		l := label[name]
-		groups[l] = append(groups[l], name)
+	for _, key := range g.keys {
+		l := label[key]
+		groups[l] = append(groups[l], key)
 	}
 
 	communities := make([]Community, 0, len(groups))
-	for _, members := range groups {
-		sort.Strings(members)
+	for _, memberKeys := range groups {
+		g.sortKeys(memberKeys)
+		members := make([]string, 0, len(memberKeys))
+		for _, k := range memberKeys {
+			members = append(members, g.label[k])
+		}
 		communities = append(communities, Community{
 			Members:         members,
 			Size:            len(members),
-			Representatives: g.topMembersByDegree(members, maxRepresentatives),
+			Representatives: g.topMembersByDegree(memberKeys, maxRepresentatives),
 		})
 	}
 
-	// Order by descending size, ties by smallest member name (members already
-	// sorted, so index 0 is the smallest). Then assign stable IDs.
+	// Order by descending size, ties by smallest member display name (members
+	// already sorted, so index 0 is the smallest). Then assign stable IDs.
 	sort.SliceStable(communities, func(i, j int) bool {
 		if communities[i].Size != communities[j].Size {
 			return communities[i].Size > communities[j].Size
@@ -119,19 +127,28 @@ func dominantLabel(label map[string]string, self string, neighbors []string) str
 	return best
 }
 
-// topMembersByDegree returns up to `limit` members with the highest total degree,
-// descending; ties broken by ascending name.
-func (g *Graph) topMembersByDegree(members []string, limit int) []string {
-	ranked := append([]string(nil), members...)
+// topMembersByDegree returns up to `limit` member DISPLAY names with the highest
+// total degree, descending; ties broken by ascending display name, then path. The
+// input is a slice of node KEYS.
+func (g *Graph) topMembersByDegree(memberKeys []string, limit int) []string {
+	ranked := append([]string(nil), memberKeys...)
 	sort.SliceStable(ranked, func(i, j int) bool {
 		di, dj := g.totalDegree(ranked[i]), g.totalDegree(ranked[j])
 		if di != dj {
 			return di > dj
 		}
-		return ranked[i] < ranked[j]
+		li, lj := g.label[ranked[i]], g.label[ranked[j]]
+		if li != lj {
+			return li < lj
+		}
+		return g.rep[ranked[i]].Path < g.rep[ranked[j]].Path
 	})
 	if limit > 0 && limit < len(ranked) {
 		ranked = ranked[:limit]
 	}
-	return ranked
+	out := make([]string, 0, len(ranked))
+	for _, k := range ranked {
+		out = append(out, g.label[k])
+	}
+	return out
 }

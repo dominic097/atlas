@@ -315,3 +315,72 @@ func TestSelfRecursionDirectedNotUndirected(t *testing.T) {
 		t.Errorf("self-recursive node communities = %+v, want single {Rec}", comms)
 	}
 }
+
+// TestIdentityAwareSplitsSameNamedMethods is the keystone regression: two distinct
+// Close methods (on different receiver types, in different files) must NOT collapse
+// into one fake god-node. They become two DISTINCT identity nodes — each qualified
+// by its receiver type — with their own per-identity degree, and the report shows
+// "aCloser.Close" / "bCloser.Close" so they are distinguishable.
+func TestIdentityAwareSplitsSameNamedMethods(t *testing.T) {
+	syms := []graph.CodeSymbol{
+		// Two types, each with its own Close method (same bare name).
+		{ID: "ta", Path: "a/a.go", Language: "go", Kind: "type", Name: "aCloser", StartLine: 1, EndLine: 2},
+		{ID: "tb", Path: "b/b.go", Language: "go", Kind: "type", Name: "bCloser", StartLine: 1, EndLine: 2},
+		{ID: "ca", Path: "a/a.go", Language: "go", Kind: "method", Name: "Close", StartLine: 5, EndLine: 7,
+			Metadata: graph.JSONBMap{"recv_type": "aCloser"}},
+		{ID: "cb", Path: "b/b.go", Language: "go", Kind: "method", Name: "Close", StartLine: 5, EndLine: 7,
+			Metadata: graph.JSONBMap{"recv_type": "bCloser"}},
+		// Two callers, each calling a different Close via a typed receiver.
+		{ID: "ua", Path: "a/a.go", Language: "go", Kind: "function", Name: "UseA", StartLine: 10, EndLine: 12},
+		{ID: "ub", Path: "b/b.go", Language: "go", Kind: "function", Name: "UseB", StartLine: 10, EndLine: 12},
+	}
+	edges := []graph.DependencyEdge{
+		// UseA calls a.Close() on an aCloser — resolves ONLY to aCloser.Close.
+		{ID: "e1", FromFile: "a/a.go", FromSymbol: "UseA", ToRef: "Close", Kind: graph.EdgeCalls,
+			Metadata: graph.JSONBMap{"qualified_ref": "a.Close", "recv_type": "aCloser"}},
+		// UseB calls b.Close() on a bCloser — resolves ONLY to bCloser.Close.
+		{ID: "e2", FromFile: "b/b.go", FromSymbol: "UseB", ToRef: "Close", Kind: graph.EdgeCalls,
+			Metadata: graph.JSONBMap{"qualified_ref": "b.Close", "recv_type": "bCloser"}},
+	}
+	g := Build(syms, edges)
+
+	// There must be TWO distinct Close hubs, not one collapsed node.
+	var closeHubs []Hub
+	for _, h := range g.Hubs(0) {
+		if h.BareName == "Close" {
+			closeHubs = append(closeHubs, h)
+		}
+	}
+	if len(closeHubs) != 2 {
+		t.Fatalf("expected 2 distinct Close identities, got %d: %+v", len(closeHubs), closeHubs)
+	}
+	byLabel := map[string]Hub{}
+	for _, h := range closeHubs {
+		byLabel[h.Name] = h
+	}
+	a, okA := byLabel["aCloser.Close"]
+	b, okB := byLabel["bCloser.Close"]
+	if !okA || !okB {
+		t.Fatalf("Close identities not qualified by receiver type: %+v", closeHubs)
+	}
+	// Each Close has in-degree 1 (its own caller), NOT 2 (the collapsed total).
+	if a.InDegree != 1 || a.Path != "a/a.go" {
+		t.Errorf("aCloser.Close = in%d %s, want in1 a/a.go", a.InDegree, a.Path)
+	}
+	if b.InDegree != 1 || b.Path != "b/b.go" {
+		t.Errorf("bCloser.Close = in%d %s, want in1 b/b.go", b.InDegree, b.Path)
+	}
+
+	// The precise receiver-type resolution must NOT cross-link: UseA does not reach
+	// bCloser.Close. So aCloser.Close and bCloser.Close are in SEPARATE communities.
+	comms := g.Communities()
+	commOf := map[string]int{}
+	for _, c := range comms {
+		for _, m := range c.Members {
+			commOf[m] = c.ID
+		}
+	}
+	if commOf["aCloser.Close"] == commOf["bCloser.Close"] {
+		t.Errorf("distinct Close methods wrongly merged into one community: %v", commOf)
+	}
+}

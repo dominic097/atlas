@@ -821,6 +821,53 @@ func pkgBase(p string) string {
 	return strings.ToLower(d)
 }
 
+// ResolvedCallEdge is a single EdgeCalls relationship resolved to concrete symbol
+// IDENTITIES on both ends: the caller symbol and the target symbol it actually
+// invokes. A qualified call that resolves to several in-repo methods (interface
+// dispatch, or a receiver type we can't narrow) yields one ResolvedCallEdge per
+// target. Edges whose target leaves the repo (stdlib, third-party, an external
+// receiver type) produce no ResolvedCallEdge — the same drop the impact/callers
+// queries already apply.
+type ResolvedCallEdge struct {
+	Caller graph.CodeSymbol
+	Target graph.CodeSymbol
+}
+
+// ResolveCallEdges resolves every EdgeCalls edge in `edges` to concrete
+// (caller -> target) symbol-identity pairs over the in-memory symbol set `syms`,
+// reusing the EXACT precision rules atlas uses for impact/callers: resolveCaller
+// for the caller side and resolveTargets (qualified_ref, recv_type, package/path,
+// in-repo-type interface dispatch) for the callee side. Edges whose caller cannot
+// be attributed, or whose callee resolves to nothing in-repo, are dropped. This is
+// the deterministic bridge the identity-aware analytics graph is built from: it
+// turns bare-name call edges into per-definition edges so a name shared across
+// types (e.g. every "Close") never collapses into one node.
+func ResolveCallEdges(syms []graph.CodeSymbol, edges []graph.DependencyEdge) []ResolvedCallEdge {
+	symsByName, symsByFile := indexSymbols(syms)
+	repoType := repoTypePredicate(syms)
+	out := make([]ResolvedCallEdge, 0, len(edges))
+	for _, e := range edges {
+		if e.Kind != graph.EdgeCalls {
+			continue
+		}
+		caller := resolveCaller(e, symsByName, symsByFile)
+		if caller == nil {
+			continue
+		}
+		for _, t := range resolveTargets(e, symsByName, repoType) {
+			out = append(out, ResolvedCallEdge{Caller: *caller, Target: t})
+		}
+	}
+	return out
+}
+
+// SymbolKey returns a stable per-DEFINITION identity for a symbol, suitable as a
+// graph node key: prefer ID, then NodeID, else canonical-path + name + start line.
+// Two distinct definitions that merely share a bare name (e.g. two Close methods
+// on different types) get DIFFERENT keys, which is what makes identity-aware
+// analytics possible.
+func SymbolKey(s graph.CodeSymbol) string { return symbolKey(s) }
+
 // symbolKey is a stable identity for dedup: prefer ID, then NodeID, else
 // file+name+start-line.
 func symbolKey(s graph.CodeSymbol) string {

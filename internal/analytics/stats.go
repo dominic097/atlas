@@ -4,14 +4,15 @@ import "sort"
 
 // Stats is a deterministic summary of the snapshot graph: raw totals plus
 // breakdowns by edge kind and language, derived community count, and the number of
-// isolated nodes (symbol names with no resolved in or out call edge).
+// isolated nodes (symbol identities with no resolved in or out call edge).
 type Stats struct {
 	// Files is the count of distinct symbol Paths.
 	Files int `json:"files"`
-	// Symbols is the count of distinct symbol NAMES (the node count).
+	// Symbols is the count of distinct symbol IDENTITIES (the node count). Distinct
+	// same-named definitions count separately (the identity-aware node model).
 	Symbols int `json:"symbols"`
-	// Edges is the count of resolved name-level "calls" edges in this graph
-	// (deduped FromSymbol->ToRef pairs where both endpoints are known symbols).
+	// Edges is the count of resolved IDENTITY-level "calls" edges in this graph
+	// (deduped caller-identity -> target-identity pairs, both in-repo symbols).
 	Edges int `json:"edges"`
 	// RawSymbols / RawEdges are the unfiltered input counts, for transparency.
 	RawSymbols int `json:"raw_symbols"`
@@ -30,7 +31,7 @@ type Stats struct {
 // across runs. Map fields are freshly allocated; the caller may mutate them.
 func (g *Graph) Stats() Stats {
 	s := Stats{
-		Symbols:    len(g.names),
+		Symbols:    len(g.keys),
 		RawSymbols: len(g.symbols),
 		RawEdges:   len(g.edges),
 		EdgeKinds:  make(map[string]int),
@@ -54,10 +55,10 @@ func (g *Graph) Stats() Stats {
 		s.Edges += len(callees)
 	}
 
-	// Language breakdown over the node set (one count per distinct symbol name,
-	// using the representative symbol's language).
-	for _, name := range g.names {
-		lang := g.rep[name].Language
+	// Language breakdown over the node set (one count per distinct symbol IDENTITY,
+	// using its defining symbol's language).
+	for _, key := range g.keys {
+		lang := g.rep[key].Language
 		if lang == "" {
 			lang = "unknown"
 		}
@@ -65,8 +66,8 @@ func (g *Graph) Stats() Stats {
 	}
 
 	// Isolated nodes: no resolved in or out call edge.
-	for _, name := range g.names {
-		if len(g.in[name]) == 0 && len(g.out[name]) == 0 {
+	for _, key := range g.keys {
+		if len(g.in[key]) == 0 && len(g.out[key]) == 0 {
 			s.IsolatedNodes++
 		}
 	}

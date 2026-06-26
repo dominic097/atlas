@@ -10,9 +10,9 @@ import "testing"
 //     enclosing class;
 //   - a this.field.method() call must infer the field's declared type;
 //   - a constructor (new Helper()) must produce a bare-name "Helper" edge;
-//   - a bare-name external-shaped call (String.valueOf) must still produce a sane
-//     edge (qualified_ref set, recv_type empty since the receiver is not a typed
-//     in-scope value).
+//   - a static class call (String.valueOf) must resolve recv_type to the declaring
+//     class ("String") and be tagged recv_kind=static — the static-call precision
+//     win, since a static method's declaring class IS its receiver type.
 const javaCallSource = `package com.example;
 
 public class Greeter {
@@ -41,6 +41,7 @@ func TestJavaCallEdges(t *testing.T) {
 	type edgeInfo struct {
 		qualifiedRef string
 		recvType     string
+		recvKind     string
 		fromSymbol   string
 		found        bool
 	}
@@ -51,7 +52,8 @@ func TestJavaCallEdges(t *testing.T) {
 		}
 		qr, _ := e.Metadata["qualified_ref"].(string)
 		rt, _ := e.Metadata["recv_type"].(string)
-		byRef[e.ToRef] = edgeInfo{qualifiedRef: qr, recvType: rt, fromSymbol: e.FromSymbol, found: true}
+		rk, _ := e.Metadata["recv_kind"].(string)
+		byRef[e.ToRef] = edgeInfo{qualifiedRef: qr, recvType: rt, recvKind: rk, fromSymbol: e.FromSymbol, found: true}
 	}
 
 	// (1) Qualified call on a typed local: local.format(trimmed).
@@ -104,16 +106,21 @@ func TestJavaCallEdges(t *testing.T) {
 		t.Errorf("new Helper() qualified_ref = %q, want %q", got.qualifiedRef, "Helper")
 	}
 
-	// (4) Bare-name external-shaped call: String.valueOf(result). qualified_ref is
-	// set; recv_type stays empty (String is not a typed in-scope value here).
+	// (4) Static class call: String.valueOf(result). The receiver is the class
+	// String (not an in-scope value), so recv_type resolves to "String" and the
+	// edge is tagged recv_kind=static — a static method's declaring class is its
+	// receiver type, so this is a precise, declaration-grounded attribution.
 	if got := byRef["valueOf"]; !got.found {
 		t.Errorf("String.valueOf() call edge not found; edges=%+v", res.Edges)
 	} else {
 		if got.qualifiedRef != "String.valueOf" {
 			t.Errorf("valueOf() qualified_ref = %q, want %q", got.qualifiedRef, "String.valueOf")
 		}
-		if got.recvType != "" {
-			t.Errorf("valueOf() recv_type = %q, want empty (untyped receiver)", got.recvType)
+		if got.recvType != "String" {
+			t.Errorf("valueOf() recv_type = %q, want %q (static class receiver)", got.recvType, "String")
+		}
+		if got.recvKind != "static" {
+			t.Errorf("valueOf() recv_kind = %q, want %q", got.recvKind, "static")
 		}
 	}
 
@@ -126,6 +133,89 @@ func TestJavaCallEdges(t *testing.T) {
 		}
 		if got.recvType != "String" {
 			t.Errorf("trim() recv_type = %q, want %q (param type)", got.recvType, "String")
+		}
+	}
+}
+
+// javaReceiverMatrixSource exercises every declaration-grounded receiver source
+// the resolver supports, with deliberate method-name reuse so an inference miss
+// would surface as a wrong recv_type:
+//   - var-with-initializer:  var v = new Engine();  v.run()  -> Engine (NOT "var")
+//   - explicit local:        Engine e = ...;        e.run()  -> Engine
+//   - field:                 this.svc.run()                  -> Service
+//   - param:                 cfg.run()                       -> Config
+//   - this/implicit:         run()                           -> Worker (enclosing)
+//   - static class call:     Engine.boot()                   -> Engine, kind=static
+//   - static stdlib call:    Integer.parseInt(x)             -> Integer, kind=static
+const javaReceiverMatrixSource = `package com.example;
+
+public class Worker {
+    private Service svc;
+
+    public void process(Config cfg, String x) {
+        var v = new Engine();
+        Engine e = new Engine();
+        v.run();
+        e.run();
+        this.svc.run();
+        cfg.run();
+        run();
+        Engine.boot();
+        int n = Integer.parseInt(x);
+    }
+
+    void run() {}
+}
+`
+
+func TestJavaReceiverMatrix(t *testing.T) {
+	res, err := Parse("repo-2", "owner/repo", "Worker.java", "java", []byte(javaReceiverMatrixSource))
+	if err != nil {
+		t.Fatalf("Parse returned error: %v", err)
+	}
+
+	// Collect every (recvType, recvKind, qualifiedRef) per bare callee. Several
+	// receivers share the callee "run", so index those by qualified_ref.
+	type info struct{ recvType, recvKind string }
+	byQualified := map[string]info{}
+	for _, e := range res.Edges {
+		if e.Kind != "calls" {
+			continue
+		}
+		qr, _ := e.Metadata["qualified_ref"].(string)
+		rt, _ := e.Metadata["recv_type"].(string)
+		rk, _ := e.Metadata["recv_kind"].(string)
+		byQualified[qr] = info{recvType: rt, recvKind: rk}
+	}
+
+	// The keystone: `var v = new Engine()` must yield recv_type Engine, NOT the
+	// literal "var" (the inference bug this strand fixes).
+	check := func(qualified, wantType, wantKind string) {
+		got, ok := byQualified[qualified]
+		if !ok {
+			t.Errorf("%s: call edge not found; edges=%+v", qualified, res.Edges)
+			return
+		}
+		if got.recvType != wantType {
+			t.Errorf("%s: recv_type = %q, want %q", qualified, got.recvType, wantType)
+		}
+		if got.recvKind != wantKind {
+			t.Errorf("%s: recv_kind = %q, want %q", qualified, got.recvKind, wantKind)
+		}
+	}
+
+	check("v.run", "Engine", "")            // var-with-initializer (keystone)
+	check("e.run", "Engine", "")            // explicit local
+	check("this.svc.run", "Service", "")    // field via this.f
+	check("cfg.run", "Config", "")          // param
+	check("this.run", "Worker", "")         // implicit this -> enclosing class
+	check("Engine.boot", "Engine", "static")   // static class call
+	check("Integer.parseInt", "Integer", "static") // static stdlib call
+
+	// Guard: no edge ever carries the literal "var" as a receiver type.
+	for _, e := range res.Edges {
+		if rt, _ := e.Metadata["recv_type"].(string); rt == "var" {
+			t.Errorf("recv_type leaked the literal \"var\" on edge %+v", e)
 		}
 	}
 }

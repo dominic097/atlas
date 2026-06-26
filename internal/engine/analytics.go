@@ -43,9 +43,12 @@ type HubsInput struct {
 	Limit  int
 }
 
-// HubInfo is a JSON-friendly projection of analytics.Hub.
+// HubInfo is a JSON-friendly projection of analytics.Hub. Name is the QUALIFIED
+// display name ("localEngine.Close") so distinct same-named methods are
+// distinguishable; BareName keeps the unqualified symbol name.
 type HubInfo struct {
 	Name        string `json:"name"`
+	BareName    string `json:"bare_name,omitempty"`
 	Path        string `json:"path,omitempty"`
 	Kind        string `json:"kind,omitempty"`
 	Language    string `json:"language,omitempty"`
@@ -246,6 +249,7 @@ func hubInfos(hs []analytics.Hub) []HubInfo {
 	for _, h := range hs {
 		out = append(out, HubInfo{
 			Name:        h.Name,
+			BareName:    h.BareName,
 			Path:        h.Path,
 			Kind:        h.Kind,
 			Language:    h.Language,
