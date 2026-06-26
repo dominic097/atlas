@@ -1,0 +1,46 @@
+# graphify update . (cwd=/tmp/langbench/c)
+Re-extracting code files in . (no LLM needed)...
+[graphify watch] Rebuilt: 971 nodes, 2148 edges, 82 communities
+[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out
+Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.
+Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction.
+
+
+# atlas index /tmp/langbench/c
+{
+  "repo_id": "00c06d28-2245-47ae-8221-8e327c6c332b",
+  "repo_full_name": "c",
+  "snapshot_id": "25960b09-986d-469f-a72d-a58885d9f7cd",
+  "commit_sha": "fb16e5cf358798aabb049655975cde8427101056",
+  "indexed_files": 254,
+  "symbols": 1449,
+  "edges": 4757,
+  "edge_kinds": {
+    "calls": 4417,
+    "imports": 340
+  },
+  "routes": 0,
+  "languages": {
+    "bash": 3,
+    "c": 99,
+    "config": 4,
+    "html": 1,
+    "json": 95,
+    "makefile": 5,
+    "markdown": 13,
+    "python": 2,
+    "text": 9,
+    "yaml": 23
+  },
+  "mode": "full",
+  "duration_ms": 571
+}
+
+
+# explain cJSON_Delete: graphify=284tok atlas_terse=131tok
+
+# explain cjson_functions_should_not_crash_with_null_pointers: graphify=288tok atlas_terse=146tok
+
+# explain cJSON_CreateObject: graphify=332tok atlas_terse=165tok
+
+# explain UnityPrint: graphify=302tok atlas_terse=120tok

@@ -1,0 +1,39 @@
+# graphify update . (cwd=/tmp/langbench/java/gson/src/main/java)
+Re-extracting code files in . (no LLM needed)...
+[graphify watch] Rebuilt: 1016 nodes, 3668 edges, 61 communities
+[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out
+Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.
+Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction.
+
+
+# atlas index /tmp/langbench/java/gson/src/main/java
+{
+  "repo_id": "cd18344d-2723-4ab8-bf23-14215288b05c",
+  "repo_full_name": "java",
+  "snapshot_id": "0ee63084-58d7-4501-b348-414c6b60d136",
+  "commit_sha": "c9f3fd55854a743b66f857ace3c7b268ea3e2ef7",
+  "indexed_files": 176,
+  "symbols": 771,
+  "edges": 3782,
+  "edge_kinds": {
+    "calls": 3105,
+    "imports": 677
+  },
+  "routes": 0,
+  "languages": {
+    "java": 86,
+    "json": 89,
+    "markdown": 1
+  },
+  "mode": "full",
+  "duration_ms": 373
+}
+
+
+# explain TypeAdapters: graphify=173tok atlas_terse=199tok
+
+# explain TypeAdapter: graphify=84tok atlas_terse=167tok
+
+# explain create: graphify=64tok atlas_terse=320tok
+
+# explain write: graphify=112tok atlas_terse=450tok

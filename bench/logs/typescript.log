@@ -1,0 +1,40 @@
+# graphify update . (cwd=/tmp/langbench/typescript/src)
+Re-extracting code files in . (no LLM needed)...
+[graphify watch] Rebuilt: 111 nodes, 171 edges, 8 communities
+[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out
+Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.
+Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction.
+
+
+# atlas index /tmp/langbench/typescript/src
+{
+  "repo_id": "22b11a48-ed8c-4d32-a364-782551bc0145",
+  "repo_full_name": "src",
+  "snapshot_id": "676f1684-98f9-4dd3-a323-4553d2546286",
+  "commit_sha": "a1f685ca744e56a982b1c5029620e0925c3ee996",
+  "indexed_files": 21,
+  "symbols": 60,
+  "edges": 214,
+  "edge_kinds": {
+    "calls": 197,
+    "imports": 17
+  },
+  "routes": 0,
+  "languages": {
+    "html": 1,
+    "json": 3,
+    "markdown": 1,
+    "typescript": 16
+  },
+  "mode": "full",
+  "duration_ms": 72
+}
+
+
+# explain devtoolsImpl: graphify=53tok atlas_terse=86tok
+
+# explain shallow: graphify=75tok atlas_terse=54tok
+
+# explain hydrate: graphify=8tok atlas_terse=43tok
+
+# explain persistImpl: graphify=52tok atlas_terse=55tok

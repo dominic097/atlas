@@ -1,0 +1,46 @@
+# graphify update . (cwd=/tmp/langbench/cpp)
+Re-extracting code files in . (no LLM needed)...
+  AST extraction: 100/140 uncached files (71%) [14 workers]
+  AST extraction: 140/140 files (100%) [14 workers]
+[graphify watch] Rebuilt: 2206 nodes, 4995 edges, 170 communities
+[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out
+Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.
+Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction.
+
+
+# atlas index /tmp/langbench/cpp
+{
+  "repo_id": "a62227bb-b563-4f6f-8043-c2b91cd8e292",
+  "repo_full_name": "cpp",
+  "snapshot_id": "1e0da75e-c1bd-4190-b908-ebee2c9d10d8",
+  "commit_sha": "7ee830d02b623e8ffe0b95d59a74db1e58da04c5",
+  "indexed_files": 288,
+  "symbols": 370,
+  "edges": 10119,
+  "edge_kinds": {
+    "calls": 9537,
+    "imports": 582
+  },
+  "routes": 0,
+  "languages": {
+    "c": 57,
+    "config": 1,
+    "cpp": 76,
+    "html": 1,
+    "json": 143,
+    "markdown": 8,
+    "text": 1,
+    "yaml": 1
+  },
+  "mode": "full",
+  "duration_ms": 592
+}
+
+
+# explain ExecErrorCheck: graphify=78tok atlas_terse=65tok
+
+# explain CheckEqual: graphify=84tok atlas_terse=61tok
+
+# explain Free: graphify=61tok atlas_terse=43tok
+
+# explain main: graphify=66tok atlas_terse=157tok

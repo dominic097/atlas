@@ -1,0 +1,45 @@
+# graphify update . (cwd=/tmp/langbench/go)
+Re-extracting code files in . (no LLM needed)...
+[graphify watch] Rebuilt: 696 nodes, 1219 edges, 42 communities
+[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out
+Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.
+Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction.
+
+
+# atlas index /tmp/langbench/go
+{
+  "repo_id": "5ec2e252-550a-4fa1-9329-5feaca421438",
+  "repo_full_name": "go",
+  "snapshot_id": "a1d4846f-c743-4c45-a25e-c68923ae2cbc",
+  "commit_sha": "fdc99501531e1c26d4b759cdb80db3ba74ed94c8",
+  "indexed_files": 115,
+  "symbols": 633,
+  "edges": 2989,
+  "edge_kinds": {
+    "calls": 2081,
+    "imports": 223,
+    "references": 685
+  },
+  "routes": 2,
+  "languages": {
+    "config": 1,
+    "go": 47,
+    "gomod": 1,
+    "gosum": 1,
+    "html": 1,
+    "json": 56,
+    "markdown": 5,
+    "yaml": 3
+  },
+  "mode": "full",
+  "duration_ms": 806
+}
+
+
+# explain log: graphify=96tok atlas_terse=83tok
+
+# explain newEntry: graphify=62tok atlas_terse=75tok
+
+# explain releaseEntry: graphify=175tok atlas_terse=76tok
+
+# explain Log: graphify=96tok atlas_terse=96tok

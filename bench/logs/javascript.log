@@ -1,0 +1,39 @@
+# graphify update . (cwd=/tmp/langbench/javascript/lib)
+Re-extracting code files in . (no LLM needed)...
+[graphify watch] Rebuilt: 28 nodes, 37 edges, 5 communities
+[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out
+Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.
+Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction.
+
+
+# atlas index /tmp/langbench/javascript/lib
+{
+  "repo_id": "c0944230-d3f3-4b45-81f0-820c933627ee",
+  "repo_full_name": "lib",
+  "snapshot_id": "d701333e-aaf0-4d69-a145-6c2c62159910",
+  "commit_sha": "18e5985b8a9d5e8423db0a9121f22bdaecd5b120",
+  "indexed_files": 11,
+  "symbols": 92,
+  "edges": 435,
+  "edge_kinds": {
+    "calls": 435
+  },
+  "routes": 1,
+  "languages": {
+    "html": 1,
+    "javascript": 6,
+    "json": 3,
+    "markdown": 1
+  },
+  "mode": "full",
+  "duration_ms": 67
+}
+
+
+# explain defineGetter: graphify=47tok atlas_terse=52tok
+
+# explain resolve: graphify=61tok atlas_terse=38tok
+
+# explain sendFile: graphify=46tok atlas_terse=43tok
+
+# explain acceptParams: graphify=56tok atlas_terse=28tok
