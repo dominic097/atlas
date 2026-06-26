@@ -42,8 +42,10 @@ func (g Graph) Render(format string) (string, error) {
 		return g.Mermaid(), nil
 	case "dot", "graphviz":
 		return g.DOT(), nil
+	case "html":
+		return g.HTML(HTMLOptions{})
 	default:
-		return "", fmt.Errorf("export: unknown format %q (want json|mermaid|dot)", format)
+		return "", fmt.Errorf("export: unknown format %q (want json|mermaid|dot|html)", format)
 	}
 }
 

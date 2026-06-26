@@ -2141,13 +2141,28 @@ func (e *localEngine) GraphExport(ctx context.Context, in GraphExportInput) (*Gr
 		}
 		g = subgraphToExport(sg)
 	}
-	content, err := g.Render(in.Format)
-	if err != nil {
-		return nil, err
-	}
 	format := strings.ToLower(strings.TrimSpace(in.Format))
 	if format == "" {
 		format = "json"
+	}
+	var content string
+	if format == "html" {
+		// The interactive HTML page gets a context-aware title; everything else
+		// flows through the generic Render path so json/mermaid/dot are unchanged.
+		title := "Atlas graph"
+		if in.All {
+			if in.RepoID != "" {
+				title = "Atlas — " + in.RepoID
+			}
+		} else if s := strings.TrimSpace(in.Symbol); s != "" {
+			title = "Atlas — " + s
+		}
+		content, err = g.HTML(export.HTMLOptions{Title: title})
+	} else {
+		content, err = g.Render(format)
+	}
+	if err != nil {
+		return nil, err
 	}
 	return &GraphExportResult{Format: format, Nodes: len(g.Nodes), Edges: len(g.Edges), Content: content}, nil
 }

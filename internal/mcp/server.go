@@ -74,7 +74,7 @@ func coreTools() []Tool {
 			InputSchema: obj(map[string]any{"target": str, "repo_id": str, "direction": str}, "target")},
 		{Name: "impact", Description: "Single-repo blast radius: reverse call-graph BFS from changed paths/symbols.",
 			InputSchema: obj(map[string]any{"changed_paths": map[string]any{"type": "array"}, "symbols": map[string]any{"type": "array"}, "max_depth": map[string]any{"type": "integer"}, "repo_id": str})},
-		{Name: "graph_export", Description: "Export the call-graph neighborhood around a symbol (json|mermaid|dot).",
+		{Name: "graph_export", Description: "Export the call-graph neighborhood around a symbol (json|mermaid|dot|html). html returns a self-contained interactive visualization.",
 			InputSchema: obj(map[string]any{"symbol": str, "depth": map[string]any{"type": "integer"}, "format": str, "repo_id": str}, "symbol")},
 		{Name: "history", Description: "Per-commit snapshot timeline for a repo (temporal).",
 			InputSchema: obj(map[string]any{"repo_id": str, "limit": map[string]any{"type": "integer"}})},
