@@ -23,6 +23,9 @@ func (stubEngine) Index(context.Context, engine.IndexInput) (*engine.IndexResult
 func (stubEngine) Search(context.Context, engine.SearchInput) (*engine.SearchResult, error) {
 	return &engine.SearchResult{}, nil
 }
+func (stubEngine) Context(context.Context, engine.ContextInput) (*engine.ContextResult, error) {
+	return &engine.ContextResult{}, nil
+}
 func (stubEngine) SemanticSearch(context.Context, engine.SemanticSearchInput) (*engine.SemanticSearchResult, error) {
 	return &engine.SemanticSearchResult{}, nil
 }

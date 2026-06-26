@@ -2,9 +2,12 @@ package engine
 
 import (
 	"context"
+	"math"
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/MsysTechnologiesllc/aziron-atlas/internal/graph"
 )
 
 // newTestEngine builds a real local engine (SQLite + lexical) under a temp dir,
@@ -24,6 +27,25 @@ func newTestEngine(t *testing.T, vectors bool) Engine {
 	}
 	t.Cleanup(func() { _ = eng.Close() })
 	return eng
+}
+
+func TestSymbolToHitSanitizesNonFiniteScores(t *testing.T) {
+	sym := graph.CodeSymbol{
+		ID:        "sym-1",
+		Name:      "ReviewContext",
+		Kind:      "function",
+		RepoID:    "repo-1",
+		Path:      "internal/service/review.go",
+		StartLine: 42,
+	}
+
+	cases := []float64{math.Inf(1), math.Inf(-1), math.NaN(), 12.5}
+	for _, score := range cases {
+		hit := symbolToHit(sym, score)
+		if math.IsInf(hit.Score, 0) || math.IsNaN(hit.Score) {
+			t.Fatalf("symbolToHit(%v) produced non-finite score %v", score, hit.Score)
+		}
+	}
 }
 
 // writeFixtureRepo writes a tiny Go package whose symbol names/docs make token

@@ -16,6 +16,7 @@ func newIndexCmd() *cobra.Command {
 			if len(args) == 1 {
 				in.ProjectPath = args[0]
 			}
+			applyIndexDefaults(&in)
 			eng, err := resolveEngine(cmd.Context())
 			if err != nil {
 				return err
@@ -34,4 +35,13 @@ func newIndexCmd() *cobra.Command {
 	f.BoolVar(&in.Reindex, "reindex", false, "force full reindex instead of delta")
 	f.BoolVar(&in.EnableVectors, "enable-vectors", false, "run the optional embedding pass")
 	return cmd
+}
+
+func applyIndexDefaults(in *atlas.IndexInput) {
+	if in == nil {
+		return
+	}
+	if in.Repo == "" {
+		in.Repo = gf.repo
+	}
 }

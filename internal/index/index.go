@@ -60,6 +60,7 @@ type Stats struct {
 	Files      int            `json:"files"`
 	Symbols    int            `json:"symbols"`
 	Edges      int            `json:"edges"`
+	EdgeKinds  map[string]int `json:"edge_kinds,omitempty"`
 	Routes     int            `json:"routes"`
 	Languages  map[string]int `json:"languages"`
 	DurationMS int64          `json:"duration_ms"`
@@ -328,12 +329,25 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 		Files:      len(files),
 		Symbols:    len(symbols),
 		Edges:      len(edges),
+		EdgeKinds:  countEdgeKinds(edges),
 		Routes:     len(graphRoutes),
 		Languages:  languages,
 		DurationMS: time.Since(start).Milliseconds(),
 		Mode:       mode,
 	}
 	return snapshot, stats, nil
+}
+
+func countEdgeKinds(edges []graph.DependencyEdge) map[string]int {
+	counts := make(map[string]int)
+	for _, edge := range edges {
+		kind := string(edge.Kind)
+		if kind == "" {
+			kind = "unknown"
+		}
+		counts[kind]++
+	}
+	return counts
 }
 
 // buildEmbeddings runs the optional embedding pass: it builds embed.NewProvider()

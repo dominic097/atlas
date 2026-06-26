@@ -221,7 +221,13 @@ func (ix *Index) BuildForSnapshot(snapshotID string, syms []graph.CodeSymbol) er
 // name (boosted) / signature / doc / path fields, with each query term passed
 // through the same code-aware analyzer so "GetUserById" indexed tokens are
 // reachable by "user".
-func (ix *Index) Search(snapshotID, query string, limit int) ([]Hit, error) {
+func (ix *Index) Search(snapshotID, query string, limit int) (hits []Hit, err error) {
+	defer func() {
+		if recovered := recover(); recovered != nil {
+			hits = nil
+			err = fmt.Errorf("lexical: search panic: %v", recovered)
+		}
+	}()
 	if ix == nil || ix.idx == nil {
 		return nil, fmt.Errorf("lexical: index is nil")
 	}
@@ -275,14 +281,14 @@ func (ix *Index) Search(snapshotID, query string, limit int) ([]Hit, error) {
 		return nil, fmt.Errorf("lexical: search: %w", err)
 	}
 
-	hits := make([]Hit, 0, len(res.Hits))
+	out := make([]Hit, 0, len(res.Hits))
 	for _, h := range res.Hits {
-		hits = append(hits, Hit{SymbolID: h.ID, Score: h.Score})
+		out = append(out, Hit{SymbolID: h.ID, Score: h.Score})
 	}
-	if len(hits) > limit {
-		hits = hits[:limit]
+	if len(out) > limit {
+		out = out[:limit]
 	}
-	return hits, nil
+	return out, nil
 }
 
 // Close releases the underlying bleve index.

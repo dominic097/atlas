@@ -27,6 +27,7 @@ var routeTable = []route{
 	{"get", "/api/v1/symbols/{name}/refs", "getRefs", "List the call-site references to a symbol"},
 	{"get", "/api/v1/symbols/{name}/neighbors", "getNeighbors", "Depth-1 caller/callee neighborhood of a symbol"},
 	{"get", "/api/v1/symbols/{name}/explain", "explain", "Deterministic context bundle for a symbol (defs, imports, routes, consumers)"},
+	{"post", "/api/v1/context", "context", "Token-budgeted review context for changed paths: changed symbols, retrieval hits, impacted files, and scoped edges"},
 	{"post", "/api/v1/impact", "impact", "Reverse blast-radius of changed paths/symbols across the call graph"},
 	{"get", "/api/v1/path", "getPath", "Shortest forward call path between two symbols"},
 	{"get", "/api/v1/coverage", "getCoverage", "Static call-graph reachability coverage for a symbol or test"},

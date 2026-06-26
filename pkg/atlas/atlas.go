@@ -26,8 +26,14 @@ type (
 	IndexInput  = engine.IndexInput
 	IndexResult = engine.IndexResult
 
-	SearchInput  = engine.SearchInput
-	SearchResult = engine.SearchResult
+	SearchInput   = engine.SearchInput
+	SearchResult  = engine.SearchResult
+	SearchHit     = engine.SearchHit
+	ContextInput  = engine.ContextInput
+	ContextResult = engine.ContextResult
+	ContextFile   = engine.ContextFile
+	ContextSymbol = engine.ContextSymbol
+	ContextEdge   = engine.ContextEdge
 
 	// Optional, gated semantic search (off by default; needs vectors enabled).
 	SemanticSearchInput  = engine.SemanticSearchInput
@@ -37,6 +43,7 @@ type (
 
 	ImpactInput  = engine.ImpactInput
 	ImpactResult = engine.ImpactResult
+	FileImpact   = engine.FileImpact
 
 	StatusInput  = engine.StatusInput
 	StatusResult = engine.StatusResult

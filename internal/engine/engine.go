@@ -11,6 +11,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"math"
 	"os"
 	"path/filepath"
 	"sort"
@@ -58,6 +59,7 @@ type IndexResult struct {
 	IndexedFiles int            `json:"indexed_files"`
 	Symbols      int            `json:"symbols"`
 	Edges        int            `json:"edges"`
+	EdgeKinds    map[string]int `json:"edge_kinds,omitempty"`
 	Routes       int            `json:"routes"`
 	Languages    map[string]int `json:"languages"`
 	Mode         string         `json:"mode"`
@@ -89,6 +91,59 @@ type SearchResult struct {
 	Results  []SearchHit `json:"results"`
 	ModeUsed string      `json:"mode_used"`
 	Total    int         `json:"total"`
+}
+
+type ContextInput struct {
+	RepoID   string
+	Paths    []string
+	Query    string
+	Limit    int
+	MaxFiles int
+	MaxEdges int
+	MaxDepth int
+}
+
+type ContextFile struct {
+	Path      string   `json:"path"`
+	Language  string   `json:"language"`
+	SizeBytes int64    `json:"size_bytes"`
+	Hash      string   `json:"hash,omitempty"`
+	Imports   []string `json:"imports,omitempty"`
+}
+
+type ContextSymbol struct {
+	SymbolID  string         `json:"symbol_id"`
+	Name      string         `json:"symbol"`
+	Kind      string         `json:"kind"`
+	RepoID    string         `json:"repo_id"`
+	Path      string         `json:"path"`
+	Line      int            `json:"line"`
+	EndLine   int            `json:"end_line"`
+	Signature string         `json:"signature,omitempty"`
+	Doc       string         `json:"doc,omitempty"`
+	Metadata  map[string]any `json:"metadata,omitempty"`
+}
+
+type ContextEdge struct {
+	FromFile   string         `json:"from_file"`
+	FromSymbol string         `json:"from_symbol,omitempty"`
+	ToRef      string         `json:"to_ref"`
+	Kind       string         `json:"kind"`
+	Language   string         `json:"language,omitempty"`
+	Line       int            `json:"line,omitempty"`
+	Metadata   map[string]any `json:"metadata,omitempty"`
+}
+
+type ContextResult struct {
+	RepoID        string          `json:"repo_id"`
+	SnapshotID    string          `json:"snapshot_id"`
+	CommitSHA     string          `json:"commit_sha"`
+	Files         []ContextFile   `json:"files"`
+	Symbols       []ContextSymbol `json:"symbols"`
+	Edges         []ContextEdge   `json:"edges"`
+	SearchHits    []SearchHit     `json:"search_hits,omitempty"`
+	ImpactedFiles []FileImpact    `json:"impacted_files,omitempty"`
+	Mode          string          `json:"mode"`
 }
 
 // SemanticSearchInput drives the OPTIONAL, gated semantic_search op. When vectors
@@ -467,6 +522,7 @@ type CoverageImportResult struct {
 type Engine interface {
 	Index(ctx context.Context, in IndexInput) (*IndexResult, error)
 	Search(ctx context.Context, in SearchInput) (*SearchResult, error)
+	Context(ctx context.Context, in ContextInput) (*ContextResult, error)
 	SemanticSearch(ctx context.Context, in SemanticSearchInput) (*SemanticSearchResult, error)
 	Impact(ctx context.Context, in ImpactInput) (*ImpactResult, error)
 	Callers(ctx context.Context, in CallersInput) (*CallersResult, error)
@@ -624,6 +680,7 @@ func (e *localEngine) Index(ctx context.Context, in IndexInput) (*IndexResult, e
 		IndexedFiles: stats.Files,
 		Symbols:      stats.Symbols,
 		Edges:        stats.Edges,
+		EdgeKinds:    stats.EdgeKinds,
 		Routes:       stats.Routes,
 		Languages:    stats.Languages,
 		Mode:         stats.Mode,
@@ -658,6 +715,289 @@ func (e *localEngine) Search(ctx context.Context, in SearchInput) (*SearchResult
 		return nil, err
 	}
 	return &SearchResult{Results: out, ModeUsed: "lexical", Total: len(out)}, nil
+}
+
+// Context returns a bounded, deterministic fact bundle for code-review/RCA
+// consumers. It starts from changed paths, then adds lexical retrieval hits and
+// reverse-impact files without packing whole files into the caller's prompt.
+func (e *localEngine) Context(ctx context.Context, in ContextInput) (*ContextResult, error) {
+	snap, err := e.resolveSnapshot(ctx, in.RepoID)
+	if err != nil {
+		return nil, err
+	}
+	limit := contextLimit(in.Limit, 80)
+	maxFiles := contextLimit(in.MaxFiles, 60)
+	maxEdges := contextLimit(in.MaxEdges, 500)
+	depth := in.MaxDepth
+	if depth <= 0 {
+		depth = 3
+	}
+
+	seedPaths := normalizeContextPaths(in.Paths)
+	selectedPaths := make([]string, 0, maxFiles)
+	pathSet := map[string]bool{}
+	addPath := func(path string) {
+		path = strings.TrimSpace(filepath.ToSlash(path))
+		if path == "" || pathSet[path] || len(selectedPaths) >= maxFiles {
+			return
+		}
+		pathSet[path] = true
+		selectedPaths = append(selectedPaths, path)
+	}
+	for _, path := range seedPaths {
+		addPath(path)
+	}
+
+	selectedSymbols := make([]graph.CodeSymbol, 0, limit)
+	symbolSet := map[string]bool{}
+	addSymbol := func(sym graph.CodeSymbol) {
+		if len(selectedSymbols) >= limit {
+			return
+		}
+		key := symbolIdentity(sym)
+		if key == "" || symbolSet[key] {
+			return
+		}
+		symbolSet[key] = true
+		selectedSymbols = append(selectedSymbols, sym)
+		addPath(sym.Path)
+	}
+	for _, path := range seedPaths {
+		syms, err := e.store.SymbolsByPath(ctx, snap.ID, path)
+		if err != nil {
+			return nil, fmt.Errorf("engine: context symbols by path: %w", err)
+		}
+		for _, sym := range syms {
+			addSymbol(sym)
+		}
+	}
+
+	queryText := strings.TrimSpace(in.Query)
+	if queryText == "" {
+		queryText = contextQueryFor(seedPaths, selectedSymbols)
+	}
+
+	searchHits := []SearchHit{}
+	var allByID map[string]graph.CodeSymbol
+	searchDegraded := false
+	if queryText != "" {
+		search, err := e.Search(ctx, SearchInput{RepoID: in.RepoID, Query: queryText, Limit: limit, Mode: "hybrid"})
+		if err != nil {
+			searchDegraded = true
+		} else {
+			searchHits = search.Results
+			allByID, err = e.symbolsByID(ctx, snap.ID)
+			if err != nil {
+				return nil, err
+			}
+			for _, hit := range searchHits {
+				if sym, ok := allByID[hit.SymbolID]; ok {
+					addSymbol(sym)
+				} else {
+					addPath(hit.Path)
+				}
+			}
+		}
+	}
+
+	impact, err := query.ImpactGraph(ctx, e.store, snap.ID, seedPaths, namesOf(selectedSymbols, limit), depth)
+	if err != nil {
+		return nil, fmt.Errorf("engine: context impact: %w", err)
+	}
+	impactedFiles := make([]FileImpact, 0, len(impact.ImpactedFiles))
+	for _, path := range impact.ImpactedFiles {
+		addPath(path)
+		impactedFiles = append(impactedFiles, FileImpact{Path: path, Reason: "caller"})
+	}
+	if len(impact.ImpactedSymbols) > 0 {
+		impactSymbols, err := e.store.SymbolsByNames(ctx, snap.ID, impact.ImpactedSymbols)
+		if err != nil {
+			return nil, fmt.Errorf("engine: context impact symbols: %w", err)
+		}
+		for _, sym := range impactSymbols {
+			addSymbol(sym)
+		}
+	}
+
+	files, err := e.contextFiles(ctx, snap.ID, pathSet)
+	if err != nil {
+		return nil, err
+	}
+	edges, err := e.contextEdges(ctx, snap.ID, pathSet, maxEdges)
+	if err != nil {
+		return nil, err
+	}
+	mode := "symbol_context"
+	if searchDegraded {
+		mode = "symbol_context(search_degraded)"
+	}
+	return &ContextResult{
+		RepoID:        snap.RepoID,
+		SnapshotID:    snap.ID,
+		CommitSHA:     snap.CommitSHA,
+		Files:         files,
+		Symbols:       contextSymbols(selectedSymbols),
+		Edges:         edges,
+		SearchHits:    searchHits,
+		ImpactedFiles: impactedFiles,
+		Mode:          mode,
+	}, nil
+}
+
+func normalizeContextPaths(paths []string) []string {
+	seen := map[string]bool{}
+	out := make([]string, 0, len(paths))
+	for _, path := range paths {
+		path = strings.TrimSpace(filepath.ToSlash(path))
+		if path == "" || seen[path] {
+			continue
+		}
+		seen[path] = true
+		out = append(out, path)
+	}
+	return out
+}
+
+func contextLimit(value, fallback int) int {
+	if value <= 0 {
+		return fallback
+	}
+	return value
+}
+
+func contextQueryFor(paths []string, symbols []graph.CodeSymbol) string {
+	const maxTokens = 48
+	seen := map[string]bool{}
+	tokens := make([]string, 0, maxTokens)
+	add := func(text string) bool {
+		for _, token := range strings.FieldsFunc(text, func(r rune) bool {
+			return !((r >= 'a' && r <= 'z') || (r >= 'A' && r <= 'Z') || (r >= '0' && r <= '9') || r == '_')
+		}) {
+			if len(token) < 3 {
+				continue
+			}
+			key := strings.ToLower(token)
+			if seen[key] {
+				continue
+			}
+			seen[key] = true
+			tokens = append(tokens, token)
+			if len(tokens) >= maxTokens {
+				return false
+			}
+		}
+		return true
+	}
+	for _, sym := range symbols {
+		if !add(sym.Name) || !add(sym.Signature) || !add(sym.Doc) {
+			break
+		}
+	}
+	for _, path := range paths {
+		base := strings.TrimSuffix(filepath.Base(path), filepath.Ext(path))
+		dir := filepath.Base(filepath.Dir(path))
+		if !add(base) || !add(strings.ReplaceAll(base, "-", " ")) || !add(strings.ReplaceAll(base, "_", " ")) || !add(dir) {
+			break
+		}
+	}
+	return strings.Join(tokens, " ")
+}
+
+func (e *localEngine) symbolsByID(ctx context.Context, snapshotID string) (map[string]graph.CodeSymbol, error) {
+	syms, err := e.store.ListSymbols(ctx, snapshotID)
+	if err != nil {
+		return nil, fmt.Errorf("engine: context load symbols: %w", err)
+	}
+	out := make(map[string]graph.CodeSymbol, len(syms))
+	for _, sym := range syms {
+		out[sym.ID] = sym
+	}
+	return out, nil
+}
+
+func (e *localEngine) contextFiles(ctx context.Context, snapshotID string, paths map[string]bool) ([]ContextFile, error) {
+	files, err := e.store.ListFiles(ctx, snapshotID)
+	if err != nil {
+		return nil, fmt.Errorf("engine: context files: %w", err)
+	}
+	out := make([]ContextFile, 0, len(paths))
+	for _, file := range files {
+		if !paths[file.Path] {
+			continue
+		}
+		out = append(out, ContextFile{
+			Path:      file.Path,
+			Language:  file.Language,
+			SizeBytes: file.SizeBytes,
+			Hash:      file.Hash,
+			Imports:   capStrings(file.Imports, 25),
+		})
+	}
+	sort.Slice(out, func(i, j int) bool { return out[i].Path < out[j].Path })
+	return out, nil
+}
+
+func (e *localEngine) contextEdges(ctx context.Context, snapshotID string, paths map[string]bool, maxEdges int) ([]ContextEdge, error) {
+	edges, err := e.store.ListEdges(ctx, snapshotID)
+	if err != nil {
+		return nil, fmt.Errorf("engine: context edges: %w", err)
+	}
+	out := make([]ContextEdge, 0, minInt(maxEdges, len(edges)))
+	for _, edge := range edges {
+		if !paths[edge.FromFile] {
+			continue
+		}
+		out = append(out, ContextEdge{
+			FromFile:   edge.FromFile,
+			FromSymbol: edge.FromSymbol,
+			ToRef:      edge.ToRef,
+			Kind:       string(edge.Kind),
+			Language:   edge.Language,
+			Line:       edge.Line,
+			Metadata:   copyAnyMap(edge.Metadata),
+		})
+		if len(out) >= maxEdges {
+			break
+		}
+	}
+	return out, nil
+}
+
+func contextSymbols(symbols []graph.CodeSymbol) []ContextSymbol {
+	out := make([]ContextSymbol, 0, len(symbols))
+	for _, sym := range symbols {
+		out = append(out, ContextSymbol{
+			SymbolID:  sym.ID,
+			Name:      sym.Name,
+			Kind:      sym.Kind,
+			RepoID:    sym.RepoID,
+			Path:      sym.Path,
+			Line:      sym.StartLine,
+			EndLine:   sym.EndLine,
+			Signature: sym.Signature,
+			Doc:       sym.Doc,
+			Metadata:  copyAnyMap(sym.Metadata),
+		})
+	}
+	return out
+}
+
+func copyAnyMap(in graph.JSONBMap) map[string]any {
+	if len(in) == 0 {
+		return nil
+	}
+	out := make(map[string]any, len(in))
+	for k, v := range in {
+		out[k] = v
+	}
+	return out
+}
+
+func minInt(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
 }
 
 // SemanticSearch is the OPTIONAL, gated semantic op. When vectors are disabled OR
@@ -767,7 +1107,7 @@ func (e *localEngine) hybridSearch(ctx context.Context, in SearchInput) (*Search
 func (e *localEngine) lexicalSearch(ctx context.Context, snapshotID, query, kind string, limit int) ([]SearchHit, error) {
 	hits, err := e.lexical.Search(snapshotID, query, limit*2) // over-fetch for post-filtering
 	if err != nil {
-		return nil, fmt.Errorf("engine: search: %w", err)
+		return e.fallbackLexicalSearch(ctx, snapshotID, query, kind, limit)
 	}
 	syms, err := e.store.ListSymbols(ctx, snapshotID)
 	if err != nil {
@@ -794,6 +1134,55 @@ func (e *localEngine) lexicalSearch(ctx context.Context, snapshotID, query, kind
 	return out, nil
 }
 
+func (e *localEngine) fallbackLexicalSearch(ctx context.Context, snapshotID, rawQuery, kind string, limit int) ([]SearchHit, error) {
+	syms, err := e.store.ListSymbols(ctx, snapshotID)
+	if err != nil {
+		return nil, fmt.Errorf("engine: fallback search load symbols: %w", err)
+	}
+	tokens := lexical.TokenizeIdentifier(rawQuery)
+	if len(tokens) == 0 {
+		return nil, nil
+	}
+	type scored struct {
+		symbol graph.CodeSymbol
+		score  float64
+	}
+	scoredHits := make([]scored, 0, limit)
+	for _, sym := range syms {
+		if kind != "" && !strings.EqualFold(sym.Kind, kind) {
+			continue
+		}
+		haystack := strings.ToLower(strings.Join([]string{sym.Name, sym.Signature, sym.Doc, sym.Path, sym.Kind}, " "))
+		score := 0.0
+		for _, token := range tokens {
+			if strings.Contains(haystack, token) {
+				score++
+			}
+		}
+		if score == 0 {
+			continue
+		}
+		scoredHits = append(scoredHits, scored{symbol: sym, score: score})
+	}
+	sort.Slice(scoredHits, func(i, j int) bool {
+		if scoredHits[i].score != scoredHits[j].score {
+			return scoredHits[i].score > scoredHits[j].score
+		}
+		if scoredHits[i].symbol.Path != scoredHits[j].symbol.Path {
+			return scoredHits[i].symbol.Path < scoredHits[j].symbol.Path
+		}
+		return scoredHits[i].symbol.Name < scoredHits[j].symbol.Name
+	})
+	if len(scoredHits) > limit {
+		scoredHits = scoredHits[:limit]
+	}
+	out := make([]SearchHit, 0, len(scoredHits))
+	for _, hit := range scoredHits {
+		out = append(out, symbolToHit(hit.symbol, hit.score))
+	}
+	return out, nil
+}
+
 // searchLimit applies the default result cap (20) for a non-positive request.
 func searchLimit(limit int) int {
 	if limit <= 0 {
@@ -813,7 +1202,20 @@ func symbolToHit(s graph.CodeSymbol, score float64) SearchHit {
 		Line:      s.StartLine,
 		Signature: s.Signature,
 		Doc:       s.Doc,
-		Score:     score,
+		Score:     finiteScore(score),
+	}
+}
+
+func finiteScore(score float64) float64 {
+	switch {
+	case math.IsNaN(score):
+		return 0
+	case math.IsInf(score, 1):
+		return math.MaxFloat64
+	case math.IsInf(score, -1):
+		return -math.MaxFloat64
+	default:
+		return score
 	}
 }
 

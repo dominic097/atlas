@@ -38,6 +38,33 @@ type Result struct {
 // LanguageForPath maps a file path to its parser language, or "" when the
 // extension is not one of the supported tree-sitter / native grammars.
 func LanguageForPath(path string) string {
+	base := strings.ToLower(filepath.Base(path))
+	if base == "dockerfile" || strings.HasPrefix(base, "dockerfile.") {
+		return "dockerfile"
+	}
+	if base == "makefile" || base == "gnumakefile" {
+		return "makefile"
+	}
+	if base == "postinstall" || base == "preinstall" {
+		return "bash"
+	}
+	if base == "jenkinsfile" || strings.HasPrefix(base, "jenkinsfile.") {
+		return "groovy"
+	}
+	switch base {
+	case "go.mod":
+		return "gomod"
+	case "go.sum":
+		return "gosum"
+	case ".dockerignore", ".gitignore", ".nojekyll", ".python-version":
+		return "config"
+	}
+	if strings.HasPrefix(base, ".env") || strings.Contains(base, ".env.") {
+		return "config"
+	}
+	if lang := languageForBackupName(base); lang != "" {
+		return lang
+	}
 	switch strings.ToLower(filepath.Ext(path)) {
 	case ".go":
 		return "go"
@@ -53,15 +80,76 @@ func LanguageForPath(path string) string {
 		return "c"
 	case ".cpp", ".cc", ".cxx", ".hpp", ".hxx", ".hh":
 		return "cpp"
+	case ".cs":
+		return "csharp"
+	case ".html", ".htm":
+		return "html"
+	case ".css", ".scss", ".sass":
+		return "css"
+	case ".sh", ".bash":
+		return "bash"
+	case ".groovy", ".gvy", ".gradle":
+		return "groovy"
+	case ".md", ".markdown", ".mdown", ".mkd":
+		return "markdown"
+	case ".mdx":
+		return "mdx"
+	case ".yaml", ".yml":
+		return "yaml"
+	case ".json", ".jsonc", ".jsonl", ".code-workspace":
+		return "json"
+	case ".proto":
+		return "proto"
+	case ".toml":
+		return "toml"
+	case ".xml":
+		return "xml"
+	case ".plist":
+		return "plist"
+	case ".ini", ".cfg", ".conf", ".cnf", ".service", ".properties", ".example", ".iss", ".alloy", ".lock":
+		return "config"
+	case ".bat", ".cmd":
+		return "batch"
+	case ".ps1":
+		return "powershell"
+	case ".sql":
+		return "sql"
+	case ".csv", ".tsv":
+		return "csv"
+	case ".txt", ".rst":
+		return "text"
 	default:
 		return ""
 	}
 }
 
+func languageForBackupName(base string) string {
+	for _, suffix := range []string{".go.disabled", ".go.backup", ".go.bak"} {
+		if strings.HasSuffix(base, suffix) {
+			return "go"
+		}
+	}
+	for _, suffix := range []string{".sql.bak", ".sql.backup"} {
+		if strings.HasSuffix(base, suffix) {
+			return "sql"
+		}
+	}
+	for _, suffix := range []string{".json.orig", ".json.bak", ".json.backup"} {
+		if strings.HasSuffix(base, suffix) {
+			return "json"
+		}
+	}
+	return ""
+}
+
 // Supported reports whether the language has a first-class parser.
 func Supported(lang string) bool {
 	switch lang {
-	case "go", "python", "javascript", "typescript", "java", "c", "cpp":
+	case "go", "python", "javascript", "typescript", "java", "c", "cpp",
+		"csharp", "groovy", "bash", "html", "css",
+		"markdown", "mdx", "yaml", "json", "proto", "toml", "xml", "plist",
+		"gomod", "gosum", "config", "makefile", "batch", "powershell",
+		"sql", "csv", "text", "dockerfile":
 		return true
 	default:
 		return false
@@ -106,6 +194,18 @@ func Parse(repoID, repoFullName, filePath, language string, content []byte) (Res
 		rawSyms, imports = parseGoSymbols(filePath, content)
 	case "python", "javascript", "typescript", "java", "c", "cpp":
 		rawSyms, imports, tsRoot, tsCleanup = parseTreeSitter(filePath, language, content)
+	case "csharp", "groovy", "bash":
+		rawSyms, imports = parseRegexFallback(filePath, language, content)
+	case "html", "css":
+	// Pulse records these as file-level context even though there is no
+	// first-class symbol parser. Keep the file row; symbols remain empty.
+	case "proto":
+		rawSyms, imports = parseProtoSymbols(filePath, content)
+	case "makefile":
+		rawSyms = parseMakefileSymbols(filePath, content)
+	case "markdown", "mdx", "yaml", "json", "toml", "xml", "plist", "gomod", "gosum",
+		"config", "batch", "powershell", "sql", "csv", "text", "dockerfile":
+		rawSyms = parseDocSymbols(filePath, language, content)
 	default:
 		return Result{}, nil
 	}
@@ -113,13 +213,27 @@ func Parse(repoID, repoFullName, filePath, language string, content []byte) (Res
 	// Enrich each symbol with leading-comment Doc and a first-line Signature
 	// fallback, then promote to the shared graph type with a stable NodeID.
 	docs := leadingComments(content, rawSyms)
+	bodies := symbolBodyExcerpts(content, rawSyms)
 	symbols := make([]graph.CodeSymbol, 0, len(rawSyms))
 	for _, d := range rawSyms {
 		sig := d.signature
 		if sig == "" {
 			sig = firstLineSignature(content, d.startLine)
 		}
-		doc := docs[d.key()]
+		doc := d.doc
+		if leading := docs[d.key()]; leading != "" {
+			doc = leading
+		}
+		meta := graph.JSONBMap{}
+		for k, v := range d.metadata {
+			meta[k] = v
+		}
+		if body := bodies[d.key()]; body != "" {
+			meta["body_excerpt"] = body
+		}
+		if doc != "" {
+			meta["doc"] = doc
+		}
 		sym := graph.CodeSymbol{
 			ID:        newUUID(),
 			RepoID:    repoID,
@@ -131,7 +245,7 @@ func Parse(repoID, repoFullName, filePath, language string, content []byte) (Res
 			Doc:       doc,
 			StartLine: d.startLine,
 			EndLine:   d.endLine,
-			Metadata:  graph.JSONBMap{},
+			Metadata:  meta,
 		}
 		sym.NodeID = ComputeNodeID(repoFullName, filePath, d.kind, d.name, sig)
 		// SHARED METADATA CONTRACT: method symbols carry the base receiver
@@ -171,8 +285,10 @@ type symbolDraft struct {
 	name      string
 	kind      string
 	signature string
+	doc       string
 	startLine int
 	endLine   int
+	metadata  graph.JSONBMap
 	// recvType is the base receiver type a method is declared on (Go only,
 	// per the SHARED METADATA CONTRACT). Empty for non-methods. Promoted to
 	// CodeSymbol.Metadata["recv_type"] so the query layer can disambiguate

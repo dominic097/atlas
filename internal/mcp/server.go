@@ -56,6 +56,8 @@ func coreTools() []Tool {
 			InputSchema: obj(map[string]any{"query": str, "repo_id": str, "kind": str, "limit": map[string]any{"type": "integer"}}, "query")},
 		{Name: "semantic_search", Description: "Optional vector nearest-neighbor search over indexed symbols. Degrades to lexical (degraded=true, mode_used=lexical) when vectors are off or the snapshot has no embeddings.",
 			InputSchema: obj(map[string]any{"query": str, "repo_id": str, "limit": map[string]any{"type": "integer"}, "min_score": map[string]any{"type": "number"}}, "query")},
+		{Name: "context", Description: "Bounded code-review context for changed paths: changed symbols, retrieval hits, impact files, and scoped edges.",
+			InputSchema: obj(map[string]any{"changed_paths": map[string]any{"type": "array"}, "query": str, "repo_id": str, "limit": map[string]any{"type": "integer"}, "max_files": map[string]any{"type": "integer"}, "max_edges": map[string]any{"type": "integer"}, "max_depth": map[string]any{"type": "integer"}})},
 		{Name: "symbol", Description: "Definition(s) of a symbol with its callers and callees.",
 			InputSchema: obj(map[string]any{"symbol": str, "repo_id": str}, "symbol")},
 		{Name: "callers", Description: "Symbols that directly call a given symbol.",
@@ -293,6 +295,11 @@ func (s *Server) callTool(ctx context.Context, params json.RawMessage) map[strin
 		payload, err = s.eng.SemanticSearch(ctx, engine.SemanticSearchInput{
 			Query: str("query"), RepoID: str("repo_id"),
 			Limit: intOr("limit", 20), MinScore: floatOr("min_score", 0),
+		})
+	case "context":
+		payload, err = s.eng.Context(ctx, engine.ContextInput{
+			Paths: strs("changed_paths"), Query: str("query"), RepoID: str("repo_id"),
+			Limit: intOr("limit", 80), MaxFiles: intOr("max_files", 60), MaxEdges: intOr("max_edges", 500), MaxDepth: intOr("max_depth", 3),
 		})
 	case "impact":
 		payload, err = s.eng.Impact(ctx, engine.ImpactInput{

@@ -84,6 +84,7 @@ func (s *Server) routes() {
 	m.HandleFunc("GET /api/v1/symbols/{name}/explain", s.handleExplain)
 
 	// graph ops
+	m.HandleFunc("POST /api/v1/context", s.handleContext)
 	m.HandleFunc("POST /api/v1/impact", s.handleImpact)
 	m.HandleFunc("GET /api/v1/path", s.handlePath)
 	m.HandleFunc("GET /api/v1/coverage", s.handleCoverage)
@@ -268,6 +269,36 @@ func (s *Server) handleRepos(w http.ResponseWriter, r *http.Request) {
 }
 
 // ── graph ops ─────────────────────────────────────────────────────────────────
+
+type contextRequest struct {
+	Paths    []string `json:"changed_paths"`
+	Query    string   `json:"query"`
+	Limit    int      `json:"limit"`
+	MaxFiles int      `json:"max_files"`
+	MaxEdges int      `json:"max_edges"`
+	MaxDepth int      `json:"max_depth"`
+	RepoID   string   `json:"repo_id"`
+}
+
+// handleContext returns the token-budgeted review-context bundle for a set of
+// changed/seed paths (plus an optional retrieval query).
+func (s *Server) handleContext(w http.ResponseWriter, r *http.Request) {
+	var req contextRequest
+	if err := decodeBody(r, &req); err != nil {
+		writeProblem(w, http.StatusBadRequest, "bad_request", err.Error())
+		return
+	}
+	res, err := s.eng.Context(r.Context(), engine.ContextInput{
+		Paths:    req.Paths,
+		Query:    req.Query,
+		Limit:    req.Limit,
+		MaxFiles: req.MaxFiles,
+		MaxEdges: req.MaxEdges,
+		MaxDepth: req.MaxDepth,
+		RepoID:   req.RepoID,
+	})
+	writeResult(w, res, err)
+}
 
 type impactRequest struct {
 	ChangedPaths []string `json:"changed_paths"`

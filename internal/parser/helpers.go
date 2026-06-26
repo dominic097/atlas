@@ -102,6 +102,35 @@ func shouldSkipCallName(language, name string) bool {
 	return false
 }
 
+// symbolBodyExcerpts captures a bounded body window for every parsed symbol.
+// Review/RCA consumers use this to pack symbol spans instead of whole files.
+func symbolBodyExcerpts(content []byte, symbols []symbolDraft) map[string]string {
+	lines := strings.Split(string(content), "\n")
+	const maxLines = 120
+	excerpts := make(map[string]string, len(symbols))
+	for _, symbol := range symbols {
+		start := symbol.startLine
+		end := symbol.endLine
+		if start <= 0 || start > len(lines) {
+			continue
+		}
+		if end < start || end > len(lines) {
+			end = start
+		}
+		body := append([]string{}, lines[start-1:end]...)
+		if len(body) > maxLines {
+			head := (maxLines * 2) / 3
+			tail := maxLines - head
+			window := append([]string{}, body[:head]...)
+			window = append(window, "// ... truncated ...")
+			window = append(window, body[len(body)-tail:]...)
+			body = window
+		}
+		excerpts[symbol.key()] = strings.TrimSpace(strings.Join(body, "\n"))
+	}
+	return excerpts
+}
+
 // dedupeEdges collapses identical (file, callee, kind, from-symbol, line) edges.
 func dedupeEdges(edges []graph.DependencyEdge) []graph.DependencyEdge {
 	seen := map[string]bool{}

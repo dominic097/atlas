@@ -487,6 +487,7 @@ func runDelta(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, b
 		Files:        len(files),
 		Symbols:      len(mergedSymbols),
 		Edges:        len(mergedEdges),
+		EdgeKinds:    countEdgeKinds(mergedEdges),
 		Routes:       len(mergedRoutes),
 		Languages:    languages,
 		DurationMS:   time.Since(start).Milliseconds(),
