@@ -354,6 +354,9 @@ func (s *Server) callTool(ctx context.Context, params json.RawMessage) map[strin
 	}
 }
 
+// mustJSON marshals a tool payload to COMPACT (un-indented) JSON. Agents don't
+// need indentation, and compact output is a real token saving on the MCP surface
+// — so this deliberately uses json.Marshal, never json.MarshalIndent.
 func mustJSON(v any) string {
 	b, err := json.Marshal(v)
 	if err != nil {
