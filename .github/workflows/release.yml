@@ -13,7 +13,8 @@ jobs:
   # Binaries + Linux packages + archives + checksums + SBOMs + keyless cosign
   # signatures + the Homebrew cask + the GitHub Release. CGO (tree-sitter) is
   # cross-compiled inside goreleaser-cross, which carries the linux gcc cross
-  # toolchains, the darwin osxcross toolchain, and cosign + syft.
+  # toolchains and the darwin osxcross toolchain. Extra release helpers are
+  # mounted into the container without dirtying the checkout.
   goreleaser:
     runs-on: ubuntu-latest
     permissions:
@@ -26,8 +27,8 @@ jobs:
 
       - name: Install Syft for SBOM generation
         run: |
-          mkdir -p .tools
-          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b .tools
+          mkdir -p "$RUNNER_TEMP/atlas-tools"
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b "$RUNNER_TEMP/atlas-tools"
 
       - name: goreleaser release (cross-compiled CGO)
         run: |
@@ -35,10 +36,11 @@ jobs:
             -e GITHUB_TOKEN="${{ secrets.ATLAS_RELEASE_TOKEN || secrets.GITHUB_TOKEN }}" \
             -e HOMEBREW_TAP_TOKEN="${{ secrets.HOMEBREW_TAP_TOKEN }}" \
             -e COSIGN_YES=true \
-            -e PATH="/src/.tools:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
+            -e PATH="/tools:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
             -e ACTIONS_ID_TOKEN_REQUEST_URL \
             -e ACTIONS_ID_TOKEN_REQUEST_TOKEN \
             -v "$PWD":/src \
+            -v "$RUNNER_TEMP/atlas-tools":/tools:ro \
             -w /src \
             ghcr.io/goreleaser/goreleaser-cross:v1.25.0 \
             release --clean
