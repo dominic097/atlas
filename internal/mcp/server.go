@@ -86,6 +86,12 @@ func coreTools() []Tool {
 			InputSchema: obj(map[string]any{"repo": str})},
 		{Name: "cross_repo_impact", Description: "Cross-repo blast radius (the USP): which OTHER repos call routes that the changed handler files serve.",
 			InputSchema: obj(map[string]any{"repo": str, "changed_paths": map[string]any{"type": "array"}})},
+		{Name: "communities", Description: "Deterministic graph communities: clusters of densely-connected symbols (label propagation), size-ranked with representative members.",
+			InputSchema: obj(map[string]any{"repo_id": str, "limit": map[string]any{"type": "integer"}})},
+		{Name: "hubs", Description: "Graph hubs (\"god nodes\"): top symbols by call-graph degree centrality (in/out/total).",
+			InputSchema: obj(map[string]any{"repo_id": str, "limit": map[string]any{"type": "integer"}})},
+		{Name: "report", Description: "Deterministic graph report: summary stats, top hubs (god nodes), and communities, with a ready-to-render Markdown document.",
+			InputSchema: obj(map[string]any{"repo_id": str})},
 		{Name: "status", Description: "Engine health and per-repo index freshness.",
 			InputSchema: obj(map[string]any{"repo_id": str})},
 		{Name: "link", Description: "Register a repo into the graph WITHOUT indexing it (path, git remote URL, or org/name), so it participates in cross-repo and shows in status.",
@@ -336,6 +342,12 @@ func (s *Server) callTool(ctx context.Context, params json.RawMessage) map[strin
 		payload, err = s.eng.Consumers(ctx, engine.ConsumersInput{Repo: str("repo")})
 	case "cross_repo_impact":
 		payload, err = s.eng.CrossRepoImpact(ctx, engine.CrossRepoImpactInput{Repo: str("repo"), ChangedPaths: strs("changed_paths")})
+	case "communities":
+		payload, err = s.eng.Communities(ctx, engine.CommunitiesInput{RepoID: str("repo_id"), Limit: intOr("limit", 20)})
+	case "hubs":
+		payload, err = s.eng.Hubs(ctx, engine.HubsInput{RepoID: str("repo_id"), Limit: intOr("limit", 20)})
+	case "report":
+		payload, err = s.eng.Report(ctx, engine.ReportInput{RepoID: str("repo_id")})
 	case "status":
 		payload, err = s.eng.Status(ctx, engine.StatusInput{RepoID: str("repo_id")})
 	case "link":

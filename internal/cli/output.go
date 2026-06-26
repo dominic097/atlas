@@ -169,6 +169,12 @@ func terseString(v any) string {
 		return terseRouteContracts(r)
 	case *engine.CrossRepoImpactResult:
 		return terseCrossRepoImpact(r)
+	case *engine.CommunitiesResult:
+		return terseCommunities(r)
+	case *engine.HubsResult:
+		return terseHubs(r)
+	case *engine.ReportResult:
+		return terseReport(r)
 	case *engine.StatusResult:
 		return terseStatus(r)
 	case *engine.HistoryResult:
@@ -392,6 +398,53 @@ func terseCrossRepoImpact(r *engine.CrossRepoImpactResult) string {
 	}
 	writeConsumerHits(&t, r.Impacted)
 	return t.String()
+}
+
+func terseCommunities(r *engine.CommunitiesResult) string {
+	var t terseLines
+	t.linef("communities  total %d  shown %d", r.Total, len(r.Communities))
+	cap := r.Communities
+	extra := 0
+	if len(cap) > listCap {
+		extra = len(cap) - listCap
+		cap = cap[:listCap]
+	}
+	for _, c := range cap {
+		members := c.Representatives
+		if len(members) == 0 {
+			members = c.Members
+		}
+		t.linef("  #%d  size %d  %s", c.ID, c.Size, capList(members))
+	}
+	if extra > 0 {
+		t.linef("  (+%d more)", extra)
+	}
+	return t.String()
+}
+
+func terseHubs(r *engine.HubsResult) string {
+	var t terseLines
+	t.linef("hubs  total %d", len(r.Hubs))
+	cap := r.Hubs
+	extra := 0
+	if len(cap) > listCap {
+		extra = len(cap) - listCap
+		cap = cap[:listCap]
+	}
+	for _, h := range cap {
+		t.line(strings.TrimRight(fmt.Sprintf("  %s  %s  in %d  out %d  total %d  %s",
+			h.Name, h.Kind, h.InDegree, h.OutDegree, h.TotalDegree, loc(h.Path, 0, 0)), " "))
+	}
+	if extra > 0 {
+		t.linef("  (+%d more)", extra)
+	}
+	return t.String()
+}
+
+// terseReport prints the ready-rendered Markdown report verbatim — the natural
+// human-facing output of `atlas report --format plain`.
+func terseReport(r *engine.ReportResult) string {
+	return r.Markdown
 }
 
 func terseStatus(r *engine.StatusResult) string {

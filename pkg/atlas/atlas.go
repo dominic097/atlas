@@ -95,6 +95,18 @@ type (
 	RouteContractsResult  = engine.RouteContractsResult
 	RouteContract         = engine.RouteContract
 	ConsumerHit           = engine.ConsumerHit
+
+	// Graph analytics (deterministic, LLM-free): communities, hubs (god nodes),
+	// and a composed graph report.
+	CommunitiesInput  = engine.CommunitiesInput
+	CommunitiesResult = engine.CommunitiesResult
+	CommunityInfo     = engine.CommunityInfo
+	HubsInput         = engine.HubsInput
+	HubsResult        = engine.HubsResult
+	HubInfo           = engine.HubInfo
+	ReportInput       = engine.ReportInput
+	ReportResult      = engine.ReportResult
+	GraphStats        = engine.GraphStats
 )
 
 // ErrNotImplemented is returned by stub operations in this scaffold.

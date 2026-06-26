@@ -74,6 +74,15 @@ func (stubEngine) Consumers(context.Context, engine.ConsumersInput) (*engine.Con
 func (stubEngine) RouteContracts(context.Context, engine.RouteContractsInput) (*engine.RouteContractsResult, error) {
 	return &engine.RouteContractsResult{}, nil
 }
+func (stubEngine) Communities(context.Context, engine.CommunitiesInput) (*engine.CommunitiesResult, error) {
+	return &engine.CommunitiesResult{}, nil
+}
+func (stubEngine) Hubs(context.Context, engine.HubsInput) (*engine.HubsResult, error) {
+	return &engine.HubsResult{}, nil
+}
+func (stubEngine) Report(context.Context, engine.ReportInput) (*engine.ReportResult, error) {
+	return &engine.ReportResult{}, nil
+}
 func (stubEngine) Status(context.Context, engine.StatusInput) (*engine.StatusResult, error) {
 	return &engine.StatusResult{Tier: "test-tier", StorageDriver: "memory", ReposIndexed: 7}, nil
 }

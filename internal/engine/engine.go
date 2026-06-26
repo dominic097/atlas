@@ -539,6 +539,9 @@ type Engine interface {
 	CrossRepoImpact(ctx context.Context, in CrossRepoImpactInput) (*CrossRepoImpactResult, error)
 	Consumers(ctx context.Context, in ConsumersInput) (*ConsumersResult, error)
 	RouteContracts(ctx context.Context, in RouteContractsInput) (*RouteContractsResult, error)
+	Communities(ctx context.Context, in CommunitiesInput) (*CommunitiesResult, error)
+	Hubs(ctx context.Context, in HubsInput) (*HubsResult, error)
+	Report(ctx context.Context, in ReportInput) (*ReportResult, error)
 	Status(ctx context.Context, in StatusInput) (*StatusResult, error)
 	Link(ctx context.Context, in LinkInput) (*LinkResult, error)
 	Close() error
