@@ -937,6 +937,15 @@ func CallersGraph(ctx context.Context, drv store.StorageDriver, snapshotID, name
 	if err != nil {
 		return nil, err
 	}
+	var fromNames []string
+	for _, e := range edges {
+		if e.Kind == graph.EdgeCalls && strings.TrimSpace(e.FromSymbol) != "" {
+			fromNames = append(fromNames, e.FromSymbol)
+		}
+	}
+	if err := cache.prefetchNames(fromNames); err != nil {
+		return nil, err
+	}
 	seen := map[string]bool{}
 	var out []graph.CodeSymbol
 	for _, e := range edges {
@@ -1022,6 +1031,15 @@ func CalleesGraph(ctx context.Context, drv store.StorageDriver, snapshotID, from
 		return nil, err
 	}
 	cache := newSymbolCache(ctx, drv, snapshotID)
+	var toRefs []string
+	for _, e := range edges {
+		if e.Kind == graph.EdgeCalls && strings.TrimSpace(e.ToRef) != "" {
+			toRefs = append(toRefs, e.ToRef)
+		}
+	}
+	if err := cache.prefetchNames(toRefs); err != nil {
+		return nil, err
+	}
 	seen := map[string]bool{}
 	var out []graph.CodeSymbol
 	for _, e := range edges {

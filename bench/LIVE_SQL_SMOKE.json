@@ -1,0 +1,273 @@
+{
+  "language": "sql",
+  "repo": "https://github.com/hasura/graphql-engine",
+  "commit": "417c174c0ac3c80dafe6e8f9e8ac39d868334724",
+  "commands": {
+    "clone": "git clone --depth 1 https://github.com/hasura/graphql-engine /tmp/atlas-live-sql-hasura/repo",
+    "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-sql-hasura/atlas.db --json index /tmp/atlas-live-sql-hasura/repo/server/src-rsr/migrations",
+    "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-sql-hasura/atlas.db --json index /tmp/atlas-live-sql-hasura/repo/server/src-rsr/migrations",
+    "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "native_baseline": "/tmp/atlas-live-sql-hasura/sqlfluff-venv/bin/sqlfluff parse --dialect postgres <82 SQL files>",
+    "query_symbols": [
+      "hdb_catalog.event_triggers",
+      "hdb_catalog.hdb_metadata",
+      "hdb_catalog.hdb_schema_update_event_notifier",
+      "hdb_catalog.hdb_function_agg"
+    ],
+    "target_path": "/tmp/atlas-live-sql-hasura/repo/server/src-rsr/migrations"
+  },
+  "atlas": {
+    "cold_wall_seconds": 0.181,
+    "reindex_wall_seconds": 0.025,
+    "index": {
+      "repo_id": "3ae3720a-c7dd-4916-95ef-e1647bff0117",
+      "repo_full_name": "migrations",
+      "snapshot_id": "65e206ec-b658-465f-94c7-49388bfbdf26",
+      "commit_sha": "417c174c0ac3c80dafe6e8f9e8ac39d868334724",
+      "indexed_files": 82,
+      "symbols": 152,
+      "edges": 857,
+      "edge_kinds": {
+        "calls": 857
+      },
+      "routes": 0,
+      "languages": {
+        "sql": 82
+      },
+      "mode": "full",
+      "duration_ms": 93,
+      "timings_ms": {
+        "delta_check": 0,
+        "ensure_repo": 0,
+        "go_types": 0,
+        "lexical": 16,
+        "parse": 46,
+        "persist": 27,
+        "resolve_head": 0,
+        "routes": 0,
+        "sort": 0,
+        "walk": 1
+      }
+    },
+    "reindex": {
+      "repo_id": "3ae3720a-c7dd-4916-95ef-e1647bff0117",
+      "repo_full_name": "migrations",
+      "snapshot_id": "65e206ec-b658-465f-94c7-49388bfbdf26",
+      "commit_sha": "417c174c0ac3c80dafe6e8f9e8ac39d868334724",
+      "indexed_files": 82,
+      "symbols": 152,
+      "edges": 857,
+      "routes": 0,
+      "languages": {
+        "sql": 82
+      },
+      "mode": "noop",
+      "duration_ms": 4,
+      "timings_ms": {
+        "delta_check": 4,
+        "resolve_head": 0
+      }
+    },
+    "symbol_breakdown": [
+      {
+        "language": "sql",
+        "kind": "document",
+        "count": 41
+      },
+      {
+        "language": "sql",
+        "kind": "function",
+        "count": 15
+      },
+      {
+        "language": "sql",
+        "kind": "table",
+        "count": 39
+      },
+      {
+        "language": "sql",
+        "kind": "trigger",
+        "count": 7
+      },
+      {
+        "language": "sql",
+        "kind": "view",
+        "count": 50
+      }
+    ],
+    "edge_breakdown": [
+      {
+        "kind": "calls",
+        "count": 857
+      }
+    ],
+    "sql_definition_symbols": 111
+  },
+  "graphify": {
+    "status": "ok",
+    "ok": true,
+    "seconds": 0.64,
+    "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "stdout_head": [
+      "Re-extracting code files in . (no LLM needed)...",
+      "[graphify watch] Rebuilt: 240 nodes, 194 edges, 82 communities",
+      "[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out",
+      "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
+      "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
+    ],
+    "stderr_head": [],
+    "metrics": {
+      "nodes": 240,
+      "links": 194,
+      "calls": 0
+    }
+  },
+  "native_baseline": {
+    "tool": "sqlfluff",
+    "status": "ok",
+    "ok": true,
+    "seconds": 24.851,
+    "command": "/tmp/atlas-live-sql-hasura/sqlfluff-venv/bin/sqlfluff parse --dialect postgres <82 SQL files>",
+    "metrics": {
+      "files": 82,
+      "parsed_files": 82,
+      "parse_errors": 0,
+      "definitions": 111,
+      "definition_counts": {
+        "table": 39,
+        "view": 50,
+        "function": 15,
+        "procedure": 0,
+        "trigger": 7
+      },
+      "sqlfluff_version": "sqlfluff, version 3.5.0",
+      "parse_error_samples": []
+    }
+  },
+  "richer_native_baselines": {
+    "psql": {
+      "status": "unavailable",
+      "ok": false,
+      "note": "psql is installed but requires a live PostgreSQL database; sqlfluff parser used as the scriptable native baseline"
+    }
+  },
+  "coverage": {
+    "atlas_vs_sqlfluff_definition_ratio": 1.0,
+    "atlas_sql_definition_symbols": 111,
+    "native_definitions": 111
+  },
+  "optimization": {
+    "cycles_run": 2,
+    "stop_reason": "SQL live smoke matched SQLFluff DDL definition coverage after installing graphify's optional tree_sitter_sql parser and exceeded 5x query latency, but token ratio saturated just below 5x on already-terse exact-symbol output.",
+    "cycle_notes": [
+      "cycle 1: graphify advertised SQL support but produced an empty graph until its optional tree_sitter_sql dependency was installed in the graphify tool environment.",
+      "cycle 2: hasura/graphql-engine migrations reached 1.0 Atlas/SQLFluff DDL coverage and exceeded 5x latency; token output stayed below 5x without removing useful source context."
+    ]
+  },
+  "queries": [
+    {
+      "symbol": "hdb_catalog.event_triggers",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-sql-hasura/atlas.db --format plain --repo migrations explain hdb_catalog.event_triggers",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain hdb_catalog.event_triggers",
+      "atlas_tokens": 11,
+      "graphify_tokens": 55,
+      "atlas_ms": 22.837,
+      "graphify_ms": 91.033,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "hdb_catalog.event_triggers t@1_to_2.sql:3 df2"
+      ],
+      "graphify_stdout_head": [
+        "Node: hdb_catalog.event_triggers",
+        "  ID:        11_to_12_hdb_catalog_event_triggers",
+        "  Source:    11_to_12.sql L1",
+        "  Type:      code",
+        "  Community: 19",
+        "  Degree:    1",
+        "",
+        "Connections (1):"
+      ]
+    },
+    {
+      "symbol": "hdb_catalog.hdb_metadata",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-sql-hasura/atlas.db --format plain --repo migrations explain hdb_catalog.hdb_metadata",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain hdb_catalog.hdb_metadata",
+      "atlas_tokens": 10,
+      "graphify_tokens": 54,
+      "atlas_ms": 12.51,
+      "graphify_ms": 88.501,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "hdb_catalog.hdb_metadata t@42_to_43.sql:48"
+      ],
+      "graphify_stdout_head": [
+        "Node: hdb_catalog.hdb_metadata",
+        "  ID:        42_to_43_hdb_catalog_hdb_metadata",
+        "  Source:    42_to_43.sql L48",
+        "  Type:      code",
+        "  Community: 30",
+        "  Degree:    1",
+        "",
+        "Connections (1):"
+      ]
+    },
+    {
+      "symbol": "hdb_catalog.hdb_schema_update_event_notifier",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-sql-hasura/atlas.db --format plain --repo migrations explain hdb_catalog.hdb_schema_update_event_notifier",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain hdb_catalog.hdb_schema_update_event_notifier",
+      "atlas_tokens": 17,
+      "graphify_tokens": 80,
+      "atlas_ms": 13.476,
+      "graphify_ms": 91.737,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "hdb_catalog.hdb_schema_update_event_notifier f@10_to_11.sql:6 df4 d1"
+      ],
+      "graphify_stdout_head": [
+        "Node: hdb_catalog.hdb_schema_update_event_notifier()",
+        "  ID:        10_to_11_hdb_catalog_hdb_schema_update_event_notifier",
+        "  Source:    10_to_11.sql L7",
+        "  Type:      code",
+        "  Community: 15",
+        "  Degree:    2",
+        "",
+        "Connections (2):"
+      ]
+    },
+    {
+      "symbol": "hdb_catalog.hdb_function_agg",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-sql-hasura/atlas.db --format plain --repo migrations explain hdb_catalog.hdb_function_agg",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain hdb_catalog.hdb_function_agg",
+      "atlas_tokens": 12,
+      "graphify_tokens": 56,
+      "atlas_ms": 18.628,
+      "graphify_ms": 92.777,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "hdb_catalog.hdb_function_agg v@12_to_13.sql:1 df10"
+      ],
+      "graphify_stdout_head": [
+        "Node: hdb_catalog.hdb_function_agg",
+        "  ID:        12_to_13_hdb_catalog_hdb_function_agg",
+        "  Source:    12_to_13.sql L1",
+        "  Type:      code",
+        "  Community: 32",
+        "  Degree:    1",
+        "",
+        "Connections (1):"
+      ]
+    }
+  ]
+}

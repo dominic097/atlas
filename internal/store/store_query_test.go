@@ -47,8 +47,12 @@ func TestIndexedQueries(t *testing.T) {
 			Metadata: graph.JSONBMap{"qualified_ref": "app.addTask", "recv_type": "TodoApp"},
 		},
 	}
+	files := []graph.File{
+		{ID: "file-app", SnapshotID: snapID, Path: "app.go", Language: "go", Imports: []string{"context", "fmt"}},
+		{ID: "file-engine", SnapshotID: snapID, Path: "engine.go", Language: "go", Imports: []string{"net/http"}},
+	}
 
-	if err := d.SaveSnapshot(ctx, snap, nil, symbols, edges, nil); err != nil {
+	if err := d.SaveSnapshot(ctx, snap, files, symbols, edges, nil); err != nil {
 		t.Fatalf("SaveSnapshot: %v", err)
 	}
 
@@ -91,6 +95,32 @@ func TestIndexedQueries(t *testing.T) {
 	}
 	if len(byPath) != 1 || byPath[0].ID != "sym-app" {
 		t.Fatalf("SymbolsByPath: got %+v, want [sym-app]", byPath)
+	}
+
+	// FilesByPaths: file-scoped, dedupes duplicate input, preserves imports.
+	byFilePath, err := d.FilesByPaths(ctx, snapID, []string{"engine.go", "app.go", "app.go", "missing.go"})
+	if err != nil {
+		t.Fatalf("FilesByPaths: %v", err)
+	}
+	if len(byFilePath) != 2 {
+		t.Fatalf("FilesByPaths: got %d files, want 2", len(byFilePath))
+	}
+	filesSeen := map[string][]string{}
+	for _, f := range byFilePath {
+		filesSeen[f.Path] = f.Imports
+	}
+	if got := filesSeen["app.go"]; len(got) != 2 || got[0] != "context" || got[1] != "fmt" {
+		t.Errorf("FilesByPaths(app.go): imports = %v, want [context fmt]", got)
+	}
+	if got := filesSeen["engine.go"]; len(got) != 1 || got[0] != "net/http" {
+		t.Errorf("FilesByPaths(engine.go): imports = %v, want [net/http]", got)
+	}
+	emptyFiles, err := d.FilesByPaths(ctx, snapID, nil)
+	if err != nil {
+		t.Fatalf("FilesByPaths(nil): %v", err)
+	}
+	if len(emptyFiles) != 0 {
+		t.Errorf("FilesByPaths(nil): got %d, want 0", len(emptyFiles))
 	}
 
 	// CallEdgesByToRefs: index hit returns the edge with metadata; a ref not in

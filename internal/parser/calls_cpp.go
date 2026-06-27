@@ -148,6 +148,12 @@ func cppDeclaratorName(node *tree_sitter.Node, src []byte) string {
 	switch node.Kind() {
 	case "identifier", "field_identifier":
 		return nodeText(node, src)
+	case "qualified_identifier":
+		qualified := strings.TrimSpace(nodeText(node, src))
+		if idx := strings.LastIndex(qualified, "::"); idx >= 0 {
+			return strings.TrimSpace(qualified[idx+2:])
+		}
+		return qualified
 	}
 	// Most declarators nest the real name under a "declarator" field; init_declarator
 	// uses "declarator" for the value-bound name. Prefer the field, then fall back

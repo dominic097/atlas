@@ -204,12 +204,12 @@ func TestJavaReceiverMatrix(t *testing.T) {
 		}
 	}
 
-	check("v.run", "Engine", "")            // var-with-initializer (keystone)
-	check("e.run", "Engine", "")            // explicit local
-	check("this.svc.run", "Service", "")    // field via this.f
-	check("cfg.run", "Config", "")          // param
-	check("this.run", "Worker", "")         // implicit this -> enclosing class
-	check("Engine.boot", "Engine", "static")   // static class call
+	check("v.run", "Engine", "")                   // var-with-initializer (keystone)
+	check("e.run", "Engine", "")                   // explicit local
+	check("this.svc.run", "Service", "")           // field via this.f
+	check("cfg.run", "Config", "")                 // param
+	check("this.run", "Worker", "")                // implicit this -> enclosing class
+	check("Engine.boot", "Engine", "static")       // static class call
 	check("Integer.parseInt", "Integer", "static") // static stdlib call
 
 	// Guard: no edge ever carries the literal "var" as a receiver type.
@@ -217,5 +217,107 @@ func TestJavaReceiverMatrix(t *testing.T) {
 		if rt, _ := e.Metadata["recv_type"].(string); rt == "var" {
 			t.Errorf("recv_type leaked the literal \"var\" on edge %+v", e)
 		}
+	}
+}
+
+const javaSymbolCoverageSource = `package com.example;
+
+public class Model {
+    private final String name;
+    static int count;
+
+    public Model(String name) {
+        this.name = name;
+    }
+
+    public String name() {
+        return name;
+    }
+
+    static class Nested {
+        void ping() {}
+    }
+}
+
+class Box<T extends Number> {
+    <U> U id(U value) {
+        return value;
+    }
+}
+
+interface Named {
+    String label();
+    int VERSION = 1;
+}
+
+enum Mode {
+    READ,
+    WRITE;
+}
+
+record Pair(String left, int right) {}
+
+@interface JsonName {
+    String value();
+}
+`
+
+func TestJavaSymbols_MembersAndModernTypes(t *testing.T) {
+	res, err := Parse("repo-3", "owner/repo", "Model.java", "java", []byte(javaSymbolCoverageSource))
+	if err != nil {
+		t.Fatalf("Parse returned error: %v", err)
+	}
+
+	type key struct {
+		name string
+		kind string
+	}
+	symbols := map[key]map[string]any{}
+	for _, sym := range res.Symbols {
+		symbols[key{sym.Name, sym.Kind}] = sym.Metadata
+	}
+
+	want := []key{
+		{"Model", "class"},
+		{"name", "field"},
+		{"count", "field"},
+		{"Model", "constructor"},
+		{"name", "method"},
+		{"Nested", "class"},
+		{"ping", "method"},
+		{"Named", "interface"},
+		{"label", "method"},
+		{"VERSION", "field"},
+		{"Mode", "enum"},
+		{"READ", "enum_constant"},
+		{"WRITE", "enum_constant"},
+		{"Pair", "record"},
+		{"left", "field"},
+		{"right", "field"},
+		{"JsonName", "annotation"},
+		{"value", "annotation_member"},
+		{"Box", "class"},
+		{"T", "type_parameter"},
+		{"U", "type_parameter"},
+		{"Box", "constructor"},
+		{"id", "method"},
+	}
+	for _, k := range want {
+		if _, ok := symbols[k]; !ok {
+			t.Errorf("missing Java symbol %s/%s; got=%+v", k.name, k.kind, res.Symbols)
+		}
+	}
+
+	if owner, _ := symbols[key{"name", "field"}]["owner_type"].(string); owner != "Model" {
+		t.Errorf("field name owner_type = %q, want Model", owner)
+	}
+	if owner, _ := symbols[key{"Model", "constructor"}]["owner_type"].(string); owner != "Model" {
+		t.Errorf("constructor owner_type = %q, want Model", owner)
+	}
+	if owner, _ := symbols[key{"left", "field"}]["owner_type"].(string); owner != "Pair" {
+		t.Errorf("record component left owner_type = %q, want Pair", owner)
+	}
+	if synthetic, _ := symbols[key{"Box", "constructor"}]["synthetic"].(bool); !synthetic {
+		t.Errorf("default Box constructor synthetic flag = %v, want true", synthetic)
 	}
 }

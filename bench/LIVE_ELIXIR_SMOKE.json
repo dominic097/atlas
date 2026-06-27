@@ -1,0 +1,324 @@
+{
+  "language": "elixir",
+  "repo": "https://github.com/phoenixframework/phoenix",
+  "commit": "9d3f1f63e00c92aafc8f015073969a2632c6879a",
+  "commands": {
+    "clone": "git clone --depth 1 https://github.com/phoenixframework/phoenix /tmp/atlas-live-elixir-phoenix/repo",
+    "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-elixir-phoenix/atlas.db --json index /tmp/atlas-live-elixir-phoenix/repo/lib",
+    "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-elixir-phoenix/atlas.db --json index /tmp/atlas-live-elixir-phoenix/repo/lib",
+    "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "native_baseline": "/tmp/atlas-live-elixir-phoenix/tree-sitter-elixir-venv/bin/python -c <tree-sitter-elixir definition counter> /tmp/atlas-live-elixir-phoenix/repo/lib",
+    "query_symbols": [
+      "Phoenix.Router",
+      "Phoenix.Endpoint",
+      "Phoenix.Controller",
+      "path",
+      "socket"
+    ],
+    "target_path": "/tmp/atlas-live-elixir-phoenix/repo/lib"
+  },
+  "atlas": {
+    "cold_wall_seconds": 0.582,
+    "reindex_wall_seconds": 0.037,
+    "index": {
+      "repo_id": "ab1aff5a-7baf-468f-b4cf-57181a4197a1",
+      "repo_full_name": "lib",
+      "snapshot_id": "cb5d09e9-5dc1-4ffb-8a63-9c15973f8841",
+      "commit_sha": "9d3f1f63e00c92aafc8f015073969a2632c6879a",
+      "indexed_files": 74,
+      "symbols": 1642,
+      "edges": 4834,
+      "edge_kinds": {
+        "calls": 4720,
+        "imports": 114
+      },
+      "routes": 0,
+      "languages": {
+        "elixir": 74
+      },
+      "mode": "full",
+      "duration_ms": 467,
+      "timings_ms": {
+        "delta_check": 0,
+        "ensure_repo": 0,
+        "go_types": 0,
+        "lexical": 240,
+        "parse": 56,
+        "persist": 167,
+        "resolve_head": 0,
+        "routes": 0,
+        "sort": 1,
+        "walk": 0
+      }
+    },
+    "reindex": {
+      "repo_id": "ab1aff5a-7baf-468f-b4cf-57181a4197a1",
+      "repo_full_name": "lib",
+      "snapshot_id": "cb5d09e9-5dc1-4ffb-8a63-9c15973f8841",
+      "commit_sha": "9d3f1f63e00c92aafc8f015073969a2632c6879a",
+      "indexed_files": 74,
+      "symbols": 1642,
+      "edges": 4834,
+      "routes": 0,
+      "languages": {
+        "elixir": 74
+      },
+      "mode": "noop",
+      "duration_ms": 2,
+      "timings_ms": {
+        "delta_check": 0,
+        "resolve_head": 1
+      }
+    },
+    "symbol_breakdown": [
+      {
+        "language": "elixir",
+        "kind": "delegate",
+        "count": 12
+      },
+      {
+        "language": "elixir",
+        "kind": "function",
+        "count": 1470
+      },
+      {
+        "language": "elixir",
+        "kind": "implementation",
+        "count": 9
+      },
+      {
+        "language": "elixir",
+        "kind": "macro",
+        "count": 67
+      },
+      {
+        "language": "elixir",
+        "kind": "module",
+        "count": 83
+      },
+      {
+        "language": "elixir",
+        "kind": "protocol",
+        "count": 1
+      }
+    ],
+    "edge_breakdown": [
+      {
+        "kind": "calls",
+        "count": 4720
+      },
+      {
+        "kind": "imports",
+        "count": 114
+      }
+    ],
+    "elixir_definition_symbols": 1642
+  },
+  "graphify": {
+    "status": "ok",
+    "ok": true,
+    "seconds": 1.093,
+    "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "stdout_head": [
+      "Re-extracting code files in . (no LLM needed)...",
+      "[graphify watch] Rebuilt: 1051 nodes, 1844 edges, 72 communities",
+      "[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out",
+      "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
+      "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
+    ],
+    "stderr_head": [],
+    "metrics": {
+      "nodes": 1051,
+      "links": 1844,
+      "calls": 858
+    }
+  },
+  "native_baseline": {
+    "tool": "tree-sitter-elixir",
+    "status": "ok",
+    "ok": true,
+    "seconds": 0.315,
+    "command": "/tmp/atlas-live-elixir-phoenix/tree-sitter-elixir-venv/bin/python -c <tree-sitter-elixir definition counter> /tmp/atlas-live-elixir-phoenix/repo/lib",
+    "metrics": {
+      "files": 74,
+      "parsed_files": 74,
+      "parse_errors": 0,
+      "definition_counts": {
+        "module": 83,
+        "protocol": 1,
+        "implementation": 9,
+        "function": 1470,
+        "macro": 67,
+        "delegate": 12,
+        "guard": 0
+      },
+      "definitions": 1642,
+      "tree_sitter_version": "0.25.2",
+      "tree_sitter_elixir_version": "0.3.5",
+      "parse_error_samples": []
+    }
+  },
+  "richer_native_baselines": {
+    "elixir": {
+      "status": "missing",
+      "ok": false,
+      "note": "elixir CLI not installed; tree-sitter-elixir parser used as the isolated definition baseline"
+    },
+    "mix": {
+      "status": "missing",
+      "ok": false,
+      "note": "mix not installed"
+    },
+    "lexical": {
+      "status": "missing",
+      "ok": false,
+      "note": "Lexical language server not installed"
+    }
+  },
+  "coverage": {
+    "atlas_vs_tree_sitter_elixir_definition_ratio": 1.0,
+    "atlas_elixir_definition_symbols": 1642,
+    "native_definitions": 1642
+  },
+  "optimization": {
+    "cycles_run": 3,
+    "stop_reason": "Elixir live smoke matched the tree-sitter-elixir definition coverage proxy exactly and met the current 5x latency/token thresholds; elixir/mix/Lexical remain unavailable on this machine.",
+    "cycle_notes": [
+      "cycle 1: phoenixframework/phoenix probe showed the biggest Atlas gap was Elixir macros, delegates, guards, protocols, and implementations beyond basic defmodule/def parsing.",
+      "cycle 2: after parser widening, Atlas/tree-sitter-elixir definition ratio reached 1.07, revealing doc/comment false positives from regex parsing.",
+      "cycle 3: after masking Elixir comments and heredocs before lightweight regex extraction, Atlas/tree-sitter-elixir definition ratio reached 1.0 while exact-symbol query rows exceeded 5x for latency and token output vs graphify."
+    ]
+  },
+  "queries": [
+    {
+      "symbol": "Phoenix.Router",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-elixir-phoenix/atlas.db --format plain --repo lib explain Phoenix.Router",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Phoenix.Router",
+      "atlas_tokens": 7,
+      "graphify_tokens": 260,
+      "atlas_ms": 87.826,
+      "graphify_ms": 212.843,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "Phoenix.Router m@router.ex:1"
+      ],
+      "graphify_stdout_head": [
+        "Node: Phoenix.Router",
+        "  ID:        phoenix_router_phoenix_router",
+        "  Source:    phoenix/router.ex L1",
+        "  Type:      code",
+        "  Community: 12",
+        "  Degree:    27",
+        "",
+        "Connections (27):"
+      ]
+    },
+    {
+      "symbol": "Phoenix.Endpoint",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-elixir-phoenix/atlas.db --format plain --repo lib explain Phoenix.Endpoint",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Phoenix.Endpoint",
+      "atlas_tokens": 9,
+      "graphify_tokens": 186,
+      "atlas_ms": 24.936,
+      "graphify_ms": 191.014,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "Phoenix.Endpoint m@endpoint.ex:1 d20"
+      ],
+      "graphify_stdout_head": [
+        "Node: Phoenix.Endpoint",
+        "  ID:        phoenix_endpoint_phoenix_endpoint",
+        "  Source:    phoenix/endpoint.ex L1",
+        "  Type:      code",
+        "  Community: 3",
+        "  Degree:    14",
+        "",
+        "Connections (14):"
+      ]
+    },
+    {
+      "symbol": "Phoenix.Controller",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-elixir-phoenix/atlas.db --format plain --repo lib explain Phoenix.Controller",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Phoenix.Controller",
+      "atlas_tokens": 9,
+      "graphify_tokens": 275,
+      "atlas_ms": 20.626,
+      "graphify_ms": 195.087,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "Phoenix.Controller m@controller.ex:1"
+      ],
+      "graphify_stdout_head": [
+        "Node: Phoenix.Controller",
+        "  ID:        phoenix_controller_phoenix_controller",
+        "  Source:    phoenix/controller.ex L1",
+        "  Type:      code",
+        "  Community: 8",
+        "  Degree:    74",
+        "",
+        "Connections (74):"
+      ]
+    },
+    {
+      "symbol": "path",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-elixir-phoenix/atlas.db --format plain --repo lib explain path",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain path",
+      "atlas_tokens": 8,
+      "graphify_tokens": 70,
+      "atlas_ms": 23.902,
+      "graphify_ms": 160.175,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "path f@endpoint.ex:590 df6 c4 d6"
+      ],
+      "graphify_stdout_head": [
+        "Node: paths()",
+        "  ID:        tasks_phx_gen_channel_mix_tasks_phx_gen_channel_paths",
+        "  Source:    mix/tasks/phx.gen.channel.ex L118",
+        "  Type:      code",
+        "  Community: 48",
+        "  Degree:    2",
+        "",
+        "Connections (2):"
+      ]
+    },
+    {
+      "symbol": "socket",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-elixir-phoenix/atlas.db --format plain --repo lib explain socket",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain socket",
+      "atlas_tokens": 8,
+      "graphify_tokens": 58,
+      "atlas_ms": 21.094,
+      "graphify_ms": 155.795,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "socket f@server.ex:66 df8 c2 d11"
+      ],
+      "graphify_stdout_head": [
+        "Node: socket()",
+        "  ID:        channel_server_phoenix_channel_server_socket",
+        "  Source:    phoenix/channel/server.ex L66",
+        "  Type:      code",
+        "  Community: 10",
+        "  Degree:    1",
+        "",
+        "Connections (1):"
+      ]
+    }
+  ]
+}

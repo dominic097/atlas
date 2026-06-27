@@ -20,8 +20,10 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/google/uuid"
@@ -68,7 +70,8 @@ type Stats struct {
 	// ChangedFiles is the number of files re-parsed on a delta run (0 on full /
 	// reindex). It is purely additive — the engine maps Stats field-by-field, so a
 	// new field is safe and simply unmapped until the engine opts in.
-	ChangedFiles int `json:"changed_files"`
+	ChangedFiles int              `json:"changed_files"`
+	TimingsMS    map[string]int64 `json:"timings_ms,omitempty"`
 }
 
 // skipDirs are directory names pruned wholesale during the walk: VCS metadata,
@@ -87,6 +90,7 @@ var skipDirs = map[string]struct{}{
 	"__pycache__":  {},
 	".next":        {},
 	".atlas":       {},
+	"graphify-out": {},
 	".testdata":    {},
 }
 
@@ -100,6 +104,10 @@ var skipDirs = map[string]struct{}{
 // the lexical index for the snapshot's symbols.
 func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID, repoFullName, root string, opts Options) (*graph.Snapshot, Stats, error) {
 	start := time.Now()
+	timings := map[string]int64{}
+	phase := func(name string, since time.Time) {
+		timings[name] += time.Since(since).Milliseconds()
+	}
 
 	if drv == nil {
 		return nil, Stats{}, fmt.Errorf("index: storage driver is required")
@@ -118,14 +126,31 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 		return nil, Stats{}, fmt.Errorf("index: root %q is not a directory", absRoot)
 	}
 
+	phaseStart := time.Now()
 	head := resolveCommitSHA(ctx, absRoot)
+	phase("resolve_head", phaseStart)
 
 	// Try an incremental delta: re-parse only the files that changed since the
 	// latest snapshot's commit and carry the rest of the graph forward. Eligibility
 	// is conservative (see deltaEligible); on any miss or error we fall through to
 	// the full walk below, so a delta never fails the run.
 	if !opts.Reindex {
+		phaseStart = time.Now()
 		if base, baseErr := resolveDeltaBase(ctx, drv, repoFullName); baseErr == nil && base != nil {
+			if sameIndexedCommit(base, head) {
+				phase("delta_check", phaseStart)
+				stats := Stats{
+					Files:      base.snapshot.FileCount,
+					Symbols:    base.snapshot.SymbolCount,
+					Edges:      base.snapshot.EdgeCount,
+					Routes:     base.snapshot.RouteCount,
+					Languages:  languagesFromSnapshot(base.snapshot),
+					DurationMS: time.Since(start).Milliseconds(),
+					Mode:       "noop",
+					TimingsMS:  timings,
+				}
+				return base.snapshot, stats, nil
+			}
 			if deltaEligible(ctx, absRoot, base, head) {
 				snap, stats, derr := runDelta(ctx, drv, lx, base, repoFullName, absRoot, head, opts, start)
 				if derr == nil {
@@ -134,17 +159,15 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 				// Delta failed mid-flight (git/diff/store hiccup): fall back to full.
 			}
 		}
+		phase("delta_check", phaseStart)
 	}
 
 	var (
-		files     []graph.File
-		symbols   []graph.CodeSymbol
-		edges     []graph.DependencyEdge
-		rawRoutes []routes.RawRoute
-		goFiles   []string // repo-relative paths of indexed Go files, for the go/types pass
-		languages = map[string]int{}
+		candidates []indexCandidate
+		languages  = map[string]int{}
 	)
 
+	phaseStart = time.Now()
 	walkErr := filepath.WalkDir(absRoot, func(path string, entry fs.DirEntry, err error) error {
 		if err != nil {
 			return err
@@ -189,60 +212,49 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 			return nil
 		}
 
-		content, readErr := os.ReadFile(path)
-		if readErr != nil {
-			// Unreadable single file: skip, don't abort the scan.
-			return nil
-		}
-
-		res, parseErr := parser.Parse(repoID, repoFullName, rel, lang, content)
-		if parseErr != nil {
-			// A parse failure on one file should not sink the whole snapshot.
-			return nil
-		}
-
-		files = append(files, graph.File{
-			ID:        uuid.NewString(),
-			Path:      rel,
-			Language:  lang,
-			SizeBytes: info.Size(),
-			Hash:      hashContent(content),
-			Imports:   res.Imports,
+		candidates = append(candidates, indexCandidate{
+			absPath: path,
+			relPath: rel,
+			lang:    lang,
+			size:    info.Size(),
 		})
-		languages[lang]++
-		if lang == "go" {
-			goFiles = append(goFiles, rel)
-		}
-		symbols = append(symbols, res.Symbols...)
-		edges = append(edges, res.Edges...)
-		// Cross-repo moat: pull producer routes + consumer calls from the same
-		// content the parser just consumed (cheap — the bytes are already in hand).
-		// Handler resolution is deferred to routes.Resolve below, once the full
-		// symbol set is known.
-		rawRoutes = append(rawRoutes, routes.ExtractFile(lang, rel, string(content))...)
 		return nil
 	})
 	if walkErr != nil {
 		return nil, Stats{}, fmt.Errorf("index: walk %q: %w", absRoot, walkErr)
 	}
+	phase("walk", phaseStart)
+
+	phaseStart = time.Now()
+	files, symbols, edges, rawRoutes, goFiles := parseCandidates(ctx, repoID, repoFullName, candidates, languages)
+	if ctx.Err() != nil {
+		return nil, Stats{}, ctx.Err()
+	}
+	phase("parse", phaseStart)
 
 	// Precise Go analysis (go/types): refine heuristic recv_type on call edges and
 	// add real type-use reference edges. Non-regressing — on any miss the heuristic
 	// edges stand untouched (see enrichGoTypes).
+	phaseStart = time.Now()
 	edges = enrichGoTypes(ctx, absRoot, goFiles, edges)
+	phase("go_types", phaseStart)
 
 	// Deterministic ordering so identical trees produce identical snapshots. The
 	// same helpers order the delta path's merged rows, guaranteeing a delta
 	// snapshot equals a full reindex of the same HEAD.
+	phaseStart = time.Now()
 	sortFiles(files)
 	sortSymbols(symbols)
 	sortEdges(edges)
+	phase("sort", phaseStart)
 
 	// Resolve raw route facts now that the full symbol set is available: producer
 	// handler names bind to their defining file, consumer calls keep their calling
 	// file. Sorted for deterministic snapshots.
+	phaseStart = time.Now()
 	graphRoutes := routes.Resolve(repoFullName, rawRoutes, symbols)
 	sortRoutes(graphRoutes)
+	phase("routes", phaseStart)
 
 	commitSHA := head
 
@@ -292,10 +304,12 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 		LastIndexedAt: &now,
 		Scope:         opts.Scope,
 	}
+	phaseStart = time.Now()
 	ensured, err := drv.EnsureRepo(ctx, repo)
 	if err != nil {
 		return nil, Stats{}, fmt.Errorf("index: ensure repo: %w", err)
 	}
+	phase("ensure_repo", phaseStart)
 	// EnsureRepo may resolve a pre-existing repo id (lookup by scope+full_name);
 	// adopt it so the snapshot binds to the canonical repo row and every symbol's
 	// RepoID stays consistent.
@@ -306,23 +320,29 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 		}
 	}
 
+	phaseStart = time.Now()
 	if err := drv.SaveSnapshot(ctx, snapshot, files, symbols, edges, graphRoutes); err != nil {
 		return nil, Stats{}, fmt.Errorf("index: save snapshot: %w", err)
 	}
+	phase("persist", phaseStart)
 
 	// Build the lexical index against the persisted snapshot id. The symbols now
 	// carry the snapshot id; pass them straight through.
 	if lx != nil {
+		phaseStart = time.Now()
 		if err := lx.BuildForSnapshot(snapshot.ID, symbols); err != nil {
 			return nil, Stats{}, fmt.Errorf("index: build lexical index: %w", err)
 		}
+		phase("lexical", phaseStart)
 	}
 
 	// OPTIONAL, gated semantic-search pass. Off by default; only runs with
 	// --enable-vectors. Non-fatal by design — a provider/embeddings hiccup must
 	// never fail the deterministic index.
 	if opts.EnableVectors {
+		phaseStart = time.Now()
 		buildEmbeddings(ctx, drv, snapshot.ID, symbols)
+		phase("embeddings", phaseStart)
 	}
 
 	stats := Stats{
@@ -334,8 +354,179 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 		Languages:  languages,
 		DurationMS: time.Since(start).Milliseconds(),
 		Mode:       mode,
+		TimingsMS:  timings,
 	}
 	return snapshot, stats, nil
+}
+
+func sameIndexedCommit(base *deltaBase, head string) bool {
+	if base == nil || base.snapshot == nil {
+		return false
+	}
+	baseCommit := strings.TrimSpace(base.commit)
+	head = strings.TrimSpace(head)
+	if baseCommit == "" || baseCommit == workingTreeSHA {
+		return false
+	}
+	return head != "" && head != workingTreeSHA && baseCommit == head
+}
+
+func languagesFromSnapshot(snap *graph.Snapshot) map[string]int {
+	if snap == nil || snap.Metadata == nil {
+		return nil
+	}
+	raw, ok := snap.Metadata["languages"]
+	if !ok {
+		return nil
+	}
+	switch langs := raw.(type) {
+	case map[string]int:
+		if len(langs) == 0 {
+			return nil
+		}
+		out := make(map[string]int, len(langs))
+		for k, v := range langs {
+			out[k] = v
+		}
+		return out
+	case map[string]any:
+		out := make(map[string]int, len(langs))
+		for k, v := range langs {
+			switch n := v.(type) {
+			case int:
+				out[k] = n
+			case int64:
+				out[k] = int(n)
+			case float64:
+				out[k] = int(n)
+			}
+		}
+		if len(out) == 0 {
+			return nil
+		}
+		return out
+	default:
+		return nil
+	}
+}
+
+type indexCandidate struct {
+	absPath string
+	relPath string
+	lang    string
+	size    int64
+}
+
+type parseCandidateResult struct {
+	file      graph.File
+	symbols   []graph.CodeSymbol
+	edges     []graph.DependencyEdge
+	routes    []routes.RawRoute
+	goFile    string
+	language  string
+	indexable bool
+}
+
+func parseCandidates(ctx context.Context, repoID, repoFullName string, candidates []indexCandidate, languages map[string]int) (
+	[]graph.File, []graph.CodeSymbol, []graph.DependencyEdge, []routes.RawRoute, []string,
+) {
+	if len(candidates) == 0 {
+		return nil, nil, nil, nil, nil
+	}
+
+	workers := runtime.NumCPU()
+	if workers < 1 {
+		workers = 1
+	}
+	if workers > len(candidates) {
+		workers = len(candidates)
+	}
+
+	jobs := make(chan indexCandidate)
+	results := make(chan parseCandidateResult, len(candidates))
+	var wg sync.WaitGroup
+	wg.Add(workers)
+	for i := 0; i < workers; i++ {
+		go func() {
+			defer wg.Done()
+			for c := range jobs {
+				if ctx.Err() != nil {
+					continue
+				}
+				results <- parseCandidate(ctx, repoID, repoFullName, c)
+			}
+		}()
+	}
+	go func() {
+		defer close(jobs)
+		for _, c := range candidates {
+			if ctx.Err() != nil {
+				return
+			}
+			jobs <- c
+		}
+	}()
+	go func() {
+		wg.Wait()
+		close(results)
+	}()
+
+	var (
+		files     []graph.File
+		symbols   []graph.CodeSymbol
+		edges     []graph.DependencyEdge
+		rawRoutes []routes.RawRoute
+		goFiles   []string
+	)
+	for r := range results {
+		if !r.indexable {
+			continue
+		}
+		files = append(files, r.file)
+		languages[r.language]++
+		if r.goFile != "" {
+			goFiles = append(goFiles, r.goFile)
+		}
+		symbols = append(symbols, r.symbols...)
+		edges = append(edges, r.edges...)
+		rawRoutes = append(rawRoutes, r.routes...)
+	}
+	return files, symbols, edges, rawRoutes, goFiles
+}
+
+func parseCandidate(ctx context.Context, repoID, repoFullName string, c indexCandidate) parseCandidateResult {
+	if ctx.Err() != nil {
+		return parseCandidateResult{}
+	}
+	content, readErr := os.ReadFile(c.absPath)
+	if readErr != nil {
+		// Unreadable single file: skip, don't abort the scan.
+		return parseCandidateResult{}
+	}
+	res, parseErr := parser.Parse(repoID, repoFullName, c.relPath, c.lang, content)
+	if parseErr != nil {
+		// A parse failure on one file should not sink the whole snapshot.
+		return parseCandidateResult{}
+	}
+	out := parseCandidateResult{
+		file: graph.File{
+			ID:        uuid.NewString(),
+			Path:      c.relPath,
+			Language:  c.lang,
+			SizeBytes: c.size,
+			Hash:      hashContent(content),
+			Imports:   res.Imports,
+		},
+		symbols:   res.Symbols,
+		edges:     res.Edges,
+		routes:    routes.ExtractFile(c.lang, c.relPath, string(content)),
+		language:  c.lang,
+		indexable: true,
+	}
+	if c.lang == "go" {
+		out.goFile = c.relPath
+	}
+	return out
 }
 
 func countEdgeKinds(edges []graph.DependencyEdge) map[string]int {
@@ -494,23 +685,121 @@ func hashContent(b []byte) string {
 	return hex.EncodeToString(sum[:])
 }
 
-// resolveCommitSHA returns the working tree's HEAD commit via `git rev-parse
-// HEAD`, falling back to the sentinel "working-tree" when root is not a git
-// checkout or git is unavailable.
+// resolveCommitSHA returns the working tree's HEAD commit. The hot path reads
+// .git/HEAD directly to keep no-change reindex cheap; it falls back to
+// `git rev-parse HEAD` for layouts the direct reader does not understand.
 func resolveCommitSHA(ctx context.Context, root string) string {
+	if sha := readGitHead(root); sha != "" {
+		return sha
+	}
 	gitBin, err := exec.LookPath("git")
 	if err != nil {
-		return "working-tree"
+		return workingTreeSHA
 	}
 	cmd := exec.CommandContext(ctx, gitBin, "rev-parse", "HEAD")
 	cmd.Dir = root
 	out, err := cmd.Output()
 	if err != nil {
-		return "working-tree"
+		return workingTreeSHA
 	}
 	sha := strings.TrimSpace(string(out))
 	if sha == "" {
-		return "working-tree"
+		return workingTreeSHA
 	}
 	return sha
+}
+
+func readGitHead(root string) string {
+	gitDir := findGitDir(root)
+	if gitDir == "" {
+		return ""
+	}
+	headBytes, err := os.ReadFile(filepath.Join(gitDir, "HEAD"))
+	if err != nil {
+		return ""
+	}
+	head := strings.TrimSpace(string(headBytes))
+	if isHexSHA(head) {
+		return head
+	}
+	const refPrefix = "ref:"
+	if !strings.HasPrefix(head, refPrefix) {
+		return ""
+	}
+	ref := strings.TrimSpace(strings.TrimPrefix(head, refPrefix))
+	if ref == "" || strings.Contains(ref, "..") || filepath.IsAbs(ref) {
+		return ""
+	}
+	if b, err := os.ReadFile(filepath.Join(gitDir, filepath.FromSlash(ref))); err == nil {
+		if sha := strings.TrimSpace(string(b)); isHexSHA(sha) {
+			return sha
+		}
+	}
+	return readPackedRef(filepath.Join(gitDir, "packed-refs"), ref)
+}
+
+func findGitDir(root string) string {
+	dir, err := filepath.Abs(root)
+	if err != nil {
+		return ""
+	}
+	for {
+		gitPath := filepath.Join(dir, ".git")
+		info, statErr := os.Stat(gitPath)
+		if statErr == nil {
+			if info.IsDir() {
+				return gitPath
+			}
+			if b, err := os.ReadFile(gitPath); err == nil {
+				text := strings.TrimSpace(string(b))
+				const gitdirPrefix = "gitdir:"
+				if strings.HasPrefix(text, gitdirPrefix) {
+					p := strings.TrimSpace(strings.TrimPrefix(text, gitdirPrefix))
+					if p == "" {
+						return ""
+					}
+					if !filepath.IsAbs(p) {
+						p = filepath.Join(dir, p)
+					}
+					return filepath.Clean(p)
+				}
+			}
+		}
+		parent := filepath.Dir(dir)
+		if parent == dir {
+			return ""
+		}
+		dir = parent
+	}
+}
+
+func readPackedRef(path, ref string) string {
+	b, err := os.ReadFile(path)
+	if err != nil {
+		return ""
+	}
+	for _, line := range strings.Split(string(b), "\n") {
+		line = strings.TrimSpace(line)
+		if line == "" || strings.HasPrefix(line, "#") || strings.HasPrefix(line, "^") {
+			continue
+		}
+		fields := strings.Fields(line)
+		if len(fields) == 2 && fields[1] == ref && isHexSHA(fields[0]) {
+			return fields[0]
+		}
+	}
+	return ""
+}
+
+func isHexSHA(s string) bool {
+	if len(s) != 40 {
+		return false
+	}
+	for _, r := range s {
+		if (r >= '0' && r <= '9') || (r >= 'a' && r <= 'f') || (r >= 'A' && r <= 'F') {
+			continue
+		}
+		return false
+	}
+	return true
 }

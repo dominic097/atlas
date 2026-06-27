@@ -84,12 +84,17 @@ func TestRenderTerseIsDenseAndShorterThanPretty(t *testing.T) {
 	if !strings.Contains(terse, "NewRootCmd") {
 		t.Fatalf("terse output missing the symbol name:\n%s", terse)
 	}
-	if !strings.Contains(terse, "func NewRootCmd() *cobra.Command") {
-		t.Fatalf("terse output missing the signature:\n%s", terse)
+	if strings.Contains(terse, "func NewRootCmd() *cobra.Command") {
+		t.Fatalf("terse explain should omit signatures; JSON retains them:\n%s", terse)
 	}
-	// Hub list must be capped, not dumped: 200 callers -> first listCap + "(+N more)".
-	if !strings.Contains(terse, "(+") || !strings.Contains(terse, "more)") {
-		t.Fatalf("terse output should cap the hub caller list with a (+N more) marker:\n%s", terse)
+	if !strings.Contains(terse, "f@root.go:52") {
+		t.Fatalf("terse output missing compact kind/location:\n%s", terse)
+	}
+	if !strings.Contains(terse, "c200") || !strings.Contains(terse, "d40") {
+		t.Fatalf("terse output missing compact caller/callee counts:\n%s", terse)
+	}
+	if strings.Contains(terse, "callerSymbolNumber") || strings.Contains(terse, "calleeSymbolNumber") {
+		t.Fatalf("terse explain should keep hub lists count-only:\n%s", terse)
 	}
 	// The whole point: materially shorter than the pretty JSON for a hub symbol.
 	if len(terse) >= len(pretty) {
@@ -97,6 +102,9 @@ func TestRenderTerseIsDenseAndShorterThanPretty(t *testing.T) {
 	}
 	if len(terse)*2 >= len(pretty) {
 		t.Fatalf("terse (%d bytes) should be at least ~2x smaller than pretty (%d bytes)", len(terse), len(pretty))
+	}
+	if len(terse)*5 >= len(pretty) {
+		t.Fatalf("terse (%d bytes) should be at least ~5x smaller than pretty (%d bytes)", len(terse), len(pretty))
 	}
 }
 

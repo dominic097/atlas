@@ -5,6 +5,7 @@ import (
 	"strings"
 	"unsafe"
 
+	"github.com/dominic097/atlas/internal/graph"
 	tree_sitter "github.com/tree-sitter/go-tree-sitter"
 	tree_sitter_c "github.com/tree-sitter/tree-sitter-c/bindings/go"
 	tree_sitter_cpp "github.com/tree-sitter/tree-sitter-cpp/bindings/go"
@@ -104,23 +105,31 @@ func parseTreeSitterSymbols(path, language string, content []byte) ([]symbolDraf
 func walkPythonAST(root *tree_sitter.Node, src []byte) ([]symbolDraft, []string) {
 	var imports []string
 	var symbols []symbolDraft
+	walkPythonModuleScope(root, src, &symbols, &imports)
+	return symbols, imports
+}
 
-	for i := uint(0); i < root.ChildCount(); i++ {
-		child := root.Child(i)
+func walkPythonModuleScope(node *tree_sitter.Node, src []byte, symbols *[]symbolDraft, imports *[]string) {
+	if node == nil {
+		return
+	}
+	for i := uint(0); i < node.ChildCount(); i++ {
+		child := node.Child(i)
 		if child == nil {
 			continue
 		}
 		switch child.Kind() {
 		case "import_statement", "import_from_statement":
-			imports = append(imports, extractPythonImport(child, src)...)
+			*imports = append(*imports, extractPythonImport(child, src)...)
+		case "assignment", "expression_statement":
+			*symbols = append(*symbols, pythonAssignmentSymbols(child, src, "", "module")...)
 		case "function_definition":
 			if sym, ok := simpleSymbol(child, src, "function"); ok {
-				symbols = append(symbols, sym)
+				*symbols = append(*symbols, sym)
+				*symbols = append(*symbols, pythonNestedFunctionSymbols(child, src, sym.name)...)
 			}
 		case "class_definition":
-			if sym, ok := simpleSymbol(child, src, "class"); ok {
-				symbols = append(symbols, sym)
-			}
+			*symbols = append(*symbols, pythonClassSymbols(child, src)...)
 		case "decorated_definition":
 			for j := uint(0); j < child.ChildCount(); j++ {
 				inner := child.Child(j)
@@ -130,17 +139,229 @@ func walkPythonAST(root *tree_sitter.Node, src []byte) ([]symbolDraft, []string)
 				switch inner.Kind() {
 				case "function_definition":
 					if sym, ok := simpleSymbol(inner, src, "function"); ok {
-						symbols = append(symbols, sym)
+						*symbols = append(*symbols, sym)
+						*symbols = append(*symbols, pythonNestedFunctionSymbols(inner, src, sym.name)...)
 					}
 				case "class_definition":
-					if sym, ok := simpleSymbol(inner, src, "class"); ok {
-						symbols = append(symbols, sym)
-					}
+					*symbols = append(*symbols, pythonClassSymbols(inner, src)...)
 				}
+			}
+		default:
+			if pythonModuleScopeContainer(child.Kind()) {
+				walkPythonModuleScope(child, src, symbols, imports)
 			}
 		}
 	}
-	return symbols, imports
+}
+
+func pythonModuleScopeContainer(kind string) bool {
+	switch kind {
+	case "module", "block", "if_statement", "elif_clause", "else_clause",
+		"try_statement", "except_clause", "finally_clause", "for_statement",
+		"while_statement", "with_statement", "match_statement", "case_clause":
+		return true
+	default:
+		return false
+	}
+}
+
+func pythonClassSymbols(classNode *tree_sitter.Node, src []byte) []symbolDraft {
+	classSym, ok := simpleSymbol(classNode, src, "class")
+	if !ok {
+		return nil
+	}
+	out := []symbolDraft{classSym}
+	owner := classSym.name
+	body := classNode.ChildByFieldName("body")
+	if body == nil {
+		for i := uint(0); i < classNode.ChildCount(); i++ {
+			child := classNode.Child(i)
+			if child != nil && child.Kind() == "block" {
+				body = child
+				break
+			}
+		}
+	}
+	if body == nil {
+		return out
+	}
+	for i := uint(0); i < body.ChildCount(); i++ {
+		child := body.Child(i)
+		if child == nil {
+			continue
+		}
+		methodNode := child
+		if child.Kind() == "decorated_definition" {
+			methodNode = nil
+			for j := uint(0); j < child.ChildCount(); j++ {
+				inner := child.Child(j)
+				if inner != nil && inner.Kind() == "function_definition" {
+					methodNode = inner
+					break
+				}
+			}
+		}
+		if methodNode == nil || methodNode.Kind() != "function_definition" {
+			out = append(out, pythonAssignmentSymbols(child, src, owner, "class")...)
+			continue
+		}
+		if method, ok := simpleSymbol(methodNode, src, "method"); ok {
+			method.recvType = owner
+			method.metadata = graph.JSONBMap{"owner_type": owner}
+			out = append(out, method)
+			out = append(out, pythonNestedFunctionSymbols(methodNode, src, method.name)...)
+		}
+	}
+	return out
+}
+
+func pythonNestedFunctionSymbols(fnNode *tree_sitter.Node, src []byte, owner string) []symbolDraft {
+	body := fnNode.ChildByFieldName("body")
+	if body == nil {
+		for i := uint(0); i < fnNode.ChildCount(); i++ {
+			child := fnNode.Child(i)
+			if child != nil && child.Kind() == "block" {
+				body = child
+				break
+			}
+		}
+	}
+	if body == nil {
+		return nil
+	}
+	var out []symbolDraft
+	walkPythonNestedFunctionScope(body, src, owner, &out)
+	return out
+}
+
+func walkPythonNestedFunctionScope(node *tree_sitter.Node, src []byte, owner string, out *[]symbolDraft) {
+	for i := uint(0); i < node.ChildCount(); i++ {
+		child := node.Child(i)
+		if child == nil {
+			continue
+		}
+		switch child.Kind() {
+		case "function_definition":
+			if sym, ok := simpleSymbol(child, src, "function"); ok {
+				sym.metadata = graph.JSONBMap{"scope": "local_function", "owner_function": owner}
+				*out = append(*out, sym)
+				*out = append(*out, pythonNestedFunctionSymbols(child, src, sym.name)...)
+			}
+		case "decorated_definition":
+			for j := uint(0); j < child.ChildCount(); j++ {
+				inner := child.Child(j)
+				if inner == nil || inner.Kind() != "function_definition" {
+					continue
+				}
+				if sym, ok := simpleSymbol(inner, src, "function"); ok {
+					sym.metadata = graph.JSONBMap{"scope": "local_function", "owner_function": owner}
+					*out = append(*out, sym)
+					*out = append(*out, pythonNestedFunctionSymbols(inner, src, sym.name)...)
+				}
+			}
+		default:
+			if pythonModuleScopeContainer(child.Kind()) {
+				walkPythonNestedFunctionScope(child, src, owner, out)
+			}
+		}
+	}
+}
+
+func pythonAssignmentSymbols(node *tree_sitter.Node, src []byte, owner, scope string) []symbolDraft {
+	assignments := pythonAssignmentNodes(node)
+	out := make([]symbolDraft, 0, len(assignments))
+	for _, assignment := range assignments {
+		left := assignment.ChildByFieldName("left")
+		if left == nil {
+			left = assignment.Child(0)
+		}
+		for _, name := range pythonAssignedNames(left, src) {
+			if name == "" {
+				continue
+			}
+			kind := "variable"
+			meta := graph.JSONBMap{"scope": scope}
+			if owner != "" {
+				kind = "field"
+				meta["owner_type"] = owner
+			} else if isPythonConstantName(name) {
+				kind = "constant"
+			}
+			out = append(out, symbolDraft{
+				name:      name,
+				kind:      kind,
+				signature: pythonAssignmentSignature(assignment, src),
+				startLine: int(assignment.StartPosition().Row) + 1,
+				endLine:   int(assignment.EndPosition().Row) + 1,
+				metadata:  meta,
+			})
+		}
+	}
+	return out
+}
+
+func pythonAssignmentNodes(node *tree_sitter.Node) []*tree_sitter.Node {
+	if node == nil {
+		return nil
+	}
+	if node.Kind() == "assignment" {
+		return []*tree_sitter.Node{node}
+	}
+	var out []*tree_sitter.Node
+	for i := uint(0); i < node.ChildCount(); i++ {
+		child := node.Child(i)
+		if child == nil {
+			continue
+		}
+		if child.Kind() == "assignment" {
+			out = append(out, child)
+		}
+	}
+	return out
+}
+
+func pythonAssignedNames(node *tree_sitter.Node, src []byte) []string {
+	if node == nil {
+		return nil
+	}
+	switch node.Kind() {
+	case "identifier":
+		return []string{nodeText(node, src)}
+	case "pattern_list", "tuple", "tuple_pattern", "list", "list_pattern":
+		var out []string
+		for i := uint(0); i < node.ChildCount(); i++ {
+			out = append(out, pythonAssignedNames(node.Child(i), src)...)
+		}
+		return out
+	default:
+		return nil
+	}
+}
+
+func pythonAssignmentSignature(node *tree_sitter.Node, src []byte) string {
+	sig := nodeText(node, src)
+	if nl := strings.IndexByte(sig, '\n'); nl > 0 {
+		sig = sig[:nl]
+	}
+	const maxLen = 160
+	sig = strings.TrimSpace(sig)
+	if len(sig) > maxLen {
+		return sig[:maxLen] + "..."
+	}
+	return sig
+}
+
+func isPythonConstantName(name string) bool {
+	hasLetter := false
+	for _, r := range name {
+		if r >= 'a' && r <= 'z' {
+			return false
+		}
+		if r >= 'A' && r <= 'Z' {
+			hasLetter = true
+		}
+	}
+	return hasLetter
 }
 
 var (
@@ -178,11 +399,21 @@ func walkJSAST(root *tree_sitter.Node, src []byte) ([]symbolDraft, []string) {
 				symbols = append(symbols, sym)
 			}
 		case "class_declaration":
-			if sym, ok := simpleSymbol(node, src, "class"); ok {
+			symbols = append(symbols, jsClassSymbols(node, src)...)
+			return false
+		case "interface_declaration":
+			symbols = append(symbols, jsInterfaceSymbols(node, src)...)
+			return false
+		case "type_alias_declaration":
+			if sym, ok := jsNamedSymbol(node, src, "type"); ok {
+				symbols = append(symbols, sym)
+			}
+		case "enum_declaration":
+			if sym, ok := jsNamedSymbol(node, src, "enum"); ok {
 				symbols = append(symbols, sym)
 			}
 		case "lexical_declaration", "variable_declaration":
-			symbols = append(symbols, jsArrowFunctions(node, src)...)
+			symbols = append(symbols, jsVariableSymbols(node, src)...)
 		}
 		return true
 	})
@@ -200,38 +431,175 @@ func extractJSImport(node *tree_sitter.Node, src []byte) []string {
 	return out
 }
 
-// jsArrowFunctions captures `const fn = (...) => {...}` arrow declarations.
-func jsArrowFunctions(node *tree_sitter.Node, src []byte) []symbolDraft {
+func jsClassSymbols(node *tree_sitter.Node, src []byte) []symbolDraft {
+	classSym, ok := jsNamedSymbol(node, src, "class")
+	if !ok {
+		return nil
+	}
+	out := []symbolDraft{classSym}
+	body := node.ChildByFieldName("body")
+	if body == nil {
+		for i := uint(0); i < node.ChildCount(); i++ {
+			child := node.Child(i)
+			if child != nil && child.Kind() == "class_body" {
+				body = child
+				break
+			}
+		}
+	}
+	if body == nil {
+		return out
+	}
+	for i := uint(0); i < body.ChildCount(); i++ {
+		child := body.Child(i)
+		if child == nil {
+			continue
+		}
+		switch child.Kind() {
+		case "method_definition", "abstract_method_signature", "method_signature":
+			if method, ok := jsNamedSymbol(child, src, "method"); ok {
+				method.recvType = classSym.name
+				method.metadata = graph.JSONBMap{"owner_type": classSym.name}
+				out = append(out, method)
+			}
+		case "public_field_definition", "field_definition", "property_signature":
+			if field, ok := jsNamedSymbol(child, src, "field"); ok {
+				field.metadata = graph.JSONBMap{"owner_type": classSym.name}
+				out = append(out, field)
+			}
+		}
+	}
+	return out
+}
+
+func jsInterfaceSymbols(node *tree_sitter.Node, src []byte) []symbolDraft {
+	iface, ok := jsNamedSymbol(node, src, "interface")
+	if !ok {
+		return nil
+	}
+	out := []symbolDraft{iface}
+	walkNode(node, func(child *tree_sitter.Node) bool {
+		if child == nil || child == node {
+			return true
+		}
+		switch child.Kind() {
+		case "method_signature", "abstract_method_signature":
+			if method, ok := jsNamedSymbol(child, src, "method"); ok {
+				method.recvType = iface.name
+				method.metadata = graph.JSONBMap{"owner_type": iface.name}
+				out = append(out, method)
+			}
+			return false
+		case "property_signature":
+			if field, ok := jsNamedSymbol(child, src, "field"); ok {
+				field.metadata = graph.JSONBMap{"owner_type": iface.name}
+				out = append(out, field)
+			}
+			return false
+		case "type_alias_declaration", "interface_declaration", "class_declaration":
+			return false
+		default:
+			return true
+		}
+	})
+	return out
+}
+
+// jsVariableSymbols captures top-level/local declarations as compact symbols:
+// `const fn = (...) => {}` remains a function, while non-callable declarations
+// become constant/variable entries for navigation and review context.
+func jsVariableSymbols(node *tree_sitter.Node, src []byte) []symbolDraft {
 	var out []symbolDraft
+	declKind := "variable"
+	if strings.HasPrefix(strings.TrimSpace(nodeText(node, src)), "const ") {
+		declKind = "constant"
+	}
 	for i := uint(0); i < node.ChildCount(); i++ {
 		child := node.Child(i)
 		if child == nil || child.Kind() != "variable_declarator" {
 			continue
 		}
-		hasArrow := false
-		varName := ""
-		for j := uint(0); j < child.ChildCount(); j++ {
-			gc := child.Child(j)
-			if gc == nil {
-				continue
-			}
-			if gc.Kind() == "identifier" && varName == "" {
-				varName = nodeText(gc, src)
-			}
-			if gc.Kind() == "arrow_function" {
-				hasArrow = true
-			}
+		nameNode := child.ChildByFieldName("name")
+		if nameNode == nil || nameNode.Kind() != "identifier" {
+			continue
 		}
-		if hasArrow && varName != "" {
-			out = append(out, symbolDraft{
-				name:      varName,
-				kind:      "function",
-				startLine: int(child.StartPosition().Row) + 1,
-				endLine:   int(child.EndPosition().Row) + 1,
-			})
+		name := strings.TrimSpace(nodeText(nameNode, src))
+		if name == "" {
+			continue
 		}
+		kind := declKind
+		if value := child.ChildByFieldName("value"); value != nil && jsValueIsFunction(value) {
+			kind = "function"
+		}
+		out = append(out, symbolDraft{
+			name:      name,
+			kind:      kind,
+			signature: jsOneLineSignature(child, src),
+			startLine: int(child.StartPosition().Row) + 1,
+			endLine:   int(child.EndPosition().Row) + 1,
+			metadata:  graph.JSONBMap{"scope": "declaration"},
+		})
 	}
 	return out
+}
+
+func jsValueIsFunction(node *tree_sitter.Node) bool {
+	if node == nil {
+		return false
+	}
+	switch node.Kind() {
+	case "arrow_function", "function", "function_expression":
+		return true
+	default:
+		return false
+	}
+}
+
+func jsNamedSymbol(node *tree_sitter.Node, src []byte, kind string) (symbolDraft, bool) {
+	name := jsNodeName(node, src)
+	if name == "" {
+		return symbolDraft{}, false
+	}
+	return symbolDraft{
+		name:      name,
+		kind:      kind,
+		signature: jsOneLineSignature(node, src),
+		startLine: int(node.StartPosition().Row) + 1,
+		endLine:   int(node.EndPosition().Row) + 1,
+	}, true
+}
+
+func jsNodeName(node *tree_sitter.Node, src []byte) string {
+	if name := node.ChildByFieldName("name"); name != nil {
+		if text := strings.TrimSpace(nodeText(name, src)); text != "" {
+			return text
+		}
+	}
+	for i := uint(0); i < node.ChildCount(); i++ {
+		child := node.Child(i)
+		if child == nil {
+			continue
+		}
+		switch child.Kind() {
+		case "identifier", "type_identifier", "property_identifier", "private_property_identifier":
+			if text := strings.TrimSpace(nodeText(child, src)); text != "" {
+				return strings.TrimPrefix(text, "#")
+			}
+		}
+	}
+	return ""
+}
+
+func jsOneLineSignature(node *tree_sitter.Node, src []byte) string {
+	sig := strings.TrimSpace(nodeText(node, src))
+	if nl := strings.IndexByte(sig, '\n'); nl > 0 {
+		sig = sig[:nl]
+	}
+	const maxLen = 160
+	if len(sig) > maxLen {
+		return sig[:maxLen] + "..."
+	}
+	return sig
 }
 
 // ── Java ────────────────────────────────────────────────────────────────────
@@ -252,7 +620,7 @@ func walkJavaAST(root *tree_sitter.Node, src []byte) ([]symbolDraft, []string) {
 			if m := javaImportRe.FindStringSubmatch(nodeText(child, src)); len(m) > 1 {
 				imports = append(imports, m[1])
 			}
-		case "class_declaration", "interface_declaration", "enum_declaration":
+		case "class_declaration", "interface_declaration", "enum_declaration", "record_declaration", "annotation_type_declaration":
 			symbols = append(symbols, javaTypeSymbols(child, src)...)
 		}
 	}
@@ -261,48 +629,299 @@ func walkJavaAST(root *tree_sitter.Node, src []byte) ([]symbolDraft, []string) {
 
 func javaTypeSymbols(node *tree_sitter.Node, src []byte) []symbolDraft {
 	var out []symbolDraft
-	kind := "class"
-	if strings.Contains(node.Kind(), "interface") {
-		kind = "interface"
-	} else if strings.Contains(node.Kind(), "enum") {
-		kind = "enum"
-	}
+	kind := javaTypeKind(node.Kind())
 
-	typeName := childText(node, "identifier", src)
+	typeName := javaDeclName(node, src)
 	if typeName != "" {
 		out = append(out, symbolDraft{
 			name:      typeName,
 			kind:      kind,
+			signature: javaOneLineSignature(node, src),
 			startLine: int(node.StartPosition().Row) + 1,
 			endLine:   int(node.EndPosition().Row) + 1,
 		})
 	}
+	if node.Kind() == "record_declaration" {
+		out = append(out, javaRecordHeaderComponentSymbols(node, src, typeName)...)
+	}
+	out = append(out, javaTypeParameterSymbols(node, src, typeName)...)
 
-	for i := uint(0); i < node.ChildCount(); i++ {
-		child := node.Child(i)
-		if child == nil || child.Kind() != "class_body" {
-			continue
-		}
-		for j := uint(0); j < child.ChildCount(); j++ {
-			member := child.Child(j)
-			if member == nil || member.Kind() != "method_declaration" {
-				continue
-			}
-			if mname := childText(member, "identifier", src); mname != "" {
-				out = append(out, symbolDraft{
-					name:      mname,
-					kind:      "method",
-					startLine: int(member.StartPosition().Row) + 1,
-					endLine:   int(member.EndPosition().Row) + 1,
-					// SHARED METADATA CONTRACT: the enclosing type lets the
-					// query layer disambiguate same-named methods on different
-					// classes (best-effort; "" when the type name is unknown).
-					recvType: typeName,
-				})
+	body := node.ChildByFieldName("body")
+	if body == nil {
+		for i := uint(0); i < node.ChildCount(); i++ {
+			child := node.Child(i)
+			if child != nil && strings.Contains(child.Kind(), "body") {
+				body = child
+				break
 			}
 		}
 	}
+	if body == nil {
+		return out
+	}
+
+	hasExplicitConstructor := false
+	for i := uint(0); i < body.ChildCount(); i++ {
+		member := body.Child(i)
+		if member == nil {
+			continue
+		}
+		if member.Kind() == "constructor_declaration" || member.Kind() == "compact_constructor_declaration" {
+			hasExplicitConstructor = true
+		}
+		out = append(out, javaMemberSymbols(member, src, typeName)...)
+	}
+	if kind == "class" && typeName != "" && !hasExplicitConstructor {
+		out = append(out, javaSyntheticConstructorSymbol(node, src, typeName))
+	}
 	return out
+}
+
+func javaRecordHeaderComponentSymbols(node *tree_sitter.Node, src []byte, owner string) []symbolDraft {
+	var out []symbolDraft
+	var walk func(n *tree_sitter.Node)
+	walk = func(n *tree_sitter.Node) {
+		if n == nil {
+			return
+		}
+		switch n.Kind() {
+		case "class_body", "interface_body", "enum_body", "record_body", "annotation_type_body",
+			"class_declaration", "interface_declaration", "enum_declaration", "record_declaration", "annotation_type_declaration":
+			if n != node {
+				return
+			}
+		case "record_component", "formal_parameter", "spread_parameter":
+			out = append(out, javaRecordComponentSymbol(n, src, owner)...)
+			return
+		}
+		for i := uint(0); i < n.ChildCount(); i++ {
+			walk(n.Child(i))
+		}
+	}
+	for i := uint(0); i < node.ChildCount(); i++ {
+		walk(node.Child(i))
+	}
+	return out
+}
+
+func javaTypeKind(kind string) string {
+	switch kind {
+	case "interface_declaration":
+		return "interface"
+	case "enum_declaration":
+		return "enum"
+	case "record_declaration":
+		return "record"
+	case "annotation_type_declaration":
+		return "annotation"
+	default:
+		return "class"
+	}
+}
+
+func javaMemberSymbols(member *tree_sitter.Node, src []byte, owner string) []symbolDraft {
+	switch member.Kind() {
+	case "class_declaration", "interface_declaration", "enum_declaration", "record_declaration", "annotation_type_declaration":
+		return javaTypeSymbols(member, src)
+	case "method_declaration":
+		return javaCallableSymbol(member, src, owner, "method")
+	case "constructor_declaration", "compact_constructor_declaration":
+		return javaCallableSymbol(member, src, owner, "constructor")
+	case "field_declaration", "constant_declaration":
+		return javaFieldSymbols(member, src, owner, "field")
+	case "enum_constant":
+		return javaEnumConstantSymbol(member, src, owner)
+	case "record_component":
+		return javaRecordComponentSymbol(member, src, owner)
+	case "annotation_type_element_declaration":
+		return javaCallableSymbol(member, src, owner, "annotation_member")
+	}
+
+	var out []symbolDraft
+	for i := uint(0); i < member.ChildCount(); i++ {
+		child := member.Child(i)
+		if child == nil {
+			continue
+		}
+		switch child.Kind() {
+		case "class_declaration", "interface_declaration", "enum_declaration", "record_declaration", "annotation_type_declaration",
+			"method_declaration", "constructor_declaration", "compact_constructor_declaration",
+			"field_declaration", "constant_declaration", "enum_constant", "record_component", "annotation_type_element_declaration":
+			out = append(out, javaMemberSymbols(child, src, owner)...)
+		}
+	}
+	return out
+}
+
+func javaCallableSymbol(node *tree_sitter.Node, src []byte, owner, kind string) []symbolDraft {
+	name := javaDeclName(node, src)
+	if name == "" && kind == "constructor" {
+		name = owner
+	}
+	if name == "" {
+		return nil
+	}
+	out := []symbolDraft{{
+		name:      name,
+		kind:      kind,
+		signature: javaOneLineSignature(node, src),
+		startLine: int(node.StartPosition().Row) + 1,
+		endLine:   int(node.EndPosition().Row) + 1,
+		metadata:  javaOwnerMetadata(owner),
+		recvType:  owner,
+	}}
+	out = append(out, javaTypeParameterSymbols(node, src, owner)...)
+	return out
+}
+
+func javaSyntheticConstructorSymbol(node *tree_sitter.Node, src []byte, owner string) symbolDraft {
+	meta := javaOwnerMetadata(owner)
+	meta["synthetic"] = true
+	return symbolDraft{
+		name:      owner,
+		kind:      "constructor",
+		signature: owner + "()",
+		startLine: int(node.StartPosition().Row) + 1,
+		endLine:   int(node.StartPosition().Row) + 1,
+		metadata:  meta,
+		recvType:  owner,
+	}
+}
+
+func javaFieldSymbols(node *tree_sitter.Node, src []byte, owner, kind string) []symbolDraft {
+	declType := javaDeclTypeName(node, src)
+	var out []symbolDraft
+	for i := uint(0); i < node.ChildCount(); i++ {
+		child := node.Child(i)
+		if child == nil || child.Kind() != "variable_declarator" {
+			continue
+		}
+		name := javaDeclName(child, src)
+		if name == "" {
+			continue
+		}
+		meta := javaOwnerMetadata(owner)
+		if declType != "" {
+			meta["decl_type"] = declType
+		}
+		out = append(out, symbolDraft{
+			name:      name,
+			kind:      kind,
+			signature: javaOneLineSignature(child, src),
+			startLine: int(child.StartPosition().Row) + 1,
+			endLine:   int(child.EndPosition().Row) + 1,
+			metadata:  meta,
+			recvType:  owner,
+		})
+	}
+	return out
+}
+
+func javaEnumConstantSymbol(node *tree_sitter.Node, src []byte, owner string) []symbolDraft {
+	name := javaDeclName(node, src)
+	if name == "" {
+		return nil
+	}
+	return []symbolDraft{{
+		name:      name,
+		kind:      "enum_constant",
+		signature: javaOneLineSignature(node, src),
+		startLine: int(node.StartPosition().Row) + 1,
+		endLine:   int(node.EndPosition().Row) + 1,
+		metadata:  javaOwnerMetadata(owner),
+		recvType:  owner,
+	}}
+}
+
+func javaRecordComponentSymbol(node *tree_sitter.Node, src []byte, owner string) []symbolDraft {
+	name := javaDeclName(node, src)
+	if name == "" {
+		return nil
+	}
+	meta := javaOwnerMetadata(owner)
+	if typ := javaDeclTypeName(node, src); typ != "" {
+		meta["decl_type"] = typ
+	}
+	return []symbolDraft{{
+		name:      name,
+		kind:      "field",
+		signature: javaOneLineSignature(node, src),
+		startLine: int(node.StartPosition().Row) + 1,
+		endLine:   int(node.EndPosition().Row) + 1,
+		metadata:  meta,
+		recvType:  owner,
+	}}
+}
+
+func javaTypeParameterSymbols(node *tree_sitter.Node, src []byte, owner string) []symbolDraft {
+	var out []symbolDraft
+	var walk func(n *tree_sitter.Node)
+	walk = func(n *tree_sitter.Node) {
+		if n == nil {
+			return
+		}
+		switch n.Kind() {
+		case "class_body", "interface_body", "enum_body", "record_body", "annotation_type_body", "block":
+			return
+		case "type_parameter":
+			name := javaDeclName(n, src)
+			if name == "" {
+				name = childText(n, "type_identifier", src)
+			}
+			if name != "" {
+				out = append(out, symbolDraft{
+					name:      name,
+					kind:      "type_parameter",
+					signature: javaOneLineSignature(n, src),
+					startLine: int(n.StartPosition().Row) + 1,
+					endLine:   int(n.EndPosition().Row) + 1,
+					metadata:  javaOwnerMetadata(owner),
+				})
+			}
+			return
+		}
+		for i := uint(0); i < n.ChildCount(); i++ {
+			walk(n.Child(i))
+		}
+	}
+	for i := uint(0); i < node.ChildCount(); i++ {
+		walk(node.Child(i))
+	}
+	return out
+}
+
+func javaOwnerMetadata(owner string) graph.JSONBMap {
+	if owner == "" {
+		return graph.JSONBMap{}
+	}
+	return graph.JSONBMap{"owner_type": owner}
+}
+
+func javaDeclName(node *tree_sitter.Node, src []byte) string {
+	if name := node.ChildByFieldName("name"); name != nil {
+		if text := strings.TrimSpace(nodeText(name, src)); text != "" {
+			return text
+		}
+	}
+	if name := childText(node, "identifier", src); name != "" {
+		return name
+	}
+	if name := childText(node, "type_identifier", src); name != "" {
+		return name
+	}
+	return ""
+}
+
+func javaOneLineSignature(node *tree_sitter.Node, src []byte) string {
+	sig := strings.TrimSpace(nodeText(node, src))
+	if nl := strings.IndexByte(sig, '\n'); nl > 0 {
+		sig = sig[:nl]
+	}
+	const maxLen = 160
+	if len(sig) > maxLen {
+		return sig[:maxLen] + "..."
+	}
+	return sig
 }
 
 // ── C / C++ ─────────────────────────────────────────────────────────────────
@@ -313,11 +932,7 @@ func walkCAST(root *tree_sitter.Node, src []byte) ([]symbolDraft, []string) {
 	var imports []string
 	var symbols []symbolDraft
 
-	for i := uint(0); i < root.ChildCount(); i++ {
-		child := root.Child(i)
-		if child == nil {
-			continue
-		}
+	walkNode(root, func(child *tree_sitter.Node) bool {
 		switch child.Kind() {
 		case "preproc_include":
 			if m := cIncludeRe.FindStringSubmatch(nodeText(child, src)); len(m) > 1 {
@@ -327,10 +942,13 @@ func walkCAST(root *tree_sitter.Node, src []byte) ([]symbolDraft, []string) {
 			if sym, ok := cFunctionSymbol(child, src); ok {
 				symbols = append(symbols, sym)
 			}
+			return false
 		case "class_specifier", "struct_specifier":
 			symbols = append(symbols, cppTypeSymbols(child, src)...)
+			return false
 		}
-	}
+		return true
+	})
 	return symbols, imports
 }
 
@@ -382,19 +1000,24 @@ func cppTypeSymbols(node *tree_sitter.Node, src []byte) []symbolDraft {
 // cppFunctionName pulls the declared name out of a C++ function_definition's
 // function_declarator, handling plain identifiers and field identifiers.
 func cppFunctionName(node *tree_sitter.Node, src []byte) string {
+	name, _, _ := cppFunctionIdentity(node, src)
+	return name
+}
+
+func cppFunctionIdentity(node *tree_sitter.Node, src []byte) (name, qualified, recvType string) {
 	for i := uint(0); i < node.ChildCount(); i++ {
 		child := node.Child(i)
 		if child == nil || child.Kind() != "function_declarator" {
 			continue
 		}
-		if name := childText(child, "identifier", src); name != "" {
-			return name
+		name = cppDeclaratorName(child, src)
+		qualified = cppDeclaratorQualifiedName(child, src)
+		if qualified != "" {
+			recvType = cppQualifiedReceiver(qualified)
 		}
-		if name := childText(child, "field_identifier", src); name != "" {
-			return name
-		}
+		return name, qualified, recvType
 	}
-	return ""
+	return "", "", ""
 }
 
 func cFunctionSymbol(node *tree_sitter.Node, src []byte) (symbolDraft, bool) {
@@ -403,13 +1026,16 @@ func cFunctionSymbol(node *tree_sitter.Node, src []byte) (symbolDraft, bool) {
 		if child == nil || child.Kind() != "function_declarator" {
 			continue
 		}
-		name := childText(child, "identifier", src)
-		if name == "" {
-			// C++ qualified / field identifiers
-			name = childText(child, "field_identifier", src)
-		}
+		name, qualified, recvType := cppFunctionIdentity(node, src)
 		if name == "" {
 			continue
+		}
+		kind := "function"
+		meta := graph.JSONBMap{}
+		if recvType != "" {
+			kind = "method"
+			meta["owner_type"] = recvType
+			meta["qualified_name"] = qualified
 		}
 		sig := nodeText(node, src)
 		if nl := strings.IndexByte(sig, '\n'); nl > 0 {
@@ -417,13 +1043,47 @@ func cFunctionSymbol(node *tree_sitter.Node, src []byte) (symbolDraft, bool) {
 		}
 		return symbolDraft{
 			name:      name,
-			kind:      "function",
+			kind:      kind,
 			signature: strings.TrimSpace(sig),
 			startLine: int(node.StartPosition().Row) + 1,
 			endLine:   int(node.EndPosition().Row) + 1,
+			metadata:  meta,
+			recvType:  recvType,
 		}, true
 	}
 	return symbolDraft{}, false
+}
+
+func cppDeclaratorQualifiedName(node *tree_sitter.Node, src []byte) string {
+	if node == nil {
+		return ""
+	}
+	if node.Kind() == "qualified_identifier" {
+		return strings.TrimSpace(nodeText(node, src))
+	}
+	if inner := node.ChildByFieldName("declarator"); inner != nil {
+		if q := cppDeclaratorQualifiedName(inner, src); q != "" {
+			return q
+		}
+	}
+	for i := uint(0); i < node.ChildCount(); i++ {
+		if q := cppDeclaratorQualifiedName(node.Child(i), src); q != "" {
+			return q
+		}
+	}
+	return ""
+}
+
+func cppQualifiedReceiver(qualified string) string {
+	parts := strings.Split(strings.TrimSpace(qualified), "::")
+	if len(parts) < 2 {
+		return ""
+	}
+	recv := strings.TrimSpace(parts[len(parts)-2])
+	if recv == "" || strings.ContainsAny(recv, " \t\n") {
+		return ""
+	}
+	return recv
 }
 
 // ── tree-sitter helpers ─────────────────────────────────────────────────────

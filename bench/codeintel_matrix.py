@@ -1,0 +1,1984 @@
+#!/usr/bin/env python3
+"""Benchmark Atlas against per-language code intelligence baselines.
+
+This is the matrix benchmark harness. It is intentionally separate from
+graphify_vs_atlas.py so the original Atlas-vs-graphify report remains stable
+while we add SCIP and language-server baselines one language at a time.
+
+Implemented live slice:
+  Go: Atlas vs graphify vs scip-go vs gopls
+  Python: Atlas vs graphify vs scip-python vs Pyright
+  JS/TS: Atlas vs graphify vs scip-typescript vs TypeScript compiler proxy
+  Java: Atlas vs graphify vs scip-java vs JDTLS
+
+Other languages are declared in the matrix so missing adapters/tools are visible
+in JSON and Markdown instead of being silently omitted.
+"""
+
+from __future__ import annotations
+
+import argparse
+import ast
+import json
+import os
+import queue
+import re
+import shlex
+import shutil
+import sqlite3
+import subprocess
+import threading
+import time
+from pathlib import Path
+from typing import Any
+
+
+REPOS = {
+    "go": ("https://github.com/sirupsen/logrus", ""),
+    "python": ("https://github.com/psf/requests", "src"),
+    "javascript": ("https://github.com/expressjs/express", "lib"),
+    "typescript": ("https://github.com/pmndrs/zustand", "src"),
+    "java": ("https://github.com/google/gson", "gson/src/main/java"),
+    "c": ("https://github.com/DaveGamble/cJSON", ""),
+    "cpp": ("https://github.com/google/leveldb", ""),
+}
+
+MATRIX = {
+    "go": ["atlas", "graphify", "scip-go", "gopls"],
+    "python": ["atlas", "graphify", "scip-python", "pyright"],
+    "javascript": ["atlas", "graphify", "scip-typescript", "tsserver"],
+    "typescript": ["atlas", "graphify", "scip-typescript", "tsserver"],
+    "java": ["atlas", "graphify", "scip-java", "jdtls"],
+    "c": ["atlas", "graphify", "clangd"],
+    "cpp": ["atlas", "graphify", "clangd"],
+}
+
+GRAPHIFY_DISCOVERY_FALLBACK = {
+    "version": "graphifyy 0.8.49",
+    "binary": "~/.local/share/uv/tools/graphifyy/bin/graphify",
+    "source_root": "~/.local/share/uv/tools/graphifyy/lib/python3.12/site-packages/graphify",
+    "dispatch_count": 0,
+    "code_extension_count": 0,
+    "evidence": [
+        "CLI help from `graphify --help` did not enumerate languages, but confirmed `update`, `extract`, and code-only AST update commands.",
+        "`graphify.detect.CODE_EXTENSIONS` plus a runtime `detect()` smoke listed code extensions.",
+        "`graphify.extract._DISPATCH` provided the deterministic extractor map used as the parser-parity target.",
+    ],
+    "detector_only_code_extensions": [".ejs", ".ets", ".r"],
+}
+
+GRAPHIFY_LANGUAGE_FAMILIES = [
+    ("go", [".go"], "native go/parser + go/types"),
+    ("python", [".py"], "tree-sitter"),
+    ("javascript", [".js", ".jsx", ".mjs"], "tree-sitter"),
+    ("typescript", [".ts", ".tsx"], "tree-sitter"),
+    ("java", [".java"], "tree-sitter"),
+    ("groovy/gradle", [".groovy", ".gradle"], "lightweight regex"),
+    ("c", [".c", ".h"], "tree-sitter"),
+    ("cpp/cuda", [".cpp", ".cc", ".cxx", ".hpp", ".cu", ".cuh"], "tree-sitter"),
+    ("csharp", [".cs"], "lightweight regex"),
+    ("rust", [".rs"], "lightweight regex"),
+    ("ruby", [".rb"], "lightweight regex"),
+    ("kotlin", [".kt", ".kts"], "lightweight regex"),
+    ("scala", [".scala"], "lightweight regex"),
+    ("php", [".php"], "lightweight regex"),
+    ("blade", ["*.blade.php"], "lightweight regex"),
+    ("swift", [".swift"], "lightweight regex"),
+    ("lua", [".lua", ".luau", ".toc"], "lightweight regex"),
+    ("zig", [".zig"], "lightweight regex"),
+    ("powershell", [".ps1", ".psm1", ".psd1"], "lightweight regex"),
+    ("elixir", [".ex", ".exs"], "lightweight regex"),
+    ("objective-c", [".m", ".mm"], "lightweight regex"),
+    ("julia", [".jl"], "lightweight regex"),
+    ("fortran", [".f", ".F", ".f90", ".F90", ".f95", ".F95", ".f03", ".F03", ".f08", ".F08"], "lightweight regex"),
+    ("dart", [".dart"], "lightweight regex"),
+    ("verilog/systemverilog", [".v", ".sv", ".svh"], "lightweight regex"),
+    ("sql", [".sql"], "lightweight regex"),
+    ("markdown", [".md", ".mdx", ".qmd"], "document parser"),
+    ("pascal", [".pas", ".pp", ".dpr", ".dpk", ".lpr", ".inc"], "lightweight regex"),
+    ("delphi/lazarus forms", [".dfm", ".lfm", ".lpk"], "lightweight regex/document fallback"),
+    ("shell", [".sh", ".bash"], "lightweight regex"),
+    ("json config", [".json"], "document parser"),
+    ("terraform/hcl", [".tf", ".tfvars", ".hcl"], "lightweight regex"),
+    ("byond dm", [".dm", ".dme", ".dmi", ".dmm", ".dmf"], "lightweight regex/document fallback"),
+    ("dotnet project", [".sln", ".slnx", ".csproj", ".fsproj", ".vbproj"], "lightweight regex"),
+    ("razor", [".razor", ".cshtml"], "lightweight regex"),
+    ("apex", [".cls", ".trigger"], "lightweight regex"),
+    ("vue", [".vue"], "lightweight regex"),
+    ("svelte", [".svelte"], "lightweight regex"),
+    ("astro", [".astro"], "lightweight regex"),
+]
+
+
+def run(cmd: list[str], cwd: Path | None = None, timeout: int = 900) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=timeout)
+
+
+def tokens(text: str) -> int:
+    return max(1, len(text) // 4)
+
+
+def pct(num: float, den: float) -> float:
+    return 0.0 if not den else round(100.0 * num / den, 1)
+
+
+def ratio(num: float, den: float) -> float | None:
+    if not num or not den:
+        return None
+    return round(num / den, 2)
+
+
+def executable(path_or_name: str) -> str | None:
+    if not path_or_name:
+        return None
+    expanded = Path(path_or_name).expanduser()
+    if expanded.exists() and os.access(expanded, os.X_OK):
+        return str(expanded)
+    return shutil.which(path_or_name)
+
+
+def tool_command(path_or_name: str, package: str | None = None, bin_name: str | None = None) -> list[str] | None:
+    found = executable(path_or_name)
+    if found:
+        return [found]
+    npx = shutil.which("npx")
+    if package and npx:
+        if bin_name and bin_name != package:
+            return [npx, "--yes", "-p", package, bin_name]
+        return [npx, "--yes", package]
+    return None
+
+
+def command_prefix(command: str) -> list[str] | None:
+    if not command:
+        return None
+    parts = shlex.split(command)
+    if not parts:
+        return None
+    if len(parts) == 1:
+        found = executable(parts[0])
+        return [found] if found else None
+    first = executable(parts[0])
+    if not first:
+        return None
+    return [first] + parts[1:]
+
+
+def resolve_graphify(value: str) -> str | None:
+    found = executable(value)
+    if found:
+        return found
+    uv_tool = Path.home() / ".local/share/uv/tools/graphifyy/bin/graphify"
+    if uv_tool.exists() and os.access(uv_tool, os.X_OK):
+        return str(uv_tool)
+    return None
+
+
+def discover_graphify_binary() -> str:
+    configured = os.environ.get("GRAPHIFY_BIN", "")
+    found = resolve_graphify(configured or "graphify")
+    return found or GRAPHIFY_DISCOVERY_FALLBACK["binary"]
+
+
+def graphify_python_for(binary: str) -> str | None:
+    path = Path(binary).expanduser()
+    if path.exists():
+        try:
+            first = path.read_text(errors="ignore").splitlines()[0]
+        except (OSError, IndexError):
+            first = ""
+        if first.startswith("#!"):
+            candidate = first[2:].strip()
+            if candidate and Path(candidate).exists():
+                probe = run([candidate, "-c", "import graphify"], timeout=30)
+                if probe.returncode == 0:
+                    return candidate
+    uv = shutil.which("uv")
+    if uv:
+        probe = run([uv, "tool", "run", "graphifyy", "python", "-c", "import sys; print(sys.executable)"], timeout=30)
+        if probe.returncode == 0 and probe.stdout.strip():
+            return probe.stdout.strip().splitlines()[-1]
+    return None
+
+
+def fallback_graphify_rows() -> list[tuple[str, str, str, str]]:
+    return [(family, " ".join(exts), "", atlas_status) for family, exts, atlas_status in GRAPHIFY_LANGUAGE_FAMILIES]
+
+
+def graphify_rows_from_runtime(dispatch: list[dict[str, str]], special: list[dict[str, str]]) -> list[tuple[str, str, str, str]]:
+    by_ext = {item["extension"]: item for item in dispatch}
+    by_ext.update({item["extension"]: item for item in special})
+    rows: list[tuple[str, str, str, str]] = []
+    for family, exts, atlas_status in GRAPHIFY_LANGUAGE_FAMILIES:
+        present = [ext for ext in exts if ext in by_ext]
+        if not present:
+            continue
+        extractors = sorted({by_ext[ext]["extractor"] for ext in present})
+        rows.append((family, " ".join(present), "/".join(extractors), atlas_status))
+    known = {ext for _, exts, _ in GRAPHIFY_LANGUAGE_FAMILIES for ext in exts}
+    for ext in sorted(set(by_ext) - known):
+        item = by_ext[ext]
+        rows.append((ext.lstrip("*."), ext, item["extractor"], "unsupported: not mapped in Atlas benchmark family table"))
+    return rows
+
+
+def discover_graphify_runtime() -> dict[str, Any]:
+    binary = discover_graphify_binary()
+    data: dict[str, Any] = {
+        **GRAPHIFY_DISCOVERY_FALLBACK,
+        "binary": binary,
+        "rows": fallback_graphify_rows(),
+        "runtime_error": "",
+    }
+    help_target = Path(binary).expanduser()
+    if help_target.exists():
+        help_run = run([str(help_target), "--help"], timeout=30)
+        if help_run.returncode == 0:
+            data["help_command_count"] = help_run.stdout.count("\n  ")
+
+    py = graphify_python_for(binary)
+    if not py:
+        data["runtime_error"] = "could not resolve a Python interpreter that imports graphify"
+        return data
+
+    script = r'''
+import importlib.metadata as md
+import inspect
+import json
+from pathlib import Path
+
+import graphify.detect as detect
+import graphify.extract as extract
+
+def fn_name(fn):
+    return getattr(fn, "__name__", repr(fn))
+
+dispatch = [
+    {"extension": key, "extractor": fn_name(fn), "module": getattr(fn, "__module__", "")}
+    for key, fn in sorted(extract._DISPATCH.items(), key=lambda item: item[0])
+]
+special = []
+for sample in ("view.blade.php",):
+    fn = extract._get_extractor(Path(sample))
+    if fn is not None:
+        special.append({"extension": "*.blade.php", "extractor": fn_name(fn), "module": getattr(fn, "__module__", "")})
+try:
+    version = "graphifyy " + md.version("graphifyy")
+except Exception:
+    version = "graphifyy unknown"
+print(json.dumps({
+    "version": version,
+    "source_root": str(Path(inspect.getsourcefile(extract)).resolve().parent),
+    "extract_source": str(Path(inspect.getsourcefile(extract)).resolve()),
+    "detect_source": str(Path(inspect.getsourcefile(detect)).resolve()),
+    "dispatch": dispatch,
+    "special": special,
+    "code_extensions": sorted(detect.CODE_EXTENSIONS),
+}, sort_keys=True))
+'''
+    probe = run([py, "-c", script], timeout=30)
+    if probe.returncode != 0:
+        data["runtime_error"] = (probe.stderr or probe.stdout).strip()
+        return data
+    try:
+        runtime = json.loads(probe.stdout)
+    except json.JSONDecodeError as exc:
+        data["runtime_error"] = f"could not parse graphify runtime JSON: {exc}"
+        return data
+
+    dispatch = runtime.get("dispatch", [])
+    special = runtime.get("special", [])
+    code_exts = runtime.get("code_extensions", [])
+    dispatch_exts = {item["extension"] for item in dispatch}
+    special_exts = {item["extension"] for item in special}
+    detector_only = sorted(
+        ext
+        for ext in code_exts
+        if ext not in dispatch_exts and ext not in {".php" if item == "*.blade.php" else item for item in special_exts}
+    )
+
+    data.update(
+        {
+            "version": runtime.get("version", data["version"]),
+            "binary": binary,
+            "python": py,
+            "source_root": runtime.get("source_root", data["source_root"]),
+            "extract_source": runtime.get("extract_source", ""),
+            "detect_source": runtime.get("detect_source", ""),
+            "dispatch_count": len(dispatch) + len(special),
+            "code_extension_count": len(code_exts),
+            "detector_only_code_extensions": detector_only,
+            "rows": graphify_rows_from_runtime(dispatch, special),
+        }
+    )
+    return data
+
+
+def base_result(tool: str, status: str = "ok", note: str = "") -> dict[str, Any]:
+    return {
+        "tool": tool,
+        "status": status,
+        "ok": status == "ok",
+        "seconds": 0.0,
+        "metrics": {},
+        "note": note,
+    }
+
+
+def missing(tool: str, command: str) -> dict[str, Any]:
+    return base_result(tool, "missing", f"command not found: {command}")
+
+
+def not_implemented(tool: str, note: str) -> dict[str, Any]:
+    return base_result(tool, "not_implemented", note)
+
+
+def ensure_repo(url: str, dest: Path, log: list[str]) -> bool:
+    if dest.exists():
+        return True
+    result = run(["git", "clone", "--depth", "1", "-q", url, str(dest)], timeout=900)
+    log.append(f"$ git clone --depth 1 {url} {dest}\n{result.stdout}{result.stderr}")
+    return result.returncode == 0 and dest.exists()
+
+
+def clean_generated_sidecars(target: Path) -> None:
+    graph_out = target / "graphify-out"
+    if graph_out.exists():
+        shutil.rmtree(graph_out, ignore_errors=True)
+
+
+def atlas_metrics(db: Path) -> dict[str, Any]:
+    metrics: dict[str, Any] = {
+        "calls": 0,
+        "internal_calls": 0,
+        "recv_typed": 0,
+        "sources": {},
+    }
+    if not db.exists():
+        return metrics
+    con = sqlite3.connect(str(db))
+    cur = con.cursor()
+    cur.execute("SELECT count(*) FROM edges WHERE kind='calls'")
+    metrics["calls"] = cur.fetchone()[0]
+    cur.execute(
+        "SELECT count(*) FROM edges WHERE kind='calls' "
+        "AND to_ref IN (SELECT DISTINCT name FROM symbols)"
+    )
+    metrics["internal_calls"] = cur.fetchone()[0]
+    cur.execute(
+        "SELECT count(*) FROM edges WHERE kind='calls' "
+        "AND json_extract(metadata,'$.recv_type') IS NOT NULL "
+        "AND json_extract(metadata,'$.recv_type') != ''"
+    )
+    metrics["recv_typed"] = cur.fetchone()[0]
+    cur.execute(
+        "SELECT json_extract(metadata,'$.source'), count(*) "
+        "FROM edges WHERE kind='calls' GROUP BY 1 ORDER BY 2 DESC"
+    )
+    metrics["sources"] = {(source or "?"): count for source, count in cur.fetchall()}
+    con.close()
+    return metrics
+
+
+def count_python_assignment_names(node: ast.AST) -> int:
+    targets: list[ast.AST]
+    if isinstance(node, ast.Assign):
+        targets = list(node.targets)
+    elif isinstance(node, ast.AnnAssign):
+        targets = [node.target]
+    else:
+        return 0
+
+    def names(target: ast.AST) -> int:
+        if isinstance(target, ast.Name):
+            return 1
+        if isinstance(target, (ast.Tuple, ast.List)):
+            return sum(names(elt) for elt in target.elts)
+        return 0
+
+    return sum(names(target) for target in targets)
+
+
+def python_ast_truth(target: Path) -> dict[str, int]:
+    metrics = {
+        "files": 0,
+        "functions": 0,
+        "classes": 0,
+        "module_assignment_names": 0,
+        "class_assignment_names": 0,
+    }
+    for path in target.rglob("*.py"):
+        try:
+            tree = ast.parse(path.read_text(encoding="utf-8"))
+        except (SyntaxError, UnicodeDecodeError):
+            continue
+        metrics["files"] += 1
+        for node in ast.walk(tree):
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                metrics["functions"] += 1
+            elif isinstance(node, ast.ClassDef):
+                metrics["classes"] += 1
+        for node in tree.body:
+            metrics["module_assignment_names"] += count_python_assignment_names(node)
+            if isinstance(node, ast.ClassDef):
+                for child in node.body:
+                    metrics["class_assignment_names"] += count_python_assignment_names(child)
+    return metrics
+
+
+def sqlite_symbol_kind_count(db: Path, kinds: tuple[str, ...]) -> int:
+    if not db.exists() or not kinds:
+        return 0
+    con = sqlite3.connect(str(db))
+    cur = con.cursor()
+    placeholders = ",".join("?" for _ in kinds)
+    cur.execute(f"SELECT count(*) FROM symbols WHERE kind IN ({placeholders})", kinds)
+    count = cur.fetchone()[0]
+    con.close()
+    return count
+
+
+def run_atlas(atlas_bin: str | None, target: Path, db: Path, log: list[str]) -> dict[str, Any]:
+    if not atlas_bin:
+        return missing("atlas", "atlas")
+    if db.exists():
+        db.unlink()
+    start = time.time()
+    cold = run([atlas_bin, "--db", f"sqlite://{db}", "index", str(target)], timeout=900)
+    cold_seconds = round(time.time() - start, 3)
+    log.append(f"$ {atlas_bin} --db sqlite://{db} index {target}  # cold\n{cold.stdout}{cold.stderr}")
+    out = base_result("atlas", "ok" if cold.returncode == 0 else "failed")
+    if cold.returncode != 0:
+        out["seconds"] = cold_seconds
+        out["note"] = cold.stderr.strip() or cold.stdout.strip()
+        return out
+
+    start = time.time()
+    result = run([atlas_bin, "--db", f"sqlite://{db}", "index", str(target)], timeout=900)
+    seconds = round(time.time() - start, 3)
+    log.append(f"$ {atlas_bin} --db sqlite://{db} index {target}  # no-change reindex\n{result.stdout}{result.stderr}")
+    out["seconds"] = seconds
+    if result.returncode != 0:
+        out["status"] = "failed"
+        out["ok"] = False
+        out["note"] = result.stderr.strip() or result.stdout.strip()
+        return out
+    metrics: dict[str, Any] = {}
+    try:
+        cold_parsed = json.loads(cold.stdout)
+        parsed = json.loads(result.stdout)
+        metrics.update(
+            {
+                "files": parsed.get("indexed_files", 0),
+                "symbols": parsed.get("symbols", 0),
+                "edges": parsed.get("edges", 0),
+                "edge_kinds": parsed.get("edge_kinds", {}) or cold_parsed.get("edge_kinds", {}),
+                "languages": parsed.get("languages", {}),
+                "duration_ms": parsed.get("duration_ms", 0),
+                "timings_ms": parsed.get("timings_ms", {}),
+                "mode": parsed.get("mode", ""),
+                "cold_seconds": cold_seconds,
+                "cold_duration_ms": cold_parsed.get("duration_ms", 0),
+                "cold_timings_ms": cold_parsed.get("timings_ms", {}),
+            }
+        )
+    except json.JSONDecodeError:
+        out["note"] = "atlas index returned non-JSON output"
+    metrics.update(atlas_metrics(db))
+    out["metrics"] = metrics
+    return out
+
+
+def run_graphify(graphify_bin: str | None, target: Path, log: list[str]) -> dict[str, Any]:
+    if not graphify_bin:
+        return missing("graphify", "graphify")
+    clean_generated_sidecars(target)
+    graph_out = target / "graphify-out"
+    start = time.time()
+    result = run([graphify_bin, "update", "."], cwd=target, timeout=900)
+    seconds = round(time.time() - start, 3)
+    log.append(f"$ {graphify_bin} update . (cwd={target})\n{result.stdout}{result.stderr}")
+    out = base_result("graphify", "ok" if result.returncode == 0 else "failed")
+    out["seconds"] = seconds
+    graph_json = graph_out / "graph.json"
+    if not graph_json.exists():
+        out["ok"] = False
+        out["status"] = "failed"
+        out["note"] = result.stderr.strip() or result.stdout.strip() or "graphify-out/graph.json missing"
+        return out
+    graph = json.loads(graph_json.read_text())
+    links = graph.get("links", [])
+    calls = [link for link in links if link.get("relation") == "calls"]
+    extracted = sum(1 for link in calls if str(link.get("confidence", "")).upper() == "EXTRACTED")
+    out["metrics"] = {
+        "nodes": len(graph.get("nodes", [])),
+        "links": len(links),
+        "calls": len(calls),
+        "extracted_calls": extracted,
+        "extracted_pct": pct(extracted, len(calls)),
+    }
+    return out
+
+
+def run_scip_go(scip_go_bin: str | None, repo: Path, workdir: Path, log: list[str]) -> dict[str, Any]:
+    if not scip_go_bin:
+        return missing("scip-go", "scip-go")
+    index_path = workdir / "go-index.scip"
+    if index_path.exists():
+        index_path.unlink()
+    start = time.time()
+    result = run([scip_go_bin, "index", "-o", str(index_path), "./..."], cwd=repo, timeout=900)
+    seconds = round(time.time() - start, 3)
+    log.append(f"$ {scip_go_bin} index -o {index_path} ./... (cwd={repo})\n{result.stdout}{result.stderr}")
+    out = base_result("scip-go", "ok" if result.returncode == 0 else "failed")
+    out["seconds"] = seconds
+    if result.returncode != 0 or not index_path.exists():
+        out["status"] = "failed"
+        out["ok"] = False
+        out["note"] = result.stderr.strip() or result.stdout.strip() or "index.scip missing"
+        return out
+
+    stats_dir = Path(__file__).resolve().parent / "scipstats"
+    stats = run(["go", "run", ".", str(index_path)], cwd=stats_dir, timeout=900)
+    log.append(f"$ go run . {index_path} (cwd={stats_dir})\n{stats.stdout}{stats.stderr}")
+    if stats.returncode != 0:
+        out["status"] = "failed"
+        out["ok"] = False
+        out["note"] = stats.stderr.strip() or stats.stdout.strip()
+        return out
+    parsed = json.loads(stats.stdout)
+    parsed["index_bytes"] = index_path.stat().st_size
+    out["metrics"] = parsed
+    return out
+
+
+def run_scip_python(scip_python_bin: str | None, repo: Path, workdir: Path, log: list[str]) -> dict[str, Any]:
+    if not scip_python_bin:
+        return missing("scip-python", "scip-python")
+    index_path = workdir / "python-index.scip"
+    if index_path.exists():
+        index_path.unlink()
+    start = time.time()
+    # scip-python 0.6.6 produced an empty index for requests when --cwd or
+    # --target-only was supplied, so this adapter runs from the repo root and
+    # records that broader scope in metrics instead of weakening the baseline.
+    result = run(
+        [
+            scip_python_bin,
+            "index",
+            "--project-name",
+            repo.name,
+            "--output",
+            str(index_path),
+            "--quiet",
+        ],
+        cwd=repo,
+        timeout=900,
+    )
+    seconds = round(time.time() - start, 3)
+    log.append(f"$ {scip_python_bin} index --project-name {repo.name} --output {index_path} --quiet (cwd={repo})\n{result.stdout}{result.stderr}")
+    out = base_result("scip-python", "ok" if result.returncode == 0 else "failed")
+    out["seconds"] = seconds
+    if result.returncode != 0 or not index_path.exists():
+        out["status"] = "failed"
+        out["ok"] = False
+        out["note"] = result.stderr.strip() or result.stdout.strip() or "index.scip missing"
+        return out
+
+    stats_dir = Path(__file__).resolve().parent / "scipstats"
+    stats = run(["go", "run", ".", str(index_path)], cwd=stats_dir, timeout=900)
+    log.append(f"$ go run . {index_path} (cwd={stats_dir})\n{stats.stdout}{stats.stderr}")
+    if stats.returncode != 0:
+        out["status"] = "failed"
+        out["ok"] = False
+        out["note"] = stats.stderr.strip() or stats.stdout.strip()
+        return out
+    parsed = json.loads(stats.stdout)
+    parsed["index_bytes"] = index_path.stat().st_size
+    parsed["scope"] = "repo-root"
+    out["metrics"] = parsed
+    return out
+
+
+def run_scip_typescript(cmd_prefix: list[str] | None, lang: str, repo: Path, target: Path, workdir: Path, log: list[str]) -> dict[str, Any]:
+    if not cmd_prefix:
+        return missing("scip-typescript", "scip-typescript")
+    index_path = workdir / f"{lang}-index.scip"
+    if index_path.exists():
+        index_path.unlink()
+    cmd = cmd_prefix + [
+        "index",
+        "--cwd",
+        str(target),
+        "--output",
+        str(index_path),
+        "--no-progress-bar",
+    ]
+    if not (target / "tsconfig.json").exists():
+        cmd.append("--infer-tsconfig")
+    start = time.time()
+    result = run(cmd, cwd=target, timeout=900)
+    seconds = round(time.time() - start, 3)
+    log.append(f"$ {' '.join(cmd)} (cwd={target})\n{result.stdout}{result.stderr}")
+    out = base_result("scip-typescript", "ok" if result.returncode == 0 else "failed")
+    out["seconds"] = seconds
+    if result.returncode != 0 or not index_path.exists():
+        out["status"] = "failed"
+        out["ok"] = False
+        out["note"] = result.stderr.strip() or result.stdout.strip() or "index.scip missing"
+        return out
+
+    stats_dir = Path(__file__).resolve().parent / "scipstats"
+    stats = run(["go", "run", ".", str(index_path)], cwd=stats_dir, timeout=900)
+    log.append(f"$ go run . {index_path} (cwd={stats_dir})\n{stats.stdout}{stats.stderr}")
+    if stats.returncode != 0:
+        out["status"] = "failed"
+        out["ok"] = False
+        out["note"] = stats.stderr.strip() or stats.stdout.strip()
+        return out
+    parsed = json.loads(stats.stdout)
+    parsed["index_bytes"] = index_path.stat().st_size
+    parsed["scope"] = os.path.relpath(target, repo)
+    out["metrics"] = parsed
+    return out
+
+
+def java_build_root(repo: Path, target: Path) -> Path:
+    current = target
+    while True:
+        if (
+            (current / "pom.xml").exists()
+            or (current / "gradlew").exists()
+            or (current / "build.gradle").exists()
+            or (current / "build.gradle.kts").exists()
+            or (current / "settings.gradle").exists()
+            or (current / "settings.gradle.kts").exists()
+        ):
+            return current
+        if current == repo or current.parent == current:
+            return repo
+        current = current.parent
+
+
+def run_scip_java(cmd_prefix: list[str] | None, repo: Path, target: Path, workdir: Path, log: list[str]) -> dict[str, Any]:
+    if not cmd_prefix:
+        return missing("scip-java", "scip-java")
+    build_root = java_build_root(repo, target)
+    index_path = workdir / "java-index.scip"
+    if index_path.exists():
+        index_path.unlink()
+    cmd = cmd_prefix + [
+        "index",
+        "--output",
+        str(index_path),
+        "--",
+        "--batch-mode",
+        "-DskipTests",
+        "-DskipITs",
+        "-Dmaven.javadoc.skip=true",
+        "package",
+    ]
+    start = time.time()
+    result = run(cmd, cwd=build_root, timeout=1800)
+    seconds = round(time.time() - start, 3)
+    log.append(f"$ {' '.join(cmd)} (cwd={build_root})\n{result.stdout}{result.stderr}")
+    out = base_result("scip-java", "ok" if result.returncode == 0 else "failed")
+    out["seconds"] = seconds
+    if result.returncode != 0 or not index_path.exists():
+        out["status"] = "failed"
+        out["ok"] = False
+        out["note"] = result.stderr.strip() or result.stdout.strip() or "index.scip missing"
+        return out
+
+    stats_dir = Path(__file__).resolve().parent / "scipstats"
+    document_prefix = os.path.relpath(target, build_root)
+    stats = run(["go", "run", ".", str(index_path), document_prefix], cwd=stats_dir, timeout=900)
+    log.append(f"$ go run . {index_path} {document_prefix} (cwd={stats_dir})\n{stats.stdout}{stats.stderr}")
+    if stats.returncode != 0:
+        out["status"] = "failed"
+        out["ok"] = False
+        out["note"] = stats.stderr.strip() or stats.stdout.strip()
+        return out
+    parsed = json.loads(stats.stdout)
+    parsed["index_bytes"] = index_path.stat().st_size
+    parsed["scope"] = os.path.relpath(build_root, repo)
+    parsed["document_filter"] = document_prefix
+    out["metrics"] = parsed
+    return out
+
+
+_DURATION_RE = re.compile(r"^([0-9.]+)(ns|us|µs|ms|s|m|h)$")
+
+
+def duration_ms(value: str) -> float | None:
+    match = _DURATION_RE.match(value.strip())
+    if not match:
+        return None
+    amount = float(match.group(1))
+    unit = match.group(2)
+    factors = {
+        "ns": 0.000001,
+        "us": 0.001,
+        "µs": 0.001,
+        "ms": 1.0,
+        "s": 1000.0,
+        "m": 60000.0,
+        "h": 3600000.0,
+    }
+    return round(amount * factors[unit], 3)
+
+
+def run_gopls(gopls_bin: str | None, repo: Path, log: list[str]) -> dict[str, Any]:
+    if not gopls_bin:
+        return missing("gopls", "gopls")
+    start = time.time()
+    result = run([gopls_bin, "stats", "-anon"], cwd=repo, timeout=900)
+    seconds = round(time.time() - start, 3)
+    log.append(f"$ {gopls_bin} stats -anon (cwd={repo})\n{result.stdout}{result.stderr}")
+    out = base_result("gopls", "ok" if result.returncode == 0 else "failed")
+    out["seconds"] = seconds
+    if result.returncode != 0:
+        out["note"] = result.stderr.strip() or result.stdout.strip()
+        return out
+    parsed = json.loads(result.stdout)
+    view = (parsed.get("WorkspaceStats", {}).get("Views") or [{}])[0]
+    workspace = view.get("WorkspacePackages", {})
+    all_packages = view.get("AllPackages", {})
+    metrics = {
+        "gopls_version": parsed.get("GoplsVersion", ""),
+        "go_version": parsed.get("GoVersion", ""),
+        "initial_workspace_load_ms": duration_ms(parsed.get("InitialWorkspaceLoadDuration", "")),
+        "dir_files": parsed.get("DirStats", {}).get("Files", 0),
+        "dir_go_files": parsed.get("DirStats", {}).get("GoFiles", 0),
+        "workspace_packages": workspace.get("Packages", 0),
+        "workspace_compiled_go_files": workspace.get("CompiledGoFiles", 0),
+        "all_packages": all_packages.get("Packages", 0),
+        "diagnostics": view.get("Diagnostics", 0),
+        "heap_alloc_bytes": parsed.get("MemStats", {}).get("HeapAlloc", 0),
+    }
+    out["metrics"] = metrics
+    return out
+
+
+def run_pyright(pyright_bin: str | None, repo: Path, target: Path, log: list[str]) -> dict[str, Any]:
+    if not pyright_bin:
+        return missing("pyright", "pyright")
+    target_arg = os.path.relpath(target, repo)
+    start = time.time()
+    result = run([pyright_bin, target_arg, "--outputjson"], cwd=repo, timeout=900)
+    seconds = round(time.time() - start, 3)
+    log.append(f"$ {pyright_bin} {target_arg} --outputjson (cwd={repo})\n{result.stdout}{result.stderr}")
+    out = base_result("pyright", "ok")
+    out["seconds"] = seconds
+    try:
+        parsed = json.loads(result.stdout)
+    except json.JSONDecodeError:
+        out["status"] = "failed"
+        out["ok"] = False
+        out["note"] = result.stderr.strip() or result.stdout.strip() or "pyright returned non-JSON output"
+        return out
+
+    diagnostics = parsed.get("generalDiagnostics", [])
+    by_severity: dict[str, int] = {}
+    by_rule: dict[str, int] = {}
+    files = set()
+    for diag in diagnostics:
+        severity = diag.get("severity", "")
+        if severity:
+            by_severity[severity] = by_severity.get(severity, 0) + 1
+        rule = diag.get("rule", "")
+        if rule:
+            by_rule[rule] = by_rule.get(rule, 0) + 1
+        file = diag.get("file", "")
+        if file:
+            files.add(file)
+    summary = parsed.get("summary", {})
+    out["metrics"] = {
+        "pyright_version": parsed.get("version", ""),
+        "diagnostics": len(diagnostics),
+        "diagnostics_by_severity": by_severity,
+        "diagnostics_by_rule": by_rule,
+        "diagnostic_files": len(files),
+        "files_analyzed": summary.get("filesAnalyzed", 0),
+        "error_count": summary.get("errorCount", by_severity.get("error", 0)),
+        "warning_count": summary.get("warningCount", by_severity.get("warning", 0)),
+        "information_count": summary.get("informationCount", by_severity.get("information", 0)),
+        "time_in_sec": summary.get("timeInSec", 0),
+        "exit_code": result.returncode,
+    }
+    if result.returncode not in (0, 1):
+        out["status"] = "failed"
+        out["ok"] = False
+        out["note"] = result.stderr.strip() or f"unexpected pyright exit code {result.returncode}"
+    elif result.returncode == 1:
+        out["note"] = "pyright returned diagnostics"
+    return out
+
+
+_TSC_METRIC_RE = re.compile(r"^(Files|Lines|Identifiers|Symbols|Types|Instantiations):\s+([0-9]+)")
+_TSC_TIME_RE = re.compile(r"^(I/O read|I/O write|Parse time|Bind time|Check time|Emit time|Total time):\s+([0-9.]+)s")
+_TSC_MEMORY_RE = re.compile(r"^Memory used:\s+([0-9]+)K")
+
+
+def js_ts_source_files(target: Path, repo: Path, lang: str) -> list[str]:
+    suffixes = (".ts", ".tsx") if lang == "typescript" else (".js", ".jsx", ".mjs", ".cjs")
+    files = [p for p in target.rglob("*") if p.is_file() and p.suffix in suffixes]
+    return [os.path.relpath(p, repo) for p in sorted(files)]
+
+
+def parse_tsc_metrics(text: str) -> dict[str, Any]:
+    metrics: dict[str, Any] = {
+        "diagnostics": 0,
+        "diagnostics_by_code": {},
+        "engine": "tsc",
+        "note": "TypeScript compiler semantic check used as scriptable tsserver proxy",
+    }
+    for line in text.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        if "error TS" in line:
+            metrics["diagnostics"] += 1
+            code_match = re.search(r"error (TS[0-9]+)", line)
+            if code_match:
+                code = code_match.group(1)
+                metrics["diagnostics_by_code"][code] = metrics["diagnostics_by_code"].get(code, 0) + 1
+        if match := _TSC_METRIC_RE.match(line):
+            metrics[match.group(1).lower()] = int(match.group(2))
+            continue
+        if match := _TSC_TIME_RE.match(line):
+            key = match.group(1).lower().replace(" ", "_").replace("/", "io")
+            metrics[f"{key}_sec"] = float(match.group(2))
+            continue
+        if match := _TSC_MEMORY_RE.match(line):
+            metrics["memory_kb"] = int(match.group(1))
+    return metrics
+
+
+def run_tsserver_proxy(cmd_prefix: list[str] | None, lang: str, repo: Path, target: Path, log: list[str]) -> dict[str, Any]:
+    if not cmd_prefix:
+        return missing("tsserver", "tsc/typescript")
+    target_arg = os.path.relpath(target, repo)
+    if lang == "typescript" and (repo / "tsconfig.json").exists():
+        cmd = cmd_prefix + ["--noEmit", "--pretty", "false", "--diagnostics", "-p", "tsconfig.json"]
+    else:
+        files = js_ts_source_files(target, repo, lang)
+        if not files:
+            return base_result("tsserver", "failed", f"no {lang} source files under {target_arg}")
+        cmd = cmd_prefix + [
+            "--ignoreConfig",
+            "--allowJs",
+            "--checkJs",
+            "--noEmit",
+            "--pretty",
+            "false",
+            "--diagnostics",
+            "--skipLibCheck",
+            "--moduleResolution",
+            "node16",
+            "--module",
+            "Node16",
+            "--target",
+            "ES2020",
+            "--ignoreDeprecations",
+            "6.0",
+        ] + files
+    start = time.time()
+    result = run(cmd, cwd=repo, timeout=900)
+    seconds = round(time.time() - start, 3)
+    combined = f"{result.stdout}{result.stderr}"
+    log.append(f"$ {' '.join(cmd)} (cwd={repo})\n{combined}")
+    metrics = parse_tsc_metrics(combined)
+    out = base_result("tsserver", "ok" if metrics.get("files") else "failed")
+    out["seconds"] = seconds
+    out["metrics"] = metrics
+    if result.returncode != 0:
+        out["note"] = f"tsc returned diagnostics/exit {result.returncode}; used as scriptable tsserver proxy"
+    if not metrics.get("files"):
+        out["status"] = "failed"
+        out["ok"] = False
+        out["note"] = combined.strip() or f"unexpected tsc exit code {result.returncode}"
+    return out
+
+
+def _lsp_write(proc: subprocess.Popen[bytes], payload: dict[str, Any]) -> None:
+    if proc.stdin is None:
+        raise RuntimeError("LSP stdin is closed")
+    body = json.dumps(payload, separators=(",", ":")).encode("utf-8")
+    proc.stdin.write(f"Content-Length: {len(body)}\r\n\r\n".encode("ascii") + body)
+    proc.stdin.flush()
+
+
+def _lsp_read_loop(stdout: Any, messages: "queue.Queue[dict[str, Any]]") -> None:
+    while True:
+        headers: dict[str, str] = {}
+        while True:
+            line = stdout.readline()
+            if not line:
+                return
+            if line in (b"\r\n", b"\n"):
+                break
+            try:
+                name, value = line.decode("ascii", errors="replace").split(":", 1)
+            except ValueError:
+                continue
+            headers[name.strip().lower()] = value.strip()
+        length = int(headers.get("content-length", "0") or "0")
+        if length <= 0:
+            continue
+        body = stdout.read(length)
+        if not body:
+            return
+        try:
+            messages.put(json.loads(body.decode("utf-8")))
+        except json.JSONDecodeError:
+            continue
+
+
+def _tail_pipe(pipe: Any, lines: list[str], limit: int = 80) -> None:
+    while True:
+        line = pipe.readline()
+        if not line:
+            return
+        text = line.decode("utf-8", errors="replace").rstrip()
+        if text:
+            lines.append(text)
+            del lines[:-limit]
+
+
+def _wait_lsp(
+    messages: "queue.Queue[dict[str, Any]]",
+    wanted_ids: set[int],
+    diagnostics: dict[str, int],
+    timeout: float,
+) -> dict[int, dict[str, Any]]:
+    deadline = time.time() + timeout
+    found: dict[int, dict[str, Any]] = {}
+    while wanted_ids - set(found) and time.time() < deadline:
+        try:
+            msg = messages.get(timeout=max(0.05, min(0.5, deadline - time.time())))
+        except queue.Empty:
+            continue
+        if msg.get("method") == "textDocument/publishDiagnostics":
+            params = msg.get("params", {})
+            uri = params.get("uri", "")
+            diagnostics[uri] = len(params.get("diagnostics") or [])
+        msg_id = msg.get("id")
+        if isinstance(msg_id, int) and msg_id in wanted_ids:
+            found[msg_id] = msg
+    return found
+
+
+def _lsp_symbol_count(items: Any) -> int:
+    if not isinstance(items, list):
+        return 0
+    total = 0
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        total += 1
+        total += _lsp_symbol_count(item.get("children"))
+    return total
+
+
+def java_source_files(target: Path, limit: int = 5) -> list[Path]:
+    return sorted(target.rglob("*.java"))[:limit]
+
+
+def c_family_source_files(target: Path, lang: str, limit: int = 8) -> list[Path]:
+    if lang == "c":
+        suffixes = (".c", ".h")
+    else:
+        suffixes = (".cc", ".cpp", ".cxx", ".hpp", ".hxx", ".hh", ".h")
+    files = [p for p in target.rglob("*") if p.is_file() and p.suffix in suffixes]
+    source_first = sorted(files, key=lambda p: (p.suffix in {".h", ".hpp", ".hxx", ".hh"}, str(p)))
+    return source_first[:limit]
+
+
+def run_jdtls(cmd_prefix: list[str] | None, repo: Path, target: Path, workdir: Path, log: list[str]) -> dict[str, Any]:
+    if not cmd_prefix:
+        return missing("jdtls", "jdtls")
+    build_root = java_build_root(repo, target)
+    data_dir = workdir / "jdtls-workspace"
+    data_dir.mkdir(parents=True, exist_ok=True)
+    cmd = list(cmd_prefix)
+    if "-data" not in cmd:
+        cmd += ["-data", str(data_dir)]
+    sources = java_source_files(target, limit=5)
+    if not sources:
+        return base_result("jdtls", "failed", f"no Java source files under {target}")
+
+    messages: "queue.Queue[dict[str, Any]]" = queue.Queue()
+    stderr_tail: list[str] = []
+    start = time.time()
+    try:
+        proc = subprocess.Popen(
+            cmd,
+            cwd=build_root,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    except OSError as exc:
+        return base_result("jdtls", "failed", str(exc))
+
+    assert proc.stdout is not None
+    assert proc.stderr is not None
+    reader = threading.Thread(target=_lsp_read_loop, args=(proc.stdout, messages), daemon=True)
+    stderr_reader = threading.Thread(target=_tail_pipe, args=(proc.stderr, stderr_tail), daemon=True)
+    reader.start()
+    stderr_reader.start()
+    diagnostics: dict[str, int] = {}
+    out = base_result("jdtls", "failed")
+    try:
+        root_uri = build_root.resolve().as_uri()
+        _lsp_write(
+            proc,
+            {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "initialize",
+                "params": {
+                    "processId": os.getpid(),
+                    "rootUri": root_uri,
+                    "capabilities": {},
+                    "workspaceFolders": [{"uri": root_uri, "name": build_root.name}],
+                },
+            },
+        )
+        init = _wait_lsp(messages, {1}, diagnostics, timeout=60.0)
+        if 1 not in init:
+            note = "initialize timed out"
+            if proc.poll() is not None:
+                note = f"jdtls exited {proc.returncode}"
+            out["note"] = note + (("; " + " | ".join(stderr_tail[-5:])) if stderr_tail else "")
+            return out
+        if init[1].get("error"):
+            out["note"] = json.dumps(init[1]["error"])
+            return out
+
+        _lsp_write(proc, {"jsonrpc": "2.0", "method": "initialized", "params": {}})
+        wanted: set[int] = set()
+        for offset, path in enumerate(sources, start=10):
+            text = path.read_text(encoding="utf-8", errors="replace")
+            uri = path.resolve().as_uri()
+            _lsp_write(
+                proc,
+                {
+                    "jsonrpc": "2.0",
+                    "method": "textDocument/didOpen",
+                    "params": {
+                        "textDocument": {
+                            "uri": uri,
+                            "languageId": "java",
+                            "version": 1,
+                            "text": text,
+                        }
+                    },
+                },
+            )
+            _lsp_write(
+                proc,
+                {
+                    "jsonrpc": "2.0",
+                    "id": offset,
+                    "method": "textDocument/documentSymbol",
+                    "params": {"textDocument": {"uri": uri}},
+                },
+            )
+            wanted.add(offset)
+        _lsp_write(
+            proc,
+            {
+                "jsonrpc": "2.0",
+                "id": 1000,
+                "method": "workspace/symbol",
+                "params": {"query": "Gson"},
+            },
+        )
+        wanted.add(1000)
+        responses = _wait_lsp(messages, wanted, diagnostics, timeout=45.0)
+        doc_symbols = 0
+        doc_symbol_files = 0
+        for msg_id, msg in responses.items():
+            if msg_id == 1000:
+                continue
+            count = _lsp_symbol_count(msg.get("result"))
+            doc_symbols += count
+            doc_symbol_files += 1
+        workspace_symbols = 0
+        if 1000 in responses and isinstance(responses[1000].get("result"), list):
+            workspace_symbols = len(responses[1000]["result"])
+        out = base_result("jdtls", "ok")
+        out["metrics"] = {
+            "build_root": os.path.relpath(build_root, repo),
+            "sample_files": len(sources),
+            "document_symbol_files": doc_symbol_files,
+            "document_symbols": doc_symbols,
+            "workspace_symbols_query_gson": workspace_symbols,
+            "diagnostic_files": len(diagnostics),
+            "diagnostics": sum(diagnostics.values()),
+            "initialized": True,
+            "stderr_tail": stderr_tail[-5:],
+        }
+        if doc_symbol_files < len(sources):
+            out["note"] = f"documentSymbol responses {doc_symbol_files}/{len(sources)} before timeout"
+        return out
+    except Exception as exc:
+        out["note"] = str(exc) + (("; " + " | ".join(stderr_tail[-5:])) if stderr_tail else "")
+        return out
+    finally:
+        out["seconds"] = round(time.time() - start, 3)
+        try:
+            if proc.poll() is None:
+                _lsp_write(proc, {"jsonrpc": "2.0", "id": 9000, "method": "shutdown", "params": None})
+                _lsp_write(proc, {"jsonrpc": "2.0", "method": "exit", "params": None})
+                proc.wait(timeout=5)
+        except Exception:
+            if proc.poll() is None:
+                proc.kill()
+        log.append(f"$ {' '.join(cmd)} (cwd={build_root})\nstatus={out.get('status')} note={out.get('note', '')}\nstderr_tail={' | '.join(stderr_tail[-10:])}")
+
+
+def run_clangd(cmd_prefix: list[str] | None, lang: str, repo: Path, target: Path, workdir: Path, log: list[str]) -> dict[str, Any]:
+    if not cmd_prefix:
+        return missing("clangd", "clangd")
+    sources = c_family_source_files(target, lang)
+    if not sources:
+        return base_result("clangd", "failed", f"no {lang} source files under {target}")
+    data_dir = workdir / f"{lang}-clangd"
+    data_dir.mkdir(parents=True, exist_ok=True)
+    cmd = list(cmd_prefix)
+    if not any(part.startswith("--background-index") for part in cmd):
+        cmd.append("--background-index=false")
+    if not any(part.startswith("--compile-commands-dir") for part in cmd):
+        cmd.append(f"--compile-commands-dir={repo}")
+
+    messages: "queue.Queue[dict[str, Any]]" = queue.Queue()
+    stderr_tail: list[str] = []
+    diagnostics: dict[str, int] = {}
+    start = time.time()
+    try:
+        proc = subprocess.Popen(
+            cmd,
+            cwd=repo,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    except OSError as exc:
+        return base_result("clangd", "failed", str(exc))
+
+    assert proc.stdout is not None
+    assert proc.stderr is not None
+    threading.Thread(target=_lsp_read_loop, args=(proc.stdout, messages), daemon=True).start()
+    threading.Thread(target=_tail_pipe, args=(proc.stderr, stderr_tail), daemon=True).start()
+    out = base_result("clangd", "failed")
+    try:
+        root_uri = repo.resolve().as_uri()
+        _lsp_write(
+            proc,
+            {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "initialize",
+                "params": {
+                    "processId": os.getpid(),
+                    "rootUri": root_uri,
+                    "capabilities": {},
+                    "workspaceFolders": [{"uri": root_uri, "name": repo.name}],
+                },
+            },
+        )
+        init = _wait_lsp(messages, {1}, diagnostics, timeout=20.0)
+        if 1 not in init:
+            note = "initialize timed out"
+            if proc.poll() is not None:
+                note = f"clangd exited {proc.returncode}"
+            out["note"] = note + (("; " + " | ".join(stderr_tail[-5:])) if stderr_tail else "")
+            return out
+        if init[1].get("error"):
+            out["note"] = json.dumps(init[1]["error"])
+            return out
+        _lsp_write(proc, {"jsonrpc": "2.0", "method": "initialized", "params": {}})
+
+        wanted: set[int] = set()
+        language_id = "c" if lang == "c" else "cpp"
+        for offset, path in enumerate(sources, start=10):
+            text = path.read_text(encoding="utf-8", errors="replace")
+            uri = path.resolve().as_uri()
+            _lsp_write(
+                proc,
+                {
+                    "jsonrpc": "2.0",
+                    "method": "textDocument/didOpen",
+                    "params": {
+                        "textDocument": {
+                            "uri": uri,
+                            "languageId": language_id,
+                            "version": 1,
+                            "text": text,
+                        }
+                    },
+                },
+            )
+            _lsp_write(
+                proc,
+                {
+                    "jsonrpc": "2.0",
+                    "id": offset,
+                    "method": "textDocument/documentSymbol",
+                    "params": {"textDocument": {"uri": uri}},
+                },
+            )
+            wanted.add(offset)
+        responses = _wait_lsp(messages, wanted, diagnostics, timeout=20.0)
+        doc_symbols = 0
+        doc_symbol_files = 0
+        for msg in responses.values():
+            count = _lsp_symbol_count(msg.get("result"))
+            doc_symbols += count
+            doc_symbol_files += 1
+        out = base_result("clangd", "ok")
+        out["metrics"] = {
+            "sample_files": len(sources),
+            "document_symbol_files": doc_symbol_files,
+            "document_symbols": doc_symbols,
+            "diagnostic_files": len(diagnostics),
+            "diagnostics": sum(diagnostics.values()),
+            "initialized": True,
+            "stderr_tail": stderr_tail[-5:],
+        }
+        if doc_symbol_files < len(sources):
+            out["note"] = f"documentSymbol responses {doc_symbol_files}/{len(sources)} before timeout"
+        return out
+    except Exception as exc:
+        out["note"] = str(exc) + (("; " + " | ".join(stderr_tail[-5:])) if stderr_tail else "")
+        return out
+    finally:
+        out["seconds"] = round(time.time() - start, 3)
+        try:
+            if proc.poll() is None:
+                _lsp_write(proc, {"jsonrpc": "2.0", "id": 9000, "method": "shutdown", "params": None})
+                _lsp_write(proc, {"jsonrpc": "2.0", "method": "exit", "params": None})
+                proc.wait(timeout=5)
+        except Exception:
+            if proc.poll() is None:
+                proc.kill()
+        log.append(f"$ {' '.join(cmd)} (cwd={repo})\nstatus={out.get('status')} note={out.get('note', '')}\nstderr_tail={' | '.join(stderr_tail[-10:])}")
+
+
+def query_token_rows(atlas_bin: str | None, graphify_bin: str | None, db: Path, target: Path, log: list[str]) -> list[dict[str, Any]]:
+    if not atlas_bin or not graphify_bin or not db.exists():
+        return []
+    hubs = run([atlas_bin, "--db", f"sqlite://{db}", "--json", "hubs", "--limit", "6"])
+    names: list[str] = []
+    try:
+        for hub in json.loads(hubs.stdout).get("hubs", []):
+            name = hub.get("bare_name") or hub.get("name") or ""
+            if name and name not in names:
+                names.append(name)
+    except json.JSONDecodeError:
+        return []
+
+    rows: list[dict[str, Any]] = []
+    for name in names[:4]:
+        t0 = time.time()
+        atlas = run([atlas_bin, "--db", f"sqlite://{db}", "--format", "plain", "explain", name])
+        atlas_ms = round((time.time() - t0) * 1000, 3)
+        t0 = time.time()
+        graphify = run([graphify_bin, "explain", name], cwd=target)
+        graphify_ms = round((time.time() - t0) * 1000, 3)
+        row = {
+            "symbol": name,
+            "atlas_tokens": tokens(atlas.stdout),
+            "graphify_tokens": tokens(graphify.stdout),
+            "atlas_ms": atlas_ms,
+            "graphify_ms": graphify_ms,
+            "atlas_missing": not atlas.stdout.strip(),
+            "graphify_missing": "No node matching" in graphify.stdout or not graphify.stdout.strip(),
+        }
+        rows.append(row)
+        log.append(
+            f"$ explain {name}\n"
+            f"atlas_tokens={row['atlas_tokens']} graphify_tokens={row['graphify_tokens']} "
+            f"atlas_ms={row['atlas_ms']} graphify_ms={row['graphify_ms']}"
+        )
+    return rows
+
+
+def equivalent_query_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return [row for row in rows if not row.get("atlas_missing") and not row.get("graphify_missing")]
+
+
+def query_totals(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    eq = equivalent_query_rows(rows)
+    return {
+        "rows": len(rows),
+        "equivalent_rows": len(eq),
+        "graphify_missing": sum(1 for row in rows if row.get("graphify_missing")),
+        "atlas_tokens": sum(row["atlas_tokens"] for row in eq),
+        "graphify_tokens": sum(row["graphify_tokens"] for row in eq),
+        "atlas_ms": sum(row["atlas_ms"] for row in eq),
+        "graphify_ms": sum(row["graphify_ms"] for row in eq),
+    }
+
+
+def run_language(lang: str, args: argparse.Namespace, workdir: Path) -> dict[str, Any]:
+    url, subdir = REPOS[lang]
+    repo = workdir / lang / "repo"
+    lang_workdir = workdir / lang
+    lang_workdir.mkdir(parents=True, exist_ok=True)
+    log: list[str] = []
+    if not ensure_repo(url, repo, log):
+        return {
+            "language": lang,
+            "repo": url,
+            "subdir": subdir,
+            "target": str(repo),
+            "tools": {"clone": base_result("clone", "failed", "git clone failed")},
+            "queries": [],
+        }
+    target = repo / subdir if subdir else repo
+    if not target.exists():
+        target = repo
+
+    atlas_bin = executable(args.atlas)
+    graphify_bin = resolve_graphify(args.graphify)
+    db = lang_workdir / "atlas.db"
+    tools: dict[str, Any] = {}
+
+    clean_generated_sidecars(target)
+    run_order = ["atlas"] + [tool for tool in MATRIX[lang] if tool not in {"atlas", "graphify"}] + ["graphify"]
+
+    for tool in run_order:
+        if tool == "atlas":
+            tools[tool] = run_atlas(atlas_bin, target, db, log)
+        elif tool == "graphify":
+            tools[tool] = run_graphify(graphify_bin, target, log)
+        elif tool == "scip-go":
+            tools[tool] = run_scip_go(executable(args.scip_go), repo, lang_workdir, log)
+        elif tool == "scip-python":
+            tools[tool] = run_scip_python(executable(args.scip_python), repo, lang_workdir, log)
+        elif tool == "scip-typescript":
+            tools[tool] = run_scip_typescript(
+                tool_command(args.scip_typescript, "@sourcegraph/scip-typescript", "scip-typescript"),
+                lang,
+                repo,
+                target,
+                lang_workdir,
+                log,
+            )
+        elif tool == "scip-java":
+            tools[tool] = run_scip_java(command_prefix(args.scip_java), repo, target, lang_workdir, log)
+        elif tool == "gopls":
+            tools[tool] = run_gopls(executable(args.gopls), repo, log)
+        elif tool == "pyright":
+            tools[tool] = run_pyright(executable(args.pyright), repo, target, log)
+        elif tool == "tsserver":
+            tools[tool] = run_tsserver_proxy(tool_command(args.tsc, "typescript", "tsc"), lang, repo, target, log)
+        elif tool == "jdtls":
+            tools[tool] = run_jdtls(command_prefix(args.jdtls), repo, target, lang_workdir, log)
+        elif tool == "clangd":
+            tools[tool] = run_clangd(command_prefix(args.clangd), lang, repo, target, lang_workdir, log)
+        else:
+            tools[tool] = not_implemented(tool, f"{tool} adapter will be added when iterating {lang}")
+
+    truth: dict[str, Any] = {}
+    if lang == "python":
+        py_truth = python_ast_truth(target)
+        py_truth["atlas_callable_class_symbols"] = sqlite_symbol_kind_count(db, ("function", "method", "class"))
+        py_truth["atlas_assignment_symbols"] = sqlite_symbol_kind_count(db, ("constant", "variable", "field"))
+        truth["python_ast"] = py_truth
+
+    queries = query_token_rows(atlas_bin, graphify_bin, db, target, log)
+    (Path(args.out).parent / "logs").mkdir(parents=True, exist_ok=True)
+    (Path(args.out).parent / "logs" / f"{lang}-matrix.log").write_text("\n\n".join(log))
+    return {
+        "language": lang,
+        "repo": url,
+        "subdir": subdir,
+        "target": str(target),
+        "tools": tools,
+        "truth": truth,
+        "queries": queries,
+    }
+
+
+def tool_cell(result: dict[str, Any], key: str) -> str:
+    tool = result["tools"].get(key)
+    if not tool:
+        return "n/a"
+    if not tool.get("ok"):
+        return tool.get("status", "missing")
+    metrics = tool.get("metrics", {})
+    if key == "atlas":
+        cold = metrics.get("cold_seconds")
+        suffix = f" reindex (cold {cold}s)" if cold is not None else ""
+        return f"{metrics.get('symbols', 0)} symbols, {metrics.get('calls', 0)} calls, {tool['seconds']}s{suffix}"
+    if key == "graphify":
+        return f"{metrics.get('nodes', 0)} nodes, {metrics.get('calls', 0)} calls, {tool['seconds']}s"
+    if key == "scip-go":
+        return f"{metrics.get('symbols', 0)} symbols, {metrics.get('occurrences', 0)} occ, {tool['seconds']}s"
+    if key == "scip-python":
+        return f"{metrics.get('symbols', 0)} symbols, {metrics.get('occurrences', 0)} occ, {tool['seconds']}s"
+    if key == "scip-typescript":
+        return f"{metrics.get('symbols', 0)} symbols, {metrics.get('occurrences', 0)} occ, {tool['seconds']}s"
+    if key == "scip-java":
+        return f"{metrics.get('symbols', 0)} symbols, {metrics.get('occurrences', 0)} occ, {tool['seconds']}s"
+    if key == "gopls":
+        return f"{metrics.get('workspace_packages', 0)} pkgs, {metrics.get('diagnostics', 0)} diag, {tool['seconds']}s"
+    if key == "pyright":
+        return f"{metrics.get('files_analyzed', 0)} files, {metrics.get('diagnostics', 0)} diag, {tool['seconds']}s"
+    if key == "tsserver":
+        return f"{metrics.get('files', 0)} files, {metrics.get('diagnostics', 0)} diag, {tool['seconds']}s"
+    if key == "jdtls":
+        return f"{metrics.get('document_symbols', 0)} doc syms, {metrics.get('diagnostics', 0)} diag, {tool['seconds']}s"
+    if key == "clangd":
+        return f"{metrics.get('document_symbols', 0)} doc syms, {metrics.get('diagnostics', 0)} diag, {tool['seconds']}s"
+    return "ok"
+
+
+def atlas_speed_line(atlas: dict[str, Any], graphify: dict[str, Any]) -> str:
+    am = atlas.get("metrics", {})
+    cold = am.get("cold_seconds")
+    cold_txt = f" (cold index {cold}s)" if cold is not None else ""
+    return f"- Speed: Atlas reindex {atlas['seconds']}s{cold_txt} vs graphify {graphify['seconds']}s, graphify/Atlas = {ratio(graphify['seconds'], atlas['seconds'])}x."
+
+
+def scip_navigation_symbols(metrics: dict[str, Any]) -> int:
+    kinds = metrics.get("kinds", {})
+    excluded = {"Variable", "Package", "UnspecifiedKind"}
+    return sum(count for kind, count in kinds.items() if kind not in excluded)
+
+
+def live_smoke_paths() -> list[tuple[Path, str]]:
+    bench_dir = Path(__file__).parent
+    paths = sorted(bench_dir.glob("LIVE_*_SMOKE.json"))
+    if not paths:
+        return []
+    return [(path, f"bench/{path.name}") for path in paths]
+
+
+def render_live_smokes() -> list[str]:
+    smoke_paths = live_smoke_paths()
+    if not smoke_paths:
+        return []
+
+    lines: list[str] = []
+    w = lines.append
+    w("## Live additional-language smokes")
+    w("")
+    for path, display_path in smoke_paths:
+        lines.extend(render_one_live_smoke(path, display_path))
+    return lines
+
+
+def render_one_live_smoke(path: Path, display_path: str) -> list[str]:
+    try:
+        smoke = json.loads(path.read_text())
+    except (OSError, json.JSONDecodeError) as exc:
+        return [
+            f"- Could not load `{display_path}`: {exc}.",
+            "",
+        ]
+
+    atlas = smoke.get("atlas", {})
+    graphify = smoke.get("graphify", {})
+    index = atlas.get("index", {})
+    reindex = atlas.get("reindex", {})
+    commands = smoke.get("commands", {})
+    lines: list[str] = []
+    w = lines.append
+    raw_language = str(smoke.get("language", path.stem))
+    language = {
+        "csharp": "C#",
+        "dart": "Dart",
+        "elixir": "Elixir",
+        "groovy": "Groovy/Gradle",
+        "kotlin": "Kotlin",
+        "objc": "Objective-C",
+        "php": "PHP",
+        "powershell": "PowerShell",
+        "ruby": "Ruby",
+        "rust": "Rust",
+        "scala": "Scala",
+        "sql": "SQL",
+        "svelte": "Svelte",
+        "terraform": "Terraform/HCL",
+        "vue": "Vue",
+        "zig": "Zig",
+    }.get(raw_language.lower(), raw_language.title())
+    w(f"### {language}")
+    w("")
+    w(
+        f"Raw artifact: `{display_path}`. Smoke used a fresh shallow clone of `{smoke.get('repo')}` at commit "
+        f"`{smoke.get('commit')}`. `graphify-out/` was removed before Atlas indexed "
+        "the repo, then graphify was run afterward for the comparison."
+    )
+    if commands.get("target_path"):
+        w(f"Benchmark target: `{commands['target_path']}`.")
+    w("")
+    w("Commands:")
+    w("")
+    for key, label in (
+        ("atlas_index", "Atlas index"),
+        ("atlas_reindex", "Atlas no-change reindex"),
+        ("graphify_update", "graphify update"),
+        ("native_baseline", "Native baseline"),
+    ):
+        if commands.get(key):
+            w(f"- {label}: `{commands[key]}`")
+    w("")
+    w("Results:")
+    w("")
+    w(
+        f"- Atlas indexed {index.get('indexed_files')} files, {index.get('symbols')} symbols, "
+        f"and {index.get('edges')} edges in {atlas.get('cold_wall_seconds')}s cold; "
+        f"no-change reindex was {atlas.get('reindex_wall_seconds')}s (`mode={reindex.get('mode')}`)."
+    )
+    langs = index.get("languages") or {}
+    if langs:
+        lang_text = ", ".join(f"`{k}:{v}`" for k, v in sorted(langs.items(), key=lambda kv: (-kv[1], kv[0])))
+        w(f"- Atlas language counts were {lang_text}.")
+    graphify_metrics = graphify.get("metrics", graphify)
+    graphify_seconds = graphify.get("update_wall_seconds", graphify.get("seconds"))
+    if graphify_metrics:
+        w(
+            f"- graphify rebuilt {graphify_metrics.get('nodes')} nodes and {graphify_metrics.get('links')} links "
+            f"in {graphify_seconds}s."
+        )
+    w("- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.")
+    native = smoke.get("native_baseline") or {}
+    if native:
+        native_metrics = native.get("metrics", {})
+        native_status = native.get("status", "unknown")
+        native_bits = ", ".join(f"{k}:{v}" for k, v in native_metrics.items() if isinstance(v, (int, float, str)))
+        w(f"- Native baseline `{native.get('tool', 'native')}` status: {native_status}" + (f" ({native_bits})." if native_bits else "."))
+    richer = smoke.get("richer_native_baselines") or {}
+    missing_richer = [name for name, data in richer.items() if data.get("status") == "missing"]
+    if missing_richer:
+        w(f"- Richer native baselines not available on this machine: {', '.join(f'`{name}`' for name in missing_richer)}.")
+    coverage = smoke.get("coverage") or {}
+    if coverage:
+        cov_text = ", ".join(f"{k}: {'n/a' if v is None else v}" for k, v in coverage.items())
+        w(f"- Coverage proxy: {cov_text}.")
+    optimization = smoke.get("optimization") or {}
+    if optimization:
+        w(
+            f"- Optimization cycles: {optimization.get('cycles_run')} "
+            f"({optimization.get('stop_reason')})."
+        )
+    w("")
+    w("| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |")
+    w("|---|---:|---:|---:|---:|---:|---:|")
+    total_atlas_ms = 0.0
+    total_graphify_ms = 0.0
+    total_atlas_tokens = 0
+    total_graphify_tokens = 0
+    equivalent_atlas_ms = 0.0
+    equivalent_graphify_ms = 0.0
+    equivalent_atlas_tokens = 0
+    equivalent_graphify_tokens = 0
+    equivalent_rows = 0
+    missing_rows: list[str] = []
+    for row in smoke.get("queries", []):
+        atlas_ms = float(row.get("atlas_ms", 0) or 0)
+        graphify_ms = float(row.get("graphify_ms", 0) or 0)
+        atlas_tokens = int(row.get("atlas_tokens", 0) or 0)
+        graphify_tokens = int(row.get("graphify_tokens", 0) or 0)
+        total_atlas_ms += atlas_ms
+        total_graphify_ms += graphify_ms
+        total_atlas_tokens += atlas_tokens
+        total_graphify_tokens += graphify_tokens
+        if row.get("atlas_missing") or row.get("graphify_missing"):
+            status = "atlas_missing" if row.get("atlas_missing") else "graphify_missing"
+            missing_rows.append(f"`{row.get('symbol')}` ({status})")
+        else:
+            equivalent_rows += 1
+            equivalent_atlas_ms += atlas_ms
+            equivalent_graphify_ms += graphify_ms
+            equivalent_atlas_tokens += atlas_tokens
+            equivalent_graphify_tokens += graphify_tokens
+        w(
+            f"| `{row.get('symbol')}` | {atlas_ms:.3f} | {graphify_ms:.3f} | "
+            f"{ratio(graphify_ms, atlas_ms)}x | {atlas_tokens} | {graphify_tokens} | "
+            f"{ratio(graphify_tokens, atlas_tokens)}x |"
+        )
+    w("")
+    if missing_rows:
+        w(f"- Query caveat: {', '.join(missing_rows)}; raw rows remain in the table.")
+    if equivalent_rows:
+        latency_ratio = ratio(equivalent_graphify_ms, equivalent_atlas_ms)
+        token_ratio = ratio(equivalent_graphify_tokens, equivalent_atlas_tokens)
+    else:
+        latency_ratio = ratio(total_graphify_ms, total_atlas_ms)
+        token_ratio = ratio(total_graphify_tokens, total_atlas_tokens)
+    language_label = language
+    if (latency_ratio or 0) >= 5 and (token_ratio or 0) >= 5:
+        w(
+            f"5x note: this {language_label} smoke meets the 5x threshold on equivalent query rows "
+            f"for latency ({latency_ratio}x) and token output ({token_ratio}x). Accuracy still uses the "
+            "native/graphify coverage proxies above; this is not a blanket quality claim."
+        )
+    else:
+        w(
+            f"Saturation note: this {language_label} smoke proves Atlas has lower latency than graphify "
+            f"on these live queries ({latency_ratio}x overall), but it does not prove every 5x target "
+            f"(token ratio {token_ratio}x overall). Pulse should use `atlas context`/MCP with a hard "
+            "token budget rather than raw `search --json` when measuring review-context token cost."
+        )
+    w("")
+    return lines
+
+
+def render(results: list[dict[str, Any]]) -> str:
+    graphify_discovery = discover_graphify_runtime()
+    lines: list[str] = []
+    w = lines.append
+    w("# Atlas code-intelligence matrix benchmark\n")
+    w("This report benchmarks Atlas against the agreed per-language baselines. Raw metrics are kept separate by tool because Atlas, graphify, SCIP, and LSP servers expose different surfaces.\n")
+    w("## graphify language discovery\n")
+    w(f"- Installed graphify: {graphify_discovery['version']} (`{graphify_discovery['binary']}`).")
+    if graphify_discovery.get("python"):
+        w(f"- Runtime Python: `{graphify_discovery['python']}`.")
+    w(f"- Source inspected: `{graphify_discovery['source_root']}`.")
+    if graphify_discovery.get("extract_source"):
+        w(f"- Extract source: `{graphify_discovery['extract_source']}`.")
+    if graphify_discovery.get("detect_source"):
+        w(f"- Detect source: `{graphify_discovery['detect_source']}`.")
+    for item in graphify_discovery["evidence"]:
+        w(f"- Evidence: {item}")
+    if graphify_discovery.get("help_command_count") is not None:
+        w(f"- Runtime help probe: `graphify --help` succeeded and listed {graphify_discovery['help_command_count']} command/help lines.")
+    if graphify_discovery.get("dispatch_count"):
+        w(
+            f"- Runtime support probe: `_DISPATCH` plus filename-special extractors exposed "
+            f"{graphify_discovery['dispatch_count']} deterministic extractor entries; "
+            f"`CODE_EXTENSIONS` exposed {graphify_discovery['code_extension_count']} code extensions."
+        )
+    if graphify_discovery.get("runtime_error"):
+        w(f"- Runtime discovery warning: {graphify_discovery['runtime_error']}. Falling back to the checked-in family table.")
+    detector_only = ", ".join(f"`{ext}`" for ext in graphify_discovery["detector_only_code_extensions"]) or "none"
+    w(f"- Detector-only code extensions in this graphify build, not counted as deterministic parser support because `_DISPATCH` has no extractor for them: {detector_only}.\n")
+    w("| graphify family | extensions / special cases | graphify extractor | Atlas status |")
+    w("|---|---|---|---|")
+    for family, exts, extractor, atlas_status in graphify_discovery["rows"]:
+        w(f"| {family} | `{exts}` | `{extractor}` | {atlas_status} |")
+    w("")
+    for line in render_live_smokes():
+        w(line)
+    w("## Tool matrix\n")
+    w("| Language | Repo | Atlas | graphify | SCIP | LSP |")
+    w("|---|---|---|---|---|---|")
+    for result in results:
+        lang = result["language"]
+        repo = result["repo"].split("github.com/")[-1]
+        scip_key = "scip-go" if lang == "go" else next((t for t in MATRIX[lang] if t.startswith("scip-")), "")
+        lsp_key = {
+            "go": "gopls",
+            "python": "pyright",
+            "javascript": "tsserver",
+            "typescript": "tsserver",
+            "java": "jdtls",
+            "c": "clangd",
+            "cpp": "clangd",
+        }.get(lang, "")
+        w(f"| {lang} | {repo} | {tool_cell(result, 'atlas')} | {tool_cell(result, 'graphify')} | {tool_cell(result, scip_key)} | {tool_cell(result, lsp_key)} |")
+
+    w("\n## Derived Go ratios\n")
+    go = next((r for r in results if r["language"] == "go"), None)
+    if go:
+        atlas = go["tools"].get("atlas", {})
+        graphify = go["tools"].get("graphify", {})
+        scip = go["tools"].get("scip-go", {})
+        gopls = go["tools"].get("gopls", {})
+        if atlas.get("ok") and graphify.get("ok"):
+            am = atlas["metrics"]
+            gm = graphify["metrics"]
+            w(atlas_speed_line(atlas, graphify))
+            timings = am.get("timings_ms") or {}
+            if timings:
+                ordered = ", ".join(f"{k}:{v}ms" for k, v in sorted(timings.items(), key=lambda kv: kv[1], reverse=True))
+                w(f"- Atlas index phase timings: {ordered}.")
+            if am.get("edge_kinds"):
+                edge_kinds = ", ".join(f"{k}:{v}" for k, v in sorted(am.get("edge_kinds", {}).items()))
+                w(f"- Atlas edge kinds: {edge_kinds}.")
+            w(f"- Call coverage proxy: Atlas internal calls {am.get('internal_calls', 0)} vs graphify calls {gm.get('calls', 0)}, Atlas/graphify = {ratio(am.get('internal_calls', 0), gm.get('calls', 0))}x.")
+            w(f"- Atlas receiver-typed calls: {am.get('recv_typed', 0)}/{am.get('calls', 0)} = {pct(am.get('recv_typed', 0), am.get('calls', 0))}%.")
+            w(f"- graphify extracted calls: {gm.get('extracted_calls', 0)}/{gm.get('calls', 0)} = {gm.get('extracted_pct', 0)}%.")
+        if atlas.get("ok") and scip.get("ok"):
+            am = atlas["metrics"]
+            sm = scip["metrics"]
+            scip_nav = scip_navigation_symbols(sm)
+            w(f"- SCIP semantic index: {sm.get('documents', 0)} documents, {sm.get('symbols', 0)} symbols, {sm.get('occurrences', 0)} occurrences, {sm.get('references', 0)} references.")
+            w(f"- SCIP navigation symbols (excluding local variables/packages) = {scip_nav}; Atlas symbols vs SCIP navigation symbols = {ratio(am.get('symbols', 0), scip_nav)}x.")
+            w(f"- SCIP local variables = {sm.get('kinds', {}).get('Variable', 0)}. Atlas currently keeps locals out of the first-class symbol table, which lowers token cost but limits fine-grained reference parity.")
+        if gopls.get("ok"):
+            gm = gopls["metrics"]
+            w(f"- gopls workspace truth: {gm.get('workspace_packages', 0)} workspace packages, {gm.get('workspace_compiled_go_files', 0)} compiled Go files, {gm.get('diagnostics', 0)} diagnostics, initial load {gm.get('initial_workspace_load_ms')}ms.")
+        if go.get("queries"):
+            qt = query_totals(go["queries"])
+            w(f"- Query token cost ({qt['equivalent_rows']}/{qt['rows']} equivalent rows): graphify {qt['graphify_tokens']} tokens vs Atlas {qt['atlas_tokens']} tokens, graphify/Atlas = {ratio(qt['graphify_tokens'], qt['atlas_tokens'])}x.")
+            w(f"- Query latency ({qt['equivalent_rows']}/{qt['rows']} equivalent rows): graphify {round(qt['graphify_ms'], 3)}ms vs Atlas {round(qt['atlas_ms'], 3)}ms, graphify/Atlas = {ratio(qt['graphify_ms'], qt['atlas_ms'])}x.")
+            if qt["graphify_missing"]:
+                w(f"- Query caveat: graphify missed {qt['graphify_missing']} Atlas-selected hub symbols; raw rows remain in the table.")
+            speed_ratio = ratio(graphify.get("seconds", 0), atlas.get("seconds", 0))
+            if speed_ratio is not None and speed_ratio < 5:
+                timings = atlas.get("metrics", {}).get("timings_ms") or {}
+                blocker = ", ".join(f"{k}:{v}ms" for k, v in sorted(timings.items(), key=lambda kv: kv[1], reverse=True)[:3])
+                w(f"- Go speed saturation: current build-speed ratio is {speed_ratio}x, below 5x; largest remaining measured phases are {blocker}.")
+
+    w("\n## Derived Python ratios\n")
+    py = next((r for r in results if r["language"] == "python"), None)
+    if py:
+        atlas = py["tools"].get("atlas", {})
+        graphify = py["tools"].get("graphify", {})
+        scip = py["tools"].get("scip-python", {})
+        pyright = py["tools"].get("pyright", {})
+        if atlas.get("ok") and graphify.get("ok"):
+            am = atlas["metrics"]
+            gm = graphify["metrics"]
+            w(atlas_speed_line(atlas, graphify))
+            timings = am.get("timings_ms") or {}
+            if timings:
+                ordered = ", ".join(f"{k}:{v}ms" for k, v in sorted(timings.items(), key=lambda kv: kv[1], reverse=True))
+                w(f"- Atlas index phase timings: {ordered}.")
+            if am.get("edge_kinds"):
+                edge_kinds = ", ".join(f"{k}:{v}" for k, v in sorted(am.get("edge_kinds", {}).items()))
+                w(f"- Atlas edge kinds: {edge_kinds}.")
+            w(f"- Call coverage proxy: Atlas internal calls {am.get('internal_calls', 0)} vs graphify calls {gm.get('calls', 0)}, Atlas/graphify = {ratio(am.get('internal_calls', 0), gm.get('calls', 0))}x.")
+            w(f"- graphify extracted calls: {gm.get('extracted_calls', 0)}/{gm.get('calls', 0)} = {gm.get('extracted_pct', 0)}%.")
+        if atlas.get("ok") and scip.get("ok"):
+            am = atlas["metrics"]
+            sm = scip["metrics"]
+            w(f"- SCIP semantic index: {sm.get('documents', 0)} documents, {sm.get('symbols', 0)} symbols, {sm.get('occurrences', 0)} occurrences, {sm.get('references', 0)} references, scope={sm.get('scope', '')}.")
+            w(f"- Atlas symbols vs SCIP symbols = {ratio(am.get('symbols', 0), sm.get('symbols', 0))}x. scip-python 0.6.6 reports all Python symbols as {', '.join(sm.get('kinds', {}).keys()) or 'unknown kind'}, so this is a raw coverage proxy, not navigation-kind parity.")
+        truth = py.get("truth", {}).get("python_ast", {})
+        if truth:
+            expected = truth.get("functions", 0) + truth.get("classes", 0)
+            got = truth.get("atlas_callable_class_symbols", 0)
+            assignment_expected = truth.get("module_assignment_names", 0) + truth.get("class_assignment_names", 0)
+            w(f"- Python AST callable/class truth: Atlas {got}/{expected} function/method/class symbols = {pct(got, expected)}% recall across {truth.get('files', 0)} files.")
+            w(f"- Python AST assignment truth: Atlas {truth.get('atlas_assignment_symbols', 0)} assignment symbols vs {assignment_expected} direct module/class assignment names; extra symbols can come from conditional class scopes.")
+        if pyright.get("ok"):
+            pm = pyright["metrics"]
+            severities = ", ".join(f"{k}:{v}" for k, v in sorted(pm.get("diagnostics_by_severity", {}).items()))
+            w(f"- Pyright truth pass: {pm.get('files_analyzed', 0)} files analyzed, {pm.get('diagnostics', 0)} diagnostics ({severities}), version {pm.get('pyright_version', '')}.")
+        if py.get("queries"):
+            qt = query_totals(py["queries"])
+            w(f"- Query token cost ({qt['equivalent_rows']}/{qt['rows']} equivalent rows): graphify {qt['graphify_tokens']} tokens vs Atlas {qt['atlas_tokens']} tokens, graphify/Atlas = {ratio(qt['graphify_tokens'], qt['atlas_tokens'])}x.")
+            w(f"- Query latency ({qt['equivalent_rows']}/{qt['rows']} equivalent rows): graphify {round(qt['graphify_ms'], 3)}ms vs Atlas {round(qt['atlas_ms'], 3)}ms, graphify/Atlas = {ratio(qt['graphify_ms'], qt['atlas_ms'])}x.")
+            if qt["graphify_missing"]:
+                w(f"- Query caveat: graphify missed {qt['graphify_missing']} Atlas-selected hub symbols; raw rows remain in the table.")
+            speed_ratio = ratio(graphify.get("seconds", 0), atlas.get("seconds", 0))
+            if speed_ratio is not None and speed_ratio < 5:
+                timings = atlas.get("metrics", {}).get("timings_ms") or {}
+                blocker = ", ".join(f"{k}:{v}ms" for k, v in sorted(timings.items(), key=lambda kv: kv[1], reverse=True)[:3])
+                w(f"- Python speed saturation: current build-speed ratio is {speed_ratio}x, below 5x; largest remaining measured phases are {blocker}.")
+
+    w("\n## Derived JS/TS ratios\n")
+    for lang in ("javascript", "typescript"):
+        result = next((r for r in results if r["language"] == lang), None)
+        if not result:
+            continue
+        w(f"### {lang}\n")
+        atlas = result["tools"].get("atlas", {})
+        graphify = result["tools"].get("graphify", {})
+        scip = result["tools"].get("scip-typescript", {})
+        tsserver = result["tools"].get("tsserver", {})
+        if atlas.get("ok") and graphify.get("ok"):
+            am = atlas["metrics"]
+            gm = graphify["metrics"]
+            w(atlas_speed_line(atlas, graphify))
+            timings = am.get("timings_ms") or {}
+            if timings:
+                ordered = ", ".join(f"{k}:{v}ms" for k, v in sorted(timings.items(), key=lambda kv: kv[1], reverse=True))
+                w(f"- Atlas index phase timings: {ordered}.")
+            if am.get("edge_kinds"):
+                edge_kinds = ", ".join(f"{k}:{v}" for k, v in sorted(am.get("edge_kinds", {}).items()))
+                w(f"- Atlas edge kinds: {edge_kinds}.")
+            w(f"- Call coverage proxy: Atlas internal calls {am.get('internal_calls', 0)} vs graphify calls {gm.get('calls', 0)}, Atlas/graphify = {ratio(am.get('internal_calls', 0), gm.get('calls', 0))}x.")
+            w(f"- Atlas receiver-typed calls: {am.get('recv_typed', 0)}/{am.get('calls', 0)} = {pct(am.get('recv_typed', 0), am.get('calls', 0))}%.")
+            w(f"- graphify extracted calls: {gm.get('extracted_calls', 0)}/{gm.get('calls', 0)} = {gm.get('extracted_pct', 0)}%.")
+        if atlas.get("ok") and scip.get("ok"):
+            am = atlas["metrics"]
+            sm = scip["metrics"]
+            w(f"- SCIP semantic index: {sm.get('documents', 0)} documents, {sm.get('symbols', 0)} symbols, {sm.get('occurrences', 0)} occurrences, {sm.get('references', 0)} references, scope={sm.get('scope', '')}.")
+            w(f"- Atlas symbols vs SCIP symbols = {ratio(am.get('symbols', 0), sm.get('symbols', 0))}x. scip-typescript reports symbols as {', '.join(sm.get('kinds', {}).keys()) or 'unknown kind'}, so this is a raw coverage proxy.")
+        if tsserver.get("ok"):
+            tm = tsserver["metrics"]
+            w(f"- TypeScript semantic check proxy: {tm.get('files', 0)} files, {tm.get('diagnostics', 0)} diagnostics, total {tm.get('total_time_sec', 0)}s, memory {tm.get('memory_kb', 0)}KB.")
+            if tsserver.get("note"):
+                w(f"- LSP caveat: {tsserver.get('note')}.")
+        if result.get("queries"):
+            qt = query_totals(result["queries"])
+            w(f"- Query token cost ({qt['equivalent_rows']}/{qt['rows']} equivalent rows): graphify {qt['graphify_tokens']} tokens vs Atlas {qt['atlas_tokens']} tokens, graphify/Atlas = {ratio(qt['graphify_tokens'], qt['atlas_tokens'])}x.")
+            w(f"- Query latency ({qt['equivalent_rows']}/{qt['rows']} equivalent rows): graphify {round(qt['graphify_ms'], 3)}ms vs Atlas {round(qt['atlas_ms'], 3)}ms, graphify/Atlas = {ratio(qt['graphify_ms'], qt['atlas_ms'])}x.")
+            if qt["graphify_missing"]:
+                w(f"- Query caveat: graphify missed {qt['graphify_missing']} Atlas-selected hub symbols; raw rows remain in the table.")
+            speed_ratio = ratio(graphify.get("seconds", 0), atlas.get("seconds", 0))
+            if speed_ratio is not None and speed_ratio < 5:
+                timings = atlas.get("metrics", {}).get("timings_ms") or {}
+                blocker = ", ".join(f"{k}:{v}ms" for k, v in sorted(timings.items(), key=lambda kv: kv[1], reverse=True)[:3])
+                w(f"- {lang} speed saturation: current build-speed ratio is {speed_ratio}x, below 5x; largest remaining measured phases are {blocker}.")
+            token_ratio = ratio(qt["graphify_tokens"], qt["atlas_tokens"])
+            if token_ratio is not None and token_ratio < 5:
+                avg_atlas = round(qt["atlas_tokens"] / qt["equivalent_rows"], 1) if qt["equivalent_rows"] else 0
+                avg_graphify = round(qt["graphify_tokens"] / qt["equivalent_rows"], 1) if qt["equivalent_rows"] else 0
+                w(f"- {lang} token saturation: current equivalent-row token ratio is {token_ratio}x, below 5x; Atlas already averages {avg_atlas} tokens/answer vs graphify {avg_graphify}, so further gains require changing retrieval semantics, not only formatting.")
+
+    w("\n## Derived Java ratios\n")
+    java = next((r for r in results if r["language"] == "java"), None)
+    if java:
+        atlas = java["tools"].get("atlas", {})
+        graphify = java["tools"].get("graphify", {})
+        scip = java["tools"].get("scip-java", {})
+        jdtls = java["tools"].get("jdtls", {})
+        if atlas.get("ok") and graphify.get("ok"):
+            am = atlas["metrics"]
+            gm = graphify["metrics"]
+            w(atlas_speed_line(atlas, graphify))
+            timings = am.get("timings_ms") or {}
+            if timings:
+                ordered = ", ".join(f"{k}:{v}ms" for k, v in sorted(timings.items(), key=lambda kv: kv[1], reverse=True))
+                w(f"- Atlas index phase timings: {ordered}.")
+            if am.get("edge_kinds"):
+                edge_kinds = ", ".join(f"{k}:{v}" for k, v in sorted(am.get("edge_kinds", {}).items()))
+                w(f"- Atlas edge kinds: {edge_kinds}.")
+            w(f"- Call coverage proxy: Atlas internal calls {am.get('internal_calls', 0)} vs graphify calls {gm.get('calls', 0)}, Atlas/graphify = {ratio(am.get('internal_calls', 0), gm.get('calls', 0))}x.")
+            w(f"- Atlas receiver-typed calls: {am.get('recv_typed', 0)}/{am.get('calls', 0)} = {pct(am.get('recv_typed', 0), am.get('calls', 0))}%.")
+            w(f"- graphify extracted calls: {gm.get('extracted_calls', 0)}/{gm.get('calls', 0)} = {gm.get('extracted_pct', 0)}%.")
+        if atlas.get("ok") and scip.get("ok"):
+            am = atlas["metrics"]
+            sm = scip["metrics"]
+            scip_nav = scip_navigation_symbols(sm)
+            w(f"- SCIP semantic index: {sm.get('documents', 0)} documents, {sm.get('symbols', 0)} symbols, {sm.get('occurrences', 0)} occurrences, {sm.get('references', 0)} references, scope={sm.get('scope', '')}.")
+            w(f"- SCIP navigation symbols (excluding local variables/packages) = {scip_nav}; Atlas symbols vs SCIP navigation symbols = {ratio(am.get('symbols', 0), scip_nav)}x.")
+        if jdtls.get("ok"):
+            jm = jdtls["metrics"]
+            w(f"- JDTLS LSP smoke: initialized against build root {jm.get('build_root', '')}, sampled {jm.get('document_symbol_files', 0)}/{jm.get('sample_files', 0)} files, {jm.get('document_symbols', 0)} document symbols, {jm.get('workspace_symbols_query_gson', 0)} workspace symbols for query `Gson`, {jm.get('diagnostics', 0)} diagnostics.")
+            if jdtls.get("note"):
+                w(f"- LSP caveat: {jdtls.get('note')}.")
+        if java.get("queries"):
+            qt = query_totals(java["queries"])
+            w(f"- Query token cost ({qt['equivalent_rows']}/{qt['rows']} equivalent rows): graphify {qt['graphify_tokens']} tokens vs Atlas {qt['atlas_tokens']} tokens, graphify/Atlas = {ratio(qt['graphify_tokens'], qt['atlas_tokens'])}x.")
+            w(f"- Query latency ({qt['equivalent_rows']}/{qt['rows']} equivalent rows): graphify {round(qt['graphify_ms'], 3)}ms vs Atlas {round(qt['atlas_ms'], 3)}ms, graphify/Atlas = {ratio(qt['graphify_ms'], qt['atlas_ms'])}x.")
+            if qt["graphify_missing"]:
+                w(f"- Query caveat: graphify missed {qt['graphify_missing']} Atlas-selected hub symbols; raw rows remain in the table.")
+            speed_ratio = ratio(graphify.get("seconds", 0), atlas.get("seconds", 0))
+            if speed_ratio is not None and speed_ratio < 5:
+                timings = atlas.get("metrics", {}).get("timings_ms") or {}
+                blocker = ", ".join(f"{k}:{v}ms" for k, v in sorted(timings.items(), key=lambda kv: kv[1], reverse=True)[:3])
+                w(f"- Java speed saturation: current build-speed ratio is {speed_ratio}x, below 5x; largest remaining measured phases are {blocker}.")
+            token_ratio = ratio(qt["graphify_tokens"], qt["atlas_tokens"])
+            if token_ratio is not None and token_ratio < 5:
+                avg_atlas = round(qt["atlas_tokens"] / qt["equivalent_rows"], 1) if qt["equivalent_rows"] else 0
+                avg_graphify = round(qt["graphify_tokens"] / qt["equivalent_rows"], 1) if qt["equivalent_rows"] else 0
+                w(f"- Java token saturation: current equivalent-row token ratio is {token_ratio}x, below 5x; Atlas averages {avg_atlas} tokens/answer vs graphify {avg_graphify}.")
+
+    w("\n## Derived C/C++ ratios\n")
+    for lang in ("c", "cpp"):
+        result = next((r for r in results if r["language"] == lang), None)
+        if not result:
+            continue
+        w(f"### {lang}\n")
+        atlas = result["tools"].get("atlas", {})
+        graphify = result["tools"].get("graphify", {})
+        clangd = result["tools"].get("clangd", {})
+        if atlas.get("ok") and graphify.get("ok"):
+            am = atlas["metrics"]
+            gm = graphify["metrics"]
+            w(atlas_speed_line(atlas, graphify))
+            timings = am.get("timings_ms") or {}
+            if timings:
+                ordered = ", ".join(f"{k}:{v}ms" for k, v in sorted(timings.items(), key=lambda kv: kv[1], reverse=True))
+                w(f"- Atlas index phase timings: {ordered}.")
+            if am.get("edge_kinds"):
+                edge_kinds = ", ".join(f"{k}:{v}" for k, v in sorted(am.get("edge_kinds", {}).items()))
+                w(f"- Atlas edge kinds: {edge_kinds}.")
+            w(f"- Call coverage proxy: Atlas internal calls {am.get('internal_calls', 0)} vs graphify calls {gm.get('calls', 0)}, Atlas/graphify = {ratio(am.get('internal_calls', 0), gm.get('calls', 0))}x.")
+            w(f"- Atlas receiver-typed calls: {am.get('recv_typed', 0)}/{am.get('calls', 0)} = {pct(am.get('recv_typed', 0), am.get('calls', 0))}%.")
+            w(f"- graphify extracted calls: {gm.get('extracted_calls', 0)}/{gm.get('calls', 0)} = {gm.get('extracted_pct', 0)}%.")
+        if clangd.get("ok"):
+            cm = clangd["metrics"]
+            w(f"- clangd LSP smoke: sampled {cm.get('document_symbol_files', 0)}/{cm.get('sample_files', 0)} files, {cm.get('document_symbols', 0)} document symbols, {cm.get('diagnostics', 0)} diagnostics.")
+            if clangd.get("note"):
+                w(f"- LSP caveat: {clangd.get('note')}.")
+        if result.get("queries"):
+            qt = query_totals(result["queries"])
+            w(f"- Query token cost ({qt['equivalent_rows']}/{qt['rows']} equivalent rows): graphify {qt['graphify_tokens']} tokens vs Atlas {qt['atlas_tokens']} tokens, graphify/Atlas = {ratio(qt['graphify_tokens'], qt['atlas_tokens'])}x.")
+            w(f"- Query latency ({qt['equivalent_rows']}/{qt['rows']} equivalent rows): graphify {round(qt['graphify_ms'], 3)}ms vs Atlas {round(qt['atlas_ms'], 3)}ms, graphify/Atlas = {ratio(qt['graphify_ms'], qt['atlas_ms'])}x.")
+            if qt["graphify_missing"]:
+                w(f"- Query caveat: graphify missed {qt['graphify_missing']} Atlas-selected hub symbols; raw rows remain in the table.")
+            speed_ratio = ratio(graphify.get("seconds", 0), atlas.get("seconds", 0))
+            if speed_ratio is not None and speed_ratio < 5:
+                timings = atlas.get("metrics", {}).get("timings_ms") or {}
+                blocker = ", ".join(f"{k}:{v}ms" for k, v in sorted(timings.items(), key=lambda kv: kv[1], reverse=True)[:3])
+                w(f"- {lang} speed saturation: current build-speed ratio is {speed_ratio}x, below 5x; largest remaining measured phases are {blocker}.")
+            token_ratio = ratio(qt["graphify_tokens"], qt["atlas_tokens"])
+            if token_ratio is not None and token_ratio < 5:
+                avg_atlas = round(qt["atlas_tokens"] / qt["equivalent_rows"], 1) if qt["equivalent_rows"] else 0
+                avg_graphify = round(qt["graphify_tokens"] / qt["equivalent_rows"], 1) if qt["equivalent_rows"] else 0
+                w(f"- {lang} token saturation: current equivalent-row token ratio is {token_ratio}x, below 5x; Atlas averages {avg_atlas} tokens/answer vs graphify {avg_graphify}.")
+
+    w("\n## Query token probes\n")
+    for result in results:
+        if not result.get("queries"):
+            continue
+        w(f"### {result['language']}\n")
+        w("| Symbol | Status | graphify tokens | Atlas tokens | graphify ms | Atlas ms |")
+        w("|---|---|--:|--:|--:|--:|")
+        for row in result["queries"]:
+            status = "graphify_missing" if row.get("graphify_missing") else "equivalent"
+            w(f"| {row['symbol']} | {status} | {row['graphify_tokens']} | {row['atlas_tokens']} | {row['graphify_ms']} | {row['atlas_ms']} |")
+        w("")
+
+    w("## Missing or partial adapters\n")
+    for result in results:
+        for tool, data in result["tools"].items():
+            if data.get("ok"):
+                continue
+            w(f"- {result['language']} {tool}: {data.get('status')} - {data.get('note')}")
+
+    w("\n---\nGenerated by `bench/codeintel_matrix.py`. Raw JSON sits next to this report; logs are in `bench/logs/`.")
+    return "\n".join(lines)
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--atlas", default=os.environ.get("ATLAS_BIN", "atlas"))
+    parser.add_argument("--graphify", default=os.environ.get("GRAPHIFY_BIN", "graphify"))
+    parser.add_argument("--scip-go", default=os.environ.get("SCIP_GO_BIN", "scip-go"))
+    parser.add_argument("--scip-python", default=os.environ.get("SCIP_PYTHON_BIN", "scip-python"))
+    parser.add_argument("--scip-typescript", default=os.environ.get("SCIP_TYPESCRIPT_BIN", "scip-typescript"))
+    parser.add_argument("--scip-java", default=os.environ.get("SCIP_JAVA_BIN", "scip-java"))
+    parser.add_argument("--gopls", default=os.environ.get("GOPLS_BIN", "gopls"))
+    parser.add_argument("--pyright", default=os.environ.get("PYRIGHT_BIN", "pyright"))
+    parser.add_argument("--tsc", default=os.environ.get("TSC_BIN", "tsc"))
+    parser.add_argument("--jdtls", default=os.environ.get("JDTLS_CMD", os.environ.get("JDTLS_BIN", "jdtls")))
+    parser.add_argument("--clangd", default=os.environ.get("CLANGD_BIN", "clangd"))
+    parser.add_argument("--workdir", default="/tmp/atlas-codeintel-matrix")
+    parser.add_argument("--out", default="bench/MATRIX_REPORT.md")
+    parser.add_argument("--langs", default="go")
+    args = parser.parse_args()
+
+    workdir = Path(args.workdir)
+    workdir.mkdir(parents=True, exist_ok=True)
+    output = Path(args.out)
+    output.parent.mkdir(parents=True, exist_ok=True)
+
+    results = []
+    for lang in [part.strip() for part in args.langs.split(",") if part.strip()]:
+        if lang not in REPOS:
+            raise SystemExit(f"unsupported language: {lang}")
+        print(f"[matrix] {lang}", flush=True)
+        results.append(run_language(lang, args, workdir))
+
+    output.write_text(render(results))
+    output.with_suffix(".json").write_text(json.dumps(results, indent=2))
+    print(f"[matrix] wrote {output} and {output.with_suffix('.json')}")
+
+
+if __name__ == "__main__":
+    main()

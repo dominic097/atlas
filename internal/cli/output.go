@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"path"
 	"strings"
 
 	"github.com/dominic097/atlas/internal/engine"
@@ -105,14 +106,31 @@ func (t *terseLines) String() string           { return t.b.String() }
 
 // capList formats up to listCap names joined by ", " then "(+N more)".
 func capList(names []string) string {
+	return capListN(names, listCap)
+}
+
+func capListN(names []string, n int) string {
 	if len(names) == 0 {
 		return ""
 	}
-	if len(names) <= listCap {
+	if n <= 0 {
+		n = listCap
+	}
+	if len(names) <= n {
 		return strings.Join(names, ", ")
 	}
-	head := strings.Join(names[:listCap], ", ")
-	return fmt.Sprintf("%s (+%d more)", head, len(names)-listCap)
+	head := strings.Join(names[:n], ", ")
+	return fmt.Sprintf("%s (+%d more)", head, len(names)-n)
+}
+
+func compactList1(names []string) string {
+	if len(names) == 0 {
+		return ""
+	}
+	if len(names) == 1 {
+		return names[0]
+	}
+	return fmt.Sprintf("%s+%d", names[0], len(names)-1)
 }
 
 // refNames projects symbol refs to their display names.
@@ -193,52 +211,74 @@ func terseString(v any) string {
 }
 
 func terseExplain(r *engine.ExplainResult) string {
-	var t terseLines
-	// Header: name, kind, primary location from the first definition.
 	kind, location := "", ""
 	if len(r.Definitions) > 0 {
 		d := r.Definitions[0]
-		kind = d.Kind
-		location = loc(d.Path, d.Line, d.EndLine)
+		kind = kindCode(d.Kind)
+		location = compactLoc(d.Path, d.Line)
 	}
-	t.line(strings.TrimRight(fmt.Sprintf("explain %s  %s  %s", r.Symbol, kind, location), " "))
-	if len(r.Definitions) > 0 && r.Definitions[0].Signature != "" {
-		t.linef("  sig  %s", r.Definitions[0].Signature)
+	parts := []string{r.Symbol}
+	if kind != "" || location != "" {
+		parts = append(parts, strings.TrimRight(fmt.Sprintf("%s@%s", kind, location), "@"))
 	}
 	if len(r.Definitions) > 1 {
-		t.linef("  defs(%d)", len(r.Definitions))
-		for _, d := range r.Definitions[1:] {
-			t.linef("    %s  %s", d.Kind, loc(d.Path, d.Line, d.EndLine))
-		}
+		parts = append(parts, fmt.Sprintf("df%d", len(r.Definitions)))
 	}
 	if len(r.Callers) > 0 {
-		t.linef("  callers(%d)  %s", len(r.Callers), capList(r.Callers))
+		parts = append(parts, fmt.Sprintf("c%d", len(r.Callers)))
 	}
 	if len(r.Callees) > 0 {
-		t.linef("  callees(%d)  %s", len(r.Callees), capList(r.Callees))
-	}
-	if len(r.Imports) > 0 {
-		t.linef("  imports(%d)  %s", len(r.Imports), capList(r.Imports))
+		parts = append(parts, fmt.Sprintf("d%d", len(r.Callees)))
 	}
 	if len(r.ServedRoutes) > 0 {
-		t.linef("  routes(%d)", len(r.ServedRoutes))
-		cap := r.ServedRoutes
-		extra := 0
-		if len(cap) > listCap {
-			extra = len(cap) - listCap
-			cap = cap[:listCap]
-		}
-		for _, rt := range cap {
-			t.linef("    %s %s", rt.Method, rt.Path)
-		}
-		if extra > 0 {
-			t.linef("    (+%d more)", extra)
-		}
+		parts = append(parts, fmt.Sprintf("r%d", len(r.ServedRoutes)))
 	}
 	if len(r.CrossRepoConsumers) > 0 {
-		t.linef("  consumers(%d)  %s", len(r.CrossRepoConsumers), capList(r.CrossRepoConsumers))
+		parts = append(parts, fmt.Sprintf("x%d", len(r.CrossRepoConsumers)))
 	}
-	return t.String()
+	return strings.Join(parts, " ") + "\n"
+}
+
+func compactLoc(file string, line int) string {
+	file = strings.TrimSpace(file)
+	if file == "" {
+		return ""
+	}
+	base := path.Base(strings.ReplaceAll(file, "\\", "/"))
+	if line > 0 {
+		return fmt.Sprintf("%s:%d", base, line)
+	}
+	return base
+}
+
+func kindCode(kind string) string {
+	switch strings.ToLower(strings.TrimSpace(kind)) {
+	case "function", "func":
+		return "f"
+	case "method":
+		return "m"
+	case "class":
+		return "c"
+	case "interface":
+		return "i"
+	case "type", "struct", "record":
+		return "t"
+	case "variable", "var":
+		return "v"
+	case "constant", "const":
+		return "k"
+	case "field", "property":
+		return "p"
+	case "constructor":
+		return "ctor"
+	case "enum":
+		return "e"
+	default:
+		if kind = strings.ToLower(strings.TrimSpace(kind)); kind != "" {
+			return kind[:1]
+		}
+		return ""
+	}
 }
 
 func terseCallers(r *engine.CallersResult) string {

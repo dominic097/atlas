@@ -17,6 +17,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/dominic097/atlas/internal/coverage"
@@ -52,18 +53,19 @@ type IndexInput struct {
 }
 
 type IndexResult struct {
-	RepoID       string         `json:"repo_id"`
-	RepoFullName string         `json:"repo_full_name"`
-	SnapshotID   string         `json:"snapshot_id"`
-	CommitSHA    string         `json:"commit_sha"`
-	IndexedFiles int            `json:"indexed_files"`
-	Symbols      int            `json:"symbols"`
-	Edges        int            `json:"edges"`
-	EdgeKinds    map[string]int `json:"edge_kinds,omitempty"`
-	Routes       int            `json:"routes"`
-	Languages    map[string]int `json:"languages"`
-	Mode         string         `json:"mode"`
-	DurationMS   int64          `json:"duration_ms"`
+	RepoID       string           `json:"repo_id"`
+	RepoFullName string           `json:"repo_full_name"`
+	SnapshotID   string           `json:"snapshot_id"`
+	CommitSHA    string           `json:"commit_sha"`
+	IndexedFiles int              `json:"indexed_files"`
+	Symbols      int              `json:"symbols"`
+	Edges        int              `json:"edges"`
+	EdgeKinds    map[string]int   `json:"edge_kinds,omitempty"`
+	Routes       int              `json:"routes"`
+	Languages    map[string]int   `json:"languages"`
+	Mode         string           `json:"mode"`
+	DurationMS   int64            `json:"duration_ms"`
+	TimingsMS    map[string]int64 `json:"timings_ms,omitempty"`
 }
 
 type SearchInput struct {
@@ -686,9 +688,29 @@ func New(ctx context.Context, opts ...Option) (Engine, error) {
 		_ = drv.Close()
 		return nil, fmt.Errorf("engine: migrate: %w", err)
 	}
-	lexDir := cfg.LexicalDir
+	return &localEngine{cfg: cfg, store: drv}, nil
+}
+
+// localEngine is the deterministic, single-DB code-intelligence engine.
+type localEngine struct {
+	cfg       Config
+	store     store.StorageDriver
+	lexical   *lexical.Index
+	lexicalMu sync.Mutex
+}
+
+func (e *localEngine) ensureLexical() (*lexical.Index, error) {
+	if e.lexical != nil {
+		return e.lexical, nil
+	}
+	e.lexicalMu.Lock()
+	defer e.lexicalMu.Unlock()
+	if e.lexical != nil {
+		return e.lexical, nil
+	}
+	lexDir := e.cfg.LexicalDir
 	if lexDir == "" {
-		base := filepath.Dir(cfg.SQLitePath)
+		base := filepath.Dir(e.cfg.SQLitePath)
 		if base == "" || base == "." {
 			base = ".atlas"
 		}
@@ -696,17 +718,10 @@ func New(ctx context.Context, opts ...Option) (Engine, error) {
 	}
 	lx, err := lexical.New(lexDir)
 	if err != nil {
-		_ = drv.Close()
 		return nil, fmt.Errorf("engine: open lexical index: %w", err)
 	}
-	return &localEngine{cfg: cfg, store: drv, lexical: lx}, nil
-}
-
-// localEngine is the deterministic, single-DB code-intelligence engine.
-type localEngine struct {
-	cfg     Config
-	store   store.StorageDriver
-	lexical *lexical.Index
+	e.lexical = lx
+	return lx, nil
 }
 
 func (e *localEngine) Index(ctx context.Context, in IndexInput) (*IndexResult, error) {
@@ -726,7 +741,11 @@ func (e *localEngine) Index(ctx context.Context, in IndexInput) (*IndexResult, e
 	// so re-indexing the same repo reuses its row. The embedding pass runs only when
 	// vectors are enabled (per-call flag OR the engine's query-time vector config).
 	enableVectors := in.EnableVectors || e.cfg.EnableVector
-	snap, stats, err := index.Run(ctx, e.store, e.lexical, "", fullName, abs, index.Options{Reindex: in.Reindex, Scope: e.cfg.Scope, EnableVectors: enableVectors})
+	lx, err := e.ensureLexical()
+	if err != nil {
+		return nil, err
+	}
+	snap, stats, err := index.Run(ctx, e.store, lx, "", fullName, abs, index.Options{Reindex: in.Reindex, Scope: e.cfg.Scope, EnableVectors: enableVectors})
 	if err != nil {
 		return nil, err
 	}
@@ -743,6 +762,7 @@ func (e *localEngine) Index(ctx context.Context, in IndexInput) (*IndexResult, e
 		Languages:    stats.Languages,
 		Mode:         stats.Mode,
 		DurationMS:   stats.DurationMS,
+		TimingsMS:    stats.TimingsMS,
 	}, nil
 }
 
@@ -978,15 +998,12 @@ func (e *localEngine) symbolsByID(ctx context.Context, snapshotID string) (map[s
 }
 
 func (e *localEngine) contextFiles(ctx context.Context, snapshotID string, paths map[string]bool) ([]ContextFile, error) {
-	files, err := e.store.ListFiles(ctx, snapshotID)
+	files, err := e.store.FilesByPaths(ctx, snapshotID, trueKeys(paths))
 	if err != nil {
 		return nil, fmt.Errorf("engine: context files: %w", err)
 	}
 	out := make([]ContextFile, 0, len(paths))
 	for _, file := range files {
-		if !paths[file.Path] {
-			continue
-		}
 		out = append(out, ContextFile{
 			Path:      file.Path,
 			Language:  file.Language,
@@ -1167,7 +1184,11 @@ func (e *localEngine) hybridSearch(ctx context.Context, in SearchInput) (*Search
 // SearchHits, applying the optional kind filter. It is the shared core behind
 // Search (lexical mode), the semantic degrade path, and hybrid's lexical leg.
 func (e *localEngine) lexicalSearch(ctx context.Context, snapshotID, query, kind string, limit int) ([]SearchHit, error) {
-	hits, err := e.lexical.Search(snapshotID, query, limit*2) // over-fetch for post-filtering
+	lx, err := e.ensureLexical()
+	if err != nil {
+		return e.fallbackLexicalSearch(ctx, snapshotID, query, kind, limit)
+	}
+	hits, err := lx.Search(snapshotID, query, limit*2) // over-fetch for post-filtering
 	if err != nil {
 		return e.fallbackLexicalSearch(ctx, snapshotID, query, kind, limit)
 	}
@@ -2063,16 +2084,13 @@ func (e *localEngine) importsForPaths(ctx context.Context, snapshotID string, pa
 	if len(paths) == 0 {
 		return nil
 	}
-	files, err := e.store.ListFiles(ctx, snapshotID)
+	files, err := e.store.FilesByPaths(ctx, snapshotID, trueKeys(paths))
 	if err != nil {
 		return nil
 	}
 	seen := map[string]bool{}
 	var out []string
 	for _, f := range files {
-		if !paths[f.Path] {
-			continue
-		}
 		for _, imp := range f.Imports {
 			imp = strings.TrimSpace(imp)
 			if imp == "" || seen[imp] {
@@ -2084,6 +2102,17 @@ func (e *localEngine) importsForPaths(ctx context.Context, snapshotID string, pa
 	}
 	sort.Strings(out)
 	return out
+}
+
+func trueKeys(set map[string]bool) []string {
+	keys := make([]string, 0, len(set))
+	for k, ok := range set {
+		if ok {
+			keys = append(keys, k)
+		}
+	}
+	sort.Strings(keys)
+	return keys
 }
 
 // routeLabelEng renders "METHOD path" (METHOD omitted when unknown), matching

@@ -39,6 +39,9 @@ type Result struct {
 // extension is not one of the supported tree-sitter / native grammars.
 func LanguageForPath(path string) string {
 	base := strings.ToLower(filepath.Base(path))
+	if strings.HasSuffix(base, ".blade.php") {
+		return "blade"
+	}
 	if base == "dockerfile" || strings.HasPrefix(base, "dockerfile.") {
 		return "dockerfile"
 	}
@@ -78,10 +81,58 @@ func LanguageForPath(path string) string {
 		return "java"
 	case ".c", ".h":
 		return "c"
-	case ".cpp", ".cc", ".cxx", ".hpp", ".hxx", ".hh":
+	case ".cpp", ".cc", ".cxx", ".hpp", ".hxx", ".hh", ".cu", ".cuh":
 		return "cpp"
 	case ".cs":
 		return "csharp"
+	case ".rs":
+		return "rust"
+	case ".rb":
+		return "ruby"
+	case ".kt", ".kts":
+		return "kotlin"
+	case ".scala":
+		return "scala"
+	case ".php":
+		return "php"
+	case ".swift":
+		return "swift"
+	case ".lua", ".luau", ".toc":
+		return "lua"
+	case ".zig":
+		return "zig"
+	case ".ex", ".exs":
+		return "elixir"
+	case ".m", ".mm":
+		return "objc"
+	case ".jl":
+		return "julia"
+	case ".f", ".f90", ".f95", ".f03", ".f08":
+		return "fortran"
+	case ".dart":
+		return "dart"
+	case ".v", ".sv", ".svh":
+		return "verilog"
+	case ".pas", ".pp", ".dpr", ".dpk", ".lpr", ".inc":
+		return "pascal"
+	case ".dfm", ".lfm", ".lpk":
+		return "delphi"
+	case ".tf", ".tfvars", ".hcl":
+		return "terraform"
+	case ".dm", ".dme", ".dmi", ".dmm", ".dmf":
+		return "byond"
+	case ".sln", ".slnx", ".csproj", ".fsproj", ".vbproj":
+		return "dotnet"
+	case ".razor", ".cshtml":
+		return "razor"
+	case ".cls", ".trigger":
+		return "apex"
+	case ".vue":
+		return "vue"
+	case ".svelte":
+		return "svelte"
+	case ".astro":
+		return "astro"
 	case ".html", ".htm":
 		return "html"
 	case ".css", ".scss", ".sass":
@@ -90,7 +141,7 @@ func LanguageForPath(path string) string {
 		return "bash"
 	case ".groovy", ".gvy", ".gradle":
 		return "groovy"
-	case ".md", ".markdown", ".mdown", ".mkd":
+	case ".md", ".markdown", ".mdown", ".mkd", ".qmd":
 		return "markdown"
 	case ".mdx":
 		return "mdx"
@@ -110,7 +161,7 @@ func LanguageForPath(path string) string {
 		return "config"
 	case ".bat", ".cmd":
 		return "batch"
-	case ".ps1":
+	case ".ps1", ".psm1", ".psd1":
 		return "powershell"
 	case ".sql":
 		return "sql"
@@ -146,6 +197,10 @@ func languageForBackupName(base string) string {
 func Supported(lang string) bool {
 	switch lang {
 	case "go", "python", "javascript", "typescript", "java", "c", "cpp",
+		"rust", "ruby", "kotlin", "scala", "php", "swift", "lua", "zig",
+		"elixir", "objc", "julia", "fortran", "dart", "verilog", "pascal",
+		"delphi", "terraform", "byond", "dotnet", "razor", "apex", "blade",
+		"vue", "svelte", "astro",
 		"csharp", "groovy", "bash", "html", "css",
 		"markdown", "mdx", "yaml", "json", "proto", "toml", "xml", "plist",
 		"gomod", "gosum", "config", "makefile", "batch", "powershell",
@@ -185,17 +240,25 @@ func Parse(repoID, repoFullName, filePath, language string, content []byte) (Res
 		// parser/tree and MUST run before Parse returns.
 		tsRoot    *tree_sitter.Node
 		tsCleanup = func() {}
+		goEdges   []graph.DependencyEdge
+		textEdges []graph.DependencyEdge
 	)
 	defer func() { tsCleanup() }()
 
 	switch language {
 	case "go":
-		// Native go/parser is the highest-fidelity path.
-		rawSyms, imports = parseGoSymbols(filePath, content)
+		// Native go/parser is the highest-fidelity path. Parse once, then reuse
+		// the AST for both symbol and call-edge extraction.
+		rawSyms, imports, goEdges = parseGoFile(filePath, content)
 	case "python", "javascript", "typescript", "java", "c", "cpp":
 		rawSyms, imports, tsRoot, tsCleanup = parseTreeSitter(filePath, language, content)
-	case "csharp", "groovy", "bash":
+	case "csharp", "groovy", "bash",
+		"rust", "ruby", "kotlin", "scala", "php", "swift", "lua", "zig",
+		"elixir", "objc", "julia", "fortran", "dart", "verilog", "pascal",
+		"delphi", "terraform", "byond", "dotnet", "razor", "apex", "blade",
+		"vue", "svelte", "astro", "powershell", "sql":
 		rawSyms, imports = parseRegexFallback(filePath, language, content)
+		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "html", "css":
 	// Pulse records these as file-level context even though there is no
 	// first-class symbol parser. Keep the file row; symbols remain empty.
@@ -204,7 +267,7 @@ func Parse(repoID, repoFullName, filePath, language string, content []byte) (Res
 	case "makefile":
 		rawSyms = parseMakefileSymbols(filePath, content)
 	case "markdown", "mdx", "yaml", "json", "toml", "xml", "plist", "gomod", "gosum",
-		"config", "batch", "powershell", "sql", "csv", "text", "dockerfile":
+		"config", "batch", "csv", "text", "dockerfile":
 		rawSyms = parseDocSymbols(filePath, language, content)
 	default:
 		return Result{}, nil
@@ -261,7 +324,14 @@ func Parse(repoID, repoFullName, filePath, language string, content []byte) (Res
 	// symbol, ToRef = callee. Go uses the native go/parser path; the tree-sitter
 	// languages walk the ALREADY-PARSED root (tsRoot) and attribute calls to the
 	// promoted symbols by line span.
-	edges := callEdges(repoID, repoFullName, filePath, language, content, tsRoot, symbols)
+	var edges []graph.DependencyEdge
+	if language == "go" {
+		edges = goEdges
+	} else if len(textEdges) > 0 {
+		edges = textEdges
+	} else {
+		edges = callEdges(repoID, repoFullName, filePath, language, content, tsRoot, symbols)
+	}
 
 	// Import edges, one EdgeImports per imported module.
 	imports = uniqueStrings(imports)

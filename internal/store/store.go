@@ -8,6 +8,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/dominic097/atlas/internal/graph"
 )
@@ -51,6 +52,9 @@ type StorageDriver interface {
 	// ListFiles returns the indexed file rows of a snapshot (path/language/imports),
 	// feeding explain's defining-file import bundle.
 	ListFiles(ctx context.Context, snapshotID string) ([]graph.File, error)
+	// FilesByPaths is the indexed, batched form used by latency-sensitive context
+	// assembly when only a small set of files is needed.
+	FilesByPaths(ctx context.Context, snapshotID string, paths []string) ([]graph.File, error)
 
 	// indexed graph reads (scale impact to the blast radius, not the whole repo)
 	//
@@ -119,4 +123,18 @@ func Open(ctx context.Context, opts Options) (StorageDriver, error) {
 	default:
 		return nil, fmt.Errorf("store: unknown driver %q", opts.Kind)
 	}
+}
+
+func uniqueNonEmpty(values []string) []string {
+	seen := map[string]bool{}
+	out := make([]string, 0, len(values))
+	for _, v := range values {
+		v = strings.TrimSpace(v)
+		if v == "" || seen[v] {
+			continue
+		}
+		seen[v] = true
+		out = append(out, v)
+	}
+	return out
 }

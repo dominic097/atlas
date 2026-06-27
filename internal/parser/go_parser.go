@@ -9,16 +9,29 @@ import (
 	"github.com/dominic097/atlas/internal/graph"
 )
 
+// parseGoFile extracts symbols, imports, and call edges from one native Go AST.
+// The index path uses this instead of parsing once for symbols and again for
+// calls. Public helpers below keep the older split surface for narrow tests.
+func parseGoFile(path string, content []byte) ([]symbolDraft, []string, []graph.DependencyEdge) {
+	fset := token.NewFileSet()
+	file, err := parser.ParseFile(fset, path, content, parser.ParseComments)
+	if err != nil {
+		return nil, nil, nil
+	}
+	symbols, imports := parseGoSymbolsFromFile(fset, file, content)
+	edges := goCallEdgesFromFile(fset, file, path)
+	return symbols, imports, edges
+}
+
 // parseGoSymbols extracts functions, methods, and types from a Go source file
 // using the native go/parser (compiler-grade fidelity), plus the import paths.
 // Ported from pulse parseGoFile.
 func parseGoSymbols(path string, content []byte) ([]symbolDraft, []string) {
-	fset := token.NewFileSet()
-	file, err := parser.ParseFile(fset, path, content, parser.ParseComments)
-	if err != nil {
-		return nil, nil
-	}
+	symbols, imports, _ := parseGoFile(path, content)
+	return symbols, imports
+}
 
+func parseGoSymbolsFromFile(fset *token.FileSet, file *ast.File, content []byte) ([]symbolDraft, []string) {
 	imports := make([]string, 0, len(file.Imports))
 	for _, imported := range file.Imports {
 		imports = append(imports, strings.Trim(imported.Path.Value, `"`))
@@ -26,24 +39,27 @@ func parseGoSymbols(path string, content []byte) ([]symbolDraft, []string) {
 
 	var symbols []symbolDraft
 	for _, decl := range file.Decls {
-		fn, ok := decl.(*ast.FuncDecl)
-		if !ok {
-			continue
+		switch d := decl.(type) {
+		case *ast.FuncDecl:
+			kind := "function"
+			recvType := ""
+			if d.Recv != nil {
+				kind = "method"
+				recvType = goReceiverType(d.Recv)
+			}
+			symbols = append(symbols, symbolDraft{
+				name:      d.Name.Name,
+				kind:      kind,
+				signature: goSignature(fset, d, content),
+				startLine: fset.Position(d.Pos()).Line,
+				endLine:   fset.Position(d.End()).Line,
+				recvType:  recvType,
+			})
+		case *ast.GenDecl:
+			if d.Tok == token.CONST {
+				symbols = append(symbols, goConstSymbols(fset, d)...)
+			}
 		}
-		kind := "function"
-		recvType := ""
-		if fn.Recv != nil {
-			kind = "method"
-			recvType = goReceiverType(fn.Recv)
-		}
-		symbols = append(symbols, symbolDraft{
-			name:      fn.Name.Name,
-			kind:      kind,
-			signature: goSignature(fset, fn, content),
-			startLine: fset.Position(fn.Pos()).Line,
-			endLine:   fset.Position(fn.End()).Line,
-			recvType:  recvType,
-		})
 	}
 
 	ast.Inspect(file, func(node ast.Node) bool {
@@ -57,10 +73,71 @@ func parseGoSymbols(path string, content []byte) ([]symbolDraft, []string) {
 			startLine: fset.Position(typeSpec.Pos()).Line,
 			endLine:   fset.Position(typeSpec.End()).Line,
 		})
+		symbols = append(symbols, goTypeMemberSymbols(fset, typeSpec)...)
 		return false
 	})
 
 	return symbols, imports
+}
+
+func goConstSymbols(fset *token.FileSet, decl *ast.GenDecl) []symbolDraft {
+	var out []symbolDraft
+	for _, spec := range decl.Specs {
+		value, ok := spec.(*ast.ValueSpec)
+		if !ok {
+			continue
+		}
+		for _, name := range value.Names {
+			out = append(out, symbolDraft{
+				name:      name.Name,
+				kind:      "constant",
+				startLine: fset.Position(name.Pos()).Line,
+				endLine:   fset.Position(name.End()).Line,
+			})
+		}
+	}
+	return out
+}
+
+func goTypeMemberSymbols(fset *token.FileSet, typeSpec *ast.TypeSpec) []symbolDraft {
+	var out []symbolDraft
+	owner := typeSpec.Name.Name
+	switch typ := typeSpec.Type.(type) {
+	case *ast.StructType:
+		if typ.Fields == nil {
+			return nil
+		}
+		for _, field := range typ.Fields.List {
+			for _, name := range field.Names {
+				out = append(out, symbolDraft{
+					name:      name.Name,
+					kind:      "field",
+					startLine: fset.Position(name.Pos()).Line,
+					endLine:   fset.Position(name.End()).Line,
+					metadata:  graph.JSONBMap{"owner_type": owner},
+				})
+			}
+		}
+	case *ast.InterfaceType:
+		if typ.Methods == nil {
+			return nil
+		}
+		for _, method := range typ.Methods.List {
+			if _, ok := method.Type.(*ast.FuncType); !ok {
+				continue
+			}
+			for _, name := range method.Names {
+				out = append(out, symbolDraft{
+					name:      name.Name,
+					kind:      "method_spec",
+					startLine: fset.Position(name.Pos()).Line,
+					endLine:   fset.Position(name.End()).Line,
+					metadata:  graph.JSONBMap{"owner_type": owner},
+				})
+			}
+		}
+	}
+	return out
 }
 
 // goSignature returns the source first line of a func declaration (the header),
@@ -99,7 +176,10 @@ func goCallEdges(filePath string, content []byte) []graph.DependencyEdge {
 	if err != nil {
 		return nil
 	}
+	return goCallEdgesFromFile(fset, file, filePath)
+}
 
+func goCallEdgesFromFile(fset *token.FileSet, file *ast.File, filePath string) []graph.DependencyEdge {
 	// imports: package alias/name -> true, so receivers that are really package
 	// qualifiers (time.Now()) are NOT treated as typed variables. We index by
 	// the last path segment AND any explicit alias.

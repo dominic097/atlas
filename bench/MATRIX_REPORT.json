@@ -1,0 +1,1088 @@
+[
+  {
+    "language": "go",
+    "repo": "https://github.com/sirupsen/logrus",
+    "subdir": "",
+    "target": "/tmp/atlas-codeintel-matrix/go/repo",
+    "tools": {
+      "atlas": {
+        "tool": "atlas",
+        "status": "ok",
+        "ok": true,
+        "seconds": 0.022,
+        "metrics": {
+          "files": 57,
+          "symbols": 676,
+          "edges": 2931,
+          "edge_kinds": {
+            "calls": 2085,
+            "imports": 224,
+            "references": 622
+          },
+          "languages": {
+            "config": 1,
+            "go": 47,
+            "gomod": 1,
+            "gosum": 1,
+            "markdown": 4,
+            "yaml": 3
+          },
+          "duration_ms": 0,
+          "timings_ms": {
+            "delta_check": 0,
+            "resolve_head": 0
+          },
+          "mode": "noop",
+          "cold_seconds": 0.397,
+          "cold_duration_ms": 366,
+          "cold_timings_ms": {
+            "delta_check": 0,
+            "ensure_repo": 0,
+            "go_types": 241,
+            "lexical": 72,
+            "parse": 18,
+            "persist": 32,
+            "resolve_head": 0,
+            "routes": 0,
+            "sort": 0,
+            "walk": 0
+          },
+          "calls": 2085,
+          "internal_calls": 1134,
+          "recv_typed": 624,
+          "sources": {
+            "go_ast": 2085
+          }
+        },
+        "note": ""
+      },
+      "scip-go": {
+        "tool": "scip-go",
+        "status": "ok",
+        "ok": true,
+        "seconds": 0.257,
+        "metrics": {
+          "documents": 47,
+          "total_documents": 47,
+          "external_symbols": 1,
+          "symbols": 2214,
+          "occurrences": 11799,
+          "definitions": 2220,
+          "references": 9579,
+          "imports": 0,
+          "relationships": 148,
+          "kinds": {
+            "Constant": 30,
+            "Field": 95,
+            "Function": 251,
+            "Interface": 11,
+            "Method": 175,
+            "MethodSpecification": 35,
+            "Package": 16,
+            "Struct": 27,
+            "Type": 10,
+            "UnspecifiedKind": 2,
+            "Variable": 1562
+          },
+          "index_bytes": 984825
+        },
+        "note": ""
+      },
+      "gopls": {
+        "tool": "gopls",
+        "status": "ok",
+        "ok": true,
+        "seconds": 0.411,
+        "metrics": {
+          "gopls_version": "v0.22.0",
+          "go_version": "go1.26.4",
+          "initial_workspace_load_ms": 289.017,
+          "dir_files": 87,
+          "dir_go_files": 47,
+          "workspace_packages": 12,
+          "workspace_compiled_go_files": 57,
+          "all_packages": 207,
+          "diagnostics": 0,
+          "heap_alloc_bytes": 158005200
+        },
+        "note": ""
+      },
+      "graphify": {
+        "tool": "graphify",
+        "status": "ok",
+        "ok": true,
+        "seconds": 0.678,
+        "metrics": {
+          "nodes": 707,
+          "links": 1236,
+          "calls": 330,
+          "extracted_calls": 196,
+          "extracted_pct": 59.4
+        },
+        "note": ""
+      }
+    },
+    "truth": {},
+    "queries": [
+      {
+        "symbol": "log",
+        "atlas_tokens": 6,
+        "graphify_tokens": 96,
+        "atlas_ms": 12.091,
+        "graphify_ms": 78.765,
+        "atlas_missing": false,
+        "graphify_missing": false
+      },
+      {
+        "symbol": "newEntry",
+        "atlas_tokens": 8,
+        "graphify_tokens": 62,
+        "atlas_ms": 12.121,
+        "graphify_ms": 78.265,
+        "atlas_missing": false,
+        "graphify_missing": false
+      },
+      {
+        "symbol": "releaseEntry",
+        "atlas_tokens": 9,
+        "graphify_tokens": 175,
+        "atlas_ms": 12.038,
+        "graphify_ms": 77.168,
+        "atlas_missing": false,
+        "graphify_missing": false
+      },
+      {
+        "symbol": "Fire",
+        "atlas_tokens": 9,
+        "graphify_tokens": 56,
+        "atlas_ms": 12.204,
+        "graphify_ms": 78.243,
+        "atlas_missing": false,
+        "graphify_missing": false
+      }
+    ]
+  },
+  {
+    "language": "python",
+    "repo": "https://github.com/psf/requests",
+    "subdir": "src",
+    "target": "/tmp/atlas-codeintel-matrix/python/repo/src",
+    "tools": {
+      "atlas": {
+        "tool": "atlas",
+        "status": "ok",
+        "ok": true,
+        "seconds": 0.021,
+        "metrics": {
+          "files": 19,
+          "symbols": 517,
+          "edges": 1150,
+          "edge_kinds": {
+            "calls": 961,
+            "imports": 189
+          },
+          "languages": {
+            "python": 19
+          },
+          "duration_ms": 0,
+          "timings_ms": {
+            "delta_check": 0,
+            "resolve_head": 0
+          },
+          "mode": "noop",
+          "cold_seconds": 0.154,
+          "cold_duration_ms": 117,
+          "cold_timings_ms": {
+            "delta_check": 0,
+            "ensure_repo": 0,
+            "go_types": 0,
+            "lexical": 67,
+            "parse": 33,
+            "persist": 15,
+            "resolve_head": 0,
+            "routes": 0,
+            "sort": 0,
+            "walk": 0
+          },
+          "calls": 961,
+          "internal_calls": 371,
+          "recv_typed": 73,
+          "sources": {
+            "python_ts": 961
+          }
+        },
+        "note": ""
+      },
+      "scip-python": {
+        "tool": "scip-python",
+        "status": "ok",
+        "ok": true,
+        "seconds": 2.102,
+        "metrics": {
+          "documents": 19,
+          "total_documents": 19,
+          "external_symbols": 208,
+          "symbols": 1518,
+          "occurrences": 8224,
+          "definitions": 1485,
+          "references": 6739,
+          "imports": 0,
+          "relationships": 64,
+          "kinds": {
+            "UnspecifiedKind": 1518
+          },
+          "index_bytes": 971908,
+          "scope": "repo-root"
+        },
+        "note": ""
+      },
+      "pyright": {
+        "tool": "pyright",
+        "status": "ok",
+        "ok": true,
+        "seconds": 0.727,
+        "metrics": {
+          "pyright_version": "1.1.411",
+          "diagnostics": 12,
+          "diagnostics_by_severity": {
+            "error": 12
+          },
+          "diagnostics_by_rule": {
+            "reportMissingImports": 4,
+            "reportUnknownVariableType": 2,
+            "reportUnknownArgumentType": 1,
+            "reportUnknownMemberType": 5
+          },
+          "diagnostic_files": 4,
+          "files_analyzed": 19,
+          "error_count": 12,
+          "warning_count": 0,
+          "information_count": 0,
+          "time_in_sec": 0.556,
+          "exit_code": 1
+        },
+        "note": "pyright returned diagnostics"
+      },
+      "graphify": {
+        "tool": "graphify",
+        "status": "ok",
+        "ok": true,
+        "seconds": 0.583,
+        "metrics": {
+          "nodes": 580,
+          "links": 1514,
+          "calls": 229,
+          "extracted_calls": 221,
+          "extracted_pct": 96.5
+        },
+        "note": ""
+      }
+    },
+    "truth": {
+      "python_ast": {
+        "files": 19,
+        "functions": 268,
+        "classes": 52,
+        "module_assignment_names": 59,
+        "class_assignment_names": 74,
+        "atlas_callable_class_symbols": 320,
+        "atlas_assignment_symbols": 197
+      }
+    },
+    "queries": [
+      {
+        "symbol": "get",
+        "atlas_tokens": 6,
+        "graphify_tokens": 142,
+        "atlas_ms": 11.181,
+        "graphify_ms": 80.169,
+        "atlas_missing": false,
+        "graphify_missing": false
+      },
+      {
+        "symbol": "request",
+        "atlas_tokens": 7,
+        "graphify_tokens": 185,
+        "atlas_ms": 12.249,
+        "graphify_ms": 80.555,
+        "atlas_missing": false,
+        "graphify_missing": false
+      },
+      {
+        "symbol": "__init__",
+        "atlas_tokens": 9,
+        "graphify_tokens": 62,
+        "atlas_ms": 12.291,
+        "graphify_ms": 79.668,
+        "atlas_missing": false,
+        "graphify_missing": false
+      }
+    ]
+  },
+  {
+    "language": "javascript",
+    "repo": "https://github.com/expressjs/express",
+    "subdir": "lib",
+    "target": "/tmp/atlas-codeintel-matrix/javascript/repo/lib",
+    "tools": {
+      "atlas": {
+        "tool": "atlas",
+        "status": "ok",
+        "ok": true,
+        "seconds": 0.028,
+        "metrics": {
+          "files": 7,
+          "symbols": 300,
+          "edges": 435,
+          "edge_kinds": {
+            "calls": 435
+          },
+          "languages": {
+            "javascript": 6,
+            "json": 1
+          },
+          "duration_ms": 0,
+          "timings_ms": {
+            "delta_check": 0,
+            "resolve_head": 0
+          },
+          "mode": "noop",
+          "cold_seconds": 0.114,
+          "cold_duration_ms": 91,
+          "cold_timings_ms": {
+            "delta_check": 0,
+            "ensure_repo": 0,
+            "go_types": 0,
+            "lexical": 50,
+            "parse": 26,
+            "persist": 14,
+            "resolve_head": 0,
+            "routes": 0,
+            "sort": 0,
+            "walk": 0
+          },
+          "calls": 435,
+          "internal_calls": 194,
+          "recv_typed": 0,
+          "sources": {
+            "javascript_ts": 435
+          }
+        },
+        "note": ""
+      },
+      "scip-typescript": {
+        "tool": "scip-typescript",
+        "status": "ok",
+        "ok": true,
+        "seconds": 0.985,
+        "metrics": {
+          "documents": 6,
+          "total_documents": 6,
+          "external_symbols": 0,
+          "symbols": 398,
+          "occurrences": 2649,
+          "definitions": 398,
+          "references": 2251,
+          "imports": 0,
+          "relationships": 0,
+          "kinds": {
+            "UnspecifiedKind": 398
+          },
+          "index_bytes": 106350,
+          "scope": "lib"
+        },
+        "note": ""
+      },
+      "tsserver": {
+        "tool": "tsserver",
+        "status": "ok",
+        "ok": true,
+        "seconds": 0.814,
+        "metrics": {
+          "diagnostics": 257,
+          "diagnostics_by_code": {
+            "TS2307": 32,
+            "TS2591": 16,
+            "TS7034": 2,
+            "TS2339": 56,
+            "TS7005": 4,
+            "TS7006": 45,
+            "TS2683": 36,
+            "TS2551": 7,
+            "TS2314": 13,
+            "TS2304": 13,
+            "TS7052": 1,
+            "TS1003": 13,
+            "TS8029": 1,
+            "TS8032": 1,
+            "TS7019": 1,
+            "TS2552": 1,
+            "TS2322": 2,
+            "TS7053": 7,
+            "TS2407": 1,
+            "TS2769": 1,
+            "TS2678": 2,
+            "TS2341": 2
+          },
+          "engine": "tsc",
+          "note": "TypeScript compiler semantic check used as scriptable tsserver proxy",
+          "files": 57,
+          "lines": 58110,
+          "identifiers": 50452,
+          "symbols": 32443,
+          "types": 1417,
+          "instantiations": 578,
+          "memory_kb": 82436,
+          "iioo_read_sec": 0.01,
+          "iioo_write_sec": 0.0,
+          "parse_time_sec": 0.08,
+          "bind_time_sec": 0.03,
+          "check_time_sec": 0.09,
+          "emit_time_sec": 0.0,
+          "total_time_sec": 0.19
+        },
+        "note": "tsc returned diagnostics/exit 2; used as scriptable tsserver proxy"
+      },
+      "graphify": {
+        "tool": "graphify",
+        "status": "ok",
+        "ok": true,
+        "seconds": 0.142,
+        "metrics": {
+          "nodes": 31,
+          "links": 39,
+          "calls": 3,
+          "extracted_calls": 3,
+          "extracted_pct": 100.0
+        },
+        "note": ""
+      }
+    },
+    "truth": {},
+    "queries": [
+      {
+        "symbol": "sendFile",
+        "atlas_tokens": 8,
+        "graphify_tokens": 46,
+        "atlas_ms": 10.805,
+        "graphify_ms": 70.374,
+        "atlas_missing": false,
+        "graphify_missing": false
+      },
+      {
+        "symbol": "defineGetter",
+        "atlas_tokens": 8,
+        "graphify_tokens": 47,
+        "atlas_ms": 11.93,
+        "graphify_ms": 69.434,
+        "atlas_missing": false,
+        "graphify_missing": false
+      },
+      {
+        "symbol": "render",
+        "atlas_tokens": 9,
+        "graphify_tokens": 43,
+        "atlas_ms": 11.758,
+        "graphify_ms": 69.362,
+        "atlas_missing": false,
+        "graphify_missing": false
+      },
+      {
+        "symbol": "contentDisposition",
+        "atlas_tokens": 9,
+        "graphify_tokens": 11,
+        "atlas_ms": 11.743,
+        "graphify_ms": 68.543,
+        "atlas_missing": false,
+        "graphify_missing": true
+      }
+    ]
+  },
+  {
+    "language": "typescript",
+    "repo": "https://github.com/pmndrs/zustand",
+    "subdir": "src",
+    "target": "/tmp/atlas-codeintel-matrix/typescript/repo/src",
+    "tools": {
+      "atlas": {
+        "tool": "atlas",
+        "status": "ok",
+        "ok": true,
+        "seconds": 0.02,
+        "metrics": {
+          "files": 17,
+          "symbols": 222,
+          "edges": 214,
+          "edge_kinds": {
+            "calls": 197,
+            "imports": 17
+          },
+          "languages": {
+            "json": 1,
+            "typescript": 16
+          },
+          "duration_ms": 0,
+          "timings_ms": {
+            "delta_check": 0,
+            "resolve_head": 0
+          },
+          "mode": "noop",
+          "cold_seconds": 0.1,
+          "cold_duration_ms": 62,
+          "cold_timings_ms": {
+            "delta_check": 0,
+            "ensure_repo": 0,
+            "go_types": 0,
+            "lexical": 31,
+            "parse": 14,
+            "persist": 10,
+            "resolve_head": 1,
+            "routes": 0,
+            "sort": 0,
+            "walk": 4
+          },
+          "calls": 197,
+          "internal_calls": 79,
+          "recv_typed": 8,
+          "sources": {
+            "javascript_ts": 197
+          }
+        },
+        "note": ""
+      },
+      "scip-typescript": {
+        "tool": "scip-typescript",
+        "status": "ok",
+        "ok": true,
+        "seconds": 0.635,
+        "metrics": {
+          "documents": 16,
+          "total_documents": 16,
+          "external_symbols": 0,
+          "symbols": 792,
+          "occurrences": 2461,
+          "definitions": 792,
+          "references": 1669,
+          "imports": 0,
+          "relationships": 0,
+          "kinds": {
+            "UnspecifiedKind": 792
+          },
+          "index_bytes": 176999,
+          "scope": "src"
+        },
+        "note": ""
+      },
+      "tsserver": {
+        "tool": "tsserver",
+        "status": "ok",
+        "ok": true,
+        "seconds": 0.724,
+        "metrics": {
+          "diagnostics": 1,
+          "diagnostics_by_code": {
+            "TS2688": 1
+          },
+          "engine": "tsc",
+          "note": "TypeScript compiler semantic check used as scriptable tsserver proxy",
+          "files": 124,
+          "lines": 68340,
+          "identifiers": 65669,
+          "symbols": 40624,
+          "types": 85,
+          "instantiations": 0,
+          "memory_kb": 72473,
+          "iioo_read_sec": 0.01,
+          "iioo_write_sec": 0.0,
+          "parse_time_sec": 0.1,
+          "bind_time_sec": 0.04,
+          "check_time_sec": 0.0,
+          "emit_time_sec": 0.0,
+          "total_time_sec": 0.14
+        },
+        "note": "tsc returned diagnostics/exit 2; used as scriptable tsserver proxy"
+      },
+      "graphify": {
+        "tool": "graphify",
+        "status": "ok",
+        "ok": true,
+        "seconds": 0.168,
+        "metrics": {
+          "nodes": 112,
+          "links": 171,
+          "calls": 6,
+          "extracted_calls": 6,
+          "extracted_pct": 100.0
+        },
+        "note": ""
+      }
+    },
+    "truth": {},
+    "queries": [
+      {
+        "symbol": "DevtoolsImpl",
+        "atlas_tokens": 7,
+        "graphify_tokens": 53,
+        "atlas_ms": 10.368,
+        "graphify_ms": 70.148,
+        "atlas_missing": false,
+        "graphify_missing": false
+      },
+      {
+        "symbol": "hydrate",
+        "atlas_tokens": 7,
+        "graphify_tokens": 8,
+        "atlas_ms": 11.591,
+        "graphify_ms": 70.293,
+        "atlas_missing": false,
+        "graphify_missing": true
+      },
+      {
+        "symbol": "persistImpl",
+        "atlas_tokens": 8,
+        "graphify_tokens": 52,
+        "atlas_ms": 12.22,
+        "graphify_ms": 70.058,
+        "atlas_missing": false,
+        "graphify_missing": false
+      },
+      {
+        "symbol": "shallow",
+        "atlas_tokens": 7,
+        "graphify_tokens": 75,
+        "atlas_ms": 11.489,
+        "graphify_ms": 70.426,
+        "atlas_missing": false,
+        "graphify_missing": false
+      }
+    ]
+  },
+  {
+    "language": "java",
+    "repo": "https://github.com/google/gson",
+    "subdir": "gson/src/main/java",
+    "target": "/tmp/atlas-codeintel-matrix/java/repo/gson/src/main/java",
+    "tools": {
+      "atlas": {
+        "tool": "atlas",
+        "status": "ok",
+        "ok": true,
+        "seconds": 0.034,
+        "metrics": {
+          "files": 86,
+          "symbols": 1401,
+          "edges": 3782,
+          "edge_kinds": {
+            "calls": 3105,
+            "imports": 677
+          },
+          "languages": {
+            "java": 86
+          },
+          "duration_ms": 0,
+          "timings_ms": {
+            "delta_check": 0,
+            "resolve_head": 0
+          },
+          "mode": "noop",
+          "cold_seconds": 0.3,
+          "cold_duration_ms": 268,
+          "cold_timings_ms": {
+            "delta_check": 0,
+            "ensure_repo": 3,
+            "go_types": 0,
+            "lexical": 151,
+            "parse": 45,
+            "persist": 65,
+            "resolve_head": 0,
+            "routes": 0,
+            "sort": 1,
+            "walk": 0
+          },
+          "calls": 3105,
+          "internal_calls": 2401,
+          "recv_typed": 2326,
+          "sources": {
+            "java_ts": 3105
+          }
+        },
+        "note": ""
+      },
+      "scip-java": {
+        "tool": "scip-java",
+        "status": "ok",
+        "ok": true,
+        "seconds": 3.346,
+        "metrics": {
+          "documents": 85,
+          "total_documents": 209,
+          "filter_prefixes": [
+            "src/main/java"
+          ],
+          "external_symbols": 0,
+          "symbols": 3408,
+          "occurrences": 21514,
+          "definitions": 3405,
+          "references": 18109,
+          "imports": 0,
+          "relationships": 832,
+          "kinds": {
+            "AbstractMethod": 44,
+            "Class": 89,
+            "Constructor": 116,
+            "Enum": 6,
+            "Field": 199,
+            "Interface": 18,
+            "Method": 675,
+            "StaticField": 171,
+            "StaticMethod": 135,
+            "TypeParameter": 96,
+            "UnspecifiedKind": 1072,
+            "Variable": 787
+          },
+          "index_bytes": 9069422,
+          "scope": "gson",
+          "document_filter": "src/main/java"
+        },
+        "note": ""
+      },
+      "jdtls": {
+        "tool": "jdtls",
+        "status": "ok",
+        "ok": true,
+        "seconds": 1.782,
+        "metrics": {
+          "build_root": "gson",
+          "sample_files": 5,
+          "document_symbol_files": 5,
+          "document_symbols": 54,
+          "workspace_symbols_query_gson": 11,
+          "diagnostic_files": 71,
+          "diagnostics": 425,
+          "initialized": true,
+          "stderr_tail": [
+            "WARNING: Using incubator modules: jdk.incubator.vector",
+            "Jun 27, 2026 12:47:39 AM org.apache.aries.spifly.BaseActivator log",
+            "INFO: Registered provider ch.qos.logback.classic.spi.LogbackServiceProvider of service org.slf4j.spi.SLF4JServiceProvider in bundle ch.qos.logback.classic"
+          ]
+        },
+        "note": ""
+      },
+      "graphify": {
+        "tool": "graphify",
+        "status": "ok",
+        "ok": true,
+        "seconds": 0.862,
+        "metrics": {
+          "nodes": 1016,
+          "links": 3668,
+          "calls": 927,
+          "extracted_calls": 599,
+          "extracted_pct": 64.6
+        },
+        "note": ""
+      }
+    },
+    "truth": {},
+    "queries": [
+      {
+        "symbol": "create",
+        "atlas_tokens": 10,
+        "graphify_tokens": 64,
+        "atlas_ms": 14.988,
+        "graphify_ms": 89.14,
+        "atlas_missing": false,
+        "graphify_missing": false
+      },
+      {
+        "symbol": "write",
+        "atlas_tokens": 9,
+        "graphify_tokens": 112,
+        "atlas_ms": 17.719,
+        "graphify_ms": 93.721,
+        "atlas_missing": false,
+        "graphify_missing": false
+      },
+      {
+        "symbol": "peek",
+        "atlas_tokens": 10,
+        "graphify_tokens": 239,
+        "atlas_ms": 14.96,
+        "graphify_ms": 89.163,
+        "atlas_missing": false,
+        "graphify_missing": false
+      },
+      {
+        "symbol": "read",
+        "atlas_tokens": 8,
+        "graphify_tokens": 102,
+        "atlas_ms": 16.967,
+        "graphify_ms": 90.639,
+        "atlas_missing": false,
+        "graphify_missing": false
+      }
+    ]
+  },
+  {
+    "language": "c",
+    "repo": "https://github.com/DaveGamble/cJSON",
+    "subdir": "",
+    "target": "/tmp/atlas-codeintel-matrix/c/repo",
+    "tools": {
+      "atlas": {
+        "tool": "atlas",
+        "status": "ok",
+        "ok": true,
+        "seconds": 0.02,
+        "metrics": {
+          "files": 161,
+          "symbols": 1387,
+          "edges": 4788,
+          "edge_kinds": {
+            "calls": 4417,
+            "imports": 371
+          },
+          "languages": {
+            "bash": 3,
+            "c": 99,
+            "config": 4,
+            "json": 4,
+            "makefile": 5,
+            "markdown": 12,
+            "python": 2,
+            "text": 9,
+            "yaml": 23
+          },
+          "duration_ms": 0,
+          "timings_ms": {
+            "delta_check": 0,
+            "resolve_head": 0
+          },
+          "mode": "noop",
+          "cold_seconds": 0.353,
+          "cold_duration_ms": 315,
+          "cold_timings_ms": {
+            "delta_check": 0,
+            "ensure_repo": 0,
+            "go_types": 0,
+            "lexical": 149,
+            "parse": 85,
+            "persist": 64,
+            "resolve_head": 11,
+            "routes": 0,
+            "sort": 1,
+            "walk": 1
+          },
+          "calls": 4417,
+          "internal_calls": 1690,
+          "recv_typed": 18,
+          "sources": {
+            "cpp_ts": 4275,
+            "python_ts": 142
+          }
+        },
+        "note": ""
+      },
+      "clangd": {
+        "tool": "clangd",
+        "status": "ok",
+        "ok": true,
+        "seconds": 0.11,
+        "metrics": {
+          "sample_files": 8,
+          "document_symbol_files": 8,
+          "document_symbols": 258,
+          "diagnostic_files": 8,
+          "diagnostics": 2,
+          "initialized": true,
+          "stderr_tail": [
+            "I[00:47:44.157] --> textDocument/publishDiagnostics",
+            "I[00:47:44.157] --> reply:textDocument/documentSymbol(16) 64 ms",
+            "I[00:47:44.157] --> reply:textDocument/documentSymbol(11) 65 ms",
+            "I[00:47:44.166] --> textDocument/publishDiagnostics",
+            "I[00:47:44.168] --> reply:textDocument/documentSymbol(10) 75 ms"
+          ]
+        },
+        "note": ""
+      },
+      "graphify": {
+        "tool": "graphify",
+        "status": "ok",
+        "ok": true,
+        "seconds": 0.87,
+        "metrics": {
+          "nodes": 971,
+          "links": 2148,
+          "calls": 1018,
+          "extracted_calls": 492,
+          "extracted_pct": 48.3
+        },
+        "note": ""
+      }
+    },
+    "truth": {},
+    "queries": [
+      {
+        "symbol": "cJSON_Delete",
+        "atlas_tokens": 8,
+        "graphify_tokens": 284,
+        "atlas_ms": 14.093,
+        "graphify_ms": 88.342,
+        "atlas_missing": false,
+        "graphify_missing": false
+      },
+      {
+        "symbol": "cjson_functions_should_not_crash_with_null_pointers",
+        "atlas_tokens": 18,
+        "graphify_tokens": 288,
+        "atlas_ms": 13.142,
+        "graphify_ms": 86.638,
+        "atlas_missing": false,
+        "graphify_missing": false
+      },
+      {
+        "symbol": "cJSON_CreateObject",
+        "atlas_tokens": 9,
+        "graphify_tokens": 332,
+        "atlas_ms": 13.242,
+        "graphify_ms": 86.998,
+        "atlas_missing": false,
+        "graphify_missing": false
+      },
+      {
+        "symbol": "UnityPrint",
+        "atlas_tokens": 7,
+        "graphify_tokens": 302,
+        "atlas_ms": 13.271,
+        "graphify_ms": 89.8,
+        "atlas_missing": false,
+        "graphify_missing": false
+      }
+    ]
+  },
+  {
+    "language": "cpp",
+    "repo": "https://github.com/google/leveldb",
+    "subdir": "",
+    "target": "/tmp/atlas-codeintel-matrix/cpp/repo",
+    "tools": {
+      "atlas": {
+        "tool": "atlas",
+        "status": "ok",
+        "ok": true,
+        "seconds": 0.03,
+        "metrics": {
+          "files": 144,
+          "symbols": 1372,
+          "edges": 10314,
+          "edge_kinds": {
+            "calls": 9537,
+            "imports": 777
+          },
+          "languages": {
+            "c": 57,
+            "config": 1,
+            "cpp": 76,
+            "html": 1,
+            "markdown": 7,
+            "text": 1,
+            "yaml": 1
+          },
+          "duration_ms": 0,
+          "timings_ms": {
+            "delta_check": 0,
+            "resolve_head": 0
+          },
+          "mode": "noop",
+          "cold_seconds": 0.358,
+          "cold_duration_ms": 330,
+          "cold_timings_ms": {
+            "delta_check": 0,
+            "ensure_repo": 0,
+            "go_types": 0,
+            "lexical": 134,
+            "parse": 71,
+            "persist": 119,
+            "resolve_head": 0,
+            "routes": 0,
+            "sort": 2,
+            "walk": 0
+          },
+          "calls": 9537,
+          "internal_calls": 4388,
+          "recv_typed": 1977,
+          "sources": {
+            "cpp_ts": 9537
+          }
+        },
+        "note": ""
+      },
+      "clangd": {
+        "tool": "clangd",
+        "status": "ok",
+        "ok": true,
+        "seconds": 0.227,
+        "metrics": {
+          "sample_files": 8,
+          "document_symbol_files": 8,
+          "document_symbols": 421,
+          "diagnostic_files": 8,
+          "diagnostics": 167,
+          "initialized": true,
+          "stderr_tail": [
+            "E[00:47:46.131] IncludeCleaner: Failed to get an entry for resolved path : No such file or directory",
+            "E[00:47:46.131] IncludeCleaner: Failed to get an entry for resolved path : No such file or directory",
+            "E[00:47:46.131] IncludeCleaner: Failed to get an entry for resolved path : No such file or directory",
+            "I[00:47:46.132] --> textDocument/publishDiagnostics",
+            "I[00:47:46.132] --> reply:textDocument/documentSymbol(11) 210 ms"
+          ]
+        },
+        "note": ""
+      },
+      "graphify": {
+        "tool": "graphify",
+        "status": "ok",
+        "ok": true,
+        "seconds": 1.202,
+        "metrics": {
+          "nodes": 2206,
+          "links": 4995,
+          "calls": 1195,
+          "extracted_calls": 1027,
+          "extracted_pct": 85.9
+        },
+        "note": ""
+      }
+    },
+    "truth": {},
+    "queries": [
+      {
+        "symbol": "TEST_F",
+        "atlas_tokens": 11,
+        "graphify_tokens": 93,
+        "atlas_ms": 25.458,
+        "graphify_ms": 98.738,
+        "atlas_missing": false,
+        "graphify_missing": false
+      },
+      {
+        "symbol": "slice",
+        "atlas_tokens": 6,
+        "graphify_tokens": 232,
+        "atlas_ms": 13.139,
+        "graphify_ms": 98.496,
+        "atlas_missing": false,
+        "graphify_missing": false
+      },
+      {
+        "symbol": "Size",
+        "atlas_tokens": 10,
+        "graphify_tokens": 72,
+        "atlas_ms": 13.18,
+        "graphify_ms": 96.879,
+        "atlas_missing": false,
+        "graphify_missing": false
+      }
+    ]
+  }
+]

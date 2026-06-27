@@ -1,0 +1,280 @@
+{
+  "language": "vue",
+  "repo": "https://github.com/gothinkster/vue-realworld-example-app",
+  "commit": "f7e48c8178602ce25d43293bc6f8ca51d84ae222",
+  "commands": {
+    "clone": "git clone --depth 1 https://github.com/gothinkster/vue-realworld-example-app /tmp/atlas-live-vue-realworld/repo",
+    "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-vue-realworld/atlas.db --json index /tmp/atlas-live-vue-realworld/repo/src",
+    "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-vue-realworld/atlas.db --json index /tmp/atlas-live-vue-realworld/repo/src",
+    "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "native_baseline": "/opt/homebrew/bin/node /tmp/atlas-live-vue-realworld/vue-compiler/vue_sfc_stats.js /tmp/atlas-live-vue-realworld/repo/src",
+    "query_symbols": [
+      "parseMarkdown",
+      "follow",
+      "goTo",
+      "onPageChange"
+    ],
+    "target_path": "/tmp/atlas-live-vue-realworld/repo/src"
+  },
+  "atlas": {
+    "cold_wall_seconds": 0.126,
+    "reindex_wall_seconds": 0.027,
+    "index": {
+      "repo_id": "d10e0b24-f60a-4a92-a22a-1e90f0c85d13",
+      "repo_full_name": "src",
+      "snapshot_id": "1189f228-2962-4014-8c5f-1c0035039451",
+      "commit_sha": "f7e48c8178602ce25d43293bc6f8ca51d84ae222",
+      "indexed_files": 32,
+      "symbols": 165,
+      "edges": 390,
+      "edge_kinds": {
+        "calls": 282,
+        "imports": 108
+      },
+      "routes": 0,
+      "languages": {
+        "javascript": 12,
+        "vue": 20
+      },
+      "mode": "full",
+      "duration_ms": 29,
+      "timings_ms": {
+        "delta_check": 0,
+        "ensure_repo": 0,
+        "go_types": 0,
+        "lexical": 16,
+        "parse": 5,
+        "persist": 6,
+        "resolve_head": 0,
+        "routes": 0,
+        "sort": 0,
+        "walk": 0
+      }
+    },
+    "reindex": {
+      "repo_id": "d10e0b24-f60a-4a92-a22a-1e90f0c85d13",
+      "repo_full_name": "src",
+      "snapshot_id": "1189f228-2962-4014-8c5f-1c0035039451",
+      "commit_sha": "f7e48c8178602ce25d43293bc6f8ca51d84ae222",
+      "indexed_files": 32,
+      "symbols": 165,
+      "edges": 390,
+      "routes": 0,
+      "languages": {
+        "javascript": 12,
+        "vue": 20
+      },
+      "mode": "noop",
+      "duration_ms": 0,
+      "timings_ms": {
+        "delta_check": 0,
+        "resolve_head": 0
+      }
+    },
+    "symbol_breakdown": [
+      {
+        "language": "javascript",
+        "kind": "constant",
+        "count": 31
+      },
+      {
+        "language": "javascript",
+        "kind": "function",
+        "count": 8
+      },
+      {
+        "language": "javascript",
+        "kind": "variable",
+        "count": 3
+      },
+      {
+        "language": "vue",
+        "kind": "document",
+        "count": 4
+      },
+      {
+        "language": "vue",
+        "kind": "function",
+        "count": 119
+      }
+    ],
+    "edge_breakdown": [
+      {
+        "kind": "calls",
+        "count": 282
+      },
+      {
+        "kind": "imports",
+        "count": 108
+      }
+    ],
+    "vue_definition_symbols": 119
+  },
+  "graphify": {
+    "status": "ok",
+    "ok": true,
+    "seconds": 0.439,
+    "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "stdout_head": [
+      "Re-extracting code files in . (no LLM needed)...",
+      "[graphify watch] Rebuilt: 111 nodes, 91 edges, 26 communities",
+      "[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out",
+      "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
+      "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
+    ],
+    "stderr_head": [],
+    "metrics": {
+      "nodes": 111,
+      "links": 91,
+      "calls": 2
+    }
+  },
+  "native_baseline": {
+    "tool": "vue-compiler-sfc",
+    "status": "ok",
+    "ok": true,
+    "seconds": 0.109,
+    "command": "/opt/homebrew/bin/node /tmp/atlas-live-vue-realworld/vue-compiler/vue_sfc_stats.js /tmp/atlas-live-vue-realworld/repo/src",
+    "metrics": {
+      "files": 20,
+      "parsed_files": 20,
+      "parse_errors": 0,
+      "script_blocks": 21,
+      "functions": 0,
+      "variables": 119,
+      "definitions": 119,
+      "compiler_version": "3.5.22",
+      "parse_error_samples": []
+    }
+  },
+  "richer_native_baselines": {
+    "vue-tsc": {
+      "status": "missing",
+      "ok": false,
+      "note": "vue-tsc not installed; @vue/compiler-sfc used as the scriptable SFC parser baseline"
+    },
+    "volar": {
+      "status": "missing",
+      "ok": false,
+      "note": "Volar language server is not installed; compiler-sfc parse coverage used for this smoke"
+    }
+  },
+  "coverage": {
+    "atlas_vs_vue_compiler_sfc_definition_ratio": 1.0,
+    "atlas_vue_definition_symbols": 119,
+    "native_definitions": 119
+  },
+  "optimization": {
+    "cycles_run": 1,
+    "stop_reason": "Vue live smoke matched @vue/compiler-sfc script declaration coverage and exceeded 5x query latency plus token output on cycle 1.",
+    "cycle_notes": [
+      "cycle 1: vue-realworld smoke used @vue/compiler-sfc as an isolated SFC parser baseline; Atlas matched top-level script declaration coverage while keeping exact-symbol explain output terse."
+    ]
+  },
+  "queries": [
+    {
+      "symbol": "parseMarkdown",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-vue-realworld/atlas.db --format plain --repo src explain parseMarkdown",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain parseMarkdown",
+      "atlas_tokens": 8,
+      "graphify_tokens": 51,
+      "atlas_ms": 13.88,
+      "graphify_ms": 88.956,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "parseMarkdown f@Article.vue:101"
+      ],
+      "graphify_stdout_head": [
+        "Node: parseMarkdown()",
+        "  ID:        views_article_parsemarkdown",
+        "  Source:    views/Article.vue L102",
+        "  Type:      code",
+        "  Community: 6",
+        "  Degree:    1",
+        "",
+        "Connections (1):"
+      ]
+    },
+    {
+      "symbol": "follow",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-vue-realworld/atlas.db --format plain --repo src explain follow",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain follow",
+      "atlas_tokens": 7,
+      "graphify_tokens": 48,
+      "atlas_ms": 13.161,
+      "graphify_ms": 88.325,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "follow f@Profile.vue:142 c1"
+      ],
+      "graphify_stdout_head": [
+        "Node: follow()",
+        "  ID:        views_profile_follow",
+        "  Source:    views/Profile.vue L143",
+        "  Type:      code",
+        "  Community: 2",
+        "  Degree:    1",
+        "",
+        "Connections (1):"
+      ]
+    },
+    {
+      "symbol": "goTo",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-vue-realworld/atlas.db --format plain --repo src explain goTo",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain goTo",
+      "atlas_tokens": 5,
+      "graphify_tokens": 45,
+      "atlas_ms": 13.236,
+      "graphify_ms": 86.649,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "goTo f@Home.vue:110"
+      ],
+      "graphify_stdout_head": [
+        "Node: goTo()",
+        "  ID:        views_home_goto",
+        "  Source:    views/Home.vue L111",
+        "  Type:      code",
+        "  Community: 10",
+        "  Degree:    1",
+        "",
+        "Connections (1):"
+      ]
+    },
+    {
+      "symbol": "onPageChange",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-vue-realworld/atlas.db --format plain --repo src explain onPageChange",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain onPageChange",
+      "atlas_tokens": 8,
+      "graphify_tokens": 49,
+      "atlas_ms": 13.38,
+      "graphify_ms": 89.522,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "onPageChange f@Home.vue:114 df2"
+      ],
+      "graphify_stdout_head": [
+        "Node: onPageChange()",
+        "  ID:        views_home_onpagechange",
+        "  Source:    views/Home.vue L115",
+        "  Type:      code",
+        "  Community: 10",
+        "  Degree:    1",
+        "",
+        "Connections (1):"
+      ]
+    }
+  ]
+}

@@ -36,8 +36,10 @@ func openSQLite(ctx context.Context, path string) (StorageDriver, error) {
 			return nil, fmt.Errorf("store: create sqlite dir: %w", err)
 		}
 	}
-	// _pragma URL params apply per-connection on the modernc driver.
-	dsn := path + "?_pragma=journal_mode(WAL)&_pragma=synchronous(NORMAL)&_pragma=busy_timeout(5000)&_pragma=foreign_keys(ON)"
+	// _pragma URL params apply per-connection on the modernc driver. The cache,
+	// mmap, and temp-store settings reduce local bulk-index overhead without
+	// weakening WAL durability or foreign-key enforcement.
+	dsn := path + "?_pragma=journal_mode(WAL)&_pragma=synchronous(NORMAL)&_pragma=busy_timeout(5000)&_pragma=foreign_keys(ON)&_pragma=cache_size(-65536)&_pragma=temp_store(MEMORY)&_pragma=mmap_size(268435456)"
 	db, err := sql.Open("sqlite", dsn)
 	if err != nil {
 		return nil, fmt.Errorf("store: open sqlite: %w", err)
@@ -375,13 +377,7 @@ func (d *sqliteDriver) SaveSnapshot(ctx context.Context, s *graph.Snapshot, file
 		}
 	}
 
-	fileStmt, err := tx.PrepareContext(ctx, `
-		INSERT INTO files (id, snapshot_id, path, language, size_bytes, hash, imports, doc_summary)
-		VALUES (?, ?, ?, ?, ?, ?, ?, ?)`)
-	if err != nil {
-		return fmt.Errorf("store: prepare file insert: %w", err)
-	}
-	defer fileStmt.Close()
+	fileRows := make([][]any, 0, len(files))
 	for i := range files {
 		f := &files[i]
 		id := f.ID
@@ -392,18 +388,15 @@ func (d *sqliteDriver) SaveSnapshot(ctx context.Context, s *graph.Snapshot, file
 		if err != nil {
 			return fmt.Errorf("store: marshal imports for %s: %w", f.Path, err)
 		}
-		if _, err := fileStmt.ExecContext(ctx, id, s.ID, f.Path, f.Language, f.SizeBytes, f.Hash, imp, f.DocSummary); err != nil {
-			return fmt.Errorf("store: save file %s: %w", f.Path, err)
-		}
+		fileRows = append(fileRows, []any{id, s.ID, f.Path, f.Language, f.SizeBytes, f.Hash, imp, f.DocSummary})
+	}
+	if err := sqliteBulkInsert(ctx, tx,
+		`INSERT INTO files (id, snapshot_id, path, language, size_bytes, hash, imports, doc_summary) VALUES `,
+		fileRows); err != nil {
+		return fmt.Errorf("store: save files: %w", err)
 	}
 
-	symStmt, err := tx.PrepareContext(ctx, `
-		INSERT INTO symbols (id, snapshot_id, node_id, repo_id, path, language, kind, name, signature, doc, start_line, end_line, metadata)
-		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-	if err != nil {
-		return fmt.Errorf("store: prepare symbol insert: %w", err)
-	}
-	defer symStmt.Close()
+	symbolRows := make([][]any, 0, len(symbols))
 	for i := range symbols {
 		sym := &symbols[i]
 		id := sym.ID
@@ -414,19 +407,16 @@ func (d *sqliteDriver) SaveSnapshot(ctx context.Context, s *graph.Snapshot, file
 		if err != nil {
 			return fmt.Errorf("store: marshal symbol metadata for %s: %w", sym.Name, err)
 		}
-		if _, err := symStmt.ExecContext(ctx, id, s.ID, string(sym.NodeID), sym.RepoID, sym.Path, sym.Language,
-			sym.Kind, sym.Name, sym.Signature, sym.Doc, sym.StartLine, sym.EndLine, m); err != nil {
-			return fmt.Errorf("store: save symbol %s: %w", sym.Name, err)
-		}
+		symbolRows = append(symbolRows, []any{id, s.ID, string(sym.NodeID), sym.RepoID, sym.Path, sym.Language,
+			sym.Kind, sym.Name, sym.Signature, sym.Doc, sym.StartLine, sym.EndLine, m})
+	}
+	if err := sqliteBulkInsert(ctx, tx,
+		`INSERT INTO symbols (id, snapshot_id, node_id, repo_id, path, language, kind, name, signature, doc, start_line, end_line, metadata) VALUES `,
+		symbolRows); err != nil {
+		return fmt.Errorf("store: save symbols: %w", err)
 	}
 
-	edgeStmt, err := tx.PrepareContext(ctx, `
-		INSERT INTO edges (id, snapshot_id, from_file, from_symbol, to_ref, kind, language, line, metadata)
-		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-	if err != nil {
-		return fmt.Errorf("store: prepare edge insert: %w", err)
-	}
-	defer edgeStmt.Close()
+	edgeRows := make([][]any, 0, len(edges))
 	for i := range edges {
 		e := &edges[i]
 		id := e.ID
@@ -437,18 +427,15 @@ func (d *sqliteDriver) SaveSnapshot(ctx context.Context, s *graph.Snapshot, file
 		if err != nil {
 			return fmt.Errorf("store: marshal edge metadata: %w", err)
 		}
-		if _, err := edgeStmt.ExecContext(ctx, id, s.ID, e.FromFile, e.FromSymbol, e.ToRef, string(e.Kind), e.Language, e.Line, m); err != nil {
-			return fmt.Errorf("store: save edge %s -> %s: %w", e.FromFile, e.ToRef, err)
-		}
+		edgeRows = append(edgeRows, []any{id, s.ID, e.FromFile, e.FromSymbol, e.ToRef, string(e.Kind), e.Language, e.Line, m})
+	}
+	if err := sqliteBulkInsert(ctx, tx,
+		`INSERT INTO edges (id, snapshot_id, from_file, from_symbol, to_ref, kind, language, line, metadata) VALUES `,
+		edgeRows); err != nil {
+		return fmt.Errorf("store: save edges: %w", err)
 	}
 
-	routeStmt, err := tx.PrepareContext(ctx, `
-		INSERT INTO routes (id, snapshot_id, repo_full_name, method, path_pattern, handler_file, role, source, confidence, metadata)
-		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-	if err != nil {
-		return fmt.Errorf("store: prepare route insert: %w", err)
-	}
-	defer routeStmt.Close()
+	routeRows := make([][]any, 0, len(routes))
 	for i := range routes {
 		rt := &routes[i]
 		id := rt.ID
@@ -459,14 +446,65 @@ func (d *sqliteDriver) SaveSnapshot(ctx context.Context, s *graph.Snapshot, file
 		if err != nil {
 			return fmt.Errorf("store: marshal route metadata: %w", err)
 		}
-		if _, err := routeStmt.ExecContext(ctx, id, s.ID, rt.RepoFullName, rt.Method, rt.PathPattern,
-			rt.HandlerFile, rt.Role, rt.Source, rt.Confidence, m); err != nil {
-			return fmt.Errorf("store: save route %s %s: %w", rt.Method, rt.PathPattern, err)
-		}
+		routeRows = append(routeRows, []any{id, s.ID, rt.RepoFullName, rt.Method, rt.PathPattern,
+			rt.HandlerFile, rt.Role, rt.Source, rt.Confidence, m})
+	}
+	if err := sqliteBulkInsert(ctx, tx,
+		`INSERT INTO routes (id, snapshot_id, repo_full_name, method, path_pattern, handler_file, role, source, confidence, metadata) VALUES `,
+		routeRows); err != nil {
+		return fmt.Errorf("store: save routes: %w", err)
 	}
 
 	if err := tx.Commit(); err != nil {
 		return fmt.Errorf("store: commit snapshot: %w", err)
+	}
+	return nil
+}
+
+const sqliteBulkInsertMaxVars = 900
+
+func sqliteBulkInsert(ctx context.Context, tx *sql.Tx, prefix string, rows [][]any) error {
+	if len(rows) == 0 {
+		return nil
+	}
+	cols := len(rows[0])
+	if cols == 0 {
+		return nil
+	}
+	chunkSize := sqliteBulkInsertMaxVars / cols
+	if chunkSize < 1 {
+		chunkSize = 1
+	}
+	for start := 0; start < len(rows); start += chunkSize {
+		end := start + chunkSize
+		if end > len(rows) {
+			end = len(rows)
+		}
+		chunk := rows[start:end]
+		var b strings.Builder
+		b.Grow(len(prefix) + len(chunk)*cols*2)
+		b.WriteString(prefix)
+		args := make([]any, 0, len(chunk)*cols)
+		for i, row := range chunk {
+			if len(row) != cols {
+				return fmt.Errorf("bulk insert row has %d columns, want %d", len(row), cols)
+			}
+			if i > 0 {
+				b.WriteByte(',')
+			}
+			b.WriteByte('(')
+			for c := 0; c < cols; c++ {
+				if c > 0 {
+					b.WriteByte(',')
+				}
+				b.WriteByte('?')
+				args = append(args, row[c])
+			}
+			b.WriteByte(')')
+		}
+		if _, err := tx.ExecContext(ctx, b.String(), args...); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -939,6 +977,61 @@ func (d *sqliteDriver) ListFiles(ctx context.Context, snapshotID string) ([]grap
 		out = append(out, f)
 	}
 	return out, rows.Err()
+}
+
+// FilesByPaths returns the indexed file rows for the requested paths. It is the
+// latency-sensitive counterpart to ListFiles for context/explain paths that only
+// need imports and metadata for a few defining files.
+func (d *sqliteDriver) FilesByPaths(ctx context.Context, snapshotID string, paths []string) ([]graph.File, error) {
+	paths = uniqueNonEmpty(paths)
+	if len(paths) == 0 {
+		return nil, nil
+	}
+	var out []graph.File
+	for start := 0; start < len(paths); start += symbolsChunk {
+		end := start + symbolsChunk
+		if end > len(paths) {
+			end = len(paths)
+		}
+		chunk := paths[start:end]
+		placeholders := strings.Repeat("?,", len(chunk))
+		placeholders = placeholders[:len(placeholders)-1]
+		args := make([]any, 0, len(chunk)+1)
+		args = append(args, snapshotID)
+		for _, p := range chunk {
+			args = append(args, p)
+		}
+		query := `SELECT id, snapshot_id, path, language, size_bytes, hash, imports, doc_summary
+			FROM files WHERE snapshot_id = ? AND path IN (` + placeholders + `)
+			ORDER BY path`
+		rows, err := d.db.QueryContext(ctx, query, args...)
+		if err != nil {
+			return nil, fmt.Errorf("store: files by paths: %w", err)
+		}
+		for rows.Next() {
+			var (
+				f    graph.File
+				imp  sql.NullString
+				docS sql.NullString
+			)
+			if err := rows.Scan(&f.ID, &f.SnapshotID, &f.Path, &f.Language, &f.SizeBytes, &f.Hash, &imp, &docS); err != nil {
+				rows.Close()
+				return nil, fmt.Errorf("store: scan file: %w", err)
+			}
+			if f.Imports, err = unmarshalStrings(imp); err != nil {
+				rows.Close()
+				return nil, fmt.Errorf("store: unmarshal file imports: %w", err)
+			}
+			f.DocSummary = docS.String
+			out = append(out, f)
+		}
+		if err := rows.Err(); err != nil {
+			rows.Close()
+			return nil, fmt.Errorf("store: files by paths: %w", err)
+		}
+		rows.Close()
+	}
+	return out, nil
 }
 
 // ---- coverage --------------------------------------------------------------

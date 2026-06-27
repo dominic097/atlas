@@ -120,3 +120,54 @@ struct Widget {
 		}
 	}
 }
+
+func TestCppSymbols_NamespaceAndQualifiedDefinitions(t *testing.T) {
+	src := []byte(`
+namespace leveldb {
+
+class DBImpl {
+ public:
+  Status Get();
+};
+
+Status DBImpl::Get() {
+  return Status();
+}
+
+int FreeFn() {
+  return 0;
+}
+
+}  // namespace leveldb
+`)
+
+	res, err := Parse("repo-cpp", "owner/repo", "db_impl.cc", "cpp", src)
+	if err != nil {
+		t.Fatalf("Parse returned error: %v", err)
+	}
+
+	type key struct {
+		name string
+		kind string
+	}
+	symbols := map[key]map[string]any{}
+	for _, sym := range res.Symbols {
+		symbols[key{sym.Name, sym.Kind}] = sym.Metadata
+	}
+
+	for _, want := range []key{
+		{"DBImpl", "class"},
+		{"Get", "method"},
+		{"FreeFn", "function"},
+	} {
+		if _, ok := symbols[want]; !ok {
+			t.Errorf("missing C++ symbol %s/%s; got=%+v", want.name, want.kind, res.Symbols)
+		}
+	}
+	if owner, _ := symbols[key{"Get", "method"}]["owner_type"].(string); owner != "DBImpl" {
+		t.Errorf("DBImpl::Get owner_type = %q, want DBImpl", owner)
+	}
+	if qualified, _ := symbols[key{"Get", "method"}]["qualified_name"].(string); qualified != "DBImpl::Get" {
+		t.Errorf("DBImpl::Get qualified_name = %q, want DBImpl::Get", qualified)
+	}
+}

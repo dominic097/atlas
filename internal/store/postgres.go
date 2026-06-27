@@ -738,6 +738,56 @@ func (d *postgresDriver) ListFiles(ctx context.Context, snapshotID string) ([]gr
 	return out, rows.Err()
 }
 
+// FilesByPaths returns the indexed file rows for the requested paths. It is the
+// latency-sensitive counterpart to ListFiles for context/explain paths that only
+// need imports and metadata for a few defining files.
+func (d *postgresDriver) FilesByPaths(ctx context.Context, snapshotID string, paths []string) ([]graph.File, error) {
+	paths = uniqueNonEmpty(paths)
+	if len(paths) == 0 {
+		return nil, nil
+	}
+	var out []graph.File
+	for start := 0; start < len(paths); start += pgChunk {
+		end := start + pgChunk
+		if end > len(paths) {
+			end = len(paths)
+		}
+		chunk := paths[start:end]
+		args := make([]any, 0, len(chunk)+1)
+		args = append(args, snapshotID)
+		for _, p := range chunk {
+			args = append(args, p)
+		}
+		query := `SELECT id, snapshot_id, path, language, size_bytes, hash, imports, doc_summary
+			FROM files WHERE snapshot_id = $1 AND path IN (` + inPlaceholders(2, len(chunk)) + `)
+			ORDER BY path`
+		rows, err := d.db.QueryContext(ctx, query, args...)
+		if err != nil {
+			return nil, fmt.Errorf("store: files by paths: %w", err)
+		}
+		for rows.Next() {
+			var (
+				f       graph.File
+				imports pq.StringArray
+			)
+			if err := rows.Scan(&f.ID, &f.SnapshotID, &f.Path, &f.Language, &f.SizeBytes, &f.Hash, &imports, &f.DocSummary); err != nil {
+				rows.Close()
+				return nil, fmt.Errorf("store: scan file: %w", err)
+			}
+			if len(imports) > 0 {
+				f.Imports = []string(imports)
+			}
+			out = append(out, f)
+		}
+		if err := rows.Err(); err != nil {
+			rows.Close()
+			return nil, fmt.Errorf("store: files by paths: %w", err)
+		}
+		rows.Close()
+	}
+	return out, nil
+}
+
 // ---- postgres helpers ------------------------------------------------------
 
 // inPlaceholders builds "$start,$start+1,...,$start+n-1" for an IN-list, given

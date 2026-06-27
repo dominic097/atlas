@@ -315,6 +315,27 @@ func TestPostgresContract(t *testing.T) {
 	if len(gotImports) != 2 || gotImports[0] != "context" || gotImports[1] != "fmt" {
 		t.Errorf("ListFiles: imports = %v, want [context fmt]", gotImports)
 	}
+	fileSubset, err := d.FilesByPaths(ctx, snapID, []string{"engine.go", "app.go", "app.go", "missing.go"})
+	if err != nil {
+		t.Fatalf("FilesByPaths: %v", err)
+	}
+	if len(fileSubset) != 2 {
+		t.Fatalf("FilesByPaths: got %d, want 2", len(fileSubset))
+	}
+	subsetByPath := map[string][]string{}
+	for _, f := range fileSubset {
+		subsetByPath[f.Path] = f.Imports
+	}
+	gotImports = append([]string(nil), subsetByPath["app.go"]...)
+	sort.Strings(gotImports)
+	if len(gotImports) != 2 || gotImports[0] != "context" || gotImports[1] != "fmt" {
+		t.Errorf("FilesByPaths(app.go): imports = %v, want [context fmt]", gotImports)
+	}
+	gotImports = append([]string(nil), subsetByPath["engine.go"]...)
+	sort.Strings(gotImports)
+	if len(gotImports) != 1 || gotImports[0] != "net/http" {
+		t.Errorf("FilesByPaths(engine.go): imports = %v, want [net/http]", gotImports)
+	}
 
 	// ---- SymbolsByName / SymbolsByNames / SymbolsByPath --------------------
 

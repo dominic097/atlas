@@ -112,13 +112,7 @@ func Analyze(ctx context.Context, repoRoot string, goFileCount int) (result Resu
 	defer cancel()
 
 	cfg := &packages.Config{
-		Mode: packages.NeedName |
-			packages.NeedFiles |
-			packages.NeedSyntax |
-			packages.NeedTypes |
-			packages.NeedTypesInfo |
-			packages.NeedImports |
-			packages.NeedDeps,
+		Mode:    packages.LoadSyntax | packages.NeedModule,
 		Dir:     repoRoot,
 		Context: loadCtx,
 		Tests:   false,

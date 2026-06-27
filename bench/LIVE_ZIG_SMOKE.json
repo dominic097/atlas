@@ -1,0 +1,323 @@
+{
+  "language": "zig",
+  "repo": "https://github.com/zigtools/zls",
+  "commit": "8da87d4f3305a550e7b739bad764e34bf1e46a08",
+  "commands": {
+    "clone": "git clone --depth 1 https://github.com/zigtools/zls /tmp/atlas-live-zig-zls/repo",
+    "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-zig-zls/atlas.db --json index /tmp/atlas-live-zig-zls/repo/src",
+    "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-zig-zls/atlas.db --json index /tmp/atlas-live-zig-zls/repo/src",
+    "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "native_baseline": "/tmp/atlas-live-zig-zls/tree-sitter-zig-venv/bin/python -c <tree-sitter-zig definition counter> /tmp/atlas-live-zig-zls/repo/src",
+    "query_symbols": [
+      "Server",
+      "DocumentStore",
+      "Analyser",
+      "Config",
+      "main"
+    ],
+    "target_path": "/tmp/atlas-live-zig-zls/repo/src"
+  },
+  "atlas": {
+    "cold_wall_seconds": 1.077,
+    "reindex_wall_seconds": 0.025,
+    "index": {
+      "repo_id": "4d44c7e7-79a5-44d1-8046-98ca1e277013",
+      "repo_full_name": "src",
+      "snapshot_id": "0c17d66b-9957-480b-ba6b-1d88e958c32c",
+      "commit_sha": "8da87d4f3305a550e7b739bad764e34bf1e46a08",
+      "indexed_files": 45,
+      "symbols": 5297,
+      "edges": 11835,
+      "edge_kinds": {
+        "calls": 11553,
+        "imports": 282
+      },
+      "routes": 0,
+      "languages": {
+        "json": 1,
+        "markdown": 1,
+        "zig": 43
+      },
+      "mode": "full",
+      "duration_ms": 962,
+      "timings_ms": {
+        "delta_check": 0,
+        "ensure_repo": 0,
+        "go_types": 0,
+        "lexical": 474,
+        "parse": 253,
+        "persist": 227,
+        "resolve_head": 0,
+        "routes": 0,
+        "sort": 4,
+        "walk": 1
+      }
+    },
+    "reindex": {
+      "repo_id": "4d44c7e7-79a5-44d1-8046-98ca1e277013",
+      "repo_full_name": "src",
+      "snapshot_id": "0c17d66b-9957-480b-ba6b-1d88e958c32c",
+      "commit_sha": "8da87d4f3305a550e7b739bad764e34bf1e46a08",
+      "indexed_files": 45,
+      "symbols": 5297,
+      "edges": 11835,
+      "routes": 0,
+      "languages": {
+        "json": 1,
+        "markdown": 1,
+        "zig": 43
+      },
+      "mode": "noop",
+      "duration_ms": 0,
+      "timings_ms": {
+        "delta_check": 0,
+        "resolve_head": 0
+      }
+    },
+    "symbol_breakdown": [
+      {
+        "language": "json",
+        "kind": "document",
+        "count": 1
+      },
+      {
+        "language": "markdown",
+        "kind": "document",
+        "count": 1
+      },
+      {
+        "language": "zig",
+        "kind": "constant",
+        "count": 3988
+      },
+      {
+        "language": "zig",
+        "kind": "document",
+        "count": 1
+      },
+      {
+        "language": "zig",
+        "kind": "function",
+        "count": 1045
+      },
+      {
+        "language": "zig",
+        "kind": "type",
+        "count": 261
+      }
+    ],
+    "edge_breakdown": [
+      {
+        "kind": "calls",
+        "count": 11553
+      },
+      {
+        "kind": "imports",
+        "count": 282
+      }
+    ],
+    "zig_definition_symbols": 5294
+  },
+  "graphify": {
+    "status": "ok",
+    "ok": true,
+    "seconds": 0.685,
+    "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "stdout_head": [
+      "Re-extracting code files in . (no LLM needed)...",
+      "[graphify watch] Rebuilt: 1096 nodes, 2536 edges, 47 communities",
+      "[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out",
+      "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
+      "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
+    ],
+    "stderr_head": [],
+    "metrics": {
+      "nodes": 1096,
+      "links": 2536,
+      "calls": 1362
+    }
+  },
+  "native_baseline": {
+    "tool": "tree-sitter-zig",
+    "status": "partial",
+    "ok": false,
+    "seconds": 0.226,
+    "command": "/tmp/atlas-live-zig-zls/tree-sitter-zig-venv/bin/python -c <tree-sitter-zig definition counter> /tmp/atlas-live-zig-zls/repo/src",
+    "metrics": {
+      "files": 43,
+      "parsed_files": 42,
+      "parse_errors": 1,
+      "definition_counts": {
+        "function": 1045,
+        "constant": 3976,
+        "type": 258
+      },
+      "definitions": 5279,
+      "tree_sitter_version": "0.25.2",
+      "tree_sitter_zig_version": "1.1.2",
+      "parse_error_samples": [
+        {
+          "path": "features/semantic_tokens.zig",
+          "error": "tree-sitter parse error"
+        }
+      ]
+    }
+  },
+  "richer_native_baselines": {
+    "zig": {
+      "status": "missing",
+      "ok": false,
+      "note": "zig CLI not installed; tree-sitter-zig parser used as the isolated definition baseline"
+    },
+    "zls": {
+      "status": "missing",
+      "ok": false,
+      "note": "zls language server not installed"
+    }
+  },
+  "coverage": {
+    "atlas_vs_tree_sitter_zig_definition_ratio": 1.0,
+    "atlas_zig_definition_symbols": 5294,
+    "native_definitions": 5279
+  },
+  "optimization": {
+    "cycles_run": 2,
+    "stop_reason": "Zig live smoke met the current 5x latency/token thresholds and exceeded the tree-sitter-zig definition coverage proxy after widening Atlas Zig declaration handling; zig/zls remain unavailable on this machine.",
+    "cycle_notes": [
+      "cycle 1: zigtools/zls smoke found Atlas/tree-sitter-zig definition ratio 0.89; biggest gaps were typed constants, compound const declarations, inline/noinline functions, and packed/extern container aliases.",
+      "cycle 2: after widening Zig declaration rules and correcting the native compound-const counter, Atlas/tree-sitter-zig definition ratio reached 1.0 while exact-symbol query rows exceeded 5x for latency and token output vs graphify."
+    ]
+  },
+  "queries": [
+    {
+      "symbol": "Server",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-zig-zls/atlas.db --format plain --repo src explain Server",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Server",
+      "atlas_tokens": 7,
+      "graphify_tokens": 268,
+      "atlas_ms": 16.71,
+      "graphify_ms": 103.246,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "Server k@Server.zig:5 df7 d1"
+      ],
+      "graphify_stdout_head": [
+        "Node: Server.zig",
+        "  ID:        server",
+        "  Source:    Server.zig L1",
+        "  Type:      code",
+        "  Community: 0",
+        "  Degree:    86",
+        "",
+        "Connections (86):"
+      ]
+    },
+    {
+      "symbol": "DocumentStore",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-zig-zls/atlas.db --format plain --repo src explain DocumentStore",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain DocumentStore",
+      "atlas_tokens": 11,
+      "graphify_tokens": 277,
+      "atlas_ms": 17.593,
+      "graphify_ms": 102.641,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "DocumentStore k@DocumentStore.zig:17 df15 d3"
+      ],
+      "graphify_stdout_head": [
+        "Node: DocumentStore.zig",
+        "  ID:        documentstore",
+        "  Source:    DocumentStore.zig L1",
+        "  Type:      code",
+        "  Community: 1",
+        "  Degree:    63",
+        "",
+        "Connections (63):"
+      ]
+    },
+    {
+      "symbol": "Analyser",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-zig-zls/atlas.db --format plain --repo src explain Analyser",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Analyser",
+      "atlas_tokens": 8,
+      "graphify_tokens": 259,
+      "atlas_ms": 17.349,
+      "graphify_ms": 102.959,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "Analyser k@Server.zig:16 df12 d1"
+      ],
+      "graphify_stdout_head": [
+        "Node: InternPool.zig",
+        "  ID:        analyser_internpool",
+        "  Source:    analyser/InternPool.zig L1",
+        "  Type:      code",
+        "  Community: 11",
+        "  Degree:    100",
+        "",
+        "Connections (100):"
+      ]
+    },
+    {
+      "symbol": "Config",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-zig-zls/atlas.db --format plain --repo src explain Config",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Config",
+      "atlas_tokens": 9,
+      "graphify_tokens": 79,
+      "atlas_ms": 17.113,
+      "graphify_ms": 105.624,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "Config t@DocumentStore.zig:38 df10 d1"
+      ],
+      "graphify_stdout_head": [
+        "Node: Config.zig",
+        "  ID:        config",
+        "  Source:    Config.zig L1",
+        "  Type:      code",
+        "  Community: 13",
+        "  Degree:    4",
+        "",
+        "Connections (4):"
+      ]
+    },
+    {
+      "symbol": "main",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-zig-zls/atlas.db --format plain --repo src explain main",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain main",
+      "atlas_tokens": 9,
+      "graphify_tokens": 202,
+      "atlas_ms": 16.903,
+      "graphify_ms": 102.943,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "main f@build_runner.zig:46 df4 c2 d1"
+      ],
+      "graphify_stdout_head": [
+        "Node: main()",
+        "  ID:        build_runner_build_runner_main",
+        "  Source:    build_runner/build_runner.zig L47",
+        "  Type:      code",
+        "  Community: 16",
+        "  Degree:    15",
+        "",
+        "Connections (15):"
+      ]
+    }
+  ]
+}

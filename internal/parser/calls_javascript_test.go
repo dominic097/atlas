@@ -158,3 +158,70 @@ function handle() {
 		t.Errorf("bare getRepo() should carry no recv_type, got %v", gb.Metadata["recv_type"])
 	}
 }
+
+func TestJSSymbols_DeclarationsAndClassMembers(t *testing.T) {
+	src := `
+const limit = 10
+let cache = new Map()
+const run = () => cache.clear()
+
+class Widget {
+  value = 1
+  render() {
+    return run()
+  }
+}
+`
+	res, err := Parse("repo1", "owner/repo", "widget.js", "javascript", []byte(src))
+	if err != nil {
+		t.Fatalf("Parse returned error: %v", err)
+	}
+
+	seen := map[string]graphMeta{}
+	for _, sym := range res.Symbols {
+		seen[sym.Kind+":"+sym.Name] = graphMeta(sym.Metadata)
+	}
+	for _, key := range []string{
+		"constant:limit",
+		"variable:cache",
+		"function:run",
+		"class:Widget",
+		"method:render",
+		"field:value",
+	} {
+		if _, ok := seen[key]; !ok {
+			t.Fatalf("symbol %s not indexed; symbols=%+v", key, res.Symbols)
+		}
+	}
+	if seen["method:render"]["owner_type"] != "Widget" {
+		t.Fatalf("render owner_type = %v, want Widget", seen["method:render"]["owner_type"])
+	}
+	if seen["field:value"]["owner_type"] != "Widget" {
+		t.Fatalf("value owner_type = %v, want Widget", seen["field:value"]["owner_type"])
+	}
+}
+
+func TestTSSymbols_TypeDeclarations(t *testing.T) {
+	src := `
+export interface StoreApi<T> {
+  getState(): T
+}
+
+export type Listener<T> = (state: T) => void
+enum Mode { Ready }
+`
+	res, err := Parse("repo1", "owner/repo", "store.ts", "typescript", []byte(src))
+	if err != nil {
+		t.Fatalf("Parse returned error: %v", err)
+	}
+
+	seen := map[string]bool{}
+	for _, sym := range res.Symbols {
+		seen[sym.Kind+":"+sym.Name] = true
+	}
+	for _, key := range []string{"interface:StoreApi", "method:getState", "type:Listener", "enum:Mode"} {
+		if !seen[key] {
+			t.Fatalf("symbol %s not indexed; symbols=%+v", key, res.Symbols)
+		}
+	}
+}

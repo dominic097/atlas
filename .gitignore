@@ -5,6 +5,10 @@
 # local Atlas store (embedded SQLite + lexical index)
 .atlas/
 
+# generated benchmark / graph outputs
+bench/logs/
+graphify-out/
+
 # test / coverage
 *.test
 coverage.out
