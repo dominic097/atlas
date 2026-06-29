@@ -67,6 +67,39 @@ func TestParsePptxSlides(t *testing.T) {
 	}
 }
 
+func TestParsePptxSpeakerNotes(t *testing.T) {
+	pptx := buildZip(t, map[string]string{
+		"ppt/slides/slide1.xml":           `<p:sld xmlns:a="a"><a:t>Title slide</a:t></p:sld>`,
+		"ppt/notesSlides/notesSlide1.xml":  `<p:notes xmlns:a="a"><a:t>Remember to mention the migration deadline</a:t></p:notes>`,
+	})
+	res, err := Parse("r", "Acme/Deck", "deck.pptx", "", pptx)
+	if err != nil {
+		t.Fatalf("Parse: %v", err)
+	}
+	// The slide's text must include its speaker note.
+	if !strings.Contains(res.Symbols[0].Doc, "migration deadline") {
+		t.Errorf("document text missing speaker note: %q", res.Symbols[0].Doc)
+	}
+}
+
+func TestParseXlsxSheetNames(t *testing.T) {
+	xlsx := buildZip(t, map[string]string{
+		"xl/workbook.xml":      `<workbook xmlns="w"><sheets><sheet name="Q3 Forecast"/><sheet name="Headcount"/></sheets></workbook>`,
+		"xl/sharedStrings.xml": `<sst xmlns="s"><si><t>Revenue</t></si></sst>`,
+	})
+	res, err := Parse("r", "Acme/Sheets", "budget.xlsx", "", xlsx)
+	if err != nil {
+		t.Fatalf("Parse: %v", err)
+	}
+	d := res.Symbols[0].Doc
+	if !strings.Contains(d, "Q3 Forecast") || !strings.Contains(d, "Headcount") {
+		t.Errorf("xlsx text missing sheet names: %q", d)
+	}
+	if !strings.Contains(d, "Revenue") {
+		t.Errorf("xlsx text missing cell content: %q", d)
+	}
+}
+
 func TestParseDocxSingleBody(t *testing.T) {
 	docx := buildZip(t, map[string]string{
 		"word/document.xml": `<w:document xmlns:w="w"><w:body><w:p><w:r><w:t>Design</w:t></w:r><w:r><w:t xml:space="preserve"> doc for the billing module</w:t></w:r></w:p></w:body></w:document>`,

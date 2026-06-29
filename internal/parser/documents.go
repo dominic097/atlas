@@ -64,8 +64,16 @@ func parseOfficeDocument(repoID, repoFullName, filePath, format string, content 
 	case "xlsx":
 		// Shared strings hold the bulk of a workbook's text in one part; that is
 		// the most useful searchable surface without resolving per-cell references.
+		// Sheet names (from the workbook part) are prepended so a tab name is found.
+		var parts []string
+		if names := extractXlsxSheetNames(zr); len(names) > 0 {
+			parts = append(parts, "Sheets: "+strings.Join(names, ", "))
+		}
 		if text := readZipText(zr, "xl/sharedStrings.xml"); text != "" {
-			sections = []docSection{{kind: "sheet", name: "Cells", text: text}}
+			parts = append(parts, text)
+		}
+		if len(parts) > 0 {
+			sections = []docSection{{kind: "sheet", name: "Cells", text: strings.Join(parts, "\n")}}
 		}
 	}
 
@@ -127,12 +135,14 @@ func newDocumentSymbol(repoID, repoFullName, filePath, format, kind, name, text 
 }
 
 // extractPptxSlides returns one section per slide, ordered by slide number, with
-// the slide's visible text.
+// the slide's visible text and its speaker notes appended (notes often carry the
+// substantive talking points, so they are valuable to search).
 func extractPptxSlides(zr *zip.Reader) []docSection {
 	type numbered struct {
 		n    int
 		text string
 	}
+	notes := extractPptxNotes(zr)
 	var slides []numbered
 	for _, f := range zr.File {
 		name := f.Name
@@ -144,7 +154,11 @@ func extractPptxSlides(zr *zip.Reader) []docSection {
 		if err != nil {
 			continue
 		}
-		if text := readZipText(zr, name); text != "" {
+		text := readZipText(zr, name)
+		if note := notes[n]; note != "" {
+			text = strings.TrimSpace(text + "\nNotes: " + note)
+		}
+		if text != "" {
 			slides = append(slides, numbered{n: n, text: text})
 		}
 	}
@@ -154,6 +168,52 @@ func extractPptxSlides(zr *zip.Reader) []docSection {
 		out = append(out, docSection{kind: "slide", name: fmt.Sprintf("Slide %d", s.n), text: s.text})
 	}
 	return out
+}
+
+// extractPptxNotes returns speaker-notes text keyed by slide number. The mapping
+// uses the conventional parallel numbering (notesSlideN ↔ slideN); a mismatch only
+// attaches a note to a nearby slide and never drops it from the document text.
+func extractPptxNotes(zr *zip.Reader) map[int]string {
+	notes := map[int]string{}
+	for _, f := range zr.File {
+		name := f.Name
+		if !strings.HasPrefix(name, "ppt/notesSlides/notesSlide") || !strings.HasSuffix(name, ".xml") {
+			continue
+		}
+		base := strings.TrimSuffix(path.Base(name), ".xml") // notesSlide3
+		n, err := strconv.Atoi(strings.TrimPrefix(base, "notesSlide"))
+		if err != nil {
+			continue
+		}
+		if text := readZipText(zr, name); text != "" {
+			notes[n] = text
+		}
+	}
+	return notes
+}
+
+// extractXlsxSheetNames returns the worksheet (tab) names from xl/workbook.xml.
+func extractXlsxSheetNames(zr *zip.Reader) []string {
+	data := readZipBytes(zr, "xl/workbook.xml")
+	if len(data) == 0 {
+		return nil
+	}
+	dec := xml.NewDecoder(bytes.NewReader(data))
+	var names []string
+	for {
+		tok, err := dec.Token()
+		if err != nil {
+			break
+		}
+		if se, ok := tok.(xml.StartElement); ok && se.Name.Local == "sheet" {
+			for _, a := range se.Attr {
+				if a.Name.Local == "name" && strings.TrimSpace(a.Value) != "" {
+					names = append(names, a.Value)
+				}
+			}
+		}
+	}
+	return names
 }
 
 // officeTitle reads dc:title from docProps/core.xml, or "" when absent.
