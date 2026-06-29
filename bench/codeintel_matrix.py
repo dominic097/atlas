@@ -112,7 +112,7 @@ GRAPHIFY_LANGUAGE_FAMILIES = [
     ("dotnet project", [".sln", ".slnx", ".csproj", ".fsproj", ".vbproj"], "lightweight regex"),
     ("razor", [".razor", ".cshtml"], "lightweight regex"),
     ("apex", [".cls", ".trigger"], "lightweight regex"),
-    ("vue", [".vue"], "lightweight regex"),
+    ("vue", [".vue"], "native SFC/tree-sitter AST"),
     ("svelte", [".svelte"], "lightweight regex"),
     ("astro", [".astro"], "lightweight regex"),
 ]

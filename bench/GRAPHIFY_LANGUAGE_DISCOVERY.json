@@ -235,7 +235,7 @@
       "vue",
       ".vue",
       "extract_js",
-      "lightweight regex"
+      "native SFC/tree-sitter AST"
     ],
     [
       "svelte",

@@ -79,6 +79,17 @@ validated with the focused parser test suite.
 | bash | nvm-sh/nvm repo | `/bin/bash -n` + source counter | 158 | 158 | 1.00x | 6.19x | 18.44x | Native tree-sitter-bash route directly verified all 158 live shell function definitions and preserved source-import extraction without routing Bash through `parseRegexFallback`. |
 | powershell | PowerShell/PowerShellGet `src` | `pwsh` AST parser | 28 | 28 | 1.00x | 5.47x | 6.68x | Native tree-sitter-powershell route matched the pwsh FunctionDefinitionAst baseline exactly on the live slice, preserved `Import-Module`/`using module` import extraction, and no longer emits regex variable/doc symbols. |
 
+## Native parser migration addendum — B5 in progress
+
+Measured 2026-06-30 while converting the B5 languages in strict order. Rows
+are added only after the language is routed off `parseRegexFallback`,
+benchmarked against graphify and the strongest local independent baseline, and
+validated with the focused parser test suite.
+
+| Lang | Repo slice | Independent baseline | Atlas defs | Baseline defs | Recall/coverage | graphify latency | graphify tokens | Notes |
+| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | --- |
+| vue | gothinkster/vue-realworld-example-app `src` | `@vue/compiler-sfc` 3.5.22 | 119 | 119 | 1.00x | 5.51x | 8.04x | Native SFC block extraction plus tree-sitter JavaScript/TypeScript declaration parsing matched the compiler-sfc script declaration baseline exactly and kept `.vue` files off `parseRegexFallback`. |
+
 ## The consistent definition surface (applied uniformly to all 7 languages)
 
 A symbol is counted as a **definition** iff it is a top-level **or member**

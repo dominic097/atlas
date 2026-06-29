@@ -5602,11 +5602,12 @@ def run_smoke(language: str, atlas_bin: str, graphify_bin: str | None) -> dict[s
         }
     elif language == "vue":
         optimization = {
-            "cycles_run": 2,
-            "stop_reason": "Vue live smoke matched @vue/compiler-sfc script declaration coverage and improved token score after compacting `.vue` suffixes in terse plain locations while preserving full paths in JSON.",
+            "cycles_run": 3,
+            "stop_reason": "Vue native SFC script parsing matched @vue/compiler-sfc declaration coverage after replacing the regex route while preserving compact `.vue` plain output paths.",
             "cycle_notes": [
                 "cycle 1: vue-realworld smoke used @vue/compiler-sfc as an isolated SFC parser baseline; Atlas matched top-level script declaration coverage while keeping exact-symbol explain output terse.",
                 "cycle 2: compacting `.vue` suffixes in terse locations reduces exact SFC symbol output without changing indexed symbols or JSON paths.",
+                "cycle 3: replacing the regex route with native SFC block extraction plus tree-sitter JavaScript/TypeScript declaration parsing preserved exact compiler-sfc coverage on the live Vue slice.",
             ],
         }
     elif language == "zig":

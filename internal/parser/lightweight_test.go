@@ -339,6 +339,57 @@ class Installer {
 	}
 }
 
+func TestParseVueNativeScriptDefinitions(t *testing.T) {
+	res, err := Parse("repo", "org/repo", "web/App.vue", "", []byte(`<template>
+  <main>{{ title }}</main>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+const title = ref('Atlas')
+let count = 0
+// const ignoredComment = 1
+</script>
+
+<script>
+import service from './service'
+function loadArticles() {
+  const nested = true
+  return service.all()
+}
+</script>
+`))
+	if err != nil {
+		t.Fatalf("Parse vue: %v", err)
+	}
+	want := map[string]int{
+		"title":        7,
+		"count":        8,
+		"loadArticles": 14,
+		"nested":       15,
+	}
+	for name, line := range want {
+		sym := findSymbol(res.Symbols, name)
+		if sym == nil {
+			t.Fatalf("missing Vue symbol %q; symbols=%+v", name, res.Symbols)
+		}
+		if sym.Kind != "function" {
+			t.Fatalf("Vue symbol %q kind = %q, want function", name, sym.Kind)
+		}
+		if sym.StartLine != line {
+			t.Fatalf("Vue symbol %q line = %d, want %d", name, sym.StartLine, line)
+		}
+	}
+	if findSymbol(res.Symbols, "ignoredComment") != nil {
+		t.Fatalf("commented Vue declaration was indexed: %+v", res.Symbols)
+	}
+	for _, wantImport := range []string{"vue", "./service"} {
+		if !containsString(res.Imports, wantImport) {
+			t.Fatalf("Vue imports = %#v, want %q", res.Imports, wantImport)
+		}
+	}
+}
+
 func TestParsePascalDefinitions(t *testing.T) {
 	res, err := Parse("repo", "org/repo", "Source/uPSCompiler.pas", "", []byte(`
 unit uPSCompiler;

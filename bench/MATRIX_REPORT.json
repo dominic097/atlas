@@ -9,7 +9,7 @@
         "tool": "atlas",
         "status": "ok",
         "ok": true,
-        "seconds": 0.037,
+        "seconds": 0.026,
         "metrics": {
           "files": 57,
           "symbols": 679,
@@ -27,34 +27,34 @@
             "markdown": 4,
             "yaml": 3
           },
-          "duration_ms": 8,
+          "duration_ms": 2,
           "timings_ms": {
-            "delta_check": 8,
+            "delta_check": 2,
             "resolve_head": 0
           },
           "mode": "noop",
-          "cold_seconds": 0.365,
-          "cold_duration_ms": 330,
+          "cold_seconds": 0.355,
+          "cold_duration_ms": 313,
           "cold_timings_ms": {
-            "build_symbols_edges": 223,
+            "build_symbols_edges": 211,
             "delta_check": 0,
             "discover_files": 0,
             "doc_links": 0,
             "ensure_repo": 0,
-            "gitignore_scan": 11,
-            "go_types": 222,
-            "lexical": 78,
-            "parse": 16,
-            "persist": 78,
+            "gitignore_scan": 12,
+            "go_types": 210,
+            "lexical": 74,
+            "parse": 14,
+            "persist": 74,
             "resolve_head": 0,
             "routes": 0,
             "sort": 0,
             "walk": 0,
-            "write_sqlite": 78
+            "write_sqlite": 74
           },
-          "full_seconds": 0.365,
+          "full_seconds": 0.355,
           "cold_mode": "full",
-          "delta_seconds": 0.037,
+          "delta_seconds": 0.026,
           "delta_mode": "noop",
           "calls": 2102,
           "internal_calls": 1143,
@@ -69,7 +69,7 @@
         "tool": "scip-go",
         "status": "ok",
         "ok": true,
-        "seconds": 0.265,
+        "seconds": 0.252,
         "metrics": {
           "documents": 47,
           "total_documents": 47,
@@ -101,18 +101,18 @@
         "tool": "gopls",
         "status": "ok",
         "ok": true,
-        "seconds": 0.443,
+        "seconds": 0.375,
         "metrics": {
           "gopls_version": "v0.22.0",
           "go_version": "go1.26.4",
-          "initial_workspace_load_ms": 289.891,
+          "initial_workspace_load_ms": 253.817,
           "dir_files": 87,
           "dir_go_files": 47,
           "workspace_packages": 12,
           "workspace_compiled_go_files": 57,
           "all_packages": 207,
           "diagnostics": 0,
-          "heap_alloc_bytes": 188597112
+          "heap_alloc_bytes": 188004616
         },
         "note": ""
       },
@@ -120,14 +120,14 @@
         "tool": "graphify",
         "status": "ok",
         "ok": true,
-        "seconds": 0.616,
+        "seconds": 0.605,
         "metrics": {
           "nodes": 711,
           "links": 1244,
           "calls": 333,
           "extracted_calls": 198,
           "extracted_pct": 59.5,
-          "full_seconds": 0.616,
+          "full_seconds": 0.605,
           "delta_seconds": 0.274,
           "supports_incremental": true
         },
@@ -140,8 +140,8 @@
         "symbol": "log",
         "atlas_tokens": 5,
         "graphify_tokens": 105,
-        "atlas_ms": 13.523,
-        "graphify_ms": 77.973,
+        "atlas_ms": 13.346,
+        "graphify_ms": 78.686,
         "atlas_missing": false,
         "graphify_missing": false
       },
@@ -149,8 +149,8 @@
         "symbol": "newEntry",
         "atlas_tokens": 7,
         "graphify_tokens": 62,
-        "atlas_ms": 13.079,
-        "graphify_ms": 77.273,
+        "atlas_ms": 13.281,
+        "graphify_ms": 75.64,
         "atlas_missing": false,
         "graphify_missing": false
       },
@@ -158,8 +158,8 @@
         "symbol": "releaseEntry",
         "atlas_tokens": 8,
         "graphify_tokens": 175,
-        "atlas_ms": 13.114,
-        "graphify_ms": 76.175,
+        "atlas_ms": 13.003,
+        "graphify_ms": 76.663,
         "atlas_missing": false,
         "graphify_missing": false
       },
@@ -167,8 +167,8 @@
         "symbol": "Fire",
         "atlas_tokens": 8,
         "graphify_tokens": 56,
-        "atlas_ms": 13.099,
-        "graphify_ms": 77.541,
+        "atlas_ms": 13.366,
+        "graphify_ms": 76.041,
         "atlas_missing": false,
         "graphify_missing": false
       }
@@ -177,91 +177,91 @@
       "status": "ok",
       "ok": true,
       "note": "",
-      "addr": "127.0.0.1:56286",
+      "addr": "127.0.0.1:58668",
       "healthz_ms": [
-        0.495,
-        0.467,
-        0.455,
-        0.456,
-        0.436
+        0.477,
+        0.522,
+        0.476,
+        0.459,
+        0.462
       ],
-      "healthz_median_ms": 0.456,
+      "healthz_median_ms": 0.476,
       "explain": [
         {
           "symbol": "log",
           "samples_ms": [
-            1.68,
-            1.523,
-            1.542,
-            1.403,
-            1.484
+            1.645,
+            1.623,
+            1.57,
+            1.455,
+            1.513
           ],
-          "median_ms": 1.523,
+          "median_ms": 1.57,
           "body_bytes": 484,
           "status": 200
         },
         {
           "symbol": "newEntry",
           "samples_ms": [
-            1.456,
-            1.166,
-            1.107,
-            1.098,
-            1.133
+            1.505,
+            1.114,
+            1.168,
+            1.148,
+            1.132
           ],
-          "median_ms": 1.133,
+          "median_ms": 1.148,
           "body_bytes": 444,
           "status": 200
         },
         {
           "symbol": "releaseEntry",
           "samples_ms": [
-            1.207,
-            1.195,
-            1.155,
-            1.191,
-            1.145
+            1.167,
+            1.138,
+            1.151,
+            1.167,
+            1.563
           ],
-          "median_ms": 1.191,
+          "median_ms": 1.167,
           "body_bytes": 446,
           "status": 200
         },
         {
           "symbol": "Fire",
           "samples_ms": [
-            1.656,
-            1.23,
-            1.209,
-            1.207,
-            1.195
+            1.304,
+            1.24,
+            1.194,
+            1.198,
+            1.578
           ],
-          "median_ms": 1.209,
+          "median_ms": 1.24,
           "body_bytes": 3651,
           "status": 200
         }
       ],
-      "explain_median_ms": 1.207,
+      "explain_median_ms": 1.219,
       "explain_all_ms": [
-        1.68,
-        1.523,
-        1.542,
-        1.403,
-        1.484,
-        1.456,
-        1.166,
-        1.107,
-        1.098,
-        1.133,
-        1.207,
-        1.195,
-        1.155,
-        1.191,
-        1.145,
-        1.656,
-        1.23,
-        1.209,
-        1.207,
-        1.195
+        1.645,
+        1.623,
+        1.57,
+        1.455,
+        1.513,
+        1.505,
+        1.114,
+        1.168,
+        1.148,
+        1.132,
+        1.167,
+        1.138,
+        1.151,
+        1.167,
+        1.563,
+        1.304,
+        1.24,
+        1.194,
+        1.198,
+        1.578
       ]
     }
   },
@@ -275,7 +275,7 @@
         "tool": "atlas",
         "status": "ok",
         "ok": true,
-        "seconds": 0.027,
+        "seconds": 0.026,
         "metrics": {
           "files": 19,
           "symbols": 517,
@@ -287,34 +287,34 @@
           "languages": {
             "python": 19
           },
-          "duration_ms": 4,
+          "duration_ms": 3,
           "timings_ms": {
-            "delta_check": 4,
+            "delta_check": 3,
             "resolve_head": 0
           },
           "mode": "noop",
-          "cold_seconds": 0.152,
-          "cold_duration_ms": 114,
+          "cold_seconds": 0.142,
+          "cold_duration_ms": 105,
           "cold_timings_ms": {
             "build_symbols_edges": 0,
             "delta_check": 0,
             "discover_files": 0,
             "doc_links": 0,
             "ensure_repo": 0,
-            "gitignore_scan": 12,
+            "gitignore_scan": 11,
             "go_types": 0,
-            "lexical": 75,
-            "parse": 25,
-            "persist": 75,
+            "lexical": 73,
+            "parse": 19,
+            "persist": 73,
             "resolve_head": 0,
             "routes": 0,
             "sort": 0,
             "walk": 0,
-            "write_sqlite": 75
+            "write_sqlite": 73
           },
-          "full_seconds": 0.152,
+          "full_seconds": 0.142,
           "cold_mode": "full",
-          "delta_seconds": 0.027,
+          "delta_seconds": 0.026,
           "delta_mode": "noop",
           "calls": 961,
           "internal_calls": 371,
@@ -329,7 +329,7 @@
         "tool": "scip-python",
         "status": "ok",
         "ok": true,
-        "seconds": 2.001,
+        "seconds": 1.945,
         "metrics": {
           "documents": 19,
           "total_documents": 19,
@@ -352,7 +352,7 @@
         "tool": "pyright",
         "status": "ok",
         "ok": true,
-        "seconds": 0.725,
+        "seconds": 0.711,
         "metrics": {
           "pyright_version": "1.1.411",
           "diagnostics": 12,
@@ -370,7 +370,7 @@
           "error_count": 12,
           "warning_count": 0,
           "information_count": 0,
-          "time_in_sec": 0.543,
+          "time_in_sec": 0.547,
           "exit_code": 1
         },
         "note": "pyright returned diagnostics"
@@ -379,15 +379,15 @@
         "tool": "graphify",
         "status": "ok",
         "ok": true,
-        "seconds": 0.575,
+        "seconds": 0.59,
         "metrics": {
           "nodes": 580,
           "links": 1514,
           "calls": 229,
           "extracted_calls": 221,
           "extracted_pct": 96.5,
-          "full_seconds": 0.575,
-          "delta_seconds": 0.263,
+          "full_seconds": 0.59,
+          "delta_seconds": 0.265,
           "supports_incremental": true
         },
         "note": ""
@@ -409,8 +409,8 @@
         "symbol": "get",
         "atlas_tokens": 6,
         "graphify_tokens": 142,
-        "atlas_ms": 14.229,
-        "graphify_ms": 79.633,
+        "atlas_ms": 13.674,
+        "graphify_ms": 79.74,
         "atlas_missing": false,
         "graphify_missing": false
       },
@@ -418,8 +418,8 @@
         "symbol": "request",
         "atlas_tokens": 6,
         "graphify_tokens": 185,
-        "atlas_ms": 13.865,
-        "graphify_ms": 80.625,
+        "atlas_ms": 13.538,
+        "graphify_ms": 80.211,
         "atlas_missing": false,
         "graphify_missing": false
       },
@@ -427,8 +427,8 @@
         "symbol": "__init__",
         "atlas_tokens": 9,
         "graphify_tokens": 62,
-        "atlas_ms": 13.675,
-        "graphify_ms": 79.303,
+        "atlas_ms": 13.922,
+        "graphify_ms": 80.33,
         "atlas_missing": false,
         "graphify_missing": false
       }
@@ -437,73 +437,73 @@
       "status": "ok",
       "ok": true,
       "note": "",
-      "addr": "127.0.0.1:56336",
+      "addr": "127.0.0.1:58722",
       "healthz_ms": [
-        0.532,
-        0.557,
-        0.543,
-        0.545,
-        0.516
+        0.525,
+        0.495,
+        0.511,
+        0.51,
+        0.506
       ],
-      "healthz_median_ms": 0.543,
+      "healthz_median_ms": 0.51,
       "explain": [
         {
           "symbol": "get",
           "samples_ms": [
-            1.922,
-            1.634,
-            1.724,
-            1.824,
-            1.52
+            1.833,
+            2.117,
+            1.558,
+            1.635,
+            1.642
           ],
-          "median_ms": 1.724,
+          "median_ms": 1.642,
           "body_bytes": 2772,
           "status": 200
         },
         {
           "symbol": "request",
           "samples_ms": [
-            1.54,
-            1.97,
-            1.608,
-            1.547,
-            1.41
+            1.55,
+            1.939,
+            1.431,
+            1.536,
+            1.341
           ],
-          "median_ms": 1.547,
+          "median_ms": 1.536,
           "body_bytes": 2361,
           "status": 200
         },
         {
           "symbol": "__init__",
           "samples_ms": [
-            1.67,
-            1.997,
-            1.607,
-            1.551,
-            1.964
+            1.624,
+            2.081,
+            1.61,
+            1.577,
+            1.926
           ],
-          "median_ms": 1.67,
+          "median_ms": 1.624,
           "body_bytes": 5922,
           "status": 200
         }
       ],
-      "explain_median_ms": 1.634,
+      "explain_median_ms": 1.624,
       "explain_all_ms": [
-        1.922,
-        1.634,
-        1.724,
-        1.824,
-        1.52,
-        1.54,
-        1.97,
-        1.608,
-        1.547,
-        1.41,
-        1.67,
-        1.997,
-        1.607,
-        1.551,
-        1.964
+        1.833,
+        2.117,
+        1.558,
+        1.635,
+        1.642,
+        1.55,
+        1.939,
+        1.431,
+        1.536,
+        1.341,
+        1.624,
+        2.081,
+        1.61,
+        1.577,
+        1.926
       ]
     }
   },
@@ -517,7 +517,7 @@
         "tool": "atlas",
         "status": "ok",
         "ok": true,
-        "seconds": 0.031,
+        "seconds": 0.026,
         "metrics": {
           "files": 7,
           "symbols": 314,
@@ -530,34 +530,34 @@
             "javascript": 6,
             "json": 1
           },
-          "duration_ms": 8,
+          "duration_ms": 4,
           "timings_ms": {
-            "delta_check": 8,
+            "delta_check": 4,
             "resolve_head": 0
           },
           "mode": "noop",
-          "cold_seconds": 0.106,
-          "cold_duration_ms": 78,
+          "cold_seconds": 0.102,
+          "cold_duration_ms": 73,
           "cold_timings_ms": {
             "build_symbols_edges": 0,
-            "delta_check": 5,
+            "delta_check": 0,
             "discover_files": 0,
             "doc_links": 0,
             "ensure_repo": 0,
-            "gitignore_scan": 12,
+            "gitignore_scan": 11,
             "go_types": 0,
-            "lexical": 42,
-            "parse": 16,
-            "persist": 42,
+            "lexical": 46,
+            "parse": 14,
+            "persist": 46,
             "resolve_head": 0,
             "routes": 0,
             "sort": 0,
             "walk": 0,
-            "write_sqlite": 42
+            "write_sqlite": 46
           },
-          "full_seconds": 0.106,
+          "full_seconds": 0.102,
           "cold_mode": "full",
-          "delta_seconds": 0.031,
+          "delta_seconds": 0.026,
           "delta_mode": "noop",
           "calls": 435,
           "internal_calls": 231,
@@ -572,7 +572,7 @@
         "tool": "scip-typescript",
         "status": "ok",
         "ok": true,
-        "seconds": 1.37,
+        "seconds": 1.333,
         "metrics": {
           "documents": 6,
           "total_documents": 6,
@@ -595,7 +595,7 @@
         "tool": "tsserver",
         "status": "ok",
         "ok": true,
-        "seconds": 0.539,
+        "seconds": 0.556,
         "metrics": {
           "diagnostics": 257,
           "diagnostics_by_code": {
@@ -630,7 +630,7 @@
           "symbols": 32443,
           "types": 1417,
           "instantiations": 578,
-          "memory_kb": 82471,
+          "memory_kb": 82998,
           "iioo_read_sec": 0.01,
           "iioo_write_sec": 0.0,
           "parse_time_sec": 0.08,
@@ -645,15 +645,15 @@
         "tool": "graphify",
         "status": "ok",
         "ok": true,
-        "seconds": 0.133,
+        "seconds": 0.134,
         "metrics": {
           "nodes": 31,
           "links": 39,
           "calls": 3,
           "extracted_calls": 3,
           "extracted_pct": 100.0,
-          "full_seconds": 0.133,
-          "delta_seconds": 0.125,
+          "full_seconds": 0.134,
+          "delta_seconds": 0.139,
           "supports_incremental": true
         },
         "note": ""
@@ -665,8 +665,8 @@
         "symbol": "get",
         "atlas_tokens": 6,
         "graphify_tokens": 47,
-        "atlas_ms": 15.338,
-        "graphify_ms": 69.59,
+        "atlas_ms": 14.861,
+        "graphify_ms": 70.11,
         "atlas_missing": false,
         "graphify_missing": false
       },
@@ -674,8 +674,8 @@
         "symbol": "sendFile",
         "atlas_tokens": 7,
         "graphify_tokens": 46,
-        "atlas_ms": 13.223,
-        "graphify_ms": 70.793,
+        "atlas_ms": 12.979,
+        "graphify_ms": 70.013,
         "atlas_missing": false,
         "graphify_missing": false
       },
@@ -683,8 +683,8 @@
         "symbol": "defineGetter",
         "atlas_tokens": 7,
         "graphify_tokens": 47,
-        "atlas_ms": 13.288,
-        "graphify_ms": 68.893,
+        "atlas_ms": 13.372,
+        "graphify_ms": 68.99,
         "atlas_missing": false,
         "graphify_missing": false
       },
@@ -692,8 +692,8 @@
         "symbol": "format",
         "atlas_tokens": 7,
         "graphify_tokens": 8,
-        "atlas_ms": 13.262,
-        "graphify_ms": 68.613,
+        "atlas_ms": 12.726,
+        "graphify_ms": 68.341,
         "atlas_missing": false,
         "graphify_missing": true
       }
@@ -702,91 +702,91 @@
       "status": "ok",
       "ok": true,
       "note": "",
-      "addr": "127.0.0.1:56381",
+      "addr": "127.0.0.1:58765",
       "healthz_ms": [
+        0.551,
+        0.542,
         0.541,
-        0.512,
-        0.521,
-        0.526,
-        0.533
+        0.541,
+        0.519
       ],
-      "healthz_median_ms": 0.526,
+      "healthz_median_ms": 0.541,
       "explain": [
         {
           "symbol": "get",
           "samples_ms": [
-            1.828,
-            1.821,
-            2.326,
-            1.646,
-            1.593
+            1.879,
+            1.819,
+            2.179,
+            1.631,
+            1.677
           ],
-          "median_ms": 1.821,
+          "median_ms": 1.819,
           "body_bytes": 743,
           "status": 200
         },
         {
           "symbol": "sendFile",
           "samples_ms": [
-            1.169,
-            1.132,
-            1.14,
-            1.096,
-            1.09
+            1.171,
+            1.273,
+            1.136,
+            1.18,
+            1.157
           ],
-          "median_ms": 1.132,
+          "median_ms": 1.171,
           "body_bytes": 599,
           "status": 200
         },
         {
           "symbol": "defineGetter",
           "samples_ms": [
-            1.272,
-            1.633,
-            1.249,
-            1.145,
-            1.143
+            1.298,
+            1.257,
+            1.542,
+            1.126,
+            1.322
           ],
-          "median_ms": 1.249,
+          "median_ms": 1.298,
           "body_bytes": 619,
           "status": 200
         },
         {
           "symbol": "format",
           "samples_ms": [
-            1.007,
-            0.991,
-            1.037,
-            0.92,
-            0.929
+            0.933,
+            0.942,
+            0.922,
+            1.005,
+            0.94
           ],
-          "median_ms": 0.991,
+          "median_ms": 0.94,
           "body_bytes": 619,
           "status": 200
         }
       ],
-      "explain_median_ms": 1.144,
+      "explain_median_ms": 1.218,
       "explain_all_ms": [
-        1.828,
-        1.821,
-        2.326,
-        1.646,
-        1.593,
-        1.169,
-        1.132,
-        1.14,
-        1.096,
-        1.09,
-        1.272,
-        1.633,
-        1.249,
-        1.145,
-        1.143,
-        1.007,
-        0.991,
-        1.037,
-        0.92,
-        0.929
+        1.879,
+        1.819,
+        2.179,
+        1.631,
+        1.677,
+        1.171,
+        1.273,
+        1.136,
+        1.18,
+        1.157,
+        1.298,
+        1.257,
+        1.542,
+        1.126,
+        1.322,
+        0.933,
+        0.942,
+        0.922,
+        1.005,
+        0.94
       ]
     }
   },
@@ -800,7 +800,7 @@
         "tool": "atlas",
         "status": "ok",
         "ok": true,
-        "seconds": 0.021,
+        "seconds": 0.029,
         "metrics": {
           "files": 17,
           "symbols": 227,
@@ -819,18 +819,18 @@
             "resolve_head": 0
           },
           "mode": "noop",
-          "cold_seconds": 0.086,
-          "cold_duration_ms": 48,
+          "cold_seconds": 0.078,
+          "cold_duration_ms": 44,
           "cold_timings_ms": {
             "build_symbols_edges": 0,
             "delta_check": 0,
             "discover_files": 0,
             "doc_links": 0,
             "ensure_repo": 0,
-            "gitignore_scan": 13,
+            "gitignore_scan": 12,
             "go_types": 0,
             "lexical": 20,
-            "parse": 13,
+            "parse": 11,
             "persist": 20,
             "resolve_head": 0,
             "routes": 0,
@@ -838,9 +838,9 @@
             "walk": 0,
             "write_sqlite": 20
           },
-          "full_seconds": 0.086,
+          "full_seconds": 0.078,
           "cold_mode": "full",
-          "delta_seconds": 0.021,
+          "delta_seconds": 0.029,
           "delta_mode": "noop",
           "calls": 197,
           "internal_calls": 81,
@@ -855,7 +855,7 @@
         "tool": "scip-typescript",
         "status": "ok",
         "ok": true,
-        "seconds": 1.027,
+        "seconds": 1.152,
         "metrics": {
           "documents": 16,
           "total_documents": 16,
@@ -878,7 +878,7 @@
         "tool": "tsserver",
         "status": "ok",
         "ok": true,
-        "seconds": 0.485,
+        "seconds": 0.699,
         "metrics": {
           "diagnostics": 1,
           "diagnostics_by_code": {
@@ -892,7 +892,7 @@
           "symbols": 40624,
           "types": 85,
           "instantiations": 0,
-          "memory_kb": 72503,
+          "memory_kb": 72371,
           "iioo_read_sec": 0.01,
           "iioo_write_sec": 0.0,
           "parse_time_sec": 0.1,
@@ -907,15 +907,15 @@
         "tool": "graphify",
         "status": "ok",
         "ok": true,
-        "seconds": 0.164,
+        "seconds": 0.163,
         "metrics": {
           "nodes": 112,
           "links": 171,
           "calls": 6,
           "extracted_calls": 6,
           "extracted_pct": 100.0,
-          "full_seconds": 0.164,
-          "delta_seconds": 0.144,
+          "full_seconds": 0.163,
+          "delta_seconds": 0.145,
           "supports_incremental": true
         },
         "note": ""
@@ -927,8 +927,8 @@
         "symbol": "DevtoolsImpl",
         "atlas_tokens": 7,
         "graphify_tokens": 53,
-        "atlas_ms": 12.813,
-        "graphify_ms": 70.203,
+        "atlas_ms": 12.619,
+        "graphify_ms": 70.038,
         "atlas_missing": false,
         "graphify_missing": false
       },
@@ -936,8 +936,8 @@
         "symbol": "hydrate",
         "atlas_tokens": 7,
         "graphify_tokens": 8,
-        "atlas_ms": 13.289,
-        "graphify_ms": 69.925,
+        "atlas_ms": 12.73,
+        "graphify_ms": 68.957,
         "atlas_missing": false,
         "graphify_missing": true
       },
@@ -945,8 +945,8 @@
         "symbol": "shallow",
         "atlas_tokens": 6,
         "graphify_tokens": 75,
-        "atlas_ms": 13.357,
-        "graphify_ms": 69.624,
+        "atlas_ms": 12.852,
+        "graphify_ms": 70.321,
         "atlas_missing": false,
         "graphify_missing": false
       },
@@ -954,8 +954,8 @@
         "symbol": "CreateStore",
         "atlas_tokens": 6,
         "graphify_tokens": 89,
-        "atlas_ms": 12.391,
-        "graphify_ms": 70.523,
+        "atlas_ms": 12.585,
+        "graphify_ms": 69.968,
         "atlas_missing": false,
         "graphify_missing": false
       }
@@ -964,91 +964,91 @@
       "status": "ok",
       "ok": true,
       "note": "",
-      "addr": "127.0.0.1:56431",
+      "addr": "127.0.0.1:58814",
       "healthz_ms": [
-        0.526,
-        0.543,
-        0.513,
-        0.524,
-        0.513
+        0.509,
+        0.506,
+        0.496,
+        0.494,
+        0.498
       ],
-      "healthz_median_ms": 0.524,
+      "healthz_median_ms": 0.498,
       "explain": [
         {
           "symbol": "DevtoolsImpl",
           "samples_ms": [
-            1.013,
-            0.926,
+            0.958,
+            0.885,
+            0.888,
             0.876,
-            0.872,
-            0.868
+            0.872
           ],
-          "median_ms": 0.876,
+          "median_ms": 0.885,
           "body_bytes": 307,
           "status": 200
         },
         {
           "symbol": "hydrate",
           "samples_ms": [
-            1.192,
-            1.152,
-            1.274,
-            1.119,
-            1.038
+            1.21,
+            1.162,
+            1.106,
+            1.062,
+            1.03
           ],
-          "median_ms": 1.152,
+          "median_ms": 1.106,
           "body_bytes": 388,
           "status": 200
         },
         {
           "symbol": "shallow",
           "samples_ms": [
-            0.908,
-            0.901,
-            0.866,
-            0.873,
-            0.88
+            0.917,
+            0.856,
+            0.977,
+            0.89,
+            0.892
           ],
-          "median_ms": 0.88,
+          "median_ms": 0.892,
           "body_bytes": 353,
           "status": 200
         },
         {
           "symbol": "CreateStore",
           "samples_ms": [
-            0.687,
-            0.635,
-            0.62,
-            0.607,
-            0.641
+            0.652,
+            0.655,
+            0.611,
+            0.599,
+            0.603
           ],
-          "median_ms": 0.635,
+          "median_ms": 0.611,
           "body_bytes": 222,
           "status": 200
         }
       ],
-      "explain_median_ms": 0.878,
+      "explain_median_ms": 0.889,
       "explain_all_ms": [
-        1.013,
-        0.926,
+        0.958,
+        0.885,
+        0.888,
         0.876,
         0.872,
-        0.868,
-        1.192,
-        1.152,
-        1.274,
-        1.119,
-        1.038,
-        0.908,
-        0.901,
-        0.866,
-        0.873,
-        0.88,
-        0.687,
-        0.635,
-        0.62,
-        0.607,
-        0.641
+        1.21,
+        1.162,
+        1.106,
+        1.062,
+        1.03,
+        0.917,
+        0.856,
+        0.977,
+        0.89,
+        0.892,
+        0.652,
+        0.655,
+        0.611,
+        0.599,
+        0.603
       ]
     }
   },
@@ -1062,7 +1062,7 @@
         "tool": "atlas",
         "status": "ok",
         "ok": true,
-        "seconds": 0.03,
+        "seconds": 0.038,
         "metrics": {
           "files": 86,
           "symbols": 1558,
@@ -1074,14 +1074,14 @@
           "languages": {
             "java": 86
           },
-          "duration_ms": 4,
+          "duration_ms": 6,
           "timings_ms": {
-            "delta_check": 4,
+            "delta_check": 5,
             "resolve_head": 0
           },
           "mode": "noop",
-          "cold_seconds": 0.304,
-          "cold_duration_ms": 256,
+          "cold_seconds": 0.305,
+          "cold_duration_ms": 268,
           "cold_timings_ms": {
             "build_symbols_edges": 0,
             "delta_check": 0,
@@ -1090,18 +1090,18 @@
             "ensure_repo": 0,
             "gitignore_scan": 12,
             "go_types": 0,
-            "lexical": 195,
-            "parse": 45,
-            "persist": 195,
+            "lexical": 209,
+            "parse": 44,
+            "persist": 209,
             "resolve_head": 0,
             "routes": 0,
             "sort": 0,
             "walk": 0,
-            "write_sqlite": 195
+            "write_sqlite": 209
           },
-          "full_seconds": 0.304,
+          "full_seconds": 0.305,
           "cold_mode": "full",
-          "delta_seconds": 0.03,
+          "delta_seconds": 0.038,
           "delta_mode": "noop",
           "calls": 3105,
           "internal_calls": 2403,
@@ -1124,7 +1124,7 @@
         "tool": "jdtls",
         "status": "ok",
         "ok": true,
-        "seconds": 1.874,
+        "seconds": 1.85,
         "metrics": {
           "build_root": "gson",
           "sample_files": 5,
@@ -1137,7 +1137,7 @@
           "java_home": "/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home",
           "stderr_tail": [
             "WARNING: Using incubator modules: jdk.incubator.vector",
-            "Jun 30, 2026 4:07:00 AM org.apache.aries.spifly.BaseActivator log",
+            "Jun 30, 2026 4:14:11 AM org.apache.aries.spifly.BaseActivator log",
             "INFO: Registered provider ch.qos.logback.classic.spi.LogbackServiceProvider of service org.slf4j.spi.SLF4JServiceProvider in bundle ch.qos.logback.classic"
           ]
         },
@@ -1147,15 +1147,15 @@
         "tool": "graphify",
         "status": "ok",
         "ok": true,
-        "seconds": 0.857,
+        "seconds": 0.847,
         "metrics": {
           "nodes": 1016,
           "links": 3668,
           "calls": 927,
           "extracted_calls": 599,
           "extracted_pct": 64.6,
-          "full_seconds": 0.857,
-          "delta_seconds": 0.55,
+          "full_seconds": 0.847,
+          "delta_seconds": 0.549,
           "supports_incremental": true
         },
         "note": ""
@@ -1167,8 +1167,8 @@
         "symbol": "write",
         "atlas_tokens": 7,
         "graphify_tokens": 112,
-        "atlas_ms": 25.484,
-        "graphify_ms": 88.113,
+        "atlas_ms": 24.563,
+        "graphify_ms": 94.394,
         "atlas_missing": false,
         "graphify_missing": false
       },
@@ -1176,8 +1176,8 @@
         "symbol": "read",
         "atlas_tokens": 7,
         "graphify_tokens": 102,
-        "atlas_ms": 21.754,
-        "graphify_ms": 89.076,
+        "atlas_ms": 22.197,
+        "graphify_ms": 90.525,
         "atlas_missing": false,
         "graphify_missing": false
       }
@@ -1186,55 +1186,55 @@
       "status": "ok",
       "ok": true,
       "note": "",
-      "addr": "127.0.0.1:56491",
+      "addr": "127.0.0.1:58869",
       "healthz_ms": [
-        0.349,
-        0.34,
-        0.291,
-        0.277,
-        0.278
+        0.519,
+        0.5,
+        0.503,
+        0.492,
+        0.486
       ],
-      "healthz_median_ms": 0.291,
+      "healthz_median_ms": 0.5,
       "explain": [
         {
           "symbol": "write",
           "samples_ms": [
-            12.981,
-            13.036,
-            12.939,
-            12.553,
-            12.449
+            13.52,
+            12.678,
+            12.829,
+            12.633,
+            12.135
           ],
-          "median_ms": 12.939,
+          "median_ms": 12.678,
           "body_bytes": 16448,
           "status": 200
         },
         {
           "symbol": "read",
           "samples_ms": [
-            9.369,
-            10.659,
-            11.842,
-            10.893,
-            9.645
+            9.619,
+            9.37,
+            9.341,
+            9.426,
+            9.3
           ],
-          "median_ms": 10.659,
+          "median_ms": 9.37,
           "body_bytes": 15271,
           "status": 200
         }
       ],
-      "explain_median_ms": 12.146,
+      "explain_median_ms": 10.877,
       "explain_all_ms": [
-        12.981,
-        13.036,
-        12.939,
-        12.553,
-        12.449,
-        9.369,
-        10.659,
-        11.842,
-        10.893,
-        9.645
+        13.52,
+        12.678,
+        12.829,
+        12.633,
+        12.135,
+        9.619,
+        9.37,
+        9.341,
+        9.426,
+        9.3
       ]
     }
   },
@@ -1248,7 +1248,7 @@
         "tool": "atlas",
         "status": "ok",
         "ok": true,
-        "seconds": 0.03,
+        "seconds": 0.038,
         "metrics": {
           "files": 178,
           "symbols": 1790,
@@ -1270,14 +1270,14 @@
             "text": 9,
             "yaml": 23
           },
-          "duration_ms": 14,
+          "duration_ms": 12,
           "timings_ms": {
-            "delta_check": 14,
+            "delta_check": 12,
             "resolve_head": 0
           },
           "mode": "noop",
-          "cold_seconds": 0.397,
-          "cold_duration_ms": 337,
+          "cold_seconds": 0.362,
+          "cold_duration_ms": 318,
           "cold_timings_ms": {
             "build_symbols_edges": 1,
             "delta_check": 0,
@@ -1286,18 +1286,18 @@
             "ensure_repo": 0,
             "gitignore_scan": 14,
             "go_types": 0,
-            "lexical": 202,
-            "parse": 116,
-            "persist": 202,
+            "lexical": 185,
+            "parse": 115,
+            "persist": 185,
             "resolve_head": 0,
             "routes": 0,
             "sort": 0,
             "walk": 1,
-            "write_sqlite": 202
+            "write_sqlite": 185
           },
-          "full_seconds": 0.397,
+          "full_seconds": 0.362,
           "cold_mode": "full",
-          "delta_seconds": 0.03,
+          "delta_seconds": 0.038,
           "delta_mode": "noop",
           "calls": 4973,
           "internal_calls": 1975,
@@ -1314,7 +1314,7 @@
         "tool": "clangd",
         "status": "ok",
         "ok": true,
-        "seconds": 0.106,
+        "seconds": 0.068,
         "metrics": {
           "sample_files": 8,
           "document_symbol_files": 8,
@@ -1323,11 +1323,11 @@
           "diagnostics": 2,
           "initialized": true,
           "stderr_tail": [
-            "I[04:07:05.707] --> reply:textDocument/documentSymbol(11) 64 ms",
-            "I[04:07:05.708] --> textDocument/publishDiagnostics",
-            "I[04:07:05.708] --> reply:textDocument/documentSymbol(16) 65 ms",
-            "I[04:07:05.716] --> textDocument/publishDiagnostics",
-            "I[04:07:05.717] --> reply:textDocument/documentSymbol(10) 74 ms"
+            "I[04:14:17.254] --> reply:textDocument/documentSymbol(11) 43 ms",
+            "I[04:14:17.255] --> textDocument/publishDiagnostics",
+            "I[04:14:17.255] --> reply:textDocument/documentSymbol(16) 44 ms",
+            "I[04:14:17.261] --> textDocument/publishDiagnostics",
+            "I[04:14:17.262] --> reply:textDocument/documentSymbol(10) 52 ms"
           ]
         },
         "note": ""
@@ -1336,15 +1336,15 @@
         "tool": "graphify",
         "status": "ok",
         "ok": true,
-        "seconds": 0.863,
+        "seconds": 0.859,
         "metrics": {
           "nodes": 971,
           "links": 2148,
           "calls": 1018,
           "extracted_calls": 492,
           "extracted_pct": 48.3,
-          "full_seconds": 0.863,
-          "delta_seconds": 0.47,
+          "full_seconds": 0.859,
+          "delta_seconds": 0.465,
           "supports_incremental": true
         },
         "note": ""
@@ -1356,8 +1356,8 @@
         "symbol": "cJSON_Delete",
         "atlas_tokens": 8,
         "graphify_tokens": 284,
-        "atlas_ms": 15.228,
-        "graphify_ms": 86.555,
+        "atlas_ms": 15.208,
+        "graphify_ms": 85.495,
         "atlas_missing": false,
         "graphify_missing": false
       },
@@ -1365,8 +1365,8 @@
         "symbol": "cjson_functions_should_not_crash_with_null_pointers",
         "atlas_tokens": 18,
         "graphify_tokens": 288,
-        "atlas_ms": 14.437,
-        "graphify_ms": 86.304,
+        "atlas_ms": 14.399,
+        "graphify_ms": 86.276,
         "atlas_missing": false,
         "graphify_missing": false
       },
@@ -1374,8 +1374,8 @@
         "symbol": "cJSON_CreateObject",
         "atlas_tokens": 9,
         "graphify_tokens": 332,
-        "atlas_ms": 14.786,
-        "graphify_ms": 85.813,
+        "atlas_ms": 14.344,
+        "graphify_ms": 85.808,
         "atlas_missing": false,
         "graphify_missing": false
       },
@@ -1383,8 +1383,8 @@
         "symbol": "UnityPrint",
         "atlas_tokens": 7,
         "graphify_tokens": 302,
-        "atlas_ms": 14.58,
-        "graphify_ms": 85.881,
+        "atlas_ms": 14.517,
+        "graphify_ms": 85.92,
         "atlas_missing": false,
         "graphify_missing": false
       }
@@ -1393,91 +1393,91 @@
       "status": "ok",
       "ok": true,
       "note": "",
-      "addr": "127.0.0.1:56526",
+      "addr": "127.0.0.1:58905",
       "healthz_ms": [
-        0.533,
-        0.517,
-        0.532,
-        0.576,
-        0.52
+        0.526,
+        0.5,
+        0.511,
+        0.486,
+        0.53
       ],
-      "healthz_median_ms": 0.532,
+      "healthz_median_ms": 0.511,
       "explain": [
         {
           "symbol": "cJSON_Delete",
           "samples_ms": [
-            3.351,
-            3.567,
-            3.053,
-            3.204,
-            3.553
+            3.196,
+            3.43,
+            3.011,
+            3.313,
+            2.937
           ],
-          "median_ms": 3.351,
+          "median_ms": 3.196,
           "body_bytes": 4255,
           "status": 200
         },
         {
           "symbol": "cjson_functions_should_not_crash_with_null_pointers",
           "samples_ms": [
-            2.344,
-            2.295,
-            2.578,
-            2.16,
-            2.231
+            2.106,
+            2.047,
+            2.398,
+            1.977,
+            1.934
           ],
-          "median_ms": 2.295,
+          "median_ms": 2.047,
           "body_bytes": 1669,
           "status": 200
         },
         {
           "symbol": "cJSON_CreateObject",
           "samples_ms": [
-            2.358,
-            2.3,
-            2.591,
-            2.228,
-            2.278
+            2.137,
+            2.186,
+            2.442,
+            2.07,
+            1.986
           ],
-          "median_ms": 2.3,
+          "median_ms": 2.137,
           "body_bytes": 2011,
           "status": 200
         },
         {
           "symbol": "UnityPrint",
           "samples_ms": [
-            2.162,
-            2.116,
-            2.081,
-            2.572,
-            2.131
+            1.794,
+            1.72,
+            2.144,
+            1.741,
+            1.738
           ],
-          "median_ms": 2.131,
+          "median_ms": 1.741,
           "body_bytes": 1017,
           "status": 200
         }
       ],
-      "explain_median_ms": 2.322,
+      "explain_median_ms": 2.122,
       "explain_all_ms": [
-        3.351,
-        3.567,
-        3.053,
-        3.204,
-        3.553,
-        2.344,
-        2.295,
-        2.578,
-        2.16,
-        2.231,
-        2.358,
-        2.3,
-        2.591,
-        2.228,
-        2.278,
-        2.162,
-        2.116,
-        2.081,
-        2.572,
-        2.131
+        3.196,
+        3.43,
+        3.011,
+        3.313,
+        2.937,
+        2.106,
+        2.047,
+        2.398,
+        1.977,
+        1.934,
+        2.137,
+        2.186,
+        2.442,
+        2.07,
+        1.986,
+        1.794,
+        1.72,
+        2.144,
+        1.741,
+        1.738
       ]
     }
   },
@@ -1491,7 +1491,7 @@
         "tool": "atlas",
         "status": "ok",
         "ok": true,
-        "seconds": 0.03,
+        "seconds": 0.04,
         "metrics": {
           "files": 144,
           "symbols": 2088,
@@ -1509,14 +1509,14 @@
             "text": 1,
             "yaml": 1
           },
-          "duration_ms": 3,
+          "duration_ms": 12,
           "timings_ms": {
-            "delta_check": 3,
+            "delta_check": 12,
             "resolve_head": 0
           },
           "mode": "noop",
-          "cold_seconds": 0.375,
-          "cold_duration_ms": 332,
+          "cold_seconds": 0.366,
+          "cold_duration_ms": 331,
           "cold_timings_ms": {
             "build_symbols_edges": 2,
             "delta_check": 0,
@@ -1525,18 +1525,18 @@
             "ensure_repo": 0,
             "gitignore_scan": 12,
             "go_types": 0,
-            "lexical": 239,
-            "parse": 77,
-            "persist": 239,
+            "lexical": 240,
+            "parse": 75,
+            "persist": 240,
             "resolve_head": 0,
             "routes": 0,
             "sort": 1,
             "walk": 0,
-            "write_sqlite": 239
+            "write_sqlite": 240
           },
-          "full_seconds": 0.375,
+          "full_seconds": 0.366,
           "cold_mode": "full",
-          "delta_seconds": 0.03,
+          "delta_seconds": 0.04,
           "delta_mode": "noop",
           "calls": 9481,
           "internal_calls": 6217,
@@ -1551,7 +1551,7 @@
         "tool": "clangd",
         "status": "ok",
         "ok": true,
-        "seconds": 0.219,
+        "seconds": 0.211,
         "metrics": {
           "sample_files": 8,
           "document_symbol_files": 8,
@@ -1560,11 +1560,11 @@
           "diagnostics": 167,
           "initialized": true,
           "stderr_tail": [
-            "E[04:07:08.896] IncludeCleaner: Failed to get an entry for resolved path : No such file or directory",
-            "E[04:07:08.896] IncludeCleaner: Failed to get an entry for resolved path : No such file or directory",
-            "E[04:07:08.896] IncludeCleaner: Failed to get an entry for resolved path : No such file or directory",
-            "I[04:07:08.897] --> textDocument/publishDiagnostics",
-            "I[04:07:08.897] --> reply:textDocument/documentSymbol(11) 201 ms"
+            "E[04:14:20.406] IncludeCleaner: Failed to get an entry for resolved path : No such file or directory",
+            "E[04:14:20.406] IncludeCleaner: Failed to get an entry for resolved path : No such file or directory",
+            "E[04:14:20.406] IncludeCleaner: Failed to get an entry for resolved path : No such file or directory",
+            "I[04:14:20.406] --> textDocument/publishDiagnostics",
+            "I[04:14:20.407] --> reply:textDocument/documentSymbol(11) 195 ms"
           ]
         },
         "note": ""
@@ -1573,15 +1573,15 @@
         "tool": "graphify",
         "status": "ok",
         "ok": true,
-        "seconds": 1.212,
+        "seconds": 1.217,
         "metrics": {
           "nodes": 2206,
           "links": 4995,
           "calls": 1195,
           "extracted_calls": 1027,
           "extracted_pct": 85.9,
-          "full_seconds": 1.212,
-          "delta_seconds": 0.763,
+          "full_seconds": 1.217,
+          "delta_seconds": 0.759,
           "supports_incremental": true
         },
         "note": ""
@@ -1593,8 +1593,8 @@
         "symbol": "RandomString",
         "atlas_tokens": 9,
         "graphify_tokens": 76,
-        "atlas_ms": 15.067,
-        "graphify_ms": 97.85,
+        "atlas_ms": 14.851,
+        "graphify_ms": 97.897,
         "atlas_missing": false,
         "graphify_missing": false
       },
@@ -1602,8 +1602,8 @@
         "symbol": "MemEnvTest",
         "atlas_tokens": 8,
         "graphify_tokens": 100,
-        "atlas_ms": 13.626,
-        "graphify_ms": 96.869,
+        "atlas_ms": 13.607,
+        "graphify_ms": 100.404,
         "atlas_missing": false,
         "graphify_missing": false
       },
@@ -1611,8 +1611,8 @@
         "symbol": "Size",
         "atlas_tokens": 9,
         "graphify_tokens": 72,
-        "atlas_ms": 14.63,
-        "graphify_ms": 98.492,
+        "atlas_ms": 14.658,
+        "graphify_ms": 97.283,
         "atlas_missing": false,
         "graphify_missing": false
       },
@@ -1620,8 +1620,8 @@
         "symbol": "size",
         "atlas_tokens": 6,
         "graphify_tokens": 72,
-        "atlas_ms": 26.015,
-        "graphify_ms": 98.479,
+        "atlas_ms": 26.745,
+        "graphify_ms": 97.617,
         "atlas_missing": false,
         "graphify_missing": false
       }
@@ -1630,91 +1630,91 @@
       "status": "ok",
       "ok": true,
       "note": "",
-      "addr": "127.0.0.1:56582",
+      "addr": "127.0.0.1:58962",
       "healthz_ms": [
-        0.504,
-        0.493,
-        0.536,
-        0.516,
-        0.497
+        0.551,
+        0.502,
+        0.511,
+        0.498,
+        0.481
       ],
-      "healthz_median_ms": 0.504,
+      "healthz_median_ms": 0.502,
       "explain": [
         {
           "symbol": "RandomString",
           "samples_ms": [
-            2.859,
-            2.765,
-            2.785,
-            3.203,
-            2.504
+            2.752,
+            2.643,
+            3.016,
+            2.681,
+            2.531
           ],
-          "median_ms": 2.785,
+          "median_ms": 2.681,
           "body_bytes": 909,
           "status": 200
         },
         {
           "symbol": "MemEnvTest",
           "samples_ms": [
-            1.522,
-            1.449,
-            1.453,
-            1.359,
-            1.372
+            1.418,
+            1.394,
+            1.389,
+            1.392,
+            1.335
           ],
-          "median_ms": 1.449,
+          "median_ms": 1.392,
           "body_bytes": 608,
           "status": 200
         },
         {
           "symbol": "Size",
           "samples_ms": [
-            1.988,
-            2.362,
-            1.977,
-            1.934,
-            1.879
+            2.328,
+            1.984,
+            1.944,
+            1.883,
+            1.882
           ],
-          "median_ms": 1.977,
+          "median_ms": 1.944,
           "body_bytes": 1475,
           "status": 200
         },
         {
           "symbol": "size",
           "samples_ms": [
-            14.139,
-            13.757,
-            13.792,
-            13.852,
-            13.892
+            14.212,
+            13.924,
+            14.104,
+            13.872,
+            13.716
           ],
-          "median_ms": 13.852,
+          "median_ms": 13.924,
           "body_bytes": 2440,
           "status": 200
         }
       ],
-      "explain_median_ms": 2.433,
+      "explain_median_ms": 2.429,
       "explain_all_ms": [
-        2.859,
-        2.765,
-        2.785,
-        3.203,
-        2.504,
-        1.522,
-        1.449,
-        1.453,
-        1.359,
-        1.372,
-        1.988,
-        2.362,
-        1.977,
-        1.934,
-        1.879,
-        14.139,
-        13.757,
-        13.792,
-        13.852,
-        13.892
+        2.752,
+        2.643,
+        3.016,
+        2.681,
+        2.531,
+        1.418,
+        1.394,
+        1.389,
+        1.392,
+        1.335,
+        2.328,
+        1.984,
+        1.944,
+        1.883,
+        1.882,
+        14.212,
+        13.924,
+        14.104,
+        13.872,
+        13.716
       ]
     }
   }

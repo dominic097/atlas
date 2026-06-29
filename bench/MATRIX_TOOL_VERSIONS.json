@@ -1,5 +1,5 @@
 {
-  "generated_at_unix": 1782772635,
+  "generated_at_unix": 1782773066,
   "platform": {
     "system": "Darwin",
     "release": "25.5.0",
@@ -59,7 +59,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.008
+      "seconds": 0.007
     },
     {
       "tool": "java",
@@ -91,7 +91,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.422
+      "seconds": 0.45
     },
     {
       "tool": "scip-go",
@@ -104,7 +104,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.065
+      "seconds": 0.062
     },
     {
       "tool": "scip-python",
@@ -117,7 +117,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.136
+      "seconds": 0.13
     },
     {
       "tool": "scip-typescript",
@@ -130,7 +130,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.403
+      "seconds": 0.416
     },
     {
       "tool": "scip-java",
@@ -166,7 +166,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.102
+      "seconds": 0.101
     },
     {
       "tool": "tsc",
@@ -179,7 +179,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.256
+      "seconds": 0.275
     },
     {
       "tool": "jdtls",
@@ -218,7 +218,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.017
+      "seconds": 0.018
     },
     {
       "tool": "dotnet",
@@ -231,7 +231,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.149
+      "seconds": 0.147
     },
     {
       "tool": "ruby",
@@ -244,7 +244,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.01
+      "seconds": 0.007
     },
     {
       "tool": "php",
@@ -261,7 +261,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.081
+      "seconds": 0.08
     },
     {
       "tool": "pwsh",
@@ -274,7 +274,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.044
+      "seconds": 0.262
     },
     {
       "tool": "sourcekit-lsp",
@@ -290,7 +290,7 @@
         "swift-driver version: 1.127.15"
       ],
       "exit_code": 0,
-      "seconds": 0.271,
+      "seconds": 0.065,
       "binary": "/usr/bin/sourcekit-lsp",
       "note": "sourcekit-lsp has no version flag in this toolchain; Swift toolchain version is recorded as the closest reproducible native version."
     }
