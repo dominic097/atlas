@@ -107,6 +107,7 @@ validated with the focused parser test suite.
 | sql | hasura/graphql-engine `server/src-rsr/migrations` | SQLFluff 3.5.0 | 111 | 111 | 1.00x | 5.96x | 5.33x | Native SQL DDL source parser matched SQLFluff coverage exactly while keeping `.sql` files off `parseRegexFallback`; tree-sitter-sql v0.3.11's Go module omits `parser.c`, and a locally generated C parser was killed during CGO compilation after 128s, so this is the documented native-parser ceiling for SQL in this environment. |
 | terraform/hcl | terraform-aws-modules/terraform-aws-vpc repo | python-hcl2 8.1.2 | 1738 | 1738 | 1.00x | 7.78x | 41.61x | Native tree-sitter HCL parser matched resource/data/module/variable/output coverage exactly while keeping `.tf`, `.tfvars`, and `.hcl` files off `parseRegexFallback`. |
 | apex | trailheadapps/apex-recipes `force-app` | apex source counter | 1072 | 1072 | 1.00x | 8.15x | 11.67x | Native tree-sitter-sfapex declaration parsing verified class/interface/enum, trigger, constructor, and method symbols, with SOQL SObject and DML operation source recovery preserved for exact coverage while keeping `.cls` and `.trigger` files off `parseRegexFallback`. |
+| dotnet project | DapperLib/Dapper repo | python dotnet-project counter | 132 | 132 | 1.00x | 7.67x | 6.15x | Native structured project parser matched `.sln`, `.slnx`, and SDK project-file project/package/project-reference/target-framework coverage exactly while keeping .NET project files off `parseRegexFallback`. |
 
 ## The consistent definition surface (applied uniformly to all 7 languages)
 

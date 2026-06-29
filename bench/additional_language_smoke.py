@@ -5410,12 +5410,13 @@ def run_smoke(language: str, atlas_bin: str, graphify_bin: str | None) -> dict[s
         }
     elif language == "dotnet":
         optimization = {
-            "cycles_run": 3,
-            "stop_reason": ".NET project live smoke matched the Python XML/solution coverage proxy and improved token score after compacting project-file suffixes in terse plain locations while preserving full paths in JSON.",
+            "cycles_run": 4,
+            "stop_reason": ".NET project native structured parser matched the Python XML/solution coverage proxy after routing project files off `parseRegexFallback`, while preserving compact project-file locations.",
             "cycle_notes": [
                 "cycle 1: Dapper project-file probe showed Atlas only captured a few XML PackageReference/ProjectReference entries and missed .slnx project entries plus target frameworks.",
                 "cycle 2: after adding a dedicated .NET project parser, Atlas/python-dotnet-project coverage reached 1.0 on the live Dapper repo.",
                 "cycle 3: compacting `.csproj`/`.fsproj`/`.vbproj`/`.slnx` suffixes in terse locations improved the live Dapper summed token ratio from 5.35x to 6.15x without changing indexed project symbols or JSON paths.",
+                "cycle 4: moving the structured project parser to a native route preserved exact Dapper coverage at 132/132 definitions and kept all six graphify comparison queries equivalent.",
             ],
         }
     elif language == "ejs":

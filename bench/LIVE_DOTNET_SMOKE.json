@@ -21,19 +21,19 @@
     "target_path": "/tmp/atlas-live-dotnet-dapper/repo"
   },
   "atlas": {
-    "cold_wall_seconds": 0.645,
-    "reindex_wall_seconds": 0.024,
+    "cold_wall_seconds": 0.517,
+    "reindex_wall_seconds": 0.028,
     "index": {
-      "repo_id": "0fcdc263-c760-4811-b573-39d910300ee1",
+      "repo_id": "f94e5ec2-0530-44d8-9fd9-62cca100483b",
       "repo_full_name": "repo",
-      "snapshot_id": "295f18a4-67eb-46bb-a3e9-825a129d9d39",
+      "snapshot_id": "67ead65e-49c5-4a6c-a8c5-0c66b269b8d8",
       "commit_sha": "72a54c475f75e18cb93cba0809d00a5e6e49efd9",
-      "indexed_files": 207,
-      "symbols": 3673,
-      "edges": 8243,
+      "indexed_files": 210,
+      "symbols": 3152,
+      "edges": 8180,
       "edge_kinds": {
-        "calls": 7570,
-        "imports": 673
+        "calls": 8113,
+        "imports": 67
       },
       "routes": 0,
       "languages": {
@@ -41,6 +41,7 @@
         "config": 1,
         "csharp": 157,
         "dotnet": 12,
+        "image": 3,
         "json": 4,
         "markdown": 8,
         "powershell": 1,
@@ -49,34 +50,40 @@
         "yaml": 6
       },
       "mode": "full",
-      "duration_ms": 599,
+      "duration_ms": 480,
       "timings_ms": {
+        "build_symbols_edges": 2,
         "delta_check": 0,
+        "discover_files": 1,
+        "doc_links": 0,
         "ensure_repo": 0,
+        "gitignore_scan": 11,
         "go_types": 0,
-        "lexical": 325,
-        "parse": 131,
-        "persist": 137,
+        "lexical": 342,
+        "parse": 122,
+        "persist": 342,
         "resolve_head": 0,
         "routes": 0,
         "sort": 2,
-        "walk": 1
+        "walk": 1,
+        "write_sqlite": 342
       }
     },
     "reindex": {
-      "repo_id": "0fcdc263-c760-4811-b573-39d910300ee1",
+      "repo_id": "f94e5ec2-0530-44d8-9fd9-62cca100483b",
       "repo_full_name": "repo",
-      "snapshot_id": "295f18a4-67eb-46bb-a3e9-825a129d9d39",
+      "snapshot_id": "67ead65e-49c5-4a6c-a8c5-0c66b269b8d8",
       "commit_sha": "72a54c475f75e18cb93cba0809d00a5e6e49efd9",
-      "indexed_files": 207,
-      "symbols": 3673,
-      "edges": 8243,
+      "indexed_files": 210,
+      "symbols": 3152,
+      "edges": 8180,
       "routes": 0,
       "languages": {
         "batch": 1,
         "config": 1,
         "csharp": 157,
         "dotnet": 12,
+        "image": 3,
         "json": 4,
         "markdown": 8,
         "powershell": 1,
@@ -85,9 +92,9 @@
         "yaml": 6
       },
       "mode": "noop",
-      "duration_ms": 0,
+      "duration_ms": 12,
       "timings_ms": {
-        "delta_check": 0,
+        "delta_check": 12,
         "resolve_head": 0
       }
     },
@@ -105,12 +112,27 @@
       {
         "language": "csharp",
         "kind": "class",
-        "count": 421
+        "count": 424
+      },
+      {
+        "language": "csharp",
+        "kind": "constant",
+        "count": 62
+      },
+      {
+        "language": "csharp",
+        "kind": "constructor",
+        "count": 150
       },
       {
         "language": "csharp",
         "kind": "enum",
         "count": 22
+      },
+      {
+        "language": "csharp",
+        "kind": "field",
+        "count": 637
       },
       {
         "language": "csharp",
@@ -120,17 +142,17 @@
       {
         "language": "csharp",
         "kind": "method",
-        "count": 2950
+        "count": 1525
       },
       {
         "language": "csharp",
-        "kind": "record",
-        "count": 2
+        "kind": "module",
+        "count": 55
       },
       {
         "language": "csharp",
         "kind": "struct",
-        "count": 15
+        "count": 13
       },
       {
         "language": "dotnet",
@@ -158,6 +180,11 @@
         "count": 25
       },
       {
+        "language": "image",
+        "kind": "image",
+        "count": 3
+      },
+      {
         "language": "json",
         "kind": "document",
         "count": 1
@@ -178,11 +205,6 @@
         "count": 79
       },
       {
-        "language": "powershell",
-        "kind": "variable",
-        "count": 2
-      },
-      {
         "language": "text",
         "kind": "document",
         "count": 15
@@ -201,11 +223,11 @@
     "edge_breakdown": [
       {
         "kind": "calls",
-        "count": 7570
+        "count": 8113
       },
       {
         "kind": "imports",
-        "count": 673
+        "count": 67
       }
     ],
     "dotnet_definition_symbols": 132
@@ -213,7 +235,7 @@
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 1.442,
+    "seconds": 1.36,
     "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
@@ -421,12 +443,13 @@
     "native_definitions": 132
   },
   "optimization": {
-    "cycles_run": 3,
-    "stop_reason": ".NET project live smoke matched the Python XML/solution coverage proxy and improved token score after compacting project-file suffixes in terse plain locations while preserving full paths in JSON.",
+    "cycles_run": 4,
+    "stop_reason": ".NET project native structured parser matched the Python XML/solution coverage proxy after routing project files off `parseRegexFallback`, while preserving compact project-file locations.",
     "cycle_notes": [
       "cycle 1: Dapper project-file probe showed Atlas only captured a few XML PackageReference/ProjectReference entries and missed .slnx project entries plus target frameworks.",
       "cycle 2: after adding a dedicated .NET project parser, Atlas/python-dotnet-project coverage reached 1.0 on the live Dapper repo.",
-      "cycle 3: compacting `.csproj`/`.fsproj`/`.vbproj`/`.slnx` suffixes in terse locations improved the live Dapper summed token ratio from 5.35x to 6.15x without changing indexed project symbols or JSON paths."
+      "cycle 3: compacting `.csproj`/`.fsproj`/`.vbproj`/`.slnx` suffixes in terse locations improved the live Dapper summed token ratio from 5.35x to 6.15x without changing indexed project symbols or JSON paths.",
+      "cycle 4: moving the structured project parser to a native route preserved exact Dapper coverage at 132/132 definitions and kept all six graphify comparison queries equivalent."
     ]
   },
   "query_warmup": {
@@ -445,14 +468,14 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Dapper",
       "atlas_tokens": 10,
       "graphify_tokens": 56,
-      "atlas_ms": 14.003,
-      "graphify_ms": 122.175,
+      "atlas_ms": 17.102,
+      "graphify_ms": 117.133,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Dapper p@Dapper.EntityFramework:13 df6 c1"
+        "Dapper p@Dapper.EntityFramework:13 df59 c1"
       ],
       "graphify_stdout_head": [
         "Node: Dapper",
@@ -472,8 +495,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Dapper.Tests",
       "atlas_tokens": 7,
       "graphify_tokens": 57,
-      "atlas_ms": 13.23,
-      "graphify_ms": 117.522,
+      "atlas_ms": 13.58,
+      "graphify_ms": 107.875,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -486,7 +509,7 @@
         "  ID:        dapper_tests_asynctests_dapper_tests",
         "  Source:    tests/Dapper.Tests/AsyncTests.cs L12",
         "  Type:      code",
-        "  Community: 50",
+        "  Community: 51",
         "  Degree:    1",
         "",
         "Connections (1):"
@@ -499,8 +522,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Microsoft.NET.Sdk",
       "atlas_tokens": 15,
       "graphify_tokens": 90,
-      "atlas_ms": 13.61,
-      "graphify_ms": 116.902,
+      "atlas_ms": 13.97,
+      "graphify_ms": 108.062,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -526,8 +549,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Microsoft.Bcl.AsyncInterfaces",
       "atlas_tokens": 14,
       "graphify_tokens": 75,
-      "atlas_ms": 13.182,
-      "graphify_ms": 119.961,
+      "atlas_ms": 13.825,
+      "graphify_ms": 108.888,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -553,8 +576,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Dapper.ProviderTools",
       "atlas_tokens": 12,
       "graphify_tokens": 62,
-      "atlas_ms": 13.238,
-      "graphify_ms": 119.179,
+      "atlas_ms": 13.767,
+      "graphify_ms": 107.905,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -580,8 +603,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain net8.0",
       "atlas_tokens": 9,
       "graphify_tokens": 72,
-      "atlas_ms": 13.411,
-      "graphify_ms": 121.641,
+      "atlas_ms": 13.603,
+      "graphify_ms": 108.424,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,

@@ -217,7 +217,7 @@
       "dotnet project",
       ".sln .slnx .csproj .fsproj .vbproj",
       "extract_csproj/extract_sln/extract_slnx",
-      "lightweight regex"
+      "native structured project parser"
     ],
     [
       "razor",

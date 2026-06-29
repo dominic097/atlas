@@ -1,5 +1,5 @@
 {
-  "generated_at_unix": 1782775794,
+  "generated_at_unix": 1782775996,
   "platform": {
     "system": "Darwin",
     "release": "25.5.0",
@@ -59,7 +59,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.006
+      "seconds": 0.007
     },
     {
       "tool": "java",
@@ -91,7 +91,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.408
+      "seconds": 0.395
     },
     {
       "tool": "scip-go",
@@ -117,7 +117,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.13
+      "seconds": 0.131
     },
     {
       "tool": "scip-typescript",
@@ -130,7 +130,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.412
+      "seconds": 0.398
     },
     {
       "tool": "scip-java",
@@ -153,7 +153,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.029
+      "seconds": 0.03
     },
     {
       "tool": "pyright",
@@ -166,7 +166,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.101
+      "seconds": 0.103
     },
     {
       "tool": "tsc",
@@ -179,7 +179,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.246
+      "seconds": 0.27
     },
     {
       "tool": "jdtls",
@@ -261,7 +261,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.035
+      "seconds": 0.038
     },
     {
       "tool": "pwsh",
@@ -274,7 +274,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.041
+      "seconds": 0.043
     },
     {
       "tool": "sourcekit-lsp",
