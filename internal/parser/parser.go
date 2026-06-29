@@ -260,8 +260,22 @@ func Parse(repoID, repoFullName, filePath, language string, content []byte) (Res
 		rawSyms, imports, goEdges = parseGoFile(filePath, content)
 	case "python", "javascript", "typescript", "java", "c", "cpp":
 		rawSyms, imports, tsRoot, tsCleanup = parseTreeSitter(filePath, language, content)
-	case "csharp", "groovy", "bash",
-		"rust", "ruby", "kotlin", "scala", "php", "swift", "lua", "zig",
+	case "rust", "ruby", "csharp", "php":
+		// NATIVE AST path: the generic tree-sitter tags-query extractor
+		// (tagsquery.go) replaces the regex fallback for these languages. Imports
+		// are not modeled by the tags query, so they stay empty here; call edges
+		// keep using the line-scan textCallEdges for now (parity with the other
+		// non-AST-call languages until per-language AST call extractors land).
+		if grammar, query, ok := tagsGrammar(language); ok {
+			rawSyms = tagsSymbols(language, grammar, query, content)
+		} else {
+			// Grammar/query unexpectedly unavailable: fall back rather than drop
+			// the file entirely.
+			rawSyms, imports = parseRegexFallback(filePath, language, content)
+		}
+		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
+	case "groovy", "bash",
+		"kotlin", "scala", "swift", "lua", "zig",
 		"elixir", "objc", "julia", "fortran", "dart", "verilog", "pascal",
 		"delphi", "terraform", "byond", "dotnet", "razor", "apex", "blade",
 		"vue", "svelte", "astro", "ejs", "ets", "r", "powershell", "sql", "p4":

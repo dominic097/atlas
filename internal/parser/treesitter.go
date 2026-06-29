@@ -30,6 +30,13 @@ func languagePointer(lang string) unsafe.Pointer {
 		return tree_sitter_c.Language()
 	case "cpp":
 		return tree_sitter_cpp.Language()
+	case "rust", "ruby", "csharp", "php":
+		// Natively parsed via the generic tags-query extractor (tagsquery.go).
+		// Parse() routes these to tagsSymbols, not the hand-written walkers in
+		// parseTreeSitter, so the grammar pointer is surfaced here for symmetry
+		// and reuse (e.g. call-edge work) while symbol extraction stays in the
+		// tags path.
+		return tagsLanguagePointer(lang)
 	default:
 		return nil
 	}
