@@ -1,6 +1,7 @@
 # atlas releases
 
-This repository publishes prebuilt `atlas` CLI release assets only.
+This repository publishes prebuilt `atlas` CLI release assets and the public
+benchmark/product site.
 
 Install surfaces:
 
@@ -37,7 +38,7 @@ atlas version
 Linux archive install example:
 
 ```sh
-curl -LO https://github.com/dominic097/atlas/releases/download/v0.1.21/atlas_0.1.21_linux_amd64.tar.gz
+curl -LO https://github.com/aziron-ai/atlas/releases/download/v0.1.21/atlas_0.1.21_linux_amd64.tar.gz
 tar -xzf atlas_0.1.21_linux_amd64.tar.gz
 sudo install -m 0755 atlas /usr/local/bin/atlas
 atlas version
@@ -55,14 +56,23 @@ atlas mcp --transport http --http 127.0.0.1:8765
 Atlas uses embedded SQLite by default at `sqlite://./.atlas/atlas.db`; no server
 is required for local indexing, context retrieval, or MCP usage.
 
-No source tree is maintained in this repository.
+No Atlas CLI source tree is maintained in this repository.
 
 ## Benchmark site
 
 The Atlas benchmark dashboard is published with GitHub Pages:
 
-https://dominic097.github.io/atlas/
+https://aziron-ai.github.io/atlas/
 
 The site is generated from benchmark JSON artifacts committed under `data/raw/`.
 The browser loads `data/benchmark-data.json` at runtime and keeps raw artifact
 links visible for auditability.
+
+The site itself is a static React/Tailwind build. Source lives under `src/`, and
+the generated GitHub Pages assets are committed under `assets/`.
+
+```sh
+npm install
+npm run build
+npm run test:site
+```

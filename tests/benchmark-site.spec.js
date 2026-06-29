@@ -21,7 +21,7 @@ test.describe("Atlas benchmark site", () => {
 
       const response = await page.goto(baseURL, { waitUntil: "networkidle" });
       expect(response.status()).toBe(200);
-      await expect(page.getByRole("heading", { name: /smaller, faster review context/i })).toBeVisible();
+      await expect(page.getByRole("heading", { name: /cut AI review cost/i })).toBeVisible();
       await expect(page.getByTestId("product-hero-visual")).toContainText("Token consumption");
       await expect(page.getByTestId("install-guide")).toContainText("brew install --cask dominic097/atlas/atlas");
       await expect(page.getByTestId("install-guide")).toContainText("npm install -g @dominic097/atlas");
