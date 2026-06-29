@@ -77,6 +77,20 @@ func parseGoSymbolsFromFile(fset *token.FileSet, file *ast.File, content []byte)
 		return false
 	})
 
+	// Record the file's package on every symbol so the query layer can resolve a
+	// qualified call to an in-repo package (e.g. `logrus.New()` from an external
+	// test / example / cross-package file). pkgBase(path) cannot see a ROOT
+	// package's name, so without this such calls were dropped as external.
+	if file.Name != nil && file.Name.Name != "" {
+		pkg := file.Name.Name
+		for i := range symbols {
+			if symbols[i].metadata == nil {
+				symbols[i].metadata = graph.JSONBMap{}
+			}
+			symbols[i].metadata["package"] = pkg
+		}
+	}
+
 	return symbols, imports
 }
 

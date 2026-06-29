@@ -617,6 +617,20 @@ func resolveTargets(e graph.DependencyEdge, symsByName map[string][]graph.CodeSy
 	if len(pkgMatch) > 0 {
 		return pkgMatch
 	}
+	// Qualified call to an IN-REPO package's symbol (e.g. `logrus.New()` from an
+	// external test / example / cross-package file). pkgBase(path) cannot recover a
+	// ROOT package's name (its dir is repo root), so match the qualifier against the
+	// candidate's recorded package instead. This stays precise: `errors.New()` is
+	// still dropped because no in-repo candidate carries package "errors".
+	var pkgNamed []graph.CodeSymbol
+	for _, c := range cands {
+		if symbolPackage(c) == qualifier {
+			pkgNamed = append(pkgNamed, c)
+		}
+	}
+	if len(pkgNamed) > 0 {
+		return pkgNamed
+	}
 	if len(methods) == 0 {
 		return nil // qualified, non-method, non-matching package -> external
 	}
@@ -664,6 +678,17 @@ func symbolRecvType(s graph.CodeSymbol) string {
 	}
 	rt, _ := s.Metadata["recv_type"].(string)
 	return strings.TrimSpace(rt)
+}
+
+// symbolPackage returns the symbol's Go package (Metadata["package"]), lowercased
+// to match edgeQualifier's casing, or "" when absent. Used to resolve a qualified
+// call to an in-repo package whose ROOT location pkgBase(path) cannot name.
+func symbolPackage(s graph.CodeSymbol) string {
+	if s.Metadata == nil {
+		return ""
+	}
+	p, _ := s.Metadata["package"].(string)
+	return strings.ToLower(strings.TrimSpace(p))
 }
 
 // edgeQualifier returns the lowercased segment immediately before the final name
