@@ -331,6 +331,148 @@ class AtomicCounter {
 	mustNotHave(t, kinds, "GUARDED_BY")
 }
 
+// ── [C++ #4] out-of-line nested type DEFINITION whose name is a qualified_
+// identifier (`class Outer::Inner : public Base { ... }`, `class VS::Builder
+// {...}`). tree-sitter-cpp parses the name as a qualified_identifier, so the plain
+// type_identifier lookup misses the type entirely. clangd reports these as Class/
+// Struct definitions (leveldb: Block::Iter, Version::LevelFileNumIterator,
+// VersionSet::Builder). The fix names the leaf and records the full qualified path
+// in metadata.qualified_name; members are stamped with the leaf as recv_type. ────
+func TestRecoverQualifiedOutOfLineNestedType(t *testing.T) {
+	src := `
+namespace leveldb {
+
+class Block::Iter : public Iterator {
+ public:
+  Iter(const Comparator* comparator) {}
+  bool Valid() const override { return true; }
+  void Next() override {}
+};
+
+class Version::LevelFileNumIterator : public Iterator {
+ public:
+  LevelFileNumIterator() {}
+  void Seek() override {}
+};
+
+struct Outer::Pod {
+  int v;
+  int get() const { return v; }
+};
+
+}
+`
+	res, err := Parse("repo", "owner/repo", "block.cc", "cpp", []byte(src))
+	if err != nil {
+		t.Fatalf("Parse: %v", err)
+	}
+	type rec struct {
+		kind, qualified string
+	}
+	byName := map[string][]rec{}
+	for _, s := range res.Symbols {
+		q, _ := s.Metadata["qualified_name"].(string)
+		byName[s.Name] = append(byName[s.Name], rec{s.Kind, q})
+	}
+	// The leaf type names are emitted with the expected kind…
+	want := map[string]struct{ kind, qualified string }{
+		"Iter":                  {"class", "Block::Iter"},
+		"LevelFileNumIterator":  {"class", "Version::LevelFileNumIterator"},
+		"Pod":                   {"struct", "Outer::Pod"},
+	}
+	for name, w := range want {
+		recs, ok := byName[name]
+		if !ok {
+			have := make([]string, 0, len(byName))
+			for k := range byName {
+				have = append(have, k)
+			}
+			t.Errorf("missing out-of-line nested type %q (recall): have %v", name, have)
+			continue
+		}
+		matched := false
+		for _, r := range recs {
+			if r.kind == w.kind && r.qualified == w.qualified {
+				matched = true
+			}
+		}
+		if !matched {
+			t.Errorf("type %q got %v, want kind=%q qualified_name=%q", name, recs, w.kind, w.qualified)
+		}
+	}
+	// …and their members come along (recall of nested members preserved). Members
+	// of qualified out-of-line types are stamped with the leaf as recv_type.
+	kinds := symbolIndex(t, "block.cc", "cpp", src)
+	for _, m := range []string{"Valid", "Next", "Seek", "get"} {
+		mustHave(t, kinds, m, "method")
+	}
+	// The leaf-named constructors are captured (distinct from the class def).
+	mustHave(t, kinds, "Iter", "constructor")
+	mustHave(t, kinds, "LevelFileNumIterator", "constructor")
+	// Precision: the full qualified string is NEVER itself emitted as a symbol name
+	// (we name the leaf, not "Block::Iter").
+	for _, q := range []string{"Block::Iter", "Version::LevelFileNumIterator", "Outer::Pod"} {
+		mustNotHave(t, kinds, q)
+	}
+	// Precision: each leaf type emitted exactly once as a type (no double-count).
+	for _, n := range []string{"Iter", "LevelFileNumIterator", "Pod"} {
+		typeCount := 0
+		for _, r := range byName[n] {
+			if r.kind == "class" || r.kind == "struct" {
+				typeCount++
+			}
+		}
+		if typeCount != 1 {
+			t.Errorf("type %q emitted %d times as a class/struct, want 1 (precision)", n, typeCount)
+		}
+	}
+}
+
+// ── [C++ #5] regression guard: clean top-level TEMPLATE definitions (template
+// class / struct / function) are captured. tree-sitter wraps each in a
+// template_declaration; the walker descends through it to the inner specifier /
+// function_definition, so these must already be emitted — this pins that. ────────
+func TestCaptureTemplateDefinitions(t *testing.T) {
+	src := `
+template <typename T>
+class Box {
+ public:
+  T get() const { return v_; }
+  void set(T v) { v_ = v; }
+ private:
+  T v_;
+};
+
+template <typename T>
+struct Pair {
+  T first;
+  T second;
+};
+
+template <typename T>
+T identity(T x) { return x; }
+
+template <typename A, typename B>
+A combine(A a, B b) { return a; }
+`
+	kinds := symbolIndex(t, "tmpl.h", "cpp", src)
+	mustHave(t, kinds, "Box", "class")
+	mustHave(t, kinds, "Pair", "struct")
+	mustHave(t, kinds, "identity", "function")
+	mustHave(t, kinds, "combine", "function")
+	// Template-class members are captured as methods.
+	mustHave(t, kinds, "get", "method")
+	mustHave(t, kinds, "set", "method")
+	// Precision: the template type-parameter name `T` is never a symbol.
+	mustNotHave(t, kinds, "T")
+	// Precision: each captured def is emitted exactly once.
+	for _, n := range []string{"Box", "Pair", "identity", "combine", "get", "set"} {
+		if c := countOf(kinds, n); c != 1 {
+			t.Errorf("template def %q emitted %d times, want 1 (precision)", n, c)
+		}
+	}
+}
+
 // ── Precision guard for ERROR recovery: an ERROR region holding only PROTOTYPES
 // (no body) must not yield function defs. ───────────────────────────────────────
 func TestErrorRecoveryRejectsPrototypes(t *testing.T) {

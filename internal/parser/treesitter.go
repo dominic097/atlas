@@ -1740,14 +1740,26 @@ func cppTypeSymbols(node *tree_sitter.Node, src []byte) []symbolDraft {
 		kind = "struct"
 	}
 
-	typeName := childText(node, "type_identifier", src)
+	// typeName is the receiver name stamped onto members (the immediate enclosing
+	// type). qualified is the full dotted path for an out-of-line nested definition
+	// (`class Outer::Inner { ... }`), whose name child is a qualified_identifier
+	// rather than a plain type_identifier; "" for the common unqualified case.
+	typeName, qualified := cppTypeName(node, src)
 	if typeName != "" {
-		out = append(out, symbolDraft{
+		draft := symbolDraft{
 			name:      typeName,
 			kind:      kind,
 			startLine: int(node.StartPosition().Row) + 1,
 			endLine:   int(node.EndPosition().Row) + 1,
-		})
+		}
+		// Out-of-line nested type: expose the qualified name so the query layer can
+		// disambiguate (and a qualified-name-aware diff matches `Outer::Inner`). The
+		// emitted symbol still NAMES the last segment, matching how clangd reports
+		// the leaf while preserving the full path in metadata.
+		if qualified != "" {
+			draft.metadata = graph.JSONBMap{"qualified_name": qualified}
+		}
+		out = append(out, draft)
 	}
 
 	body := node.ChildByFieldName("body")
@@ -1825,6 +1837,48 @@ func cppTypeSymbols(node *tree_sitter.Node, src []byte) []symbolDraft {
 		}
 	}
 	return out
+}
+
+// cppTypeName resolves the name of a class_specifier / struct_specifier. Most
+// types name themselves with a direct type_identifier (`class Foo`). An out-of-
+// line nested definition (`class Outer::Inner { ... }`, `struct A::B::C { ... }`)
+// instead carries a qualified_identifier name child, which the plain
+// type_identifier lookup misses entirely — leaving the type unemitted and its
+// members un-stamped. We unwrap it here:
+//
+//   - display is the leaf segment (`Inner`), matching how clangd names the symbol
+//     and how the member-name dedup family keys.
+//   - qualified is the full path (`Outer::Inner`) ONLY for the qualified case, so
+//     the unqualified path is byte-for-byte unchanged (no new metadata, rounds
+//     1-2 behaviour preserved).
+//
+// A template type's name child sits at the same position, so this also handles
+// `template <...> class Outer::Inner`.
+func cppTypeName(node *tree_sitter.Node, src []byte) (display, qualified string) {
+	if name := childText(node, "type_identifier", src); name != "" {
+		return name, ""
+	}
+	q := childNode(node, "qualified_identifier")
+	if q == nil {
+		return "", ""
+	}
+	full := strings.TrimSpace(nodeText(q, src))
+	if full == "" {
+		return "", ""
+	}
+	// A multi-line or whitespace-mangled qualifier is not a clean name — bail to
+	// keep precision (no spurious type from a corrupted node).
+	if strings.ContainsAny(full, " \t\n") {
+		return "", ""
+	}
+	leaf := full
+	if i := strings.LastIndex(full, "::"); i >= 0 {
+		leaf = full[i+2:]
+	}
+	if leaf == "" {
+		return "", ""
+	}
+	return leaf, full
 }
 
 // cppMemberKind classifies a member function by name relative to its enclosing
