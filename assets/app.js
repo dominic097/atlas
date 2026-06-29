@@ -45,6 +45,177 @@ function ratioBar(value, max = 42, cls = "") {
   return `<div class="bar ${cls}"><span style="width:${width}%"></span></div>`;
 }
 
+function coreTotals(data) {
+  const summaries = data.coreMatrix.map((row) => row.querySummary);
+  return {
+    atlasTokens: summaries.reduce((total, row) => total + row.atlasTokens, 0),
+    graphifyTokens: summaries.reduce((total, row) => total + row.graphifyTokens, 0),
+    atlasMs: summaries.reduce((total, row) => total + row.atlasMs, 0),
+    graphifyMs: summaries.reduce((total, row) => total + row.graphifyMs, 0),
+    equivalentRows: summaries.reduce((total, row) => total + row.equivalentRows, 0),
+    rows: summaries.reduce((total, row) => total + row.rows, 0),
+  };
+}
+
+function liveCoverageCount(data) {
+  return data.liveSmokes.filter((row) => Number(row.coverage.ratio) >= 1).length;
+}
+
+function renderMiniComparison(label, atlasValue, graphifyValue, unit, ratio, accent = "") {
+  const max = Math.max(atlasValue, graphifyValue, 1);
+  const atlasWidth = (atlasValue / max) * 100;
+  const graphifyWidth = (graphifyValue / max) * 100;
+  return `
+    <article class="comparison-item ${accent}">
+      <div class="comparison-label">
+        <span>${label}</span>
+        <strong>${fmtRatio(ratio)}</strong>
+      </div>
+      <div class="compare-row atlas-row">
+        <span>Atlas</span>
+        <div class="compare-track"><b style="width:${atlasWidth}%"></b></div>
+        <em>${fmtNumber(Math.round(atlasValue))} ${unit}</em>
+      </div>
+      <div class="compare-row graphify-row">
+        <span>graphify</span>
+        <div class="compare-track"><b style="width:${graphifyWidth}%"></b></div>
+        <em>${fmtNumber(Math.round(graphifyValue))} ${unit}</em>
+      </div>
+    </article>
+  `;
+}
+
+function renderExecutiveProduct(data) {
+  const totals = coreTotals(data);
+  const coverageAtNative = liveCoverageCount(data);
+  const tokenSaved = totals.graphifyTokens - totals.atlasTokens;
+  const latencySaved = totals.graphifyMs - totals.atlasMs;
+
+  $("#hero-proof-bars").innerHTML = [
+    renderMiniComparison("Token consumption", totals.atlasTokens, totals.graphifyTokens, "tok", data.summary.core.tokenRatio, "token"),
+    renderMiniComparison("Query latency", totals.atlasMs, totals.graphifyMs, "ms", data.summary.core.latencyRatio, "latency"),
+  ].join("");
+
+  const metricCards = [
+    {
+      label: "Token footprint",
+      value: fmtRatio(data.summary.core.tokenRatio),
+      note: `${fmtNumber(tokenSaved)} fewer response tokens across comparable core rows`,
+    },
+    {
+      label: "Query latency",
+      value: fmtRatio(data.summary.core.latencyRatio),
+      note: `${fmtNumber(Math.round(latencySaved))} ms less aggregate response time in the core matrix`,
+    },
+    {
+      label: "Accuracy coverage",
+      value: `${coverageAtNative}/${data.summary.live.artifacts}`,
+      note: "live smokes at or above native definition coverage proxy",
+    },
+    {
+      label: "Audit surface",
+      value: `${data.sourceArtifacts.length}`,
+      note: "downloadable benchmark JSON artifacts",
+    },
+  ];
+
+  $("#decision-metrics").innerHTML = metricCards.map((card) => `
+    <article class="decision-card">
+      <span class="label">${card.label}</span>
+      <strong>${card.value}</strong>
+      <p>${card.note}</p>
+    </article>
+  `).join("");
+
+  const languages = data.coreMatrix.map((row) => `
+    <div class="language-bar">
+      <span>${languageLabel(row.language)}</span>
+      <div>
+        <b class="latency" style="width:${Math.min(100, (row.querySummary.latencyRatio / 8) * 100)}%"></b>
+        <b class="tokens" style="width:${Math.min(100, (row.querySummary.tokenRatio / 30) * 100)}%"></b>
+      </div>
+      <em>${fmtRatio(row.querySummary.latencyRatio)} / ${fmtRatio(row.querySummary.tokenRatio)}</em>
+    </div>
+  `).join("");
+
+  $("#comparison-bars").innerHTML = `
+    <div class="chart-panel">
+      <div class="chart-title">
+        <h3>Core language ratios</h3>
+        <p>Latency and tokens are shown only where both tools returned comparable query rows.</p>
+      </div>
+      <div class="legend">
+        <span><i class="legend-latency"></i> latency</span>
+        <span><i class="legend-tokens"></i> tokens</span>
+      </div>
+      <div class="language-bars">${languages}</div>
+    </div>
+    <div class="chart-panel">
+      <div class="chart-title">
+        <h3>Decision frame</h3>
+        <p>Atlas reduces review-context cost without hiding non-comparable rows.</p>
+      </div>
+      <div class="decision-stack">
+        <div><strong>${data.summary.core.equivalentRows}/${data.summary.core.queryRows}</strong><span>core comparable rows</span></div>
+        <div><strong>${data.summary.live.fiveXComparable}/${data.summary.live.withComparableRows}</strong><span>live rows above 5x on comparable rows</span></div>
+        <div><strong>${data.summary.saturation.noComparableRows}</strong><span>saturation rows with no graphify equivalent</span></div>
+      </div>
+    </div>
+  `;
+}
+
+function renderAccuracyStory(data) {
+  const coverageAtNative = liveCoverageCount(data);
+  const detector = data.provenance.graphify.detectorOnlyCodeExtensions.join(", ");
+  $("#accuracy-story").innerHTML = `
+    <article class="accuracy-card">
+      <span class="label">Coverage proxy</span>
+      <strong>${coverageAtNative}/${data.summary.live.artifacts}</strong>
+      <p>live open-source smokes at or above native/parser definition coverage.</p>
+    </article>
+    <article class="accuracy-card">
+      <span class="label">graphify support audit</span>
+      <strong>${data.summary.coverage.graphifyRows}/39</strong>
+      <p>deterministic graphify families covered, with runtime discovery from graphify ${data.provenance.graphify.version}.</p>
+    </article>
+    <article class="accuracy-card warn">
+      <span class="label">Detector-only honesty</span>
+      <strong>${detector}</strong>
+      <p>shown as detector-only, not deterministic extractor parity.</p>
+    </article>
+    <article class="accuracy-card warn">
+      <span class="label">No invented 5x</span>
+      <strong>${data.summary.saturation.noComparableRows}</strong>
+      <p>BYOND, ETS, and R have native coverage evidence but zero graphify-equivalent query rows.</p>
+    </article>
+  `;
+}
+
+function renderDownloadActions(data) {
+  $("#download-actions").innerHTML = `
+    <a class="download-card" href="data/benchmark-data.json" download>
+      <span class="label">Executive dataset</span>
+      <strong>benchmark-data.json</strong>
+      <p>Derived JSON used by every chart and table on this page.</p>
+    </a>
+    <a class="download-card" href="data/raw/MATRIX_REPORT.json" download>
+      <span class="label">Core matrix</span>
+      <strong>MATRIX_REPORT.json</strong>
+      <p>${data.summary.core.languages} languages, ${data.summary.core.queryRows} query rows.</p>
+    </a>
+    <a class="download-card" href="data/raw/MATRIX_TOOL_VERSIONS.json" download>
+      <span class="label">Tool manifest</span>
+      <strong>MATRIX_TOOL_VERSIONS.json</strong>
+      <p>${data.provenance.tools.coreCount} core tools and ${data.provenance.tools.liveSmokeCount} live smoke tools.</p>
+    </a>
+    <a class="download-card" href="data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json" download>
+      <span class="label">Coverage discovery</span>
+      <strong>GRAPHIFY_LANGUAGE_DISCOVERY.json</strong>
+      <p>${data.provenance.graphify.dispatchCount} extractor entries and ${data.provenance.graphify.codeExtensionCount} code extensions.</p>
+    </a>
+  `;
+}
+
 function rowStatus(summary) {
   if (summary.equivalentRows === 0) return `<span class="chip warn">no comparable rows</span>`;
   if (summary.pass5x) return `<span class="chip ok">5x on comparable rows</span>`;
@@ -257,6 +428,9 @@ async function init() {
   const response = await fetch("data/benchmark-data.json", { cache: "no-store" });
   if (!response.ok) throw new Error(`Unable to load benchmark data: ${response.status}`);
   state.data = await response.json();
+  renderExecutiveProduct(state.data);
+  renderAccuracyStory(state.data);
+  renderDownloadActions(state.data);
   renderKPIs(state.data);
   renderProvenance(state.data);
   renderCoreMatrix(state.data);

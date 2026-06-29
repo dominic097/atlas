@@ -21,7 +21,11 @@ test.describe("Atlas benchmark site", () => {
 
       const response = await page.goto(baseURL, { waitUntil: "networkidle" });
       expect(response.status()).toBe(200);
-      await expect(page.getByRole("heading", { name: /benchmark evidence/i })).toBeVisible();
+      await expect(page.getByRole("heading", { name: /smaller, faster review context/i })).toBeVisible();
+      await expect(page.getByTestId("product-hero-visual")).toContainText("Token consumption");
+      await expect(page.getByTestId("executive-performance")).toBeVisible();
+      await expect(page.getByTestId("token-latency-charts")).toContainText("Core language ratios");
+      await expect(page.getByTestId("accuracy-positioning")).toBeVisible();
       await expect(page.getByTestId("benchmark-source-root")).toContainText("benchmark JSON artifacts");
       await expect(page.getByTestId("core-matrix")).toBeVisible();
       await expect(page.getByTestId("coverage-audit")).toBeVisible();
@@ -44,6 +48,7 @@ test.describe("Atlas benchmark site", () => {
       }));
       expect(sizes.body).toBeLessThanOrEqual(sizes.viewport + 2);
       expect(await page.locator("a[data-source-artifact]").count()).toBeGreaterThanOrEqual(10);
+      expect(await page.locator("a[download]").count()).toBeGreaterThanOrEqual(4);
 
       await page.screenshot({
         path: `output/playwright/atlas-benchmark-${viewport.name}.png`,

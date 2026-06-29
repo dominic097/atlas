@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Atlas Benchmark Ground Truth</title>
-    <meta name="description" content="Atlas benchmark dashboard generated from raw JSON artifacts.">
+    <title>Atlas Product Benchmark</title>
+    <meta name="description" content="Atlas product benchmark for token consumption, query latency, and accuracy evidence.">
     <link rel="stylesheet" href="assets/styles.css">
     <script defer src="assets/app.js"></script>
   </head>
@@ -15,27 +15,78 @@
         <div class="brand">
           <span class="brand-mark" aria-hidden="true">A</span>
           <span class="brand-title">Atlas</span>
-          <span class="brand-subtitle">Benchmark ground truth</span>
+          <span class="brand-subtitle">Product benchmark</span>
         </div>
         <div class="nav-links">
+          <a href="#product">Product</a>
+          <a href="#performance">Performance</a>
+          <a href="#accuracy">Accuracy</a>
+          <a href="#downloads">Data</a>
           <a href="#matrix">Matrix</a>
-          <a href="#coverage">Coverage</a>
-          <a href="#live">Live smokes</a>
-          <a href="#evidence">Artifacts</a>
         </div>
       </nav>
     </header>
 
     <main id="main">
-      <section class="intro" aria-labelledby="page-title">
+      <section id="product" class="product-hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="eyebrow">Atlas for engineering leaders</p>
+          <h1 id="page-title">Smaller, faster review context from local code intelligence</h1>
+          <p class="lead">Atlas indexes code locally, stores the graph in SQLite, and retrieves bounded context for review agents. This page positions the product with benchmark JSON: token consumption, latency, and accuracy evidence against graphify and language-native baselines.</p>
+          <div class="hero-actions">
+            <a class="primary" href="data/benchmark-data.json" download>Download benchmark data</a>
+            <a class="secondary" href="#performance">View executive proof</a>
+            <a class="secondary" href="https://github.com/dominic097/atlas/releases/latest">Download atlas</a>
+          </div>
+        </div>
+        <div class="hero-visual" data-testid="product-hero-visual">
+          <div class="visual-header">
+            <span>Agent review context</span>
+            <strong>JSON-backed proof</strong>
+          </div>
+          <div id="hero-proof-bars" class="hero-proof-bars"></div>
+          <div class="context-flow" aria-label="Atlas review context flow">
+            <span>Repo</span>
+            <span>Atlas index</span>
+            <span>SQLite graph</span>
+            <span>Bounded context</span>
+            <span>Review agent</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="performance" class="executive-panel" data-testid="executive-performance" aria-labelledby="performance-title">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Executive proof</p>
+            <h2 id="performance-title">Token, latency, and coverage metrics that affect AI-review cost</h2>
+            <p>Ratios are computed from equivalent query rows only. Saturated rows remain visible without invented ratios.</p>
+          </div>
+          <div class="source-links">
+            <a data-source-artifact href="data/benchmark-data.json" download>Download derived JSON</a>
+            <a data-source-artifact href="data/raw/MATRIX_REPORT.json" download>Download matrix JSON</a>
+          </div>
+        </div>
+        <div id="decision-metrics" class="decision-metrics"></div>
+        <div id="comparison-bars" class="comparison-bars" data-testid="token-latency-charts"></div>
+      </section>
+
+      <section id="accuracy" class="proof-layout" data-testid="accuracy-positioning" aria-labelledby="accuracy-title">
+        <div class="proof-copy">
+          <p class="eyebrow">Accuracy evidence</p>
+          <h2 id="accuracy-title">Accuracy is presented as verifiable coverage and comparable retrieval rows</h2>
+          <p>Atlas is not shown as a blanket “more accurate” claim. The page separates native coverage proxies, graphify extractor coverage, and query rows where both tools returned comparable answers.</p>
+        </div>
+        <div id="accuracy-story" class="accuracy-story"></div>
+      </section>
+
+      <section id="downloads" class="download-panel" aria-labelledby="downloads-title">
         <div>
-          <h1 id="page-title">Local code-intelligence benchmark evidence</h1>
-          <p class="lead">This page renders from benchmark JSON artifacts: core language matrix, graphify runtime discovery, live open-source repository smokes, tool versions, and saturation evidence.</p>
+          <p class="eyebrow">Downloadable evidence</p>
+          <h2 id="downloads-title">Benchmark data for architects, procurement, and engineering review</h2>
+          <p>Use the derived dataset for dashboards, or download the raw JSON artifacts to audit every number.</p>
         </div>
-        <div class="actions">
-          <a class="primary" href="#matrix">View matrix</a>
-          <a class="secondary" href="https://github.com/dominic097/atlas/releases/latest">Download atlas</a>
-        </div>
+        <div id="download-actions" class="download-actions"></div>
       </section>
 
       <section id="kpis" class="kpis" aria-label="Benchmark summary"></section>
