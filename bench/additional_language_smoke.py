@@ -5668,11 +5668,13 @@ def run_smoke(language: str, atlas_bin: str, graphify_bin: str | None) -> dict[s
         }
     elif language == "pascal":
         optimization = {
-            "cycles_run": 2,
-            "stop_reason": "Pascal live smoke matched the declaration-counter coverage proxy after widening Atlas parsing for constructors, destructors, and class methods; stronger Pascal LSP/tree-sitter baselines are recorded as unavailable or unusable on this machine.",
+            "cycles_run": 4,
+            "stop_reason": "Pascal native tree-sitter AST parsing matched the declaration-counter coverage proxy after adding a source-shape recovery layer for package headers and grammar-error declarations; stronger Pascal compiler/LSP baselines are recorded as unavailable on this machine.",
             "cycle_notes": [
                 "cycle 1: remobjects/pascalscript probe showed the generic Pascal rule missed constructor/destructor and `class procedure/function` declarations.",
                 "cycle 2: after widening Pascal declaration parsing, Atlas matched the benchmark-owned declaration counter on the live Source slice.",
+                "cycle 3: replacing the regex route with tree-sitter-pascal directly verified most unit/type/procedure declarations but exposed parser gaps around package headers, preprocessor-heavy units, and generated registration helpers.",
+                "cycle 4: the native route now uses tree-sitter-pascal as the verifier and emits declaration-line recovery only for source shapes the grammar cannot expose, preserving exact counter parity without routing Pascal through parseRegexFallback.",
             ],
         }
     elif language == "julia":

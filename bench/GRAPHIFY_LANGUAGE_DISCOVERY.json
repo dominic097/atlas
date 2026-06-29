@@ -181,7 +181,7 @@
       "pascal",
       ".pas .pp .dpr .dpk .lpr .inc",
       "extract_pascal",
-      "lightweight regex"
+      "native tree-sitter AST"
     ],
     [
       "delphi/lazarus forms",

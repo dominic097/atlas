@@ -1,7 +1,7 @@
 {
   "language": "pascal",
   "repo": "https://github.com/remobjects/pascalscript",
-  "commit": "2c826cd803a3c0417354fa37b2417f21993ce4ac",
+  "commit": "4340039059ce2d270b39fad64c1415ead9f83234",
   "graphify_detector_only": "",
   "commands": {
     "clone": "git clone --depth 1 https://github.com/remobjects/pascalscript /tmp/atlas-live-pascal-pascalscript/repo",
@@ -20,63 +20,71 @@
     "target_path": "/tmp/atlas-live-pascal-pascalscript/repo/Source"
   },
   "atlas": {
-    "cold_wall_seconds": 1.365,
-    "reindex_wall_seconds": 0.037,
+    "cold_wall_seconds": 1.011,
+    "reindex_wall_seconds": 0.04,
     "index": {
-      "repo_id": "cc273333-4949-4f55-b6ff-288e420a009f",
+      "repo_id": "40354bc2-ef15-4b13-adae-2801e0e3bd7a",
       "repo_full_name": "Source",
-      "snapshot_id": "a59a09c3-5558-4e13-b556-b7e5f32854ba",
-      "commit_sha": "2c826cd803a3c0417354fa37b2417f21993ce4ac",
-      "indexed_files": 105,
-      "symbols": 6487,
-      "edges": 21350,
+      "snapshot_id": "5cf0f135-14c9-4a7a-9cea-bd4a00aa6c9b",
+      "commit_sha": "4340039059ce2d270b39fad64c1415ead9f83234",
+      "indexed_files": 126,
+      "symbols": 6506,
+      "edges": 21357,
       "edge_kinds": {
-        "calls": 20975,
-        "imports": 375
+        "calls": 20961,
+        "imports": 375,
+        "references": 21
       },
       "routes": 0,
       "languages": {
         "batch": 1,
         "config": 8,
         "delphi": 2,
+        "image": 21,
         "pascal": 93,
         "text": 1
       },
       "mode": "full",
-      "duration_ms": 1316,
+      "duration_ms": 982,
       "timings_ms": {
+        "build_symbols_edges": 6,
         "delta_check": 0,
+        "discover_files": 0,
+        "doc_links": 1,
         "ensure_repo": 0,
+        "gitignore_scan": 10,
         "go_types": 0,
-        "lexical": 603,
-        "parse": 354,
-        "persist": 348,
+        "lexical": 700,
+        "parse": 263,
+        "persist": 700,
         "resolve_head": 0,
         "routes": 0,
-        "sort": 8,
-        "walk": 0
+        "sort": 5,
+        "walk": 0,
+        "write_sqlite": 700
       }
     },
     "reindex": {
-      "repo_id": "cc273333-4949-4f55-b6ff-288e420a009f",
+      "repo_id": "40354bc2-ef15-4b13-adae-2801e0e3bd7a",
       "repo_full_name": "Source",
-      "snapshot_id": "a59a09c3-5558-4e13-b556-b7e5f32854ba",
-      "commit_sha": "2c826cd803a3c0417354fa37b2417f21993ce4ac",
-      "indexed_files": 105,
-      "symbols": 6487,
-      "edges": 21350,
+      "snapshot_id": "5cf0f135-14c9-4a7a-9cea-bd4a00aa6c9b",
+      "commit_sha": "4340039059ce2d270b39fad64c1415ead9f83234",
+      "indexed_files": 126,
+      "symbols": 6506,
+      "edges": 21357,
       "routes": 0,
       "languages": {
         "batch": 1,
         "config": 8,
         "delphi": 2,
+        "image": 21,
         "pascal": 93,
         "text": 1
       },
       "mode": "noop",
-      "duration_ms": 0,
+      "duration_ms": 13,
       "timings_ms": {
-        "delta_check": 0,
+        "delta_check": 12,
         "resolve_head": 0
       }
     },
@@ -107,14 +115,14 @@
         "count": 39
       },
       {
-        "language": "pascal",
-        "kind": "document",
-        "count": 3
+        "language": "image",
+        "kind": "image",
+        "count": 21
       },
       {
         "language": "pascal",
         "kind": "function",
-        "count": 6072
+        "count": 6073
       },
       {
         "language": "pascal",
@@ -135,33 +143,37 @@
     "edge_breakdown": [
       {
         "kind": "calls",
-        "count": 20975
+        "count": 20961
       },
       {
         "kind": "imports",
         "count": 375
+      },
+      {
+        "kind": "references",
+        "count": 21
       }
     ],
-    "pascal_definition_symbols": 6431
+    "pascal_definition_symbols": 6432
   },
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 1.92,
+    "seconds": 1.589,
     "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
-      "[graphify watch] Skipped graph.html: Graph has 5275 nodes - too large for HTML viz (limit: 5000). Use --no-viz, raise GRAPHIFY_VIZ_NODE_LIMIT, or reduce input size.",
-      "[graphify watch] Rebuilt: 5275 nodes, 7437 edges, 150 communities",
+      "[graphify watch] Skipped graph.html: Graph has 5276 nodes - too large for HTML viz (limit: 5000). Use --no-viz, raise GRAPHIFY_VIZ_NODE_LIMIT, or reduce input size.",
+      "[graphify watch] Rebuilt: 5276 nodes, 7453 edges, 153 communities",
       "[graphify watch] graph.json and GRAPH_REPORT.md updated in graphify-out",
       "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
       "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
     ],
     "stderr_head": [],
     "metrics": {
-      "nodes": 5275,
-      "links": 7437,
-      "calls": 2187
+      "nodes": 5276,
+      "links": 7453,
+      "calls": 2202
     }
   },
   "native_baseline": {
@@ -176,9 +188,9 @@
       "definition_counts": {
         "unit": 85,
         "type": 274,
-        "function": 6072
+        "function": 6073
       },
-      "definitions": 6431,
+      "definitions": 6432,
       "sample_definitions": [
         {
           "kind": "type",
@@ -352,15 +364,17 @@
   },
   "coverage": {
     "atlas_vs_pascal_regex_counter_definition_ratio": 1.0,
-    "atlas_pascal_definition_symbols": 6431,
-    "native_definitions": 6431
+    "atlas_pascal_definition_symbols": 6432,
+    "native_definitions": 6432
   },
   "optimization": {
-    "cycles_run": 2,
-    "stop_reason": "Pascal live smoke matched the declaration-counter coverage proxy after widening Atlas parsing for constructors, destructors, and class methods; stronger Pascal LSP/tree-sitter baselines are recorded as unavailable or unusable on this machine.",
+    "cycles_run": 4,
+    "stop_reason": "Pascal native tree-sitter AST parsing matched the declaration-counter coverage proxy after adding a source-shape recovery layer for package headers and grammar-error declarations; stronger Pascal compiler/LSP baselines are recorded as unavailable on this machine.",
     "cycle_notes": [
       "cycle 1: remobjects/pascalscript probe showed the generic Pascal rule missed constructor/destructor and `class procedure/function` declarations.",
-      "cycle 2: after widening Pascal declaration parsing, Atlas matched the benchmark-owned declaration counter on the live Source slice."
+      "cycle 2: after widening Pascal declaration parsing, Atlas matched the benchmark-owned declaration counter on the live Source slice.",
+      "cycle 3: replacing the regex route with tree-sitter-pascal directly verified most unit/type/procedure declarations but exposed parser gaps around package headers, preprocessor-heavy units, and generated registration helpers.",
+      "cycle 4: the native route now uses tree-sitter-pascal as the verifier and emits declaration-line recovery only for source shapes the grammar cannot expose, preserving exact counter parity without routing Pascal through parseRegexFallback."
     ]
   },
   "query_warmup": {
@@ -379,8 +393,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain TPSPascalCompiler",
       "atlas_tokens": 9,
       "graphify_tokens": 255,
-      "atlas_ms": 16.064,
-      "graphify_ms": 136.972,
+      "atlas_ms": 15.234,
+      "graphify_ms": 129.192,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -406,14 +420,14 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain TPSExec.InnerfuseCall",
       "atlas_tokens": 11,
       "graphify_tokens": 12,
-      "atlas_ms": 16.454,
-      "graphify_ms": 132.532,
+      "atlas_ms": 15.537,
+      "graphify_ms": 126.786,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": true,
       "atlas_stdout_head": [
-        "TPSExec.InnerfuseCall f@InvokeCall:374 df6 d5"
+        "TPSExec.InnerfuseCall f@InvokeCall:375 df6 d5"
       ],
       "graphify_stdout_head": [
         "No node matching 'TPSExec.InnerfuseCall' found."
@@ -426,21 +440,21 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain TPSRuntimeClassImporter",
       "atlas_tokens": 11,
       "graphify_tokens": 120,
-      "atlas_ms": 15.639,
-      "graphify_ms": 135.358,
+      "atlas_ms": 15.16,
+      "graphify_ms": 127.97,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "TPSRuntimeClassImporter t@uPSRuntime:1049 c4"
+        "TPSRuntimeClassImporter t@uPSRuntime:1050 c4"
       ],
       "graphify_stdout_head": [
         "Node: TPSRuntimeClassImporter",
         "  ID:        upsruntime_tpsruntimeclassimporter",
         "  Source:    uPSRuntime.pas L1050",
         "  Type:      code",
-        "  Community: 20",
+        "  Community: 39",
         "  Degree:    8",
         "",
         "Connections (8):"
@@ -453,14 +467,14 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain TPSInternalProcedure",
       "atlas_tokens": 10,
       "graphify_tokens": 109,
-      "atlas_ms": 16.195,
-      "graphify_ms": 135.32,
+      "atlas_ms": 15.322,
+      "graphify_ms": 127.688,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "TPSInternalProcedure t@uPSCompiler:548 c13"
+        "TPSInternalProcedure t@uPSCompiler:550 c13"
       ],
       "graphify_stdout_head": [
         "Node: TPSInternalProcedure",
@@ -480,21 +494,21 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain RegisterClassLibraryRuntime",
       "atlas_tokens": 14,
       "graphify_tokens": 81,
-      "atlas_ms": 17.42,
-      "graphify_ms": 136.635,
+      "atlas_ms": 16.233,
+      "graphify_ms": 128.502,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "RegisterClassLibraryRuntime f@uPSRuntime:1071 df2 c3 d1"
+        "RegisterClassLibraryRuntime f@uPSRuntime:1073 df2 c3 d1"
       ],
       "graphify_stdout_head": [
         "Node: RegisterClassLibraryRuntime()",
         "  ID:        upsruntime_registerclasslibraryruntime",
         "  Source:    uPSRuntime.pas L11989",
         "  Type:      code",
-        "  Community: 15",
+        "  Community: 39",
         "  Degree:    3",
         "",
         "Connections (3):"
