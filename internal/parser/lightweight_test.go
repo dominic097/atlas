@@ -1586,6 +1586,11 @@ plot_cache <- new.env()
 			t.Fatalf("R imports = %#v, want %q", r.Imports, want)
 		}
 	}
+	for _, fake := range []string{"title"} {
+		if sym := findSymbol(r.Symbols, fake); sym != nil {
+			t.Fatalf("unexpected R argument symbol %q: %+v", fake, sym)
+		}
+	}
 }
 
 func TestParseByondDefinitions(t *testing.T) {

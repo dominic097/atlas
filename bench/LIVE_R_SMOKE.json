@@ -23,63 +23,63 @@
     "target_path": "/tmp/atlas-live-r-ggplot2/repo/R"
   },
   "atlas": {
-    "cold_wall_seconds": 0.705,
-    "reindex_wall_seconds": 0.029,
+    "cold_wall_seconds": 1.456,
+    "reindex_wall_seconds": 0.039,
     "index": {
-      "repo_id": "77e49f00-97a0-4155-a687-b3956028fdda",
+      "repo_id": "c1331338-2cdb-4fd2-a9f7-8cce89dba1d6",
       "repo_full_name": "R",
-      "snapshot_id": "93d6f42f-bc5a-4daa-9b28-824d4a82f0a4",
+      "snapshot_id": "6d0a2b93-c95a-4767-849e-37fd37172815",
       "commit_sha": "6870419aa6e106c3580c45c81d5b688cb31758bd",
       "indexed_files": 201,
-      "symbols": 3018,
-      "edges": 16950,
+      "symbols": 3010,
+      "edges": 16377,
       "edge_kinds": {
-        "calls": 16950
+        "calls": 16377
       },
       "routes": 0,
       "languages": {
         "r": 201
       },
       "mode": "full",
-      "duration_ms": 665,
+      "duration_ms": 525,
       "timings_ms": {
+        "build_symbols_edges": 3,
         "delta_check": 0,
+        "discover_files": 0,
+        "doc_links": 0,
         "ensure_repo": 0,
+        "gitignore_scan": 13,
         "go_types": 0,
-        "lexical": 288,
-        "parse": 57,
-        "persist": 313,
+        "lexical": 395,
+        "parse": 111,
+        "persist": 395,
         "resolve_head": 0,
         "routes": 0,
-        "sort": 4,
-        "walk": 0
+        "sort": 3,
+        "walk": 0,
+        "write_sqlite": 395
       }
     },
     "reindex": {
-      "repo_id": "77e49f00-97a0-4155-a687-b3956028fdda",
+      "repo_id": "c1331338-2cdb-4fd2-a9f7-8cce89dba1d6",
       "repo_full_name": "R",
-      "snapshot_id": "93d6f42f-bc5a-4daa-9b28-824d4a82f0a4",
+      "snapshot_id": "6d0a2b93-c95a-4767-849e-37fd37172815",
       "commit_sha": "6870419aa6e106c3580c45c81d5b688cb31758bd",
       "indexed_files": 201,
-      "symbols": 3018,
-      "edges": 16950,
+      "symbols": 3010,
+      "edges": 16377,
       "routes": 0,
       "languages": {
         "r": 201
       },
       "mode": "noop",
-      "duration_ms": 0,
+      "duration_ms": 13,
       "timings_ms": {
-        "delta_check": 0,
+        "delta_check": 13,
         "resolve_head": 0
       }
     },
     "symbol_breakdown": [
-      {
-        "language": "r",
-        "kind": "document",
-        "count": 7
-      },
       {
         "language": "r",
         "kind": "function",
@@ -93,21 +93,21 @@
       {
         "language": "r",
         "kind": "variable",
-        "count": 1294
+        "count": 1293
       }
     ],
     "edge_breakdown": [
       {
         "kind": "calls",
-        "count": 16950
+        "count": 16377
       }
     ],
-    "r_definition_symbols": 3011
+    "r_definition_symbols": 3010
   },
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 0.208,
+    "seconds": 0.278,
     "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
@@ -127,7 +127,7 @@
     "tool": "r-source-counter",
     "status": "ok",
     "ok": true,
-    "seconds": 0.055,
+    "seconds": 0.052,
     "command": "python3 <R source counter> /tmp/atlas-live-r-ggplot2/repo/R",
     "metrics": {
       "files": 201,
@@ -312,16 +312,17 @@
   },
   "coverage": {
     "atlas_vs_r_source_counter_definition_ratio": 1.0,
-    "atlas_r_definition_symbols": 3011,
+    "atlas_r_definition_symbols": 3010,
     "native_definitions": 3011
   },
   "optimization": {
-    "cycles_run": 5,
-    "stop_reason": "R live smoke covers a graphify detector-only extension by adding Atlas R function, multiline function, S4/R6/ggproto type, and variable symbols; the five-pass saturation report records that graphify exposes no equivalent query rows in this runtime.",
+    "cycles_run": 6,
+    "stop_reason": "R native tree-sitter AST parsing covers graphify's detector-only .r extension and matches r-source-counter functions/types exactly; the single raw-count gap is a source-counter false positive inside a single-quoted string literal, so adding it would reduce Atlas precision.",
     "cycle_notes": [
       "cycle 1: tidyverse/ggplot2 probe showed the generic R rules missed multiline function assignments and ggproto declarations such as GeomPoint and StatSummary.",
       "cycle 2: after widening R lightweight parsing, Atlas covers ggplot2-style functions and ggproto types against the live R source slice; graphify query rows remain detector-only caveats.",
-      "cycles 3-5: repeated live smokes kept native coverage at 1.0 and graphify-equivalent query rows at 0/8, so R query-score improvement is saturated until graphify ships a deterministic R extractor."
+      "cycles 3-5: repeated live smokes kept native coverage at 1.0 and graphify-equivalent query rows at 0/8, so R query-score improvement is saturated until graphify ships a deterministic R extractor.",
+      "cycle 6: replacing the regex route with tree-sitter-r AST parsing preserved exact function/type coverage and 1293/1294 source-counter variables; the lone omitted source-counter row is `i = ...` embedded in a quoted message string in geom-dotplot.R."
     ]
   },
   "query_warmup": {
@@ -340,14 +341,14 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ggplot",
       "atlas_tokens": 6,
       "graphify_tokens": 8,
-      "atlas_ms": 16.912,
-      "graphify_ms": 76.94,
+      "atlas_ms": 17.443,
+      "graphify_ms": 85.977,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": true,
       "atlas_stdout_head": [
-        "ggplot f@plot.R:106 c44 d2"
+        "ggplot f@plot.R:106 c40 d2"
       ],
       "graphify_stdout_head": [
         "No node matching 'ggplot' found."
@@ -360,8 +361,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ggplot.default",
       "atlas_tokens": 7,
       "graphify_tokens": 10,
-      "atlas_ms": 13.468,
-      "graphify_ms": 75.495,
+      "atlas_ms": 14.898,
+      "graphify_ms": 76.719,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -380,8 +381,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain GeomPoint",
       "atlas_tokens": 7,
       "graphify_tokens": 9,
-      "atlas_ms": 14.03,
-      "graphify_ms": 76.013,
+      "atlas_ms": 15.383,
+      "graphify_ms": 77.53,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -400,8 +401,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain geom_point",
       "atlas_tokens": 2,
       "graphify_tokens": 9,
-      "atlas_ms": 16.361,
-      "graphify_ms": 76.13,
+      "atlas_ms": 17.594,
+      "graphify_ms": 86.258,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -420,8 +421,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain StatSummary",
       "atlas_tokens": 9,
       "graphify_tokens": 9,
-      "atlas_ms": 14.796,
-      "graphify_ms": 74.207,
+      "atlas_ms": 14.176,
+      "graphify_ms": 75.311,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -440,8 +441,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain theme",
       "atlas_tokens": 6,
       "graphify_tokens": 8,
-      "atlas_ms": 15.575,
-      "graphify_ms": 92.82,
+      "atlas_ms": 16.821,
+      "graphify_ms": 77.025,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -460,14 +461,14 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain aes",
       "atlas_tokens": 6,
       "graphify_tokens": 7,
-      "atlas_ms": 30.621,
-      "graphify_ms": 82.621,
+      "atlas_ms": 18.056,
+      "graphify_ms": 72.71,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": true,
       "atlas_stdout_head": [
-        "aes f@aes.R:93 df2 c93 d3"
+        "aes f@aes.R:93 df2 c89 d3"
       ],
       "graphify_stdout_head": [
         "No node matching 'aes' found."
@@ -480,8 +481,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain coord_cartesian",
       "atlas_tokens": 11,
       "graphify_tokens": 10,
-      "atlas_ms": 15.012,
-      "graphify_ms": 79.342,
+      "atlas_ms": 13.903,
+      "graphify_ms": 71.674,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,

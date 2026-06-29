@@ -5482,12 +5482,13 @@ def run_smoke(language: str, atlas_bin: str, graphify_bin: str | None) -> dict[s
         }
     elif language == "r":
         optimization = {
-            "cycles_run": 5,
-            "stop_reason": "R live smoke covers a graphify detector-only extension by adding Atlas R function, multiline function, S4/R6/ggproto type, and variable symbols; the five-pass saturation report records that graphify exposes no equivalent query rows in this runtime.",
+            "cycles_run": 6,
+            "stop_reason": "R native tree-sitter AST parsing covers graphify's detector-only .r extension and matches r-source-counter functions/types exactly; the single raw-count gap is a source-counter false positive inside a single-quoted string literal, so adding it would reduce Atlas precision.",
             "cycle_notes": [
                 "cycle 1: tidyverse/ggplot2 probe showed the generic R rules missed multiline function assignments and ggproto declarations such as GeomPoint and StatSummary.",
                 "cycle 2: after widening R lightweight parsing, Atlas covers ggplot2-style functions and ggproto types against the live R source slice; graphify query rows remain detector-only caveats.",
                 "cycles 3-5: repeated live smokes kept native coverage at 1.0 and graphify-equivalent query rows at 0/8, so R query-score improvement is saturated until graphify ships a deterministic R extractor.",
+                "cycle 6: replacing the regex route with tree-sitter-r AST parsing preserved exact function/type coverage and 1293/1294 source-counter variables; the lone omitted source-counter row is `i = ...` embedded in a quoted message string in geom-dotplot.R.",
             ],
         }
     elif language == "swift":
