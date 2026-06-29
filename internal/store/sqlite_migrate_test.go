@@ -2,6 +2,7 @@ package store
 
 import (
 	"context"
+	"fmt"
 	"path/filepath"
 	"testing"
 )
@@ -85,5 +86,62 @@ func TestSQLiteMigrateCreatesOnStaleVersion(t *testing.T) {
 	sd.db.QueryRowContext(ctx, "PRAGMA user_version").Scan(&ver)
 	if ver != sqliteSchemaVersion {
 		t.Fatalf("user_version after migrate = %d, want %d", ver, sqliteSchemaVersion)
+	}
+}
+
+// TestSQLiteMigrateDropsOnVersionBump verifies the dev-stage drop-fresh path: when
+// an existing DB carries a non-zero version BELOW the current one (an incompatible
+// older compact-schema shape), Migrate DROPS the old tables and recreates them
+// clean, discarding stale rows. The local .atlas.db is a derived cache, so the
+// next reindex repopulates — no in-place data migration.
+func TestSQLiteMigrateDropsOnVersionBump(t *testing.T) {
+	ctx := context.Background()
+	d, err := Open(ctx, Options{Kind: "sqlite", SQLitePath: filepath.Join(t.TempDir(), "atlas.db")})
+	if err != nil {
+		t.Fatalf("Open: %v", err)
+	}
+	t.Cleanup(func() { _ = d.Close() })
+	sd := d.(*sqliteDriver)
+
+	// Simulate an older-but-gated DB: apply current schema, then stamp an EARLIER
+	// version and seed a row that a fresh rebuild must discard.
+	if err := d.Migrate(ctx); err != nil {
+		t.Fatalf("seed Migrate: %v", err)
+	}
+	if _, err := sd.db.ExecContext(ctx,
+		"INSERT INTO repos (id, full_name) VALUES ('stale', 'old/repo')"); err != nil {
+		t.Fatalf("seed row: %v", err)
+	}
+	if sqliteSchemaVersion < 2 {
+		t.Skip("needs a non-zero prior version to exercise the drop branch")
+	}
+	if _, err := sd.db.ExecContext(ctx,
+		fmt.Sprintf("PRAGMA user_version=%d", sqliteSchemaVersion-1)); err != nil {
+		t.Fatalf("stamp prior version: %v", err)
+	}
+
+	// Re-migrate: ver (current-1) != 0 and != current -> drop + recreate fresh.
+	if err := d.Migrate(ctx); err != nil {
+		t.Fatalf("upgrade Migrate: %v", err)
+	}
+	var n int
+	if err := sd.db.QueryRowContext(ctx, "SELECT count(*) FROM repos").Scan(&n); err != nil {
+		t.Fatalf("count repos after upgrade: %v", err)
+	}
+	if n != 0 {
+		t.Fatalf("drop-fresh did not discard stale rows: repos count = %d, want 0", n)
+	}
+	var ver int
+	sd.db.QueryRowContext(ctx, "PRAGMA user_version").Scan(&ver)
+	if ver != sqliteSchemaVersion {
+		t.Fatalf("user_version after upgrade = %d, want %d", ver, sqliteSchemaVersion)
+	}
+	// The dead index must be gone after the fresh rebuild (proves new DDL applied).
+	if err := sd.db.QueryRowContext(ctx,
+		"SELECT count(*) FROM sqlite_master WHERE type='index' AND name='idx_symbols_node'").Scan(&n); err != nil {
+		t.Fatalf("count idx_symbols_node: %v", err)
+	}
+	if n != 0 {
+		t.Fatalf("compact schema not applied: idx_symbols_node still present")
 	}
 }

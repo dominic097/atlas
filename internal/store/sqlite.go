@@ -53,17 +53,34 @@ func openSQLite(ctx context.Context, path string) (StorageDriver, error) {
 	return &sqliteDriver{path: path, db: db}, nil
 }
 
-// sqliteSchemaVersion is bumped whenever schemaSQLite changes. Migrate stamps it
-// into PRAGMA user_version after applying the schema, so subsequent opens (the
-// common case — every read query) skip the 22 DDL statements entirely and pay
-// only one pragma read. This is the dominant per-invocation startup cost for
-// query ops, where the actual query is a few ms but schema replay was not.
-const sqliteSchemaVersion = 1
+// sqliteSchemaVersion is bumped whenever schemaSQLite changes shape. Migrate
+// stamps it into PRAGMA user_version after applying the schema, so subsequent
+// opens (the common case — every read query) skip the DDL replay entirely and pay
+// only one pragma read. This is the dominant per-invocation startup cost for query
+// ops, where the actual query is a few ms but schema replay was not.
+//
+// v2 = compact schema (redundant indexes removed; the incremental column
+// compactions ride later bumps). Because a local .atlas.db is a DERIVED cache (the
+// git working tree is the source of truth), a version MISMATCH does a clean
+// DROP+recreate rather than an in-place data migration: the caller (atlas index /
+// atlas watch) reindexes from the working tree afterward. No migration code, no
+// partial-state risk.
+const sqliteSchemaVersion = 2
 
 func (d *sqliteDriver) Migrate(ctx context.Context) error {
 	var ver int
-	if err := d.db.QueryRowContext(ctx, "PRAGMA user_version").Scan(&ver); err == nil && ver >= sqliteSchemaVersion {
+	err := d.db.QueryRowContext(ctx, "PRAGMA user_version").Scan(&ver)
+	if err == nil && ver == sqliteSchemaVersion {
 		return nil // schema already current — skip all DDL replay
+	}
+	// Any non-zero, non-current version (older OR a downgraded future one) is an
+	// INCOMPATIBLE on-disk shape. Drop every Atlas table so the fresh DDL below
+	// recreates them clean; the snapshot data is rebuilt by the next reindex.
+	// ver==0 is a fresh / pre-gate DB with nothing (compatible) to drop.
+	if err == nil && ver != 0 {
+		if _, derr := d.db.ExecContext(ctx, dropAllSQLite); derr != nil {
+			return fmt.Errorf("store: drop stale sqlite schema (v%d): %w", ver, derr)
+		}
 	}
 	if _, err := d.db.ExecContext(ctx, schemaSQLite); err != nil {
 		return fmt.Errorf("store: migrate sqlite: %w", err)
@@ -74,6 +91,21 @@ func (d *sqliteDriver) Migrate(ctx context.Context) error {
 	}
 	return nil
 }
+
+// dropAllSQLite removes every Atlas table (indexes drop with their tables) so a
+// version-mismatched DB can be rebuilt fresh. SQLite DROP TABLE takes one table
+// per statement; order is free because schemaSQLite declares no inter-table FKs.
+// Safe under MaxOpenConns(1): no concurrent reader can observe the gap.
+const dropAllSQLite = `
+DROP TABLE IF EXISTS embeddings;
+DROP TABLE IF EXISTS coverage;
+DROP TABLE IF EXISTS routes;
+DROP TABLE IF EXISTS edges;
+DROP TABLE IF EXISTS symbols;
+DROP TABLE IF EXISTS files;
+DROP TABLE IF EXISTS snapshots;
+DROP TABLE IF EXISTS repos;
+`
 
 func (d *sqliteDriver) Dialect() string { return "sqlite" }
 

@@ -50,7 +50,9 @@ CREATE TABLE IF NOT EXISTS files (
 	imports     TEXT NOT NULL DEFAULT '[]',
 	doc_summary TEXT NOT NULL DEFAULT ''
 );
-CREATE INDEX IF NOT EXISTS idx_files_snapshot ON files (snapshot_id);
+-- idx_files_snapshot (snapshot_id) intentionally omitted: it is a strict prefix
+-- of idx_files_snapshot_path, so the planner already serves bare snapshot_id
+-- scans from the composite. (Audited: ListFiles binds idx_files_snapshot_path.)
 CREATE INDEX IF NOT EXISTS idx_files_snapshot_path ON files (snapshot_id, path);
 
 CREATE TABLE IF NOT EXISTS symbols (
@@ -70,7 +72,9 @@ CREATE TABLE IF NOT EXISTS symbols (
 );
 CREATE INDEX IF NOT EXISTS idx_symbols_snapshot_name ON symbols (snapshot_id, name);
 CREATE INDEX IF NOT EXISTS idx_symbols_snapshot_path ON symbols (snapshot_id, path);
-CREATE INDEX IF NOT EXISTS idx_symbols_node ON symbols (snapshot_id, node_id);
+-- idx_symbols_node (snapshot_id, node_id) intentionally omitted: no query filters
+-- on node_id (node_id is written + read as payload only, never a WHERE/JOIN key).
+-- Re-add if a cross-snapshot node-identity lookup is introduced.
 
 CREATE TABLE IF NOT EXISTS edges (
 	id          TEXT PRIMARY KEY,
@@ -111,7 +115,8 @@ CREATE TABLE IF NOT EXISTS coverage (
 	coverage_type  TEXT NOT NULL DEFAULT '',
 	strength       TEXT NOT NULL DEFAULT ''
 );
-CREATE INDEX IF NOT EXISTS idx_coverage_snapshot ON coverage (snapshot_id);
+-- idx_coverage_snapshot (snapshot_id) intentionally omitted: strict prefix of
+-- idx_coverage_snapshot_symbol, which serves both ListCoverage variants.
 CREATE INDEX IF NOT EXISTS idx_coverage_snapshot_symbol ON coverage (snapshot_id, symbol_ref);
 
 CREATE TABLE IF NOT EXISTS embeddings (
@@ -121,5 +126,7 @@ CREATE TABLE IF NOT EXISTS embeddings (
 	vec         BLOB,
 	PRIMARY KEY (snapshot_id, symbol_id)
 );
-CREATE INDEX IF NOT EXISTS idx_embeddings_snapshot ON embeddings (snapshot_id);
+-- idx_embeddings_snapshot (snapshot_id) intentionally omitted: snapshot_id is the
+-- leading column of the (snapshot_id, symbol_id) PK, which already serves
+-- NearestSymbols' bare snapshot_id filter.
 `
