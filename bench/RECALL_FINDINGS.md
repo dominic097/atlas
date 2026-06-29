@@ -60,6 +60,7 @@ validated with the focused parser test suite.
 | elixir | phoenixframework/phoenix `lib` | tree-sitter-elixir 0.3.5 | 1642 | 1642 | 1.00x | 6.61x | 22.95x | Native tree-sitter AST walker preserves module/protocol/implementation/function/macro/delegate/guard kinds and adds operator-function support. |
 | objective-c | SDWebImage/SDWebImage `.m`/`.mm` graphify scope | tree-sitter-objc 3.0.2 | 971 | 971 | 1.00x | 6.78x | 23.63x | Native tree-sitter AST walker preserves full Objective-C selectors; `storeImage:forKey:completion:` remains documented as graphify-missing because graphify flattens selector names. |
 | julia | JuliaIO/JSON.jl `src` | tree-sitter-julia 0.23.1 | 310 | 310 | 1.00x | 5.75x | 12.72x | Native tree-sitter AST walker preserves module/type/function/macro/constant coverage and precise callable-assignment handling. |
+| dart | dart-lang/http `pkgs/http/lib` | tree-sitter-dart 0.1.0 | 180 | 180 | 1.00x | 6.25x | 8.54x | Native tree-sitter AST walker preserves type/function/constructor/getter/setter/typedef coverage while avoiding constructor-call false positives. |
 
 ## The consistent definition surface (applied uniformly to all 7 languages)
 

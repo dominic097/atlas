@@ -5400,11 +5400,12 @@ def run_smoke(language: str, atlas_bin: str, graphify_bin: str | None) -> dict[s
         }
     elif language == "dart":
         optimization = {
-            "cycles_run": 2,
-            "stop_reason": "Dart live smoke met the current 5x latency/token thresholds and matched the tree-sitter-dart definition coverage proxy after replacing generic regex parsing with a Dart-specific signature scanner.",
+            "cycles_run": 3,
+            "stop_reason": "Dart native tree-sitter AST parsing met the current 5x latency/token thresholds and matched the tree-sitter-dart definition coverage proxy.",
             "cycle_notes": [
                 "cycle 1: dart-lang/http probe showed the generic fallback over-indexed constructor calls such as Duration and missed real generic-return methods such as `Future<StreamedResponse> send(...)`.",
                 "cycle 2: after adding a Dart-specific parser, Atlas/tree-sitter-dart definition coverage matched on the live package slice and exact-symbol query rows exceeded 5x for latency and token output vs graphify.",
+                "cycle 3: replacing the signature scanner with a tree-sitter-dart AST walker preserved exact type/function/constructor/getter/setter/typedef coverage while avoiding constructor-call false positives.",
             ],
         }
     elif language == "dotnet":

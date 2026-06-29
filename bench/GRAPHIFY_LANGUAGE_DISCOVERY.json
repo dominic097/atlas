@@ -157,7 +157,7 @@
       "dart",
       ".dart",
       "extract_dart",
-      "lightweight regex"
+      "native tree-sitter AST"
     ],
     [
       "verilog/systemverilog",
