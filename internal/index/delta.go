@@ -17,6 +17,7 @@ package index
 import (
 	"context"
 	"fmt"
+	"os"
 	"sort"
 	"strings"
 	"time"
@@ -181,10 +182,29 @@ func makeSet(slices ...[]string) map[string]struct{} {
 // Any error here is the caller's signal to fall back to a full index — runDelta
 // must not have side effects before SaveSnapshot, which it doesn't (all work is
 // in-memory until the single save).
-func runDelta(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, base *deltaBase, scan *workTreeScan, repoFullName, absRoot, head string, opts Options, start time.Time) (*graph.Snapshot, Stats, error) {
+func runDelta(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, base *deltaBase, scan *workTreeScan, repoFullName, absRoot, head string, opts Options, start time.Time, seedTimings map[string]int64) (*graph.Snapshot, Stats, error) {
 	baseCommit := base.commit
 
+	// reuseSnapshotID predicts SaveSnapshot's (repo_id, commit_sha) idempotency:
+	// when the working tree is re-indexed against the SAME commit (the common
+	// uncommitted-edit case), SaveSnapshot reuses the base snapshot's id and wipes
+	// + rebuilds its child rows. We mirror that decision here so the whole delta —
+	// id stamping and the lexical update — is consistent with what gets persisted.
+	// A NEW commit means a brand-new snapshot id, which takes the full lexical
+	// rebuild path below (correct: there is no prior doc set to update in place).
+	reuseSnapshotID := head != "" && head == baseCommit
+
+	// Seed with the pre-delta phases the caller already measured (resolve_head,
+	// delta_check) so the delta's timings_ms is a complete profile rather than only
+	// the in-runDelta work. delta_check is the working-tree discover+hash+classify
+	// scan — also surfaced under the canonical discover_files name.
 	timings := map[string]int64{}
+	for k, v := range seedTimings {
+		timings[k] = v
+	}
+	if dc, ok := seedTimings["delta_check"]; ok {
+		timings["discover_files"] = dc
+	}
 	phase := func(name string, since time.Time) {
 		timings[name] += time.Since(since).Milliseconds()
 	}
@@ -267,6 +287,24 @@ func runDelta(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, b
 
 	mergedSymbols := append(keepBaseSymbols(baseSymbols, touched), newSymbols...)
 	mergedEdges := append(keepBaseEdges(baseEdges, touched), newEdges...)
+
+	// For the incremental lexical update (reused-snapshot path only): the docs to
+	// delete are the BASE snapshot's symbols whose owning file is touched (changed
+	// ∪ added ∪ deleted). Those docs were indexed under this snapshot id keyed by
+	// their (base) symbol id; deleting them and re-indexing newSymbols swaps exactly
+	// the touched files' docs while every carried-forward doc is left in place. We
+	// snapshot these ids BEFORE the re-stamp loop, which would otherwise overwrite
+	// them. (Harmless to compute even when reuse is false — it's then unused.)
+	var lexicalRemoveIDs []string
+	if reuseSnapshotID && lx != nil {
+		for i := range baseSymbols {
+			if _, hit := touched[canonicalPath(baseSymbols[i].Path)]; hit {
+				if id := strings.TrimSpace(baseSymbols[i].ID); id != "" {
+					lexicalRemoveIDs = append(lexicalRemoveIDs, id)
+				}
+			}
+		}
+	}
 	// Resolve the changed-file raw routes against the FULL merged symbol set so a
 	// handler defined in an untouched file still resolves to its file, then append
 	// to the kept base routes.
@@ -358,9 +396,23 @@ func runDelta(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, b
 	sortRoutes(mergedRoutes)
 	phase("sort", sortStart)
 
+	// build_symbols_edges is the canonical "construct the final graph from parsed
+	// facts" phase, shared with the full path: here it spans loading the base graph,
+	// the go/types enrichment, and the deterministic re-sort of the merged rows.
+	timings["build_symbols_edges"] = timings["base_load"] + timings["go_types"] + timings["sort"]
+
+	// When the commit is unchanged, SaveSnapshot will reuse the base snapshot id;
+	// stamp it here so every child row's SnapshotID and the lexical update key the
+	// SAME id SaveSnapshot persists under. On a new commit, mint a fresh id (the
+	// full lexical rebuild path handles it).
+	snapshotID := uuid.NewString()
+	if reuseSnapshotID {
+		snapshotID = base.snapshot.ID
+	}
+
 	now := time.Now().UTC()
 	snapshot := &graph.Snapshot{
-		ID:          uuid.NewString(),
+		ID:          snapshotID,
 		RepoID:      base.repoID,
 		CommitSHA:   head,
 		CommitRange: baseCommit + ".." + head,
@@ -396,7 +448,16 @@ func runDelta(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, b
 	}
 	for i := range mergedSymbols {
 		mergedSymbols[i].SnapshotID = snapshot.ID
-		mergedSymbols[i].ID = uuid.NewString()
+		// On the reused-snapshot path the lexical index is updated INCREMENTALLY:
+		// carried-forward docs are keyed by their original symbol ids and left in
+		// place, so the persisted symbol rows MUST keep those same ids or a kept doc
+		// would no longer map to its row (engine.lexicalSearch maps a hit's symbol id
+		// back through ListSymbols). SaveSnapshot deletes this snapshot's child rows
+		// before re-inserting, so reusing an original id cannot collide. On a new
+		// snapshot id we re-stamp a fresh id (the full lexical rebuild keys it).
+		if !reuseSnapshotID {
+			mergedSymbols[i].ID = uuid.NewString()
+		}
 	}
 	for i := range mergedEdges {
 		mergedEdges[i].SnapshotID = snapshot.ID
@@ -433,12 +494,38 @@ func runDelta(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, b
 		return nil, Stats{}, fmt.Errorf("index: delta save snapshot: %w", err)
 	}
 	phase("persist", persistStart)
+	phase("write_sqlite", persistStart)
 
 	if lx != nil {
-		// Full lexical rebuild for the new snapshot id (correct + fine for v1).
 		lexicalStart := time.Now()
-		if err := lx.BuildForSnapshot(snapshot.ID, mergedSymbols); err != nil {
-			return nil, Stats{}, fmt.Errorf("index: delta build lexical index: %w", err)
+		// Take the incremental path ONLY when SaveSnapshot actually persisted under the
+		// reused base id (snapshot.ID is mutated in place by SaveSnapshot's idempotency
+		// lookup). If our reuse prediction held, the base docs live under this exact id
+		// and carried-forward symbol ids were preserved, so an in-place swap of the
+		// touched files' docs is correct. In any other case (new id, or SaveSnapshot
+		// resolved a different id than predicted) fall back to a full rebuild for the
+		// id that was actually persisted — always correct, never a stale index.
+		// ATLAS_LEXICAL_FULL_DELTA=1 forces the legacy full-rebuild path even when the
+		// incremental one is eligible. It is an escape hatch (distrust the incremental
+		// update) and the A/B measurement lever for the lexical-phase before/after.
+		forceFull := os.Getenv("ATLAS_LEXICAL_FULL_DELTA") == "1"
+		if reuseSnapshotID && snapshot.ID == base.snapshot.ID && !forceFull {
+			// INCREMENTAL: delete only the touched files' base docs and index only the
+			// changed/added files' fresh symbols; every untouched file's doc is left in
+			// place. Search-equivalent to a full rebuild of mergedSymbols because the
+			// carried-forward docs keep their original symbol-id keys, which the persisted
+			// rows preserve above — at a fraction of the work.
+			if err := lx.UpdateForSnapshot(snapshot.ID, lexicalRemoveIDs, newSymbols); err != nil {
+				return nil, Stats{}, fmt.Errorf("index: delta update lexical index: %w", err)
+			}
+			snapshot.Metadata["lexical_mode"] = "incremental"
+		} else {
+			// NEW snapshot id (new commit, or an unexpected id): no prior doc set to update
+			// in place, so build the full lexical index for the persisted id.
+			if err := lx.BuildForSnapshot(snapshot.ID, mergedSymbols); err != nil {
+				return nil, Stats{}, fmt.Errorf("index: delta build lexical index: %w", err)
+			}
+			snapshot.Metadata["lexical_mode"] = "full_rebuild"
 		}
 		phase("lexical", lexicalStart)
 	}
@@ -454,6 +541,9 @@ func runDelta(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, b
 		Mode:         "delta",
 		ChangedFiles: len(changedSet),
 		TimingsMS:    timings,
+	}
+	if err := persistIndexTelemetry(ctx, drv, snapshot, stats); err != nil {
+		return nil, Stats{}, err
 	}
 	return snapshot, stats, nil
 }

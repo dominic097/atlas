@@ -216,6 +216,96 @@ func (ix *Index) BuildForSnapshot(snapshotID string, syms []graph.CodeSymbol) er
 	return nil
 }
 
+// UpdateForSnapshot incrementally updates the bleve index for snapshotID in
+// place, WITHOUT rebuilding the whole snapshot. It is the delta-path counterpart
+// to BuildForSnapshot: when an index run reuses an existing snapshot id (an
+// uncommitted edit re-indexed against the same commit — see SaveSnapshot's
+// (repo_id, commit_sha) idempotency), only the changed files' docs need to move,
+// so a full BuildForSnapshot over every merged symbol is wasted work.
+//
+// It does two things, in one batch, under the write lock:
+//
+//   - DELETE: every doc id in removeSymbolIDs is removed. The caller passes the
+//     BASE snapshot's symbol ids for the touched files (changed ∪ added ∪
+//     deleted) — those are exactly the docs that were indexed under this snapshot
+//     id and must go. The doc-id scheme is the symbol id (matching
+//     BuildForSnapshot's batch.Index(s.ID, …)), so a base symbol id deletes the
+//     base doc it created.
+//   - INDEX: every symbol in newSymbols is (re)indexed under its id, identically
+//     to BuildForSnapshot (same symbolDoc shape, same analyzer, same batching).
+//     The caller passes the freshly-parsed symbols for the changed/added files.
+//
+// The net effect is byte-for-byte equivalent — for search purposes — to a full
+// BuildForSnapshot of the merged symbol set, because the carried-forward
+// (untouched-file) docs were never disturbed and remain keyed by their original
+// (preserved) symbol ids, while the touched files' docs are swapped wholesale.
+// The caller MUST preserve the carried-forward symbols' ids across the reused
+// snapshot (no re-stamp) so the kept docs still map to the persisted rows.
+//
+// Re-indexing a doc id that does not yet exist is an insert; deleting a doc id
+// that is absent is a harmless no-op — so an "added" file (no base doc) and a
+// "deleted" file (no new symbol) are both handled by passing the right ids.
+func (ix *Index) UpdateForSnapshot(snapshotID string, removeSymbolIDs []string, newSymbols []graph.CodeSymbol) error {
+	if ix == nil || ix.idx == nil {
+		return fmt.Errorf("lexical: index is nil")
+	}
+	ix.mu.Lock()
+	defer ix.mu.Unlock()
+
+	batch := ix.idx.NewBatch()
+	n := 0
+	flush := func() error {
+		if batch.Size() == 0 {
+			return nil
+		}
+		if err := ix.idx.Batch(batch); err != nil {
+			return fmt.Errorf("lexical: update batch: %w", err)
+		}
+		batch = ix.idx.NewBatch()
+		return nil
+	}
+
+	for _, id := range removeSymbolIDs {
+		if strings.TrimSpace(id) == "" {
+			continue
+		}
+		batch.Delete(id)
+		n++
+		if n%indexBatchSize == 0 {
+			if err := flush(); err != nil {
+				return err
+			}
+		}
+	}
+
+	for i := range newSymbols {
+		s := &newSymbols[i]
+		if strings.TrimSpace(s.ID) == "" {
+			continue
+		}
+		d := symbolDoc{
+			SnapshotID: snapshotID,
+			Name:       s.Name,
+			Kind:       s.Kind,
+			Signature:  s.Signature,
+			Doc:        s.Doc,
+			Path:       s.Path,
+			Language:   s.Language,
+		}
+		if err := batch.Index(s.ID, d); err != nil {
+			// Skip a single bad doc rather than abort the whole update.
+			continue
+		}
+		n++
+		if n%indexBatchSize == 0 {
+			if err := flush(); err != nil {
+				return err
+			}
+		}
+	}
+	return flush()
+}
+
 // Search runs a code-aware disjunction query scoped to snapshotID and returns
 // the top-N hits by BM25 score (descending). The query is matched against the
 // name (boosted) / signature / doc / path fields, with each query term passed

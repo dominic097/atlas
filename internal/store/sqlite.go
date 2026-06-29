@@ -524,6 +524,26 @@ func sqliteBulkInsert(ctx context.Context, tx *sql.Tx, prefix string, rows [][]a
 	return nil
 }
 
+func (d *sqliteDriver) UpdateSnapshotMetadata(ctx context.Context, snapshotID string, metadata graph.JSONBMap) error {
+	if strings.TrimSpace(snapshotID) == "" {
+		return fmt.Errorf("store: snapshot id is required")
+	}
+	meta, err := marshalJSONMap(metadata)
+	if err != nil {
+		return fmt.Errorf("store: marshal snapshot metadata: %w", err)
+	}
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	res, err := d.db.ExecContext(ctx, `UPDATE snapshots SET metadata = ? WHERE id = ?`, meta, snapshotID)
+	if err != nil {
+		return fmt.Errorf("store: update snapshot metadata: %w", err)
+	}
+	if n, _ := res.RowsAffected(); n == 0 {
+		return fmt.Errorf("store: snapshot %q not found", snapshotID)
+	}
+	return nil
+}
+
 const snapshotCols = `id, repo_id, commit_sha, branch, commit_range, file_count, symbol_count, edge_count, route_count, metadata, created_at`
 
 func scanSnapshot(sc interface{ Scan(...any) error }) (graph.Snapshot, error) {
@@ -787,6 +807,56 @@ func (d *sqliteDriver) SymbolsByPath(ctx context.Context, snapshotID, path strin
 	return out, rows.Err()
 }
 
+// SymbolsByIDs returns every symbol whose id is in `ids`, served by the symbols
+// primary key (id) scoped to snapshot_id. The IN-list is chunked so a large hit
+// set never blows the bound-parameter limit; all matching rows are returned with
+// node_id + decoded metadata (no dedupe), exactly like SymbolsByName. This
+// targeted form replaces the whole-snapshot ListSymbols scan the search/context
+// paths used only to resolve a handful of known hit ids.
+func (d *sqliteDriver) SymbolsByIDs(ctx context.Context, snapshotID string, ids []string) ([]graph.CodeSymbol, error) {
+	if len(ids) == 0 {
+		return nil, nil
+	}
+	var out []graph.CodeSymbol
+	for start := 0; start < len(ids); start += symbolsChunk {
+		end := start + symbolsChunk
+		if end > len(ids) {
+			end = len(ids)
+		}
+		chunk := ids[start:end]
+
+		placeholders := strings.Repeat("?,", len(chunk))
+		placeholders = placeholders[:len(placeholders)-1] // trim trailing comma
+		args := make([]any, 0, len(chunk)+1)
+		args = append(args, snapshotID)
+		for _, id := range chunk {
+			args = append(args, id)
+		}
+
+		query := `SELECT ` + symbolCols + `
+			FROM symbols WHERE snapshot_id = ? AND id IN (` + placeholders + `)
+			ORDER BY path, start_line, name`
+		rows, err := d.db.QueryContext(ctx, query, args...)
+		if err != nil {
+			return nil, fmt.Errorf("store: symbols by ids: %w", err)
+		}
+		for rows.Next() {
+			sym, err := scanSymbolRow(rows)
+			if err != nil {
+				rows.Close()
+				return nil, fmt.Errorf("store: scan symbol: %w", err)
+			}
+			out = append(out, sym)
+		}
+		if err := rows.Err(); err != nil {
+			rows.Close()
+			return nil, fmt.Errorf("store: symbols by ids: %w", err)
+		}
+		rows.Close()
+	}
+	return out, nil
+}
+
 // callEdgesChunk is the IN-list batch size: SQLite caps bound parameters
 // (default 999); 400 to_refs + the snapshot_id stays comfortably under it.
 const callEdgesChunk = 400
@@ -920,6 +990,58 @@ func (d *sqliteDriver) RefEdgesByToRefs(ctx context.Context, snapshotID string, 
 		if err := rows.Err(); err != nil {
 			rows.Close()
 			return nil, fmt.Errorf("store: ref edges by to_refs: %w", err)
+		}
+		rows.Close()
+	}
+	return out, nil
+}
+
+// EdgesByFromFiles returns every edge (any kind) whose from_file is in fromFiles,
+// served by idx_edges_snapshot_fromfile. The IN-list is chunked so a large
+// changed-path set never blows the bound-parameter limit; all matching edges are
+// returned with Metadata populated (no dedupe). This is the targeted counterpart
+// to ListEdges for the `context` op's changed-path edge slice.
+func (d *sqliteDriver) EdgesByFromFiles(ctx context.Context, snapshotID string, fromFiles []string) ([]graph.DependencyEdge, error) {
+	fromFiles = uniqueNonEmpty(fromFiles)
+	if len(fromFiles) == 0 {
+		return nil, nil
+	}
+	var out []graph.DependencyEdge
+	for start := 0; start < len(fromFiles); start += callEdgesChunk {
+		end := start + callEdgesChunk
+		if end > len(fromFiles) {
+			end = len(fromFiles)
+		}
+		chunk := fromFiles[start:end]
+
+		placeholders := strings.Repeat("?,", len(chunk))
+		placeholders = placeholders[:len(placeholders)-1] // trim trailing comma
+		args := make([]any, 0, len(chunk)+1)
+		args = append(args, snapshotID)
+		for _, f := range chunk {
+			args = append(args, f)
+		}
+
+		// ORDER BY from_file, to_ref, kind mirrors ListEdges so the targeted slice
+		// arrives in the SAME order the load-all filter produced.
+		query := `SELECT ` + edgeCols + `
+			FROM edges WHERE snapshot_id = ? AND from_file IN (` + placeholders + `)
+			ORDER BY from_file, to_ref, kind`
+		rows, err := d.db.QueryContext(ctx, query, args...)
+		if err != nil {
+			return nil, fmt.Errorf("store: edges by from_files: %w", err)
+		}
+		for rows.Next() {
+			e, err := scanEdgeRow(rows)
+			if err != nil {
+				rows.Close()
+				return nil, fmt.Errorf("store: scan edge: %w", err)
+			}
+			out = append(out, e)
+		}
+		if err := rows.Err(); err != nil {
+			rows.Close()
+			return nil, fmt.Errorf("store: edges by from_files: %w", err)
 		}
 		rows.Close()
 	}

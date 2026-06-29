@@ -112,6 +112,44 @@ func TestStatusOK(t *testing.T) {
 	}
 }
 
+func TestStatsOK(t *testing.T) {
+	s := newTestServer(t, "")
+	rec := do(t, s, http.MethodGet, "/api/v1/stats?limit=5", nil, nil)
+	if rec.Code != http.StatusOK {
+		t.Fatalf("stats: got %d, body=%s", rec.Code, rec.Body.String())
+	}
+	var res struct {
+		RepoFullName string `json:"repo_full_name"`
+		Latest       struct {
+			Mode      string           `json:"mode"`
+			Files     int              `json:"files"`
+			Symbols   int              `json:"symbols"`
+			TimingsMS map[string]int64 `json:"timings_ms"`
+		} `json:"latest"`
+		Graph struct {
+			Symbols int `json:"symbols"`
+			Edges   int `json:"edges"`
+		} `json:"graph"`
+		HistoryReturned int `json:"history_returned"`
+	}
+	decodeData(t, rec, &res)
+	if res.RepoFullName != "org/sample" {
+		t.Fatalf("repo full name = %q, want org/sample", res.RepoFullName)
+	}
+	if res.Latest.Mode != "full" || res.Latest.Files == 0 || res.Latest.Symbols == 0 {
+		t.Fatalf("latest stats look wrong: %+v", res.Latest)
+	}
+	if len(res.Latest.TimingsMS) == 0 {
+		t.Fatalf("latest timings should be persisted")
+	}
+	if res.Graph.Symbols == 0 || res.Graph.Edges == 0 {
+		t.Fatalf("graph stats should include symbols and edges: %+v", res.Graph)
+	}
+	if res.HistoryReturned != 1 {
+		t.Fatalf("history_returned = %d, want 1", res.HistoryReturned)
+	}
+}
+
 func TestSearchOK(t *testing.T) {
 	s := newTestServer(t, "")
 	rec := do(t, s, http.MethodGet, "/api/v1/search?q=Caller", nil, nil)

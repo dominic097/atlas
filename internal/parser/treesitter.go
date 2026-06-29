@@ -1219,6 +1219,14 @@ func walkCAST(root *tree_sitter.Node, src []byte) ([]symbolDraft, []string) {
 			if sym, ok := cFunctionSymbol(child, src); ok {
 				symbols = append(symbols, sym)
 			}
+			// An unbalanced function-like macro in THIS function's body (Unity's
+			// EXPECT_ABORT_BEGIN opens a brace VERIFY_FAILS_END closes) can make
+			// tree-sitter nest the FOLLOWING function inside this one's body-ERROR.
+			// Recover those buried siblings; guarded on an ERROR child so well-formed
+			// bodies are untouched.
+			if body := child.ChildByFieldName("body"); body != nil && cBodyHasError(body) {
+				symbols = append(symbols, recoverFromError(body, src)...)
+			}
 			return false
 		case "class_specifier", "struct_specifier":
 			symbols = append(symbols, cppTypeSymbols(child, src)...)
@@ -1232,15 +1240,360 @@ func walkCAST(root *tree_sitter.Node, src []byte) ([]symbolDraft, []string) {
 			}
 			return false
 		case "type_definition":
-			// `typedef enum {...} ValueType;` — the enum_specifier is anonymous
-			// and the real type name is the type_definition's declarator. Emit it
-			// under the typedef name.
-			symbols = append(symbols, cTypedefEnumSymbols(child, src)...)
+			// `typedef enum {...} ValueType;` and `typedef struct NAME {...} NAME;`.
+			// The wrapped specifier may be anonymous, so the real type name is the
+			// type_definition's trailing declarator. Emit under the typedef name.
+			symbols = append(symbols, cTypedefSymbols(child, src)...)
+			return false
+		case "ERROR":
+			// tree-sitter has no C preprocessor, so unbalanced function-like macros
+			// (Unity's EXPECT_ABORT_BEGIN/VERIFY_FAILS_END) and #if-interleaved code
+			// (leveldb's Limiter member-init list) produce ERROR nodes that swallow
+			// real definitions. Descend into the ERROR subtree and recover the
+			// orphaned class/struct/function/enum nodes buried inside. Each recovered
+			// node is a genuine syntactic definition, so precision is preserved; the
+			// caller de-dups so a def reachable by both paths is emitted once.
+			symbols = append(symbols, recoverFromError(child, src)...)
 			return false
 		}
 		return true
 	})
-	return symbols, imports
+	return dedupDrafts(symbols), imports
+}
+
+// dedupDrafts collapses drafts that name the SAME definition (same name + start
+// line) so a def reachable by multiple recovery paths is emitted once. ERROR-node
+// recovery can rediscover a definition the normal walk already produced — e.g. a
+// member recovered as a `method` (with receiver context) by cppTypeSymbols AND as
+// a bare `function` by the flat shred scanner. When two drafts collide we keep the
+// RICHER one (a method/constructor carrying a recv_type beats a bare function),
+// which preserves both correct kind and precision (honest def counts). A name at a
+// given source line is a single definition, so this never merges distinct symbols.
+func dedupDrafts(in []symbolDraft) []symbolDraft {
+	if len(in) < 2 {
+		return in
+	}
+	idx := make(map[string]int, len(in))
+	out := make([]symbolDraft, 0, len(in))
+	for _, d := range in {
+		// Collapse callables (function/method/constructor) that share a name+line
+		// regardless of kind — that is the SAME definition reached two ways (e.g.
+		// recovered as a method by cppTypeSymbols and as a bare function by the
+		// shred scanner). Types keep their kind in the key so a one-line
+		// `class Foo { Foo(); }` never merges the class with its constructor.
+		family := d.kind
+		if cCallableKind(d.kind) {
+			family = "callable"
+		}
+		k := family + "\x00" + d.name + "\x00" + itoa(d.startLine)
+		if at, ok := idx[k]; ok {
+			// Keep the richer draft: a method/constructor with a receiver type beats
+			// a bare function (correct kind + honest count = precision).
+			if out[at].recvType == "" && d.recvType != "" {
+				out[at] = d
+			}
+			continue
+		}
+		idx[k] = len(out)
+		out = append(out, d)
+	}
+	return out
+}
+
+// cCallableKind reports whether a draft kind is a callable definition (function,
+// method or constructor) for dedup-family grouping.
+func cCallableKind(kind string) bool {
+	switch kind {
+	case "function", "method", "constructor":
+		return true
+	}
+	return false
+}
+
+// recoverableContainerKinds are nodes that, when buried under an ERROR, may still
+// hold well-formed definitions we should descend into during error recovery.
+var recoverableContainerKinds = map[string]bool{
+	"ERROR":                 true,
+	"preproc_if":            true,
+	"preproc_ifdef":         true,
+	"preproc_else":          true,
+	"preproc_elif":          true,
+	"linkage_specification": true, // extern "C" { ... }
+	"declaration_list":      true,
+	"namespace_definition":  true,
+}
+
+// recoverFromError walks an ERROR subtree (and any nested preproc/container nodes)
+// and emits the genuine definitions buried inside it:
+//   - class_specifier / struct_specifier → cppTypeSymbols (recurses members)
+//   - function_definition / enum_specifier → their normal handlers
+//   - an orphaned function_declarator immediately followed by a `{` sibling: the
+//     ERROR split a real `RetType name(args) { body }` into loose siblings (Unity
+//     testXxx defs), so reassemble it into a function/method draft.
+//
+// It does NOT emit bare declarators without a following body brace (those are
+// prototypes/macro calls), so no forward-declaration or macro noise is added.
+func recoverFromError(node *tree_sitter.Node, src []byte) []symbolDraft {
+	if node == nil {
+		return nil
+	}
+	var out []symbolDraft
+	n := node.ChildCount()
+	for i := uint(0); i < n; i++ {
+		child := node.Child(i)
+		if child == nil {
+			continue
+		}
+		switch child.Kind() {
+		case "class_specifier", "struct_specifier":
+			out = append(out, cppTypeSymbols(child, src)...)
+		case "function_definition":
+			if sym, ok := cFunctionSymbol(child, src); ok {
+				out = append(out, sym)
+			}
+			// A buried function's OWN body may in turn ERROR-swallow the next
+			// function (Unity chains testA→testB→testC through nested body-ERRORs),
+			// so recurse into it when corrupted.
+			if body := child.ChildByFieldName("body"); body != nil && cBodyHasError(body) {
+				out = append(out, recoverFromError(body, src)...)
+			}
+		case "enum_specifier":
+			if sym, ok := cEnumSymbol(child, src, ""); ok {
+				out = append(out, sym)
+			}
+		case "type_definition":
+			out = append(out, cTypedefSymbols(child, src)...)
+		case "field_declaration", "declaration":
+			// A real class/struct/enum DEFINITION buried under an ERROR is wrapped in
+			// a field_declaration/declaration (e.g. env_posix.cc's PosixSequentialFile
+			// nested in the #if-mangled Limiter body). Unwrap it. We only recurse into
+			// aggregate/enum specifiers (real defs); a bare field_declaration with a
+			// function_declarator here is a prototype with no body, so it is skipped
+			// (precision — no forward-decl noise).
+			if nested := childNode(child, "class_specifier"); nested != nil {
+				out = append(out, cppTypeSymbols(nested, src)...)
+			} else if nested := childNode(child, "struct_specifier"); nested != nil {
+				out = append(out, cppTypeSymbols(nested, src)...)
+			} else if e := childNode(child, "enum_specifier"); e != nil {
+				if sym, ok := cEnumSymbol(e, src, ""); ok {
+					out = append(out, sym)
+				}
+			}
+		case "function_declarator":
+			// Orphaned declarator: a real definition only if a `{` body brace
+			// follows it among the ERROR's children (guards against prototypes).
+			if errorDeclaratorHasBody(node, i) {
+				if sym, ok := cOrphanFunctionSymbol(child, src); ok {
+					out = append(out, sym)
+				}
+			}
+		default:
+			if recoverableContainerKinds[child.Kind()] {
+				out = append(out, recoverFromError(child, src)...)
+			}
+		}
+	}
+	// Deeply-shredded function headers (Unity testunity.c: an unbalanced
+	// function-like macro fragments `void testXxx(void) { ... }` so the name,
+	// parens and body brace land in different ERROR fragments under this node and
+	// never form a function_declarator). Scan the flat token stream of THIS ERROR
+	// for `<type> <name> ( ... ) {` definitions the structural cases above missed.
+	out = append(out, recoverShreddedFunctions(node, src)...)
+	return out
+}
+
+// cBodyHasError reports whether a function/compound body contains a direct ERROR
+// child — the cheap guard that an unbalanced macro corrupted it and may be hiding
+// a following definition that recoverFromError should pull out.
+func cBodyHasError(body *tree_sitter.Node) bool {
+	for i := uint(0); i < body.ChildCount(); i++ {
+		if c := body.Child(i); c != nil && c.Kind() == "ERROR" {
+			return true
+		}
+	}
+	return false
+}
+
+// shredTok is a flattened, document-ordered token used to recognise a shredded
+// function header `<type> <name> ( params ) {` whose pieces tree-sitter scattered
+// across ERROR fragments. Only the few token kinds that disambiguate a definition
+// from a macro call / prototype are collected.
+type shredTok struct {
+	kind string // "type" | "id" | "(" | ")" | "{" | ";"
+	text string
+	line int
+}
+
+// recoverShreddedFunctions reconstructs function DEFINITIONS from the flat token
+// stream of an ERROR subtree. It emits a symbol only for the precise sequence
+//
+//	<type> <identifier> ( … balanced … ) {
+//
+// i.e. a name preceded by a return type and FOLLOWED by a body-opening `{` (not a
+// `;`). A trailing `;` (prototype) or no brace (macro call/statement) is rejected,
+// and ALL-CAPS macro names are dropped — so assertion-macro invocations like
+// `TEST_ASSERT_INT_WITHIN(...)` are never emitted (precision preserved). This only
+// fires inside ERROR nodes, so well-formed code is untouched and deterministic.
+func recoverShreddedFunctions(errNode *tree_sitter.Node, src []byte) []symbolDraft {
+	var toks []shredTok
+	collectShredTokens(errNode, src, &toks)
+	if len(toks) < 4 {
+		return nil
+	}
+	var out []symbolDraft
+	seen := map[string]struct{}{}
+	for i := 0; i+2 < len(toks); i++ {
+		// pattern start: type, id, "("
+		if toks[i].kind != "type" || toks[i+1].kind != "id" || toks[i+2].kind != "(" {
+			continue
+		}
+		name := toks[i+1].text
+		if name == "" || isMacroAnnotationName(name) {
+			continue
+		}
+		// find the matching ")" with paren depth, then require the next
+		// brace/semicolon token to be "{" (a body) — that is what marks a def.
+		depth := 0
+		j := i + 2
+		closed := -1
+		for ; j < len(toks); j++ {
+			switch toks[j].kind {
+			case "(":
+				depth++
+			case ")":
+				depth--
+				if depth == 0 {
+					closed = j
+				}
+			}
+			if closed >= 0 {
+				break
+			}
+		}
+		if closed < 0 || closed+1 >= len(toks) {
+			continue
+		}
+		next := toks[closed+1]
+		if next.kind != "{" {
+			// ";" (prototype) or anything else (macro call / expression) → not a def.
+			continue
+		}
+		key := name + "\x00" + itoa(toks[i+1].line)
+		if _, dup := seen[key]; dup {
+			continue
+		}
+		seen[key] = struct{}{}
+		out = append(out, symbolDraft{
+			name:      name,
+			kind:      "function",
+			signature: name + "()",
+			startLine: toks[i+1].line,
+			endLine:   next.line,
+		})
+		i = closed // skip past the consumed header
+	}
+	return out
+}
+
+// collectShredTokens DFS-flattens an ERROR subtree into the minimal token stream
+// recoverShreddedFunctions needs. A `parenthesized_declarator`/`parameter_list`
+// boundary still contributes its `(`/`)` leaves, so the params of a scattered
+// header are seen in order.
+func collectShredTokens(node *tree_sitter.Node, src []byte, out *[]shredTok) {
+	if node == nil {
+		return
+	}
+	switch node.Kind() {
+	case "primitive_type", "sized_type_specifier":
+		*out = append(*out, shredTok{kind: "type", text: nodeText(node, src), line: int(node.StartPosition().Row) + 1})
+		return
+	case "type_identifier":
+		*out = append(*out, shredTok{kind: "type", text: nodeText(node, src), line: int(node.StartPosition().Row) + 1})
+		return
+	case "identifier", "field_identifier":
+		*out = append(*out, shredTok{kind: "id", text: nodeText(node, src), line: int(node.StartPosition().Row) + 1})
+		return
+	case "(":
+		*out = append(*out, shredTok{kind: "(", line: int(node.StartPosition().Row) + 1})
+		return
+	case ")":
+		*out = append(*out, shredTok{kind: ")", line: int(node.StartPosition().Row) + 1})
+		return
+	case "{":
+		*out = append(*out, shredTok{kind: "{", line: int(node.StartPosition().Row) + 1})
+		return
+	case "}":
+		// closing brace is not needed for header recognition; skip.
+		return
+	case ";":
+		*out = append(*out, shredTok{kind: ";", line: int(node.StartPosition().Row) + 1})
+		return
+	case "compound_statement":
+		// A well-formed body — its leading `{` marks a definition; record it then stop.
+		*out = append(*out, shredTok{kind: "{", line: int(node.StartPosition().Row) + 1})
+		return
+	}
+	for i := uint(0); i < node.ChildCount(); i++ {
+		collectShredTokens(node.Child(i), src, out)
+	}
+}
+
+// errorDeclaratorHasBody reports whether the child at index decl in an ERROR
+// node's child list is immediately followed (skipping comments/preproc trivia)
+// by a `{` token — i.e. the orphaned declarator opens a function body, marking it
+// a definition rather than a prototype.
+func errorDeclaratorHasBody(errNode *tree_sitter.Node, decl uint) bool {
+	n := errNode.ChildCount()
+	for j := decl + 1; j < n; j++ {
+		c := errNode.Child(j)
+		if c == nil {
+			continue
+		}
+		switch c.Kind() {
+		case "comment":
+			continue
+		case "{", "compound_statement":
+			return true
+		default:
+			return false
+		}
+	}
+	return false
+}
+
+// cOrphanFunctionSymbol builds a function/method draft from a function_declarator
+// recovered out of an ERROR node. Mirrors cFunctionSymbol's identity + macro guard
+// but anchors the span on the declarator (the function_definition wrapper is gone).
+func cOrphanFunctionSymbol(decl *tree_sitter.Node, src []byte) (symbolDraft, bool) {
+	name := cppDeclaratorName(decl, src)
+	if name == "" || isMacroAnnotationName(name) {
+		return symbolDraft{}, false
+	}
+	qualified := cppDeclaratorQualifiedName(decl, src)
+	recvType := ""
+	if qualified != "" {
+		recvType = cppQualifiedReceiver(qualified)
+	}
+	kind := "function"
+	meta := graph.JSONBMap{}
+	if recvType != "" {
+		kind = "method"
+		meta["owner_type"] = recvType
+		meta["qualified_name"] = qualified
+	}
+	sig := nodeText(decl, src)
+	if nl := strings.IndexByte(sig, '\n'); nl > 0 {
+		sig = sig[:nl]
+	}
+	return symbolDraft{
+		name:      name,
+		kind:      kind,
+		signature: strings.TrimSpace(sig),
+		startLine: int(decl.StartPosition().Row) + 1,
+		endLine:   int(decl.EndPosition().Row) + 1,
+		metadata:  meta,
+		recvType:  recvType,
+	}, true
 }
 
 // cEnumSymbol builds an enum definition from an enum_specifier. When the enum is
@@ -1268,33 +1621,112 @@ func cEnumSymbol(node *tree_sitter.Node, src []byte, fallbackName string) (symbo
 	}, true
 }
 
-// cTypedefEnumSymbols handles `typedef enum {...} Name;`. It locates the wrapped
-// enum_specifier and names it after the typedef's declarator identifier. Returns
-// nothing when the type_definition does not wrap an enum.
-func cTypedefEnumSymbols(node *tree_sitter.Node, src []byte) []symbolDraft {
-	var enumNode *tree_sitter.Node
+// cTypedefSymbols handles `typedef <specifier> {...} Name;` where the specifier is
+// an enum (`typedef enum {...} ValueType;`), a struct (`typedef struct cJSON {...}
+// cJSON;`), a union, or a class. It names the type after the typedef's trailing
+// declarator identifier (preferring the specifier's own name when present), and
+// for struct/union/class also emits the member functions via cppTypeSymbols.
+//
+// The typedef NAME is what callers reference, so it is always the emitted def name
+// (matching clangd, which reports the typedef'd type under that name). Returns
+// nothing when the type_definition wraps no aggregate/enum specifier (a scalar
+// alias like `typedef int cJSON_bool;` is not a definition — precision).
+func cTypedefSymbols(node *tree_sitter.Node, src []byte) []symbolDraft {
+	// The typedef name is the type_definition's trailing type_identifier.
+	typedefName := childText(node, "type_identifier", src)
+
+	var spec *tree_sitter.Node
 	for i := uint(0); i < node.ChildCount(); i++ {
-		if c := node.Child(i); c != nil && c.Kind() == "enum_specifier" {
-			enumNode = c
+		c := node.Child(i)
+		if c == nil {
+			continue
+		}
+		switch c.Kind() {
+		case "enum_specifier", "struct_specifier", "union_specifier", "class_specifier":
+			spec = c
+		}
+		if spec != nil {
 			break
 		}
 	}
-	if enumNode == nil {
+	if spec == nil {
 		return nil
 	}
-	// The typedef name is the type_definition's trailing type_identifier (or a
-	// declarator wrapping one). If the enum_specifier itself is named, prefer that.
-	name := childText(enumNode, "type_identifier", src)
-	if name == "" {
-		name = childText(node, "type_identifier", src)
+
+	if spec.Kind() == "enum_specifier" {
+		aggName := childText(spec, "type_identifier", src)
+		name := aggName
+		if name == "" {
+			name = typedefName
+		}
+		var syms []symbolDraft
+		if sym, ok := cEnumSymbol(spec, src, name); ok {
+			// Anchor the def to the typedef span so line ranges cover the full decl.
+			sym.startLine = int(node.StartPosition().Row) + 1
+			sym.endLine = int(node.EndPosition().Row) + 1
+			syms = append(syms, sym)
+		}
+		// `typedef enum TAG {...} ALIAS;` — clangd reports BOTH the tag and the
+		// typedef alias. When they differ, add the alias too (only meaningful when
+		// the enum has a body, i.e. a real definition).
+		if typedefName != "" && typedefName != aggName && spec.ChildByFieldName("body") != nil {
+			syms = append(syms, symbolDraft{
+				name:      typedefName,
+				kind:      "enum",
+				startLine: int(node.StartPosition().Row) + 1,
+				endLine:   int(node.EndPosition().Row) + 1,
+			})
+		}
+		return syms
 	}
-	if sym, ok := cEnumSymbol(enumNode, src, name); ok {
-		// Anchor the def to the typedef span so line ranges cover the full decl.
-		sym.startLine = int(node.StartPosition().Row) + 1
-		sym.endLine = int(node.EndPosition().Row) + 1
-		return []symbolDraft{sym}
+
+	// struct / union / class: emit the type + its members via the shared walker,
+	// but force the leading type's name to the typedef name when the aggregate is
+	// anonymous (`typedef struct {...} Foo;`). When the aggregate is named
+	// (`typedef struct cJSON {...} cJSON;`) cppTypeSymbols already names it.
+	syms := cppTypeSymbols(spec, src)
+	if len(syms) == 0 {
+		// Anonymous aggregate with no captured leader — synthesize from typedef name.
+		if typedefName == "" {
+			return nil
+		}
+		kind := "struct"
+		if spec.Kind() == "class_specifier" {
+			kind = "class"
+		}
+		return []symbolDraft{{
+			name:      typedefName,
+			kind:      kind,
+			startLine: int(node.StartPosition().Row) + 1,
+			endLine:   int(node.EndPosition().Row) + 1,
+		}}
 	}
-	return nil
+	// Emit the typedef NAME as its own type def when it is not already covered by
+	// the aggregate's own name. Two cases:
+	//   - anonymous aggregate (`typedef struct {...} Foo;`): cppTypeSymbols emitted
+	//     no leading type, so Foo is the only type name.
+	//   - named aggregate (`typedef struct GuardBytes {...} Guard;`): clangd reports
+	//     BOTH the tag (GuardBytes) and the typedef alias (Guard) as types, so we
+	//     add Guard alongside the tag cppTypeSymbols already emitted.
+	aggName := childText(spec, "type_identifier", src)
+	// Only when the aggregate actually has a body is this a DEFINITION; an
+	// opaque `typedef struct Impl Handle;` (no body) is a forward declaration and
+	// must not be emitted (precision — clangd-truth treats it as noise).
+	hasBody := spec.ChildByFieldName("body") != nil
+	if hasBody && typedefName != "" && typedefName != aggName {
+		kind := "struct"
+		if spec.Kind() == "class_specifier" {
+			kind = "class"
+		}
+		lead := symbolDraft{
+			name:      typedefName,
+			kind:      kind,
+			startLine: int(node.StartPosition().Row) + 1,
+			endLine:   int(node.EndPosition().Row) + 1,
+		}
+		syms = append([]symbolDraft{lead}, syms...)
+	}
+	return syms
 }
 
 // cppTypeSymbols extracts a C++ class/struct symbol plus its member functions,
@@ -1352,6 +1784,18 @@ func cppTypeSymbols(node *tree_sitter.Node, src []byte) []symbolDraft {
 				}
 				continue
 			}
+			// A nested class/struct defined inside this type's body
+			// (`class ModelIter : public Iterator { ... };`) parses as a
+			// field_declaration wrapping a class_specifier/struct_specifier. Recurse
+			// so the nested type AND its inline members are captured.
+			if nested := childNode(member, "class_specifier"); nested != nil {
+				out = append(out, cppTypeSymbols(nested, src)...)
+				continue
+			}
+			if nested := childNode(member, "struct_specifier"); nested != nil {
+				out = append(out, cppTypeSymbols(nested, src)...)
+				continue
+			}
 			// Declared-only member: a method prototype (`int bar(int x);`), a
 			// constructor (`Foo();`) or destructor (`~Foo();`) — common in headers
 			// where the definition lives in a .cc. Only emit when a
@@ -1359,10 +1803,24 @@ func cppTypeSymbols(node *tree_sitter.Node, src []byte) []symbolDraft {
 			if sym, ok := cppMemberDeclSymbol(member, src, typeName); ok {
 				out = append(out, sym)
 			}
+		case "class_specifier", "struct_specifier":
+			// A nested type declared directly in the body (no field_declaration
+			// wrapper, e.g. inside an anonymous-namespace or already-mangled parent).
+			out = append(out, cppTypeSymbols(member, src)...)
 		case "enum_specifier":
 			// A nested enum declared directly in the class body.
 			if sym, ok := cEnumSymbol(member, src, ""); ok {
 				out = append(out, sym)
+			}
+		default:
+			// #if-interleaved code (leveldb's Limiter member-init list) makes
+			// tree-sitter bury the rest of an anonymous-namespace block inside a
+			// preproc_if / ERROR child of THIS type's body, hiding sibling classes
+			// (PosixSequentialFile/PosixEnv …) and their methods. Recover them by
+			// descending into those containers, treating found defs as top-level
+			// siblings (NOT members of this type — they are not, so no recv_type).
+			if recoverableContainerKinds[member.Kind()] {
+				out = append(out, recoverFromError(member, src)...)
 			}
 		}
 	}
@@ -1447,6 +1905,14 @@ func cppFunctionIdentity(node *tree_sitter.Node, src []byte) (name, qualified, r
 // nodes, so a flat scan of direct children misses them. We unwrap those layers
 // down to the function_declarator. Multi-line signatures parse to the same shape,
 // so this also recovers functions whose return type / params span lines.
+//
+// It also descends into a leading ERROR child: a method with a trailing
+// thread-safety annotation (`int Read() LOCKS_EXCLUDED(mu_) { ... }`) parses as
+// `function_definition( ERROR[ function_declarator "Read()" ],
+// function_declarator "LOCKS_EXCLUDED(mu_)", body )`. Walking children in document
+// order returns the REAL declarator (`Read`) buried in the ERROR before the
+// trailing annotation declarator, so the def is captured under the right name and
+// the macro declarator is left for isMacroAnnotationName to drop.
 func cFindFunctionDeclarator(node *tree_sitter.Node) *tree_sitter.Node {
 	if node == nil {
 		return nil
@@ -1459,7 +1925,7 @@ func cFindFunctionDeclarator(node *tree_sitter.Node) *tree_sitter.Node {
 		switch child.Kind() {
 		case "function_declarator":
 			return child
-		case "pointer_declarator", "reference_declarator":
+		case "pointer_declarator", "reference_declarator", "ERROR":
 			if d := cFindFunctionDeclarator(child); d != nil {
 				return d
 			}
@@ -1470,6 +1936,16 @@ func cFindFunctionDeclarator(node *tree_sitter.Node) *tree_sitter.Node {
 
 func cFunctionSymbol(node *tree_sitter.Node, src []byte) (symbolDraft, bool) {
 	if cFindFunctionDeclarator(node) == nil {
+		// A function-like macro modifier between the return type and the name
+		// (`int CJSON_CDECL main(void) { ... }`) makes tree-sitter peel `int
+		// CJSON_CDECL` into a stray declaration and parse the rest as a
+		// function_definition whose name is a bare type_identifier followed by a
+		// parenthesized_declarator (the params) — there is NO function_declarator.
+		// Recover it: this is a genuine definition (it has a compound_statement
+		// body), so precision holds.
+		if sym, ok := cMacroModifierFunctionSymbol(node, src); ok {
+			return sym, true
+		}
 		return symbolDraft{}, false
 	}
 	name, qualified, recvType := cppFunctionIdentity(node, src)
@@ -1502,6 +1978,56 @@ func cFunctionSymbol(node *tree_sitter.Node, src []byte) (symbolDraft, bool) {
 		endLine:   int(node.EndPosition().Row) + 1,
 		metadata:  meta,
 		recvType:  recvType,
+	}, true
+}
+
+// cMacroModifierFunctionSymbol recovers `RET MACRO name(params) { body }` defs
+// where a function-like calling-convention macro (CJSON_CDECL, WINAPI, STDCALL …)
+// sits between the return type and the function name. tree-sitter then models the
+// function_definition with a bare identifier/type_identifier name child directly
+// followed by a parenthesized_declarator holding the params, and a body. Requires
+// the body (compound_statement) so prototypes are not emitted (precision). The
+// macro itself is never emitted as a symbol.
+func cMacroModifierFunctionSymbol(node *tree_sitter.Node, src []byte) (symbolDraft, bool) {
+	// Must be a real definition: a body must be present.
+	if node.ChildByFieldName("body") == nil && childNode(node, "compound_statement") == nil {
+		return symbolDraft{}, false
+	}
+	var nameNode, parenNode *tree_sitter.Node
+	for i := uint(0); i < node.ChildCount(); i++ {
+		c := node.Child(i)
+		if c == nil {
+			continue
+		}
+		switch c.Kind() {
+		case "identifier", "type_identifier":
+			// The LAST name token before the parenthesized_declarator is the
+			// function name (an earlier one would be a return type, but those parse
+			// as primitive_type/type_identifier on the peeled declaration).
+			if parenNode == nil {
+				nameNode = c
+			}
+		case "parenthesized_declarator":
+			parenNode = c
+		}
+	}
+	if nameNode == nil || parenNode == nil {
+		return symbolDraft{}, false
+	}
+	name := strings.TrimSpace(nodeText(nameNode, src))
+	if name == "" || isMacroAnnotationName(name) {
+		return symbolDraft{}, false
+	}
+	sig := nodeText(node, src)
+	if nl := strings.IndexByte(sig, '\n'); nl > 0 {
+		sig = sig[:nl]
+	}
+	return symbolDraft{
+		name:      name,
+		kind:      "function",
+		signature: strings.TrimSpace(sig),
+		startLine: int(node.StartPosition().Row) + 1,
+		endLine:   int(node.EndPosition().Row) + 1,
 	}, true
 }
 

@@ -166,6 +166,34 @@ func TestReportComposesStatsAndMarkdown(t *testing.T) {
 	}
 }
 
+func TestStatsReturnsPersistedIndexTelemetry(t *testing.T) {
+	ctx := context.Background()
+	eng := indexAnalyticsFixture(t)
+
+	res, err := eng.Stats(ctx, StatsInput{Limit: 5})
+	if err != nil {
+		t.Fatalf("Stats: %v", err)
+	}
+	if res.RepoFullName == "" {
+		t.Fatalf("Stats should include repo full name")
+	}
+	if res.Latest.Mode != "full" {
+		t.Fatalf("Latest mode = %q, want full", res.Latest.Mode)
+	}
+	if res.Latest.Files == 0 || res.Latest.Symbols == 0 || res.Latest.Edges == 0 {
+		t.Fatalf("latest counts should be populated: %+v", res.Latest)
+	}
+	if len(res.Latest.TimingsMS) == 0 {
+		t.Fatalf("latest timings should be persisted")
+	}
+	if res.Graph.Symbols == 0 || res.Graph.Edges == 0 {
+		t.Fatalf("graph stats should be populated: %+v", res.Graph)
+	}
+	if res.HistoryReturned != 1 || len(res.History) != 1 {
+		t.Fatalf("history returned mismatch: %d len=%d", res.HistoryReturned, len(res.History))
+	}
+}
+
 func containsStr(s []string, want string) bool {
 	for _, v := range s {
 		if v == want {

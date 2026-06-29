@@ -2,8 +2,11 @@ package engine
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"strconv"
 	"strings"
+	"time"
 
 	"github.com/dominic097/atlas/internal/analytics"
 	"github.com/dominic097/atlas/internal/graph"
@@ -74,6 +77,55 @@ type GraphStats struct {
 	IsolatedNodes int                   `json:"isolated_nodes"`
 	EdgeKinds     []analytics.KindCount `json:"edge_kinds"`
 	Languages     []analytics.KindCount `json:"languages"`
+}
+
+// StatsInput selects the repo and the number of recent index telemetry rows to
+// return. It is intentionally observation-oriented: graph totals plus the
+// runtime/index metadata persisted with snapshots.
+type StatsInput struct {
+	RepoID string
+	Limit  int
+}
+
+// IndexDelta compares a snapshot's counts with the prior snapshot in the
+// returned history (newest row relative to the next older row).
+type IndexDelta struct {
+	Files   int `json:"files"`
+	Symbols int `json:"symbols"`
+	Edges   int `json:"edges"`
+	Routes  int `json:"routes"`
+}
+
+// SnapshotTelemetry is the persisted observability record for an index run.
+// DurationMS/TimingsMS are present for snapshots created by newer Atlas builds;
+// older snapshots still expose counts/mode/created_at.
+type SnapshotTelemetry struct {
+	SnapshotID   string           `json:"snapshot_id"`
+	CommitSHA    string           `json:"commit_sha"`
+	CreatedAt    string           `json:"created_at"`
+	Files        int              `json:"files"`
+	Symbols      int              `json:"symbols"`
+	Edges        int              `json:"edges"`
+	Routes       int              `json:"routes"`
+	Mode         string           `json:"mode,omitempty"`
+	DurationMS   int64            `json:"duration_ms,omitempty"`
+	ChangedFiles int              `json:"changed_files,omitempty"`
+	TimingsMS    map[string]int64 `json:"timings_ms,omitempty"`
+	Delta        *IndexDelta      `json:"delta,omitempty"`
+}
+
+// StatsResult combines telemetry and graph statistics for CLI/API/MCP. It is
+// direct enough for dashboards but still compact enough for LLM tools.
+type StatsResult struct {
+	RepoID          string              `json:"repo_id"`
+	RepoFullName    string              `json:"repo_full_name"`
+	Tier            string              `json:"tier"`
+	StorageDriver   string              `json:"storage_driver"`
+	Latest          SnapshotTelemetry   `json:"latest"`
+	Graph           GraphStats          `json:"graph"`
+	CoverageFacts   int                 `json:"coverage_facts"`
+	History         []SnapshotTelemetry `json:"history"`
+	HistoryReturned int                 `json:"history_returned"`
 }
 
 // ReportInput selects the repo a graph report is rendered for.
@@ -226,6 +278,56 @@ func (e *localEngine) Report(ctx context.Context, in ReportInput) (*ReportResult
 	}, nil
 }
 
+const defaultStatsHistoryLimit = 20
+
+func (e *localEngine) Stats(ctx context.Context, in StatsInput) (*StatsResult, error) {
+	repo, err := e.resolveRepo(ctx, in.RepoID)
+	if err != nil {
+		return nil, err
+	}
+	limit := in.Limit
+	if limit <= 0 {
+		limit = defaultStatsHistoryLimit
+	}
+	if limit > 500 {
+		limit = 500
+	}
+	snaps, err := e.store.ListSnapshots(ctx, repo.ID, limit)
+	if err != nil {
+		return nil, fmt.Errorf("engine: stats history: %w", err)
+	}
+	if len(snaps) == 0 {
+		return nil, ErrNoIndex
+	}
+	g, err := e.loadAnalyticsGraph(ctx, repo.ID)
+	if err != nil {
+		return nil, err
+	}
+	coverageFacts, err := e.store.ListCoverage(ctx, snaps[0].ID, "")
+	if err != nil {
+		return nil, fmt.Errorf("engine: stats coverage: %w", err)
+	}
+	history := make([]SnapshotTelemetry, 0, len(snaps))
+	for i := range snaps {
+		var prev *graph.Snapshot
+		if i+1 < len(snaps) {
+			prev = &snaps[i+1]
+		}
+		history = append(history, snapshotTelemetry(snaps[i], prev))
+	}
+	return &StatsResult{
+		RepoID:          repo.ID,
+		RepoFullName:    repo.FullName,
+		Tier:            e.cfg.Tier,
+		StorageDriver:   e.store.Dialect(),
+		Latest:          history[0],
+		Graph:           graphStats(g.Stats()),
+		CoverageFacts:   len(coverageFacts),
+		History:         history,
+		HistoryReturned: len(history),
+	}, nil
+}
+
 // ── projections ─────────────────────────────────────────────────────────────
 
 func communityInfos(cs []analytics.Community, limit int) []CommunityInfo {
@@ -272,6 +374,109 @@ func graphStats(s analytics.Stats) GraphStats {
 		IsolatedNodes: s.IsolatedNodes,
 		EdgeKinds:     s.EdgeKindsSorted(),
 		Languages:     s.LanguagesSorted(),
+	}
+}
+
+func snapshotTelemetry(s graph.Snapshot, prev *graph.Snapshot) SnapshotTelemetry {
+	mode := metaStr(s.Metadata, "last_index_mode")
+	if mode == "" {
+		mode = metaStr(s.Metadata, "mode")
+	}
+	durationMS := metaInt64(s.Metadata, "last_index_duration_ms")
+	if durationMS == 0 {
+		durationMS = metaInt64(s.Metadata, "duration_ms")
+	}
+	changedFiles := metaInt64(s.Metadata, "last_index_changed_files")
+	if changedFiles == 0 {
+		changedFiles = metaInt64(s.Metadata, "changed_files")
+	}
+	timings := metaTimings(s.Metadata, "last_index_timings_ms")
+	if len(timings) == 0 {
+		timings = metaTimings(s.Metadata, "timings_ms")
+	}
+	out := SnapshotTelemetry{
+		SnapshotID:   s.ID,
+		CommitSHA:    s.CommitSHA,
+		CreatedAt:    s.CreatedAt.Format(time.RFC3339),
+		Files:        s.FileCount,
+		Symbols:      s.SymbolCount,
+		Edges:        s.EdgeCount,
+		Routes:       s.RouteCount,
+		Mode:         mode,
+		DurationMS:   durationMS,
+		ChangedFiles: int(changedFiles),
+		TimingsMS:    timings,
+	}
+	if prev != nil {
+		out.Delta = &IndexDelta{
+			Files:   s.FileCount - prev.FileCount,
+			Symbols: s.SymbolCount - prev.SymbolCount,
+			Edges:   s.EdgeCount - prev.EdgeCount,
+			Routes:  s.RouteCount - prev.RouteCount,
+		}
+	}
+	return out
+}
+
+func metaInt64(m graph.JSONBMap, key string) int64 {
+	if m == nil {
+		return 0
+	}
+	switch v := m[key].(type) {
+	case int:
+		return int64(v)
+	case int64:
+		return v
+	case float64:
+		return int64(v)
+	case json.Number:
+		n, _ := v.Int64()
+		return n
+	}
+	return 0
+}
+
+func metaTimings(m graph.JSONBMap, key string) map[string]int64 {
+	if m == nil {
+		return nil
+	}
+	raw, ok := m[key]
+	if !ok {
+		return nil
+	}
+	out := map[string]int64{}
+	switch v := raw.(type) {
+	case map[string]int64:
+		for k, n := range v {
+			out[k] = n
+		}
+	case map[string]any:
+		for k, n := range v {
+			out[k] = valueInt64(n)
+		}
+	}
+	if len(out) == 0 {
+		return nil
+	}
+	return out
+}
+
+func valueInt64(v any) int64 {
+	switch n := v.(type) {
+	case int:
+		return int64(n)
+	case int64:
+		return n
+	case float64:
+		return int64(n)
+	case string:
+		i, _ := strconv.ParseInt(n, 10, 64)
+		return i
+	case json.Number:
+		i, _ := n.Int64()
+		return i
+	default:
+		return 0
 	}
 }
 

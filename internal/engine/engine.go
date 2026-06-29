@@ -544,6 +544,7 @@ type Engine interface {
 	Communities(ctx context.Context, in CommunitiesInput) (*CommunitiesResult, error)
 	Hubs(ctx context.Context, in HubsInput) (*HubsResult, error)
 	Report(ctx context.Context, in ReportInput) (*ReportResult, error)
+	Stats(ctx context.Context, in StatsInput) (*StatsResult, error)
 	Status(ctx context.Context, in StatusInput) (*StatusResult, error)
 	Link(ctx context.Context, in LinkInput) (*LinkResult, error)
 	Close() error
@@ -704,6 +705,12 @@ type localEngine struct {
 	store     store.StorageDriver
 	lexical   *lexical.Index
 	lexicalMu sync.Mutex
+
+	// ctxCache memoizes Context() bundles keyed by (snapshotID, sorted changed
+	// paths, query, budget). A new snapshot produces a new key, so it invalidates
+	// naturally; the watch/serve warm process — which re-asks for context against
+	// the same snapshot — benefits most. nil until the first Context call.
+	ctxCache *contextCache
 }
 
 func (e *localEngine) ensureLexical() (*lexical.Index, error) {
@@ -818,6 +825,16 @@ func (e *localEngine) Context(ctx context.Context, in ContextInput) (*ContextRes
 	depth := firstPositive(in.MaxDepth, e.cfg.ContextBudget.MaxDepth, 3)
 
 	seedPaths := normalizeContextPaths(in.Paths)
+
+	// Context-pack cache: a hit returns a fresh deep copy of the previously
+	// assembled bundle without re-querying the store. The key folds the snapshot
+	// id (so a new snapshot is a new key — natural invalidation), the sorted seed
+	// paths, the query, and the resolved budget.
+	cacheKey := contextCacheKey(snap.ID, seedPaths, in.Query, limit, maxFiles, maxEdges, depth)
+	if cached, ok := e.contextCacheGet(cacheKey); ok {
+		return cached, nil
+	}
+
 	selectedPaths := make([]string, 0, maxFiles)
 	pathSet := map[string]bool{}
 	addPath := func(path string) {
@@ -862,7 +879,6 @@ func (e *localEngine) Context(ctx context.Context, in ContextInput) (*ContextRes
 	}
 
 	searchHits := []SearchHit{}
-	var allByID map[string]graph.CodeSymbol
 	searchDegraded := false
 	if queryText != "" {
 		search, err := e.Search(ctx, SearchInput{RepoID: in.RepoID, Query: queryText, Limit: limit, Mode: "hybrid"})
@@ -870,12 +886,21 @@ func (e *localEngine) Context(ctx context.Context, in ContextInput) (*ContextRes
 			searchDegraded = true
 		} else {
 			searchHits = search.Results
-			allByID, err = e.symbolsByID(ctx, snap.ID)
+			// Resolve only the hit symbols (a bounded set), not the whole snapshot:
+			// fetch them by id via the PK-indexed SymbolsByIDs instead of loading
+			// every symbol with ListSymbols.
+			hitIDs := make([]string, 0, len(searchHits))
+			for _, hit := range searchHits {
+				if hit.SymbolID != "" {
+					hitIDs = append(hitIDs, hit.SymbolID)
+				}
+			}
+			hitByID, err := e.symbolsByID(ctx, snap.ID, hitIDs)
 			if err != nil {
 				return nil, err
 			}
 			for _, hit := range searchHits {
-				if sym, ok := allByID[hit.SymbolID]; ok {
+				if sym, ok := hitByID[hit.SymbolID]; ok {
 					addSymbol(sym)
 				} else {
 					addPath(hit.Path)
@@ -915,7 +940,7 @@ func (e *localEngine) Context(ctx context.Context, in ContextInput) (*ContextRes
 	if searchDegraded {
 		mode = "symbol_context(search_degraded)"
 	}
-	return &ContextResult{
+	result := &ContextResult{
 		RepoID:        snap.RepoID,
 		SnapshotID:    snap.ID,
 		CommitSHA:     snap.CommitSHA,
@@ -925,7 +950,9 @@ func (e *localEngine) Context(ctx context.Context, in ContextInput) (*ContextRes
 		SearchHits:    searchHits,
 		ImpactedFiles: impactedFiles,
 		Mode:          mode,
-	}, nil
+	}
+	e.contextCachePut(cacheKey, result)
+	return result, nil
 }
 
 func normalizeContextPaths(paths []string) []string {
@@ -992,8 +1019,14 @@ func contextQueryFor(paths []string, symbols []graph.CodeSymbol) string {
 	return strings.Join(tokens, " ")
 }
 
-func (e *localEngine) symbolsByID(ctx context.Context, snapshotID string) (map[string]graph.CodeSymbol, error) {
-	syms, err := e.store.ListSymbols(ctx, snapshotID)
+// symbolsByID resolves a known set of symbol ids into an id-keyed map, fetching
+// only those rows via the PK-indexed SymbolsByIDs rather than scanning the whole
+// snapshot. Empty ids yields an empty map without touching the store.
+func (e *localEngine) symbolsByID(ctx context.Context, snapshotID string, ids []string) (map[string]graph.CodeSymbol, error) {
+	if len(ids) == 0 {
+		return map[string]graph.CodeSymbol{}, nil
+	}
+	syms, err := e.store.SymbolsByIDs(ctx, snapshotID, ids)
 	if err != nil {
 		return nil, fmt.Errorf("engine: context load symbols: %w", err)
 	}
@@ -1024,7 +1057,11 @@ func (e *localEngine) contextFiles(ctx context.Context, snapshotID string, paths
 }
 
 func (e *localEngine) contextEdges(ctx context.Context, snapshotID string, paths map[string]bool, maxEdges int) ([]ContextEdge, error) {
-	edges, err := e.store.ListEdges(ctx, snapshotID)
+	// Fetch ONLY the edges leaving the selected paths (index-backed), not the
+	// whole snapshot's edge set. EdgesByFromFiles returns them in the same
+	// (from_file, to_ref, kind) order ListEdges did, so the slice + cap below
+	// produces byte-identical output to the prior load-all-then-filter form.
+	edges, err := e.store.EdgesByFromFiles(ctx, snapshotID, trueKeys(paths))
 	if err != nil {
 		return nil, fmt.Errorf("engine: context edges: %w", err)
 	}
@@ -1199,7 +1236,19 @@ func (e *localEngine) lexicalSearch(ctx context.Context, snapshotID, query, kind
 	if err != nil {
 		return e.fallbackLexicalSearch(ctx, snapshotID, query, kind, limit)
 	}
-	syms, err := e.store.ListSymbols(ctx, snapshotID)
+	// Resolve only the hit symbols (a handful), not the whole snapshot. Collect
+	// the distinct hit ids and fetch them via the PK-indexed SymbolsByIDs instead
+	// of scanning every symbol in the snapshot with ListSymbols.
+	hitIDs := make([]string, 0, len(hits))
+	seenID := make(map[string]bool, len(hits))
+	for _, h := range hits {
+		if h.SymbolID == "" || seenID[h.SymbolID] {
+			continue
+		}
+		seenID[h.SymbolID] = true
+		hitIDs = append(hitIDs, h.SymbolID)
+	}
+	syms, err := e.store.SymbolsByIDs(ctx, snapshotID, hitIDs)
 	if err != nil {
 		return nil, fmt.Errorf("engine: load symbols: %w", err)
 	}

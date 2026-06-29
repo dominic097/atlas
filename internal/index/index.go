@@ -157,9 +157,12 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 						Mode:       "noop",
 						TimingsMS:  timings,
 					}
+					if err := persistIndexTelemetry(ctx, drv, base.snapshot, stats); err != nil {
+						return nil, Stats{}, err
+					}
 					return base.snapshot, stats, nil
 				}
-				snap, stats, derr := runDelta(ctx, drv, lx, base, scan, repoFullName, absRoot, head, opts, start)
+				snap, stats, derr := runDelta(ctx, drv, lx, base, scan, repoFullName, absRoot, head, opts, start, timings)
 				if derr == nil {
 					return snap, stats, nil
 				}
@@ -237,7 +240,10 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 	if walkErr != nil {
 		return nil, Stats{}, fmt.Errorf("index: walk %q: %w", absRoot, walkErr)
 	}
+	// discover_files: the working-tree walk that selects parseable candidates. This
+	// is the canonical phase name shared with the delta path's scan (delta_check).
 	phase("walk", phaseStart)
+	phase("discover_files", phaseStart)
 
 	phaseStart = time.Now()
 	files, symbols, edges, rawRoutes, goFiles := parseCandidates(ctx, repoID, repoFullName, candidates, languages)
@@ -245,6 +251,11 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 		return nil, Stats{}, ctx.Err()
 	}
 	phase("parse", phaseStart)
+
+	// build_symbols_edges spans every post-parse graph-construction step: precise
+	// go/types enrichment, deterministic ordering, and route resolution. It is the
+	// canonical "turn parsed facts into the final graph" phase a profile reads.
+	buildStart := time.Now()
 
 	// Precise Go analysis (go/types): refine heuristic recv_type on call edges and
 	// add real type-use reference edges. Non-regressing — on any miss the heuristic
@@ -269,6 +280,8 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 	graphRoutes := routes.Resolve(repoFullName, rawRoutes, symbols)
 	sortRoutes(graphRoutes)
 	phase("routes", phaseStart)
+
+	phase("build_symbols_edges", buildStart)
 
 	commitSHA := head
 
@@ -339,6 +352,7 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 		return nil, Stats{}, fmt.Errorf("index: save snapshot: %w", err)
 	}
 	phase("persist", phaseStart)
+	phase("write_sqlite", phaseStart)
 
 	// Build the lexical index against the persisted snapshot id. The symbols now
 	// carry the snapshot id; pass them straight through.
@@ -370,7 +384,35 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 		Mode:       mode,
 		TimingsMS:  timings,
 	}
+	if err := persistIndexTelemetry(ctx, drv, snapshot, stats); err != nil {
+		return nil, Stats{}, err
+	}
 	return snapshot, stats, nil
+}
+
+func persistIndexTelemetry(ctx context.Context, drv store.StorageDriver, snapshot *graph.Snapshot, stats Stats) error {
+	if snapshot == nil {
+		return nil
+	}
+	if snapshot.Metadata == nil {
+		snapshot.Metadata = graph.JSONBMap{}
+	}
+	if stats.Mode != "noop" {
+		snapshot.Metadata["mode"] = stats.Mode
+		snapshot.Metadata["duration_ms"] = stats.DurationMS
+		snapshot.Metadata["timings_ms"] = stats.TimingsMS
+		snapshot.Metadata["changed_files"] = stats.ChangedFiles
+		snapshot.Metadata["edge_kinds"] = stats.EdgeKinds
+		snapshot.Metadata["languages"] = stats.Languages
+	}
+	snapshot.Metadata["last_index_mode"] = stats.Mode
+	snapshot.Metadata["last_index_duration_ms"] = stats.DurationMS
+	snapshot.Metadata["last_index_timings_ms"] = stats.TimingsMS
+	snapshot.Metadata["last_index_changed_files"] = stats.ChangedFiles
+	if err := drv.UpdateSnapshotMetadata(ctx, snapshot.ID, snapshot.Metadata); err != nil {
+		return fmt.Errorf("index: update snapshot telemetry: %w", err)
+	}
+	return nil
 }
 
 func languagesFromSnapshot(snap *graph.Snapshot) map[string]int {

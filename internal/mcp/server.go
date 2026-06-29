@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"sort"
 	"strings"
 	"sync"
 	"time"
@@ -101,6 +102,8 @@ func coreTools() []Tool {
 			InputSchema: obj(withFormat(map[string]any{"repo_id": str, "limit": map[string]any{"type": "integer"}}))},
 		{Name: "report", Description: "Deterministic graph report: summary stats, top hubs (god nodes), and communities, with a ready-to-render Markdown document.",
 			InputSchema: obj(withFormat(map[string]any{"repo_id": str}))},
+		{Name: "stats", Description: "Graph and index telemetry statistics: latest snapshot counts, timings, coverage facts, and recent history.",
+			InputSchema: obj(withFormat(map[string]any{"repo_id": str, "limit": map[string]any{"type": "integer"}}))},
 		{Name: "status", Description: "Engine health and per-repo index freshness.",
 			InputSchema: obj(withFormat(map[string]any{"repo_id": str}))},
 		{Name: "link", Description: "Register a repo into the graph WITHOUT indexing it (path, git remote URL, or org/name), so it participates in cross-repo and shows in status.",
@@ -357,6 +360,8 @@ func (s *Server) callTool(ctx context.Context, params json.RawMessage) map[strin
 		payload, err = s.eng.Hubs(ctx, engine.HubsInput{RepoID: str("repo_id"), Limit: intOr("limit", 20)})
 	case "report":
 		payload, err = s.eng.Report(ctx, engine.ReportInput{RepoID: str("repo_id")})
+	case "stats":
+		payload, err = s.eng.Stats(ctx, engine.StatsInput{RepoID: str("repo_id"), Limit: intOr("limit", 20)})
 	case "status":
 		payload, err = s.eng.Status(ctx, engine.StatusInput{RepoID: str("repo_id")})
 	case "link":
@@ -424,6 +429,8 @@ func mcpPlain(v any) string {
 		return mcpPlainHubs(r)
 	case *engine.ReportResult:
 		return r.Markdown
+	case *engine.StatsResult:
+		return mcpPlainStats(r)
 	case *engine.StatusResult:
 		return mcpPlainStatus(r)
 	default:
@@ -548,6 +555,32 @@ func mcpPlainHubs(r *engine.HubsResult) string {
 	}
 	if extra > 0 {
 		l.linef("  (+%d more)", extra)
+	}
+	return l.String()
+}
+
+func mcpPlainStats(r *engine.StatsResult) string {
+	var l mcpLines
+	l.linef("stats %s  %s/%s  history %d  coverage_facts %d",
+		r.RepoFullName, r.Tier, r.StorageDriver, r.HistoryReturned, r.CoverageFacts)
+	l.linef("  latest %s  mode %s  files %d  symbols %d  edges %d  routes %d  %dms",
+		r.Latest.CommitSHA, r.Latest.Mode, r.Latest.Files, r.Latest.Symbols, r.Latest.Edges, r.Latest.Routes, r.Latest.DurationMS)
+	l.linef("  graph files %d  symbols %d  edges %d  communities %d  isolated %d",
+		r.Graph.Files, r.Graph.Symbols, r.Graph.Edges, r.Graph.Communities, r.Graph.IsolatedNodes)
+	if len(r.Graph.Languages) > 0 {
+		parts := make([]string, 0, len(r.Graph.Languages))
+		for _, c := range r.Graph.Languages {
+			parts = append(parts, fmt.Sprintf("%s:%d", c.Key, c.Count))
+		}
+		l.linef("  langs  %s", strings.Join(parts, " "))
+	}
+	if len(r.Latest.TimingsMS) > 0 {
+		parts := make([]string, 0, len(r.Latest.TimingsMS))
+		for k, v := range r.Latest.TimingsMS {
+			parts = append(parts, fmt.Sprintf("%s:%dms", k, v))
+		}
+		sort.Strings(parts)
+		l.linef("  timings  %s", strings.Join(parts, " "))
 	}
 	return l.String()
 }

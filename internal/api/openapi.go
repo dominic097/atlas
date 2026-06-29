@@ -20,6 +20,7 @@ type route struct {
 // patterns registered in routes().
 var routeTable = []route{
 	{"get", "/api/v1/status", "getStatus", "Engine and storage status, including the indexed-repo list"},
+	{"get", "/api/v1/stats", "getStats", "Graph and index telemetry statistics for an indexed repo"},
 	{"post", "/api/v1/index", "index", "Index (or re-index) a project path into the code graph"},
 	{"get", "/api/v1/search", "search", "Lexical (BM25) symbol search across the indexed graph"},
 	{"get", "/api/v1/symbols/{name}", "getSymbol", "Resolve a symbol by name with its definitions, callers, and callees"},

@@ -107,6 +107,10 @@ type (
 	ReportInput       = engine.ReportInput
 	ReportResult      = engine.ReportResult
 	GraphStats        = engine.GraphStats
+	StatsInput        = engine.StatsInput
+	StatsResult       = engine.StatsResult
+	SnapshotTelemetry = engine.SnapshotTelemetry
+	IndexDelta        = engine.IndexDelta
 )
 
 // ErrNotImplemented is returned by stub operations in this scaffold.

@@ -89,6 +89,7 @@ func NewRootCmd() *cobra.Command {
 		newCommunitiesCmd(),
 		newHubsCmd(),
 		newReportCmd(),
+		newStatsCmd(),
 		newStatusCmd(),
 		newLinkCmd(),
 		newServeCmd(),

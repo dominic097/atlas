@@ -355,6 +355,24 @@ func (d *postgresDriver) SaveSnapshot(ctx context.Context, s *graph.Snapshot, fi
 	return nil
 }
 
+func (d *postgresDriver) UpdateSnapshotMetadata(ctx context.Context, snapshotID string, metadata graph.JSONBMap) error {
+	if strings.TrimSpace(snapshotID) == "" {
+		return fmt.Errorf("store: snapshot id is required")
+	}
+	meta, err := marshalJSONMap(metadata)
+	if err != nil {
+		return fmt.Errorf("store: marshal snapshot metadata: %w", err)
+	}
+	res, err := d.db.ExecContext(ctx, `UPDATE snapshots SET metadata = $1::jsonb WHERE id = $2`, meta, snapshotID)
+	if err != nil {
+		return fmt.Errorf("store: update snapshot metadata: %w", err)
+	}
+	if n, _ := res.RowsAffected(); n == 0 {
+		return fmt.Errorf("store: snapshot %q not found", snapshotID)
+	}
+	return nil
+}
+
 func scanSnapshotPG(sc interface{ Scan(...any) error }) (graph.Snapshot, error) {
 	var (
 		s         graph.Snapshot
@@ -608,6 +626,54 @@ func (d *postgresDriver) SymbolsByPath(ctx context.Context, snapshotID, path str
 	return out, rows.Err()
 }
 
+// SymbolsByIDs returns every symbol whose id is in `ids`, served by the symbols
+// primary key (id) scoped to snapshot_id. The IN-list is chunked so a large hit
+// set never blows the bound-parameter limit; all matching rows are returned with
+// node_id + decoded metadata (no dedupe), exactly like SymbolsByName. This
+// targeted form replaces the whole-snapshot ListSymbols scan the search/context
+// paths used only to resolve a handful of known hit ids.
+func (d *postgresDriver) SymbolsByIDs(ctx context.Context, snapshotID string, ids []string) ([]graph.CodeSymbol, error) {
+	if len(ids) == 0 {
+		return nil, nil
+	}
+	var out []graph.CodeSymbol
+	for start := 0; start < len(ids); start += pgChunk {
+		end := start + pgChunk
+		if end > len(ids) {
+			end = len(ids)
+		}
+		chunk := ids[start:end]
+
+		args := make([]any, 0, len(chunk)+1)
+		args = append(args, snapshotID)
+		for _, id := range chunk {
+			args = append(args, id)
+		}
+
+		query := `SELECT ` + symbolCols + `
+			FROM symbols WHERE snapshot_id = $1 AND id IN (` + inPlaceholders(2, len(chunk)) + `)
+			ORDER BY path, start_line, name`
+		rows, err := d.db.QueryContext(ctx, query, args...)
+		if err != nil {
+			return nil, fmt.Errorf("store: symbols by ids: %w", err)
+		}
+		for rows.Next() {
+			sym, err := scanSymbolRowPG(rows)
+			if err != nil {
+				rows.Close()
+				return nil, fmt.Errorf("store: scan symbol: %w", err)
+			}
+			out = append(out, sym)
+		}
+		if err := rows.Err(); err != nil {
+			rows.Close()
+			return nil, fmt.Errorf("store: symbols by ids: %w", err)
+		}
+		rows.Close()
+	}
+	return out, nil
+}
+
 // CallEdgesByToRefs returns every "calls" edge whose to_ref is in toRefs, served
 // by idx_edges_snapshot_toref. The IN-list is chunked so a large blast radius
 // never blows the bound-parameter limit; all matching edges are returned with
@@ -666,6 +732,56 @@ func (d *postgresDriver) edgesIn(ctx context.Context, snapshotID, kind, column s
 		if err := rows.Err(); err != nil {
 			rows.Close()
 			return nil, fmt.Errorf("store: %s edges by %s: %w", kind, column, err)
+		}
+		rows.Close()
+	}
+	return out, nil
+}
+
+// EdgesByFromFiles returns every edge (any kind) whose from_file is in fromFiles,
+// served by idx_edges_snapshot_fromfile. The IN-list is chunked so a large
+// changed-path set never blows the bound-parameter limit; all matching edges are
+// returned with Metadata populated (no dedupe). Unlike edgesIn there is no kind
+// filter — the `context` op wants every edge leaving the changed paths.
+func (d *postgresDriver) EdgesByFromFiles(ctx context.Context, snapshotID string, fromFiles []string) ([]graph.DependencyEdge, error) {
+	fromFiles = uniqueNonEmpty(fromFiles)
+	if len(fromFiles) == 0 {
+		return nil, nil
+	}
+	var out []graph.DependencyEdge
+	for start := 0; start < len(fromFiles); start += pgChunk {
+		end := start + pgChunk
+		if end > len(fromFiles) {
+			end = len(fromFiles)
+		}
+		chunk := fromFiles[start:end]
+
+		args := make([]any, 0, len(chunk)+1)
+		args = append(args, snapshotID)
+		for _, f := range chunk {
+			args = append(args, f)
+		}
+
+		// ORDER BY from_file, to_ref, kind mirrors ListEdges so the targeted slice
+		// arrives in the SAME order the load-all filter produced.
+		query := `SELECT ` + edgeCols + `
+			FROM edges WHERE snapshot_id = $1 AND from_file IN (` + inPlaceholders(2, len(chunk)) + `)
+			ORDER BY from_file, to_ref, kind`
+		rows, err := d.db.QueryContext(ctx, query, args...)
+		if err != nil {
+			return nil, fmt.Errorf("store: edges by from_files: %w", err)
+		}
+		for rows.Next() {
+			e, err := scanEdgeRowPG(rows)
+			if err != nil {
+				rows.Close()
+				return nil, fmt.Errorf("store: scan edge: %w", err)
+			}
+			out = append(out, e)
+		}
+		if err := rows.Err(); err != nil {
+			rows.Close()
+			return nil, fmt.Errorf("store: edges by from_files: %w", err)
 		}
 		rows.Close()
 	}

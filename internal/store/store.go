@@ -42,6 +42,7 @@ type StorageDriver interface {
 	// snapshots (temporal moat)
 	SaveSnapshot(ctx context.Context, s *graph.Snapshot, files []graph.File,
 		symbols []graph.CodeSymbol, edges []graph.DependencyEdge, routes []graph.Route) error
+	UpdateSnapshotMetadata(ctx context.Context, snapshotID string, metadata graph.JSONBMap) error
 	LatestSnapshot(ctx context.Context, repoID string) (*graph.Snapshot, error)
 	ListSnapshots(ctx context.Context, repoID string, limit int) ([]graph.Snapshot, error)
 
@@ -69,6 +70,13 @@ type StorageDriver interface {
 	// against a hub symbol's blast radius. Uses idx_symbols_snapshot_name; no dedupe.
 	SymbolsByNames(ctx context.Context, snapshotID string, names []string) ([]graph.CodeSymbol, error)
 	SymbolsByPath(ctx context.Context, snapshotID, path string) ([]graph.CodeSymbol, error)
+	// SymbolsByIDs returns every symbol whose id is in the given set, served by the
+	// symbols primary key (id) scoped to snapshot_id. The IN-list is chunked to
+	// stay under SQLite's bound-parameter limit (mirroring SymbolsByNames). It is
+	// the targeted counterpart to ListSymbols for the search/context paths, which
+	// only need to resolve a handful of known hit ids rather than loading every
+	// symbol in the snapshot. Rows carry node_id + decoded metadata (no dedupe).
+	SymbolsByIDs(ctx context.Context, snapshotID string, ids []string) ([]graph.CodeSymbol, error)
 	// CallEdgesByToRefs returns every "calls" edge whose to_ref is in the given
 	// set, using the (snapshot_id, to_ref) index. The IN-list is chunked to stay
 	// under SQLite's bound-parameter limit; all matching edges are returned with
@@ -84,6 +92,13 @@ type StorageDriver interface {
 	// `refs` can return TRUE type-use references alongside call-site callers. Same
 	// chunking/Metadata semantics (no dedupe).
 	RefEdgesByToRefs(ctx context.Context, snapshotID string, toRefs []string) ([]graph.DependencyEdge, error)
+	// EdgesByFromFiles returns every edge (any kind) whose from_file is in the
+	// given set, served by idx_edges_snapshot_fromfile. The IN-list is chunked to
+	// stay under SQLite's bound-parameter limit. It is the targeted counterpart to
+	// ListEdges for the `context` op, which only needs edges originating in the
+	// changed paths rather than the whole snapshot's edge set. Rows carry decoded
+	// Metadata (no dedupe).
+	EdgesByFromFiles(ctx context.Context, snapshotID string, fromFiles []string) ([]graph.DependencyEdge, error)
 
 	// coverage (runtime test-coverage facts)
 	//

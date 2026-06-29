@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"io"
 	"path"
+	"sort"
 	"strings"
 
+	"github.com/dominic097/atlas/internal/analytics"
 	"github.com/dominic097/atlas/internal/engine"
 	"github.com/dominic097/atlas/internal/query"
 )
@@ -193,6 +195,8 @@ func terseString(v any) string {
 		return terseHubs(r)
 	case *engine.ReportResult:
 		return terseReport(r)
+	case *engine.StatsResult:
+		return terseStats(r)
 	case *engine.StatusResult:
 		return terseStatus(r)
 	case *engine.HistoryResult:
@@ -606,6 +610,23 @@ func terseIndex(r *engine.IndexResult) string {
 	return t.String()
 }
 
+func terseStats(r *engine.StatsResult) string {
+	var t terseLines
+	t.linef("stats %s  %s/%s  history %d  coverage_facts %d",
+		r.RepoFullName, r.Tier, r.StorageDriver, r.HistoryReturned, r.CoverageFacts)
+	t.linef("  latest %s  mode %s  files %d  symbols %d  edges %d  routes %d  %dms",
+		shortSHA(r.Latest.CommitSHA), r.Latest.Mode, r.Latest.Files, r.Latest.Symbols, r.Latest.Edges, r.Latest.Routes, r.Latest.DurationMS)
+	t.linef("  graph files %d  symbols %d  edges %d  communities %d  isolated %d",
+		r.Graph.Files, r.Graph.Symbols, r.Graph.Edges, r.Graph.Communities, r.Graph.IsolatedNodes)
+	if len(r.Graph.Languages) > 0 {
+		t.linef("  langs  %s", joinKindCountPairs(r.Graph.Languages))
+	}
+	if len(r.Latest.TimingsMS) > 0 {
+		t.linef("  timings  %s", joinInt64Counts(r.Latest.TimingsMS))
+	}
+	return t.String()
+}
+
 // ── shared writers ──────────────────────────────────────────────────────────
 
 func writeRefs(t *terseLines, refs []engine.SymbolRef) {
@@ -683,6 +704,23 @@ func joinCounts(m map[string]int) string {
 				parts[i], parts[j] = parts[j], parts[i]
 			}
 		}
+	}
+	return strings.Join(parts, " ")
+}
+
+func joinInt64Counts(m map[string]int64) string {
+	parts := make([]string, 0, len(m))
+	for k, v := range m {
+		parts = append(parts, fmt.Sprintf("%s:%dms", k, v))
+	}
+	sort.Strings(parts)
+	return strings.Join(parts, " ")
+}
+
+func joinKindCountPairs(kc []analytics.KindCount) string {
+	parts := make([]string, 0, len(kc))
+	for _, c := range kc {
+		parts = append(parts, fmt.Sprintf("%s:%d", c.Key, c.Count))
 	}
 	return strings.Join(parts, " ")
 }

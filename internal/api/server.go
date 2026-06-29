@@ -71,6 +71,7 @@ func (s *Server) routes() {
 
 	// status / index
 	m.HandleFunc("GET /api/v1/status", s.handleStatus)
+	m.HandleFunc("GET /api/v1/stats", s.handleStats)
 	m.HandleFunc("POST /api/v1/index", s.handleIndex)
 
 	// search
@@ -250,6 +251,14 @@ func (s *Server) handleStatus(w http.ResponseWriter, r *http.Request) {
 	res, err := s.eng.Status(r.Context(), engine.StatusInput{
 		RepoID:  r.URL.Query().Get("repo_id"),
 		Verbose: queryBool(r, "verbose"),
+	})
+	writeResult(w, res, err)
+}
+
+func (s *Server) handleStats(w http.ResponseWriter, r *http.Request) {
+	res, err := s.eng.Stats(r.Context(), engine.StatsInput{
+		RepoID: r.URL.Query().Get("repo_id"),
+		Limit:  queryInt(r, "limit", 0),
 	})
 	writeResult(w, res, err)
 }

@@ -102,6 +102,25 @@ func (stubEngine) Hubs(context.Context, engine.HubsInput) (*engine.HubsResult, e
 func (stubEngine) Report(context.Context, engine.ReportInput) (*engine.ReportResult, error) {
 	return &engine.ReportResult{}, nil
 }
+func (stubEngine) Stats(context.Context, engine.StatsInput) (*engine.StatsResult, error) {
+	return &engine.StatsResult{
+		RepoFullName:    "org/repo",
+		Tier:            "test-tier",
+		StorageDriver:   "memory",
+		CoverageFacts:   2,
+		HistoryReturned: 1,
+		Latest: engine.SnapshotTelemetry{
+			CommitSHA:  "abc123",
+			Mode:       "full",
+			Files:      3,
+			Symbols:    5,
+			Edges:      7,
+			Routes:     1,
+			DurationMS: 9,
+		},
+		Graph: engine.GraphStats{Files: 3, Symbols: 5, Edges: 7},
+	}, nil
+}
 func (stubEngine) Status(context.Context, engine.StatusInput) (*engine.StatusResult, error) {
 	return &engine.StatusResult{Tier: "test-tier", StorageDriver: "memory", ReposIndexed: 7}, nil
 }
@@ -169,16 +188,15 @@ func TestHTTPHandler_ToolsList(t *testing.T) {
 			t.Fatalf("%s inputSchema.required is nil", tool.Name)
 		}
 	}
-	// status must be present in the advertised catalog.
-	var found bool
+	// status and stats must be present in the advertised catalog.
+	found := map[string]bool{}
 	for _, tool := range resp.Result.Tools {
-		if tool.Name == "status" {
-			found = true
-			break
-		}
+		found[tool.Name] = true
 	}
-	if !found {
-		t.Errorf("tools/list does not advertise the status tool; got %d tools", len(resp.Result.Tools))
+	for _, name := range []string{"status", "stats"} {
+		if !found[name] {
+			t.Errorf("tools/list does not advertise the %s tool; got %d tools", name, len(resp.Result.Tools))
+		}
 	}
 }
 
@@ -227,6 +245,42 @@ func TestHTTPHandler_ToolsCallStatus(t *testing.T) {
 	}
 	if sr.Tier != "test-tier" || sr.ReposIndexed != 7 {
 		t.Errorf("status payload = %+v, want tier=test-tier repos_indexed=7", sr)
+	}
+}
+
+func TestHTTPHandler_ToolsCallStatsPlainFormat(t *testing.T) {
+	h := newTestHandler()
+	status, body := httpRPC(t, h, `{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"stats","arguments":{"format":"plain"}}}`)
+	if status != http.StatusOK {
+		t.Fatalf("status = %d, want 200; body=%s", status, body)
+	}
+
+	var resp struct {
+		Result struct {
+			Content []struct {
+				Text string `json:"text"`
+			} `json:"content"`
+			IsError bool `json:"isError"`
+		} `json:"result"`
+		Error *rpcError `json:"error"`
+	}
+	if err := json.Unmarshal(body, &resp); err != nil {
+		t.Fatalf("unmarshal: %v; body=%s", err, body)
+	}
+	if resp.Error != nil {
+		t.Fatalf("unexpected error: %+v", resp.Error)
+	}
+	if resp.Result.IsError {
+		t.Fatal("tools/call(stats) returned isError=true")
+	}
+	if len(resp.Result.Content) == 0 {
+		t.Fatal("tools/call(stats) returned no content")
+	}
+	text := resp.Result.Content[0].Text
+	for _, want := range []string{"stats org/repo", "coverage_facts 2", "latest abc123", "graph files 3"} {
+		if !strings.Contains(text, want) {
+			t.Fatalf("stats plain output missing %q:\n%s", want, text)
+		}
 	}
 }
 
