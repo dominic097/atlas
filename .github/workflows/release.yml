@@ -53,31 +53,24 @@ jobs:
       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - name: Check npm publish token
-        id: npm-token
         run: |
           if [ -z "$NODE_AUTH_TOKEN" ]; then
-            echo "present=false" >> "$GITHUB_OUTPUT"
-            echo "NPM_TOKEN is not configured; skipping npm publish."
-          else
-            echo "present=true" >> "$GITHUB_OUTPUT"
+            echo "NPM_TOKEN is not configured; failing release because npm publish is part of the e2e release gate." >&2
+            exit 1
           fi
 
       - uses: actions/checkout@v4
-        if: steps.npm-token.outputs.present == 'true'
 
       - uses: actions/setup-node@v4
-        if: steps.npm-token.outputs.present == 'true'
         with:
           node-version: "22"
           registry-url: "https://registry.npmjs.org"
 
       - name: Align npm package version to release tag
-        if: steps.npm-token.outputs.present == 'true'
         working-directory: npm/atlas
         run: npm version "${GITHUB_REF_NAME#v}" --no-git-tag-version
 
       - name: Publish local binary npm wrapper
-        if: steps.npm-token.outputs.present == 'true'
         working-directory: npm/atlas
         env:
           ATLAS_SKIP_DOWNLOAD: "1"

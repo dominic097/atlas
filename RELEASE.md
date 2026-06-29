@@ -47,7 +47,7 @@ local indexing, search, impact, or MCP.
 | `GITHUB_TOKEN` | `goreleaser` | default token when releases are published from the same repository |
 | `ATLAS_RELEASE_TOKEN` | `goreleaser` | optional PAT with contents write access to `aziron-ai/atlas` when releasing from another repository |
 | `HOMEBREW_TAP_TOKEN` | `goreleaser` | PAT with contents write access to `dominic097/homebrew-atlas` so GoReleaser can push `Casks/atlas.rb` |
-| `NPM_TOKEN` | `npm` | npm automation token with publish rights for the `@dominic097/atlas` package |
+| `NPM_TOKEN` | `npm` | required npm automation token with publish rights for the `@dominic097/atlas` package |
 
 Keyless cosign signing uses GitHub OIDC (`id-token: write` plus Fulcio/Rekor);
 no signing key secret is needed.
@@ -57,6 +57,8 @@ no signing key secret is needed.
 - `dominic097/homebrew-atlas` exists and is writable by the current GitHub user.
 - `aziron-ai/atlas` must exist before the release workflow can publish
   clean public release assets.
+- `NPM_TOKEN` must be configured in `MsysTechnologiesllc/aziron-atlas` before a
+  tag is pushed. The release workflow fails if npm cannot be published.
 - The exact npm package name `atlas` is already registered on npm. The current
   fallback keeps the installed binary name as `atlas` by publishing the scoped
   package `@dominic097/atlas`.
