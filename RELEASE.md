@@ -80,6 +80,23 @@ ATLAS_BINARY=../../bin/atlas npm run smoke
 ATLAS_SKIP_DOWNLOAD=1 npm publish --dry-run --access public
 ```
 
+## Recover npm Publish For An Existing Release
+
+If the GitHub Release and Homebrew cask are already published but npm failed or
+was missing `NPM_TOKEN`, configure a valid `NPM_TOKEN` secret in
+`MsysTechnologiesllc/aziron-atlas`, then run the `npm-publish` workflow with the
+released version number:
+
+```sh
+gh workflow run npm-publish.yml \
+  --repo MsysTechnologiesllc/aziron-atlas \
+  -f version=0.1.22
+```
+
+That workflow verifies the matching `aziron-ai/atlas` GitHub Release exists,
+publishes `@dominic097/atlas`, reads the version back from npm, installs the
+package from the public registry, and runs the installed `atlas` binary.
+
 ## Verifying Signatures
 
 ```sh

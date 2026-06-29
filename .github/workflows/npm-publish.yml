@@ -1,0 +1,66 @@
+name: npm-publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Atlas version to publish to npm, without the leading v"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      ATLAS_VERSION: ${{ inputs.version }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Check npm publish token
+        run: |
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo "NPM_TOKEN is not configured; cannot publish @dominic097/atlas." >&2
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Verify matching GitHub Release exists
+        run: gh release view "v$ATLAS_VERSION" --repo aziron-ai/atlas --json tagName,url
+
+      - name: Align npm package version
+        working-directory: npm/atlas
+        run: |
+          node -e 'const fs = require("fs"); const p = JSON.parse(fs.readFileSync("package.json", "utf8")); p.version = process.env.ATLAS_VERSION; fs.writeFileSync("package.json", JSON.stringify(p, null, 2) + "\n");'
+
+      - name: Publish local binary npm wrapper
+        working-directory: npm/atlas
+        env:
+          ATLAS_SKIP_DOWNLOAD: "1"
+        run: npm publish --access public
+
+      - name: Verify npm package and installed binary
+        run: |
+          set -euo pipefail
+          for i in {1..12}; do
+            published="$(npm view "@dominic097/atlas@$ATLAS_VERSION" version --registry=https://registry.npmjs.org/ 2>/dev/null || true)"
+            if [ "$published" = "$ATLAS_VERSION" ]; then
+              break
+            fi
+            sleep 5
+          done
+          test "$published" = "$ATLAS_VERSION"
+
+          tmp="$(mktemp -d)"
+          npm_config_prefix="$tmp/prefix" npm install -g "@dominic097/atlas@$ATLAS_VERSION"
+          "$tmp/prefix/bin/atlas" version | tee "$tmp/version.txt"
+          grep "atlas $ATLAS_VERSION" "$tmp/version.txt"
+          "$tmp/prefix/bin/atlas" --db "sqlite://$tmp/atlas.db" --repo npm/manual-smoke status

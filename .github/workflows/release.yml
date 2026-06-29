@@ -66,12 +66,34 @@ jobs:
           node-version: "22"
           registry-url: "https://registry.npmjs.org"
 
+      - name: Set release version
+        run: echo "ATLAS_VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
+
       - name: Align npm package version to release tag
         working-directory: npm/atlas
-        run: npm version "${GITHUB_REF_NAME#v}" --no-git-tag-version
+        run: |
+          node -e 'const fs = require("fs"); const p = JSON.parse(fs.readFileSync("package.json", "utf8")); p.version = process.env.ATLAS_VERSION; fs.writeFileSync("package.json", JSON.stringify(p, null, 2) + "\n");'
 
       - name: Publish local binary npm wrapper
         working-directory: npm/atlas
         env:
           ATLAS_SKIP_DOWNLOAD: "1"
         run: npm publish --access public
+
+      - name: Verify npm package and installed binary
+        run: |
+          set -euo pipefail
+          for i in {1..12}; do
+            published="$(npm view "@dominic097/atlas@$ATLAS_VERSION" version --registry=https://registry.npmjs.org/ 2>/dev/null || true)"
+            if [ "$published" = "$ATLAS_VERSION" ]; then
+              break
+            fi
+            sleep 5
+          done
+          test "$published" = "$ATLAS_VERSION"
+
+          tmp="$(mktemp -d)"
+          npm_config_prefix="$tmp/prefix" npm install -g "@dominic097/atlas@$ATLAS_VERSION"
+          "$tmp/prefix/bin/atlas" version | tee "$tmp/version.txt"
+          grep "atlas $ATLAS_VERSION" "$tmp/version.txt"
+          "$tmp/prefix/bin/atlas" --db "sqlite://$tmp/atlas.db" --repo npm/release-smoke status
