@@ -49,6 +49,10 @@ type IndexInput struct {
 	Langs         []string
 	Reindex       bool
 	EnableVectors bool
+	// RespectGitignore prunes git-ignored paths from the walk (the CLI sets this
+	// true by default). Zero value preserves the legacy "index everything" behavior
+	// for SDK callers.
+	RespectGitignore bool
 }
 
 type IndexResult struct {

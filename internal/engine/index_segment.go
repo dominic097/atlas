@@ -46,7 +46,7 @@ func (e *localEngine) indexOne(ctx context.Context, in IndexInput, abs, fullName
 		return nil, err
 	}
 	snap, stats, err := index.Run(ctx, e.store, lx, "", fullName, abs,
-		index.Options{Reindex: in.Reindex, Scope: e.cfg.Scope, EnableVectors: enableVectors, SkipPaths: skipPaths})
+		index.Options{Reindex: in.Reindex, Scope: e.cfg.Scope, EnableVectors: enableVectors, SkipPaths: skipPaths, RespectGitignore: in.RespectGitignore})
 	if err != nil {
 		return nil, err
 	}
@@ -115,7 +115,7 @@ func (e *localEngine) indexSegmented(ctx context.Context, in IndexInput, root st
 		name := job.name
 		pc.SetRepo(name, i+1, len(jobs))
 		snap, stats, rerr := index.Run(ctx, e.store, lx, "", name, job.root,
-			index.Options{Reindex: in.Reindex, Scope: e.cfg.Scope, EnableVectors: enableVectors, SkipPaths: job.skip})
+			index.Options{Reindex: in.Reindex, Scope: e.cfg.Scope, EnableVectors: enableVectors, SkipPaths: job.skip, RespectGitignore: in.RespectGitignore})
 		summary := RepoIndexSummary{Repo: name, Root: job.root}
 		if rerr != nil {
 			summary.Error = rerr.Error()

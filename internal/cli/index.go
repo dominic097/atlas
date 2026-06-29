@@ -75,6 +75,7 @@ func newIndexCmd() *cobra.Command {
 	f.StringVar(&cpuProfile, "cpuprofile", "", "write a runtime/pprof CPU profile of the index run to this path")
 	f.StringVar(&memProfile, "memprofile", "", "write a runtime/pprof heap profile after the index run to this path")
 	f.BoolVar(&progress, "progress", true, "print start, periodic progress, and completion stats to stderr for human output")
+	f.BoolVar(&in.RespectGitignore, "gitignore", true, "skip paths git ignores (build output, caches, vendored runtimes); --gitignore=false to index everything")
 	return cmd
 }
 

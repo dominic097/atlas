@@ -60,6 +60,13 @@ type Options struct {
 	// outer repo's OWN loose files without descending into the nested repos it also
 	// indexes separately — so no file is indexed twice and memory stays bounded.
 	SkipPaths []string
+	// RespectGitignore prunes paths git considers ignored (build output, caches,
+	// vendored runtimes) from the walk, so Atlas indexes source-of-truth files only.
+	// It asks git itself (one `git ls-files` call), so .gitignore semantics — nested
+	// rules, negation, exclude files — are exact; on a non-git tree or without a git
+	// binary it is a silent no-op (everything is indexed). Off by default to keep
+	// library/SDK snapshots stable; the CLI turns it on.
+	RespectGitignore bool
 }
 
 // Stats is the human-facing summary of an indexing run.
@@ -210,13 +217,21 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 		languages  = map[string]int{}
 	)
 
-	// Absolute directory paths to prune (the segmented path passes nested-repo roots
-	// so an outer repo skips the repos it indexes separately).
+	// Absolute paths to prune from the walk: the segmented path's nested-repo roots,
+	// plus (when enabled) everything git ignores. Fully-ignored directories collapse
+	// to one entry so a large ignored tree is skipped at its boundary, not walked.
 	skipPathSet := make(map[string]struct{}, len(opts.SkipPaths))
 	for _, p := range opts.SkipPaths {
 		if ap, aerr := filepath.Abs(p); aerr == nil {
 			skipPathSet[filepath.Clean(ap)] = struct{}{}
 		}
+	}
+	if opts.RespectGitignore {
+		phaseStart = time.Now()
+		for p := range gitIgnoredPaths(ctx, absRoot) {
+			skipPathSet[p] = struct{}{}
+		}
+		phase("gitignore_scan", phaseStart)
 	}
 
 	phaseStart = time.Now()
@@ -253,6 +268,14 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 		// Skip symlinks and other non-regular files.
 		if entry.Type()&fs.ModeSymlink != 0 {
 			return nil
+		}
+
+		// A git-ignored FILE inside an otherwise-tracked directory (the dir-level
+		// prune above only catches fully-ignored directories).
+		if len(skipPathSet) > 0 {
+			if _, skip := skipPathSet[filepath.Clean(path)]; skip {
+				return nil
+			}
 		}
 
 		lang := parser.LanguageForPath(rel)
@@ -840,6 +863,36 @@ func hashContent(b []byte) string {
 // resolveCommitSHA returns the working tree's HEAD commit. The hot path reads
 // .git/HEAD directly to keep no-change reindex cheap; it falls back to
 // `git rev-parse HEAD` for layouts the direct reader does not understand.
+// gitIgnoredPaths returns the set of ABSOLUTE paths under absRoot that git
+// considers ignored. `--directory` collapses a fully-ignored directory to one
+// entry, so a 3GB ignored tree is pruned at its boundary instead of walked. It
+// shells out to git — the same dependency the index already uses for HEAD — and
+// returns nil when absRoot is not a git repo or git is unavailable, so indexing
+// degrades to "index everything" rather than failing. Tracked files are never
+// returned (git does not ignore tracked paths), matching git's own model.
+func gitIgnoredPaths(ctx context.Context, absRoot string) map[string]struct{} {
+	gitBin, err := exec.LookPath("git")
+	if err != nil {
+		return nil
+	}
+	cmd := exec.CommandContext(ctx, gitBin,
+		"ls-files", "--others", "--ignored", "--exclude-standard", "--directory", "-z")
+	cmd.Dir = absRoot
+	out, err := cmd.Output()
+	if err != nil {
+		return nil
+	}
+	set := make(map[string]struct{})
+	for _, rel := range strings.Split(string(out), "\x00") {
+		rel = strings.TrimSuffix(strings.TrimSpace(rel), "/")
+		if rel == "" {
+			continue
+		}
+		set[filepath.Clean(filepath.Join(absRoot, rel))] = struct{}{}
+	}
+	return set
+}
+
 func resolveCommitSHA(ctx context.Context, root string) string {
 	if sha := readGitHead(root); sha != "" {
 		return sha
