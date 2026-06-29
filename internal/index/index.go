@@ -363,6 +363,12 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 	edges = enrichGoTypes(ctx, absRoot, goFiles, edges)
 	phase("go_types", phaseStart)
 
+	// Link indexed documents (decks, specs, images) to the in-repo code they
+	// reference, so a query can cross from a document to the package it describes.
+	phaseStart = time.Now()
+	edges = append(edges, linkDocuments(symbols, files)...)
+	phase("doc_links", phaseStart)
+
 	// Deterministic ordering so identical trees produce identical snapshots. The
 	// same helpers order the delta path's merged rows, guaranteeing a delta
 	// snapshot equals a full reindex of the same HEAD.
