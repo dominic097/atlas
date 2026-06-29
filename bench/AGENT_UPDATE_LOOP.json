@@ -3,7 +3,7 @@
     "atlas": "/tmp/atlas",
     "graphify": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify",
     "cycles": 5,
-    "generated_at": "2026-06-29T21:59:34+0530",
+    "generated_at": "2026-06-29T23:38:51+0530",
     "platform": "darwin"
   },
   "results": [
@@ -15,9 +15,9 @@
       "edit_file": "alt_exit.go",
       "cycles": 5,
       "atlas": {
-        "median_seconds": 0.31,
-        "peak_rss_mb": 80.1,
-        "median_rss_mb": 79.9,
+        "median_seconds": 0.291,
+        "peak_rss_mb": 80.2,
+        "median_rss_mb": 79.7,
         "markers_found": 5,
         "markers_added": 5,
         "accuracy": 1.0,
@@ -26,9 +26,9 @@
         ]
       },
       "graphify": {
-        "median_seconds": 0.5715,
-        "peak_rss_mb": 55.5,
-        "median_rss_mb": 55.1,
+        "median_seconds": 0.548,
+        "peak_rss_mb": 55.3,
+        "median_rss_mb": 55.3,
         "markers_found": 5,
         "markers_added": 5,
         "accuracy": 1.0
@@ -38,8 +38,8 @@
           {
             "cycle": 0,
             "marker": "AtlasLoopMarker_0",
-            "seconds": 0.31,
-            "rss_bytes": 83951616,
+            "seconds": 0.292,
+            "rss_bytes": 84049920,
             "found": true,
             "mode": "delta",
             "rc": 0
@@ -47,8 +47,8 @@
           {
             "cycle": 1,
             "marker": "AtlasLoopMarker_1",
-            "seconds": 0.316,
-            "rss_bytes": 83951616,
+            "seconds": 0.291,
+            "rss_bytes": 83525632,
             "found": true,
             "mode": "delta",
             "rc": 0
@@ -56,8 +56,8 @@
           {
             "cycle": 2,
             "marker": "AtlasLoopMarker_2",
-            "seconds": 0.303,
-            "rss_bytes": 83755008,
+            "seconds": 0.292,
+            "rss_bytes": 83492864,
             "found": true,
             "mode": "delta",
             "rc": 0
@@ -65,8 +65,8 @@
           {
             "cycle": 3,
             "marker": "AtlasLoopMarker_3",
-            "seconds": 0.317,
-            "rss_bytes": 83689472,
+            "seconds": 0.283,
+            "rss_bytes": 83886080,
             "found": true,
             "mode": "delta",
             "rc": 0
@@ -74,8 +74,8 @@
           {
             "cycle": 4,
             "marker": "AtlasLoopMarker_4",
-            "seconds": 0.309,
-            "rss_bytes": 83525632,
+            "seconds": 0.283,
+            "rss_bytes": 83345408,
             "found": true,
             "mode": "delta",
             "rc": 0
@@ -85,40 +85,40 @@
           {
             "cycle": 0,
             "marker": "AtlasLoopMarker_0",
-            "seconds": 0.5656,
-            "rss_bytes": 56852480,
+            "seconds": 0.5255,
+            "rss_bytes": 56360960,
             "found": true,
             "rc": 0
           },
           {
             "cycle": 1,
             "marker": "AtlasLoopMarker_1",
-            "seconds": 0.5696,
-            "rss_bytes": 57884672,
+            "seconds": 0.5191,
+            "rss_bytes": 56344576,
             "found": true,
             "rc": 0
           },
           {
             "cycle": 2,
             "marker": "AtlasLoopMarker_2",
-            "seconds": 0.5937,
-            "rss_bytes": 58228736,
+            "seconds": 0.548,
+            "rss_bytes": 57982976,
             "found": true,
             "rc": 0
           },
           {
             "cycle": 3,
             "marker": "AtlasLoopMarker_3",
-            "seconds": 0.6283,
-            "rss_bytes": 57753600,
+            "seconds": 0.5633,
+            "rss_bytes": 57982976,
             "found": true,
             "rc": 0
           },
           {
             "cycle": 4,
             "marker": "AtlasLoopMarker_4",
-            "seconds": 0.5715,
-            "rss_bytes": 57475072,
+            "seconds": 0.5639,
+            "rss_bytes": 57966592,
             "found": true,
             "rc": 0
           }
@@ -133,9 +133,9 @@
       "edit_file": "src/requests/__init__.py",
       "cycles": 5,
       "atlas": {
-        "median_seconds": 0.068,
-        "peak_rss_mb": 49.3,
-        "median_rss_mb": 48.2,
+        "median_seconds": 0.064,
+        "peak_rss_mb": 48.7,
+        "median_rss_mb": 47.3,
         "markers_found": 5,
         "markers_added": 5,
         "accuracy": 1.0,
@@ -144,9 +144,9 @@
         ]
       },
       "graphify": {
-        "median_seconds": 0.6464,
-        "peak_rss_mb": 59.7,
-        "median_rss_mb": 58.9,
+        "median_seconds": 0.6225,
+        "peak_rss_mb": 60.0,
+        "median_rss_mb": 57.4,
         "markers_found": 5,
         "markers_added": 5,
         "accuracy": 1.0
@@ -156,8 +156,8 @@
           {
             "cycle": 0,
             "marker": "AtlasLoopMarker_0",
-            "seconds": 0.075,
-            "rss_bytes": 51691520,
+            "seconds": 0.062,
+            "rss_bytes": 48136192,
             "found": true,
             "mode": "delta",
             "rc": 0
@@ -165,8 +165,8 @@
           {
             "cycle": 1,
             "marker": "AtlasLoopMarker_1",
-            "seconds": 0.078,
-            "rss_bytes": 50577408,
+            "seconds": 0.061,
+            "rss_bytes": 49627136,
             "found": true,
             "mode": "delta",
             "rc": 0
@@ -174,8 +174,8 @@
           {
             "cycle": 2,
             "marker": "AtlasLoopMarker_2",
-            "seconds": 0.063,
-            "rss_bytes": 51429376,
+            "seconds": 0.064,
+            "rss_bytes": 49102848,
             "found": true,
             "mode": "delta",
             "rc": 0
@@ -184,7 +184,7 @@
             "cycle": 3,
             "marker": "AtlasLoopMarker_3",
             "seconds": 0.068,
-            "rss_bytes": 49627136,
+            "rss_bytes": 50331648,
             "found": true,
             "mode": "delta",
             "rc": 0
@@ -192,8 +192,8 @@
           {
             "cycle": 4,
             "marker": "AtlasLoopMarker_4",
-            "seconds": 0.061,
-            "rss_bytes": 48988160,
+            "seconds": 0.065,
+            "rss_bytes": 51085312,
             "found": true,
             "mode": "delta",
             "rc": 0
@@ -203,158 +203,40 @@
           {
             "cycle": 0,
             "marker": "AtlasLoopMarker_0",
-            "seconds": 0.6717,
-            "rss_bytes": 62570496,
+            "seconds": 0.8002,
+            "rss_bytes": 62930944,
             "found": true,
             "rc": 0
           },
           {
             "cycle": 1,
             "marker": "AtlasLoopMarker_1",
-            "seconds": 0.6509,
-            "rss_bytes": 61751296,
+            "seconds": 0.6218,
+            "rss_bytes": 61652992,
             "found": true,
             "rc": 0
           },
           {
             "cycle": 2,
             "marker": "AtlasLoopMarker_2",
-            "seconds": 0.6464,
-            "rss_bytes": 60489728,
+            "seconds": 0.6137,
+            "rss_bytes": 60162048,
             "found": true,
             "rc": 0
           },
           {
             "cycle": 3,
             "marker": "AtlasLoopMarker_3",
-            "seconds": 0.6324,
-            "rss_bytes": 60456960,
+            "seconds": 0.6225,
+            "rss_bytes": 60162048,
             "found": true,
             "rc": 0
           },
           {
             "cycle": 4,
             "marker": "AtlasLoopMarker_4",
-            "seconds": 0.6398,
-            "rss_bytes": 62160896,
-            "found": true,
-            "rc": 0
-          }
-        ]
-      }
-    },
-    {
-      "lang": "javascript",
-      "url": "https://github.com/expressjs/express",
-      "ok": true,
-      "error": null,
-      "edit_file": "lib/application.js",
-      "cycles": 5,
-      "atlas": {
-        "median_seconds": 0.06,
-        "peak_rss_mb": 43.7,
-        "median_rss_mb": 43.1,
-        "markers_found": 5,
-        "markers_added": 5,
-        "accuracy": 1.0,
-        "modes": [
-          "delta"
-        ]
-      },
-      "graphify": {
-        "median_seconds": 0.1501,
-        "peak_rss_mb": 46.0,
-        "median_rss_mb": 45.7,
-        "markers_found": 5,
-        "markers_added": 5,
-        "accuracy": 1.0
-      },
-      "raw": {
-        "atlas": [
-          {
-            "cycle": 0,
-            "marker": "AtlasLoopMarker_0",
-            "seconds": 0.06,
-            "rss_bytes": 45645824,
-            "found": true,
-            "mode": "delta",
-            "rc": 0
-          },
-          {
-            "cycle": 1,
-            "marker": "AtlasLoopMarker_1",
-            "seconds": 0.066,
-            "rss_bytes": 43417600,
-            "found": true,
-            "mode": "delta",
-            "rc": 0
-          },
-          {
-            "cycle": 2,
-            "marker": "AtlasLoopMarker_2",
-            "seconds": 0.06,
-            "rss_bytes": 44285952,
-            "found": true,
-            "mode": "delta",
-            "rc": 0
-          },
-          {
-            "cycle": 3,
-            "marker": "AtlasLoopMarker_3",
-            "seconds": 0.069,
-            "rss_bytes": 45154304,
-            "found": true,
-            "mode": "delta",
-            "rc": 0
-          },
-          {
-            "cycle": 4,
-            "marker": "AtlasLoopMarker_4",
-            "seconds": 0.056,
-            "rss_bytes": 45842432,
-            "found": true,
-            "mode": "delta",
-            "rc": 0
-          }
-        ],
-        "graphify": [
-          {
-            "cycle": 0,
-            "marker": "AtlasLoopMarker_0",
-            "seconds": 0.1536,
-            "rss_bytes": 48283648,
-            "found": true,
-            "rc": 0
-          },
-          {
-            "cycle": 1,
-            "marker": "AtlasLoopMarker_1",
-            "seconds": 0.1577,
-            "rss_bytes": 48267264,
-            "found": true,
-            "rc": 0
-          },
-          {
-            "cycle": 2,
-            "marker": "AtlasLoopMarker_2",
-            "seconds": 0.1472,
-            "rss_bytes": 47726592,
-            "found": true,
-            "rc": 0
-          },
-          {
-            "cycle": 3,
-            "marker": "AtlasLoopMarker_3",
-            "seconds": 0.1475,
-            "rss_bytes": 47726592,
-            "found": true,
-            "rc": 0
-          },
-          {
-            "cycle": 4,
-            "marker": "AtlasLoopMarker_4",
-            "seconds": 0.1501,
-            "rss_bytes": 47955968,
+            "seconds": 0.6228,
+            "rss_bytes": 60211200,
             "found": true,
             "rc": 0
           }
@@ -369,9 +251,9 @@
       "edit_file": "gson/src/main/java/com/google/gson/ExclusionStrategy.java",
       "cycles": 5,
       "atlas": {
-        "median_seconds": 0.127,
-        "peak_rss_mb": 66.5,
-        "median_rss_mb": 61.9,
+        "median_seconds": 0.121,
+        "peak_rss_mb": 65.2,
+        "median_rss_mb": 61.4,
         "markers_found": 5,
         "markers_added": 5,
         "accuracy": 1.0,
@@ -380,9 +262,9 @@
         ]
       },
       "graphify": {
-        "median_seconds": 0.848,
-        "peak_rss_mb": 77.9,
-        "median_rss_mb": 76.5,
+        "median_seconds": 0.8377,
+        "peak_rss_mb": 78.6,
+        "median_rss_mb": 76.2,
         "markers_found": 5,
         "markers_added": 5,
         "accuracy": 1.0
@@ -392,8 +274,8 @@
           {
             "cycle": 0,
             "marker": "AtlasLoopMarker_0",
-            "seconds": 0.148,
-            "rss_bytes": 69713920,
+            "seconds": 0.135,
+            "rss_bytes": 68403200,
             "found": true,
             "mode": "delta",
             "rc": 0
@@ -401,8 +283,8 @@
           {
             "cycle": 1,
             "marker": "AtlasLoopMarker_1",
-            "seconds": 0.164,
-            "rss_bytes": 65060864,
+            "seconds": 0.117,
+            "rss_bytes": 63275008,
             "found": true,
             "mode": "delta",
             "rc": 0
@@ -410,8 +292,8 @@
           {
             "cycle": 2,
             "marker": "AtlasLoopMarker_2",
-            "seconds": 0.126,
-            "rss_bytes": 64438272,
+            "seconds": 0.121,
+            "rss_bytes": 64421888,
             "found": true,
             "mode": "delta",
             "rc": 0
@@ -419,8 +301,8 @@
           {
             "cycle": 3,
             "marker": "AtlasLoopMarker_3",
-            "seconds": 0.127,
-            "rss_bytes": 61898752,
+            "seconds": 0.125,
+            "rss_bytes": 64258048,
             "found": true,
             "mode": "delta",
             "rc": 0
@@ -428,8 +310,8 @@
           {
             "cycle": 4,
             "marker": "AtlasLoopMarker_4",
-            "seconds": 0.123,
-            "rss_bytes": 64946176,
+            "seconds": 0.116,
+            "rss_bytes": 64602112,
             "found": true,
             "mode": "delta",
             "rc": 0
@@ -439,158 +321,40 @@
           {
             "cycle": 0,
             "marker": "AtlasLoopMarker_0",
-            "seconds": 0.9411,
-            "rss_bytes": 80232448,
-            "found": true,
-            "rc": 0
-          },
-          {
-            "cycle": 1,
-            "marker": "AtlasLoopMarker_1",
-            "seconds": 0.8763,
-            "rss_bytes": 81723392,
-            "found": true,
-            "rc": 0
-          },
-          {
-            "cycle": 2,
-            "marker": "AtlasLoopMarker_2",
-            "seconds": 0.8436,
-            "rss_bytes": 78594048,
-            "found": true,
-            "rc": 0
-          },
-          {
-            "cycle": 3,
-            "marker": "AtlasLoopMarker_3",
-            "seconds": 0.8343,
+            "seconds": 0.8377,
             "rss_bytes": 78348288,
             "found": true,
             "rc": 0
           },
           {
-            "cycle": 4,
-            "marker": "AtlasLoopMarker_4",
-            "seconds": 0.848,
-            "rss_bytes": 81297408,
-            "found": true,
-            "rc": 0
-          }
-        ]
-      }
-    },
-    {
-      "lang": "c",
-      "url": "https://github.com/DaveGamble/cJSON",
-      "ok": true,
-      "error": null,
-      "edit_file": "cJSON.c",
-      "cycles": 5,
-      "atlas": {
-        "median_seconds": 0.189,
-        "peak_rss_mb": 72.9,
-        "median_rss_mb": 71.5,
-        "markers_found": 5,
-        "markers_added": 5,
-        "accuracy": 1.0,
-        "modes": [
-          "delta"
-        ]
-      },
-      "graphify": {
-        "median_seconds": 0.9144,
-        "peak_rss_mb": 66.1,
-        "median_rss_mb": 65.1,
-        "markers_found": 5,
-        "markers_added": 5,
-        "accuracy": 1.0
-      },
-      "raw": {
-        "atlas": [
-          {
-            "cycle": 0,
-            "marker": "AtlasLoopMarker_0",
-            "seconds": 0.2,
-            "rss_bytes": 72646656,
-            "found": true,
-            "mode": "delta",
-            "rc": 0
-          },
-          {
             "cycle": 1,
             "marker": "AtlasLoopMarker_1",
-            "seconds": 0.189,
-            "rss_bytes": 72892416,
-            "found": true,
-            "mode": "delta",
-            "rc": 0
-          },
-          {
-            "cycle": 2,
-            "marker": "AtlasLoopMarker_2",
-            "seconds": 0.186,
-            "rss_bytes": 74924032,
-            "found": true,
-            "mode": "delta",
-            "rc": 0
-          },
-          {
-            "cycle": 3,
-            "marker": "AtlasLoopMarker_3",
-            "seconds": 0.185,
-            "rss_bytes": 75350016,
-            "found": true,
-            "mode": "delta",
-            "rc": 0
-          },
-          {
-            "cycle": 4,
-            "marker": "AtlasLoopMarker_4",
-            "seconds": 0.2,
-            "rss_bytes": 76431360,
-            "found": true,
-            "mode": "delta",
-            "rc": 0
-          }
-        ],
-        "graphify": [
-          {
-            "cycle": 0,
-            "marker": "AtlasLoopMarker_0",
-            "seconds": 0.8827,
-            "rss_bytes": 69271552,
-            "found": true,
-            "rc": 0
-          },
-          {
-            "cycle": 1,
-            "marker": "AtlasLoopMarker_1",
-            "seconds": 0.8885,
-            "rss_bytes": 69287936,
+            "seconds": 0.8487,
+            "rss_bytes": 80953344,
             "found": true,
             "rc": 0
           },
           {
             "cycle": 2,
             "marker": "AtlasLoopMarker_2",
-            "seconds": 0.9453,
-            "rss_bytes": 66977792,
+            "seconds": 0.8482,
+            "rss_bytes": 82411520,
             "found": true,
             "rc": 0
           },
           {
             "cycle": 3,
             "marker": "AtlasLoopMarker_3",
-            "seconds": 0.9267,
-            "rss_bytes": 67436544,
+            "seconds": 0.8268,
+            "rss_bytes": 79921152,
             "found": true,
             "rc": 0
           },
           {
             "cycle": 4,
             "marker": "AtlasLoopMarker_4",
-            "seconds": 0.9144,
-            "rss_bytes": 68288512,
+            "seconds": 0.8159,
+            "rss_bytes": 78233600,
             "found": true,
             "rc": 0
           }
@@ -605,9 +369,9 @@
       "edit_file": "benchmarks/db_bench.cc",
       "cycles": 5,
       "atlas": {
-        "median_seconds": 0.292,
+        "median_seconds": 0.302,
         "peak_rss_mb": 90.4,
-        "median_rss_mb": 89.8,
+        "median_rss_mb": 90.0,
         "markers_found": 5,
         "markers_added": 5,
         "accuracy": 1.0,
@@ -616,9 +380,9 @@
         ]
       },
       "graphify": {
-        "median_seconds": 1.377,
-        "peak_rss_mb": 97.9,
-        "median_rss_mb": 95.8,
+        "median_seconds": 1.3478,
+        "peak_rss_mb": 98.0,
+        "median_rss_mb": 97.2,
         "markers_found": 5,
         "markers_added": 5,
         "accuracy": 1.0
@@ -628,8 +392,8 @@
           {
             "cycle": 0,
             "marker": "AtlasLoopMarker_0",
-            "seconds": 0.287,
-            "rss_bytes": 94224384,
+            "seconds": 0.27,
+            "rss_bytes": 93290496,
             "found": true,
             "mode": "delta",
             "rc": 0
@@ -637,8 +401,8 @@
           {
             "cycle": 1,
             "marker": "AtlasLoopMarker_1",
-            "seconds": 0.328,
-            "rss_bytes": 91947008,
+            "seconds": 0.282,
+            "rss_bytes": 94748672,
             "found": true,
             "mode": "delta",
             "rc": 0
@@ -646,8 +410,8 @@
           {
             "cycle": 2,
             "marker": "AtlasLoopMarker_2",
-            "seconds": 0.29,
-            "rss_bytes": 94797824,
+            "seconds": 0.512,
+            "rss_bytes": 94486528,
             "found": true,
             "mode": "delta",
             "rc": 0
@@ -655,8 +419,8 @@
           {
             "cycle": 3,
             "marker": "AtlasLoopMarker_3",
-            "seconds": 0.292,
-            "rss_bytes": 94158848,
+            "seconds": 0.482,
+            "rss_bytes": 94339072,
             "found": true,
             "mode": "delta",
             "rc": 0
@@ -664,8 +428,8 @@
           {
             "cycle": 4,
             "marker": "AtlasLoopMarker_4",
-            "seconds": 0.324,
-            "rss_bytes": 94011392,
+            "seconds": 0.302,
+            "rss_bytes": 93274112,
             "found": true,
             "mode": "delta",
             "rc": 0
@@ -675,40 +439,40 @@
           {
             "cycle": 0,
             "marker": "AtlasLoopMarker_0",
-            "seconds": 1.4286,
-            "rss_bytes": 99844096,
+            "seconds": 1.2732,
+            "rss_bytes": 100417536,
             "found": true,
             "rc": 0
           },
           {
             "cycle": 1,
             "marker": "AtlasLoopMarker_1",
-            "seconds": 1.3304,
-            "rss_bytes": 102678528,
+            "seconds": 1.3941,
+            "rss_bytes": 102727680,
             "found": true,
             "rc": 0
           },
           {
             "cycle": 2,
             "marker": "AtlasLoopMarker_2",
-            "seconds": 1.377,
-            "rss_bytes": 100433920,
+            "seconds": 1.3478,
+            "rss_bytes": 101974016,
             "found": true,
             "rc": 0
           },
           {
             "cycle": 3,
             "marker": "AtlasLoopMarker_3",
-            "seconds": 1.3819,
-            "rss_bytes": 101793792,
+            "seconds": 1.3893,
+            "rss_bytes": 102350848,
             "found": true,
             "rc": 0
           },
           {
             "cycle": 4,
             "marker": "AtlasLoopMarker_4",
-            "seconds": 1.3718,
-            "rss_bytes": 98877440,
+            "seconds": 1.2666,
+            "rss_bytes": 101367808,
             "found": true,
             "rc": 0
           }
