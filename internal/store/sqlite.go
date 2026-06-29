@@ -53,9 +53,24 @@ func openSQLite(ctx context.Context, path string) (StorageDriver, error) {
 	return &sqliteDriver{path: path, db: db}, nil
 }
 
+// sqliteSchemaVersion is bumped whenever schemaSQLite changes. Migrate stamps it
+// into PRAGMA user_version after applying the schema, so subsequent opens (the
+// common case — every read query) skip the 22 DDL statements entirely and pay
+// only one pragma read. This is the dominant per-invocation startup cost for
+// query ops, where the actual query is a few ms but schema replay was not.
+const sqliteSchemaVersion = 1
+
 func (d *sqliteDriver) Migrate(ctx context.Context) error {
+	var ver int
+	if err := d.db.QueryRowContext(ctx, "PRAGMA user_version").Scan(&ver); err == nil && ver >= sqliteSchemaVersion {
+		return nil // schema already current — skip all DDL replay
+	}
 	if _, err := d.db.ExecContext(ctx, schemaSQLite); err != nil {
 		return fmt.Errorf("store: migrate sqlite: %w", err)
+	}
+	// PRAGMA user_version takes no bound parameter; the version is a constant.
+	if _, err := d.db.ExecContext(ctx, fmt.Sprintf("PRAGMA user_version=%d", sqliteSchemaVersion)); err != nil {
+		return fmt.Errorf("store: stamp sqlite schema version: %w", err)
 	}
 	return nil
 }

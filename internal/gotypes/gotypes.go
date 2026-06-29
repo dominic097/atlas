@@ -51,6 +51,47 @@ const loadTimeout = 90 * time.Second
 // (we already cap total files at maxGoFiles).
 const maxRefEdges = 8000
 
+// loadMode is the explicit, minimal set of go/packages NeedX bits this analyzer
+// actually consumes, replacing the deprecated LoadSyntax alias. Each bit is load-
+// bearing for the two precision outputs (recv_type overrides + type-use RefEdges):
+//
+//	NeedName             pkg.Module.Path comparison (inModule) needs package paths
+//	NeedFiles            establishes pkg.Fset / file positions
+//	NeedCompiledGoFiles  the files actually type-checked (positions join AST edges)
+//	NeedImports          import graph required before any package can type-check
+//	NeedTypes            *types.Package — Selections/Types receiver resolution
+//	NeedTypesInfo        pkg.TypesInfo (Selections, Types, Uses) — the whole engine
+//	NeedSyntax           pkg.Syntax (the typed AST we walk)
+//	NeedModule           pkg.Module — the in-module RefEdge filter (inModule)
+//
+// Deliberately ABSENT:
+//   - NeedDeps: dependency type info is read from compiled export data, NOT
+//     re-type-checked from source. Setting it would re-typecheck the whole
+//     transitive world (the LoadAllSyntax behavior) and is the single biggest
+//     way to blow up index time — we never want it.
+//   - NeedTypesSizes: the loader derives type sizes from the `go list` response
+//     whenever NeedTypes/NeedTypesInfo is set (packages.go: ld.sizes is populated
+//     unconditionally from response.Compiler/Arch), so the explicit bit is
+//     redundant for correct type-checking.
+//
+// NOTE (measured, do not re-litigate as a perf lever): swapping LoadSyntax for
+// this minimal set was verified to produce byte-identical precision output
+// (recv_source=go_types call edges + references edges) on logrus, and is NOT a
+// cold-index speedup. The cold go/types cost is dominated by the Go toolchain
+// compiling dependency export data — `go list -export ./...` alone is ~3.0s cold
+// vs ~0.11s warm on logrus, i.e. essentially the entire cold go_types phase —
+// which `packages.Load` must trigger for ANY mode that requests types. Mode
+// choice moved cold load by less than its run-to-run variance. This is a
+// correctness/clarity change (explicit non-deprecated intent), not a perf win.
+const loadMode = packages.NeedName |
+	packages.NeedFiles |
+	packages.NeedCompiledGoFiles |
+	packages.NeedImports |
+	packages.NeedTypes |
+	packages.NeedTypesInfo |
+	packages.NeedSyntax |
+	packages.NeedModule
+
 // CallRecv is a precise receiver base-type binding for a single method-call
 // site. File is relative to the repo root with forward slashes; Line/Callee
 // match the AST parser's call-edge Line and ToRef so the index can join them.
@@ -112,7 +153,7 @@ func Analyze(ctx context.Context, repoRoot string, goFileCount int) (result Resu
 	defer cancel()
 
 	cfg := &packages.Config{
-		Mode:    packages.LoadSyntax | packages.NeedModule,
+		Mode:    loadMode,
 		Dir:     repoRoot,
 		Context: loadCtx,
 		Tests:   false,

@@ -26,11 +26,16 @@ import queue
 import re
 import shlex
 import shutil
+import socket
 import sqlite3
+import statistics
 import subprocess
 import sys
 import threading
 import time
+import urllib.error
+import urllib.parse
+import urllib.request
 from pathlib import Path
 from typing import Any
 
@@ -521,6 +526,14 @@ def run_atlas(atlas_bin: str | None, target: Path, db: Path, log: list[str]) -> 
                 "cold_seconds": cold_seconds,
                 "cold_duration_ms": cold_parsed.get("duration_ms", 0),
                 "cold_timings_ms": cold_parsed.get("timings_ms", {}),
+                # Explicit aliases so the report never confuses the two builds:
+                # full_seconds = cold full index (fair vs graphify FULL / scip-go
+                # / gopls cold); delta_seconds = no-change reindex (fair vs the
+                # incremental path of tools that support one).
+                "full_seconds": cold_seconds,
+                "cold_mode": cold_parsed.get("mode", ""),
+                "delta_seconds": seconds,
+                "delta_mode": parsed.get("mode", ""),
             }
         )
     except json.JSONDecodeError:
@@ -535,11 +548,14 @@ def run_graphify(graphify_bin: str | None, target: Path, log: list[str]) -> dict
         return missing("graphify", "graphify")
     clean_generated_sidecars(target)
     graph_out = target / "graphify-out"
+    # First `update` with no prior `graphify-out/` is graphify's FULL extract.
     start = time.time()
     result = run([graphify_bin, "update", "."], cwd=target, timeout=900)
     seconds = round(time.time() - start, 3)
-    log.append(f"$ {graphify_bin} update . (cwd={target})\n{result.stdout}{result.stderr}")
+    log.append(f"$ {graphify_bin} update . (cwd={target})  # full extract\n{result.stdout}{result.stderr}")
     out = base_result("graphify", "ok" if result.returncode == 0 else "failed")
+    # `seconds` is graphify's FULL extract wall time (apples-to-apples with
+    # Atlas's cold full index). It must never be paired against Atlas's delta.
     out["seconds"] = seconds
     graph_json = graph_out / "graph.json"
     if not graph_json.exists():
@@ -547,6 +563,19 @@ def run_graphify(graphify_bin: str | None, target: Path, log: list[str]) -> dict
         out["status"] = "failed"
         out["note"] = result.stderr.strip() or result.stdout.strip() or "graphify-out/graph.json missing"
         return out
+    # Second `update` keeps the existing `graphify-out/` so graphify re-runs in
+    # its incremental/no-change path; this is the fair delta-vs-delta baseline
+    # for Atlas's no-change reindex. We do NOT clean the sidecar in between.
+    delta_seconds: float | None = None
+    delta = run([graphify_bin, "update", "."], cwd=target, timeout=900)
+    if delta.returncode == 0 and graph_json.exists():
+        d_start = time.time()
+        delta = run([graphify_bin, "update", "."], cwd=target, timeout=900)
+        delta_seconds = round(time.time() - d_start, 3)
+        log.append(
+            f"$ {graphify_bin} update . (cwd={target})  # no-change re-update (delta-vs-delta baseline)\n"
+            f"{delta.stdout}{delta.stderr}"
+        )
     graph = json.loads(graph_json.read_text())
     links = graph.get("links", [])
     calls = [link for link in links if link.get("relation") == "calls"]
@@ -557,6 +586,9 @@ def run_graphify(graphify_bin: str | None, target: Path, log: list[str]) -> dict
         "calls": len(calls),
         "extracted_calls": extracted,
         "extracted_pct": pct(extracted, len(calls)),
+        "full_seconds": seconds,
+        "delta_seconds": delta_seconds,
+        "supports_incremental": delta_seconds is not None,
     }
     return out
 
@@ -1312,10 +1344,11 @@ def run_clangd(cmd_prefix: list[str] | None, lang: str, repo: Path, target: Path
         log.append(f"$ {' '.join(cmd)} (cwd={repo})\nstatus={out.get('status')} note={out.get('note', '')}\nstderr_tail={' | '.join(stderr_tail[-10:])}")
 
 
-def query_token_rows(atlas_bin: str | None, graphify_bin: str | None, db: Path, target: Path, log: list[str]) -> list[dict[str, Any]]:
-    if not atlas_bin or not graphify_bin or not db.exists():
+def atlas_hub_names(atlas_bin: str | None, db: Path, limit: int = 6) -> list[str]:
+    """Return Atlas hub symbol names (most-connected symbols) for query probes."""
+    if not atlas_bin or not db.exists():
         return []
-    hubs = run([atlas_bin, "--db", f"sqlite://{db}", "--json", "hubs", "--limit", "6"])
+    hubs = run([atlas_bin, "--db", f"sqlite://{db}", "--json", "hubs", "--limit", str(limit)])
     names: list[str] = []
     try:
         for hub in json.loads(hubs.stdout).get("hubs", []):
@@ -1323,6 +1356,178 @@ def query_token_rows(atlas_bin: str | None, graphify_bin: str | None, db: Path, 
             if name and name not in names:
                 names.append(name)
     except json.JSONDecodeError:
+        return []
+    return names
+
+
+def _free_tcp_port() -> int:
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        sock.bind(("127.0.0.1", 0))
+        return sock.getsockname()[1]
+    finally:
+        sock.close()
+
+
+def _http_get_ms(url: str, timeout: float = 5.0) -> tuple[float | None, int, int]:
+    """GET url; return (elapsed_ms, status, body_len). elapsed_ms is None on error."""
+    start = time.time()
+    try:
+        with urllib.request.urlopen(url, timeout=timeout) as resp:
+            body = resp.read()
+            return round((time.time() - start) * 1000, 3), resp.status, len(body)
+    except urllib.error.HTTPError as exc:
+        # 404 still measures the warm round-trip; record it rather than discard.
+        return round((time.time() - start) * 1000, 3), exc.code, 0
+    except (urllib.error.URLError, OSError):
+        return None, 0, 0
+
+
+def atlas_warm_serve_latency(
+    atlas_bin: str | None,
+    db: Path,
+    names: list[str],
+    log: list[str],
+    samples: int = 5,
+) -> dict[str, Any]:
+    """Start `atlas serve` against the already-indexed DB, warm it, and time warm
+    HTTP queries. This is the FAIR persistent-daemon latency path (comparable to a
+    warm LSP server). It is reported in its own section and is NEVER divided by a
+    cold graphify CLI time, because graphify has no warm/server mode.
+
+    Raw per-call millisecond samples are preserved alongside the median.
+    """
+    out: dict[str, Any] = {
+        "status": "skipped",
+        "ok": False,
+        "note": "",
+        "addr": "",
+        "healthz_ms": [],
+        "healthz_median_ms": None,
+        "explain": [],
+        "explain_median_ms": None,
+        "explain_all_ms": [],
+    }
+    if not atlas_bin or not db.exists() or not names:
+        out["note"] = "atlas binary, indexed db, or hub symbols unavailable for warm serve"
+        return out
+    port = _free_tcp_port()
+    addr = f"127.0.0.1:{port}"
+    out["addr"] = addr
+    base = f"http://{addr}"
+    try:
+        proc = subprocess.Popen(
+            [atlas_bin, "--db", f"sqlite://{db}", "serve", "--addr", addr],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+        )
+    except OSError as exc:
+        out["status"] = "failed"
+        out["note"] = f"could not start atlas serve: {exc}"
+        return out
+
+    try:
+        # Wait for the server to answer /healthz before any measurement.
+        deadline = time.time() + 20.0
+        ready = False
+        while time.time() < deadline:
+            if proc.poll() is not None:
+                break
+            ms, status, _ = _http_get_ms(f"{base}/healthz", timeout=1.0)
+            if ms is not None and status == 200:
+                ready = True
+                break
+            time.sleep(0.05)
+        if not ready:
+            out["status"] = "failed"
+            out["note"] = (
+                f"atlas serve did not become ready on {addr}"
+                + (f" (process exited {proc.returncode})" if proc.poll() is not None else "")
+            )
+            return out
+
+        # Warm-up pass (untimed) so we measure the steady-state daemon, not the
+        # first request that lazily opens the DB / fills caches.
+        for name in names:
+            _http_get_ms(f"{base}/api/v1/symbols/{urllib.parse.quote(name)}/explain")
+        _http_get_ms(f"{base}/healthz")
+
+        # Warm /healthz (server-floor with no query work).
+        healthz_ms = []
+        for _ in range(samples):
+            ms, status, _ = _http_get_ms(f"{base}/healthz")
+            if ms is not None and status == 200:
+                healthz_ms.append(ms)
+        out["healthz_ms"] = healthz_ms
+        if healthz_ms:
+            out["healthz_median_ms"] = round(statistics.median(healthz_ms), 3)
+
+        # Warm explain per hub symbol; keep every raw sample.
+        explain_rows: list[dict[str, Any]] = []
+        all_ms: list[float] = []
+        for name in names:
+            per: list[float] = []
+            body_len = 0
+            last_status = 0
+            for _ in range(samples):
+                ms, status, blen = _http_get_ms(
+                    f"{base}/api/v1/symbols/{urllib.parse.quote(name)}/explain"
+                )
+                last_status = status
+                if ms is not None and status == 200:
+                    per.append(ms)
+                    body_len = blen
+            if per:
+                med = round(statistics.median(per), 3)
+                all_ms.extend(per)
+                explain_rows.append(
+                    {
+                        "symbol": name,
+                        "samples_ms": per,
+                        "median_ms": med,
+                        "body_bytes": body_len,
+                        "status": last_status,
+                    }
+                )
+        out["explain"] = explain_rows
+        out["explain_all_ms"] = all_ms
+        if all_ms:
+            out["explain_median_ms"] = round(statistics.median(all_ms), 3)
+            out["status"] = "ok"
+            out["ok"] = True
+        else:
+            out["status"] = "failed"
+            out["note"] = "no warm explain samples succeeded"
+        log.append(
+            "$ atlas serve --addr "
+            + addr
+            + " (warm HTTP latency)\n"
+            + f"healthz_median_ms={out['healthz_median_ms']} explain_median_ms={out['explain_median_ms']} "
+            + f"samples_per_symbol={samples}"
+        )
+        return out
+    finally:
+        # Stop the server cleanly: SIGTERM, then wait, then kill as a last resort.
+        try:
+            if proc.poll() is None:
+                proc.terminate()
+                try:
+                    proc.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    proc.kill()
+                    proc.wait(timeout=5)
+        except Exception:
+            try:
+                proc.kill()
+            except Exception:
+                pass
+
+
+def query_token_rows(atlas_bin: str | None, graphify_bin: str | None, db: Path, target: Path, log: list[str]) -> list[dict[str, Any]]:
+    if not atlas_bin or not graphify_bin or not db.exists():
+        return []
+    names = atlas_hub_names(atlas_bin, db, limit=6)
+    if not names:
         return []
 
     if names:
@@ -1446,6 +1651,8 @@ def run_language(lang: str, args: argparse.Namespace, workdir: Path) -> dict[str
         truth["python_ast"] = py_truth
 
     queries = query_token_rows(atlas_bin, graphify_bin, db, target, log)
+    hub_names = atlas_hub_names(atlas_bin, db, limit=6)[:4]
+    warm_latency = atlas_warm_serve_latency(atlas_bin, db, hub_names, log)
     (Path(args.out).parent / "logs").mkdir(parents=True, exist_ok=True)
     (Path(args.out).parent / "logs" / f"{lang}-matrix.log").write_text("\n\n".join(log))
     return {
@@ -1456,6 +1663,7 @@ def run_language(lang: str, args: argparse.Namespace, workdir: Path) -> dict[str
         "tools": tools,
         "truth": truth,
         "queries": queries,
+        "atlas_warm_serve": warm_latency,
     }
 
 
@@ -1467,11 +1675,16 @@ def tool_cell(result: dict[str, Any], key: str) -> str:
         return tool.get("status", "missing")
     metrics = tool.get("metrics", {})
     if key == "atlas":
-        cold = metrics.get("cold_seconds")
-        suffix = f" reindex (cold {cold}s)" if cold is not None else ""
-        return f"{metrics.get('symbols', 0)} symbols, {metrics.get('calls', 0)} calls, {tool['seconds']}s{suffix}"
+        cold = metrics.get("full_seconds", metrics.get("cold_seconds"))
+        delta = metrics.get("delta_seconds", tool["seconds"])
+        cold_txt = f"{cold}s cold full" if cold is not None else f"{tool['seconds']}s"
+        return f"{metrics.get('symbols', 0)} symbols, {metrics.get('calls', 0)} calls, {cold_txt} ({delta}s delta)"
     if key == "graphify":
-        return f"{metrics.get('nodes', 0)} nodes, {metrics.get('calls', 0)} calls, {tool['seconds']}s"
+        gm = metrics
+        full = gm.get("full_seconds", tool["seconds"])
+        delta = gm.get("delta_seconds")
+        delta_txt = f" ({delta}s delta)" if delta is not None else ""
+        return f"{gm.get('nodes', 0)} nodes, {gm.get('calls', 0)} calls, {full}s full{delta_txt}"
     if key == "scip-go":
         return f"{metrics.get('symbols', 0)} symbols, {metrics.get('occurrences', 0)} occ, {tool['seconds']}s"
     if key == "scip-python":
@@ -1691,11 +1904,163 @@ def render_tool_manifest(tool_manifest: dict[str, Any]) -> list[str]:
     return lines
 
 
-def atlas_speed_line(atlas: dict[str, Any], graphify: dict[str, Any]) -> str:
+# Tools whose full-index wall time lives in result["tools"][key]["seconds"] and
+# can be compared cold-vs-cold against Atlas's COLD full index. graphify is
+# handled separately because it also exposes an incremental path.
+COLD_BUILD_BASELINES = {
+    "go": [("scip-go", "scip-go"), ("gopls", "gopls (workspace type-check via `gopls stats`)")],
+    "python": [("scip-python", "scip-python")],
+    "javascript": [("scip-typescript", "scip-typescript")],
+    "typescript": [("scip-typescript", "scip-typescript")],
+    "java": [("scip-java", "scip-java")],
+}
+
+
+def build_speed_lines(result: dict[str, Any]) -> list[str]:
+    """Honest build-speed reporting.
+
+    Headline = COLD full index vs COLD full build of every baseline that also
+    builds from scratch (graphify FULL extract, scip-*, gopls). Delta-vs-delta is
+    reported separately and ONLY where both tools have an incremental path. Raw
+    seconds are always shown beside any ratio, and delta-vs-full is never the
+    headline.
+    """
+    lang = result.get("language", "")
+    tools = result.get("tools", {})
+    atlas = tools.get("atlas", {})
+    graphify = tools.get("graphify", {})
     am = atlas.get("metrics", {})
-    cold = am.get("cold_seconds")
-    cold_txt = f" (cold index {cold}s)" if cold is not None else ""
-    return f"- Speed: Atlas reindex {atlas['seconds']}s{cold_txt} vs graphify {graphify['seconds']}s, graphify/Atlas = {ratio(graphify['seconds'], atlas['seconds'])}x."
+    out: list[str] = []
+
+    atlas_cold = am.get("full_seconds", am.get("cold_seconds"))
+    atlas_delta = am.get("delta_seconds", atlas.get("seconds"))
+
+    # --- Headline: cold full index vs cold full build (apples-to-apples). ---
+    cold_parts: list[str] = []
+    if graphify.get("ok"):
+        gm = graphify.get("metrics", {})
+        g_full = gm.get("full_seconds", graphify.get("seconds"))
+        if atlas_cold is not None and g_full is not None:
+            cold_parts.append(f"graphify FULL extract {g_full}s (graphify/Atlas = {ratio(g_full, atlas_cold)}x)")
+    for key, label in COLD_BUILD_BASELINES.get(lang, []):
+        baseline = tools.get(key, {})
+        if baseline.get("ok") and baseline.get("seconds") and atlas_cold is not None:
+            b = baseline["seconds"]
+            cold_parts.append(f"{label} cold {b}s ({key}/Atlas = {ratio(b, atlas_cold)}x)")
+    if atlas_cold is not None and cold_parts:
+        out.append(
+            f"- Build speed (cold-vs-cold, full index): Atlas COLD full index {atlas_cold}s vs "
+            + "; ".join(cold_parts)
+            + ". A ratio < 1.0x means Atlas is slower cold; this is the honest headline."
+        )
+    elif atlas_cold is not None:
+        out.append(f"- Build speed (cold-vs-cold, full index): Atlas COLD full index {atlas_cold}s (no comparable cold baseline succeeded this run).")
+
+    # --- Delta-vs-delta: only where both tools have an incremental path. ---
+    if graphify.get("ok"):
+        gm = graphify.get("metrics", {})
+        g_delta = gm.get("delta_seconds")
+        if atlas_delta is not None and g_delta is not None:
+            out.append(
+                f"- Build speed (delta-vs-delta, no-change reindex): Atlas {atlas_delta}s vs "
+                f"graphify {g_delta}s, graphify/Atlas = {ratio(g_delta, atlas_delta)}x. "
+                "Both tools re-run against an existing snapshot/sidecar here."
+            )
+        elif atlas_delta is not None:
+            out.append(
+                f"- Build speed (delta): Atlas no-change reindex {atlas_delta}s. graphify exposed no "
+                "incremental wall time this run, so no fair delta-vs-delta ratio is reported "
+                "(comparing Atlas delta to graphify FULL would be delta-vs-full and is omitted)."
+            )
+    return out
+
+
+# Languages whose LSP baseline is a persistent daemon, so a warm-vs-warm latency
+# row is meaningful. tsserver here is the one-shot `tsc` proxy (not a daemon) so
+# it is intentionally excluded from warm-vs-warm.
+WARM_LSP_BASELINES = {
+    "go": "gopls",
+    "python": "pyright",
+    "java": "jdtls",
+    "c": "clangd",
+    "cpp": "clangd",
+}
+
+
+def render_warm_latency(results: list[dict[str, Any]]) -> list[str]:
+    """Render the warm (persistent-server) query-latency section.
+
+    This is the legitimate path to higher latency ratios: Atlas's `serve` daemon
+    answers warm HTTP queries without paying the per-call Go process-start floor
+    that gates the cold CLI. graphify has NO warm/server mode, so we never divide
+    warm Atlas by cold graphify here. Where a baseline is itself a persistent
+    daemon (gopls/clangd/jdtls/pyright), the cold-vs-cold CLI latency table above
+    already covers graphify; this section reports Atlas warm latency as a RAW
+    number plus the cold CLI floor for the SAME tool to show the warm speedup.
+    """
+    have = [r for r in results if (r.get("atlas_warm_serve") or {}).get("ok")]
+    if not have:
+        return []
+    lines: list[str] = []
+    w = lines.append
+    w("## Warm query latency (persistent server)\n")
+    w(
+        "Atlas `serve` is started against the already-indexed DB, warmed, then warm "
+        "HTTP queries are timed. Raw per-call samples are preserved in the JSON "
+        "(`atlas_warm_serve`). graphify has no warm/server mode, so warm Atlas is "
+        "NOT divided by any graphify time; the cold-vs-cold CLI latency rows above "
+        "remain the only Atlas-vs-graphify latency ratio.\n"
+    )
+    w("| Language | Atlas warm /healthz (median ms) | Atlas warm explain (median ms) | Atlas cold-CLI explain (median ms) | warm speedup (cold/warm) |")
+    w("|---|--:|--:|--:|--:|")
+    for r in have:
+        warm = r["atlas_warm_serve"]
+        lang = r["language"]
+        # Cold CLI explain median for the SAME tool/symbols (fair warm-vs-cold for
+        # Atlas itself — both are Atlas, isolating the process-start floor).
+        cold_ms = [row["atlas_ms"] for row in r.get("queries", []) if not row.get("atlas_missing")]
+        cold_med = round(statistics.median(cold_ms), 3) if cold_ms else None
+        warm_explain = warm.get("explain_median_ms")
+        speedup = ratio(cold_med, warm_explain) if (cold_med and warm_explain) else None
+        w(
+            f"| {lang} | {warm.get('healthz_median_ms')} | {warm_explain} | "
+            f"{cold_med if cold_med is not None else 'n/a'} | "
+            f"{str(speedup) + 'x' if speedup is not None else 'n/a'} |"
+        )
+    w("")
+    # Warm-vs-warm note where the LSP baseline is itself a daemon.
+    for r in have:
+        lang = r["language"]
+        lsp_key = WARM_LSP_BASELINES.get(lang)
+        if not lsp_key:
+            continue
+        warm = r["atlas_warm_serve"]
+        w(
+            f"- {lang} warm-vs-warm context: both Atlas `serve` and {lsp_key} run as persistent "
+            f"daemons. Atlas warm explain median is {warm.get('explain_median_ms')}ms and warm /healthz "
+            f"is {warm.get('healthz_median_ms')}ms. {lsp_key}'s steady-state per-request latency is "
+            "measured separately in its LSP smoke (different query semantics: a full Atlas context "
+            "bundle vs a single LSP method), so the two are reported side by side, not as a single ratio."
+        )
+    w("")
+    return lines
+
+
+def atlas_speed_line(atlas: dict[str, Any], graphify: dict[str, Any]) -> str:
+    """Backward-compatible single-line summary kept for any external callers.
+
+    It now states BOTH builds explicitly and labels the delta vs full so it can
+    never be misread as an apples-to-apples headline.
+    """
+    am = atlas.get("metrics", {})
+    cold = am.get("full_seconds", am.get("cold_seconds"))
+    gm = graphify.get("metrics", {})
+    g_full = gm.get("full_seconds", graphify.get("seconds"))
+    cold_txt = f"Atlas COLD full index {cold}s" if cold is not None else "Atlas full index n/a"
+    g_txt = f"graphify FULL extract {g_full}s" if g_full is not None else "graphify full n/a"
+    if cold is not None and g_full is not None:
+        return f"- Build speed (cold-vs-cold): {cold_txt} vs {g_txt}, graphify/Atlas = {ratio(g_full, cold)}x (Atlas delta reindex {am.get('delta_seconds', atlas.get('seconds'))}s reported separately, not used as the headline)."
+    return f"- Build speed (cold-vs-cold): {cold_txt} vs {g_txt}."
 
 
 def scip_navigation_symbols(metrics: dict[str, Any]) -> int:
@@ -2304,7 +2669,8 @@ def render(
         if atlas.get("ok") and graphify.get("ok"):
             am = atlas["metrics"]
             gm = graphify["metrics"]
-            w(atlas_speed_line(atlas, graphify))
+            for line in build_speed_lines(go):
+                w(line)
             timings = am.get("timings_ms") or {}
             if timings:
                 ordered = ", ".join(f"{k}:{v}ms" for k, v in sorted(timings.items(), key=lambda kv: kv[1], reverse=True))
@@ -2331,11 +2697,13 @@ def render(
             w(f"- Query latency ({qt['equivalent_rows']}/{qt['rows']} equivalent rows): graphify {round(qt['graphify_ms'], 3)}ms vs Atlas {round(qt['atlas_ms'], 3)}ms, graphify/Atlas = {ratio(qt['graphify_ms'], qt['atlas_ms'])}x.")
             if qt["graphify_missing"]:
                 w(f"- Query caveat: graphify missed {qt['graphify_missing']} Atlas-selected hub symbols; raw rows remain in the table.")
-            speed_ratio = ratio(graphify.get("seconds", 0), atlas.get("seconds", 0))
-            if speed_ratio is not None and speed_ratio < 5:
-                timings = atlas.get("metrics", {}).get("timings_ms") or {}
-                blocker = ", ".join(f"{k}:{v}ms" for k, v in sorted(timings.items(), key=lambda kv: kv[1], reverse=True)[:3])
-                w(f"- Go speed saturation: current build-speed ratio is {speed_ratio}x, below 5x; largest remaining measured phases are {blocker}.")
+            atlas_cold = atlas.get("metrics", {}).get("full_seconds", atlas.get("metrics", {}).get("cold_seconds"))
+            g_full = graphify.get("metrics", {}).get("full_seconds", graphify.get("seconds"))
+            cold_speed_ratio = ratio(g_full, atlas_cold)
+            if cold_speed_ratio is not None and cold_speed_ratio < 5:
+                cold_timings = atlas.get("metrics", {}).get("cold_timings_ms") or atlas.get("metrics", {}).get("timings_ms") or {}
+                blocker = ", ".join(f"{k}:{v}ms" for k, v in sorted(cold_timings.items(), key=lambda kv: kv[1], reverse=True)[:3])
+                w(f"- Go cold-build saturation: cold-vs-cold full-index ratio is {cold_speed_ratio}x (graphify FULL {g_full}s / Atlas cold {atlas_cold}s), below 5x; Atlas's largest cold phases are {blocker}.")
 
     w("\n## Derived Python ratios\n")
     py = next((r for r in results if r["language"] == "python"), None)
@@ -2347,7 +2715,8 @@ def render(
         if atlas.get("ok") and graphify.get("ok"):
             am = atlas["metrics"]
             gm = graphify["metrics"]
-            w(atlas_speed_line(atlas, graphify))
+            for line in build_speed_lines(py):
+                w(line)
             timings = am.get("timings_ms") or {}
             if timings:
                 ordered = ", ".join(f"{k}:{v}ms" for k, v in sorted(timings.items(), key=lambda kv: kv[1], reverse=True))
@@ -2379,11 +2748,13 @@ def render(
             w(f"- Query latency ({qt['equivalent_rows']}/{qt['rows']} equivalent rows): graphify {round(qt['graphify_ms'], 3)}ms vs Atlas {round(qt['atlas_ms'], 3)}ms, graphify/Atlas = {ratio(qt['graphify_ms'], qt['atlas_ms'])}x.")
             if qt["graphify_missing"]:
                 w(f"- Query caveat: graphify missed {qt['graphify_missing']} Atlas-selected hub symbols; raw rows remain in the table.")
-            speed_ratio = ratio(graphify.get("seconds", 0), atlas.get("seconds", 0))
-            if speed_ratio is not None and speed_ratio < 5:
-                timings = atlas.get("metrics", {}).get("timings_ms") or {}
-                blocker = ", ".join(f"{k}:{v}ms" for k, v in sorted(timings.items(), key=lambda kv: kv[1], reverse=True)[:3])
-                w(f"- Python speed saturation: current build-speed ratio is {speed_ratio}x, below 5x; largest remaining measured phases are {blocker}.")
+            atlas_cold = atlas.get("metrics", {}).get("full_seconds", atlas.get("metrics", {}).get("cold_seconds"))
+            g_full = graphify.get("metrics", {}).get("full_seconds", graphify.get("seconds"))
+            cold_speed_ratio = ratio(g_full, atlas_cold)
+            if cold_speed_ratio is not None and cold_speed_ratio < 5:
+                cold_timings = atlas.get("metrics", {}).get("cold_timings_ms") or atlas.get("metrics", {}).get("timings_ms") or {}
+                blocker = ", ".join(f"{k}:{v}ms" for k, v in sorted(cold_timings.items(), key=lambda kv: kv[1], reverse=True)[:3])
+                w(f"- Python cold-build saturation: cold-vs-cold full-index ratio is {cold_speed_ratio}x (graphify FULL {g_full}s / Atlas cold {atlas_cold}s), below 5x; Atlas's largest cold phases are {blocker}.")
 
     w("\n## Derived JS/TS ratios\n")
     for lang in ("javascript", "typescript"):
@@ -2398,7 +2769,8 @@ def render(
         if atlas.get("ok") and graphify.get("ok"):
             am = atlas["metrics"]
             gm = graphify["metrics"]
-            w(atlas_speed_line(atlas, graphify))
+            for line in build_speed_lines(result):
+                w(line)
             timings = am.get("timings_ms") or {}
             if timings:
                 ordered = ", ".join(f"{k}:{v}ms" for k, v in sorted(timings.items(), key=lambda kv: kv[1], reverse=True))
@@ -2425,11 +2797,13 @@ def render(
             w(f"- Query latency ({qt['equivalent_rows']}/{qt['rows']} equivalent rows): graphify {round(qt['graphify_ms'], 3)}ms vs Atlas {round(qt['atlas_ms'], 3)}ms, graphify/Atlas = {ratio(qt['graphify_ms'], qt['atlas_ms'])}x.")
             if qt["graphify_missing"]:
                 w(f"- Query caveat: graphify missed {qt['graphify_missing']} Atlas-selected hub symbols; raw rows remain in the table.")
-            speed_ratio = ratio(graphify.get("seconds", 0), atlas.get("seconds", 0))
-            if speed_ratio is not None and speed_ratio < 5:
-                timings = atlas.get("metrics", {}).get("timings_ms") or {}
-                blocker = ", ".join(f"{k}:{v}ms" for k, v in sorted(timings.items(), key=lambda kv: kv[1], reverse=True)[:3])
-                w(f"- {lang} speed saturation: current build-speed ratio is {speed_ratio}x, below 5x; largest remaining measured phases are {blocker}.")
+            atlas_cold = atlas.get("metrics", {}).get("full_seconds", atlas.get("metrics", {}).get("cold_seconds"))
+            g_full = graphify.get("metrics", {}).get("full_seconds", graphify.get("seconds"))
+            cold_speed_ratio = ratio(g_full, atlas_cold)
+            if cold_speed_ratio is not None and cold_speed_ratio < 5:
+                cold_timings = atlas.get("metrics", {}).get("cold_timings_ms") or atlas.get("metrics", {}).get("timings_ms") or {}
+                blocker = ", ".join(f"{k}:{v}ms" for k, v in sorted(cold_timings.items(), key=lambda kv: kv[1], reverse=True)[:3])
+                w(f"- {lang} cold-build saturation: cold-vs-cold full-index ratio is {cold_speed_ratio}x (graphify FULL {g_full}s / Atlas cold {atlas_cold}s), below 5x; Atlas's largest cold phases are {blocker}.")
             token_ratio = ratio(qt["graphify_tokens"], qt["atlas_tokens"])
             if token_ratio is not None and token_ratio < 5:
                 avg_atlas = round(qt["atlas_tokens"] / qt["equivalent_rows"], 1) if qt["equivalent_rows"] else 0
@@ -2446,7 +2820,8 @@ def render(
         if atlas.get("ok") and graphify.get("ok"):
             am = atlas["metrics"]
             gm = graphify["metrics"]
-            w(atlas_speed_line(atlas, graphify))
+            for line in build_speed_lines(java):
+                w(line)
             timings = am.get("timings_ms") or {}
             if timings:
                 ordered = ", ".join(f"{k}:{v}ms" for k, v in sorted(timings.items(), key=lambda kv: kv[1], reverse=True))
@@ -2474,11 +2849,13 @@ def render(
             w(f"- Query latency ({qt['equivalent_rows']}/{qt['rows']} equivalent rows): graphify {round(qt['graphify_ms'], 3)}ms vs Atlas {round(qt['atlas_ms'], 3)}ms, graphify/Atlas = {ratio(qt['graphify_ms'], qt['atlas_ms'])}x.")
             if qt["graphify_missing"]:
                 w(f"- Query caveat: graphify missed {qt['graphify_missing']} Atlas-selected hub symbols; raw rows remain in the table.")
-            speed_ratio = ratio(graphify.get("seconds", 0), atlas.get("seconds", 0))
-            if speed_ratio is not None and speed_ratio < 5:
-                timings = atlas.get("metrics", {}).get("timings_ms") or {}
-                blocker = ", ".join(f"{k}:{v}ms" for k, v in sorted(timings.items(), key=lambda kv: kv[1], reverse=True)[:3])
-                w(f"- Java speed saturation: current build-speed ratio is {speed_ratio}x, below 5x; largest remaining measured phases are {blocker}.")
+            atlas_cold = atlas.get("metrics", {}).get("full_seconds", atlas.get("metrics", {}).get("cold_seconds"))
+            g_full = graphify.get("metrics", {}).get("full_seconds", graphify.get("seconds"))
+            cold_speed_ratio = ratio(g_full, atlas_cold)
+            if cold_speed_ratio is not None and cold_speed_ratio < 5:
+                cold_timings = atlas.get("metrics", {}).get("cold_timings_ms") or atlas.get("metrics", {}).get("timings_ms") or {}
+                blocker = ", ".join(f"{k}:{v}ms" for k, v in sorted(cold_timings.items(), key=lambda kv: kv[1], reverse=True)[:3])
+                w(f"- Java cold-build saturation: cold-vs-cold full-index ratio is {cold_speed_ratio}x (graphify FULL {g_full}s / Atlas cold {atlas_cold}s), below 5x; Atlas's largest cold phases are {blocker}.")
             token_ratio = ratio(qt["graphify_tokens"], qt["atlas_tokens"])
             if token_ratio is not None and token_ratio < 5:
                 avg_atlas = round(qt["atlas_tokens"] / qt["equivalent_rows"], 1) if qt["equivalent_rows"] else 0
@@ -2497,7 +2874,8 @@ def render(
         if atlas.get("ok") and graphify.get("ok"):
             am = atlas["metrics"]
             gm = graphify["metrics"]
-            w(atlas_speed_line(atlas, graphify))
+            for line in build_speed_lines(result):
+                w(line)
             timings = am.get("timings_ms") or {}
             if timings:
                 ordered = ", ".join(f"{k}:{v}ms" for k, v in sorted(timings.items(), key=lambda kv: kv[1], reverse=True))
@@ -2519,16 +2897,22 @@ def render(
             w(f"- Query latency ({qt['equivalent_rows']}/{qt['rows']} equivalent rows): graphify {round(qt['graphify_ms'], 3)}ms vs Atlas {round(qt['atlas_ms'], 3)}ms, graphify/Atlas = {ratio(qt['graphify_ms'], qt['atlas_ms'])}x.")
             if qt["graphify_missing"]:
                 w(f"- Query caveat: graphify missed {qt['graphify_missing']} Atlas-selected hub symbols; raw rows remain in the table.")
-            speed_ratio = ratio(graphify.get("seconds", 0), atlas.get("seconds", 0))
-            if speed_ratio is not None and speed_ratio < 5:
-                timings = atlas.get("metrics", {}).get("timings_ms") or {}
-                blocker = ", ".join(f"{k}:{v}ms" for k, v in sorted(timings.items(), key=lambda kv: kv[1], reverse=True)[:3])
-                w(f"- {lang} speed saturation: current build-speed ratio is {speed_ratio}x, below 5x; largest remaining measured phases are {blocker}.")
+            atlas_cold = atlas.get("metrics", {}).get("full_seconds", atlas.get("metrics", {}).get("cold_seconds"))
+            g_full = graphify.get("metrics", {}).get("full_seconds", graphify.get("seconds"))
+            cold_speed_ratio = ratio(g_full, atlas_cold)
+            if cold_speed_ratio is not None and cold_speed_ratio < 5:
+                cold_timings = atlas.get("metrics", {}).get("cold_timings_ms") or atlas.get("metrics", {}).get("timings_ms") or {}
+                blocker = ", ".join(f"{k}:{v}ms" for k, v in sorted(cold_timings.items(), key=lambda kv: kv[1], reverse=True)[:3])
+                w(f"- {lang} cold-build saturation: cold-vs-cold full-index ratio is {cold_speed_ratio}x (graphify FULL {g_full}s / Atlas cold {atlas_cold}s), below 5x; Atlas's largest cold phases are {blocker}.")
             token_ratio = ratio(qt["graphify_tokens"], qt["atlas_tokens"])
             if token_ratio is not None and token_ratio < 5:
                 avg_atlas = round(qt["atlas_tokens"] / qt["equivalent_rows"], 1) if qt["equivalent_rows"] else 0
                 avg_graphify = round(qt["graphify_tokens"] / qt["equivalent_rows"], 1) if qt["equivalent_rows"] else 0
                 w(f"- {lang} token saturation: current equivalent-row token ratio is {token_ratio}x, below 5x; Atlas averages {avg_atlas} tokens/answer vs graphify {avg_graphify}.")
+
+    w("")
+    for line in render_warm_latency(results):
+        w(line)
 
     w("\n## Query token probes\n")
     for result in results:

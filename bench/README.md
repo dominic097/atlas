@@ -86,6 +86,43 @@ The Go, Python, JavaScript, TypeScript, and Java SCIP metrics are parsed by
 nested module so SCIP protobuf dependencies do not enter the Atlas production
 module.
 
+### Build-speed fairness (cold-vs-cold and delta-vs-delta)
+
+Build-speed is reported on two clearly-labeled axes, and a delta-vs-full pairing
+is never used as the headline:
+
+- **Cold-vs-cold full index (headline):** Atlas's *cold* full index vs the *cold*
+  full build of every baseline that also builds from scratch — graphify FULL
+  extract, `scip-go`/`scip-python`/`scip-typescript`/`scip-java`, and `gopls`
+  workspace type-check. A ratio < 1.0x means Atlas is slower cold and the report
+  says so. On a warm Go build cache, Atlas's cold full index of logrus is ~0.55s
+  vs graphify FULL ~0.84s / scip-go ~0.62s / gopls ~0.38s. On a *first-ever*
+  cold cache the Go `go/types` load dominates (the `cold_timings_ms.go_types`
+  phase), pushing Atlas's first cold index materially higher; both are real and
+  preserved in `cold_seconds` / `cold_timings_ms`.
+- **Delta-vs-delta no-change reindex:** Atlas's no-change reindex vs graphify's
+  incremental re-`update` (its `graphify-out/` sidecar is kept between runs).
+  Both tools re-run against an existing snapshot here, so the ratio is fair. This
+  is the only place a delta number appears as a ratio.
+
+Raw seconds for every build are kept in the JSON: Atlas `full_seconds` /
+`delta_seconds` (+ `cold_timings_ms`), graphify `full_seconds` / `delta_seconds`.
+
+### Warm query latency (persistent server)
+
+The matrix also starts `atlas serve` against the indexed DB, warms it, and times
+warm HTTP queries (`GET /healthz`, `GET /api/v1/symbols/<name>/explain`). This is
+the legitimate path to higher latency ratios because the warm server skips the
+per-call Go process-start floor that gates the cold CLI. Warm numbers live in
+their own report section and in `atlas_warm_serve` in the JSON (raw per-call
+samples preserved). graphify has no warm/server mode, so warm Atlas is never
+divided by a graphify time — the only Atlas-vs-graphify latency ratio stays
+cold-vs-cold CLI. The server is stopped cleanly (SIGTERM, then kill as a last
+resort) after measurement.
+
+See `bench/HONEST_FINDINGS.md` for the measured saturation analysis (where a 25x
+target is or is not physically reachable, with numbers).
+
 ## Additional graphify-language smokes
 
 `additional_language_smoke.py` adds live checks for graphify-supported languages

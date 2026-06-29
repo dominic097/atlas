@@ -5,6 +5,8 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+
+	"golang.org/x/tools/go/packages"
 )
 
 // writeModule lays down a tiny on-disk Go module under dir and returns dir.
@@ -130,6 +132,106 @@ func TestAnalyzeNonModuleDirIsHonest(t *testing.T) {
 	res := Analyze(context.Background(), dir, 1)
 	if res.OK {
 		t.Fatalf("Analyze should return OK=false for a non-module directory")
+	}
+}
+
+// TestLoadModePreservesPrecisionBits guards the explicit minimal loadMode against
+// a future regression that would either DROP a precision-bearing NeedX bit (which
+// would silently kill recv_type / RefEdge output) or ADD NeedDeps (which would
+// re-type-check the entire transitive world and blow up index time). Both are
+// caught here without a full packages.Load, so the test is hermetic and fast.
+func TestLoadModePreservesPrecisionBits(t *testing.T) {
+	required := []struct {
+		name string
+		bit  packages.LoadMode
+	}{
+		{"NeedName", packages.NeedName},
+		{"NeedFiles", packages.NeedFiles},
+		{"NeedCompiledGoFiles", packages.NeedCompiledGoFiles},
+		{"NeedImports", packages.NeedImports},
+		{"NeedTypes", packages.NeedTypes},
+		{"NeedTypesInfo", packages.NeedTypesInfo},
+		{"NeedSyntax", packages.NeedSyntax},
+		{"NeedModule", packages.NeedModule},
+	}
+	for _, r := range required {
+		if loadMode&r.bit == 0 {
+			t.Errorf("loadMode is missing %s; recv_type/RefEdge precision depends on it", r.name)
+		}
+	}
+	// NeedDeps must stay OFF: it re-type-checks dependencies from source instead of
+	// reading their export data, which is the single biggest index-time blowup.
+	if loadMode&packages.NeedDeps != 0 {
+		t.Errorf("loadMode must NOT set NeedDeps (it re-type-checks the whole transitive world)")
+	}
+}
+
+// TestAnalyzeReceiverChainAndRefEdgeUnderMinimalMode is a second, distinct fixture
+// (pointer receiver via a func-result chain + a field-type reference) that the
+// minimal loadMode must still resolve precisely. It complements the keystone test:
+// if a future Mode change quietly drops type info, both recv_type and the RefEdge
+// here go missing and this fails. It directly exercises the configured loadMode
+// through Analyze (no special wiring), so it is the regression net the task asks
+// for.
+func TestAnalyzeReceiverChainAndRefEdgeUnderMinimalMode(t *testing.T) {
+	src := `package app
+
+// Client has a method Send. mk() returns a *Client so mk().Send() is a
+// func-result, pointer-receiver method call the AST heuristic cannot resolve.
+type Client struct{}
+
+func (c *Client) Send() {}
+
+func mk() *Client { return &Client{} }
+
+// Conn is referenced as a STRUCT FIELD type below — a type-use reference, not a
+// call, attributed to the enclosing type decl Holder.
+type Conn struct{}
+
+type Holder struct {
+	conn Conn
+}
+
+func use() {
+	mk().Send()
+}
+`
+	dir := writeModule(t, map[string]string{
+		"go.mod": "module example.com/app\n\ngo 1.21\n",
+		"app.go": src,
+	})
+
+	res := Analyze(context.Background(), dir, 1)
+	if !res.OK {
+		t.Fatalf("Analyze returned OK=false; the minimal loadMode must still type-check the fixture")
+	}
+
+	// Func-result pointer-receiver chain: mk().Send() must resolve to base type "Client".
+	var foundSend bool
+	for _, cr := range res.CallRecvs {
+		if cr.Callee == "Send" {
+			foundSend = true
+			if cr.Type != "Client" {
+				t.Errorf("Send() CallRecv.Type = %q, want %q (mk() returns *Client)", cr.Type, "Client")
+			}
+		}
+	}
+	if !foundSend {
+		t.Errorf("no CallRecv for mk().Send(); the loadMode dropped receiver precision; got %+v", res.CallRecvs)
+	}
+
+	// Field-type reference: Holder.conn Conn must yield a RefEdge to Conn.
+	var foundConnRef bool
+	for _, r := range res.RefEdges {
+		if r.ToRef == "Conn" {
+			foundConnRef = true
+			if r.Qualified != "example.com/app.Conn" {
+				t.Errorf("Conn RefEdge.Qualified = %q, want %q", r.Qualified, "example.com/app.Conn")
+			}
+		}
+	}
+	if !foundConnRef {
+		t.Errorf("no RefEdge to field-type Conn; the loadMode dropped Uses info; got %+v", res.RefEdges)
 	}
 }
 
