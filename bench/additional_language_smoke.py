@@ -5600,11 +5600,12 @@ def run_smoke(language: str, atlas_bin: str, graphify_bin: str | None) -> dict[s
         }
     elif language == "terraform":
         optimization = {
-            "cycles_run": 2,
-            "stop_reason": "Terraform/HCL live smoke matched python-hcl2 definition coverage and exceeded 5x query latency plus token output after installing graphify's optional tree_sitter_hcl parser.",
+            "cycles_run": 3,
+            "stop_reason": "Terraform/HCL native tree-sitter parser matched python-hcl2 definition coverage after routing `.tf`, `.tfvars`, and `.hcl` files off `parseRegexFallback`, while keeping graphify latency/token ratios above 5x.",
             "cycle_notes": [
                 "cycle 1: graphify advertised Terraform/HCL support but produced no HCL code nodes until its optional tree_sitter_hcl dependency was installed in the graphify tool environment.",
                 "cycle 2: terraform-aws-modules/terraform-aws-vpc reached 1.0 Atlas/python-hcl2 definition coverage and exceeded 5x latency plus token output on exact HCL resource queries.",
+                "cycle 3: replacing the regex fallback route with tree-sitter-hcl block parsing preserved exact live coverage at 1738/1738 definitions, including resource/data two-label names and module/variable/output one-label names.",
             ],
         }
     elif language == "vue":

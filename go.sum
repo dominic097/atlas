@@ -98,6 +98,8 @@ github.com/stadelmanma/tree-sitter-fortran v0.6.0 h1:TX6cFIyThsnf0CDT7dPMvBAhvYN
 github.com/stadelmanma/tree-sitter-fortran v0.6.0/go.mod h1:whOIPOLxcDEBoBEcsjHH5dyonI7nH/DSKZ79hsNk/I0=
 github.com/stretchr/testify v1.11.1 h1:7s2iGBzp5EwR7/aIZr8ao5+dra3wiQyKjjFuvgVKu7U=
 github.com/stretchr/testify v1.11.1/go.mod h1:wZwfW3scLgRK+23gO65QZefKpKQRnfz6sD981Nm4B6U=
+github.com/tree-sitter-grammars/tree-sitter-hcl v1.2.0 h1:jl3v597Dii91OHcHAUrTQaSEK7oODNh6yK8z4H5xXFA=
+github.com/tree-sitter-grammars/tree-sitter-hcl v1.2.0/go.mod h1:NzEB+a6rpv14H4tCrCfzhTorCyvYYb3T9+o/e4d0pdU=
 github.com/tree-sitter-grammars/tree-sitter-kotlin v1.1.0 h1:SWIUDASa+WPhDDem1U5IJpYwQEezkqXrUI61OcnORzM=
 github.com/tree-sitter-grammars/tree-sitter-kotlin v1.1.0/go.mod h1:eH+flFf3QOa9c9BY9g3Bz02F7zTq30kGIG3cgB0lSlI=
 github.com/tree-sitter-grammars/tree-sitter-lua v0.5.0 h1:4YHMdo2TzpbhHe3nfdI4qruBGeFGIwfYGfxZJW/tnjc=

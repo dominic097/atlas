@@ -442,7 +442,14 @@ func Parse(repoID, repoFullName, filePath, language string, content []byte) (Res
 			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
-	case "delphi", "terraform", "byond", "dotnet", "apex", "ets", "p4":
+	case "terraform":
+		if syms, ok := parseTerraformNative(content); ok {
+			rawSyms = syms
+		} else {
+			rawSyms, imports = parseRegexFallback(filePath, language, content)
+		}
+		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
+	case "delphi", "byond", "dotnet", "apex", "ets", "p4":
 		rawSyms, imports = parseRegexFallback(filePath, language, content)
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "html", "css":

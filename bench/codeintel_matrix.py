@@ -107,7 +107,7 @@ GRAPHIFY_LANGUAGE_FAMILIES = [
     ("delphi/lazarus forms", [".dfm", ".lfm", ".lpk"], "lightweight regex/document fallback"),
     ("shell", [".sh", ".bash"], "native tree-sitter AST"),
     ("json config", [".json"], "document parser"),
-    ("terraform/hcl", [".tf", ".tfvars", ".hcl"], "lightweight regex"),
+    ("terraform/hcl", [".tf", ".tfvars", ".hcl"], "native tree-sitter HCL"),
     ("byond dm", [".dm", ".dme", ".dmi", ".dmm", ".dmf"], "lightweight regex/document fallback"),
     ("dotnet project", [".sln", ".slnx", ".csproj", ".fsproj", ".vbproj"], "lightweight regex"),
     ("razor", [".razor", ".cshtml"], "native Razor source parser"),

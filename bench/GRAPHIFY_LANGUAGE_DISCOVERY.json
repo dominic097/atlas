@@ -205,7 +205,7 @@
       "terraform/hcl",
       ".tf .tfvars .hcl",
       "extract_terraform",
-      "lightweight regex"
+      "native tree-sitter HCL"
     ],
     [
       "byond dm",
