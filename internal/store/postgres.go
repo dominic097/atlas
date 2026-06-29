@@ -305,23 +305,19 @@ func (d *postgresDriver) SaveSnapshot(ctx context.Context, s *graph.Snapshot, fi
 	}
 
 	edgeStmt, err := tx.PrepareContext(ctx, `
-		INSERT INTO edges (id, snapshot_id, from_file, from_symbol, to_ref, kind, language, line, metadata)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9::jsonb)`)
+		INSERT INTO edges (snapshot_id, from_file, from_symbol, to_ref, kind, language, line, metadata)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8::jsonb)`)
 	if err != nil {
 		return fmt.Errorf("store: prepare edge insert: %w", err)
 	}
 	defer edgeStmt.Close()
 	for i := range edges {
 		e := &edges[i]
-		id := e.ID
-		if id == "" {
-			id = uuid.NewString()
-		}
 		m, err := marshalJSONMap(e.Metadata)
 		if err != nil {
 			return fmt.Errorf("store: marshal edge metadata: %w", err)
 		}
-		if _, err := edgeStmt.ExecContext(ctx, id, s.ID, e.FromFile, e.FromSymbol, e.ToRef, string(e.Kind), e.Language, e.Line, m); err != nil {
+		if _, err := edgeStmt.ExecContext(ctx, s.ID, e.FromFile, e.FromSymbol, e.ToRef, string(e.Kind), e.Language, e.Line, m); err != nil {
 			return fmt.Errorf("store: save edge %s -> %s: %w", e.FromFile, e.ToRef, err)
 		}
 	}
@@ -441,23 +437,19 @@ func (d *postgresDriver) ReplaceFileRows(ctx context.Context, snapshotID string,
 	}
 
 	edgeStmt, err := tx.PrepareContext(ctx, `
-		INSERT INTO edges (id, snapshot_id, from_file, from_symbol, to_ref, kind, language, line, metadata)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9::jsonb)`)
+		INSERT INTO edges (snapshot_id, from_file, from_symbol, to_ref, kind, language, line, metadata)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8::jsonb)`)
 	if err != nil {
 		return fmt.Errorf("store: prepare edge insert: %w", err)
 	}
 	defer edgeStmt.Close()
 	for i := range edges {
 		e := &edges[i]
-		id := e.ID
-		if id == "" {
-			id = uuid.NewString()
-		}
 		m, err := marshalJSONMap(e.Metadata)
 		if err != nil {
 			return fmt.Errorf("store: marshal edge metadata: %w", err)
 		}
-		if _, err := edgeStmt.ExecContext(ctx, id, snapshotID, e.FromFile, e.FromSymbol, e.ToRef, string(e.Kind), e.Language, e.Line, m); err != nil {
+		if _, err := edgeStmt.ExecContext(ctx, snapshotID, e.FromFile, e.FromSymbol, e.ToRef, string(e.Kind), e.Language, e.Line, m); err != nil {
 			return fmt.Errorf("store: save edge %s -> %s: %w", e.FromFile, e.ToRef, err)
 		}
 	}
@@ -631,7 +623,7 @@ func scanEdgeRowPG(sc interface{ Scan(...any) error }) (graph.DependencyEdge, er
 		kind string
 		meta []byte
 	)
-	if err := sc.Scan(&e.ID, &e.SnapshotID, &e.FromFile, &e.FromSymbol, &e.ToRef, &kind, &e.Language, &e.Line, &meta); err != nil {
+	if err := sc.Scan(&e.SnapshotID, &e.FromFile, &e.FromSymbol, &e.ToRef, &kind, &e.Language, &e.Line, &meta); err != nil {
 		return graph.DependencyEdge{}, err
 	}
 	e.Kind = graph.EdgeKind(kind)

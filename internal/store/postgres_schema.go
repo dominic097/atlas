@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS files (
 	imports     TEXT[] NOT NULL DEFAULT '{}',
 	doc_summary TEXT NOT NULL DEFAULT ''
 );
-CREATE INDEX IF NOT EXISTS idx_files_snapshot ON files (snapshot_id);
+-- idx_files_snapshot omitted: strict prefix of idx_files_snapshot_path (see SQLite tier).
 CREATE INDEX IF NOT EXISTS idx_files_snapshot_path ON files (snapshot_id, path);
 
 CREATE TABLE IF NOT EXISTS symbols (
@@ -73,10 +73,11 @@ CREATE TABLE IF NOT EXISTS symbols (
 );
 CREATE INDEX IF NOT EXISTS idx_symbols_snapshot_name ON symbols (snapshot_id, name);
 CREATE INDEX IF NOT EXISTS idx_symbols_snapshot_path ON symbols (snapshot_id, path);
-CREATE INDEX IF NOT EXISTS idx_symbols_node ON symbols (snapshot_id, node_id);
+-- idx_symbols_node omitted: no query filters on node_id (see SQLite tier).
 
+-- edges has NO uuid id (write-only, read by nothing); mirrors the SQLite tier's
+-- rowid edges table. Postgres needs no PK here — edges are never looked up by id.
 CREATE TABLE IF NOT EXISTS edges (
-	id          TEXT PRIMARY KEY,
 	snapshot_id TEXT NOT NULL,
 	from_file   TEXT NOT NULL DEFAULT '',
 	from_symbol TEXT NOT NULL DEFAULT '',
@@ -114,7 +115,7 @@ CREATE TABLE IF NOT EXISTS coverage (
 	coverage_type  TEXT NOT NULL DEFAULT '',
 	strength       TEXT NOT NULL DEFAULT ''
 );
-CREATE INDEX IF NOT EXISTS idx_coverage_snapshot ON coverage (snapshot_id);
+-- idx_coverage_snapshot omitted: strict prefix of idx_coverage_snapshot_symbol.
 CREATE INDEX IF NOT EXISTS idx_coverage_snapshot_symbol ON coverage (snapshot_id, symbol_ref);
 
 CREATE TABLE IF NOT EXISTS embeddings (
@@ -124,5 +125,5 @@ CREATE TABLE IF NOT EXISTS embeddings (
 	vec         BYTEA,
 	PRIMARY KEY (snapshot_id, symbol_id)
 );
-CREATE INDEX IF NOT EXISTS idx_embeddings_snapshot ON embeddings (snapshot_id);
+-- idx_embeddings_snapshot omitted: snapshot_id is the leading column of the PK.
 `

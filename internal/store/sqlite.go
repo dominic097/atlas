@@ -59,13 +59,13 @@ func openSQLite(ctx context.Context, path string) (StorageDriver, error) {
 // only one pragma read. This is the dominant per-invocation startup cost for query
 // ops, where the actual query is a few ms but schema replay was not.
 //
-// v2 = compact schema (redundant indexes removed; the incremental column
-// compactions ride later bumps). Because a local .atlas.db is a DERIVED cache (the
+// Compact-schema bumps: v2 = redundant indexes removed; v3 = edges drop the
+// write-only uuid id (rowid). Because a local .atlas.db is a DERIVED cache (the
 // git working tree is the source of truth), a version MISMATCH does a clean
 // DROP+recreate rather than an in-place data migration: the caller (atlas index /
 // atlas watch) reindexes from the working tree afterward. No migration code, no
 // partial-state risk.
-const sqliteSchemaVersion = 2
+const sqliteSchemaVersion = 3
 
 func (d *sqliteDriver) Migrate(ctx context.Context) error {
 	var ver int
@@ -466,18 +466,14 @@ func (d *sqliteDriver) SaveSnapshot(ctx context.Context, s *graph.Snapshot, file
 	edgeRows := make([][]any, 0, len(edges))
 	for i := range edges {
 		e := &edges[i]
-		id := e.ID
-		if id == "" {
-			id = uuid.NewString()
-		}
 		m, err := marshalJSONMap(e.Metadata)
 		if err != nil {
 			return fmt.Errorf("store: marshal edge metadata: %w", err)
 		}
-		edgeRows = append(edgeRows, []any{id, s.ID, e.FromFile, e.FromSymbol, e.ToRef, string(e.Kind), e.Language, e.Line, m})
+		edgeRows = append(edgeRows, []any{s.ID, e.FromFile, e.FromSymbol, e.ToRef, string(e.Kind), e.Language, e.Line, m})
 	}
 	if err := sqliteBulkInsert(ctx, tx,
-		`INSERT INTO edges (id, snapshot_id, from_file, from_symbol, to_ref, kind, language, line, metadata) VALUES `,
+		`INSERT INTO edges (snapshot_id, from_file, from_symbol, to_ref, kind, language, line, metadata) VALUES `,
 		edgeRows); err != nil {
 		return fmt.Errorf("store: save edges: %w", err)
 	}
@@ -597,18 +593,14 @@ func (d *sqliteDriver) ReplaceFileRows(ctx context.Context, snapshotID string, f
 	edgeRows := make([][]any, 0, len(edges))
 	for i := range edges {
 		e := &edges[i]
-		id := e.ID
-		if id == "" {
-			id = uuid.NewString()
-		}
 		m, err := marshalJSONMap(e.Metadata)
 		if err != nil {
 			return fmt.Errorf("store: marshal edge metadata: %w", err)
 		}
-		edgeRows = append(edgeRows, []any{id, snapshotID, e.FromFile, e.FromSymbol, e.ToRef, string(e.Kind), e.Language, e.Line, m})
+		edgeRows = append(edgeRows, []any{snapshotID, e.FromFile, e.FromSymbol, e.ToRef, string(e.Kind), e.Language, e.Line, m})
 	}
 	if err := sqliteBulkInsert(ctx, tx,
-		`INSERT INTO edges (id, snapshot_id, from_file, from_symbol, to_ref, kind, language, line, metadata) VALUES `,
+		`INSERT INTO edges (snapshot_id, from_file, from_symbol, to_ref, kind, language, line, metadata) VALUES `,
 		edgeRows); err != nil {
 		return fmt.Errorf("store: replace save edges: %w", err)
 	}
@@ -810,7 +802,10 @@ func (d *sqliteDriver) ListSnapshots(ctx context.Context, repoID string, limit i
 // SymbolsByPath, CallEdgesByToRefs and the List* readers all share them so every
 // path returns the SAME graph shape (node_id + decoded metadata).
 const symbolCols = `id, snapshot_id, node_id, repo_id, path, language, kind, name, signature, doc, start_line, end_line, metadata`
-const edgeCols = `id, snapshot_id, from_file, from_symbol, to_ref, kind, language, line, metadata`
+
+// edgeCols has no `id`: edges use the implicit rowid (the uuid id was write-only).
+// DependencyEdge.ID is left zero on read; no consumer reads it.
+const edgeCols = `snapshot_id, from_file, from_symbol, to_ref, kind, language, line, metadata`
 
 // scanSymbolRow decodes one symbols row into a graph.CodeSymbol (node_id +
 // metadata included), matching ListSymbols exactly.
@@ -841,7 +836,7 @@ func scanEdgeRow(sc interface{ Scan(...any) error }) (graph.DependencyEdge, erro
 		kind string
 		meta sql.NullString
 	)
-	if err := sc.Scan(&e.ID, &e.SnapshotID, &e.FromFile, &e.FromSymbol, &e.ToRef, &kind, &e.Language, &e.Line, &meta); err != nil {
+	if err := sc.Scan(&e.SnapshotID, &e.FromFile, &e.FromSymbol, &e.ToRef, &kind, &e.Language, &e.Line, &meta); err != nil {
 		return graph.DependencyEdge{}, err
 	}
 	e.Kind = graph.EdgeKind(kind)

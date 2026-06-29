@@ -76,8 +76,11 @@ CREATE INDEX IF NOT EXISTS idx_symbols_snapshot_path ON symbols (snapshot_id, pa
 -- on node_id (node_id is written + read as payload only, never a WHERE/JOIN key).
 -- Re-add if a cross-snapshot node-identity lookup is introduced.
 
+-- edges has NO uuid id column: it is the largest table and its surrogate id was
+-- write-only (read by no query/consumer), so we use SQLite's implicit rowid and
+-- drop the 36B/row + the uuid-PK autoindex. DependencyEdge.ID stays empty after a
+-- round-trip; nothing reads it.
 CREATE TABLE IF NOT EXISTS edges (
-	id          TEXT PRIMARY KEY,
 	snapshot_id TEXT NOT NULL,
 	from_file   TEXT NOT NULL DEFAULT '',
 	from_symbol TEXT NOT NULL DEFAULT '',
