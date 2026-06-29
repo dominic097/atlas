@@ -5431,12 +5431,13 @@ def run_smoke(language: str, atlas_bin: str, graphify_bin: str | None) -> dict[s
         }
     elif language == "ets":
         optimization = {
-            "cycles_run": 5,
-            "stop_reason": "ETS live smoke covers a graphify detector-only extension with ArkTS/ETS declarations while avoiding control-flow false positives; the five-pass saturation report records that graphify exposes no equivalent query rows in this runtime.",
+            "cycles_run": 6,
+            "stop_reason": "ETS native ArkTS source parser matches the benchmark-owned source-counter coverage proxy after routing `.ets` files off `parseRegexFallback`; graphify still exposes no equivalent ETS query rows in this runtime.",
             "cycle_notes": [
                 "cycle 1: OpenHarmony TabsSample probe showed the generic ETS regex would index control-flow keywords such as if(...) as methods on live ArkTS files.",
                 "cycle 2: after adding an ETS-specific scanner, Atlas indexes structs/classes/functions/methods/constructors/fields/state variables while skipping control-flow and ArkUI component-call noise.",
                 "cycles 3-5: repeated live smokes kept native coverage at 1.0 and graphify-equivalent query rows at 0/8, so ETS query-score improvement is saturated until graphify ships a deterministic ETS extractor.",
+                "cycle 6: moving the ETS scanner to the native route preserved exact OpenHarmony coverage at 153/153 definitions while graphify-equivalent query rows stayed at the documented 0/8 ceiling.",
             ],
         }
     elif language == "kotlin":

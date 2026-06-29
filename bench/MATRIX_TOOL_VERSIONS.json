@@ -1,5 +1,5 @@
 {
-  "generated_at_unix": 1782776534,
+  "generated_at_unix": 1782776733,
   "platform": {
     "system": "Darwin",
     "release": "25.5.0",
@@ -18,7 +18,7 @@
         "atlas dev (none, unknown)"
       ],
       "exit_code": 0,
-      "seconds": 0.011
+      "seconds": 0.012
     },
     {
       "tool": "graphify",
@@ -31,7 +31,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.031,
+      "seconds": 0.033,
       "discovered_version": "graphifyy 0.8.49",
       "binary": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify"
     },
@@ -46,7 +46,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.01
+      "seconds": 0.011
     },
     {
       "tool": "python",
@@ -74,7 +74,7 @@
         "OpenJDK 64-Bit Server VM Homebrew (build 17.0.18+0, mixed mode, sharing)"
       ],
       "exit_code": 0,
-      "seconds": 0.06
+      "seconds": 0.024
     },
     {
       "tool": "maven",
@@ -91,7 +91,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.425
+      "seconds": 0.427
     },
     {
       "tool": "scip-go",
@@ -104,7 +104,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.066
+      "seconds": 0.062
     },
     {
       "tool": "scip-python",
@@ -130,7 +130,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.402
+      "seconds": 0.943
     },
     {
       "tool": "scip-java",
@@ -179,7 +179,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.25
+      "seconds": 0.247
     },
     {
       "tool": "jdtls",
@@ -231,7 +231,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.064
+      "seconds": 0.057
     },
     {
       "tool": "ruby",
@@ -261,7 +261,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.043
+      "seconds": 0.039
     },
     {
       "tool": "pwsh",
@@ -274,7 +274,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.045
+      "seconds": 0.042
     },
     {
       "tool": "sourcekit-lsp",
@@ -290,7 +290,7 @@
         "swift-driver version: 1.127.15"
       ],
       "exit_code": 0,
-      "seconds": 0.067,
+      "seconds": 0.063,
       "binary": "/usr/bin/sourcekit-lsp",
       "note": "sourcekit-lsp has no version flag in this toolchain; Swift toolchain version is recorded as the closest reproducible native version."
     }
