@@ -12,6 +12,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/dominic097/atlas/internal/index"
 	"github.com/dominic097/atlas/pkg/atlas"
 )
 
@@ -42,14 +43,15 @@ func newIndexCmd() *cobra.Command {
 			}
 			defer stopCPU()
 
-			finishProgress := startIndexProgress(cmd.ErrOrStderr(), indexProgressEnabled(progress), in.ProjectPath)
+			pc := &index.ProgressCounters{}
+			finishProgress := startIndexProgress(cmd.ErrOrStderr(), indexProgressEnabled(progress), in.ProjectPath, pc)
 			eng, err := resolveEngine(cmd.Context())
 			if err != nil {
 				finishProgress(nil, err)
 				return err
 			}
 			defer eng.Close()
-			res, err := eng.Index(cmd.Context(), in)
+			res, err := eng.Index(index.WithProgress(cmd.Context(), pc), in)
 			if err != nil {
 				finishProgress(res, err)
 				return err
@@ -88,7 +90,7 @@ func indexProgressEnabled(flag bool) bool {
 	}
 }
 
-func startIndexProgress(w io.Writer, enabled bool, projectPath string) func(*atlas.IndexResult, error) {
+func startIndexProgress(w io.Writer, enabled bool, projectPath string, pc *index.ProgressCounters) func(*atlas.IndexResult, error) {
 	if !enabled || w == nil {
 		return func(*atlas.IndexResult, error) {}
 	}
@@ -101,12 +103,12 @@ func startIndexProgress(w io.Writer, enabled bool, projectPath string) func(*atl
 	fmt.Fprintf(w, "atlas index: starting path=%s db=%s\n", projectPath, gf.db)
 	go func() {
 		defer close(stopped)
-		ticker := time.NewTicker(5 * time.Second)
+		ticker := time.NewTicker(2 * time.Second)
 		defer ticker.Stop()
 		for {
 			select {
 			case <-ticker.C:
-				fmt.Fprintf(w, "atlas index: still indexing elapsed=%s\n", roundIndexDuration(time.Since(start)))
+				fmt.Fprintln(w, formatIndexProgress(pc.Snapshot(), time.Since(start)))
 			case <-done:
 				return
 			}
@@ -124,12 +126,63 @@ func startIndexProgress(w io.Writer, enabled bool, projectPath string) func(*atl
 			fmt.Fprintf(w, "atlas index: done in %s\n", elapsed)
 			return
 		}
+		// Segmented (workspace) run: print the per-repo breakdown above the aggregate.
+		if len(res.Repos) > 0 {
+			ok, failed := 0, 0
+			for _, r := range res.Repos {
+				if r.Error != "" {
+					failed++
+				} else {
+					ok++
+				}
+			}
+			fmt.Fprintf(w, "atlas index: segmented %d repos (%d ok, %d failed)\n", len(res.Repos), ok, failed)
+			for _, r := range res.Repos {
+				if r.Error != "" {
+					fmt.Fprintf(w, "atlas index:   %-30s FAILED: %s\n", r.Repo, r.Error)
+					continue
+				}
+				fmt.Fprintf(w, "atlas index:   %-30s files=%d symbols=%d edges=%d routes=%d\n",
+					r.Repo, r.Files, r.Symbols, r.Edges, r.Routes)
+			}
+		}
 		fmt.Fprintf(w, "atlas index: done repo=%s mode=%s files=%d symbols=%d edges=%d routes=%d duration=%dms\n",
 			res.RepoFullName, res.Mode, res.IndexedFiles, res.Symbols, res.Edges, res.Routes, res.DurationMS)
 		if timings := formatIndexTimings(res.TimingsMS); timings != "" {
 			fmt.Fprintf(w, "atlas index: timings %s\n", timings)
 		}
 	}
+}
+
+// formatIndexProgress renders one live progress line from a counters snapshot —
+// the current repo (in a segmented run), phase, and parsed/total file + symbol
+// counts — so the user sees real movement instead of a bare elapsed timer.
+func formatIndexProgress(s index.ProgressSnapshot, elapsed time.Duration) string {
+	var b strings.Builder
+	b.WriteString("atlas index: ")
+	if s.RepoTotal > 1 {
+		fmt.Fprintf(&b, "[%d/%d] %s ", s.RepoIndex, s.RepoTotal, s.RepoName)
+	}
+	switch s.Phase {
+	case "parse":
+		if s.FilesTotal > 0 {
+			fmt.Fprintf(&b, "parsing %d/%d files, %d symbols", s.FilesParsed, s.FilesTotal, s.Symbols)
+		} else {
+			b.WriteString("parsing files")
+		}
+	case "go_types":
+		fmt.Fprintf(&b, "analyzing types (%d files, %d symbols)", s.FilesParsed, s.Symbols)
+	case "persist":
+		fmt.Fprintf(&b, "persisting %d symbols", s.Symbols)
+	case "discover", "":
+		b.WriteString("scanning files")
+	case "done":
+		b.WriteString("finishing up")
+	default:
+		b.WriteString(s.Phase)
+	}
+	fmt.Fprintf(&b, " elapsed=%s", roundIndexDuration(elapsed))
+	return b.String()
 }
 
 func roundIndexDuration(d time.Duration) time.Duration {

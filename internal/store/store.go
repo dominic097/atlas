@@ -42,6 +42,36 @@ type StorageDriver interface {
 	// snapshots (temporal moat)
 	SaveSnapshot(ctx context.Context, s *graph.Snapshot, files []graph.File,
 		symbols []graph.CodeSymbol, edges []graph.DependencyEdge, routes []graph.Route) error
+	// ReplaceFileRows is the SQL-level incremental delta primitive. In ONE
+	// transaction it deletes only the child rows owned by the affected files and
+	// bulk-inserts the provided fresh rows for those files, then updates the
+	// snapshot's file/symbol/edge/route counts to the supplied new totals.
+	//
+	// Two DISTINCT affected sets are required because a file's row-ownership differs
+	// per table:
+	//   - fileScope (changed/added ∪ deleted files): deletes files WHERE path IN(...),
+	//     symbols WHERE path IN(...), and routes WHERE handler_file IN(...). These are
+	//     the files whose SYMBOLS/FILE-ROWS/ROUTES are being replaced — i.e. the files
+	//     actually re-parsed (plus deletions, which delete with no re-insert).
+	//   - edgeScope (fileScope ∪ Go reverse-dep files): deletes edges WHERE
+	//     from_file IN(...). Go's scoped type-check can refresh a reverse-dep file's
+	//     go/types EDGES without changing its SYMBOLS, so edges are dropped for a
+	//     SUPERSET of fileScope. A reverse-dep file is in edgeScope but NOT fileScope,
+	//     so its symbol/file rows are preserved while its edge rows are replaced.
+	//
+	// Every file outside edgeScope is left exactly as it is — never loaded, never
+	// rewritten — so a one-file edit to a large snapshot touches only the edited
+	// file's blast radius instead of re-saving the whole graph. The result is
+	// byte-identical to a SaveSnapshot of the equivalent merged set.
+	//
+	// The provided files/symbols/edges/routes are the FRESH rows for the affected
+	// files only (no carried-forward rows): files/symbols/routes for fileScope, edges
+	// for edgeScope. They must already carry snapshotID + their final per-row ids.
+	// newFileCount/newSymbolCount/newEdgeCount/newRouteCount are the snapshot's TOTAL
+	// counts after the replace (kept + replaced), used to update the snapshots row.
+	ReplaceFileRows(ctx context.Context, snapshotID string, fileScope, edgeScope []string,
+		files []graph.File, symbols []graph.CodeSymbol, edges []graph.DependencyEdge, routes []graph.Route,
+		newFileCount, newSymbolCount, newEdgeCount, newRouteCount int) error
 	UpdateSnapshotMetadata(ctx context.Context, snapshotID string, metadata graph.JSONBMap) error
 	LatestSnapshot(ctx context.Context, repoID string) (*graph.Snapshot, error)
 	ListSnapshots(ctx context.Context, repoID string, limit int) ([]graph.Snapshot, error)

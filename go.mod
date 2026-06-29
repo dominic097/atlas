@@ -25,6 +25,7 @@ require (
 	github.com/tree-sitter/tree-sitter-javascript v0.25.0
 	github.com/tree-sitter/tree-sitter-python v0.25.0
 	github.com/tree-sitter/tree-sitter-typescript v0.23.2
+	golang.org/x/sync v0.21.0
 	golang.org/x/tools v0.46.0
 	modernc.org/sqlite v1.53.0
 )
@@ -63,7 +64,6 @@ require (
 	github.com/tree-sitter/tree-sitter-go v0.25.0 // indirect
 	go.etcd.io/bbolt v1.4.0 // indirect
 	golang.org/x/mod v0.37.0 // indirect
-	golang.org/x/sync v0.21.0 // indirect
 	golang.org/x/sys v0.46.0 // indirect
 	google.golang.org/protobuf v1.36.6 // indirect
 	modernc.org/libc v1.73.4 // indirect

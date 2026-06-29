@@ -46,10 +46,27 @@ const maxGoFiles = 4000
 // bound it so indexing always terminates and degrades to the heuristic.
 const loadTimeout = 90 * time.Second
 
-// maxRefEdges caps the number of type-use reference edges emitted, so a huge
-// module cannot balloon the snapshot. Reached only on very large in-bound repos
-// (we already cap total files at maxGoFiles).
-const maxRefEdges = 8000
+// maxRefEdgesPerFile caps the number of type-use reference edges emitted FROM a
+// single source file, so a pathological generated file cannot balloon the snapshot
+// while keeping every NORMAL file's full ref set. It is a PER-FROM-FILE cap, not a
+// global one: a file's emitted ref set depends ONLY on that file (its own type-use
+// occurrences resolved against its dependencies' types), never on the global order
+// in which packages/files happen to be walked.
+//
+// This is the determinism keystone. A GLOBAL cap (the previous maxRefEdges=8000)
+// truncated by global emission order, so (a) two full reindexes of the same tree
+// could disagree — each hit the global ceiling on a DIFFERENT set of files — and
+// (b) a SQL-level delta that carries unchanged files' base refs forward could not
+// match a fresh reindex that truncated a different set. A per-file cap removes the
+// cross-file coupling entirely: each file is bounded independently and emitted in a
+// deterministic (line, then qualified ref) order, so a full reindex is byte-stable
+// and an unchanged file's refs are identical across a reindex and a carry-forward.
+//
+// The value is generous: real source files have far fewer than 512 distinct type-use
+// references (hugo's true total ~13835 is spread across thousands of files, i.e. a
+// few per file). It exists only to bound a degenerate single generated file, and is
+// reached by essentially no hand-written Go.
+const maxRefEdgesPerFile = 512
 
 // ScopedMinGoFiles is the module-size floor below which the incremental delta path
 // (AnalyzeScoped) is NOT worth taking: the scoped path pays a fixed metadata
@@ -314,12 +331,6 @@ func analyzePackages(pkgs []*packages.Package, repoRoot string) Result {
 			}
 			collectCallRecvs(fset, info, syntax, repoRoot, &callRecvs)
 			collectRefEdges(fset, info, syntax, repoRoot, pkg.Module, &refEdges, refSeen)
-			if len(refEdges) >= maxRefEdges {
-				break
-			}
-		}
-		if len(refEdges) >= maxRefEdges {
-			break
 		}
 	}
 
@@ -328,6 +339,15 @@ func analyzePackages(pkgs []*packages.Package, repoRoot string) Result {
 	if !analyzed {
 		return Result{OK: false}
 	}
+
+	// Bound each FROM-FILE's reference set INDEPENDENTLY and deterministically. This is
+	// the determinism keystone: collectRefEdges emits every in-module type-use ref with
+	// no global cap, so the raw set is already global-order-INDEPENDENT (it is the full
+	// Uses set per file). capRefEdgesPerFile then keeps at most maxRefEdgesPerFile per
+	// FromFile in a deterministic (line, qualified, symbol, ref) order, so a pathological
+	// generated file is bounded without that bound depending on — or perturbing — any
+	// other file's emitted set.
+	refEdges = capRefEdgesPerFile(refEdges)
 
 	sortCallRecvs(callRecvs)
 	sortRefEdges(refEdges)
@@ -496,9 +516,6 @@ func collectRefEdges(fset *token.FileSet, info *types.Info, file *ast.File, repo
 	decls := topLevelDecls(file)
 
 	for ident, obj := range info.Uses {
-		if len(*out) >= maxRefEdges {
-			return
-		}
 		tn, ok := obj.(*types.TypeName)
 		if !ok {
 			continue
@@ -678,6 +695,70 @@ func sortCallRecvs(cr []CallRecv) {
 	})
 }
 
+// capRefEdgesPerFile bounds each FromFile's reference-edge set to maxRefEdgesPerFile,
+// keeping a DETERMINISTIC prefix per file so the result depends only on the file's own
+// edges (never on global emission/walk order). It groups by FromFile, sorts each group
+// by (line, qualified, fromSymbol, toRef) — a total order independent of how info.Uses
+// happened to iterate — and keeps the first maxRefEdgesPerFile of each group. Files at
+// or under the cap (essentially all real source) are returned with their full set; only
+// a degenerate file is truncated, and even then to a STABLE prefix.
+//
+// The returned slice is unsorted across files (analyzePackages calls sortRefEdges next);
+// only the per-file selection matters here.
+func capRefEdgesPerFile(edges []RefEdge) []RefEdge {
+	if len(edges) == 0 {
+		return edges
+	}
+	// Group indices by FromFile, preserving first-seen file order only for the cheap
+	// no-truncation fast path; selection itself is order-independent (we sort each group).
+	groups := make(map[string][]int)
+	for i := range edges {
+		groups[edges[i].FromFile] = append(groups[edges[i].FromFile], i)
+	}
+
+	// Fast path: no file exceeds the cap -> nothing to drop, return as-is.
+	overflow := false
+	for _, idxs := range groups {
+		if len(idxs) > maxRefEdgesPerFile {
+			overflow = true
+			break
+		}
+	}
+	if !overflow {
+		return edges
+	}
+
+	out := make([]RefEdge, 0, len(edges))
+	for _, idxs := range groups {
+		if len(idxs) <= maxRefEdgesPerFile {
+			for _, i := range idxs {
+				out = append(out, edges[i])
+			}
+			continue
+		}
+		// Deterministic per-file order before truncation: line, then qualified ref, then
+		// enclosing symbol, then base ref — a total order that does not depend on the map
+		// iteration that produced these edges.
+		sort.SliceStable(idxs, func(a, b int) bool {
+			ea, eb := &edges[idxs[a]], &edges[idxs[b]]
+			if ea.Line != eb.Line {
+				return ea.Line < eb.Line
+			}
+			if ea.Qualified != eb.Qualified {
+				return ea.Qualified < eb.Qualified
+			}
+			if ea.FromSymbol != eb.FromSymbol {
+				return ea.FromSymbol < eb.FromSymbol
+			}
+			return ea.ToRef < eb.ToRef
+		})
+		for _, i := range idxs[:maxRefEdgesPerFile] {
+			out = append(out, edges[i])
+		}
+	}
+	return out
+}
+
 func sortRefEdges(re []RefEdge) {
 	sort.SliceStable(re, func(i, j int) bool {
 		if re[i].FromFile != re[j].FromFile {
@@ -689,7 +770,15 @@ func sortRefEdges(re []RefEdge) {
 		if re[i].FromSymbol != re[j].FromSymbol {
 			return re[i].FromSymbol < re[j].FromSymbol
 		}
-		return re[i].ToRef < re[j].ToRef
+		if re[i].ToRef != re[j].ToRef {
+			return re[i].ToRef < re[j].ToRef
+		}
+		// Qualified is the final tiebreaker: two distinct types whose bare names collide
+		// (same ToRef) but come from different packages can occur on the SAME line/symbol
+		// (e.g. a func with params of two same-named types from different packages). Since
+		// info.Uses iterates in map-random order, omitting this tiebreaker would leave
+		// such a pair in a nondeterministic relative order — defeating reindex stability.
+		return re[i].Qualified < re[j].Qualified
 	})
 }
 

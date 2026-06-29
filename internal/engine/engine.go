@@ -25,7 +25,6 @@ import (
 	"github.com/dominic097/atlas/internal/embed"
 	"github.com/dominic097/atlas/internal/export"
 	"github.com/dominic097/atlas/internal/graph"
-	"github.com/dominic097/atlas/internal/index"
 	"github.com/dominic097/atlas/internal/lexical"
 	"github.com/dominic097/atlas/internal/query"
 	"github.com/dominic097/atlas/internal/store"
@@ -66,6 +65,11 @@ type IndexResult struct {
 	Mode         string           `json:"mode"`
 	DurationMS   int64            `json:"duration_ms"`
 	TimingsMS    map[string]int64 `json:"timings_ms,omitempty"`
+	// Repos is the per-repo breakdown of a SEGMENTED run (Mode=="segmented"),
+	// produced when `index` is pointed at a workspace containing many repos. Empty
+	// for a normal single-repo index. The top-level Symbols/Edges/IndexedFiles/
+	// Routes fields hold the aggregate across all repos.
+	Repos []RepoIndexSummary `json:"repos,omitempty"`
 }
 
 type SearchInput struct {
@@ -747,37 +751,29 @@ func (e *localEngine) Index(ctx context.Context, in IndexInput) (*IndexResult, e
 	if err != nil {
 		return nil, fmt.Errorf("engine: resolve path: %w", err)
 	}
-	fullName := in.Repo
-	if fullName == "" {
-		fullName = filepath.Base(abs)
+	// Auto-segment a workspace into its constituent repos. When the caller did not
+	// name a single repo, look for git repos nested under the path and, if it is a
+	// workspace (a parent of repos), index each nested repo on its own. This bounds
+	// memory — each repo's parse + go/types pass runs and flushes before the next,
+	// so a 200k-file many-repo tree no longer accumulates one giant in-memory graph
+	// and OOMs — and preserves cross-repo links, which form at query time from the
+	// shared store.
+	//
+	// A workspace is either (a) a plain parent dir holding repos, or (b) a dir that
+	// is ITSELF under git yet still contains several independent repos (e.g. a dev
+	// workspace kept under one outer git, like ~/workspace with many cloned repos).
+	// A normal repo with one vendored submodule (root is a repo, ≤1 nested) is NOT a
+	// workspace and is indexed as a single repo.
+	if strings.TrimSpace(in.Repo) == "" {
+		nested := discoverRepos(abs)
+		rootIsRepo := isGitRepo(abs)
+		if (len(nested) >= 1 && !rootIsRepo) || (len(nested) >= 2 && rootIsRepo) {
+			return e.indexSegmented(ctx, in, abs, nested, rootIsRepo)
+		}
 	}
 	// repoID left empty: the store resolves/mints the canonical id by full_name,
-	// so re-indexing the same repo reuses its row. The embedding pass runs only when
-	// vectors are enabled (per-call flag OR the engine's query-time vector config).
-	enableVectors := in.EnableVectors || e.cfg.EnableVector
-	lx, err := e.ensureLexical()
-	if err != nil {
-		return nil, err
-	}
-	snap, stats, err := index.Run(ctx, e.store, lx, "", fullName, abs, index.Options{Reindex: in.Reindex, Scope: e.cfg.Scope, EnableVectors: enableVectors})
-	if err != nil {
-		return nil, err
-	}
-	return &IndexResult{
-		RepoID:       snap.RepoID,
-		RepoFullName: fullName,
-		SnapshotID:   snap.ID,
-		CommitSHA:    snap.CommitSHA,
-		IndexedFiles: stats.Files,
-		Symbols:      stats.Symbols,
-		Edges:        stats.Edges,
-		EdgeKinds:    stats.EdgeKinds,
-		Routes:       stats.Routes,
-		Languages:    stats.Languages,
-		Mode:         stats.Mode,
-		DurationMS:   stats.DurationMS,
-		TimingsMS:    stats.TimingsMS,
-	}, nil
+	// so re-indexing the same repo reuses its row.
+	return e.indexOne(ctx, in, abs, "", nil)
 }
 
 // Search is the catalog entry point. The default is deterministic lexical (BM25)

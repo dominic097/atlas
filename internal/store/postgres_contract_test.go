@@ -200,6 +200,70 @@ func TestPostgresContract(t *testing.T) {
 		t.Fatalf("SaveSnapshot(2): %v", err)
 	}
 
+	// ---- ReplaceFileRows (Phase 1B SQL-level incremental delta) -------------
+	//
+	// Seed snap2 with two files (a.go edited, b.go reverse-dep) plus an untouched file
+	// c.go, then ReplaceFileRows: fileScope={a.go} replaces a.go's file/symbol/route
+	// rows; edgeScope={a.go,b.go} replaces those files' edge rows. c.go must survive and
+	// b.go must keep its symbol while its edge refreshes — the exact scope split the Go
+	// scoped delta relies on, validated against the live Postgres tier.
+	rfrFiles := []graph.File{
+		{ID: "rfr-fa", SnapshotID: snap2.ID, Path: "a.go", Language: "go", Hash: "ra", SizeBytes: 1},
+		{ID: "rfr-fb", SnapshotID: snap2.ID, Path: "b.go", Language: "go", Hash: "rb", SizeBytes: 2},
+		{ID: "rfr-fc", SnapshotID: snap2.ID, Path: "c.go", Language: "go", Hash: "rc", SizeBytes: 3},
+	}
+	rfrSymbols := []graph.CodeSymbol{
+		{ID: "rfr-sa", SnapshotID: snap2.ID, NodeID: "rn-a", RepoID: repoA1.ID, Path: "a.go", Language: "go", Kind: "function", Name: "Old"},
+		{ID: "rfr-sb", SnapshotID: snap2.ID, NodeID: "rn-b", RepoID: repoA1.ID, Path: "b.go", Language: "go", Kind: "function", Name: "BUser"},
+		{ID: "rfr-sc", SnapshotID: snap2.ID, NodeID: "rn-c", RepoID: repoA1.ID, Path: "c.go", Language: "go", Kind: "function", Name: "CUser"},
+	}
+	rfrEdges := []graph.DependencyEdge{
+		{ID: "rfr-ea", SnapshotID: snap2.ID, FromFile: "a.go", ToRef: "BUser", Kind: graph.EdgeCalls, Language: "go", Line: 2},
+		{ID: "rfr-eb", SnapshotID: snap2.ID, FromFile: "b.go", ToRef: "Widget", Kind: graph.EdgeReferences, Language: "go", Line: 3, Metadata: graph.JSONBMap{"recv_type": "old"}},
+		{ID: "rfr-ec", SnapshotID: snap2.ID, FromFile: "c.go", ToRef: "BUser", Kind: graph.EdgeCalls, Language: "go", Line: 4},
+	}
+	rfrRoutes := []graph.Route{
+		{ID: "rfr-ra", SnapshotID: snap2.ID, RepoFullName: "org/web", Method: "GET", PathPattern: "/a", HandlerFile: "a.go", Role: "producer", Source: "route_table", Confidence: "high"},
+		{ID: "rfr-rc", SnapshotID: snap2.ID, RepoFullName: "org/web", Method: "GET", PathPattern: "/c", HandlerFile: "c.go", Role: "producer", Source: "route_table", Confidence: "high"},
+	}
+	if err := d.SaveSnapshot(ctx, snap2, rfrFiles, rfrSymbols, rfrEdges, rfrRoutes); err != nil {
+		t.Fatalf("ReplaceFileRows seed SaveSnapshot: %v", err)
+	}
+	// Replace a.go (Old->New, edge target shifts) and b.go's edge (recv_type old->new).
+	newA := []graph.File{{ID: "rfr-fa2", SnapshotID: snap2.ID, Path: "a.go", Language: "go", Hash: "ra2", SizeBytes: 11}}
+	newSyms := []graph.CodeSymbol{{ID: "rfr-sa2", SnapshotID: snap2.ID, NodeID: "rn-a2", RepoID: repoA1.ID, Path: "a.go", Language: "go", Kind: "function", Name: "New"}}
+	newEdges := []graph.DependencyEdge{
+		{ID: "rfr-ea2", SnapshotID: snap2.ID, FromFile: "a.go", ToRef: "CUser", Kind: graph.EdgeCalls, Language: "go", Line: 2},
+		{ID: "rfr-eb2", SnapshotID: snap2.ID, FromFile: "b.go", ToRef: "Widget", Kind: graph.EdgeReferences, Language: "go", Line: 3, Metadata: graph.JSONBMap{"recv_type": "new"}},
+	}
+	newRoutes := []graph.Route{{ID: "rfr-ra2", SnapshotID: snap2.ID, RepoFullName: "org/web", Method: "POST", PathPattern: "/a", HandlerFile: "a.go", Role: "producer", Source: "route_table", Confidence: "high"}}
+	// Totals: files 3, symbols 3, edges 3 (3 − 2 + 2), routes 2 (2 − 1 + 1).
+	if err := d.ReplaceFileRows(ctx, snap2.ID, []string{"a.go"}, []string{"a.go", "b.go"}, newA, newSyms, newEdges, newRoutes, 3, 3, 3, 2); err != nil {
+		t.Fatalf("ReplaceFileRows: %v", err)
+	}
+	// a.go replaced.
+	if aSyms, err := d.SymbolsByPath(ctx, snap2.ID, "a.go"); err != nil || len(aSyms) != 1 || aSyms[0].Name != "New" {
+		t.Fatalf("ReplaceFileRows a.go symbols = %+v err=%v, want [New]", aSyms, err)
+	}
+	// b.go symbol preserved, edge refreshed.
+	if bSyms, err := d.SymbolsByPath(ctx, snap2.ID, "b.go"); err != nil || len(bSyms) != 1 || bSyms[0].Name != "BUser" {
+		t.Fatalf("ReplaceFileRows b.go symbol = %+v err=%v, want preserved [BUser]", bSyms, err)
+	}
+	if bEdges, err := d.EdgesByFromFiles(ctx, snap2.ID, []string{"b.go"}); err != nil || len(bEdges) != 1 {
+		t.Fatalf("ReplaceFileRows b.go edges = %+v err=%v, want 1", bEdges, err)
+	} else if recv, _ := bEdges[0].Metadata["recv_type"].(string); recv != "new" {
+		t.Fatalf("ReplaceFileRows b.go edge recv_type = %q, want refreshed 'new'", recv)
+	}
+	// c.go untouched.
+	if cSyms, err := d.SymbolsByPath(ctx, snap2.ID, "c.go"); err != nil || len(cSyms) != 1 || cSyms[0].Name != "CUser" {
+		t.Fatalf("ReplaceFileRows c.go symbol changed = %+v err=%v", cSyms, err)
+	}
+	if s2, err := d.LatestSnapshot(ctx, repoA1.ID); err == nil && s2 != nil && s2.ID == snap2.ID {
+		if s2.FileCount != 3 || s2.SymbolCount != 3 || s2.EdgeCount != 3 || s2.RouteCount != 2 {
+			t.Fatalf("ReplaceFileRows snap2 counts = %d/%d/%d/%d, want 3/3/3/2", s2.FileCount, s2.SymbolCount, s2.EdgeCount, s2.RouteCount)
+		}
+	}
+
 	// Idempotency: re-saving the SAME (repo_id, commit_sha) must reuse the id and
 	// rebuild children (count stays 2, not 4). Carry the same metadata so the
 	// upsert (metadata = excluded.metadata) preserves it for the round-trip check.

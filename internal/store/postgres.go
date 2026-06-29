@@ -355,6 +355,174 @@ func (d *postgresDriver) SaveSnapshot(ctx context.Context, s *graph.Snapshot, fi
 	return nil
 }
 
+// ReplaceFileRows is the SQL-level incremental delta for the Postgres tier. It
+// mirrors the SQLite implementation exactly: in one transaction it deletes only
+// the affected ∪ deleted files' rows (by path/from_file/handler_file), re-inserts
+// the supplied fresh rows for the affected files, and updates the snapshot counts.
+// Unchanged files' rows are untouched, so the result is byte-identical to a
+// SaveSnapshot of the merged set.
+func (d *postgresDriver) ReplaceFileRows(ctx context.Context, snapshotID string, fileScope, edgeScope []string,
+	files []graph.File, symbols []graph.CodeSymbol, edges []graph.DependencyEdge, routes []graph.Route,
+	newFileCount, newSymbolCount, newEdgeCount, newRouteCount int) error {
+	if strings.TrimSpace(snapshotID) == "" {
+		return fmt.Errorf("store: snapshot id is required")
+	}
+
+	tx, err := d.db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("store: begin replace tx: %w", err)
+	}
+	defer tx.Rollback()
+
+	// fileScope drives files/symbols/routes deletes; edgeScope (a superset including Go
+	// reverse-dep files) drives the edges delete. See the interface doc for the split.
+	fileScope = uniqueNonEmpty(fileScope)
+	edgeScope = uniqueNonEmpty(edgeScope)
+	if len(fileScope) > 0 {
+		for _, del := range []struct{ table, col string }{
+			{"files", "path"},
+			{"symbols", "path"},
+			{"routes", "handler_file"},
+		} {
+			if err := pgDeleteByFileColumn(ctx, tx, del.table, del.col, snapshotID, fileScope); err != nil {
+				return fmt.Errorf("store: replace clear %s: %w", del.table, err)
+			}
+		}
+	}
+	if len(edgeScope) > 0 {
+		if err := pgDeleteByFileColumn(ctx, tx, "edges", "from_file", snapshotID, edgeScope); err != nil {
+			return fmt.Errorf("store: replace clear edges: %w", err)
+		}
+	}
+
+	fileStmt, err := tx.PrepareContext(ctx, `
+		INSERT INTO files (id, snapshot_id, path, language, size_bytes, hash, imports, doc_summary)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`)
+	if err != nil {
+		return fmt.Errorf("store: prepare file insert: %w", err)
+	}
+	defer fileStmt.Close()
+	for i := range files {
+		f := &files[i]
+		id := f.ID
+		if id == "" {
+			id = uuid.NewString()
+		}
+		imports := f.Imports
+		if imports == nil {
+			imports = []string{}
+		}
+		if _, err := fileStmt.ExecContext(ctx, id, snapshotID, f.Path, f.Language, f.SizeBytes, f.Hash, pq.Array(imports), f.DocSummary); err != nil {
+			return fmt.Errorf("store: save file %s: %w", f.Path, err)
+		}
+	}
+
+	symStmt, err := tx.PrepareContext(ctx, `
+		INSERT INTO symbols (id, snapshot_id, node_id, repo_id, path, language, kind, name, signature, doc, start_line, end_line, metadata)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13::jsonb)`)
+	if err != nil {
+		return fmt.Errorf("store: prepare symbol insert: %w", err)
+	}
+	defer symStmt.Close()
+	for i := range symbols {
+		sym := &symbols[i]
+		id := sym.ID
+		if id == "" {
+			id = uuid.NewString()
+		}
+		m, err := marshalJSONMap(sym.Metadata)
+		if err != nil {
+			return fmt.Errorf("store: marshal symbol metadata for %s: %w", sym.Name, err)
+		}
+		if _, err := symStmt.ExecContext(ctx, id, snapshotID, string(sym.NodeID), sym.RepoID, sym.Path, sym.Language,
+			sym.Kind, sym.Name, sym.Signature, sym.Doc, sym.StartLine, sym.EndLine, m); err != nil {
+			return fmt.Errorf("store: save symbol %s: %w", sym.Name, err)
+		}
+	}
+
+	edgeStmt, err := tx.PrepareContext(ctx, `
+		INSERT INTO edges (id, snapshot_id, from_file, from_symbol, to_ref, kind, language, line, metadata)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9::jsonb)`)
+	if err != nil {
+		return fmt.Errorf("store: prepare edge insert: %w", err)
+	}
+	defer edgeStmt.Close()
+	for i := range edges {
+		e := &edges[i]
+		id := e.ID
+		if id == "" {
+			id = uuid.NewString()
+		}
+		m, err := marshalJSONMap(e.Metadata)
+		if err != nil {
+			return fmt.Errorf("store: marshal edge metadata: %w", err)
+		}
+		if _, err := edgeStmt.ExecContext(ctx, id, snapshotID, e.FromFile, e.FromSymbol, e.ToRef, string(e.Kind), e.Language, e.Line, m); err != nil {
+			return fmt.Errorf("store: save edge %s -> %s: %w", e.FromFile, e.ToRef, err)
+		}
+	}
+
+	routeStmt, err := tx.PrepareContext(ctx, `
+		INSERT INTO routes (id, snapshot_id, repo_full_name, method, path_pattern, handler_file, role, source, confidence, metadata)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10::jsonb)`)
+	if err != nil {
+		return fmt.Errorf("store: prepare route insert: %w", err)
+	}
+	defer routeStmt.Close()
+	for i := range routes {
+		rt := &routes[i]
+		id := rt.ID
+		if id == "" {
+			id = uuid.NewString()
+		}
+		m, err := marshalJSONMap(rt.Metadata)
+		if err != nil {
+			return fmt.Errorf("store: marshal route metadata: %w", err)
+		}
+		if _, err := routeStmt.ExecContext(ctx, id, snapshotID, rt.RepoFullName, rt.Method, rt.PathPattern,
+			rt.HandlerFile, rt.Role, rt.Source, rt.Confidence, m); err != nil {
+			return fmt.Errorf("store: save route %s %s: %w", rt.Method, rt.PathPattern, err)
+		}
+	}
+
+	if _, err := tx.ExecContext(ctx,
+		`UPDATE snapshots SET file_count = $1, symbol_count = $2, edge_count = $3, route_count = $4 WHERE id = $5`,
+		newFileCount, newSymbolCount, newEdgeCount, newRouteCount, snapshotID); err != nil {
+		return fmt.Errorf("store: replace update counts: %w", err)
+	}
+
+	if err := tx.Commit(); err != nil {
+		return fmt.Errorf("store: commit replace: %w", err)
+	}
+	return nil
+}
+
+// pgDeleteByFileColumn deletes every row of `table` whose file-path `col` is in
+// `paths`, scoped to snapshotID, using a chunked IN-list. col is a fixed identifier
+// ("path"|"from_file"|"handler_file"), never user input, so it is interpolated.
+func pgDeleteByFileColumn(ctx context.Context, tx *sql.Tx, table, col, snapshotID string, paths []string) error {
+	if len(paths) == 0 {
+		return nil
+	}
+	for start := 0; start < len(paths); start += pgChunk {
+		end := start + pgChunk
+		if end > len(paths) {
+			end = len(paths)
+		}
+		chunk := paths[start:end]
+		args := make([]any, 0, len(chunk)+1)
+		args = append(args, snapshotID)
+		for _, p := range chunk {
+			args = append(args, p)
+		}
+		query := `DELETE FROM ` + table + ` WHERE snapshot_id = $1 AND ` + col + ` IN (` + inPlaceholders(2, len(chunk)) + `)`
+		if _, err := tx.ExecContext(ctx, query, args...); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func (d *postgresDriver) UpdateSnapshotMetadata(ctx context.Context, snapshotID string, metadata graph.JSONBMap) error {
 	if strings.TrimSpace(snapshotID) == "" {
 		return fmt.Errorf("store: snapshot id is required")

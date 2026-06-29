@@ -52,7 +52,7 @@ func TestStartIndexProgressWritesStats(t *testing.T) {
 	defer func() { gf.db = prevDB }()
 
 	var buf bytes.Buffer
-	finish := startIndexProgress(&buf, true, ".")
+	finish := startIndexProgress(&buf, true, ".", nil)
 	finish(&atlas.IndexResult{
 		RepoFullName: "repo",
 		Mode:         "delta",
@@ -78,7 +78,7 @@ func TestStartIndexProgressWritesStats(t *testing.T) {
 
 func TestStartIndexProgressWritesFailure(t *testing.T) {
 	var buf bytes.Buffer
-	finish := startIndexProgress(&buf, true, "svc")
+	finish := startIndexProgress(&buf, true, "svc", nil)
 	finish(nil, errors.New("boom"))
 
 	out := buf.String()

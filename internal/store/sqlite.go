@@ -476,6 +476,174 @@ func (d *sqliteDriver) SaveSnapshot(ctx context.Context, s *graph.Snapshot, file
 	return nil
 }
 
+// ReplaceFileRows is the SQL-level incremental delta: it deletes only the rows
+// owned by the affected ∪ deleted files and bulk-inserts the supplied fresh rows
+// for the affected files, then updates the snapshot's counts — all in ONE tx.
+// Unchanged files' rows are never touched, so a small edit re-saves only its blast
+// radius rather than the whole graph (the byte-identical-to-full-reindex parity is
+// guaranteed by the caller, which re-emits exactly the affected files' rows).
+func (d *sqliteDriver) ReplaceFileRows(ctx context.Context, snapshotID string, fileScope, edgeScope []string,
+	files []graph.File, symbols []graph.CodeSymbol, edges []graph.DependencyEdge, routes []graph.Route,
+	newFileCount, newSymbolCount, newEdgeCount, newRouteCount int) error {
+	if strings.TrimSpace(snapshotID) == "" {
+		return fmt.Errorf("store: snapshot id is required")
+	}
+	d.mu.Lock()
+	defer d.mu.Unlock()
+
+	tx, err := d.db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("store: begin replace tx: %w", err)
+	}
+	defer tx.Rollback()
+
+	// fileScope drives the files/symbols/routes deletes (keyed by path/path/handler_file);
+	// edgeScope (a superset including Go reverse-dep files) drives the edges delete
+	// (keyed by from_file). A reverse-dep file is in edgeScope but NOT fileScope, so only
+	// its edge rows are replaced while its symbol/file rows are preserved.
+	fileScope = uniqueNonEmpty(fileScope)
+	edgeScope = uniqueNonEmpty(edgeScope)
+	if len(fileScope) > 0 {
+		for _, del := range []struct{ table, col string }{
+			{"files", "path"},
+			{"symbols", "path"},
+			{"routes", "handler_file"},
+		} {
+			if err := sqliteDeleteByFileColumn(ctx, tx, del.table, del.col, snapshotID, fileScope); err != nil {
+				return fmt.Errorf("store: replace clear %s: %w", del.table, err)
+			}
+		}
+	}
+	if len(edgeScope) > 0 {
+		if err := sqliteDeleteByFileColumn(ctx, tx, "edges", "from_file", snapshotID, edgeScope); err != nil {
+			return fmt.Errorf("store: replace clear edges: %w", err)
+		}
+	}
+
+	// Bulk-insert the fresh rows for the affected files. These reuse the SAME row
+	// marshaling SaveSnapshot uses, so a row written here is byte-identical to the row
+	// a full reindex would write for the same file.
+	fileRows := make([][]any, 0, len(files))
+	for i := range files {
+		f := &files[i]
+		id := f.ID
+		if id == "" {
+			id = uuid.NewString()
+		}
+		imp, err := marshalStrings(f.Imports)
+		if err != nil {
+			return fmt.Errorf("store: marshal imports for %s: %w", f.Path, err)
+		}
+		fileRows = append(fileRows, []any{id, snapshotID, f.Path, f.Language, f.SizeBytes, f.Hash, imp, f.DocSummary})
+	}
+	if err := sqliteBulkInsert(ctx, tx,
+		`INSERT INTO files (id, snapshot_id, path, language, size_bytes, hash, imports, doc_summary) VALUES `,
+		fileRows); err != nil {
+		return fmt.Errorf("store: replace save files: %w", err)
+	}
+
+	symbolRows := make([][]any, 0, len(symbols))
+	for i := range symbols {
+		sym := &symbols[i]
+		id := sym.ID
+		if id == "" {
+			id = uuid.NewString()
+		}
+		m, err := marshalJSONMap(sym.Metadata)
+		if err != nil {
+			return fmt.Errorf("store: marshal symbol metadata for %s: %w", sym.Name, err)
+		}
+		symbolRows = append(symbolRows, []any{id, snapshotID, string(sym.NodeID), sym.RepoID, sym.Path, sym.Language,
+			sym.Kind, sym.Name, sym.Signature, sym.Doc, sym.StartLine, sym.EndLine, m})
+	}
+	if err := sqliteBulkInsert(ctx, tx,
+		`INSERT INTO symbols (id, snapshot_id, node_id, repo_id, path, language, kind, name, signature, doc, start_line, end_line, metadata) VALUES `,
+		symbolRows); err != nil {
+		return fmt.Errorf("store: replace save symbols: %w", err)
+	}
+
+	edgeRows := make([][]any, 0, len(edges))
+	for i := range edges {
+		e := &edges[i]
+		id := e.ID
+		if id == "" {
+			id = uuid.NewString()
+		}
+		m, err := marshalJSONMap(e.Metadata)
+		if err != nil {
+			return fmt.Errorf("store: marshal edge metadata: %w", err)
+		}
+		edgeRows = append(edgeRows, []any{id, snapshotID, e.FromFile, e.FromSymbol, e.ToRef, string(e.Kind), e.Language, e.Line, m})
+	}
+	if err := sqliteBulkInsert(ctx, tx,
+		`INSERT INTO edges (id, snapshot_id, from_file, from_symbol, to_ref, kind, language, line, metadata) VALUES `,
+		edgeRows); err != nil {
+		return fmt.Errorf("store: replace save edges: %w", err)
+	}
+
+	routeRows := make([][]any, 0, len(routes))
+	for i := range routes {
+		rt := &routes[i]
+		id := rt.ID
+		if id == "" {
+			id = uuid.NewString()
+		}
+		m, err := marshalJSONMap(rt.Metadata)
+		if err != nil {
+			return fmt.Errorf("store: marshal route metadata: %w", err)
+		}
+		routeRows = append(routeRows, []any{id, snapshotID, rt.RepoFullName, rt.Method, rt.PathPattern,
+			rt.HandlerFile, rt.Role, rt.Source, rt.Confidence, m})
+	}
+	if err := sqliteBulkInsert(ctx, tx,
+		`INSERT INTO routes (id, snapshot_id, repo_full_name, method, path_pattern, handler_file, role, source, confidence, metadata) VALUES `,
+		routeRows); err != nil {
+		return fmt.Errorf("store: replace save routes: %w", err)
+	}
+
+	// Update the snapshot's counts to the new totals (kept + replaced). The caller
+	// computes these; ReplaceFileRows never re-counts the whole snapshot.
+	if _, err := tx.ExecContext(ctx,
+		`UPDATE snapshots SET file_count = ?, symbol_count = ?, edge_count = ?, route_count = ? WHERE id = ?`,
+		newFileCount, newSymbolCount, newEdgeCount, newRouteCount, snapshotID); err != nil {
+		return fmt.Errorf("store: replace update counts: %w", err)
+	}
+
+	if err := tx.Commit(); err != nil {
+		return fmt.Errorf("store: commit replace: %w", err)
+	}
+	return nil
+}
+
+// sqliteDeleteByFileColumn deletes every row of `table` whose `col` (a file-path
+// column) is in `paths`, scoped to snapshotID, using a chunked IN-list so a large
+// affected set never blows SQLite's bound-parameter limit. col is a fixed
+// identifier ("path"|"from_file"|"handler_file"), never user input.
+func sqliteDeleteByFileColumn(ctx context.Context, tx *sql.Tx, table, col, snapshotID string, paths []string) error {
+	if len(paths) == 0 {
+		return nil
+	}
+	for start := 0; start < len(paths); start += symbolsChunk {
+		end := start + symbolsChunk
+		if end > len(paths) {
+			end = len(paths)
+		}
+		chunk := paths[start:end]
+		placeholders := strings.Repeat("?,", len(chunk))
+		placeholders = placeholders[:len(placeholders)-1]
+		args := make([]any, 0, len(chunk)+1)
+		args = append(args, snapshotID)
+		for _, p := range chunk {
+			args = append(args, p)
+		}
+		query := `DELETE FROM ` + table + ` WHERE snapshot_id = ? AND ` + col + ` IN (` + placeholders + `)`
+		if _, err := tx.ExecContext(ctx, query, args...); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 const sqliteBulkInsertMaxVars = 900
 
 func sqliteBulkInsert(ctx context.Context, tx *sql.Tx, prefix string, rows [][]any) error {

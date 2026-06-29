@@ -55,6 +55,11 @@ type Options struct {
 	// default — the deterministic lexical core is unchanged. A provider/embeddings
 	// failure is non-fatal (logged, indexing still succeeds).
 	EnableVectors bool
+	// SkipPaths are absolute directory paths pruned from the walk, in addition to
+	// the by-name skipDirs. The segmented (multi-repo) path uses this to index an
+	// outer repo's OWN loose files without descending into the nested repos it also
+	// indexes separately — so no file is indexed twice and memory stays bounded.
+	SkipPaths []string
 }
 
 // Stats is the human-facing summary of an indexing run.
@@ -87,11 +92,32 @@ var skipDirs = map[string]struct{}{
 	"node_modules": {},
 	"vendor":       {},
 	".venv":        {},
+	"venv":         {},
 	"__pycache__":  {},
 	".next":        {},
+	".nuxt":        {},
+	".svelte-kit":  {},
 	".atlas":       {},
 	"graphify-out": {},
 	".testdata":    {},
+	// Agent scratch: .claude/worktrees holds dozens of full duplicate repo
+	// checkouts. Walking them indexes every tracked repo many times over (and is
+	// a primary cause of OOM when a workspace root is indexed). Never source.
+	".claude": {},
+	// VCS metadata and editor/build caches — never source, frequently enormous.
+	".hg":           {},
+	".svn":          {},
+	".idea":         {},
+	".vscode":       {},
+	".gradle":       {},
+	".mvn":          {},
+	".tox":          {},
+	".cache":        {},
+	".pytest_cache": {},
+	".mypy_cache":   {},
+	".ruff_cache":   {},
+	".turbo":        {},
+	".parcel-cache": {},
 }
 
 // Run indexes the repository rooted at root and persists a snapshot.
@@ -184,6 +210,15 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 		languages  = map[string]int{}
 	)
 
+	// Absolute directory paths to prune (the segmented path passes nested-repo roots
+	// so an outer repo skips the repos it indexes separately).
+	skipPathSet := make(map[string]struct{}, len(opts.SkipPaths))
+	for _, p := range opts.SkipPaths {
+		if ap, aerr := filepath.Abs(p); aerr == nil {
+			skipPathSet[filepath.Clean(ap)] = struct{}{}
+		}
+	}
+
 	phaseStart = time.Now()
 	walkErr := filepath.WalkDir(absRoot, func(path string, entry fs.DirEntry, err error) error {
 		if err != nil {
@@ -204,6 +239,11 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 		rel = filepath.ToSlash(rel)
 
 		if entry.IsDir() {
+			if len(skipPathSet) > 0 {
+				if _, skip := skipPathSet[filepath.Clean(path)]; skip {
+					return filepath.SkipDir
+				}
+			}
 			if _, skip := skipDirs[entry.Name()]; skip {
 				return filepath.SkipDir
 			}
@@ -245,12 +285,19 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 	phase("walk", phaseStart)
 	phase("discover_files", phaseStart)
 
+	// Live progress (nil-safe): the count of candidate files is now known, so a
+	// watcher can render "parsed K / N" instead of a bare elapsed timer.
+	pc := ProgressFromContext(ctx)
+	pc.SetFilesTotal(len(candidates))
+	pc.SetPhase("parse")
+
 	phaseStart = time.Now()
 	files, symbols, edges, rawRoutes, goFiles := parseCandidates(ctx, repoID, repoFullName, candidates, languages)
 	if ctx.Err() != nil {
 		return nil, Stats{}, ctx.Err()
 	}
 	phase("parse", phaseStart)
+	pc.SetPhase("go_types")
 
 	// build_symbols_edges spans every post-parse graph-construction step: precise
 	// go/types enrichment, deterministic ordering, and route resolution. It is the
@@ -347,20 +394,36 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 		}
 	}
 
+	// Persist the snapshot and build the lexical index. These two writes are
+	// independent (disjoint stores, read-only shared symbols), so they run
+	// CONCURRENTLY (Phase 1C) — the slower hides behind the faster. The persisted
+	// snapshot and lexical index are identical to running them sequentially. The
+	// combined wall-clock spans the overlapped block; persist/lexical are reported as
+	// the same combined duration since they overlap.
+	var lexicalFn func() error
+	if lx != nil {
+		lexicalFn = func() error {
+			// Build the lexical index against the persisted snapshot id. The symbols now
+			// carry the snapshot id; pass them straight through.
+			if err := lx.BuildForSnapshot(snapshot.ID, symbols); err != nil {
+				return fmt.Errorf("index: build lexical index: %w", err)
+			}
+			return nil
+		}
+	}
+	pc.SetPhase("persist")
 	phaseStart = time.Now()
-	if err := drv.SaveSnapshot(ctx, snapshot, files, symbols, edges, graphRoutes); err != nil {
-		return nil, Stats{}, fmt.Errorf("index: save snapshot: %w", err)
+	if err := runPersistAndLexical(ctx, func() error {
+		if err := drv.SaveSnapshot(ctx, snapshot, files, symbols, edges, graphRoutes); err != nil {
+			return fmt.Errorf("index: save snapshot: %w", err)
+		}
+		return nil
+	}, lexicalFn); err != nil {
+		return nil, Stats{}, err
 	}
 	phase("persist", phaseStart)
 	phase("write_sqlite", phaseStart)
-
-	// Build the lexical index against the persisted snapshot id. The symbols now
-	// carry the snapshot id; pass them straight through.
 	if lx != nil {
-		phaseStart = time.Now()
-		if err := lx.BuildForSnapshot(snapshot.ID, symbols); err != nil {
-			return nil, Stats{}, fmt.Errorf("index: build lexical index: %w", err)
-		}
 		phase("lexical", phaseStart)
 	}
 
@@ -387,6 +450,7 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 	if err := persistIndexTelemetry(ctx, drv, snapshot, stats); err != nil {
 		return nil, Stats{}, err
 	}
+	pc.SetPhase("done")
 	return snapshot, stats, nil
 }
 
@@ -495,6 +559,7 @@ func parseCandidates(ctx context.Context, repoID, repoFullName string, candidate
 	// after the deterministic sort the caller applies.
 	out := make([]parseCandidateResult, len(candidates))
 	indexes := make(chan int)
+	pc := ProgressFromContext(ctx) // nil-safe; bumped once per parsed file below
 	var wg sync.WaitGroup
 	wg.Add(workers)
 	for i := 0; i < workers; i++ {
@@ -505,6 +570,7 @@ func parseCandidates(ctx context.Context, repoID, repoFullName string, candidate
 					continue
 				}
 				out[idx] = parseCandidate(ctx, repoID, repoFullName, candidates[idx])
+				pc.AddParsed(len(out[idx].symbols))
 			}
 		}()
 	}

@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 	"testing"
 
 	"golang.org/x/tools/go/packages"
@@ -467,4 +468,135 @@ func TestPlainTypeName(t *testing.T) {
 			t.Errorf("plainTypeName(%q) = %q, want %q", in, got, want)
 		}
 	}
+}
+
+// TestAnalyzeDeterministicAcrossRuns is the determinism keystone the global-cap bug
+// violated: indexing the SAME multi-file module TWICE must yield byte-identical
+// reference-edge and recv_source call sets, with NO dependence on the order packages
+// or files happen to be walked (info.Uses is a Go map, so its iteration order is
+// randomized per run). The previous GLOBAL maxRefEdges cap truncated by global
+// emission order, so two runs that hit the ceiling on different files disagreed. With
+// a per-FROM-FILE cap each file's set depends only on that file, so the analyzer is
+// stable run-to-run. Multiple packages + multiple files per package make any
+// global-order coupling observable.
+func TestAnalyzeDeterministicAcrossRuns(t *testing.T) {
+	dir := multiPkgModule(t)
+
+	first := Analyze(context.Background(), dir, 4)
+	if !first.OK {
+		t.Skip("whole-module Analyze produced no type info in this environment")
+	}
+	wantRefs := sortedRefKeys(first.RefEdges)
+	wantCalls := sortedKeys(first.CallRecvs)
+
+	// Re-run several times: a single re-run can coincidentally match by luck, but a
+	// map-order-dependent output would diverge across a handful of runs.
+	for i := 0; i < 5; i++ {
+		next := Analyze(context.Background(), dir, 4)
+		if !next.OK {
+			t.Fatalf("run %d returned OK=false", i)
+		}
+		if !equalStringSlices(wantRefs, sortedRefKeys(next.RefEdges)) {
+			t.Fatalf("run %d RefEdges differ from run 0 — analyzer output is not deterministic\n first=%v\n run%d=%v",
+				i, wantRefs, i, sortedRefKeys(next.RefEdges))
+		}
+		if !equalStringSlices(wantCalls, sortedKeys(next.CallRecvs)) {
+			t.Fatalf("run %d CallRecvs differ from run 0 — analyzer output is not deterministic", i)
+		}
+	}
+}
+
+// bigRefFileModule lays down a module with ONE file whose package-level var block
+// references a single in-module type far MORE than maxRefEdgesPerFile times, plus a
+// second small file under the cap. It exercises the per-file cap: the big file must be
+// truncated to EXACTLY maxRefEdgesPerFile in a stable prefix, while the small file
+// keeps its full (uncapped) ref set — and neither file's selection perturbs the other.
+func bigRefFileModule(t *testing.T, refsInBigFile int) string {
+	t.Helper()
+
+	var b strings.Builder
+	b.WriteString("package big\n\n")
+	b.WriteString("type T struct{ n int }\n\n")
+	b.WriteString("var (\n")
+	// Each line `vN T` is a distinct type-use reference to T on its own line. With
+	// refsInBigFile > maxRefEdgesPerFile this overflows the per-file cap.
+	for i := 0; i < refsInBigFile; i++ {
+		b.WriteString("\tv")
+		b.WriteString(itoa(i))
+		b.WriteString(" T\n")
+	}
+	b.WriteString(")\n")
+
+	return writeModule(t, map[string]string{
+		"go.mod":         "module example.com/big\n\ngo 1.21\n",
+		"big/big.go":     b.String(),
+		"small/small.go": "package small\n\ntype S struct{}\n\nfunc use(x S) { _ = x }\n",
+	})
+}
+
+// TestAnalyzePerFileRefCapIsBoundedAndDeterministic proves the per-file cap: a single
+// file with FAR more than maxRefEdgesPerFile type-use references is truncated to
+// exactly maxRefEdgesPerFile (never the global 8000-style cap), the truncation is a
+// STABLE prefix across re-runs (deterministic, not map-order), and a SMALL file in the
+// same module keeps its full ref set — proving the cap is genuinely per-file and one
+// file's bound does not steal from another's.
+func TestAnalyzePerFileRefCapIsBoundedAndDeterministic(t *testing.T) {
+	dir := bigRefFileModule(t, maxRefEdgesPerFile+200)
+
+	first := Analyze(context.Background(), dir, 2)
+	if !first.OK {
+		t.Skip("Analyze produced no type info in this environment")
+	}
+
+	countFor := func(res Result, file string) int {
+		n := 0
+		for _, r := range res.RefEdges {
+			if r.FromFile == file && r.ToRef == "T" {
+				n++
+			}
+		}
+		return n
+	}
+
+	bigN := countFor(first, "big/big.go")
+	if bigN != maxRefEdgesPerFile {
+		t.Fatalf("big/big.go ref count = %d, want exactly maxRefEdgesPerFile=%d (per-file cap not applied or wrong bound)", bigN, maxRefEdgesPerFile)
+	}
+
+	// The small file (well under the cap) must keep its full set — its single S use is
+	// not stolen by the big file overflowing.
+	var smallHasS bool
+	for _, r := range first.RefEdges {
+		if r.FromFile == "small/small.go" && r.ToRef == "S" {
+			smallHasS = true
+		}
+	}
+	if !smallHasS {
+		t.Fatalf("small/small.go lost its (under-cap) ref to S — the big file's overflow leaked across files")
+	}
+
+	// Stable prefix: re-running yields the IDENTICAL truncated set for the big file, so
+	// the cap depends only on the file's own deterministic order, not map iteration.
+	wantBig := sortedRefKeys(filterRefEdgesToSlice(first.RefEdges, "big/big.go"))
+	for i := 0; i < 4; i++ {
+		next := Analyze(context.Background(), dir, 2)
+		if !next.OK {
+			t.Fatalf("run %d OK=false", i)
+		}
+		gotBig := sortedRefKeys(filterRefEdgesToSlice(next.RefEdges, "big/big.go"))
+		if !equalStringSlices(wantBig, gotBig) {
+			t.Fatalf("run %d: capped big-file ref set is not a stable prefix (per-file cap is map-order dependent)\n want=%v\n got=%v", i, wantBig, gotBig)
+		}
+	}
+}
+
+// filterRefEdgesToSlice returns the RefEdges whose FromFile equals file.
+func filterRefEdgesToSlice(in []RefEdge, file string) []RefEdge {
+	var out []RefEdge
+	for _, r := range in {
+		if r.FromFile == file {
+			out = append(out, r)
+		}
+	}
+	return out
 }

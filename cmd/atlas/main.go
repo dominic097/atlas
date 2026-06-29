@@ -8,9 +8,15 @@ import (
 	"strings"
 
 	"github.com/dominic097/atlas/internal/cli"
+	"github.com/dominic097/atlas/internal/runtimecfg"
 )
 
 func main() {
+	// Apply any operator-set runtime knobs (ATLAS_MEMORY_LIMIT / ATLAS_GOGC)
+	// before anything allocates. No-op unless explicitly set; the warm daemons
+	// add their own soft GC default on top (see internal/cli watch/serve/mcp).
+	runtimecfg.Apply(os.Stderr)
+
 	cli.SetBuildInfo(Version, Commit, Date)
 	if err := cli.NewRootCmd().Execute(); err != nil {
 		// Many engine errors already carry an "atlas:" prefix; trim it so the

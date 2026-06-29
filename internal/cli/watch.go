@@ -9,6 +9,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/dominic097/atlas/internal/runtimecfg"
 	"github.com/dominic097/atlas/internal/watch"
 	"github.com/dominic097/atlas/pkg/atlas"
 )
@@ -35,6 +36,10 @@ func newWatchCmd() *cobra.Command {
 			if len(args) == 1 {
 				path = args[0]
 			}
+
+			// Long-lived foreground daemon: opt into the warm-daemon GC nudge for
+			// lower steady RSS (no-op if the operator set any ATLAS_*/GO* knob).
+			runtimecfg.ApplyWarmDaemonDefaults(cmd.ErrOrStderr())
 
 			eng, err := resolveEngine(cmd.Context())
 			if err != nil {
@@ -98,6 +103,10 @@ func startBackgroundWatch(ctx context.Context, cmd *cobra.Command, eng atlas.Eng
 	if path == "" {
 		path = "."
 	}
+	// This is the shared opt-in path for `serve --watch` and `mcp --watch`: the
+	// process is now a long-lived warm daemon, so apply the warm-daemon GC nudge
+	// for lower steady RSS (no-op if any ATLAS_*/GO* knob is set by the operator).
+	runtimecfg.ApplyWarmDaemonDefaults(cmd.ErrOrStderr())
 	w, err := watch.New(eng, path, watch.Options{
 		Repo:   gf.repo,
 		Logger: cmd.ErrOrStderr(),
