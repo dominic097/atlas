@@ -48,6 +48,17 @@ The durable rendered artifact for this addendum is the regenerated
 `bench/MATRIX_REPORT.md`; the matching per-language raw JSON benchmark files
 remain under `bench/` until the final artifact cleanup pass.
 
+## Native parser migration addendum — B3 in progress
+
+Measured 2026-06-30 while converting the B3 languages in strict order. Rows
+here are added only after the language is routed off `parseRegexFallback`,
+benchmarked against graphify and the strongest local independent baseline, and
+validated with the focused parser test suite.
+
+| Lang | Repo slice | Independent baseline | Atlas defs | Baseline defs | Recall/coverage | graphify latency | graphify tokens | Notes |
+| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | --- |
+| elixir | phoenixframework/phoenix `lib` | tree-sitter-elixir 0.3.5 | 1642 | 1642 | 1.00x | 6.61x | 22.95x | Native tree-sitter AST walker preserves module/protocol/implementation/function/macro/delegate/guard kinds and adds operator-function support. |
+
 ## The consistent definition surface (applied uniformly to all 7 languages)
 
 A symbol is counted as a **definition** iff it is a top-level **or member**

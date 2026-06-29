@@ -67,37 +67,37 @@
       "csharp",
       ".cs",
       "extract_csharp",
-      "lightweight regex"
+      "native tree-sitter tags"
     ],
     [
       "rust",
       ".rs",
       "extract_rust",
-      "lightweight regex"
+      "native tree-sitter tags"
     ],
     [
       "ruby",
       ".rb",
       "extract_ruby",
-      "lightweight regex"
+      "native tree-sitter tags"
     ],
     [
       "kotlin",
       ".kt .kts",
       "extract_kotlin",
-      "lightweight regex"
+      "native tree-sitter tags"
     ],
     [
       "scala",
       ".scala",
       "extract_scala",
-      "lightweight regex"
+      "native tree-sitter tags"
     ],
     [
       "php",
       ".php",
       "extract_php",
-      "lightweight regex"
+      "native tree-sitter tags"
     ],
     [
       "blade",
@@ -109,19 +109,19 @@
       "swift",
       ".swift",
       "extract_swift",
-      "lightweight regex"
+      "native tree-sitter tags"
     ],
     [
       "lua",
       ".lua .luau .toc",
       "extract_lua",
-      "lightweight regex"
+      "native tree-sitter tags"
     ],
     [
       "zig",
       ".zig",
       "extract_zig",
-      "lightweight regex"
+      "native tree-sitter tags"
     ],
     [
       "powershell",
@@ -133,7 +133,7 @@
       "elixir",
       ".ex .exs",
       "extract_elixir",
-      "lightweight regex"
+      "native tree-sitter AST"
     ],
     [
       "objective-c",

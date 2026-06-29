@@ -672,6 +672,7 @@ defmodule Phoenix.Router do
   defdelegate reload!(endpoint, opts), to: Phoenix.CodeReloader.Server
   defguard is_ready(term) when is_atom(term)
   defguardp has_private(term) when is_binary(term)
+  def +(left, right), do: left + right
   def socket(path, module, opts \\ []) do
     {path, module, opts}
   end
@@ -700,6 +701,7 @@ end
 		"reload!":           "delegate",
 		"is_ready":          "guard",
 		"has_private":       "guard",
+		"+":                 "function",
 		"socket":            "function",
 		"private_route":     "function",
 		"Phoenix.Param":     "protocol",

@@ -9,7 +9,7 @@ Raw artifact: `bench/MATRIX_TOOL_VERSIONS.json`.
 
 | tool | status | version / first output line | command |
 |---|---|---|---|
-| atlas | ok | `atlas v0.1.23-11-g1e524cc-dirty (1e524cc, 2026-06-29T20:57:02Z)` | `bin/atlas version` |
+| atlas | ok | `atlas v0.1.23-12-g532ff00-dirty (532ff00, 2026-06-29T21:12:06Z)` | `bin/atlas version` |
 | graphify | ok | `graphifyy 0.8.49` | `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify --version` |
 | go | ok | `go version go1.25.0 darwin/arm64` | `/usr/local/go/bin/go version` |
 | python | ok | `Python 3.14.6` | `/opt/homebrew/opt/python@3.14/bin/python3.14 --version` |
@@ -59,18 +59,18 @@ Raw artifact: `bench/MATRIX_TOOL_VERSIONS.json`.
 | groovy/gradle | `.groovy .gradle` | `extract_groovy` | lightweight regex |
 | c | `.c .h` | `extract_c` | tree-sitter |
 | cpp/cuda | `.cpp .cc .cxx .hpp .cu .cuh` | `extract_cpp` | tree-sitter |
-| csharp | `.cs` | `extract_csharp` | lightweight regex |
-| rust | `.rs` | `extract_rust` | lightweight regex |
-| ruby | `.rb` | `extract_ruby` | lightweight regex |
-| kotlin | `.kt .kts` | `extract_kotlin` | lightweight regex |
-| scala | `.scala` | `extract_scala` | lightweight regex |
-| php | `.php` | `extract_php` | lightweight regex |
+| csharp | `.cs` | `extract_csharp` | native tree-sitter tags |
+| rust | `.rs` | `extract_rust` | native tree-sitter tags |
+| ruby | `.rb` | `extract_ruby` | native tree-sitter tags |
+| kotlin | `.kt .kts` | `extract_kotlin` | native tree-sitter tags |
+| scala | `.scala` | `extract_scala` | native tree-sitter tags |
+| php | `.php` | `extract_php` | native tree-sitter tags |
 | blade | `*.blade.php` | `extract_blade` | lightweight regex |
-| swift | `.swift` | `extract_swift` | lightweight regex |
-| lua | `.lua .luau .toc` | `extract_lua` | lightweight regex |
-| zig | `.zig` | `extract_zig` | lightweight regex |
+| swift | `.swift` | `extract_swift` | native tree-sitter tags |
+| lua | `.lua .luau .toc` | `extract_lua` | native tree-sitter tags |
+| zig | `.zig` | `extract_zig` | native tree-sitter tags |
 | powershell | `.ps1 .psm1 .psd1` | `extract_powershell/extract_powershell_manifest` | lightweight regex |
-| elixir | `.ex .exs` | `extract_elixir` | lightweight regex |
+| elixir | `.ex .exs` | `extract_elixir` | native tree-sitter AST |
 | objective-c | `.m .mm` | `extract_objc` | lightweight regex |
 | julia | `.jl` | `extract_julia` | lightweight regex |
 | fortran | `.f .F .f90 .F90 .f95 .F95 .f03 .F03 .f08 .F08` | `extract_fortran` | lightweight regex |
@@ -99,14 +99,14 @@ Raw artifact: `bench/MATRIX_TOOL_VERSIONS.json`.
 
 | graphify support | status | Atlas evidence |
 |---|---|---|
-| go<br>`.go` via `extract_go` | ok | core matrix `go` ok; native scip-go:ok, gopls:ok; query eq 4/4, latency 6.3x, tokens 14.21x |
-| python<br>`.py` via `extract_python` | ok | core matrix `python` ok; native scip-python:ok, pyright:ok; query eq 3/3, latency 6.31x, tokens 18.52x |
-| javascript<br>`.js .jsx .mjs` via `extract_js` | ok | core matrix `javascript` ok; native scip-typescript:ok, tsserver:ok; query eq 3/4, latency 5.79x, tokens 7.0x |
-| typescript<br>`.ts .tsx` via `extract_js` | ok | core matrix `typescript` ok; native scip-typescript:ok, tsserver:ok; query eq 3/4, latency 4.99x, tokens 11.42x |
-| java<br>`.java` via `extract_java` | ok | core matrix `java` ok; native scip-java:missing, jdtls:ok; query eq 2/2, latency 4.03x, tokens 15.29x |
+| go<br>`.go` via `extract_go` | ok | core matrix `go` ok; native scip-go:ok, gopls:ok; query eq 4/4, latency 6.58x, tokens 14.21x |
+| python<br>`.py` via `extract_python` | ok | core matrix `python` ok; native scip-python:ok, pyright:ok; query eq 3/3, latency 6.57x, tokens 18.52x |
+| javascript<br>`.js .jsx .mjs` via `extract_js` | ok | core matrix `javascript` ok; native scip-typescript:ok, tsserver:ok; query eq 3/4, latency 5.69x, tokens 7.0x |
+| typescript<br>`.ts .tsx` via `extract_js` | ok | core matrix `typescript` ok; native scip-typescript:ok, tsserver:ok; query eq 3/4, latency 6.19x, tokens 11.42x |
+| java<br>`.java` via `extract_java` | ok | core matrix `java` ok; native scip-java:missing, jdtls:ok; query eq 2/2, latency 4.29x, tokens 15.29x |
 | groovy/gradle<br>`.groovy .gradle` via `extract_groovy` | ok | `bench/LIVE_GROOVY_SMOKE.json` native_limited=partial; repo `https://github.com/nextflow-io/nextflow` commit `83d452a51796aca34f136f796383185d703c349c`; native `tree-sitter-groovy`; atlas_vs_tree_sitter_groovy_definition_ratio=1.59, query eq 5/5, latency 6.79x, tokens 9.97x |
-| c<br>`.c .h` via `extract_c` | ok | core matrix `c` ok; native clangd:ok; query eq 4/4, latency 6.36x, tokens 28.71x |
-| cpp/cuda<br>`.cpp .cc .cxx .hpp .cu .cuh` via `extract_cpp` | ok | core matrix `cpp` ok; native clangd:ok; query eq 4/4, latency 2.66x, tokens 10.0x<br>`bench/LIVE_CUDA_SMOKE.json` ok; repo `https://github.com/NVIDIA/cuda-samples` commit `b7c5481c556c3fe98db060207ecaa41a4b9a9abc`; native `cuda-source-counter`; atlas_vs_cuda_source_counter_definition_ratio=1.0, query eq 3/3, latency 5.96x, tokens 6.67x |
+| c<br>`.c .h` via `extract_c` | ok | core matrix `c` ok; native clangd:ok; query eq 4/4, latency 6.2x, tokens 28.71x |
+| cpp/cuda<br>`.cpp .cc .cxx .hpp .cu .cuh` via `extract_cpp` | ok | core matrix `cpp` ok; native clangd:ok; query eq 4/4, latency 6.05x, tokens 10.0x<br>`bench/LIVE_CUDA_SMOKE.json` ok; repo `https://github.com/NVIDIA/cuda-samples` commit `b7c5481c556c3fe98db060207ecaa41a4b9a9abc`; native `cuda-source-counter`; atlas_vs_cuda_source_counter_definition_ratio=1.0, query eq 3/3, latency 5.96x, tokens 6.67x |
 | csharp<br>`.cs` via `extract_csharp` | ok | `bench/LIVE_CSHARP_SMOKE.json` ok; repo `https://github.com/DapperLib/Dapper` commit `72a54c475f75e18cb93cba0809d00a5e6e49efd9`; native `roslyn`; atlas_vs_roslyn_definition_ratio=1.84, query eq 4/4, latency 7.26x, tokens 14.15x |
 | rust<br>`.rs` via `extract_rust` | ok | `bench/LIVE_RUST_SMOKE.json` ok; repo `https://github.com/BurntSushi/ripgrep` commit `dfe4a81d2591daca76d25ae4e052c34b26578155`; native `rust-analyzer`; atlas_vs_rust_analyzer_definition_ratio=1.0, query eq 4/4, latency 8.71x, tokens 40.23x |
 | ruby<br>`.rb` via `extract_ruby` | ok | `bench/LIVE_RUBY_SMOKE.json` ok; repo `https://github.com/sinatra/sinatra` commit `5236d3459b8b9015e5ce21ddd0c6beb0db4081d4`; native `ruby-ripper`; atlas_vs_ruby_ripper_definition_ratio=1.01, query eq 4/4, latency 7.13x, tokens 10.86x |
@@ -118,7 +118,7 @@ Raw artifact: `bench/MATRIX_TOOL_VERSIONS.json`.
 | lua<br>`.lua .luau .toc` via `extract_lua` | ok | `bench/LIVE_LUA_SMOKE.json` ok; repo `https://github.com/folke/lazy.nvim` commit `306a05526ada86a7b30af95c5cc81ffba93fef97`; native `luaparser`; atlas_vs_luaparser_definition_ratio=1.0, query eq 4/4, latency 6.88x, tokens 15.09x |
 | zig<br>`.zig` via `extract_zig` | ok | `bench/LIVE_ZIG_SMOKE.json` native_limited=partial; repo `https://github.com/zigtools/zls` commit `8da87d4f3305a550e7b739bad764e34bf1e46a08`; native `tree-sitter-zig`; atlas_vs_tree_sitter_zig_definition_ratio=1.22, query eq 5/5, latency 5.55x, tokens 28.55x |
 | powershell<br>`.ps1 .psm1 .psd1` via `extract_powershell/extract_powershell_manifest` | ok | `bench/LIVE_POWERSHELL_SMOKE.json` ok; repo `https://github.com/PowerShell/PowerShellGet` commit `a2dac8e74603f7c9eec4a54c5e23459531751b0d`; native `pwsh-parser`; atlas_vs_pwsh_parser_definition_ratio=1.0, query eq 4/4, latency 6.37x, tokens 6.68x |
-| elixir<br>`.ex .exs` via `extract_elixir` | ok | `bench/LIVE_ELIXIR_SMOKE.json` ok; repo `https://github.com/phoenixframework/phoenix` commit `9d3f1f63e00c92aafc8f015073969a2632c6879a`; native `tree-sitter-elixir`; atlas_vs_tree_sitter_elixir_definition_ratio=1.0, query eq 5/5, latency 6.93x, tokens 23.58x |
+| elixir<br>`.ex .exs` via `extract_elixir` | ok | `bench/LIVE_ELIXIR_SMOKE.json` ok; repo `https://github.com/phoenixframework/phoenix` commit `909725968776c2601bbea7827fd5b76e4992cc70`; native `tree-sitter-elixir`; atlas_vs_tree_sitter_elixir_definition_ratio=1.0, query eq 5/5, latency 6.61x, tokens 22.95x |
 | objective-c<br>`.m .mm` via `extract_objc` | ok | `bench/LIVE_OBJC_SMOKE.json` native_limited=partial; repo `https://github.com/SDWebImage/SDWebImage` commit `c3ad5e1a9bf55c9b76d4c362430b5fcded96c502`; native `tree-sitter-objc`; atlas_vs_tree_sitter_objc_definition_ratio=1.0, query eq 4/5, latency 7.41x, tokens 23.63x |
 | julia<br>`.jl` via `extract_julia` | ok | `bench/LIVE_JULIA_SMOKE.json` native_limited=partial; repo `https://github.com/JuliaIO/JSON.jl` commit `e5ef310dece16746843753e4c3b44e868b917b64`; native `tree-sitter-julia`; atlas_vs_tree_sitter_julia_definition_ratio=1.0, query eq 5/6, latency 6.11x, tokens 12.72x |
 | fortran<br>`.f .F .f90 .F90 .f95 .F95 .f03 .F03 .f08 .F08` via `extract_fortran` | ok | `bench/LIVE_FORTRAN_SMOKE.json` ok; repo `https://github.com/fortran-lang/stdlib` commit `4c8521d5658455a576946cca3bfe2bd8ede36e24`; native `tree-sitter-fortran`; atlas_vs_tree_sitter_fortran_definition_ratio=1.0, query eq 6/6, latency 6.61x, tokens 19.69x |
@@ -532,7 +532,7 @@ Detector-only saturation note: this EJS smoke proves Atlas indexes the live lang
 
 ### Elixir
 
-Raw artifact: `bench/LIVE_ELIXIR_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/phoenixframework/phoenix` at commit `9d3f1f63e00c92aafc8f015073969a2632c6879a`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Raw artifact: `bench/LIVE_ELIXIR_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/phoenixframework/phoenix` at commit `909725968776c2601bbea7827fd5b76e4992cc70`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-elixir-phoenix/repo/lib`.
 
 Commands:
@@ -544,24 +544,24 @@ Commands:
 
 Results:
 
-- Atlas indexed 74 files, 1642 symbols, and 4834 edges in 0.32s cold; no-change reindex was 0.024s (`mode=noop`).
+- Atlas indexed 74 files, 1642 symbols, and 4897 edges in 0.341s cold; no-change reindex was 0.028s (`mode=noop`).
 - Atlas language counts were `elixir:74`.
-- graphify rebuilt 1051 nodes and 1844 links in 0.561s.
+- graphify rebuilt 1051 nodes and 1844 links in 0.579s.
 - The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
 - Native baseline `tree-sitter-elixir` status: ok (files:74, parsed_files:74, parse_errors:0, definitions:1642, tree_sitter_version:0.25.2, tree_sitter_elixir_version:0.3.5).
 - Richer native baselines not available on this machine: `elixir`, `mix`, `lexical`.
 - Coverage proxy: atlas_vs_tree_sitter_elixir_definition_ratio: 1.0, atlas_elixir_definition_symbols: 1642, native_definitions: 1642.
-- Optimization cycles: 3 (Elixir live smoke matched the tree-sitter-elixir definition coverage proxy exactly and met the current 5x latency/token thresholds; elixir/mix/Lexical remain unavailable on this machine.).
+- Optimization cycles: 4 (Elixir native tree-sitter AST parsing matched the tree-sitter-elixir definition coverage proxy exactly and met the current 5x latency/token thresholds; elixir/mix/Lexical remain unavailable on this machine.).
 
 | query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
 |---|---:|---:|---:|---:|---:|---:|
-| `Phoenix.Router` | 12.414 | 88.583 | 7.14x | 6 | 260 | 43.33x |
-| `Phoenix.Endpoint` | 13.743 | 88.778 | 6.46x | 8 | 186 | 23.25x |
-| `Phoenix.Controller` | 12.971 | 89.261 | 6.88x | 8 | 275 | 34.38x |
-| `path` | 13.363 | 88.300 | 6.61x | 7 | 70 | 10.0x |
-| `socket` | 13.335 | 101.352 | 7.6x | 7 | 58 | 8.29x |
+| `Phoenix.Router` | 14.423 | 102.743 | 7.12x | 6 | 260 | 43.33x |
+| `Phoenix.Endpoint` | 15.261 | 101.131 | 6.63x | 8 | 186 | 23.25x |
+| `Phoenix.Controller` | 15.175 | 98.935 | 6.52x | 9 | 275 | 30.56x |
+| `path` | 15.774 | 100.239 | 6.35x | 7 | 70 | 10.0x |
+| `socket` | 15.585 | 101.003 | 6.48x | 7 | 58 | 8.29x |
 
-5x note: this Elixir smoke meets the 5x threshold on equivalent query rows for latency (6.93x) and token output (23.58x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this Elixir smoke meets the 5x threshold on equivalent query rows for latency (6.61x) and token output (22.95x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### ETS/ArkTS
 
@@ -1368,19 +1368,19 @@ Results:
 
 | Language | Repo | Atlas | graphify | SCIP | LSP |
 |---|---|---|---|---|---|
-| go | sirupsen/logrus | 679 symbols, 2102 calls, 0.463s cold full (0.039s delta) | 711 nodes, 333 calls, 0.696s full (0.313s delta) | 2225 symbols, 11887 occ, 0.291s | 12 pkgs, 0 diag, 0.419s |
-| python | psf/requests | 517 symbols, 961 calls, 0.185s cold full (0.037s delta) | 580 nodes, 229 calls, 0.663s full (0.312s delta) | 1518 symbols, 8224 occ, 2.393s | 19 files, 12 diag, 0.852s |
-| javascript | expressjs/express | 314 symbols, 435 calls, 0.149s cold full (0.026s delta) | 31 nodes, 3 calls, 0.164s full (0.156s delta) | 398 symbols, 2649 occ, 1.523s | 57 files, 257 diag, 0.608s |
-| typescript | pmndrs/zustand | 227 symbols, 197 calls, 0.092s cold full (0.034s delta) | 112 nodes, 6 calls, 0.196s full (0.178s delta) | 792 symbols, 2461 occ, 1.175s | 124 files, 1 diag, 0.539s |
-| java | google/gson | 1558 symbols, 3105 calls, 0.369s cold full (0.046s delta) | 1016 nodes, 927 calls, 0.985s full (0.624s delta) | missing | 54 doc syms, 425 diag, 3.948s |
-| c | DaveGamble/cJSON | 1790 symbols, 4973 calls, 0.458s cold full (0.032s delta) | 971 nodes, 1018 calls, 1.036s full (0.536s delta) | n/a | 258 doc syms, 2 diag, 0.158s |
-| cpp | google/leveldb | 2088 symbols, 9481 calls, 0.525s cold full (0.043s delta) | 2206 nodes, 1195 calls, 1.373s full (0.866s delta) | n/a | 421 doc syms, 167 diag, 0.28s |
+| go | sirupsen/logrus | 679 symbols, 2102 calls, 0.468s cold full (0.027s delta) | 711 nodes, 333 calls, 0.71s full (0.311s delta) | 2225 symbols, 11887 occ, 0.278s | 12 pkgs, 0 diag, 0.546s |
+| python | psf/requests | 517 symbols, 961 calls, 0.167s cold full (0.025s delta) | 580 nodes, 229 calls, 0.648s full (0.307s delta) | 1518 symbols, 8224 occ, 2.385s | 19 files, 12 diag, 0.839s |
+| javascript | expressjs/express | 314 symbols, 435 calls, 0.136s cold full (0.025s delta) | 31 nodes, 3 calls, 0.164s full (0.15s delta) | 398 symbols, 2649 occ, 1.068s | 57 files, 257 diag, 0.642s |
+| typescript | pmndrs/zustand | 227 symbols, 197 calls, 0.113s cold full (0.028s delta) | 112 nodes, 6 calls, 0.195s full (0.17s delta) | 792 symbols, 2461 occ, 1.199s | 124 files, 1 diag, 0.53s |
+| java | google/gson | 1558 symbols, 3105 calls, 0.327s cold full (0.039s delta) | 1016 nodes, 927 calls, 0.973s full (0.617s delta) | missing | 54 doc syms, 425 diag, 1.974s |
+| c | DaveGamble/cJSON | 1790 symbols, 4973 calls, 0.419s cold full (0.034s delta) | 971 nodes, 1018 calls, 0.98s full (0.526s delta) | n/a | 258 doc syms, 2 diag, 0.082s |
+| cpp | google/leveldb | 2088 symbols, 9481 calls, 0.473s cold full (0.031s delta) | 2206 nodes, 1195 calls, 1.331s full (0.828s delta) | n/a | 421 doc syms, 167 diag, 0.282s |
 
 ## Derived Go ratios
 
-- Build speed (cold-vs-cold, full index): Atlas COLD full index 0.463s vs graphify FULL extract 0.696s (graphify/Atlas = 1.5x); scip-go cold 0.291s (scip-go/Atlas = 0.63x); gopls (workspace type-check via `gopls stats`) cold 0.419s (gopls/Atlas = 0.9x). A ratio < 1.0x means Atlas is slower cold; this is the honest headline.
-- Build speed (delta-vs-delta, no-change reindex): Atlas 0.039s vs graphify 0.313s, graphify/Atlas = 8.03x. Both tools re-run against an existing snapshot/sidecar here.
-- Atlas index phase timings: delta_check:5ms, resolve_head:0ms.
+- Build speed (cold-vs-cold, full index): Atlas COLD full index 0.468s vs graphify FULL extract 0.71s (graphify/Atlas = 1.52x); scip-go cold 0.278s (scip-go/Atlas = 0.59x); gopls (workspace type-check via `gopls stats`) cold 0.546s (gopls/Atlas = 1.17x). A ratio < 1.0x means Atlas is slower cold; this is the honest headline.
+- Build speed (delta-vs-delta, no-change reindex): Atlas 0.027s vs graphify 0.311s, graphify/Atlas = 11.52x. Both tools re-run against an existing snapshot/sidecar here.
+- Atlas index phase timings: delta_check:6ms, resolve_head:0ms.
 - Atlas edge kinds: calls:2102, imports:224, references:622.
 - Call coverage proxy: Atlas internal calls 1143 vs graphify calls 333, Atlas/graphify = 3.43x.
 - Atlas receiver-typed calls: 632/2102 = 30.1%.
@@ -1388,16 +1388,16 @@ Results:
 - SCIP semantic index: 47 documents, 2225 symbols, 11887 occurrences, 9656 references.
 - SCIP navigation symbols (excluding local variables/packages) = 637; Atlas symbols vs SCIP navigation symbols = 1.07x.
 - SCIP local variables = 1570. Atlas currently keeps locals out of the first-class symbol table, which lowers token cost but limits fine-grained reference parity.
-- gopls workspace truth: 12 workspace packages, 57 compiled Go files, 0 diagnostics, initial load 253.331ms.
+- gopls workspace truth: 12 workspace packages, 57 compiled Go files, 0 diagnostics, initial load 273.182ms.
 - Query token cost (4/4 equivalent rows): graphify 398 tokens vs Atlas 28 tokens, graphify/Atlas = 14.21x.
-- Query latency (4/4 equivalent rows): graphify 381.723ms vs Atlas 60.59ms, graphify/Atlas = 6.3x.
-- Go cold-build saturation: cold-vs-cold full-index ratio is 1.5x (graphify FULL 0.696s / Atlas cold 0.463s), below 5x; Atlas's largest cold phases are build_symbols_edges:264ms, go_types:263ms, lexical:92ms.
+- Query latency (4/4 equivalent rows): graphify 380.037ms vs Atlas 57.715ms, graphify/Atlas = 6.58x.
+- Go cold-build saturation: cold-vs-cold full-index ratio is 1.52x (graphify FULL 0.71s / Atlas cold 0.468s), below 5x; Atlas's largest cold phases are build_symbols_edges:279ms, go_types:278ms, lexical:98ms.
 
 ## Derived Python ratios
 
-- Build speed (cold-vs-cold, full index): Atlas COLD full index 0.185s vs graphify FULL extract 0.663s (graphify/Atlas = 3.58x); scip-python cold 2.393s (scip-python/Atlas = 12.94x). A ratio < 1.0x means Atlas is slower cold; this is the honest headline.
-- Build speed (delta-vs-delta, no-change reindex): Atlas 0.037s vs graphify 0.312s, graphify/Atlas = 8.43x. Both tools re-run against an existing snapshot/sidecar here.
-- Atlas index phase timings: delta_check:1ms, resolve_head:0ms.
+- Build speed (cold-vs-cold, full index): Atlas COLD full index 0.167s vs graphify FULL extract 0.648s (graphify/Atlas = 3.88x); scip-python cold 2.385s (scip-python/Atlas = 14.28x). A ratio < 1.0x means Atlas is slower cold; this is the honest headline.
+- Build speed (delta-vs-delta, no-change reindex): Atlas 0.025s vs graphify 0.307s, graphify/Atlas = 12.28x. Both tools re-run against an existing snapshot/sidecar here.
+- Atlas index phase timings: delta_check:7ms, resolve_head:0ms.
 - Atlas edge kinds: calls:961, imports:410.
 - Call coverage proxy: Atlas internal calls 371 vs graphify calls 229, Atlas/graphify = 1.62x.
 - graphify extracted calls: 221/229 = 96.5%.
@@ -1407,66 +1407,66 @@ Results:
 - Python AST assignment truth: Atlas 197 assignment symbols vs 133 direct module/class assignment names; extra symbols can come from conditional class scopes.
 - Pyright truth pass: 19 files analyzed, 12 diagnostics (error:12), version 1.1.411.
 - Query token cost (3/3 equivalent rows): graphify 389 tokens vs Atlas 21 tokens, graphify/Atlas = 18.52x.
-- Query latency (3/3 equivalent rows): graphify 292.596ms vs Atlas 46.404ms, graphify/Atlas = 6.31x.
-- Python cold-build saturation: cold-vs-cold full-index ratio is 3.58x (graphify FULL 0.663s / Atlas cold 0.185s), below 5x; Atlas's largest cold phases are lexical:93ms, persist:93ms, write_sqlite:93ms.
+- Query latency (3/3 equivalent rows): graphify 291.653ms vs Atlas 44.368ms, graphify/Atlas = 6.57x.
+- Python cold-build saturation: cold-vs-cold full-index ratio is 3.88x (graphify FULL 0.648s / Atlas cold 0.167s), below 5x; Atlas's largest cold phases are lexical:86ms, persist:86ms, write_sqlite:86ms.
 
 ## Derived JS/TS ratios
 
 ### javascript
 
-- Build speed (cold-vs-cold, full index): Atlas COLD full index 0.149s vs graphify FULL extract 0.164s (graphify/Atlas = 1.1x); scip-typescript cold 1.523s (scip-typescript/Atlas = 10.22x). A ratio < 1.0x means Atlas is slower cold; this is the honest headline.
-- Build speed (delta-vs-delta, no-change reindex): Atlas 0.026s vs graphify 0.156s, graphify/Atlas = 6.0x. Both tools re-run against an existing snapshot/sidecar here.
-- Atlas index phase timings: delta_check:3ms, resolve_head:0ms.
+- Build speed (cold-vs-cold, full index): Atlas COLD full index 0.136s vs graphify FULL extract 0.164s (graphify/Atlas = 1.21x); scip-typescript cold 1.068s (scip-typescript/Atlas = 7.85x). A ratio < 1.0x means Atlas is slower cold; this is the honest headline.
+- Build speed (delta-vs-delta, no-change reindex): Atlas 0.025s vs graphify 0.15s, graphify/Atlas = 6.0x. Both tools re-run against an existing snapshot/sidecar here.
+- Atlas index phase timings: delta_check:4ms, resolve_head:0ms.
 - Atlas edge kinds: calls:435, imports:51.
 - Call coverage proxy: Atlas internal calls 231 vs graphify calls 3, Atlas/graphify = 77.0x.
 - Atlas receiver-typed calls: 0/435 = 0.0%.
 - graphify extracted calls: 3/3 = 100.0%.
 - SCIP semantic index: 6 documents, 398 symbols, 2649 occurrences, 2251 references, scope=lib.
 - Atlas symbols vs SCIP symbols = 0.79x. scip-typescript reports symbols as UnspecifiedKind, so this is a raw coverage proxy.
-- TypeScript semantic check proxy: 57 files, 257 diagnostics, total 0.21s, memory 82360KB.
+- TypeScript semantic check proxy: 57 files, 257 diagnostics, total 0.21s, memory 82670KB.
 - LSP caveat: tsc returned diagnostics/exit 2; used as scriptable tsserver proxy.
 - Query token cost (3/4 equivalent rows): graphify 140 tokens vs Atlas 20 tokens, graphify/Atlas = 7.0x.
-- Query latency (3/4 equivalent rows): graphify 260.088ms vs Atlas 44.959ms, graphify/Atlas = 5.79x.
+- Query latency (3/4 equivalent rows): graphify 254.212ms vs Atlas 44.665ms, graphify/Atlas = 5.69x.
 - Query caveat: graphify missed 1 Atlas-selected hub symbols; raw rows remain in the table.
-- javascript cold-build saturation: cold-vs-cold full-index ratio is 1.1x (graphify FULL 0.164s / Atlas cold 0.149s), below 5x; Atlas's largest cold phases are lexical:64ms, persist:64ms, write_sqlite:64ms.
+- javascript cold-build saturation: cold-vs-cold full-index ratio is 1.21x (graphify FULL 0.164s / Atlas cold 0.136s), below 5x; Atlas's largest cold phases are lexical:52ms, persist:52ms, write_sqlite:52ms.
 ### typescript
 
-- Build speed (cold-vs-cold, full index): Atlas COLD full index 0.092s vs graphify FULL extract 0.196s (graphify/Atlas = 2.13x); scip-typescript cold 1.175s (scip-typescript/Atlas = 12.77x). A ratio < 1.0x means Atlas is slower cold; this is the honest headline.
-- Build speed (delta-vs-delta, no-change reindex): Atlas 0.034s vs graphify 0.178s, graphify/Atlas = 5.24x. Both tools re-run against an existing snapshot/sidecar here.
-- Atlas index phase timings: delta_check:0ms, resolve_head:0ms.
+- Build speed (cold-vs-cold, full index): Atlas COLD full index 0.113s vs graphify FULL extract 0.195s (graphify/Atlas = 1.73x); scip-typescript cold 1.199s (scip-typescript/Atlas = 10.61x). A ratio < 1.0x means Atlas is slower cold; this is the honest headline.
+- Build speed (delta-vs-delta, no-change reindex): Atlas 0.028s vs graphify 0.17s, graphify/Atlas = 6.07x. Both tools re-run against an existing snapshot/sidecar here.
+- Atlas index phase timings: delta_check:4ms, resolve_head:0ms.
 - Atlas edge kinds: calls:197, imports:27.
 - Call coverage proxy: Atlas internal calls 81 vs graphify calls 6, Atlas/graphify = 13.5x.
 - Atlas receiver-typed calls: 8/197 = 4.1%.
 - graphify extracted calls: 6/6 = 100.0%.
 - SCIP semantic index: 16 documents, 792 symbols, 2461 occurrences, 1669 references, scope=src.
 - Atlas symbols vs SCIP symbols = 0.29x. scip-typescript reports symbols as UnspecifiedKind, so this is a raw coverage proxy.
-- TypeScript semantic check proxy: 124 files, 1 diagnostics, total 0.16s, memory 72368KB.
+- TypeScript semantic check proxy: 124 files, 1 diagnostics, total 0.16s, memory 72517KB.
 - LSP caveat: tsc returned diagnostics/exit 2; used as scriptable tsserver proxy.
 - Query token cost (3/4 equivalent rows): graphify 217 tokens vs Atlas 19 tokens, graphify/Atlas = 11.42x.
-- Query latency (3/4 equivalent rows): graphify 263.663ms vs Atlas 52.8ms, graphify/Atlas = 4.99x.
+- Query latency (3/4 equivalent rows): graphify 257.17ms vs Atlas 41.577ms, graphify/Atlas = 6.19x.
 - Query caveat: graphify missed 1 Atlas-selected hub symbols; raw rows remain in the table.
-- typescript cold-build saturation: cold-vs-cold full-index ratio is 2.13x (graphify FULL 0.196s / Atlas cold 0.092s), below 5x; Atlas's largest cold phases are parse:22ms, lexical:20ms, persist:20ms.
+- typescript cold-build saturation: cold-vs-cold full-index ratio is 1.73x (graphify FULL 0.195s / Atlas cold 0.113s), below 5x; Atlas's largest cold phases are lexical:43ms, persist:43ms, write_sqlite:43ms.
 
 ## Derived Java ratios
 
-- Build speed (cold-vs-cold, full index): Atlas COLD full index 0.369s vs graphify FULL extract 0.985s (graphify/Atlas = 2.67x). A ratio < 1.0x means Atlas is slower cold; this is the honest headline.
-- Build speed (delta-vs-delta, no-change reindex): Atlas 0.046s vs graphify 0.624s, graphify/Atlas = 13.57x. Both tools re-run against an existing snapshot/sidecar here.
-- Atlas index phase timings: delta_check:6ms, resolve_head:0ms.
+- Build speed (cold-vs-cold, full index): Atlas COLD full index 0.327s vs graphify FULL extract 0.973s (graphify/Atlas = 2.98x). A ratio < 1.0x means Atlas is slower cold; this is the honest headline.
+- Build speed (delta-vs-delta, no-change reindex): Atlas 0.039s vs graphify 0.617s, graphify/Atlas = 15.82x. Both tools re-run against an existing snapshot/sidecar here.
+- Atlas index phase timings: delta_check:10ms, resolve_head:0ms.
 - Atlas edge kinds: calls:3105, imports:677.
 - Call coverage proxy: Atlas internal calls 2403 vs graphify calls 927, Atlas/graphify = 2.59x.
 - Atlas receiver-typed calls: 2326/3105 = 74.9%.
 - graphify extracted calls: 599/927 = 64.6%.
 - JDTLS LSP smoke: initialized against build root gson, sampled 5/5 files, 54 document symbols, 11 workspace symbols for query `Gson`, 425 diagnostics.
 - Query token cost (2/2 equivalent rows): graphify 214 tokens vs Atlas 14 tokens, graphify/Atlas = 15.29x.
-- Query latency (2/2 equivalent rows): graphify 212.202ms vs Atlas 52.702ms, graphify/Atlas = 4.03x.
-- Java cold-build saturation: cold-vs-cold full-index ratio is 2.67x (graphify FULL 0.985s / Atlas cold 0.369s), below 5x; Atlas's largest cold phases are lexical:245ms, persist:245ms, write_sqlite:245ms.
+- Query latency (2/2 equivalent rows): graphify 222.633ms vs Atlas 51.902ms, graphify/Atlas = 4.29x.
+- Java cold-build saturation: cold-vs-cold full-index ratio is 2.98x (graphify FULL 0.973s / Atlas cold 0.327s), below 5x; Atlas's largest cold phases are lexical:206ms, persist:206ms, write_sqlite:206ms.
 
 ## Derived C/C++ ratios
 
 ### c
 
-- Build speed (cold-vs-cold, full index): Atlas COLD full index 0.458s vs graphify FULL extract 1.036s (graphify/Atlas = 2.26x). A ratio < 1.0x means Atlas is slower cold; this is the honest headline.
-- Build speed (delta-vs-delta, no-change reindex): Atlas 0.032s vs graphify 0.536s, graphify/Atlas = 16.75x. Both tools re-run against an existing snapshot/sidecar here.
+- Build speed (cold-vs-cold, full index): Atlas COLD full index 0.419s vs graphify FULL extract 0.98s (graphify/Atlas = 2.34x). A ratio < 1.0x means Atlas is slower cold; this is the honest headline.
+- Build speed (delta-vs-delta, no-change reindex): Atlas 0.034s vs graphify 0.526s, graphify/Atlas = 15.47x. Both tools re-run against an existing snapshot/sidecar here.
 - Atlas index phase timings: delta_check:15ms, resolve_head:0ms.
 - Atlas edge kinds: calls:4973, imports:400.
 - Call coverage proxy: Atlas internal calls 1975 vs graphify calls 1018, Atlas/graphify = 1.94x.
@@ -1474,21 +1474,21 @@ Results:
 - graphify extracted calls: 492/1018 = 48.3%.
 - clangd LSP smoke: sampled 8/8 files, 258 document symbols, 2 diagnostics.
 - Query token cost (4/4 equivalent rows): graphify 1206 tokens vs Atlas 42 tokens, graphify/Atlas = 28.71x.
-- Query latency (4/4 equivalent rows): graphify 431.829ms vs Atlas 67.95ms, graphify/Atlas = 6.36x.
-- c cold-build saturation: cold-vs-cold full-index ratio is 2.26x (graphify FULL 1.036s / Atlas cold 0.458s), below 5x; Atlas's largest cold phases are lexical:232ms, persist:232ms, write_sqlite:232ms.
+- Query latency (4/4 equivalent rows): graphify 427.195ms vs Atlas 68.869ms, graphify/Atlas = 6.2x.
+- c cold-build saturation: cold-vs-cold full-index ratio is 2.34x (graphify FULL 0.98s / Atlas cold 0.419s), below 5x; Atlas's largest cold phases are lexical:206ms, persist:206ms, write_sqlite:206ms.
 ### cpp
 
-- Build speed (cold-vs-cold, full index): Atlas COLD full index 0.525s vs graphify FULL extract 1.373s (graphify/Atlas = 2.62x). A ratio < 1.0x means Atlas is slower cold; this is the honest headline.
-- Build speed (delta-vs-delta, no-change reindex): Atlas 0.043s vs graphify 0.866s, graphify/Atlas = 20.14x. Both tools re-run against an existing snapshot/sidecar here.
-- Atlas index phase timings: delta_check:15ms, resolve_head:0ms.
+- Build speed (cold-vs-cold, full index): Atlas COLD full index 0.473s vs graphify FULL extract 1.331s (graphify/Atlas = 2.81x). A ratio < 1.0x means Atlas is slower cold; this is the honest headline.
+- Build speed (delta-vs-delta, no-change reindex): Atlas 0.031s vs graphify 0.828s, graphify/Atlas = 26.71x. Both tools re-run against an existing snapshot/sidecar here.
+- Atlas index phase timings: delta_check:6ms, resolve_head:0ms.
 - Atlas edge kinds: calls:9481, imports:774.
 - Call coverage proxy: Atlas internal calls 6217 vs graphify calls 1195, Atlas/graphify = 5.2x.
 - Atlas receiver-typed calls: 1959/9481 = 20.7%.
 - graphify extracted calls: 1027/1195 = 85.9%.
 - clangd LSP smoke: sampled 8/8 files, 421 document symbols, 167 diagnostics.
 - Query token cost (4/4 equivalent rows): graphify 320 tokens vs Atlas 32 tokens, graphify/Atlas = 10.0x.
-- Query latency (4/4 equivalent rows): graphify 475.792ms vs Atlas 178.836ms, graphify/Atlas = 2.66x.
-- cpp cold-build saturation: cold-vs-cold full-index ratio is 2.62x (graphify FULL 1.373s / Atlas cold 0.525s), below 5x; Atlas's largest cold phases are lexical:361ms, persist:361ms, write_sqlite:361ms.
+- Query latency (4/4 equivalent rows): graphify 466.695ms vs Atlas 77.174ms, graphify/Atlas = 6.05x.
+- cpp cold-build saturation: cold-vs-cold full-index ratio is 2.81x (graphify FULL 1.331s / Atlas cold 0.473s), below 5x; Atlas's largest cold phases are lexical:275ms, persist:275ms, write_sqlite:275ms.
 
 ## Warm query latency (persistent server)
 
@@ -1496,19 +1496,19 @@ Atlas `serve` is started against the already-indexed DB, warmed, then warm HTTP 
 
 | Language | Atlas warm /healthz (median ms) | Atlas warm explain (median ms) | Atlas cold-CLI explain (median ms) | warm speedup (cold/warm) |
 |---|--:|--:|--:|--:|
-| go | 0.557 | 1.455 | 15.065 | 10.35x |
-| python | 0.352 | 1.646 | 15.367 | 9.34x |
-| javascript | 0.532 | 1.371 | 14.803 | 10.8x |
-| typescript | 0.541 | 1.011 | 14.787 | 14.63x |
-| java | 0.501 | 12.447 | 26.351 | 2.12x |
-| c | 0.535 | 2.542 | 17.081 | 6.72x |
-| cpp | 0.514 | 3.034 | 23.654 | 7.8x |
+| go | 0.269 | 1.326 | 14.281 | 10.77x |
+| python | 0.312 | 1.668 | 14.669 | 8.79x |
+| javascript | 0.28 | 1.144 | 15.043 | 13.15x |
+| typescript | 0.296 | 0.796 | 13.805 | 17.34x |
+| java | 0.291 | 12.085 | 25.951 | 2.15x |
+| c | 0.328 | 2.357 | 16.275 | 6.9x |
+| cpp | 0.298 | 2.704 | 16.189 | 5.99x |
 
-- go warm-vs-warm context: both Atlas `serve` and gopls run as persistent daemons. Atlas warm explain median is 1.455ms and warm /healthz is 0.557ms. gopls's steady-state per-request latency is measured separately in its LSP smoke (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
-- python warm-vs-warm context: both Atlas `serve` and pyright run as persistent daemons. Atlas warm explain median is 1.646ms and warm /healthz is 0.352ms. pyright's steady-state per-request latency is measured separately in its LSP smoke (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
-- java warm-vs-warm context: both Atlas `serve` and jdtls run as persistent daemons. Atlas warm explain median is 12.447ms and warm /healthz is 0.501ms. jdtls's steady-state per-request latency is measured separately in its LSP smoke (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
-- c warm-vs-warm context: both Atlas `serve` and clangd run as persistent daemons. Atlas warm explain median is 2.542ms and warm /healthz is 0.535ms. clangd's steady-state per-request latency is measured separately in its LSP smoke (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
-- cpp warm-vs-warm context: both Atlas `serve` and clangd run as persistent daemons. Atlas warm explain median is 3.034ms and warm /healthz is 0.514ms. clangd's steady-state per-request latency is measured separately in its LSP smoke (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
+- go warm-vs-warm context: both Atlas `serve` and gopls run as persistent daemons. Atlas warm explain median is 1.326ms and warm /healthz is 0.269ms. gopls's steady-state per-request latency is measured separately in its LSP smoke (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
+- python warm-vs-warm context: both Atlas `serve` and pyright run as persistent daemons. Atlas warm explain median is 1.668ms and warm /healthz is 0.312ms. pyright's steady-state per-request latency is measured separately in its LSP smoke (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
+- java warm-vs-warm context: both Atlas `serve` and jdtls run as persistent daemons. Atlas warm explain median is 12.085ms and warm /healthz is 0.291ms. jdtls's steady-state per-request latency is measured separately in its LSP smoke (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
+- c warm-vs-warm context: both Atlas `serve` and clangd run as persistent daemons. Atlas warm explain median is 2.357ms and warm /healthz is 0.328ms. clangd's steady-state per-request latency is measured separately in its LSP smoke (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
+- cpp warm-vs-warm context: both Atlas `serve` and clangd run as persistent daemons. Atlas warm explain median is 2.704ms and warm /healthz is 0.298ms. clangd's steady-state per-request latency is measured separately in its LSP smoke (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
 
 
 ## Query token probes
@@ -1517,61 +1517,61 @@ Atlas `serve` is started against the already-indexed DB, warmed, then warm HTTP 
 
 | Symbol | Status | graphify tokens | Atlas tokens | graphify ms | Atlas ms |
 |---|---|--:|--:|--:|--:|
-| log | equivalent | 105 | 5 | 97.458 | 15.095 |
-| newEntry | equivalent | 62 | 7 | 94.646 | 14.653 |
-| releaseEntry | equivalent | 175 | 8 | 94.729 | 15.807 |
-| Fire | equivalent | 56 | 8 | 94.89 | 15.035 |
+| log | equivalent | 105 | 5 | 96.586 | 15.126 |
+| newEntry | equivalent | 62 | 7 | 94.173 | 14.091 |
+| releaseEntry | equivalent | 175 | 8 | 93.352 | 14.027 |
+| Fire | equivalent | 56 | 8 | 95.926 | 14.471 |
 
 ### python
 
 | Symbol | Status | graphify tokens | Atlas tokens | graphify ms | Atlas ms |
 |---|---|--:|--:|--:|--:|
-| get | equivalent | 142 | 6 | 96.296 | 15.367 |
-| request | equivalent | 185 | 6 | 98.258 | 15.023 |
-| __init__ | equivalent | 62 | 9 | 98.042 | 16.014 |
+| get | equivalent | 142 | 6 | 96.497 | 14.669 |
+| request | equivalent | 185 | 6 | 98.627 | 14.505 |
+| __init__ | equivalent | 62 | 9 | 96.529 | 15.194 |
 
 ### javascript
 
 | Symbol | Status | graphify tokens | Atlas tokens | graphify ms | Atlas ms |
 |---|---|--:|--:|--:|--:|
-| get | equivalent | 47 | 6 | 85.635 | 15.354 |
-| sendFile | equivalent | 46 | 7 | 86.65 | 14.449 |
-| defineGetter | equivalent | 47 | 7 | 87.803 | 15.156 |
-| format | graphify_missing | 8 | 7 | 86.763 | 14.419 |
+| get | equivalent | 47 | 6 | 85.733 | 15.004 |
+| sendFile | equivalent | 46 | 7 | 84.157 | 15.083 |
+| defineGetter | equivalent | 47 | 7 | 84.322 | 14.578 |
+| format | graphify_missing | 8 | 7 | 82.012 | 22.316 |
 
 ### typescript
 
 | Symbol | Status | graphify tokens | Atlas tokens | graphify ms | Atlas ms |
 |---|---|--:|--:|--:|--:|
-| DevtoolsImpl | equivalent | 53 | 7 | 87.87 | 23.659 |
-| hydrate | graphify_missing | 8 | 7 | 87.166 | 14.856 |
-| shallow | equivalent | 75 | 6 | 88.102 | 14.718 |
-| CreateStore | equivalent | 89 | 6 | 87.691 | 14.423 |
+| DevtoolsImpl | equivalent | 53 | 7 | 84.678 | 13.786 |
+| hydrate | graphify_missing | 8 | 7 | 85.832 | 13.824 |
+| shallow | equivalent | 75 | 6 | 87.539 | 14.163 |
+| CreateStore | equivalent | 89 | 6 | 84.953 | 13.628 |
 
 ### java
 
 | Symbol | Status | graphify tokens | Atlas tokens | graphify ms | Atlas ms |
 |---|---|--:|--:|--:|--:|
-| write | equivalent | 112 | 7 | 104.733 | 28.15 |
-| read | equivalent | 102 | 7 | 107.469 | 24.552 |
+| write | equivalent | 112 | 7 | 111.723 | 28.23 |
+| read | equivalent | 102 | 7 | 110.91 | 23.672 |
 
 ### c
 
 | Symbol | Status | graphify tokens | Atlas tokens | graphify ms | Atlas ms |
 |---|---|--:|--:|--:|--:|
-| cJSON_Delete | equivalent | 284 | 8 | 108.61 | 17.402 |
-| cjson_functions_should_not_crash_with_null_pointers | equivalent | 288 | 18 | 108.66 | 17.081 |
-| cJSON_CreateObject | equivalent | 332 | 9 | 107.9 | 16.385 |
-| UnityPrint | equivalent | 302 | 7 | 106.659 | 17.082 |
+| cJSON_Delete | equivalent | 284 | 8 | 108.176 | 20.345 |
+| cjson_functions_should_not_crash_with_null_pointers | equivalent | 288 | 18 | 106.448 | 16.154 |
+| cJSON_CreateObject | equivalent | 332 | 9 | 106.893 | 16.396 |
+| UnityPrint | equivalent | 302 | 7 | 105.678 | 15.974 |
 
 ### cpp
 
 | Symbol | Status | graphify tokens | Atlas tokens | graphify ms | Atlas ms |
 |---|---|--:|--:|--:|--:|
-| RandomString | equivalent | 76 | 9 | 123.937 | 17.231 |
-| MemEnvTest | equivalent | 100 | 8 | 118.142 | 114.579 |
-| Size | equivalent | 72 | 9 | 117.404 | 16.948 |
-| size | equivalent | 72 | 6 | 116.309 | 30.078 |
+| RandomString | equivalent | 76 | 9 | 115.786 | 16.484 |
+| MemEnvTest | equivalent | 100 | 8 | 118.632 | 14.889 |
+| Size | equivalent | 72 | 9 | 116.072 | 15.893 |
+| size | equivalent | 72 | 6 | 116.205 | 29.908 |
 
 ## Missing or partial adapters
 

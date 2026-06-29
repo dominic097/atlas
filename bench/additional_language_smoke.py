@@ -5614,12 +5614,13 @@ def run_smoke(language: str, atlas_bin: str, graphify_bin: str | None) -> dict[s
         }
     elif language == "elixir":
         optimization = {
-            "cycles_run": 3,
-            "stop_reason": "Elixir live smoke matched the tree-sitter-elixir definition coverage proxy exactly and met the current 5x latency/token thresholds; elixir/mix/Lexical remain unavailable on this machine.",
+            "cycles_run": 4,
+            "stop_reason": "Elixir native tree-sitter AST parsing matched the tree-sitter-elixir definition coverage proxy exactly and met the current 5x latency/token thresholds; elixir/mix/Lexical remain unavailable on this machine.",
             "cycle_notes": [
                 "cycle 1: phoenixframework/phoenix probe showed the biggest Atlas gap was Elixir macros, delegates, guards, protocols, and implementations beyond basic defmodule/def parsing.",
                 "cycle 2: after parser widening, Atlas/tree-sitter-elixir definition ratio reached 1.07, revealing doc/comment false positives from regex parsing.",
                 "cycle 3: after masking Elixir comments and heredocs before lightweight regex extraction, Atlas/tree-sitter-elixir definition ratio reached 1.0 while exact-symbol query rows exceeded 5x for latency and token output vs graphify.",
+                "cycle 4: replacing the regex extractor with a tree-sitter-elixir AST walker preserved exact module/protocol/implementation/function/macro/delegate/guard coverage and added native operator-function support.",
             ],
         }
     elif language == "fortran":
