@@ -95,6 +95,17 @@ validated with the focused parser test suite.
 | blade | BookStackApp/BookStack `resources/views` | blade directive counter | 1090 | 1090 | 1.00x | 6.07x | 6.10x | Native Blade source parser matched template identity, directive, component, and `wire:` handler coverage exactly while keeping `.blade.php` files off `parseRegexFallback`. |
 | ejs | expressjs/express `examples` | ejs template counter | 36 | 36 | 1.00x | 5.21x | 6.86x | Native EJS tag scanner matched template, include, function, and variable coverage exactly while keeping `.ejs` files off `parseRegexFallback`; graphify is detector-only for `.ejs`, so the ratios use the one equivalent query and the graphify ceiling is documented. |
 
+## Native parser migration addendum — B6 in progress
+
+Measured 2026-06-30 while converting the B6 languages in strict order. Rows
+are added only after the language is routed off `parseRegexFallback`,
+benchmarked against graphify and the strongest local independent baseline, and
+validated with the focused parser test suite.
+
+| Lang | Repo slice | Independent baseline | Atlas defs | Baseline defs | Recall/coverage | graphify latency | graphify tokens | Notes |
+| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | --- |
+| sql | hasura/graphql-engine `server/src-rsr/migrations` | SQLFluff 3.5.0 | 111 | 111 | 1.00x | 5.96x | 5.33x | Native SQL DDL source parser matched SQLFluff coverage exactly while keeping `.sql` files off `parseRegexFallback`; tree-sitter-sql v0.3.11's Go module omits `parser.c`, and a locally generated C parser was killed during CGO compilation after 128s, so this is the documented native-parser ceiling for SQL in this environment. |
+
 ## The consistent definition surface (applied uniformly to all 7 languages)
 
 A symbol is counted as a **definition** iff it is a top-level **or member**

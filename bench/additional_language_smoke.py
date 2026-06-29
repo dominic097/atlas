@@ -5588,13 +5588,14 @@ def run_smoke(language: str, atlas_bin: str, graphify_bin: str | None) -> dict[s
         }
     elif language == "sql":
         optimization = {
-            "cycles_run": 4,
-            "stop_reason": "SQL live smoke matches SQLFluff DDL definition coverage and now exceeds 5x latency/token thresholds after compacting SQL terse locations and warming both tools before measured query rows.",
+            "cycles_run": 5,
+            "stop_reason": "SQL native source parser matches SQLFluff DDL definition coverage after routing `.sql` files off `parseRegexFallback`; it exceeds 5x latency/token thresholds, while the generated tree-sitter-sql C parser was rejected because CGO compilation was killed on this machine.",
             "cycle_notes": [
                 "cycle 1: graphify advertised SQL support but produced an empty graph until its optional tree_sitter_sql dependency was installed in the graphify tool environment.",
                 "cycle 2: hasura/graphql-engine migrations reached 1.0 Atlas/SQLFluff DDL coverage and exceeded 5x latency; token output stayed below 5x without removing useful source context.",
                 "cycle 3: hard-budgeted context probes increased token output compared with exact-symbol explain, so the benchmark keeps exact-symbol explain and documents the 4.9x token saturation point.",
                 "cycle 4: SQL terse output now keeps full paths in JSON but drops the redundant `.sql` suffix in plain locations, and the harness runs one untimed warm-up for both tools; live SQL smoke measured 5.33x summed token ratio and 6.14x average latency.",
+                "cycle 5: tree-sitter-sql v0.3.11's Go module omits generated parser.c; a locally generated parser compiled for 128s and was killed, so Atlas uses a native SQL DDL scanner with quote/comment/dollar-body skipping and preserves exact SQLFluff parity at 111/111 definitions.",
             ],
         }
     elif language == "terraform":

@@ -169,7 +169,7 @@
       "sql",
       ".sql",
       "extract_sql",
-      "lightweight regex"
+      "native SQL source parser"
     ],
     [
       "markdown",

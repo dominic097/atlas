@@ -101,7 +101,7 @@ GRAPHIFY_LANGUAGE_FAMILIES = [
     ("dart", [".dart"], "native tree-sitter AST"),
     ("r", [".r", ".R"], "native tree-sitter AST"),
     ("verilog/systemverilog", [".v", ".sv", ".svh"], "native tree-sitter AST"),
-    ("sql", [".sql"], "lightweight regex"),
+    ("sql", [".sql"], "native SQL source parser"),
     ("markdown", [".md", ".mdx", ".qmd"], "document parser"),
     ("pascal", [".pas", ".pp", ".dpr", ".dpk", ".lpr", ".inc"], "native tree-sitter AST"),
     ("delphi/lazarus forms", [".dfm", ".lfm", ".lpk"], "lightweight regex/document fallback"),
