@@ -79,6 +79,14 @@ type StorageDriver interface {
 	// graph reads (feed search / impact / neighbors / path)
 	ListSymbols(ctx context.Context, snapshotID string) ([]graph.CodeSymbol, error)
 	ListEdges(ctx context.Context, snapshotID string) ([]graph.DependencyEdge, error)
+	// StreamSymbols / StreamEdges yield the same rows as ListSymbols / ListEdges
+	// (identical ORDER BY) but in batches of at most `batch` rows, invoking fn once
+	// per batch — so a whole-graph consumer (analytics, export, snapshot-diff)
+	// bounds peak memory to its accumulator + one batch instead of slurping every
+	// row into one giant slice. The batch slice is reused between calls; fn must
+	// copy any rows it retains (appending the value structs out suffices).
+	StreamSymbols(ctx context.Context, snapshotID string, batch int, fn func([]graph.CodeSymbol) error) error
+	StreamEdges(ctx context.Context, snapshotID string, batch int, fn func([]graph.DependencyEdge) error) error
 	ListRoutes(ctx context.Context, snapshotID, role string) ([]graph.Route, error)
 	// ListFiles returns the indexed file rows of a snapshot (path/language/imports),
 	// feeding explain's defining-file import bundle.

@@ -689,6 +689,80 @@ func (d *postgresDriver) ListEdges(ctx context.Context, snapshotID string) ([]gr
 	return out, rows.Err()
 }
 
+func (d *postgresDriver) StreamSymbols(ctx context.Context, snapshotID string, batch int, fn func([]graph.CodeSymbol) error) error {
+	if batch <= 0 {
+		batch = streamBatch
+	}
+	rows, err := d.db.QueryContext(ctx, `
+		SELECT `+symbolCols+`
+		FROM symbols WHERE snapshot_id = $1
+		ORDER BY path, start_line, name`,
+		snapshotID,
+	)
+	if err != nil {
+		return fmt.Errorf("store: stream symbols: %w", err)
+	}
+	defer rows.Close()
+	buf := make([]graph.CodeSymbol, 0, batch)
+	for rows.Next() {
+		sym, err := scanSymbolRowPG(rows)
+		if err != nil {
+			return fmt.Errorf("store: scan symbol: %w", err)
+		}
+		buf = append(buf, sym)
+		if len(buf) >= batch {
+			if err := fn(buf); err != nil {
+				return err
+			}
+			buf = buf[:0]
+		}
+	}
+	if err := rows.Err(); err != nil {
+		return err
+	}
+	if len(buf) > 0 {
+		return fn(buf)
+	}
+	return nil
+}
+
+func (d *postgresDriver) StreamEdges(ctx context.Context, snapshotID string, batch int, fn func([]graph.DependencyEdge) error) error {
+	if batch <= 0 {
+		batch = streamBatch
+	}
+	rows, err := d.db.QueryContext(ctx, `
+		SELECT `+edgeCols+`
+		FROM edges WHERE snapshot_id = $1
+		ORDER BY from_file, to_ref, kind`,
+		snapshotID,
+	)
+	if err != nil {
+		return fmt.Errorf("store: stream edges: %w", err)
+	}
+	defer rows.Close()
+	buf := make([]graph.DependencyEdge, 0, batch)
+	for rows.Next() {
+		e, err := scanEdgeRowPG(rows)
+		if err != nil {
+			return fmt.Errorf("store: scan edge: %w", err)
+		}
+		buf = append(buf, e)
+		if len(buf) >= batch {
+			if err := fn(buf); err != nil {
+				return err
+			}
+			buf = buf[:0]
+		}
+	}
+	if err := rows.Err(); err != nil {
+		return err
+	}
+	if len(buf) > 0 {
+		return fn(buf)
+	}
+	return nil
+}
+
 // SymbolsByName returns symbols whose name matches exactly, served by the
 // idx_symbols_snapshot_name index — the indexed seed for impact's reverse-BFS.
 func (d *postgresDriver) SymbolsByName(ctx context.Context, snapshotID, name string) ([]graph.CodeSymbol, error) {

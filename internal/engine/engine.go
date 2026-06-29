@@ -1175,7 +1175,14 @@ func (e *localEngine) SemanticSearch(ctx context.Context, in SemanticSearchInput
 	if err != nil {
 		return nil, fmt.Errorf("engine: semantic search: %w", err)
 	}
-	syms, err := e.store.ListSymbols(ctx, snap.ID)
+	// Fetch ONLY the scored symbols (targeted, index-backed) instead of loading
+	// the whole snapshot's symbols just to resolve a handful of nearest-neighbor
+	// ids — peak memory becomes proportional to the result set, not the repo.
+	ids := make([]string, 0, len(scored))
+	for _, sc := range scored {
+		ids = append(ids, sc.SymbolID)
+	}
+	syms, err := e.store.SymbolsByIDs(ctx, snap.ID, ids)
 	if err != nil {
 		return nil, fmt.Errorf("engine: load symbols: %w", err)
 	}

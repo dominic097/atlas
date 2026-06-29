@@ -161,28 +161,33 @@ func (e *localEngine) loadAnalyticsGraph(ctx context.Context, repoID string) (*a
 	if err != nil {
 		return nil, err
 	}
-	syms, err := e.store.ListSymbols(ctx, snap.ID)
-	if err != nil {
-		return nil, fmt.Errorf("engine: analytics load symbols: %w", err)
-	}
-	edges, err := e.store.ListEdges(ctx, snap.ID)
-	if err != nil {
-		return nil, fmt.Errorf("engine: analytics load edges: %w", err)
-	}
 	// Hubs / communities / report describe the real ARCHITECTURE, so test files are
 	// excluded by default — test scaffolding (e.g. every package's stub Close()) would
 	// otherwise dominate the degree ranking with names that collapse across types.
-	keptSyms := make([]graph.CodeSymbol, 0, len(syms))
-	for _, s := range syms {
-		if !isTestPath(s.Path) && isCodeLang(s.Language) {
-			keptSyms = append(keptSyms, s)
+	// Stream + filter so peak memory is the kept (architecture) subset, not the raw
+	// whole-graph slices held alongside it. Order is identical to ListSymbols/Edges,
+	// so the analytics result is byte-identical to the prior load-all path.
+	var keptSyms []graph.CodeSymbol
+	if err := e.store.StreamSymbols(ctx, snap.ID, 0, func(batch []graph.CodeSymbol) error {
+		for _, s := range batch {
+			if !isTestPath(s.Path) && isCodeLang(s.Language) {
+				keptSyms = append(keptSyms, s)
+			}
 		}
+		return nil
+	}); err != nil {
+		return nil, fmt.Errorf("engine: analytics load symbols: %w", err)
 	}
-	keptEdges := make([]graph.DependencyEdge, 0, len(edges))
-	for _, ed := range edges {
-		if !isTestPath(ed.FromFile) {
-			keptEdges = append(keptEdges, ed)
+	var keptEdges []graph.DependencyEdge
+	if err := e.store.StreamEdges(ctx, snap.ID, 0, func(batch []graph.DependencyEdge) error {
+		for _, ed := range batch {
+			if !isTestPath(ed.FromFile) {
+				keptEdges = append(keptEdges, ed)
+			}
 		}
+		return nil
+	}); err != nil {
+		return nil, fmt.Errorf("engine: analytics load edges: %w", err)
 	}
 	return analytics.Build(keptSyms, keptEdges), nil
 }
