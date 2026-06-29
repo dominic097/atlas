@@ -183,6 +183,8 @@ func LanguageForPath(path string) string {
 		return "docx"
 	case ".xlsx":
 		return "xlsx"
+	case ".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tif", ".tiff", ".webp":
+		return "image"
 	default:
 		return ""
 	}
@@ -219,7 +221,7 @@ func Supported(lang string) bool {
 		"markdown", "mdx", "yaml", "json", "proto", "toml", "xml", "plist",
 		"gomod", "gosum", "config", "makefile", "batch", "powershell",
 		"sql", "csv", "text", "dockerfile",
-		"pptx", "docx", "xlsx":
+		"pptx", "docx", "xlsx", "image":
 		return true
 	default:
 		return false
@@ -266,6 +268,9 @@ func Parse(repoID, repoFullName, filePath, language string, content []byte) (Res
 		// symbols. They have no source-code comments/bodies, so they bypass the
 		// symbolDraft enrichment below and return their own Result.
 		return parseOfficeDocument(repoID, repoFullName, filePath, language, content)
+	case "image":
+		// Images: catalog + optional OCR text, also returning their own Result.
+		return parseImage(repoID, repoFullName, filePath, content)
 	case "go":
 		// Native go/parser is the highest-fidelity path. Parse once, then reuse
 		// the AST for both symbol and call-edge extraction.

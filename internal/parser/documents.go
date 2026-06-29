@@ -15,11 +15,11 @@ import (
 	"github.com/dominic097/atlas/internal/graph"
 )
 
-// documentFormats are the binary office documents Atlas extracts searchable text
-// from. Each is an OOXML package: a ZIP of XML parts, so extraction needs only the
-// standard library (archive/zip + encoding/xml), no external dependency.
+// documentFormats are the binary document/media formats Atlas extracts searchable
+// text from (office OOXML packages plus images). They share the larger index size
+// ceiling because the file carries embedded media but only its text is read.
 var documentFormats = map[string]struct{}{
-	"pptx": {}, "docx": {}, "xlsx": {},
+	"pptx": {}, "docx": {}, "xlsx": {}, "image": {},
 }
 
 // IsDocumentFormat reports whether a language is one of the binary document
