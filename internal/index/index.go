@@ -130,36 +130,50 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 	head := resolveCommitSHA(ctx, absRoot)
 	phase("resolve_head", phaseStart)
 
-	// Try an incremental delta: re-parse only the files that changed since the
-	// latest snapshot's commit and carry the rest of the graph forward. Eligibility
-	// is conservative (see deltaEligible); on any miss or error we fall through to
-	// the full walk below, so a delta never fails the run.
+	// Try an incremental delta. Change detection is WORKING-TREE-aware: it compares
+	// the working tree (content-hashed) against the base snapshot's stored hashes,
+	// so an uncommitted edit, an untracked new file, or a deletion is detected even
+	// when no new commit exists. This is the per-edit update an agent runs after
+	// every task; a commit-only diff would miss it and noop a stale graph.
+	//
+	// The run is a genuine no-op ONLY when the working tree matches the base
+	// snapshot exactly. On any error we fall through to the full walk below, so a
+	// delta never fails the run.
 	if !opts.Reindex {
 		phaseStart = time.Now()
 		if base, baseErr := resolveDeltaBase(ctx, drv, repoFullName); baseErr == nil && base != nil {
-			if sameIndexedCommit(base, head) {
+			if scan, scanErr := scanWorkTree(ctx, drv, base.snapshot.ID, absRoot); scanErr == nil {
+				// The scan (walk + hash + classify) is the delta_check cost; record it
+				// once here so neither the noop, delta, nor fall-through exit double-counts.
 				phase("delta_check", phaseStart)
-				stats := Stats{
-					Files:      base.snapshot.FileCount,
-					Symbols:    base.snapshot.SymbolCount,
-					Edges:      base.snapshot.EdgeCount,
-					Routes:     base.snapshot.RouteCount,
-					Languages:  languagesFromSnapshot(base.snapshot),
-					DurationMS: time.Since(start).Milliseconds(),
-					Mode:       "noop",
-					TimingsMS:  timings,
+				if scan.noChanges() {
+					stats := Stats{
+						Files:      base.snapshot.FileCount,
+						Symbols:    base.snapshot.SymbolCount,
+						Edges:      base.snapshot.EdgeCount,
+						Routes:     base.snapshot.RouteCount,
+						Languages:  languagesFromSnapshot(base.snapshot),
+						DurationMS: time.Since(start).Milliseconds(),
+						Mode:       "noop",
+						TimingsMS:  timings,
+					}
+					return base.snapshot, stats, nil
 				}
-				return base.snapshot, stats, nil
-			}
-			if deltaEligible(ctx, absRoot, base, head) {
-				snap, stats, derr := runDelta(ctx, drv, lx, base, repoFullName, absRoot, head, opts, start)
+				snap, stats, derr := runDelta(ctx, drv, lx, base, scan, repoFullName, absRoot, head, opts, start)
 				if derr == nil {
 					return snap, stats, nil
 				}
-				// Delta failed mid-flight (git/diff/store hiccup): fall back to full.
+				// Delta failed mid-flight (store hiccup): fall back to full. The
+				// delta_check phase is already recorded above.
+			} else {
+				// No usable base scan (base resolved but scan errored): record the
+				// time spent before falling through to the full walk.
+				phase("delta_check", phaseStart)
 			}
+		} else {
+			// No delta base (first index, or base lookup failed): record the probe time.
+			phase("delta_check", phaseStart)
 		}
-		phase("delta_check", phaseStart)
 	}
 
 	var (
@@ -357,18 +371,6 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 		TimingsMS:  timings,
 	}
 	return snapshot, stats, nil
-}
-
-func sameIndexedCommit(base *deltaBase, head string) bool {
-	if base == nil || base.snapshot == nil {
-		return false
-	}
-	baseCommit := strings.TrimSpace(base.commit)
-	head = strings.TrimSpace(head)
-	if baseCommit == "" || baseCommit == workingTreeSHA {
-		return false
-	}
-	return head != "" && head != workingTreeSHA && baseCommit == head
 }
 
 func languagesFromSnapshot(snap *graph.Snapshot) map[string]int {

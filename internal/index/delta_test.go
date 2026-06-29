@@ -115,29 +115,6 @@ func TestKeepBase_EmptyTouchedKeepsAll(t *testing.T) {
 	}
 }
 
-func TestParseNameStatusZ(t *testing.T) {
-	// A flat NUL stream: status, path, status, path, ...
-	// A added, M modified, D deleted, R/C handled like changed.
-	raw := "A\x00added.go\x00M\x00mod.go\x00D\x00del.go\x00R\x00renamed.go\x00C\x00copied.go\x00"
-	changed, deleted := parseNameStatusZ([]byte(raw))
-
-	sort.Strings(changed)
-	wantChanged := []string{"added.go", "copied.go", "mod.go", "renamed.go"}
-	if !reflect.DeepEqual(changed, wantChanged) {
-		t.Fatalf("changed = %v, want %v", changed, wantChanged)
-	}
-	if !reflect.DeepEqual(deleted, []string{"del.go"}) {
-		t.Fatalf("deleted = %v, want [del.go]", deleted)
-	}
-}
-
-func TestParseNameStatusZ_Empty(t *testing.T) {
-	changed, deleted := parseNameStatusZ([]byte(""))
-	if len(changed) != 0 || len(deleted) != 0 {
-		t.Fatalf("empty diff produced changed=%v deleted=%v", changed, deleted)
-	}
-}
-
 func TestMakeSet_CanonicalizesAndUnions(t *testing.T) {
 	set := makeSet([]string{" a.go ", `b\c.go`}, []string{"d.go", ""})
 	want := map[string]struct{}{"a.go": {}, "b/c.go": {}, "d.go": {}}

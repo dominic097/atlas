@@ -1,24 +1,22 @@
 // delta.go implements incremental (delta) indexing for index.Run.
 //
-// A delta reindex avoids re-parsing the whole working tree when the previous
-// snapshot's commit is an ancestor of the new HEAD: only files that changed
-// between the two commits are re-parsed, and the rest of the graph (symbols,
-// edges, routes for untouched files) is carried forward from the base snapshot.
-// The merged result is sorted identically to a full index so a delta snapshot is
-// byte-for-byte equivalent to a full reindex of the same HEAD.
+// A delta reindex avoids re-parsing the whole working tree on a per-edit update:
+// only the files the working tree shows as changed/added (vs. the base snapshot)
+// are re-parsed, and the rest of the graph (symbols, edges, routes for untouched
+// files) is carried forward from the base snapshot. Change detection itself lives
+// in worktree.go (scanWorkTree, a git-independent content-hash compare) so an
+// UNCOMMITTED edit, an untracked new file, or a deletion is detected even with no
+// new commit. The merged result is sorted identically to a full index so a delta
+// snapshot is byte-for-byte equivalent to a full reindex of the same tree state.
 //
 // Everything here is built on the EXISTING StorageDriver methods (ListRepos,
-// LatestSnapshot, ListSymbols, ListEdges, ListRoutes); the delta logic derives
-// its base snapshot itself and needs no store-interface or engine change.
+// LatestSnapshot, ListFiles, ListSymbols, ListEdges, ListRoutes); the delta logic
+// derives its base snapshot itself and needs no store-interface or engine change.
 package index
 
 import (
 	"context"
 	"fmt"
-	"io/fs"
-	"os"
-	"os/exec"
-	"path/filepath"
 	"sort"
 	"strings"
 	"time"
@@ -32,8 +30,9 @@ import (
 	"github.com/dominic097/atlas/internal/store"
 )
 
-// workingTreeSHA is the sentinel resolveCommitSHA returns for a non-git tree; a
-// snapshot stamped with it can never be a delta base.
+// workingTreeSHA is the sentinel resolveCommitSHA returns for a non-git tree. The
+// commit field is now informational only — change detection is content-hash based
+// (scanWorkTree), so a working-tree sentinel base is a perfectly valid delta base.
 const workingTreeSHA = "working-tree"
 
 // deltaBase is the previous-snapshot context a delta reindex builds on.
@@ -70,95 +69,6 @@ func resolveDeltaBase(ctx context.Context, drv store.StorageDriver, repoFullName
 		return nil, nil
 	}
 	return &deltaBase{repoID: repoID, snapshot: snap, commit: snap.CommitSHA}, nil
-}
-
-// deltaEligible reports whether a delta reindex is safe given the base snapshot
-// and the new HEAD. It requires: a base commit that is a real, non-sentinel sha
-// distinct from head; git available; and the base being an ancestor of head
-// (which rules out force-pushes / unrelated history that would invalidate the
-// carry-forward).
-func deltaEligible(ctx context.Context, root string, base *deltaBase, head string) bool {
-	if base == nil {
-		return false
-	}
-	baseCommit := strings.TrimSpace(base.commit)
-	if baseCommit == "" || baseCommit == workingTreeSHA {
-		return false
-	}
-	if head == "" || head == workingTreeSHA {
-		return false
-	}
-	if baseCommit == head {
-		return false
-	}
-	gitBin, err := exec.LookPath("git")
-	if err != nil {
-		return false
-	}
-	// `merge-base --is-ancestor A B` exits 0 iff A is an ancestor of B.
-	cmd := exec.CommandContext(ctx, gitBin, "-C", root, "merge-base", "--is-ancestor", baseCommit, head)
-	if err := cmd.Run(); err != nil {
-		return false
-	}
-	return true
-}
-
-// gitDiffNameStatus returns the changed and deleted repo-root-relative paths
-// between baseCommit and head, parsed from `git diff --name-status --no-renames
-// -z`. With --no-renames, a rename is reported as a delete + an add, so renamed
-// files land in both sets correctly. Status codes A/M/C/T/R map to changed; D
-// maps to deleted. Paths are ToSlash-normalized.
-func gitDiffNameStatus(ctx context.Context, root, baseCommit, head string) (changed, deleted []string, err error) {
-	gitBin, lookErr := exec.LookPath("git")
-	if lookErr != nil {
-		return nil, nil, lookErr
-	}
-	cmd := exec.CommandContext(ctx, gitBin, "-C", root,
-		"diff", "--name-status", "--no-renames", "-z", baseCommit, head)
-	out, runErr := cmd.Output()
-	if runErr != nil {
-		return nil, nil, runErr
-	}
-	changed, deleted = parseNameStatusZ(out)
-	return changed, deleted, nil
-}
-
-// parseNameStatusZ parses the NUL-delimited output of `git diff --name-status
-// -z`. The stream is a flat sequence of records where each entry is a status
-// token (e.g. "A", "M", "D") followed by its path, both NUL-terminated:
-//
-//	"M\0path1\0A\0path2\0D\0path3\0"
-//
-// (With --no-renames there are no two-path R/C records to special-case.)
-func parseNameStatusZ(out []byte) (changed, deleted []string) {
-	fields := strings.Split(string(out), "\x00")
-	i := 0
-	for i < len(fields) {
-		status := strings.TrimSpace(fields[i])
-		if status == "" {
-			i++
-			continue
-		}
-		if i+1 >= len(fields) {
-			break
-		}
-		path := canonicalPath(fields[i+1])
-		i += 2
-		if path == "" {
-			continue
-		}
-		switch status[0] {
-		case 'D':
-			deleted = append(deleted, path)
-		case 'A', 'M', 'C', 'T', 'R':
-			changed = append(changed, path)
-		default:
-			// Unknown status (e.g. U for unmerged): treat as changed so the file
-			// is re-parsed rather than silently carried forward stale.
-			changed = append(changed, path)
-		}
-	}
-	return changed, deleted
 }
 
 // canonicalPath normalizes a path for set membership: trim, ToSlash.
@@ -243,26 +153,29 @@ func makeSet(slices ...[]string) map[string]struct{} {
 	return set
 }
 
-// runDelta executes the incremental index path. Preconditions (checked by the
-// caller): base != nil, deltaEligible == true. It re-parses only changed files,
-// carries the rest of the base graph forward, merges + re-sorts everything to
-// match a full index, persists a new snapshot, and rebuilds the lexical index.
+// runDelta executes the incremental index path from a PRECOMPUTED working-tree
+// scan. Preconditions (checked by the caller): base != nil and scan != nil with
+// at least one change (a no-change scan is the caller's noop). It re-parses only
+// changed/added files, carries the rest of the base graph forward, merges +
+// re-sorts everything to match a full index, persists a new snapshot, and
+// rebuilds the lexical index.
+//
+// The scan is the single source of change truth: it already content-hashed every
+// present file and classified it against the base snapshot's stored hashes, so
+// uncommitted edits, untracked new files, and deletions are all reflected here
+// regardless of commit state. runDelta re-uses the scan's materialized content +
+// hashes — it does not re-walk or re-hash the tree.
 //
 // Any error here is the caller's signal to fall back to a full index — runDelta
 // must not have side effects before SaveSnapshot, which it doesn't (all work is
 // in-memory until the single save).
-func runDelta(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, base *deltaBase, repoFullName, absRoot, head string, opts Options, start time.Time) (*graph.Snapshot, Stats, error) {
+func runDelta(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, base *deltaBase, scan *workTreeScan, repoFullName, absRoot, head string, opts Options, start time.Time) (*graph.Snapshot, Stats, error) {
 	baseCommit := base.commit
 
-	changedPaths, deletedPaths, err := gitDiffNameStatus(ctx, absRoot, baseCommit, head)
-	if err != nil {
-		return nil, Stats{}, fmt.Errorf("index: delta diff: %w", err)
-	}
-	changedSet := makeSet(changedPaths)
-	deletedSet := makeSet(deletedPaths)
-	touched := makeSet(changedPaths, deletedPaths)
+	changedSet := scan.changedSet() // changed ∪ added — the files to (re)parse
+	touched := scan.touchedSet()    // changed ∪ added ∪ deleted — base rows to drop
 
-	// Whether any touched (changed or deleted) file is Go — gates the go/types
+	// Whether any touched (changed/added/deleted) file is Go — gates the go/types
 	// re-enrichment below. No Go change means the kept base Go edges are already
 	// precise, so the whole-repo type pass can be skipped (delta stays fast).
 	goTouched := false
@@ -273,10 +186,10 @@ func runDelta(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, b
 		}
 	}
 
-	// Re-walk the tree with the SAME prune/size/lang rules as the full path, but
-	// only PARSE files whose rel path changed. Every supported file still present
-	// contributes a graph.File row (stat+hash only, no parse) so FileCount matches
-	// a full index of HEAD.
+	// Build rows from the precomputed scan with the SAME prune/size/lang rules the
+	// full path used (the scan already applied them). Every present supported file
+	// contributes a graph.File row (content+hash already computed) so FileCount
+	// matches a full index of HEAD; only changed/added files are (re)parsed.
 	var (
 		files        []graph.File
 		newSymbols   []graph.CodeSymbol
@@ -285,81 +198,37 @@ func runDelta(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, b
 		languages    = map[string]int{}
 	)
 
-	walkErr := filepath.WalkDir(absRoot, func(path string, entry fs.DirEntry, walkErr error) error {
-		if walkErr != nil {
-			return walkErr
-		}
+	for i := range scan.files {
 		if ctx.Err() != nil {
-			return ctx.Err()
+			return nil, Stats{}, ctx.Err()
 		}
-
-		rel, relErr := filepath.Rel(absRoot, path)
-		if relErr != nil {
-			return relErr
-		}
-		if rel == "." {
-			return nil
-		}
-		rel = filepath.ToSlash(rel)
-
-		if entry.IsDir() {
-			if _, skip := skipDirs[entry.Name()]; skip {
-				return filepath.SkipDir
-			}
-			return nil
-		}
-		if entry.Type()&fs.ModeSymlink != 0 {
-			return nil
-		}
-
-		lang := parser.LanguageForPath(rel)
-		if !parser.Supported(lang) {
-			return nil
-		}
-
-		info, infoErr := entry.Info()
-		if infoErr != nil {
-			return nil
-		}
-		if info.Size() > maxFileBytes {
-			return nil
-		}
-
-		content, readErr := os.ReadFile(path)
-		if readErr != nil {
-			return nil
-		}
+		wf := &scan.files[i]
 
 		// File row for every supported, present file (keeps FileCount correct).
 		files = append(files, graph.File{
 			ID:        uuid.NewString(),
-			Path:      rel,
-			Language:  lang,
-			SizeBytes: info.Size(),
-			Hash:      hashContent(content),
+			Path:      wf.relPath,
+			Language:  wf.lang,
+			SizeBytes: wf.size,
+			Hash:      wf.hash,
 		})
-		languages[lang]++
+		languages[wf.lang]++
 
-		// Only changed files are (re)parsed; their fresh rows replace the dropped
-		// base rows for the same file.
-		if _, isChanged := changedSet[rel]; !isChanged {
-			return nil
+		// Only changed/added files are (re)parsed; their fresh rows replace the
+		// dropped base rows for the same file.
+		if _, isChanged := changedSet[wf.relPath]; !isChanged {
+			continue
 		}
-		res, parseErr := parser.Parse("", repoFullName, rel, lang, content)
+		res, parseErr := parser.Parse("", repoFullName, wf.relPath, wf.lang, wf.content)
 		if parseErr != nil {
-			return nil
+			continue
 		}
 		// Restore imports onto the file row now that we parsed it.
 		files[len(files)-1].Imports = res.Imports
 		newSymbols = append(newSymbols, res.Symbols...)
 		newEdges = append(newEdges, res.Edges...)
-		newRawRoutes = append(newRawRoutes, routes.ExtractFile(lang, rel, string(content))...)
-		return nil
-	})
-	if walkErr != nil {
-		return nil, Stats{}, fmt.Errorf("index: delta walk %q: %w", absRoot, walkErr)
+		newRawRoutes = append(newRawRoutes, routes.ExtractFile(wf.lang, wf.relPath, string(wf.content))...)
 	}
-	_ = deletedSet // deletions are handled purely via the `touched` keep-filter
 
 	// Load the base graph and keep only the rows whose owning file is untouched.
 	baseSymbols, err := drv.ListSymbols(ctx, base.snapshot.ID)
