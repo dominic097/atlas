@@ -71,9 +71,10 @@ func TestDropTypeUseRefs_RemovesGoTypesRefsKeepsRest(t *testing.T) {
 		{FromFile: "c.go", Kind: graph.EdgeReferences, ToRef: "Baz", Metadata: graph.JSONBMap{"source": "other"}},    // kept (not go_types)
 		{FromFile: "d.go", Kind: graph.EdgeImports, ToRef: "fmt"},
 	}
-	got := dropTypeUseRefs(in)
+	// nil scope = whole-module drop: BOTH go_types references removed.
+	got := dropTypeUseRefs(in, nil)
 	if len(got) != 3 {
-		t.Fatalf("dropTypeUseRefs kept %d edges, want 3 (both go_types references removed)", len(got))
+		t.Fatalf("dropTypeUseRefs(nil) kept %d edges, want 3 (both go_types references removed)", len(got))
 	}
 	for _, e := range got {
 		if e.Kind == graph.EdgeReferences {
@@ -81,6 +82,35 @@ func TestDropTypeUseRefs_RemovesGoTypesRefsKeepsRest(t *testing.T) {
 				t.Fatalf("a go_types reference edge survived: %+v", e)
 			}
 		}
+	}
+}
+
+// TestDropTypeUseRefs_ScopedOnlyDropsInScope proves the scoped drop removes a
+// go_types reference edge only when its FromFile is in scope; an out-of-scope
+// (untouched-file) go_types reference is preserved for carry-forward.
+func TestDropTypeUseRefs_ScopedOnlyDropsInScope(t *testing.T) {
+	in := []graph.DependencyEdge{
+		{FromFile: "a.go", Kind: graph.EdgeCalls, ToRef: "Do"},
+		{FromFile: "a.go", Kind: graph.EdgeReferences, ToRef: "Foo", Metadata: graph.JSONBMap{"source": "go_types"}}, // in scope -> dropped
+		{FromFile: "b.go", Kind: graph.EdgeReferences, ToRef: "Bar", Metadata: graph.JSONBMap{"source": "go_types"}}, // out of scope -> kept
+		{FromFile: "d.go", Kind: graph.EdgeImports, ToRef: "fmt"},
+	}
+	scope := map[string]struct{}{"a.go": {}}
+	got := dropTypeUseRefs(in, scope)
+	if len(got) != 3 {
+		t.Fatalf("scoped dropTypeUseRefs kept %d edges, want 3 (only a.go ref dropped)", len(got))
+	}
+	var keptB bool
+	for _, e := range got {
+		if e.FromFile == "a.go" && e.Kind == graph.EdgeReferences {
+			t.Fatalf("in-scope go_types reference a.go/Foo survived: %+v", e)
+		}
+		if e.FromFile == "b.go" && e.Kind == graph.EdgeReferences {
+			keptB = true
+		}
+	}
+	if !keptB {
+		t.Fatal("out-of-scope go_types reference b.go/Bar was dropped; carry-forward broken")
 	}
 }
 

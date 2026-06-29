@@ -211,3 +211,122 @@ int main() {
 		}
 	}
 }
+
+type symKey struct{ name, kind string }
+
+func cSymbolSet(t *testing.T, path, lang string, src string) (map[symKey]bool, []graph.CodeSymbol) {
+	t.Helper()
+	res, err := Parse("repo", "owner/repo", path, lang, []byte(src))
+	if err != nil {
+		t.Fatalf("Parse(%s) error: %v", path, err)
+	}
+	set := map[symKey]bool{}
+	for _, s := range res.Symbols {
+		set[symKey{s.Name, s.Kind}] = true
+	}
+	return set, res.Symbols
+}
+
+// TestCSymbols_RecallRootCauses pins the four C recall regressions the audit
+// found on cJSON/leveldb: enums emitted at all, multi-line signatures, and
+// pointer-return functions. Each must appear with the correct kind.
+func TestCSymbols_RecallRootCauses(t *testing.T) {
+	src := `
+/* root cause 1: enum defs were never emitted */
+enum Direction { kForward, kReverse };
+typedef enum { kTypeDeletion = 0x0, kTypeValue = 0x1 } ValueType;
+
+/* root cause 3: pointer-return functions were dropped */
+static cJSON *cJSON_New_Item(const internal_hooks * const hooks)
+{
+    return NULL;
+}
+static unsigned char* ensure(printbuffer * const p, size_t needed)
+{
+    return NULL;
+}
+
+/* control: single-line non-pointer function (already worked) */
+void cJSON_Delete(cJSON *item) { }
+
+/* root cause 2: multi-line signature, pointer return */
+leveldb_t* leveldb_open(
+    const leveldb_options_t* options,
+    const char* name,
+    char** errptr) {
+  return NULL;
+}
+`
+	set, all := cSymbolSet(t, "fixture.c", "c", src)
+	for _, want := range []symKey{
+		{"Direction", "enum"},
+		{"ValueType", "enum"},
+		{"cJSON_New_Item", "function"},
+		{"ensure", "function"},
+		{"cJSON_Delete", "function"},
+		{"leveldb_open", "function"},
+	} {
+		if !set[want] {
+			t.Errorf("missing C symbol %s/%s; got=%+v", want.name, want.kind, all)
+		}
+	}
+}
+
+// TestCppSymbols_RecallRootCauses pins the C++ recall regressions: enum (incl.
+// nested and enum-class) defs, and header-declared class members (methods,
+// constructors, destructors) that have no inline body.
+func TestCppSymbols_RecallRootCauses(t *testing.T) {
+	src := `
+enum class Color { Red, Green };
+enum CompressionType { kNoCompression = 0x0, kSnappyCompression = 0x1 };
+
+/* root cause 4: header-only class with ctor/dtor/method declarations */
+class Iterator {
+ public:
+  Iterator();
+  ~Iterator();
+  bool Valid() const;
+  void inlineSeek() { }     // inline-defined member still works
+  enum Status { Ok, Err };  // nested enum
+};
+
+struct Slice {
+  size_t size() const;
+};
+`
+	set, all := cSymbolSet(t, "fixture.cpp", "cpp", src)
+	for _, want := range []symKey{
+		{"Color", "enum"},
+		{"CompressionType", "enum"},
+		{"Iterator", "class"},
+		{"Iterator", "constructor"},
+		{"~Iterator", "method"},
+		{"Valid", "method"},
+		{"inlineSeek", "method"},
+		{"Status", "enum"},
+		{"Slice", "struct"},
+		{"size", "method"},
+	} {
+		if !set[want] {
+			t.Errorf("missing C++ symbol %s/%s; got=%+v", want.name, want.kind, all)
+		}
+	}
+
+	// Precision guard: a constructor must be exactly one symbol, and the class
+	// type itself must not be double-emitted as a method.
+	var ctorCount, classCount int
+	for _, s := range all {
+		if s.Name == "Iterator" && s.Kind == "constructor" {
+			ctorCount++
+		}
+		if s.Name == "Iterator" && s.Kind == "class" {
+			classCount++
+		}
+	}
+	if ctorCount != 1 {
+		t.Errorf("expected exactly 1 Iterator constructor, got %d", ctorCount)
+	}
+	if classCount != 1 {
+		t.Errorf("expected exactly 1 Iterator class, got %d", classCount)
+	}
+}

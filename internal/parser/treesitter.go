@@ -84,11 +84,69 @@ func parseTreeSitter(path, language string, content []byte) (syms []symbolDraft,
 		syms, imports = walkJavaAST(root, content)
 	case "c", "cpp":
 		syms, imports = walkCAST(root, content)
+		// `.h` headers default to the C grammar, but many ship C++ API (leveldb's
+		// include/leveldb/*.h wrap everything in `namespace`). The C parser then
+		// silently mis-models the file — often WITHOUT setting an error flag — and
+		// drops every def. When the content is unmistakably C++ (namespace/class/
+		// template/`::`), re-parse with the cpp grammar and keep its results when
+		// they capture at least as many symbols, so we never trade C recall away.
+		if language == "c" && looksLikeCPP(content) {
+			if cppSyms, cppImports, cppRoot, cppCleanup, ok := reparseAsCPP(content); ok {
+				if len(cppSyms) >= len(syms) {
+					cleanup()
+					return cppSyms, cppImports, cppRoot, cppCleanup
+				}
+				cppCleanup()
+			}
+		}
 	default:
 		cleanup()
 		return nil, nil, nil, func() {}
 	}
 	return syms, imports, root, cleanup
+}
+
+// cppOnlyTokenRe matches tokens that are valid C++ but not C, used to decide
+// whether a `.h` that failed to parse as C should be retried as C++. Word
+// boundaries avoid matching identifiers that merely contain these substrings.
+var cppOnlyTokenRe = regexp.MustCompile(`\b(namespace|template|class|public:|private:|protected:)\b|::|\boperator\b`)
+
+// looksLikeCPP reports whether content contains C++-only constructs. Conservative
+// by design: only triggers a cpp re-parse for headers the C grammar cannot model.
+func looksLikeCPP(content []byte) bool {
+	return cppOnlyTokenRe.Match(content)
+}
+
+// reparseAsCPP parses content with the cpp grammar and walks it, returning the
+// live root + cleanup so callers can still extract call edges. ok is false if the
+// cpp parse fails entirely.
+func reparseAsCPP(content []byte) (syms []symbolDraft, imports []string, root *tree_sitter.Node, cleanup func(), ok bool) {
+	ptr := languagePointer("cpp")
+	if ptr == nil {
+		return nil, nil, nil, func() {}, false
+	}
+	lang := tree_sitter.NewLanguage(ptr)
+	if lang == nil {
+		return nil, nil, nil, func() {}, false
+	}
+	p := tree_sitter.NewParser()
+	if err := p.SetLanguage(lang); err != nil {
+		p.Close()
+		return nil, nil, nil, func() {}, false
+	}
+	tree := p.Parse(content, nil)
+	if tree == nil {
+		p.Close()
+		return nil, nil, nil, func() {}, false
+	}
+	root = tree.RootNode()
+	if root == nil {
+		tree.Close()
+		p.Close()
+		return nil, nil, nil, func() {}, false
+	}
+	syms, imports = walkCAST(root, content)
+	return syms, imports, root, func() { tree.Close(); p.Close() }, true
 }
 
 // parseTreeSitterSymbols parses a non-Go file with tree-sitter, returning symbol
@@ -464,10 +522,109 @@ func walkJSAST(root *tree_sitter.Node, src []byte) ([]symbolDraft, []string) {
 			if jsExportAssignRe.MatchString(text) {
 				imports = append(imports, extractJSImportsFromText(text)...)
 			}
+		case "assignment_expression":
+			// X.foo = function(){} / exports.bar = () => {} /
+			// module.exports.baz = function(){}. Anonymous function/arrow
+			// expressions bound to a member target are definitions (e.g. the
+			// Express public API) that the named-fn-expr path never sees.
+			if sym, ok := jsAssignedFunctionSymbol(node, src); ok {
+				symbols = append(symbols, sym)
+			}
 		}
 		return true
 	})
 	return symbols, imports
+}
+
+// jsAssignedFunctionSymbol promotes `LHS = <anonymous fn/arrow>` assignments to
+// definitions when the LHS is a member_expression (object.property, including
+// prototype/exports/module.exports chains). The emitted name is the bare LHS
+// property (matching the class-method naming convention), with the dotted
+// qualifier captured as recvType + an owner_type hint for disambiguation.
+//
+// Only ANONYMOUS right-hand sides are emitted: named function expressions
+// (`X.foo = function foo(){}`) are already captured by the function_expression
+// path, so emitting here would double-count them. const/let arrow declarations
+// are likewise handled by jsVariableSymbols, so this stays scoped to
+// member-expression targets.
+func jsAssignedFunctionSymbol(node *tree_sitter.Node, src []byte) (symbolDraft, bool) {
+	left := node.ChildByFieldName("left")
+	right := node.ChildByFieldName("right")
+	if left == nil || right == nil {
+		return symbolDraft{}, false
+	}
+	if !jsValueIsFunction(right) {
+		return symbolDraft{}, false
+	}
+	// Skip named function/arrow expressions — already emitted by simpleSymbol.
+	if jsFunctionExprHasName(right, src) {
+		return symbolDraft{}, false
+	}
+	if left.Kind() != "member_expression" {
+		return symbolDraft{}, false
+	}
+	prop := left.ChildByFieldName("property")
+	if prop == nil {
+		return symbolDraft{}, false
+	}
+	name := strings.TrimSpace(nodeText(prop, src))
+	if name == "" {
+		return symbolDraft{}, false
+	}
+	owner := ""
+	if obj := left.ChildByFieldName("object"); obj != nil {
+		// Reject literal-rooted targets (`"x".foo = fn`): these are never valid
+		// assignment LHS in real code and only arise when the non-TSX grammar
+		// mis-parses a `.tsx` JSX attribute (e.g. data-x="y" onClick={()=>...}).
+		switch obj.Kind() {
+		case "string", "template_string", "number", "regex", "true", "false", "null":
+			return symbolDraft{}, false
+		}
+		owner = strings.TrimSpace(nodeText(obj, src))
+	}
+	sig := strings.TrimSpace(nodeText(left, src)) + " = " + jsValueFunctionHead(right, src)
+	if len(sig) > 160 {
+		sig = sig[:160] + "..."
+	}
+	sym := symbolDraft{
+		name:      name,
+		kind:      "method",
+		signature: sig,
+		startLine: int(node.StartPosition().Row) + 1,
+		endLine:   int(node.EndPosition().Row) + 1,
+		metadata:  graph.JSONBMap{"scope": "assignment"},
+	}
+	if owner != "" {
+		sym.recvType = owner
+		sym.metadata["owner_type"] = owner
+	}
+	return sym, true
+}
+
+// jsFunctionExprHasName reports whether a function/arrow expression node has its
+// own identifier (named function expression). Arrow functions are always
+// anonymous; only function_expression/function nodes can carry a name.
+func jsFunctionExprHasName(node *tree_sitter.Node, src []byte) bool {
+	if node == nil {
+		return false
+	}
+	if name := node.ChildByFieldName("name"); name != nil {
+		return strings.TrimSpace(nodeText(name, src)) != ""
+	}
+	return false
+}
+
+// jsValueFunctionHead returns a compact one-line head of a function/arrow value
+// for use in an assignment signature (e.g. "function(req, res)").
+func jsValueFunctionHead(node *tree_sitter.Node, src []byte) string {
+	head := strings.TrimSpace(nodeText(node, src))
+	if i := strings.IndexByte(head, '{'); i > 0 {
+		head = strings.TrimSpace(head[:i])
+	}
+	if nl := strings.IndexByte(head, '\n'); nl > 0 {
+		head = strings.TrimSpace(head[:nl])
+	}
+	return head
 }
 
 func jsClassSymbols(node *tree_sitter.Node, src []byte) []symbolDraft {
@@ -699,19 +856,12 @@ func javaTypeSymbols(node *tree_sitter.Node, src []byte) []symbolDraft {
 		return out
 	}
 
-	hasExplicitConstructor := false
 	for i := uint(0); i < body.ChildCount(); i++ {
 		member := body.Child(i)
 		if member == nil {
 			continue
 		}
-		if member.Kind() == "constructor_declaration" || member.Kind() == "compact_constructor_declaration" {
-			hasExplicitConstructor = true
-		}
 		out = append(out, javaMemberSymbols(member, src, typeName)...)
-	}
-	if kind == "class" && typeName != "" && !hasExplicitConstructor {
-		out = append(out, javaSyntheticConstructorSymbol(node, src, typeName))
 	}
 	return out
 }
@@ -763,17 +913,30 @@ func javaMemberSymbols(member *tree_sitter.Node, src []byte, owner string) []sym
 	case "class_declaration", "interface_declaration", "enum_declaration", "record_declaration", "annotation_type_declaration":
 		return javaTypeSymbols(member, src)
 	case "method_declaration":
-		return javaCallableSymbol(member, src, owner, "method")
+		out := javaCallableSymbol(member, src, owner, "method")
+		// Descend into the method body: anonymous classes, local types.
+		out = append(out, javaNestedTypeSymbols(member, src, owner)...)
+		return out
 	case "constructor_declaration", "compact_constructor_declaration":
-		return javaCallableSymbol(member, src, owner, "constructor")
+		out := javaCallableSymbol(member, src, owner, "constructor")
+		out = append(out, javaNestedTypeSymbols(member, src, owner)...)
+		return out
 	case "field_declaration", "constant_declaration":
-		return javaFieldSymbols(member, src, owner, "field")
+		out := javaFieldSymbols(member, src, owner, "field")
+		// Field initializers can host anonymous classes (e.g. a factory field
+		// initialized to `new TypeAdapterFactory(){...}`).
+		out = append(out, javaNestedTypeSymbols(member, src, owner)...)
+		return out
 	case "enum_constant":
 		return javaEnumConstantSymbol(member, src, owner)
 	case "record_component":
 		return javaRecordComponentSymbol(member, src, owner)
 	case "annotation_type_element_declaration":
 		return javaCallableSymbol(member, src, owner, "annotation_member")
+	case "static_initializer", "block":
+		// Static / instance initializer blocks can host anonymous classes and
+		// local types whose members are real definitions.
+		return javaNestedTypeSymbols(member, src, owner)
 	}
 
 	var out []symbolDraft
@@ -813,17 +976,77 @@ func javaCallableSymbol(node *tree_sitter.Node, src []byte, owner, kind string) 
 	return out
 }
 
-func javaSyntheticConstructorSymbol(node *tree_sitter.Node, src []byte, owner string) symbolDraft {
-	meta := javaOwnerMetadata(owner)
-	meta["synthetic"] = true
-	return symbolDraft{
-		name:      owner,
-		kind:      "constructor",
-		signature: owner + "()",
-		startLine: int(node.StartPosition().Row) + 1,
-		endLine:   int(node.StartPosition().Row) + 1,
-		metadata:  meta,
-		recvType:  owner,
+// javaNestedTypeSymbols walks the subtree of a member declaration (method,
+// constructor, field initializer) looking for type definitions that live inside
+// executable bodies — anonymous classes (`object_creation_expression` with a
+// `class_body`) and local classes/records/interfaces/enums declared inside a
+// block. Members of those types are emitted as real definitions so they are not
+// lost from the symbol index.
+//
+// It walks DOWN through expressions/statements but STOPS at the boundary of a
+// named type body or anonymous class body, handing that subtree to the
+// appropriate extractor (which recurses on its own). This keeps each type body
+// processed exactly once and avoids double-counting.
+func javaNestedTypeSymbols(node *tree_sitter.Node, src []byte, owner string) []symbolDraft {
+	var out []symbolDraft
+	var walk func(n *tree_sitter.Node)
+	walk = func(n *tree_sitter.Node) {
+		if n == nil {
+			return
+		}
+		switch n.Kind() {
+		case "object_creation_expression":
+			// Anonymous class: `new Type(...) { members }`. The class_body holds
+			// the overriding/added members. The instantiated type names the
+			// receiver so qualified names stay deterministic.
+			if cb := childNode(n, "class_body"); cb != nil {
+				anonOwner := javaAnonymousOwner(n, src, owner)
+				for i := uint(0); i < cb.ChildCount(); i++ {
+					out = append(out, javaMemberSymbols(cb.Child(i), src, anonOwner)...)
+				}
+				// Continue scanning the constructor argument list (which can host
+				// further anonymous classes) but NOT the class_body again.
+				for i := uint(0); i < n.ChildCount(); i++ {
+					if c := n.Child(i); c != nil && c.Kind() != "class_body" {
+						walk(c)
+					}
+				}
+				return
+			}
+		case "class_declaration", "interface_declaration", "enum_declaration",
+			"record_declaration", "annotation_type_declaration":
+			// Local type declared inside a block. javaTypeSymbols recurses into
+			// its body itself, so do not descend further here.
+			out = append(out, javaTypeSymbols(n, src)...)
+			return
+		}
+		for i := uint(0); i < n.ChildCount(); i++ {
+			walk(n.Child(i))
+		}
+	}
+	for i := uint(0); i < node.ChildCount(); i++ {
+		walk(node.Child(i))
+	}
+	return out
+}
+
+// javaAnonymousOwner derives a deterministic owner-type name for the members of
+// an anonymous class from the type being instantiated, qualified by the
+// enclosing owner (e.g. "Excluder$TypeAdapter"). Falls back to the enclosing
+// owner alone when the instantiated type cannot be read.
+func javaAnonymousOwner(objCreation *tree_sitter.Node, src []byte, owner string) string {
+	typeNode := objCreation.ChildByFieldName("type")
+	base := ""
+	if typeNode != nil {
+		base = javaBareTypeName(nodeText(typeNode, src))
+	}
+	switch {
+	case base != "" && owner != "":
+		return owner + "$" + base
+	case base != "":
+		return base
+	default:
+		return owner
 	}
 }
 
@@ -861,7 +1084,7 @@ func javaEnumConstantSymbol(node *tree_sitter.Node, src []byte, owner string) []
 	if name == "" {
 		return nil
 	}
-	return []symbolDraft{{
+	out := []symbolDraft{{
 		name:      name,
 		kind:      "enum_constant",
 		signature: javaOneLineSignature(node, src),
@@ -870,6 +1093,21 @@ func javaEnumConstantSymbol(node *tree_sitter.Node, src []byte, owner string) []
 		metadata:  javaOwnerMetadata(owner),
 		recvType:  owner,
 	}}
+	// An enum constant may carry a body that overrides/adds members
+	// (`CONST() { @Override ... }`). Those are real method/field defs owned by
+	// the constant's specialized type.
+	if cb := childNode(node, "class_body"); cb != nil {
+		constOwner := owner
+		if owner != "" {
+			constOwner = owner + "$" + name
+		} else {
+			constOwner = name
+		}
+		for i := uint(0); i < cb.ChildCount(); i++ {
+			out = append(out, javaMemberSymbols(cb.Child(i), src, constOwner)...)
+		}
+	}
+	return out
 }
 
 func javaRecordComponentSymbol(node *tree_sitter.Node, src []byte, owner string) []symbolDraft {
@@ -985,10 +1223,78 @@ func walkCAST(root *tree_sitter.Node, src []byte) ([]symbolDraft, []string) {
 		case "class_specifier", "struct_specifier":
 			symbols = append(symbols, cppTypeSymbols(child, src)...)
 			return false
+		case "enum_specifier":
+			// A named enum (`enum Direction {...}`) carries its name as a direct
+			// type_identifier. typedef'd anonymous enums are handled via the
+			// enclosing type_definition case below, so skip nameless ones here.
+			if sym, ok := cEnumSymbol(child, src, ""); ok {
+				symbols = append(symbols, sym)
+			}
+			return false
+		case "type_definition":
+			// `typedef enum {...} ValueType;` — the enum_specifier is anonymous
+			// and the real type name is the type_definition's declarator. Emit it
+			// under the typedef name.
+			symbols = append(symbols, cTypedefEnumSymbols(child, src)...)
+			return false
 		}
 		return true
 	})
 	return symbols, imports
+}
+
+// cEnumSymbol builds an enum definition from an enum_specifier. When the enum is
+// anonymous (no type_identifier, e.g. inside a typedef) the caller supplies the
+// typedef name via fallbackName. Returns false when no name is determinable
+// (truly anonymous enums have no def name worth indexing).
+func cEnumSymbol(node *tree_sitter.Node, src []byte, fallbackName string) (symbolDraft, bool) {
+	name := childText(node, "type_identifier", src)
+	if name == "" {
+		name = strings.TrimSpace(fallbackName)
+	}
+	if name == "" {
+		return symbolDraft{}, false
+	}
+	sig := nodeText(node, src)
+	if nl := strings.IndexByte(sig, '\n'); nl > 0 {
+		sig = sig[:nl]
+	}
+	return symbolDraft{
+		name:      name,
+		kind:      "enum",
+		signature: strings.TrimSpace(sig),
+		startLine: int(node.StartPosition().Row) + 1,
+		endLine:   int(node.EndPosition().Row) + 1,
+	}, true
+}
+
+// cTypedefEnumSymbols handles `typedef enum {...} Name;`. It locates the wrapped
+// enum_specifier and names it after the typedef's declarator identifier. Returns
+// nothing when the type_definition does not wrap an enum.
+func cTypedefEnumSymbols(node *tree_sitter.Node, src []byte) []symbolDraft {
+	var enumNode *tree_sitter.Node
+	for i := uint(0); i < node.ChildCount(); i++ {
+		if c := node.Child(i); c != nil && c.Kind() == "enum_specifier" {
+			enumNode = c
+			break
+		}
+	}
+	if enumNode == nil {
+		return nil
+	}
+	// The typedef name is the type_definition's trailing type_identifier (or a
+	// declarator wrapping one). If the enum_specifier itself is named, prefer that.
+	name := childText(enumNode, "type_identifier", src)
+	if name == "" {
+		name = childText(node, "type_identifier", src)
+	}
+	if sym, ok := cEnumSymbol(enumNode, src, name); ok {
+		// Anchor the def to the typedef span so line ranges cover the full decl.
+		sym.startLine = int(node.StartPosition().Row) + 1
+		sym.endLine = int(node.EndPosition().Row) + 1
+		return []symbolDraft{sym}
+	}
+	return nil
 }
 
 // cppTypeSymbols extracts a C++ class/struct symbol plus its member functions,
@@ -1018,22 +1324,78 @@ func cppTypeSymbols(node *tree_sitter.Node, src []byte) []symbolDraft {
 	}
 	for i := uint(0); i < body.ChildCount(); i++ {
 		member := body.Child(i)
-		if member == nil || member.Kind() != "function_definition" {
+		if member == nil {
 			continue
 		}
-		name := cppFunctionName(member, src)
-		if name == "" {
-			continue
+		switch member.Kind() {
+		case "function_definition":
+			// Inline-defined member (`int bar() { ... }`).
+			name := cppFunctionName(member, src)
+			if name == "" {
+				continue
+			}
+			out = append(out, symbolDraft{
+				name:      name,
+				kind:      cppMemberKind(name, typeName),
+				startLine: int(member.StartPosition().Row) + 1,
+				endLine:   int(member.EndPosition().Row) + 1,
+				recvType:  typeName,
+			})
+		case "field_declaration", "declaration":
+			// A nested enum is a field_declaration wrapping an enum_specifier
+			// (`enum Inner { A, B };`); emit it as an enum def.
+			if enumNode := childNode(member, "enum_specifier"); enumNode != nil {
+				if sym, ok := cEnumSymbol(enumNode, src, ""); ok {
+					out = append(out, sym)
+				}
+				continue
+			}
+			// Declared-only member: a method prototype (`int bar(int x);`), a
+			// constructor (`Foo();`) or destructor (`~Foo();`) — common in headers
+			// where the definition lives in a .cc. Only emit when a
+			// function_declarator is present so plain data fields are skipped.
+			if sym, ok := cppMemberDeclSymbol(member, src, typeName); ok {
+				out = append(out, sym)
+			}
+		case "enum_specifier":
+			// A nested enum declared directly in the class body.
+			if sym, ok := cEnumSymbol(member, src, ""); ok {
+				out = append(out, sym)
+			}
 		}
-		out = append(out, symbolDraft{
-			name:      name,
-			kind:      "method",
-			startLine: int(member.StartPosition().Row) + 1,
-			endLine:   int(member.EndPosition().Row) + 1,
-			recvType:  typeName,
-		})
 	}
 	return out
+}
+
+// cppMemberKind classifies a member function by name relative to its enclosing
+// type: a member whose name equals the type name is a constructor; everything
+// else (including destructors `~Type`) is a method, matching clangd's reporting.
+func cppMemberKind(name, typeName string) string {
+	if typeName != "" && name == typeName {
+		return "constructor"
+	}
+	return "method"
+}
+
+// cppMemberDeclSymbol extracts a declared-only class member (no body) from a
+// field_declaration / declaration node, capturing methods, constructors and
+// destructors. Returns false for non-callable declarations (data fields, typedefs).
+func cppMemberDeclSymbol(member *tree_sitter.Node, src []byte, typeName string) (symbolDraft, bool) {
+	decl := cFindFunctionDeclarator(member)
+	if decl == nil {
+		return symbolDraft{}, false
+	}
+	name := cppDeclaratorName(decl, src)
+	if name == "" {
+		return symbolDraft{}, false
+	}
+	return symbolDraft{
+		name:      name,
+		kind:      cppMemberKind(name, typeName),
+		startLine: int(member.StartPosition().Row) + 1,
+		endLine:   int(member.EndPosition().Row) + 1,
+		recvType:  typeName,
+	}, true
 }
 
 // cppFunctionName pulls the declared name out of a C++ function_definition's
@@ -1044,53 +1406,74 @@ func cppFunctionName(node *tree_sitter.Node, src []byte) string {
 }
 
 func cppFunctionIdentity(node *tree_sitter.Node, src []byte) (name, qualified, recvType string) {
+	decl := cFindFunctionDeclarator(node)
+	if decl == nil {
+		return "", "", ""
+	}
+	name = cppDeclaratorName(decl, src)
+	qualified = cppDeclaratorQualifiedName(decl, src)
+	if qualified != "" {
+		recvType = cppQualifiedReceiver(qualified)
+	}
+	return name, qualified, recvType
+}
+
+// cFindFunctionDeclarator locates the function_declarator inside a
+// function_definition's declarator slot. Pointer/reference-returning functions
+// (`cJSON *foo(...)`, `unsigned char* ensure(...)`, `Foo& bar(...)`) wrap the
+// function_declarator in one or more pointer_declarator / reference_declarator
+// nodes, so a flat scan of direct children misses them. We unwrap those layers
+// down to the function_declarator. Multi-line signatures parse to the same shape,
+// so this also recovers functions whose return type / params span lines.
+func cFindFunctionDeclarator(node *tree_sitter.Node) *tree_sitter.Node {
+	if node == nil {
+		return nil
+	}
 	for i := uint(0); i < node.ChildCount(); i++ {
 		child := node.Child(i)
-		if child == nil || child.Kind() != "function_declarator" {
+		if child == nil {
 			continue
 		}
-		name = cppDeclaratorName(child, src)
-		qualified = cppDeclaratorQualifiedName(child, src)
-		if qualified != "" {
-			recvType = cppQualifiedReceiver(qualified)
+		switch child.Kind() {
+		case "function_declarator":
+			return child
+		case "pointer_declarator", "reference_declarator":
+			if d := cFindFunctionDeclarator(child); d != nil {
+				return d
+			}
 		}
-		return name, qualified, recvType
 	}
-	return "", "", ""
+	return nil
 }
 
 func cFunctionSymbol(node *tree_sitter.Node, src []byte) (symbolDraft, bool) {
-	for i := uint(0); i < node.ChildCount(); i++ {
-		child := node.Child(i)
-		if child == nil || child.Kind() != "function_declarator" {
-			continue
-		}
-		name, qualified, recvType := cppFunctionIdentity(node, src)
-		if name == "" {
-			continue
-		}
-		kind := "function"
-		meta := graph.JSONBMap{}
-		if recvType != "" {
-			kind = "method"
-			meta["owner_type"] = recvType
-			meta["qualified_name"] = qualified
-		}
-		sig := nodeText(node, src)
-		if nl := strings.IndexByte(sig, '\n'); nl > 0 {
-			sig = sig[:nl]
-		}
-		return symbolDraft{
-			name:      name,
-			kind:      kind,
-			signature: strings.TrimSpace(sig),
-			startLine: int(node.StartPosition().Row) + 1,
-			endLine:   int(node.EndPosition().Row) + 1,
-			metadata:  meta,
-			recvType:  recvType,
-		}, true
+	if cFindFunctionDeclarator(node) == nil {
+		return symbolDraft{}, false
 	}
-	return symbolDraft{}, false
+	name, qualified, recvType := cppFunctionIdentity(node, src)
+	if name == "" {
+		return symbolDraft{}, false
+	}
+	kind := "function"
+	meta := graph.JSONBMap{}
+	if recvType != "" {
+		kind = "method"
+		meta["owner_type"] = recvType
+		meta["qualified_name"] = qualified
+	}
+	sig := nodeText(node, src)
+	if nl := strings.IndexByte(sig, '\n'); nl > 0 {
+		sig = sig[:nl]
+	}
+	return symbolDraft{
+		name:      name,
+		kind:      kind,
+		signature: strings.TrimSpace(sig),
+		startLine: int(node.StartPosition().Row) + 1,
+		endLine:   int(node.EndPosition().Row) + 1,
+		metadata:  meta,
+		recvType:  recvType,
+	}, true
 }
 
 func cppDeclaratorQualifiedName(node *tree_sitter.Node, src []byte) string {
@@ -1155,6 +1538,17 @@ func nodeText(node *tree_sitter.Node, src []byte) string {
 		return ""
 	}
 	return string(src[start:end])
+}
+
+// childNode returns the first direct child of the given Kind, or nil.
+func childNode(node *tree_sitter.Node, kind string) *tree_sitter.Node {
+	for i := uint(0); i < node.ChildCount(); i++ {
+		child := node.Child(i)
+		if child != nil && child.Kind() == kind {
+			return child
+		}
+	}
+	return nil
 }
 
 // childText returns the text of the first direct child of the given Kind.

@@ -93,6 +93,7 @@ func NewRootCmd() *cobra.Command {
 		newLinkCmd(),
 		newServeCmd(),
 		newMCPCmd(),
+		newWatchCmd(),
 		newInstallCmd(),
 		newVersionCmd(),
 	)

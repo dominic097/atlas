@@ -299,7 +299,6 @@ func TestJavaSymbols_MembersAndModernTypes(t *testing.T) {
 		{"Box", "class"},
 		{"T", "type_parameter"},
 		{"U", "type_parameter"},
-		{"Box", "constructor"},
 		{"id", "method"},
 	}
 	for _, k := range want {
@@ -317,7 +316,146 @@ func TestJavaSymbols_MembersAndModernTypes(t *testing.T) {
 	if owner, _ := symbols[key{"left", "field"}]["owner_type"].(string); owner != "Pair" {
 		t.Errorf("record component left owner_type = %q, want Pair", owner)
 	}
-	if synthetic, _ := symbols[key{"Box", "constructor"}]["synthetic"].(bool); !synthetic {
-		t.Errorf("default Box constructor synthetic flag = %v, want true", synthetic)
+	// Box declares no constructor in source, so NO constructor symbol must be
+	// emitted for it — Atlas no longer fabricates synthetic implicit ctors.
+	if _, ok := symbols[key{"Box", "constructor"}]; ok {
+		t.Errorf("Box has no constructor_declaration in source; a synthetic constructor must NOT be emitted")
+	}
+	// Exactly one real constructor exists in the source (Model's).
+	ctorCount := 0
+	for _, sym := range res.Symbols {
+		if sym.Kind == "constructor" {
+			ctorCount++
+		}
+	}
+	if ctorCount != 1 {
+		t.Errorf("constructor count = %d, want 1 (only Model's real ctor)", ctorCount)
+	}
+}
+
+// javaNestedBodySource exercises symbol recall inside executable bodies and the
+// removal of synthetic constructors:
+//   - a method that returns an ANONYMOUS class whose overriding method (read)
+//     must be captured;
+//   - a field initialized to an anonymous class whose method (create) must be
+//     captured;
+//   - an ENUM CONSTANT with an override body whose method (translateName) must
+//     be captured;
+//   - a NESTED class with its own method (run);
+//   - a LOCAL class declared inside a method body whose method (helper) must be
+//     captured;
+//   - a class (NoCtor) that declares NO constructor — no synthetic constructor
+//     may be emitted for it.
+const javaNestedBodySource = `package com.example;
+
+public class Registry {
+    private final Factory factory = new Factory() {
+        @Override
+        public Object create() {
+            return null;
+        }
+    };
+
+    public Adapter make() {
+        return new Adapter() {
+            @Override
+            public String read() {
+                return "x";
+            }
+        };
+    }
+
+    void run() {
+        class Local {
+            int helper() {
+                return 1;
+            }
+        }
+    }
+
+    static class Inner {
+        void run() {}
+    }
+}
+
+enum Naming {
+    UPPER_CAMEL_CASE {
+        @Override
+        public String translateName(String f) {
+            return f;
+        }
+    };
+
+    public String translateName(String f) {
+        return f;
+    }
+}
+
+class NoCtor {
+    int value;
+    void touch() {}
+}
+`
+
+func TestJavaSymbols_NestedBodiesAndNoSyntheticCtor(t *testing.T) {
+	res, err := Parse("repo-4", "owner/repo", "Registry.java", "java", []byte(javaNestedBodySource))
+	if err != nil {
+		t.Fatalf("Parse returned error: %v", err)
+	}
+
+	type key struct {
+		name string
+		kind string
+	}
+	count := map[key]int{}
+	for _, sym := range res.Symbols {
+		count[key{sym.Name, sym.Kind}]++
+	}
+
+	// (a) Recall: methods that live inside anonymous-class, enum-constant, nested
+	// and local-class bodies must all be present.
+	wantPresent := []key{
+		{"create", "method"},        // anonymous class assigned to a field
+		{"read", "method"},          // anonymous class returned from make()
+		{"translateName", "method"}, // override body inside enum constant
+		{"run", "method"},           // nested class Inner.run
+		{"helper", "method"},        // local class inside run()
+		{"Inner", "class"},          // nested class
+		{"Local", "class"},          // local class
+	}
+	for _, k := range wantPresent {
+		if count[k] == 0 {
+			t.Errorf("missing Java symbol %s/%s; got=%+v", k.name, k.kind, res.Symbols)
+		}
+	}
+
+	// translateName must appear TWICE: once on the enum type, once on the enum
+	// constant's specialized override body.
+	if c := count[key{"translateName", "method"}]; c != 2 {
+		t.Errorf("translateName method count = %d, want 2 (enum body + constant override)", c)
+	}
+
+	// (b) Precision: NoCtor declares no constructor, so no NoCtor constructor may
+	// exist. More broadly, NO synthetic constructor may be emitted for ANY class.
+	if c := count[key{"NoCtor", "constructor"}]; c != 0 {
+		t.Errorf("NoCtor has no constructor in source; synthetic ctor must NOT be emitted (got %d)", c)
+	}
+	for _, sym := range res.Symbols {
+		if sym.Kind != "constructor" {
+			continue
+		}
+		if synthetic, _ := sym.Metadata["synthetic"].(bool); synthetic {
+			t.Errorf("synthetic constructor emitted for %q; synthetic ctors must not exist", sym.Name)
+		}
+	}
+	// This fixture declares zero constructors, so zero constructor symbols.
+	ctorCount := 0
+	for _, sym := range res.Symbols {
+		if sym.Kind == "constructor" {
+			ctorCount++
+		}
+	}
+	if ctorCount != 0 {
+		t.Errorf("constructor count = %d, want 0 (no constructor_declaration in source)", ctorCount)
 	}
 }

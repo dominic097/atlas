@@ -130,6 +130,10 @@ func WithPostgres(dsn string) Option { return engine.WithPostgres(dsn) }
 // It is orthogonal to the tier — combine it with WithSQLite or WithPostgres.
 func WithScope(scope string) Option { return engine.WithScope(scope) }
 
+// WithLexicalDir sets the on-disk BM25 index directory. Use a separate directory
+// per hosted scope when multiple scoped engines live in one process.
+func WithLexicalDir(dir string) Option { return engine.WithLexicalDir(dir) }
+
 // WithVectors enables the OPTIONAL semantic layer: the index pass builds
 // per-symbol embeddings and query-time SemanticSearch runs vector nearest-neighbor
 // instead of degrading to lexical. Off by default — the deterministic core is

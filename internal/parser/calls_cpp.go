@@ -148,6 +148,10 @@ func cppDeclaratorName(node *tree_sitter.Node, src []byte) string {
 	switch node.Kind() {
 	case "identifier", "field_identifier":
 		return nodeText(node, src)
+	case "destructor_name", "operator_name":
+		// `~Foo` / `operator==` — keep the full spelling so it matches the way
+		// language servers (and call sites) name the member.
+		return strings.TrimSpace(nodeText(node, src))
 	case "qualified_identifier":
 		qualified := strings.TrimSpace(nodeText(node, src))
 		if idx := strings.LastIndex(qualified, "::"); idx >= 0 {

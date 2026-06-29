@@ -598,6 +598,13 @@ func WithScope(scope string) Option {
 	return func(c *Config) { c.Scope = scope }
 }
 
+// WithLexicalDir sets the on-disk BM25 index directory. Hosted callers that
+// create multiple scoped engines in one process should provide a unique
+// directory per scope so Bleve/bbolt locks and documents are not shared.
+func WithLexicalDir(dir string) Option {
+	return func(c *Config) { c.LexicalDir = strings.TrimSpace(dir) }
+}
+
 // WithVectors enables the OPTIONAL semantic layer for this engine: the index pass
 // builds per-symbol embeddings (when --enable-vectors / IndexInput.EnableVectors
 // also asks for them) and query-time semantic_search runs vector nearest-neighbor

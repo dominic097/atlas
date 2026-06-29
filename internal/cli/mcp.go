@@ -14,6 +14,8 @@ func newMCPCmd() *cobra.Command {
 		transport string
 		httpAddr  string
 		sseAddr   string
+		withWatch bool
+		watchPath string
 	)
 	cmd := &cobra.Command{
 		Use:   "mcp",
@@ -24,6 +26,19 @@ func newMCPCmd() *cobra.Command {
 				return err
 			}
 			defer eng.Close()
+
+			// --watch: the SAME warm process that serves the agent also keeps the
+			// graph fresh in the background, so every MCP query hits a fresh graph
+			// with NO manual `atlas index`. Opt-in to avoid surprising existing users.
+			if withWatch {
+				path := watchPath
+				if path == "" {
+					path = gf.repo
+				}
+				stop := startBackgroundWatch(cmd.Context(), cmd, eng, path)
+				defer stop()
+			}
+
 			srv := mcp.NewServer(eng)
 
 			// --sse: serve the legacy HTTP+SSE transport for older clients.
@@ -48,6 +63,8 @@ func newMCPCmd() *cobra.Command {
 	cmd.Flags().StringVar(&transport, "transport", "stdio", "transport: stdio|http|sse")
 	cmd.Flags().StringVar(&httpAddr, "http", "", "serve MCP over Streamable HTTP on this address (e.g. 127.0.0.1:8765); empty = stdio")
 	cmd.Flags().StringVar(&sseAddr, "sse", "", "serve the legacy MCP HTTP+SSE transport on this address (e.g. 127.0.0.1:8766); empty = stdio")
+	cmd.Flags().BoolVar(&withWatch, "watch", false, "also keep the graph fresh in the background by watching the repo (opt-in; auto-refresh on change)")
+	cmd.Flags().StringVar(&watchPath, "watch-path", "", "repo path to watch when --watch is set (default: --repo, else current dir)")
 	return cmd
 }
 

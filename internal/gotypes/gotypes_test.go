@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 	"path/filepath"
+	"sort"
 	"testing"
 
 	"golang.org/x/tools/go/packages"
@@ -233,6 +234,222 @@ func use() {
 	if !foundConnRef {
 		t.Errorf("no RefEdge to field-type Conn; the loadMode dropped Uses info; got %+v", res.RefEdges)
 	}
+}
+
+// multiPkgModule is a 3-package fixture: core defines a type+method; app and lib
+// both import core (so both are reverse-deps of core); solo imports nothing in the
+// module (so it is NOT a reverse-dep of core). It exercises the scoped analyzer's
+// reverse-dep expansion and the carry-forward boundary.
+func multiPkgModule(t *testing.T) string {
+	t.Helper()
+	return writeModule(t, map[string]string{
+		"go.mod": "module example.com/m\n\ngo 1.21\n",
+		"core/core.go": `package core
+
+type Widget struct{ n int }
+
+func (w Widget) Do() int { return w.n }
+
+func New() Widget { return Widget{} }
+`,
+		"app/app.go": `package app
+
+import "example.com/m/core"
+
+// Run uses core.Widget as a type-use reference AND calls its method.
+func Run() int {
+	w := core.New()
+	var ref core.Widget = w
+	return ref.Do()
+}
+`,
+		"lib/lib.go": `package lib
+
+import "example.com/m/core"
+
+type Holder struct {
+	w core.Widget
+}
+
+func (h Holder) Value() int { return h.w.Do() }
+`,
+		"solo/solo.go": `package solo
+
+type Local struct{}
+
+func (l Local) Ping() {}
+
+func Use() { var x Local; x.Ping() }
+`,
+	})
+}
+
+// callRecvKey / refEdgeKey give stable, comparable string keys for an analyzer
+// output so two runs (whole-module vs scoped) can be compared exactly.
+func callRecvKey(c CallRecv) string {
+	return c.File + "|" + itoa(c.Line) + "|" + c.Callee + "|" + c.Type
+}
+
+func refEdgeKey(r RefEdge) string {
+	return r.FromFile + "|" + itoa(r.Line) + "|" + r.FromSymbol + "|" + r.ToRef + "|" + r.Qualified
+}
+
+// filterCallRecvs / filterRefEdges keep only the rows whose file is in the given
+// set — the slice of a whole-module result that a scoped result is responsible for.
+func filterCallRecvs(in []CallRecv, files map[string]struct{}) []string {
+	var out []string
+	for _, c := range in {
+		if _, ok := files[c.File]; ok {
+			out = append(out, callRecvKey(c))
+		}
+	}
+	return out
+}
+
+func filterRefEdges(in []RefEdge, files map[string]struct{}) []string {
+	var out []string
+	for _, r := range in {
+		if _, ok := files[r.FromFile]; ok {
+			out = append(out, refEdgeKey(r))
+		}
+	}
+	return out
+}
+
+func sortedKeys(c []CallRecv) []string {
+	out := make([]string, 0, len(c))
+	for _, x := range c {
+		out = append(out, callRecvKey(x))
+	}
+	sort.Strings(out)
+	return out
+}
+
+func sortedRefKeys(r []RefEdge) []string {
+	out := make([]string, 0, len(r))
+	for _, x := range r {
+		out = append(out, refEdgeKey(x))
+	}
+	sort.Strings(out)
+	return out
+}
+
+func equalStringSlices(a, b []string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	sort.Strings(a)
+	sort.Strings(b)
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
+}
+
+// TestAnalyzeScopedMatchesWholeModuleForAffectedFiles is the PRECISION keystone for
+// the incremental path. Editing core/core.go must, on the scoped path, recompute the
+// go/types output for core AND its reverse-deps (app, lib) and produce output that
+// is BYTE-IDENTICAL (per affected file) to the whole-module Analyze. It also proves
+// the carry-forward boundary: solo (not a reverse-dep) is NOT analyzed, so its edges
+// would be carried forward, never recomputed.
+func TestAnalyzeScopedMatchesWholeModuleForAffectedFiles(t *testing.T) {
+	dir := multiPkgModule(t)
+
+	full := Analyze(context.Background(), dir, 4)
+	if !full.OK {
+		t.Skip("whole-module Analyze produced no type info in this environment")
+	}
+
+	// Edit scope = core/core.go (the changed file).
+	changed := map[string]struct{}{"core/core.go": {}}
+	scoped := AnalyzeScoped(context.Background(), dir, 4, changed)
+	if !scoped.OK {
+		t.Fatalf("AnalyzeScoped returned OK=false; expected a scoped type-check")
+	}
+
+	// The analyzed set must be exactly core + its reverse-deps (app, lib), and must
+	// NOT include solo (which does not import core).
+	wantFiles := []string{"core/core.go", "app/app.go", "lib/lib.go"}
+	for _, f := range wantFiles {
+		if _, ok := scoped.AnalyzedFiles[f]; !ok {
+			t.Fatalf("scoped AnalyzedFiles missing %q; reverse-dep expansion failed (got %v)", f, keysOf(scoped.AnalyzedFiles))
+		}
+	}
+	if _, ok := scoped.AnalyzedFiles["solo/solo.go"]; ok {
+		t.Fatalf("scoped AnalyzedFiles wrongly includes solo/solo.go (not a reverse-dep of core); got %v", keysOf(scoped.AnalyzedFiles))
+	}
+
+	// For every file the scoped run is authoritative for, its CallRecvs and RefEdges
+	// must equal the whole-module run's rows for those same files — byte-identical.
+	fullCallForFiles := filterCallRecvs(full.CallRecvs, scoped.AnalyzedFiles)
+	scopedCallForFiles := filterCallRecvs(scoped.CallRecvs, scoped.AnalyzedFiles)
+	if !equalStringSlices(fullCallForFiles, scopedCallForFiles) {
+		t.Fatalf("scoped CallRecvs differ from whole-module for affected files:\n full=%v\n scoped=%v", fullCallForFiles, scopedCallForFiles)
+	}
+
+	fullRefForFiles := filterRefEdges(full.RefEdges, scoped.AnalyzedFiles)
+	scopedRefForFiles := filterRefEdges(scoped.RefEdges, scoped.AnalyzedFiles)
+	if !equalStringSlices(fullRefForFiles, scopedRefForFiles) {
+		t.Fatalf("scoped RefEdges differ from whole-module for affected files:\n full=%v\n scoped=%v", fullRefForFiles, scopedRefForFiles)
+	}
+
+	// And the scoped run must NOT emit any row outside its analyzed set (it would
+	// otherwise risk overwriting a carried-forward untouched file's edges).
+	for _, c := range scoped.CallRecvs {
+		if _, ok := scoped.AnalyzedFiles[c.File]; !ok {
+			t.Fatalf("scoped CallRecv outside analyzed set: %+v", c)
+		}
+	}
+	for _, r := range scoped.RefEdges {
+		if _, ok := scoped.AnalyzedFiles[r.FromFile]; !ok {
+			t.Fatalf("scoped RefEdge outside analyzed set: %+v", r)
+		}
+	}
+}
+
+// TestAnalyzeScopedDeterministic asserts repeated scoped runs over the same tree
+// yield identical (sorted) output — no nondeterminism from the package walk / maps.
+func TestAnalyzeScopedDeterministic(t *testing.T) {
+	dir := multiPkgModule(t)
+	changed := map[string]struct{}{"core/core.go": {}}
+
+	first := AnalyzeScoped(context.Background(), dir, 4, changed)
+	if !first.OK {
+		t.Skip("scoped Analyze produced no type info in this environment")
+	}
+	for i := 0; i < 3; i++ {
+		next := AnalyzeScoped(context.Background(), dir, 4, changed)
+		if !next.OK {
+			t.Fatalf("run %d returned OK=false", i)
+		}
+		if !equalStringSlices(sortedKeys(first.CallRecvs), sortedKeys(next.CallRecvs)) {
+			t.Fatalf("run %d CallRecvs nondeterministic", i)
+		}
+		if !equalStringSlices(sortedRefKeys(first.RefEdges), sortedRefKeys(next.RefEdges)) {
+			t.Fatalf("run %d RefEdges nondeterministic", i)
+		}
+	}
+}
+
+// TestAnalyzeScopedDeclinesForUnknownFile proves the honest fallback: a changed
+// file that no loaded package claims yields OK=false (caller takes the safe path).
+func TestAnalyzeScopedDeclinesForUnknownFile(t *testing.T) {
+	dir := multiPkgModule(t)
+	res := AnalyzeScoped(context.Background(), dir, 4, map[string]struct{}{"nope/ghost.go": {}})
+	if res.OK {
+		t.Fatalf("AnalyzeScoped should decline for a file no package owns; got OK=true")
+	}
+}
+
+func keysOf(m map[string]struct{}) []string {
+	out := make([]string, 0, len(m))
+	for k := range m {
+		out = append(out, k)
+	}
+	sort.Strings(out)
+	return out
 }
 
 // TestBaseTypeNameReductions covers the name-reduction rules directly (pointer

@@ -436,7 +436,7 @@ func parseCandidates(ctx context.Context, repoID, repoFullName string, candidate
 		return nil, nil, nil, nil, nil
 	}
 
-	workers := runtime.NumCPU()
+	workers := runtime.GOMAXPROCS(0)
 	if workers < 1 {
 		workers = 1
 	}
@@ -444,35 +444,38 @@ func parseCandidates(ctx context.Context, repoID, repoFullName string, candidate
 		workers = len(candidates)
 	}
 
-	jobs := make(chan indexCandidate)
-	results := make(chan parseCandidateResult, len(candidates))
+	// Parse each candidate concurrently, writing into a per-index result slot. Each
+	// parser.Parse call constructs its OWN parsing state — Go uses go/parser (per
+	// call) and the tree-sitter path builds a fresh tree_sitter.NewParser per Parse
+	// (see internal/parser parseTreeSitter), so no parser is shared across goroutines.
+	// Writing to out[i] (not a shared append) keeps the pre-sort accumulation order
+	// equal to the candidate order, so the snapshot is byte-identical to a serial run
+	// after the deterministic sort the caller applies.
+	out := make([]parseCandidateResult, len(candidates))
+	indexes := make(chan int)
 	var wg sync.WaitGroup
 	wg.Add(workers)
 	for i := 0; i < workers; i++ {
 		go func() {
 			defer wg.Done()
-			for c := range jobs {
+			for idx := range indexes {
 				if ctx.Err() != nil {
 					continue
 				}
-				results <- parseCandidate(ctx, repoID, repoFullName, c)
+				out[idx] = parseCandidate(ctx, repoID, repoFullName, candidates[idx])
 			}
 		}()
 	}
-	go func() {
-		defer close(jobs)
-		for _, c := range candidates {
-			if ctx.Err() != nil {
-				return
-			}
-			jobs <- c
+	for i := range candidates {
+		if ctx.Err() != nil {
+			break
 		}
-	}()
-	go func() {
-		wg.Wait()
-		close(results)
-	}()
+		indexes <- i
+	}
+	close(indexes)
+	wg.Wait()
 
+	// Reduce in candidate order (deterministic) for stable accumulation.
 	var (
 		files     []graph.File
 		symbols   []graph.CodeSymbol
@@ -480,7 +483,8 @@ func parseCandidates(ctx context.Context, repoID, repoFullName string, candidate
 		rawRoutes []routes.RawRoute
 		goFiles   []string
 	)
-	for r := range results {
+	for i := range out {
+		r := &out[i]
 		if !r.indexable {
 			continue
 		}
@@ -622,7 +626,15 @@ func enrichGoTypes(ctx context.Context, absRoot string, goFiles []string, edges 
 	if !res.OK {
 		return edges
 	}
+	return applyGoTypesResult(res, edges)
+}
 
+// applyGoTypesResult folds a gotypes.Result into the edge set: it refines recv_type
+// on matching Go call edges (a pure refinement — a miss leaves the heuristic value
+// untouched) and appends one type-use reference edge per RefEdge. It is shared by
+// the whole-module (enrichGoTypes) and scoped (enrichGoTypesScoped) paths so both
+// produce byte-identical edge shapes for the files they cover.
+func applyGoTypesResult(res gotypes.Result, edges []graph.DependencyEdge) []graph.DependencyEdge {
 	// Index precise receiver types by (relfile\x00line\x00callee). The AST call
 	// edge carries the same file (repo-relative), Line, and ToRef (bare callee),
 	// so this key joins them exactly.
@@ -679,6 +691,36 @@ func enrichGoTypes(ctx context.Context, absRoot string, goFiles []string, edges 
 		})
 	}
 	return edges
+}
+
+// enrichGoTypesScoped is the INCREMENTAL Go enrichment for the delta path. It
+// type-checks only the changed packages + their in-module reverse-deps (via
+// gotypes.AnalyzeScoped) instead of the whole module, then refreshes the go/types
+// edges for exactly the analyzed files — recv_type overrides and regenerated
+// type-use reference edges — while every untouched file's carried-forward edges are
+// left intact.
+//
+// It returns (edges, true) on success and (edges-unchanged, false) when the scoped
+// analyzer declines (OK:false). On false the caller MUST fall back to the
+// whole-module enrichGoTypes so precision is never regressed.
+//
+// changedFiles are the canonical (ToSlash) repo-relative paths of the re-parsed
+// files (changed ∪ added). The reference-edge drop is scoped to res.AnalyzedFiles —
+// the full set the analyzer is authoritative for (changed packages + reverse-deps) —
+// so reverse-dep files whose refs could have shifted are regenerated, and no other
+// file's refs are touched.
+func enrichGoTypesScoped(ctx context.Context, absRoot string, goFiles []string, changedFiles map[string]struct{}, edges []graph.DependencyEdge) ([]graph.DependencyEdge, bool) {
+	if len(goFiles) == 0 || len(changedFiles) == 0 {
+		return edges, false
+	}
+	res := gotypes.AnalyzeScoped(ctx, absRoot, len(goFiles), changedFiles)
+	if !res.OK {
+		return edges, false
+	}
+	// Drop only the analyzed files' prior type-use refs; applyGoTypesResult then
+	// regenerates exactly those plus refreshing their recv_type overrides.
+	edges = dropTypeUseRefs(edges, res.AnalyzedFiles)
+	return applyGoTypesResult(res, edges), true
 }
 
 // hashContent returns the lowercase sha256 hex digest of a file's bytes.

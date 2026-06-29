@@ -1,0 +1,719 @@
+{
+  "meta": {
+    "atlas": "/tmp/atlas",
+    "graphify": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify",
+    "cycles": 5,
+    "generated_at": "2026-06-29T19:44:30+0530",
+    "platform": "darwin"
+  },
+  "results": [
+    {
+      "lang": "go",
+      "url": "https://github.com/sirupsen/logrus",
+      "ok": true,
+      "error": null,
+      "edit_file": "alt_exit.go",
+      "cycles": 5,
+      "atlas": {
+        "median_seconds": 0.353,
+        "peak_rss_mb": 80.0,
+        "median_rss_mb": 79.7,
+        "markers_found": 5,
+        "markers_added": 5,
+        "accuracy": 1.0,
+        "modes": [
+          "delta"
+        ]
+      },
+      "graphify": {
+        "median_seconds": 0.5241,
+        "peak_rss_mb": 55.0,
+        "median_rss_mb": 54.3,
+        "markers_found": 5,
+        "markers_added": 5,
+        "accuracy": 1.0
+      },
+      "raw": {
+        "atlas": [
+          {
+            "cycle": 0,
+            "marker": "AtlasLoopMarker_0",
+            "seconds": 0.377,
+            "rss_bytes": 83640320,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          },
+          {
+            "cycle": 1,
+            "marker": "AtlasLoopMarker_1",
+            "seconds": 0.349,
+            "rss_bytes": 83607552,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          },
+          {
+            "cycle": 2,
+            "marker": "AtlasLoopMarker_2",
+            "seconds": 0.344,
+            "rss_bytes": 83918848,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          },
+          {
+            "cycle": 3,
+            "marker": "AtlasLoopMarker_3",
+            "seconds": 0.361,
+            "rss_bytes": 83558400,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          },
+          {
+            "cycle": 4,
+            "marker": "AtlasLoopMarker_4",
+            "seconds": 0.353,
+            "rss_bytes": 83361792,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          }
+        ],
+        "graphify": [
+          {
+            "cycle": 0,
+            "marker": "AtlasLoopMarker_0",
+            "seconds": 0.5342,
+            "rss_bytes": 56901632,
+            "found": true,
+            "rc": 0
+          },
+          {
+            "cycle": 1,
+            "marker": "AtlasLoopMarker_1",
+            "seconds": 0.5434,
+            "rss_bytes": 57327616,
+            "found": true,
+            "rc": 0
+          },
+          {
+            "cycle": 2,
+            "marker": "AtlasLoopMarker_2",
+            "seconds": 0.5202,
+            "rss_bytes": 56328192,
+            "found": true,
+            "rc": 0
+          },
+          {
+            "cycle": 3,
+            "marker": "AtlasLoopMarker_3",
+            "seconds": 0.5235,
+            "rss_bytes": 57720832,
+            "found": true,
+            "rc": 0
+          },
+          {
+            "cycle": 4,
+            "marker": "AtlasLoopMarker_4",
+            "seconds": 0.5241,
+            "rss_bytes": 56721408,
+            "found": true,
+            "rc": 0
+          }
+        ]
+      }
+    },
+    {
+      "lang": "python",
+      "url": "https://github.com/psf/requests",
+      "ok": true,
+      "error": null,
+      "edit_file": "src/requests/__init__.py",
+      "cycles": 5,
+      "atlas": {
+        "median_seconds": 0.112,
+        "peak_rss_mb": 50.4,
+        "median_rss_mb": 48.6,
+        "markers_found": 5,
+        "markers_added": 5,
+        "accuracy": 1.0,
+        "modes": [
+          "delta"
+        ]
+      },
+      "graphify": {
+        "median_seconds": 0.5985,
+        "peak_rss_mb": 57.8,
+        "median_rss_mb": 56.4,
+        "markers_found": 5,
+        "markers_added": 5,
+        "accuracy": 1.0
+      },
+      "raw": {
+        "atlas": [
+          {
+            "cycle": 0,
+            "marker": "AtlasLoopMarker_0",
+            "seconds": 0.108,
+            "rss_bytes": 50954240,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          },
+          {
+            "cycle": 1,
+            "marker": "AtlasLoopMarker_1",
+            "seconds": 0.123,
+            "rss_bytes": 51003392,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          },
+          {
+            "cycle": 2,
+            "marker": "AtlasLoopMarker_2",
+            "seconds": 0.112,
+            "rss_bytes": 52871168,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          },
+          {
+            "cycle": 3,
+            "marker": "AtlasLoopMarker_3",
+            "seconds": 0.118,
+            "rss_bytes": 52445184,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          },
+          {
+            "cycle": 4,
+            "marker": "AtlasLoopMarker_4",
+            "seconds": 0.108,
+            "rss_bytes": 50135040,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          }
+        ],
+        "graphify": [
+          {
+            "cycle": 0,
+            "marker": "AtlasLoopMarker_0",
+            "seconds": 0.6011,
+            "rss_bytes": 59490304,
+            "found": true,
+            "rc": 0
+          },
+          {
+            "cycle": 1,
+            "marker": "AtlasLoopMarker_1",
+            "seconds": 0.5985,
+            "rss_bytes": 59146240,
+            "found": true,
+            "rc": 0
+          },
+          {
+            "cycle": 2,
+            "marker": "AtlasLoopMarker_2",
+            "seconds": 0.5916,
+            "rss_bytes": 59129856,
+            "found": true,
+            "rc": 0
+          },
+          {
+            "cycle": 3,
+            "marker": "AtlasLoopMarker_3",
+            "seconds": 0.5945,
+            "rss_bytes": 59097088,
+            "found": true,
+            "rc": 0
+          },
+          {
+            "cycle": 4,
+            "marker": "AtlasLoopMarker_4",
+            "seconds": 0.6011,
+            "rss_bytes": 60555264,
+            "found": true,
+            "rc": 0
+          }
+        ]
+      }
+    },
+    {
+      "lang": "javascript",
+      "url": "https://github.com/expressjs/express",
+      "ok": true,
+      "error": null,
+      "edit_file": "lib/application.js",
+      "cycles": 5,
+      "atlas": {
+        "median_seconds": 0.069,
+        "peak_rss_mb": 46.8,
+        "median_rss_mb": 42.0,
+        "markers_found": 5,
+        "markers_added": 5,
+        "accuracy": 1.0,
+        "modes": [
+          "delta"
+        ]
+      },
+      "graphify": {
+        "median_seconds": 0.1412,
+        "peak_rss_mb": 46.1,
+        "median_rss_mb": 45.5,
+        "markers_found": 5,
+        "markers_added": 5,
+        "accuracy": 1.0
+      },
+      "raw": {
+        "atlas": [
+          {
+            "cycle": 0,
+            "marker": "AtlasLoopMarker_0",
+            "seconds": 0.08,
+            "rss_bytes": 46153728,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          },
+          {
+            "cycle": 1,
+            "marker": "AtlasLoopMarker_1",
+            "seconds": 0.059,
+            "rss_bytes": 40157184,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          },
+          {
+            "cycle": 2,
+            "marker": "AtlasLoopMarker_2",
+            "seconds": 0.068,
+            "rss_bytes": 49053696,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          },
+          {
+            "cycle": 3,
+            "marker": "AtlasLoopMarker_3",
+            "seconds": 0.073,
+            "rss_bytes": 40697856,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          },
+          {
+            "cycle": 4,
+            "marker": "AtlasLoopMarker_4",
+            "seconds": 0.069,
+            "rss_bytes": 43991040,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          }
+        ],
+        "graphify": [
+          {
+            "cycle": 0,
+            "marker": "AtlasLoopMarker_0",
+            "seconds": 0.1412,
+            "rss_bytes": 47677440,
+            "found": true,
+            "rc": 0
+          },
+          {
+            "cycle": 1,
+            "marker": "AtlasLoopMarker_1",
+            "seconds": 0.1404,
+            "rss_bytes": 47661056,
+            "found": true,
+            "rc": 0
+          },
+          {
+            "cycle": 2,
+            "marker": "AtlasLoopMarker_2",
+            "seconds": 0.2652,
+            "rss_bytes": 48381952,
+            "found": true,
+            "rc": 0
+          },
+          {
+            "cycle": 3,
+            "marker": "AtlasLoopMarker_3",
+            "seconds": 0.1474,
+            "rss_bytes": 47628288,
+            "found": true,
+            "rc": 0
+          },
+          {
+            "cycle": 4,
+            "marker": "AtlasLoopMarker_4",
+            "seconds": 0.1355,
+            "rss_bytes": 47841280,
+            "found": true,
+            "rc": 0
+          }
+        ]
+      }
+    },
+    {
+      "lang": "java",
+      "url": "https://github.com/google/gson",
+      "ok": true,
+      "error": null,
+      "edit_file": "gson/src/main/java/com/google/gson/ExclusionStrategy.java",
+      "cycles": 5,
+      "atlas": {
+        "median_seconds": 0.301,
+        "peak_rss_mb": 82.6,
+        "median_rss_mb": 78.0,
+        "markers_found": 5,
+        "markers_added": 5,
+        "accuracy": 1.0,
+        "modes": [
+          "delta"
+        ]
+      },
+      "graphify": {
+        "median_seconds": 0.8082,
+        "peak_rss_mb": 77.9,
+        "median_rss_mb": 74.7,
+        "markers_found": 5,
+        "markers_added": 5,
+        "accuracy": 1.0
+      },
+      "raw": {
+        "atlas": [
+          {
+            "cycle": 0,
+            "marker": "AtlasLoopMarker_0",
+            "seconds": 0.301,
+            "rss_bytes": 79937536,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          },
+          {
+            "cycle": 1,
+            "marker": "AtlasLoopMarker_1",
+            "seconds": 0.28,
+            "rss_bytes": 83181568,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          },
+          {
+            "cycle": 2,
+            "marker": "AtlasLoopMarker_2",
+            "seconds": 0.311,
+            "rss_bytes": 80117760,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          },
+          {
+            "cycle": 3,
+            "marker": "AtlasLoopMarker_3",
+            "seconds": 0.281,
+            "rss_bytes": 81739776,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          },
+          {
+            "cycle": 4,
+            "marker": "AtlasLoopMarker_4",
+            "seconds": 0.302,
+            "rss_bytes": 86589440,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          }
+        ],
+        "graphify": [
+          {
+            "cycle": 0,
+            "marker": "AtlasLoopMarker_0",
+            "seconds": 0.8148,
+            "rss_bytes": 81641472,
+            "found": true,
+            "rc": 0
+          },
+          {
+            "cycle": 1,
+            "marker": "AtlasLoopMarker_1",
+            "seconds": 0.8071,
+            "rss_bytes": 78643200,
+            "found": true,
+            "rc": 0
+          },
+          {
+            "cycle": 2,
+            "marker": "AtlasLoopMarker_2",
+            "seconds": 0.8056,
+            "rss_bytes": 78299136,
+            "found": true,
+            "rc": 0
+          },
+          {
+            "cycle": 3,
+            "marker": "AtlasLoopMarker_3",
+            "seconds": 0.8086,
+            "rss_bytes": 78364672,
+            "found": true,
+            "rc": 0
+          },
+          {
+            "cycle": 4,
+            "marker": "AtlasLoopMarker_4",
+            "seconds": 0.8082,
+            "rss_bytes": 78331904,
+            "found": true,
+            "rc": 0
+          }
+        ]
+      }
+    },
+    {
+      "lang": "c",
+      "url": "https://github.com/DaveGamble/cJSON",
+      "ok": true,
+      "error": null,
+      "edit_file": "cJSON.c",
+      "cycles": 5,
+      "atlas": {
+        "median_seconds": 0.349,
+        "peak_rss_mb": 89.5,
+        "median_rss_mb": 86.8,
+        "markers_found": 5,
+        "markers_added": 5,
+        "accuracy": 1.0,
+        "modes": [
+          "delta"
+        ]
+      },
+      "graphify": {
+        "median_seconds": 0.8114,
+        "peak_rss_mb": 64.8,
+        "median_rss_mb": 63.8,
+        "markers_found": 5,
+        "markers_added": 5,
+        "accuracy": 1.0
+      },
+      "raw": {
+        "atlas": [
+          {
+            "cycle": 0,
+            "marker": "AtlasLoopMarker_0",
+            "seconds": 0.367,
+            "rss_bytes": 93831168,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          },
+          {
+            "cycle": 1,
+            "marker": "AtlasLoopMarker_1",
+            "seconds": 0.358,
+            "rss_bytes": 90996736,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          },
+          {
+            "cycle": 2,
+            "marker": "AtlasLoopMarker_2",
+            "seconds": 0.345,
+            "rss_bytes": 91226112,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          },
+          {
+            "cycle": 3,
+            "marker": "AtlasLoopMarker_3",
+            "seconds": 0.333,
+            "rss_bytes": 89505792,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          },
+          {
+            "cycle": 4,
+            "marker": "AtlasLoopMarker_4",
+            "seconds": 0.349,
+            "rss_bytes": 90783744,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          }
+        ],
+        "graphify": [
+          {
+            "cycle": 0,
+            "marker": "AtlasLoopMarker_0",
+            "seconds": 0.8114,
+            "rss_bytes": 67010560,
+            "found": true,
+            "rc": 0
+          },
+          {
+            "cycle": 1,
+            "marker": "AtlasLoopMarker_1",
+            "seconds": 0.813,
+            "rss_bytes": 66945024,
+            "found": true,
+            "rc": 0
+          },
+          {
+            "cycle": 2,
+            "marker": "AtlasLoopMarker_2",
+            "seconds": 0.7997,
+            "rss_bytes": 66748416,
+            "found": true,
+            "rc": 0
+          },
+          {
+            "cycle": 3,
+            "marker": "AtlasLoopMarker_3",
+            "seconds": 0.8316,
+            "rss_bytes": 67895296,
+            "found": true,
+            "rc": 0
+          },
+          {
+            "cycle": 4,
+            "marker": "AtlasLoopMarker_4",
+            "seconds": 0.8035,
+            "rss_bytes": 66912256,
+            "found": true,
+            "rc": 0
+          }
+        ]
+      }
+    },
+    {
+      "lang": "cpp",
+      "url": "https://github.com/google/leveldb",
+      "ok": true,
+      "error": null,
+      "edit_file": "benchmarks/db_bench.cc",
+      "cycles": 5,
+      "atlas": {
+        "median_seconds": 0.438,
+        "peak_rss_mb": 108.2,
+        "median_rss_mb": 106.6,
+        "markers_found": 5,
+        "markers_added": 5,
+        "accuracy": 1.0,
+        "modes": [
+          "delta"
+        ]
+      },
+      "graphify": {
+        "median_seconds": 1.2027,
+        "peak_rss_mb": 99.1,
+        "median_rss_mb": 95.4,
+        "markers_found": 5,
+        "markers_added": 5,
+        "accuracy": 1.0
+      },
+      "raw": {
+        "atlas": [
+          {
+            "cycle": 0,
+            "marker": "AtlasLoopMarker_0",
+            "seconds": 0.438,
+            "rss_bytes": 104906752,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          },
+          {
+            "cycle": 1,
+            "marker": "AtlasLoopMarker_1",
+            "seconds": 0.449,
+            "rss_bytes": 111820800,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          },
+          {
+            "cycle": 2,
+            "marker": "AtlasLoopMarker_2",
+            "seconds": 0.427,
+            "rss_bytes": 112066560,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          },
+          {
+            "cycle": 3,
+            "marker": "AtlasLoopMarker_3",
+            "seconds": 0.427,
+            "rss_bytes": 109805568,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          },
+          {
+            "cycle": 4,
+            "marker": "AtlasLoopMarker_4",
+            "seconds": 0.473,
+            "rss_bytes": 113442816,
+            "found": true,
+            "mode": "delta",
+            "rc": 0
+          }
+        ],
+        "graphify": [
+          {
+            "cycle": 0,
+            "marker": "AtlasLoopMarker_0",
+            "seconds": 1.198,
+            "rss_bytes": 99958784,
+            "found": true,
+            "rc": 0
+          },
+          {
+            "cycle": 1,
+            "marker": "AtlasLoopMarker_1",
+            "seconds": 1.1957,
+            "rss_bytes": 99909632,
+            "found": true,
+            "rc": 0
+          },
+          {
+            "cycle": 2,
+            "marker": "AtlasLoopMarker_2",
+            "seconds": 1.2074,
+            "rss_bytes": 100024320,
+            "found": true,
+            "rc": 0
+          },
+          {
+            "cycle": 3,
+            "marker": "AtlasLoopMarker_3",
+            "seconds": 1.2027,
+            "rss_bytes": 103907328,
+            "found": true,
+            "rc": 0
+          },
+          {
+            "cycle": 4,
+            "marker": "AtlasLoopMarker_4",
+            "seconds": 1.2138,
+            "rss_bytes": 100155392,
+            "found": true,
+            "rc": 0
+          }
+        ]
+      }
+    }
+  ]
+}

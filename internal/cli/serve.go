@@ -13,8 +13,10 @@ import (
 
 func newServeCmd() *cobra.Command {
 	var (
-		addr    string
-		withMCP bool
+		addr      string
+		withMCP   bool
+		withWatch bool
+		watchPath string
 	)
 	cmd := &cobra.Command{
 		Use:   "serve",
@@ -25,6 +27,17 @@ func newServeCmd() *cobra.Command {
 				return err
 			}
 			defer eng.Close()
+
+			// --watch: the same long-lived server that answers REST/MCP queries also
+			// keeps the graph fresh in the background. Opt-in; off by default.
+			if withWatch {
+				path := watchPath
+				if path == "" {
+					path = gf.repo
+				}
+				stop := startBackgroundWatch(cmd.Context(), cmd, eng, path)
+				defer stop()
+			}
 
 			srv := api.NewServer(eng, api.Config{Addr: addr, MountMCP: withMCP})
 
@@ -49,6 +62,8 @@ func newServeCmd() *cobra.Command {
 	f := cmd.Flags()
 	f.StringVar(&addr, "addr", ":8083", "listen address")
 	f.BoolVar(&withMCP, "mcp", false, "also mount MCP over HTTP at POST /mcp")
+	f.BoolVar(&withWatch, "watch", false, "also keep the graph fresh in the background by watching the repo (opt-in; auto-refresh on change)")
+	f.StringVar(&watchPath, "watch-path", "", "repo path to watch when --watch is set (default: --repo, else current dir)")
 	return cmd
 }
 

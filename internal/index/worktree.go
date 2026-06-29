@@ -26,7 +26,9 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"runtime"
 	"sort"
+	"sync"
 
 	"github.com/dominic097/atlas/internal/parser"
 	"github.com/dominic097/atlas/internal/store"
@@ -116,8 +118,11 @@ func scanWorkTree(ctx context.Context, drv store.StorageDriver, baseSnapshotID, 
 		added:   map[string]struct{}{},
 		deleted: map[string]struct{}{},
 	}
-	seen := make(map[string]struct{}, len(baseFiles))
 
+	// Phase 1: WALK ONLY — collect the supported, in-size candidate files (no read,
+	// no hash). The walk is inherently serial (directory tree traversal) but cheap;
+	// the expensive per-file read+hash is deferred to the parallel phase below.
+	var candidates []workTreeCandidate
 	walkErr := filepath.WalkDir(absRoot, func(path string, entry fs.DirEntry, walkErr error) error {
 		if walkErr != nil {
 			return walkErr
@@ -159,34 +164,45 @@ func scanWorkTree(ctx context.Context, drv store.StorageDriver, baseSnapshotID, 
 			return nil
 		}
 
-		content, readErr := os.ReadFile(path)
-		if readErr != nil {
-			// Unreadable single file: skip, don't abort the scan.
-			return nil
-		}
-		hash := hashContent(content)
-
-		scan.files = append(scan.files, workTreeFile{
+		candidates = append(candidates, workTreeCandidate{
 			absPath: path,
 			relPath: rel,
 			lang:    lang,
 			size:    info.Size(),
-			hash:    hash,
-			content: content,
 		})
-		seen[rel] = struct{}{}
-
-		prev, inBase := baseHash[rel]
-		switch {
-		case !inBase:
-			scan.added[rel] = struct{}{}
-		case prev != hash:
-			scan.changed[rel] = struct{}{}
-		}
 		return nil
 	})
 	if walkErr != nil {
 		return nil, walkErr
+	}
+
+	// Phase 2: READ + HASH in parallel. Each candidate is independent (a file read
+	// and a sha256), so a worker pool sized to GOMAXPROCS computes them concurrently.
+	// Workers write into per-index result slots (no shared mutation), so the output
+	// is order-independent; the present-file set is sorted below for determinism.
+	hashed := hashWorkTreeCandidates(ctx, candidates)
+
+	seen := make(map[string]struct{}, len(candidates))
+	for i := range hashed {
+		wf := hashed[i]
+		if !wf.ok {
+			// Unreadable single file: skip, don't abort the scan (parity with the
+			// prior serial behavior, where a read error returned nil for that file).
+			continue
+		}
+		scan.files = append(scan.files, wf.file)
+		seen[wf.file.relPath] = struct{}{}
+
+		prev, inBase := baseHash[wf.file.relPath]
+		switch {
+		case !inBase:
+			scan.added[wf.file.relPath] = struct{}{}
+		case prev != wf.file.hash:
+			scan.changed[wf.file.relPath] = struct{}{}
+		}
+	}
+	if ctx.Err() != nil {
+		return nil, ctx.Err()
 	}
 
 	// Anything in the base but no longer present on disk is a deletion.
@@ -198,6 +214,81 @@ func scanWorkTree(ctx context.Context, drv store.StorageDriver, baseSnapshotID, 
 
 	sortWorkTreeFiles(scan.files)
 	return scan, nil
+}
+
+// workTreeCandidate is a file the walk selected for hashing: its path/lang/size are
+// known but its content has not yet been read.
+type workTreeCandidate struct {
+	absPath string
+	relPath string
+	lang    string
+	size    int64
+}
+
+// hashedWorkTreeFile is the parallel read+hash result for one candidate. ok is false
+// when the file could not be read (it is then skipped, mirroring the serial path).
+type hashedWorkTreeFile struct {
+	file workTreeFile
+	ok   bool
+}
+
+// hashWorkTreeCandidates reads and content-hashes every candidate concurrently
+// across a worker pool sized to GOMAXPROCS (capped at the candidate count). Results
+// are written to per-index slots so the output order is deterministic (it mirrors
+// the candidate order, which the caller then sorts by rel path regardless). Honors
+// ctx cancellation between files.
+func hashWorkTreeCandidates(ctx context.Context, candidates []workTreeCandidate) []hashedWorkTreeFile {
+	out := make([]hashedWorkTreeFile, len(candidates))
+	if len(candidates) == 0 {
+		return out
+	}
+
+	workers := runtime.GOMAXPROCS(0)
+	if workers < 1 {
+		workers = 1
+	}
+	if workers > len(candidates) {
+		workers = len(candidates)
+	}
+
+	indexes := make(chan int)
+	var wg sync.WaitGroup
+	wg.Add(workers)
+	for w := 0; w < workers; w++ {
+		go func() {
+			defer wg.Done()
+			for i := range indexes {
+				if ctx.Err() != nil {
+					continue
+				}
+				c := candidates[i]
+				content, readErr := os.ReadFile(c.absPath)
+				if readErr != nil {
+					continue // out[i].ok stays false
+				}
+				out[i] = hashedWorkTreeFile{
+					ok: true,
+					file: workTreeFile{
+						absPath: c.absPath,
+						relPath: c.relPath,
+						lang:    c.lang,
+						size:    c.size,
+						hash:    hashContent(content),
+						content: content,
+					},
+				}
+			}
+		}()
+	}
+	for i := range candidates {
+		if ctx.Err() != nil {
+			break
+		}
+		indexes <- i
+	}
+	close(indexes)
+	wg.Wait()
+	return out
 }
 
 // sortWorkTreeFiles orders the present-file set by rel path so the delta path
