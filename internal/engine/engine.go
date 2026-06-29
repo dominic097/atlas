@@ -2206,15 +2206,10 @@ func (e *localEngine) GraphExport(ctx context.Context, in GraphExportInput) (*Gr
 	}
 	var g export.Graph
 	if in.All {
-		syms, err := e.store.ListSymbols(ctx, snap.ID)
+		g, err = e.streamFullGraph(ctx, snap.ID)
 		if err != nil {
-			return nil, fmt.Errorf("engine: export load symbols: %w", err)
+			return nil, fmt.Errorf("engine: export load graph: %w", err)
 		}
-		edges, err := e.store.ListEdges(ctx, snap.ID)
-		if err != nil {
-			return nil, fmt.Errorf("engine: export load edges: %w", err)
-		}
-		g = fullGraph(syms, edges)
 	} else {
 		if strings.TrimSpace(in.Symbol) == "" {
 			return nil, errors.New("atlas: graph export needs --symbol (a focus symbol) or --all")
@@ -2277,36 +2272,56 @@ func subgraphToExport(sg query.SubgraphResult) export.Graph {
 	return g
 }
 
-// fullGraph maps a whole snapshot to an export.Graph: every symbol is a node;
-// call edges connect by name to a representative node (external callees, whose
-// to_ref is not an indexed symbol, are dropped).
-func fullGraph(syms []graph.CodeSymbol, edges []graph.DependencyEdge) export.Graph {
+// streamFullGraph maps a whole snapshot to an export.Graph: every symbol is a
+// node; call edges connect by name to a representative node (external callees,
+// whose to_ref is not an indexed symbol, are dropped).
+//
+// It STREAMS symbols then edges rather than loading both whole-graph slices, so
+// peak RAM is bounded by the projected export.Graph (only ID/Name/Kind/Path/Line/
+// Language survive per node) plus the name→rep map — never the heavy per-symbol
+// signature/doc/metadata payload (the body_excerpt that dominates each row). The
+// output is byte-identical to the old slice-based fold: StreamSymbols/StreamEdges
+// yield the same rows in the same order as ListSymbols/ListEdges, and the fold is
+// order-deterministic (first-seen rep, first-seen edge key).
+func (e *localEngine) streamFullGraph(ctx context.Context, snapID string) (export.Graph, error) {
 	g := export.Graph{}
-	rep := make(map[string]string, len(syms))
-	for _, s := range syms {
-		g.Nodes = append(g.Nodes, export.Node{ID: s.ID, Name: s.Name, Kind: s.Kind, Path: s.Path, Line: s.StartLine, Language: s.Language})
-		if k := strings.ToLower(s.Name); k != "" {
-			if _, ok := rep[k]; !ok {
-				rep[k] = s.ID
+	rep := map[string]string{}
+	if err := e.store.StreamSymbols(ctx, snapID, 0, func(batch []graph.CodeSymbol) error {
+		for i := range batch {
+			s := &batch[i]
+			g.Nodes = append(g.Nodes, export.Node{ID: s.ID, Name: s.Name, Kind: s.Kind, Path: s.Path, Line: s.StartLine, Language: s.Language})
+			if k := strings.ToLower(s.Name); k != "" {
+				if _, ok := rep[k]; !ok {
+					rep[k] = s.ID
+				}
 			}
 		}
+		return nil
+	}); err != nil {
+		return export.Graph{}, err
 	}
 	seen := map[string]bool{}
-	for _, e := range edges {
-		if e.Kind != graph.EdgeCalls {
-			continue
+	if err := e.store.StreamEdges(ctx, snapID, 0, func(batch []graph.DependencyEdge) error {
+		for i := range batch {
+			ed := &batch[i]
+			if ed.Kind != graph.EdgeCalls {
+				continue
+			}
+			f, ok1 := rep[strings.ToLower(strings.TrimSpace(ed.FromSymbol))]
+			t, ok2 := rep[strings.ToLower(strings.TrimSpace(ed.ToRef))]
+			if !ok1 || !ok2 || f == t {
+				continue
+			}
+			if key := f + "\x00" + t; !seen[key] {
+				seen[key] = true
+				g.Edges = append(g.Edges, export.Edge{From: f, To: t, Kind: "calls"})
+			}
 		}
-		f, ok1 := rep[strings.ToLower(strings.TrimSpace(e.FromSymbol))]
-		t, ok2 := rep[strings.ToLower(strings.TrimSpace(e.ToRef))]
-		if !ok1 || !ok2 || f == t {
-			continue
-		}
-		if key := f + "\x00" + t; !seen[key] {
-			seen[key] = true
-			g.Edges = append(g.Edges, export.Edge{From: f, To: t, Kind: "calls"})
-		}
+		return nil
+	}); err != nil {
+		return export.Graph{}, err
 	}
-	return g
+	return g, nil
 }
 
 func (e *localEngine) History(ctx context.Context, in HistoryInput) (*HistoryResult, error) {

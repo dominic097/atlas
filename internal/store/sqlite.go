@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/dominic097/atlas/internal/graph"
+	"github.com/dominic097/atlas/internal/runtimecfg"
 	"github.com/google/uuid"
 	_ "modernc.org/sqlite"
 )
@@ -39,7 +40,19 @@ func openSQLite(ctx context.Context, path string) (StorageDriver, error) {
 	// _pragma URL params apply per-connection on the modernc driver. The cache,
 	// mmap, and temp-store settings reduce local bulk-index overhead without
 	// weakening WAL durability or foreign-key enforcement.
-	dsn := path + "?_pragma=journal_mode(WAL)&_pragma=synchronous(NORMAL)&_pragma=busy_timeout(5000)&_pragma=foreign_keys(ON)&_pragma=cache_size(-65536)&_pragma=temp_store(MEMORY)&_pragma=mmap_size(268435456)"
+	//
+	// mmap_size caps how much of the DB SQLite memory-maps instead of read()ing it
+	// page by page; raising it past the DB size trades file-backed (reclaimable,
+	// non-heap) RSS for far fewer read syscalls on large snapshots — the read-path
+	// the profile flagged. Default 512 MiB (covers most repos); override with
+	// ATLAS_MMAP_SIZE (e.g. "1GiB" on a large monorepo, "0" to disable mmap).
+	mmap := int64(512 << 20)
+	if v := strings.TrimSpace(os.Getenv("ATLAS_MMAP_SIZE")); v != "" {
+		if n, perr := runtimecfg.ParseBytes(v); perr == nil {
+			mmap = n
+		}
+	}
+	dsn := fmt.Sprintf("%s?_pragma=journal_mode(WAL)&_pragma=synchronous(NORMAL)&_pragma=busy_timeout(5000)&_pragma=foreign_keys(ON)&_pragma=cache_size(-65536)&_pragma=temp_store(MEMORY)&_pragma=mmap_size(%d)", path, mmap)
 	db, err := sql.Open("sqlite", dsn)
 	if err != nil {
 		return nil, fmt.Errorf("store: open sqlite: %w", err)
