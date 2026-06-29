@@ -2,81 +2,389 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   Atlas — The Benchmark Instrument
+   Dark instrument-console tokens. No external font CDN:
+   sans = Inter via system stack, mono = ui-monospace stack.
+   ============================================================ */
+
 @layer base {
   :root {
-    --background: 210 33% 98%;
-    --foreground: 219 43% 11%;
-    --card: 0 0% 100%;
-    --card-foreground: 219 43% 11%;
-    --muted: 214 38% 93%;
-    --muted-foreground: 215 16% 43%;
-    --border: 214 26% 86%;
-    --primary: 178 100% 25%;
-    --primary-foreground: 0 0% 100%;
-    --accent: 217 55% 43%;
-    --accent-foreground: 0 0% 100%;
-    --success: 144 52% 31%;
-    --warning: 39 100% 31%;
+    --bg: #08090c;
+    --bg2: #0b0d12;
+    --surface: #10131a;
+    --surface-raised: #161a23;
+    --line: #1e2430;
+    --line-strong: #2a323f;
+    --text: #e8ecf2;
+    --muted: #8a93a3;
+    --faint: #5a6373;
+    --primary: #5ee6c4;
+    --primary-dim: #2ba889;
+    --secondary: #7aa2ff;
+    --success: #52d98b;
+    --warning: #f2b43a;
+    --danger: #ff6b6b;
+    --not-comparable: #8a93a3;
+    --grid: #12161e;
+    --g0: #5ee6c4;
+    --g1: #7aa2ff;
+    --g2: #c792ea;
+    --g3: #f2b43a;
+    --g4: #ff8fa3;
+    --g5: #67e8f9;
   }
 
   * {
-    @apply border-border;
+    border-color: var(--line);
   }
 
   html {
     scroll-behavior: smooth;
+    background: var(--bg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
-    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+      "Segoe UI", sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
   h1,
   h2,
   h3 {
-    letter-spacing: 0;
+    font-weight: 600;
+  }
+
+  ::selection {
+    background: rgba(94, 230, 196, 0.22);
+    color: var(--text);
+  }
+
+  /* thin custom scrollbar for the dark surface */
+  *::-webkit-scrollbar {
+    height: 10px;
+    width: 10px;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: var(--line-strong);
+    border-radius: 999px;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background: var(--faint);
   }
 }
 
 @layer components {
   .skip-link {
-    @apply absolute left-4 top-[-4rem] z-50 rounded-md bg-slate-950 px-3 py-2 text-sm font-semibold text-white focus:top-4;
+    @apply absolute left-4 z-50 rounded-md px-3 py-2 text-sm font-semibold;
+    top: -4rem;
+    background: var(--primary);
+    color: #04130f;
+  }
+  .skip-link:focus {
+    top: 1rem;
   }
 
-  .container-shell {
-    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
-  }
-
-  .eyebrow {
-    @apply text-xs font-bold uppercase tracking-[0.08em] text-primary;
+  .shell {
+    @apply mx-auto w-full px-4 sm:px-6 lg:px-8;
+    max-width: 1280px;
   }
 
   .mono {
-    font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    font-family: ui-monospace, "SF Mono", "JetBrains Mono", "Cascadia Code", Menlo,
+      Consolas, monospace;
+    font-variant-numeric: tabular-nums;
   }
 
-  .table-wrap {
-    @apply min-w-0 max-w-full overflow-x-auto rounded-lg border bg-white;
+  /* instrument label / kicker */
+  .kicker {
+    @apply mono;
+    font-size: 11px;
+    line-height: 1.3;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
   }
 
-  .data-table {
-    @apply min-w-[900px] w-full border-collapse text-left text-sm;
+  .micro {
+    font-size: 11px;
+    line-height: 1.3;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 600;
   }
 
-  .data-table th {
-    @apply sticky top-0 z-10 bg-slate-100 px-3 py-3 text-xs font-bold uppercase tracking-wide text-slate-600;
+  /* the measurement-grid + radial glow backdrop, applied behind hero */
+  .measure-grid {
+    background-image: radial-gradient(
+        circle at center,
+        rgba(94, 230, 196, 0.06),
+        transparent 60%
+      ),
+      radial-gradient(var(--grid) 1px, transparent 1px);
+    background-size:
+      100% 100%,
+      28px 28px;
+    background-position:
+      center 30%,
+      center center;
   }
 
-  .data-table td {
-    @apply border-t px-3 py-3 align-top;
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
   }
 
-  .data-table tr:hover {
-    @apply bg-slate-50;
+  .panel-raised {
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    border-radius: 12px;
   }
 
-  .code-block {
-    @apply max-w-full overflow-x-auto rounded-lg bg-slate-950 p-3 text-xs leading-6 text-slate-100;
+  .hairline {
+    border-top: 1px solid var(--line);
+  }
+
+  /* terminal-idiom code block */
+  .term {
+    background: var(--bg2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .term-body {
+    @apply mono;
+    font-size: 13px;
+    line-height: 1.6;
+    padding: 14px 16px;
+    overflow-x: auto;
+    color: var(--text);
+    white-space: pre;
+  }
+  .term-prompt {
+    color: var(--faint);
+    user-select: none;
+  }
+
+  /* data table instrument */
+  .tablewrap {
+    @apply min-w-0 max-w-full overflow-x-auto;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+  }
+  .dtable {
+    @apply w-full border-collapse text-left;
+    min-width: 880px;
+    font-size: 13px;
+  }
+  .dtable th {
+    @apply sticky top-0 z-10;
+    background: var(--surface-raised);
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--line);
+    white-space: nowrap;
+  }
+  .dtable td {
+    padding: 11px 14px;
+    border-top: 1px solid var(--line);
+    vertical-align: top;
+    color: var(--text);
+  }
+  .dtable tbody tr:nth-child(even) td {
+    background: rgba(255, 255, 255, 0.018);
+  }
+  .dtable tbody tr:hover td {
+    background: rgba(94, 230, 196, 0.05);
+  }
+
+  .num {
+    @apply mono;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .chip {
+    @apply mono inline-flex items-center gap-1 rounded-full;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border: 1px solid var(--line);
+    background: var(--surface-raised);
+    color: var(--muted);
+  }
+
+  /* focusable interactive primitives — consistent keyboard ring */
+  .focusring:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
+
+  .btn {
+    @apply inline-flex min-h-10 items-center justify-center gap-2 rounded-lg px-4 text-sm font-semibold transition;
+  }
+  .btn-primary {
+    background: var(--primary);
+    color: #04130f;
+  }
+  .btn-primary:hover {
+    background: #74efce;
+  }
+  .btn-ghost {
+    background: transparent;
+    border: 1px solid var(--line-strong);
+    color: var(--text);
+  }
+  .btn-ghost:hover {
+    background: var(--surface-raised);
+    border-color: var(--faint);
+  }
+
+  .navlink {
+    @apply relative rounded-md px-3 py-2 text-sm font-medium transition;
+    color: var(--muted);
+  }
+  .navlink:hover {
+    color: var(--text);
+  }
+  .navlink[data-active="true"] {
+    color: var(--text);
+  }
+  .navlink[data-active="true"]::after {
+    content: "";
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 2px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--primary);
+    box-shadow: 0 0 12px rgba(94, 230, 196, 0.6);
+  }
+
+  /* segmented toggle pill */
+  .seg {
+    @apply inline-flex rounded-lg p-0.5;
+    background: var(--bg2);
+    border: 1px solid var(--line);
+  }
+  .seg-btn {
+    @apply mono rounded-md px-3 py-1.5 transition;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+  .seg-btn[data-active="true"] {
+    background: var(--surface-raised);
+    color: var(--text);
+    box-shadow: inset 0 0 0 1px var(--line-strong);
+  }
+
+  /* form controls on the dark surface */
+  .field {
+    @apply min-h-10 w-full rounded-lg px-3 text-sm;
+    background: var(--bg2);
+    border: 1px solid var(--line);
+    color: var(--text);
+  }
+  .field::placeholder {
+    color: var(--faint);
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--primary-dim);
+    box-shadow: 0 0 0 1px var(--primary-dim);
+  }
+
+  .link {
+    color: var(--secondary);
+  }
+  .link:hover {
+    text-decoration: underline;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* signal-path traveling dot — CSS (not SMIL) so it never poisons
+   actionability/stability of unrelated controls. */
+@keyframes atlas-travel {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(760px);
+    opacity: 0;
+  }
+}
+.signal-dot {
+  animation: atlas-travel 3.2s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .signal-dot {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* coverage-scatter point entry — fades IN from 0 to the element's resting
+   opacity (set inline), so the resting/static state is always fully visible.
+   Reveal is enhancement-only; charts never depend on it to be seen. */
+@keyframes atlas-scatter-in {
+  from {
+    opacity: 0;
+  }
+}
+.scatter-pt {
+  animation: atlas-scatter-in 360ms ease-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .scatter-pt {
+    animation: none;
+  }
+}
+
+/* count-up + bar transitions honor reduced motion via JS guards,
+   but keep CSS transitions out of reach when reduced. */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
   }
 }
