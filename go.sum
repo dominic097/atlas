@@ -106,6 +106,8 @@ github.com/tree-sitter-grammars/tree-sitter-zig v1.1.2 h1:j8JARutysdxMwBEfVLGx9u
 github.com/tree-sitter-grammars/tree-sitter-zig v1.1.2/go.mod h1:ekWQEqj2e/gQal396f5rKJ6L14/a4bMPMqSRzmf8OZE=
 github.com/tree-sitter/go-tree-sitter v0.25.0 h1:sx6kcg8raRFCvc9BnXglke6axya12krCJF5xJ2sftRU=
 github.com/tree-sitter/go-tree-sitter v0.25.0/go.mod h1:r77ig7BikoZhHrrsjAnv8RqGti5rtSyvDHPzgTPsUuU=
+github.com/tree-sitter/tree-sitter-bash v0.25.1 h1:ZD3MK4oDB5lAsFztqbdcyYEd24pxDtx3g9UOWA062rE=
+github.com/tree-sitter/tree-sitter-bash v0.25.1/go.mod h1:AksQ6zE+sP9hnp7mKTMT7Q+CwpthV7VGQLXvweVXz9U=
 github.com/tree-sitter/tree-sitter-c v0.24.2 h1:nW+M6BnPUa/fBwks8nqf1NiVvu7nltaC+5bR/lTtJCs=
 github.com/tree-sitter/tree-sitter-c v0.24.2/go.mod h1:/SpJlv2BuiCgFA5xvtgukFGi51WxctByPUGDxPl60fc=
 github.com/tree-sitter/tree-sitter-c-sharp v0.23.5 h1:EeUc2WJE5G1pD6YEqera2yVHYeroeR+/MakKX2a+0xQ=

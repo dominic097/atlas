@@ -1,5 +1,5 @@
 {
-  "generated_at_unix": 1782771822,
+  "generated_at_unix": 1782772127,
   "platform": {
     "system": "Darwin",
     "release": "25.5.0",
@@ -12,10 +12,10 @@
       "status": "ok",
       "ok": true,
       "command": "bin/atlas version",
-      "version": "atlas v0.1.24-4-g817754e-dirty (817754e, 2026-06-29T22:22:13Z)",
+      "version": "atlas v0.1.24-5-ge9fdec2-dirty (e9fdec2, 2026-06-29T22:27:30Z)",
       "stdout": [],
       "stderr": [
-        "atlas v0.1.24-4-g817754e-dirty (817754e, 2026-06-29T22:22:13Z)"
+        "atlas v0.1.24-5-ge9fdec2-dirty (e9fdec2, 2026-06-29T22:27:30Z)"
       ],
       "exit_code": 0,
       "seconds": 0.011
@@ -46,7 +46,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.011
+      "seconds": 0.01
     },
     {
       "tool": "python",
@@ -91,7 +91,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.452
+      "seconds": 0.393
     },
     {
       "tool": "scip-go",
@@ -104,7 +104,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.069
+      "seconds": 0.064
     },
     {
       "tool": "scip-python",
@@ -117,7 +117,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.137
+      "seconds": 0.138
     },
     {
       "tool": "scip-typescript",
@@ -130,7 +130,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.399
+      "seconds": 0.413
     },
     {
       "tool": "scip-java",
@@ -153,7 +153,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.035
+      "seconds": 0.029
     },
     {
       "tool": "pyright",
@@ -166,7 +166,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.103
+      "seconds": 0.102
     },
     {
       "tool": "tsc",
@@ -179,7 +179,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.258
+      "seconds": 0.266
     },
     {
       "tool": "jdtls",
@@ -218,7 +218,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.017
+      "seconds": 0.019
     },
     {
       "tool": "dotnet",
@@ -231,7 +231,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.154
+      "seconds": 0.209
     },
     {
       "tool": "ruby",
@@ -244,7 +244,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "tool": "php",
@@ -261,7 +261,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.096
+      "seconds": 0.128
     },
     {
       "tool": "pwsh",
@@ -274,7 +274,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.291
+      "seconds": 0.274
     },
     {
       "tool": "sourcekit-lsp",
@@ -290,7 +290,7 @@
         "swift-driver version: 1.127.15"
       ],
       "exit_code": 0,
-      "seconds": 0.069,
+      "seconds": 0.068,
       "binary": "/usr/bin/sourcekit-lsp",
       "note": "sourcekit-lsp has no version flag in this toolchain; Swift toolchain version is recorded as the closest reproducible native version."
     }

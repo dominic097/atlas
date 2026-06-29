@@ -5499,9 +5499,12 @@ def run_smoke(language: str, atlas_bin: str, graphify_bin: str | None) -> dict[s
         }
     elif language == "bash":
         optimization = {
-            "cycles_run": 1,
-            "stop_reason": "Bash live smoke met the current 5x latency/token thresholds and matched the /bin/bash -n function-definition coverage proxy on cycle 1.",
-            "cycle_notes": ["cycle 1: nvm-sh/nvm smoke reached 1.0 Atlas/native function coverage and exceeded 5x query latency plus token output vs graphify on exact function queries."],
+            "cycles_run": 2,
+            "stop_reason": "Bash native tree-sitter AST parsing matched the /bin/bash -n function-definition coverage proxy and met the current 5x latency/token thresholds.",
+            "cycle_notes": [
+                "cycle 1: nvm-sh/nvm smoke reached 1.0 Atlas/native function coverage and exceeded 5x query latency plus token output vs graphify on exact function queries.",
+                "cycle 2: replacing the regex route with tree-sitter-bash preserved exact function coverage; all live nvm function definitions were directly verified by tree-sitter-bash.",
+            ],
         }
     elif language == "blade":
         optimization = {

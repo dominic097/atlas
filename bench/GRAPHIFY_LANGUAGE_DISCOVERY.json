@@ -193,7 +193,7 @@
       "shell",
       ".sh .bash",
       "extract_bash",
-      "lightweight regex"
+      "native tree-sitter AST"
     ],
     [
       "json config",

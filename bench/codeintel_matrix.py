@@ -105,7 +105,7 @@ GRAPHIFY_LANGUAGE_FAMILIES = [
     ("markdown", [".md", ".mdx", ".qmd"], "document parser"),
     ("pascal", [".pas", ".pp", ".dpr", ".dpk", ".lpr", ".inc"], "native tree-sitter AST"),
     ("delphi/lazarus forms", [".dfm", ".lfm", ".lpk"], "lightweight regex/document fallback"),
-    ("shell", [".sh", ".bash"], "lightweight regex"),
+    ("shell", [".sh", ".bash"], "native tree-sitter AST"),
     ("json config", [".json"], "document parser"),
     ("terraform/hcl", [".tf", ".tfvars", ".hcl"], "lightweight regex"),
     ("byond dm", [".dm", ".dme", ".dmi", ".dmm", ".dmf"], "lightweight regex/document fallback"),

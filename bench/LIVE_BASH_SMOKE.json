@@ -19,24 +19,26 @@
     "target_path": "/tmp/atlas-live-bash-nvm/repo"
   },
   "atlas": {
-    "cold_wall_seconds": 0.163,
-    "reindex_wall_seconds": 0.025,
+    "cold_wall_seconds": 0.323,
+    "reindex_wall_seconds": 0.032,
     "index": {
-      "repo_id": "c7ac70ad-4e98-4c02-b921-eff42789ff85",
+      "repo_id": "508bc287-814b-421f-bf8e-c9d71dfbf3fc",
       "repo_full_name": "repo",
-      "snapshot_id": "fbe0f00f-f42b-45fb-be7c-6732becefba1",
+      "snapshot_id": "fbe635b9-62f4-4ee0-9e3e-8d58545299e6",
       "commit_sha": "a6ec73943099a86fba98bde3b04a1c60944a4549",
-      "indexed_files": 64,
-      "symbols": 479,
-      "edges": 102,
+      "indexed_files": 66,
+      "symbols": 481,
+      "edges": 103,
       "edge_kinds": {
-        "calls": 102
+        "calls": 102,
+        "references": 1
       },
       "routes": 0,
       "languages": {
         "bash": 5,
         "config": 2,
         "dockerfile": 1,
+        "image": 2,
         "javascript": 1,
         "json": 6,
         "makefile": 1,
@@ -45,33 +47,39 @@
         "yaml": 18
       },
       "mode": "full",
-      "duration_ms": 123,
+      "duration_ms": 299,
       "timings_ms": {
+        "build_symbols_edges": 0,
         "delta_check": 0,
+        "discover_files": 1,
+        "doc_links": 0,
         "ensure_repo": 0,
+        "gitignore_scan": 16,
         "go_types": 0,
-        "lexical": 54,
-        "parse": 36,
-        "persist": 30,
+        "lexical": 50,
+        "parse": 230,
+        "persist": 50,
         "resolve_head": 0,
         "routes": 0,
         "sort": 0,
-        "walk": 1
+        "walk": 1,
+        "write_sqlite": 50
       }
     },
     "reindex": {
-      "repo_id": "c7ac70ad-4e98-4c02-b921-eff42789ff85",
+      "repo_id": "508bc287-814b-421f-bf8e-c9d71dfbf3fc",
       "repo_full_name": "repo",
-      "snapshot_id": "fbe0f00f-f42b-45fb-be7c-6732becefba1",
+      "snapshot_id": "fbe635b9-62f4-4ee0-9e3e-8d58545299e6",
       "commit_sha": "a6ec73943099a86fba98bde3b04a1c60944a4549",
-      "indexed_files": 64,
-      "symbols": 479,
-      "edges": 102,
+      "indexed_files": 66,
+      "symbols": 481,
+      "edges": 103,
       "routes": 0,
       "languages": {
         "bash": 5,
         "config": 2,
         "dockerfile": 1,
+        "image": 2,
         "javascript": 1,
         "json": 6,
         "makefile": 1,
@@ -80,9 +88,9 @@
         "yaml": 18
       },
       "mode": "noop",
-      "duration_ms": 0,
+      "duration_ms": 11,
       "timings_ms": {
-        "delta_check": 0,
+        "delta_check": 11,
         "resolve_head": 0
       }
     },
@@ -101,6 +109,11 @@
         "language": "dockerfile",
         "kind": "document",
         "count": 1
+      },
+      {
+        "language": "image",
+        "kind": "image",
+        "count": 2
       },
       {
         "language": "json",
@@ -142,6 +155,10 @@
       {
         "kind": "calls",
         "count": 102
+      },
+      {
+        "kind": "references",
+        "count": 1
       }
     ],
     "bash_definition_symbols": 158
@@ -149,20 +166,20 @@
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 0.551,
+    "seconds": 0.531,
     "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
       "  AST extraction: 300/300 files (100%) [14 workers]",
-      "[graphify watch] Rebuilt: 452 nodes, 729 edges, 31 communities",
+      "[graphify watch] Rebuilt: 531 nodes, 807 edges, 28 communities",
       "[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out",
       "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
       "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
     ],
     "stderr_head": [],
     "metrics": {
-      "nodes": 452,
-      "links": 729,
+      "nodes": 531,
+      "links": 807,
       "calls": 292
     }
   },
@@ -170,7 +187,7 @@
     "tool": "bash-n",
     "status": "ok",
     "ok": true,
-    "seconds": 0.023,
+    "seconds": 0.019,
     "command": "/bin/bash -n <5 shell files>",
     "metrics": {
       "files": 5,
@@ -201,10 +218,11 @@
     "native_definitions": 158
   },
   "optimization": {
-    "cycles_run": 1,
-    "stop_reason": "Bash live smoke met the current 5x latency/token thresholds and matched the /bin/bash -n function-definition coverage proxy on cycle 1.",
+    "cycles_run": 2,
+    "stop_reason": "Bash native tree-sitter AST parsing matched the /bin/bash -n function-definition coverage proxy and met the current 5x latency/token thresholds.",
     "cycle_notes": [
-      "cycle 1: nvm-sh/nvm smoke reached 1.0 Atlas/native function coverage and exceeded 5x query latency plus token output vs graphify on exact function queries."
+      "cycle 1: nvm-sh/nvm smoke reached 1.0 Atlas/native function coverage and exceeded 5x query latency plus token output vs graphify on exact function queries.",
+      "cycle 2: replacing the regex route with tree-sitter-bash preserved exact function coverage; all live nvm function definitions were directly verified by tree-sitter-bash."
     ]
   },
   "query_warmup": {
@@ -223,21 +241,21 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain nvm",
       "atlas_tokens": 5,
       "graphify_tokens": 269,
-      "atlas_ms": 12.298,
-      "graphify_ms": 84.038,
+      "atlas_ms": 12.168,
+      "graphify_ms": 77.12,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "nvm f@nvm.sh:3154 d1"
+        "nvm f@nvm.sh:3155 d1"
       ],
       "graphify_stdout_head": [
         "Node: nvm.sh",
         "  ID:        nvm",
         "  Source:    nvm.sh L1",
         "  Type:      code",
-        "  Community: 5",
+        "  Community: 0",
         "  Degree:    117",
         "",
         "Connections (117):"
@@ -250,8 +268,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain nvm_install_binary",
       "atlas_tokens": 8,
       "graphify_tokens": 87,
-      "atlas_ms": 12.47,
-      "graphify_ms": 83.141,
+      "atlas_ms": 11.875,
+      "graphify_ms": 76.224,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -264,7 +282,7 @@
         "  ID:        nvm_nvm_install_binary",
         "  Source:    nvm.sh L2331",
         "  Type:      code",
-        "  Community: 11",
+        "  Community: 0",
         "  Degree:    5",
         "",
         "Connections (5):"
@@ -277,21 +295,21 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain nvm_die_on_prefix",
       "atlas_tokens": 8,
       "graphify_tokens": 90,
-      "atlas_ms": 12.192,
-      "graphify_ms": 81.912,
+      "atlas_ms": 12.614,
+      "graphify_ms": 78.156,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "nvm_die_on_prefix f@nvm.sh:2862"
+        "nvm_die_on_prefix f@nvm.sh:2863"
       ],
       "graphify_stdout_head": [
         "Node: nvm_die_on_prefix()",
         "  ID:        nvm_nvm_die_on_prefix",
         "  Source:    nvm.sh L2863",
         "  Type:      code",
-        "  Community: 5",
+        "  Community: 0",
         "  Degree:    5",
         "",
         "Connections (5):"
@@ -304,21 +322,21 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain nvm_get_os",
       "atlas_tokens": 6,
       "graphify_tokens": 52,
-      "atlas_ms": 12.337,
-      "graphify_ms": 80.538,
+      "atlas_ms": 13.051,
+      "graphify_ms": 76.389,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "nvm_get_os f@nvm.sh:2128"
+        "nvm_get_os f@nvm.sh:2129"
       ],
       "graphify_stdout_head": [
         "Node: nvm_get_os()",
         "  ID:        nvm_nvm_get_os",
         "  Source:    nvm.sh L2129",
         "  Type:      code",
-        "  Community: 4",
+        "  Community: 0",
         "  Degree:    2",
         "",
         "Connections (2):"

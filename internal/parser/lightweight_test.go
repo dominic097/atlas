@@ -807,6 +807,45 @@ tasks.register('cleanGenerated') {
 	}
 }
 
+func TestParseBashNativeDefinitions(t *testing.T) {
+	res, err := Parse("repo", "org/repo", "scripts/install.sh", "", []byte(`
+#!/usr/bin/env bash
+source ./lib/common.sh
+. ./lib/colors.sh
+
+function install_node {
+  echo installing
+}
+
+nvm_use() {
+  echo using
+}
+
+# comment_only() {
+`))
+	if err != nil {
+		t.Fatalf("Parse: %v", err)
+	}
+	for _, name := range []string{"install_node", "nvm_use"} {
+		sym := findSymbol(res.Symbols, name)
+		if sym == nil {
+			t.Fatalf("missing Bash symbol %q; symbols=%+v", name, res.Symbols)
+		}
+		if sym.Kind != "function" {
+			t.Fatalf("%s kind = %q, want function", name, sym.Kind)
+		}
+	}
+	if !containsString(res.Imports, "./lib/common.sh") {
+		t.Fatalf("imports = %#v, want ./lib/common.sh", res.Imports)
+	}
+	if !containsString(res.Imports, "./lib/colors.sh") {
+		t.Fatalf("imports = %#v, want ./lib/colors.sh", res.Imports)
+	}
+	if sym := findSymbol(res.Symbols, "comment_only"); sym != nil {
+		t.Fatalf("unexpected Bash comment symbol: %+v", sym)
+	}
+}
+
 func TestParseObjCLightweightSelectors(t *testing.T) {
 	res, err := Parse("repo", "org/repo", "SDWebImage/Core/SDImageCache.m", "", []byte(`
 #import <Foundation/Foundation.h>
