@@ -211,7 +211,7 @@
       "byond dm",
       ".dm .dme .dmi .dmm .dmf",
       "extract_dm/extract_dmf/extract_dmi/extract_dmm",
-      "lightweight regex/document fallback"
+      "native BYOND source parser"
     ],
     [
       "dotnet project",

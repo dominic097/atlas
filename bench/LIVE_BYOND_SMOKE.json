@@ -1,7 +1,7 @@
 {
   "language": "byond",
   "repo": "https://github.com/tgstation/tgstation",
-  "commit": "4c88909444709d715adfb8f96e9e96cccd986095",
+  "commit": "ba6e47987178c54dc0432f0d4ee6843f6a3c9828",
   "graphify_detector_only": "",
   "commands": {
     "clone": "git clone --depth 1 https://github.com/tgstation/tgstation /tmp/atlas-live-byond-tgstation/repo",
@@ -21,18 +21,18 @@
     "target_path": "/tmp/atlas-live-byond-tgstation/repo/code/modules/mob"
   },
   "atlas": {
-    "cold_wall_seconds": 2.088,
-    "reindex_wall_seconds": 0.041,
+    "cold_wall_seconds": 1.148,
+    "reindex_wall_seconds": 0.047,
     "index": {
-      "repo_id": "057aacd1-dd64-4ba6-aa26-8698dbbd999c",
+      "repo_id": "cd30c0a4-9d82-4b10-807a-f0f4246e2e6d",
       "repo_full_name": "mob",
-      "snapshot_id": "931c1ecb-05e7-45a3-aa7e-90b42018bde0",
-      "commit_sha": "4c88909444709d715adfb8f96e9e96cccd986095",
+      "snapshot_id": "c61aca9a-862e-4bc1-be1d-727a6bc93747",
+      "commit_sha": "ba6e47987178c54dc0432f0d4ee6843f6a3c9828",
       "indexed_files": 616,
       "symbols": 8882,
-      "edges": 39073,
+      "edges": 39076,
       "edge_kinds": {
-        "calls": 39073
+        "calls": 39076
       },
       "routes": 0,
       "languages": {
@@ -41,28 +41,33 @@
         "text": 1
       },
       "mode": "full",
-      "duration_ms": 1974,
+      "duration_ms": 1111,
       "timings_ms": {
+        "build_symbols_edges": 9,
         "delta_check": 0,
+        "discover_files": 21,
+        "doc_links": 1,
         "ensure_repo": 0,
+        "gitignore_scan": 13,
         "go_types": 0,
-        "lexical": 917,
-        "parse": 98,
-        "persist": 926,
+        "lexical": 993,
+        "parse": 72,
+        "persist": 993,
         "resolve_head": 0,
         "routes": 0,
-        "sort": 12,
-        "walk": 18
+        "sort": 6,
+        "walk": 21,
+        "write_sqlite": 993
       }
     },
     "reindex": {
-      "repo_id": "057aacd1-dd64-4ba6-aa26-8698dbbd999c",
+      "repo_id": "cd30c0a4-9d82-4b10-807a-f0f4246e2e6d",
       "repo_full_name": "mob",
-      "snapshot_id": "931c1ecb-05e7-45a3-aa7e-90b42018bde0",
-      "commit_sha": "4c88909444709d715adfb8f96e9e96cccd986095",
+      "snapshot_id": "c61aca9a-862e-4bc1-be1d-727a6bc93747",
+      "commit_sha": "ba6e47987178c54dc0432f0d4ee6843f6a3c9828",
       "indexed_files": 616,
       "symbols": 8882,
-      "edges": 39073,
+      "edges": 39076,
       "routes": 0,
       "languages": {
         "byond": 614,
@@ -70,9 +75,9 @@
         "text": 1
       },
       "mode": "noop",
-      "duration_ms": 0,
+      "duration_ms": 26,
       "timings_ms": {
-        "delta_check": 0,
+        "delta_check": 26,
         "resolve_head": 0
       }
     },
@@ -106,7 +111,7 @@
     "edge_breakdown": [
       {
         "kind": "calls",
-        "count": 39073
+        "count": 39076
       }
     ],
     "byond_definition_symbols": 8874
@@ -114,7 +119,7 @@
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 3.654,
+    "seconds": 3.375,
     "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
@@ -141,7 +146,7 @@
     "tool": "byond-source-counter",
     "status": "ok",
     "ok": true,
-    "seconds": 0.259,
+    "seconds": 0.25,
     "command": "python3 <byond source counter> /tmp/atlas-live-byond-tgstation/repo/code/modules/mob",
     "metrics": {
       "files": 614,
@@ -340,13 +345,14 @@
     "native_definitions": 8874
   },
   "optimization": {
-    "cycles_run": 5,
-    "stop_reason": "BYOND/DM live smoke replaces the generic regex fallback with a dedicated source parser and records saturation evidence; the five-pass saturation report records that graphify misses every path-like DM query on this machine.",
+    "cycles_run": 6,
+    "stop_reason": "BYOND/DM native source parser matches the benchmark-owned source-counter coverage proxy after routing BYOND resource files off `parseRegexFallback`; graphify still misses every path-like DM query on this machine.",
     "cycle_notes": [
       "cycle 1: tgstation/tgstation probe showed the generic BYOND fallback over-indexed call/control-flow lines such as if(...) while missing graphify-style owner-qualified proc paths and resource-file context.",
       "cycle 2: after adding a dedicated BYOND parser and benchmark-owned source counter, Atlas indexes owner-qualified DM paths plus BYOND resource symbols against the live tgstation code slice.",
       "cycle 3: hard-budgeted context probes increased tokens/latency for path-like DM symbols, so exact-symbol explain remains the lower-cost measurement; 5x is not claimed because graphify has no equivalent rows.",
-      "cycles 4-5: repeated live smokes kept native coverage at 1.0 and graphify-equivalent query rows at 0/6, so BYOND query-score improvement is saturated until graphify exposes equivalent DM query nodes for these paths."
+      "cycles 4-5: repeated live smokes kept native coverage at 1.0 and graphify-equivalent query rows at 0/6, so BYOND query-score improvement is saturated until graphify exposes equivalent DM query nodes for these paths.",
+      "cycle 6: moving the dedicated BYOND parser to the native route preserved exact tgstation coverage at 8874/8874 definitions while graphify-equivalent query rows stayed at the documented 0/6 ceiling."
     ]
   },
   "query_warmup": {
@@ -365,8 +371,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain /mob/living",
       "atlas_tokens": 8,
       "graphify_tokens": 9,
-      "atlas_ms": 19.157,
-      "graphify_ms": 76.007,
+      "atlas_ms": 17.996,
+      "graphify_ms": 70.092,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -385,8 +391,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain /mob/living/Initialize",
       "atlas_tokens": 8,
       "graphify_tokens": 12,
-      "atlas_ms": 15.875,
-      "graphify_ms": 76.856,
+      "atlas_ms": 17.285,
+      "graphify_ms": 68.708,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -405,8 +411,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain /mob/living/prepare_data_huds",
       "atlas_tokens": 10,
       "graphify_tokens": 14,
-      "atlas_ms": 16.651,
-      "graphify_ms": 76.508,
+      "atlas_ms": 16.157,
+      "graphify_ms": 68.819,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -425,8 +431,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain /mob/living/ZImpactDamage",
       "atlas_tokens": 9,
       "graphify_tokens": 13,
-      "atlas_ms": 16.472,
-      "graphify_ms": 76.601,
+      "atlas_ms": 16.119,
+      "graphify_ms": 69.373,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -445,8 +451,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain /datum/movespeed_modifier/landed_on_feet",
       "atlas_tokens": 13,
       "graphify_tokens": 16,
-      "atlas_ms": 16.683,
-      "graphify_ms": 75.371,
+      "atlas_ms": 16.554,
+      "graphify_ms": 71.618,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -465,8 +471,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain /mob/living/MobBump",
       "atlas_tokens": 8,
       "graphify_tokens": 11,
-      "atlas_ms": 16.26,
-      "graphify_ms": 76.457,
+      "atlas_ms": 16.428,
+      "graphify_ms": 68.526,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,

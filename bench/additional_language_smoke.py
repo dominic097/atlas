@@ -5543,13 +5543,14 @@ def run_smoke(language: str, atlas_bin: str, graphify_bin: str | None) -> dict[s
         }
     elif language == "byond":
         optimization = {
-            "cycles_run": 5,
-            "stop_reason": "BYOND/DM live smoke replaces the generic regex fallback with a dedicated source parser and records saturation evidence; the five-pass saturation report records that graphify misses every path-like DM query on this machine.",
+            "cycles_run": 6,
+            "stop_reason": "BYOND/DM native source parser matches the benchmark-owned source-counter coverage proxy after routing BYOND resource files off `parseRegexFallback`; graphify still misses every path-like DM query on this machine.",
             "cycle_notes": [
                 "cycle 1: tgstation/tgstation probe showed the generic BYOND fallback over-indexed call/control-flow lines such as if(...) while missing graphify-style owner-qualified proc paths and resource-file context.",
                 "cycle 2: after adding a dedicated BYOND parser and benchmark-owned source counter, Atlas indexes owner-qualified DM paths plus BYOND resource symbols against the live tgstation code slice.",
                 "cycle 3: hard-budgeted context probes increased tokens/latency for path-like DM symbols, so exact-symbol explain remains the lower-cost measurement; 5x is not claimed because graphify has no equivalent rows.",
                 "cycles 4-5: repeated live smokes kept native coverage at 1.0 and graphify-equivalent query rows at 0/6, so BYOND query-score improvement is saturated until graphify exposes equivalent DM query nodes for these paths.",
+                "cycle 6: moving the dedicated BYOND parser to the native route preserved exact tgstation coverage at 8874/8874 definitions while graphify-equivalent query rows stayed at the documented 0/6 ceiling.",
             ],
         }
     elif language == "delphi":

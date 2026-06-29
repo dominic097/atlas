@@ -108,7 +108,7 @@ GRAPHIFY_LANGUAGE_FAMILIES = [
     ("shell", [".sh", ".bash"], "native tree-sitter AST"),
     ("json config", [".json"], "document parser"),
     ("terraform/hcl", [".tf", ".tfvars", ".hcl"], "native tree-sitter HCL"),
-    ("byond dm", [".dm", ".dme", ".dmi", ".dmm", ".dmf"], "lightweight regex/document fallback"),
+    ("byond dm", [".dm", ".dme", ".dmi", ".dmm", ".dmf"], "native BYOND source parser"),
     ("dotnet project", [".sln", ".slnx", ".csproj", ".fsproj", ".vbproj"], "native structured project parser"),
     ("razor", [".razor", ".cshtml"], "native Razor source parser"),
     ("apex", [".cls", ".trigger"], "native tree-sitter Apex"),
