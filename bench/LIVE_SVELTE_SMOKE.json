@@ -1,9 +1,11 @@
 {
   "language": "svelte",
   "repo": "https://github.com/carbon-design-system/carbon-components-svelte",
-  "commit": "db1dfd0344296142cffea0012591e8b6fd58a78b",
+  "commit": "454a3881cd2b5ac3e47b92d7524a8faa5d99f03d",
+  "graphify_detector_only": "",
   "commands": {
     "clone": "git clone --depth 1 https://github.com/carbon-design-system/carbon-components-svelte /tmp/atlas-live-svelte-carbon/repo",
+    "sparse_checkout": "",
     "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-svelte-carbon/atlas.db --json index /tmp/atlas-live-svelte-carbon/repo/src",
     "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-svelte-carbon/atlas.db --json index /tmp/atlas-live-svelte-carbon/repo/src",
     "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
@@ -18,54 +20,54 @@
     "target_path": "/tmp/atlas-live-svelte-carbon/repo/src"
   },
   "atlas": {
-    "cold_wall_seconds": 0.459,
-    "reindex_wall_seconds": 0.026,
+    "cold_wall_seconds": 0.343,
+    "reindex_wall_seconds": 0.022,
     "index": {
-      "repo_id": "dd230b9a-6260-474a-b5ff-e909aa1ccd25",
+      "repo_id": "e86c9c40-b21c-4570-8623-7f26a44c4d90",
       "repo_full_name": "src",
-      "snapshot_id": "e686e0be-87f6-4fe0-998c-9c580d673e38",
-      "commit_sha": "db1dfd0344296142cffea0012591e8b6fd58a78b",
-      "indexed_files": 405,
-      "symbols": 1830,
-      "edges": 3526,
+      "snapshot_id": "9c3640ff-8606-4544-9fbb-7fa037e8ecd2",
+      "commit_sha": "454a3881cd2b5ac3e47b92d7524a8faa5d99f03d",
+      "indexed_files": 424,
+      "symbols": 1923,
+      "edges": 4184,
       "edge_kinds": {
-        "calls": 3069,
-        "imports": 457
+        "calls": 3252,
+        "imports": 932
       },
       "routes": 0,
       "languages": {
-        "javascript": 115,
-        "svelte": 250,
-        "typescript": 40
+        "javascript": 120,
+        "svelte": 262,
+        "typescript": 42
       },
       "mode": "full",
-      "duration_ms": 329,
+      "duration_ms": 312,
       "timings_ms": {
         "delta_check": 0,
         "ensure_repo": 0,
         "go_types": 0,
-        "lexical": 225,
-        "parse": 30,
-        "persist": 68,
+        "lexical": 196,
+        "parse": 25,
+        "persist": 67,
         "resolve_head": 0,
         "routes": 0,
         "sort": 1,
-        "walk": 3
+        "walk": 20
       }
     },
     "reindex": {
-      "repo_id": "dd230b9a-6260-474a-b5ff-e909aa1ccd25",
+      "repo_id": "e86c9c40-b21c-4570-8623-7f26a44c4d90",
       "repo_full_name": "src",
-      "snapshot_id": "e686e0be-87f6-4fe0-998c-9c580d673e38",
-      "commit_sha": "db1dfd0344296142cffea0012591e8b6fd58a78b",
-      "indexed_files": 405,
-      "symbols": 1830,
-      "edges": 3526,
+      "snapshot_id": "9c3640ff-8606-4544-9fbb-7fa037e8ecd2",
+      "commit_sha": "454a3881cd2b5ac3e47b92d7524a8faa5d99f03d",
+      "indexed_files": 424,
+      "symbols": 1923,
+      "edges": 4184,
       "routes": 0,
       "languages": {
-        "javascript": 115,
-        "svelte": 250,
-        "typescript": 40
+        "javascript": 120,
+        "svelte": 262,
+        "typescript": 42
       },
       "mode": "noop",
       "duration_ms": 0,
@@ -78,32 +80,32 @@
       {
         "language": "javascript",
         "kind": "constant",
-        "count": 170
+        "count": 172
       },
       {
         "language": "javascript",
         "kind": "function",
-        "count": 102
+        "count": 105
       },
       {
         "language": "javascript",
         "kind": "variable",
-        "count": 62
+        "count": 64
       },
       {
         "language": "svelte",
         "kind": "document",
-        "count": 140
+        "count": 146
       },
       {
         "language": "svelte",
         "kind": "function",
-        "count": 1244
+        "count": 1323
       },
       {
         "language": "typescript",
         "kind": "constant",
-        "count": 13
+        "count": 14
       },
       {
         "language": "typescript",
@@ -129,53 +131,53 @@
     "edge_breakdown": [
       {
         "kind": "calls",
-        "count": 3069
+        "count": 3252
       },
       {
         "kind": "imports",
-        "count": 457
+        "count": 932
       }
     ],
-    "svelte_definition_symbols": 1244
+    "svelte_definition_symbols": 1323
   },
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 1.689,
+    "seconds": 1.516,
     "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
-      "  AST extraction: 100/405 uncached files (24%) [14 workers]",
-      "  AST extraction: 200/405 uncached files (49%) [14 workers]",
-      "  AST extraction: 300/405 uncached files (74%) [14 workers]",
-      "  AST extraction: 400/405 uncached files (98%) [14 workers]",
-      "  AST extraction: 405/405 files (100%) [14 workers]",
-      "[graphify watch] Rebuilt: 818 nodes, 1453 edges, 94 communities",
+      "  AST extraction: 100/424 uncached files (23%) [14 workers]",
+      "  AST extraction: 200/424 uncached files (47%) [14 workers]",
+      "  AST extraction: 300/424 uncached files (70%) [14 workers]",
+      "  AST extraction: 400/424 uncached files (94%) [14 workers]",
+      "  AST extraction: 424/424 files (100%) [14 workers]",
+      "[graphify watch] Rebuilt: 853 nodes, 1521 edges, 114 communities",
       "[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out",
       "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
       "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
     ],
     "stderr_head": [],
     "metrics": {
-      "nodes": 818,
-      "links": 1453,
-      "calls": 108
+      "nodes": 853,
+      "links": 1521,
+      "calls": 114
     }
   },
   "native_baseline": {
     "tool": "svelte-compiler",
     "status": "ok",
     "ok": true,
-    "seconds": 0.281,
+    "seconds": 0.342,
     "command": "/opt/homebrew/bin/node /tmp/atlas-live-svelte-carbon/svelte-compiler/svelte_stats.js /tmp/atlas-live-svelte-carbon/repo/src",
     "metrics": {
-      "files": 250,
-      "parsed_files": 250,
+      "files": 262,
+      "parsed_files": 262,
       "parse_errors": 0,
-      "script_blocks": 226,
-      "functions": 264,
-      "variables": 933,
-      "definitions": 1197,
+      "script_blocks": 236,
+      "functions": 293,
+      "variables": 985,
+      "definitions": 1278,
       "compiler_version": "5.56.4",
       "parse_error_samples": []
     }
@@ -194,8 +196,8 @@
   },
   "coverage": {
     "atlas_vs_svelte_compiler_definition_ratio": 1.04,
-    "atlas_svelte_definition_symbols": 1244,
-    "native_definitions": 1197
+    "atlas_svelte_definition_symbols": 1323,
+    "native_definitions": 1278
   },
   "optimization": {
     "cycles_run": 1,
@@ -204,15 +206,24 @@
       "cycle 1: carbon-components-svelte smoke used the native Svelte compiler as an isolated SFC parser baseline; Atlas indexed at least the compiler-counted top-level script declarations and resolved exact component function symbols."
     ]
   },
+  "query_warmup": {
+    "symbol": "setChar",
+    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-svelte-carbon/atlas.db --format plain --repo src explain setChar",
+    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain setChar",
+    "atlas_returncode": 0,
+    "graphify_returncode": 0,
+    "note": "Untimed warm-up for both tools before measured query latency rows."
+  },
   "queries": [
     {
       "symbol": "setChar",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-svelte-carbon/atlas.db --format plain --repo src explain setChar",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain setChar",
       "atlas_tokens": 9,
       "graphify_tokens": 78,
-      "atlas_ms": 14.142,
-      "graphify_ms": 102.648,
+      "atlas_ms": 12.954,
+      "graphify_ms": 84.556,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -225,7 +236,7 @@
         "  ID:        pincodeinput_pincodeinput_setchar",
         "  Source:    PinCodeInput/PinCodeInput.svelte L210",
         "  Type:      code",
-        "  Community: 14",
+        "  Community: 11",
         "  Degree:    3",
         "",
         "Connections (3):"
@@ -233,12 +244,13 @@
     },
     {
       "symbol": "focusInput",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-svelte-carbon/atlas.db --format plain --repo src explain focusInput",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain focusInput",
       "atlas_tokens": 10,
       "graphify_tokens": 141,
-      "atlas_ms": 14.246,
-      "graphify_ms": 102.845,
+      "atlas_ms": 12.742,
+      "graphify_ms": 84.822,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -251,7 +263,7 @@
         "  ID:        pincodeinput_pincodeinput_focusinput",
         "  Source:    PinCodeInput/PinCodeInput.svelte L218",
         "  Type:      code",
-        "  Community: 14",
+        "  Community: 11",
         "  Degree:    9",
         "",
         "Connections (9):"
@@ -259,12 +271,13 @@
     },
     {
       "symbol": "handleInput",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-svelte-carbon/atlas.db --format plain --repo src explain handleInput",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain handleInput",
       "atlas_tokens": 11,
       "graphify_tokens": 88,
-      "atlas_ms": 14.476,
-      "graphify_ms": 111.323,
+      "atlas_ms": 13.39,
+      "graphify_ms": 84.546,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -277,7 +290,7 @@
         "  ID:        pincodeinput_pincodeinput_handleinput",
         "  Source:    PinCodeInput/PinCodeInput.svelte L231",
         "  Type:      code",
-        "  Community: 14",
+        "  Community: 11",
         "  Degree:    4",
         "",
         "Connections (4):"
@@ -285,25 +298,26 @@
     },
     {
       "symbol": "handleKeydown",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-svelte-carbon/atlas.db --format plain --repo src explain handleKeydown",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain handleKeydown",
       "atlas_tokens": 12,
       "graphify_tokens": 79,
-      "atlas_ms": 14.628,
-      "graphify_ms": 107.046,
+      "atlas_ms": 14.273,
+      "graphify_ms": 84.848,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "handleKeydown f@PinCodeInput.svelte:250 df4 c1 d6"
+        "handleKeydown f@PinCodeInput.svelte:250 df5 c1 d9"
       ],
       "graphify_stdout_head": [
         "Node: handleKeydown()",
         "  ID:        pincodeinput_pincodeinput_handlekeydown",
         "  Source:    PinCodeInput/PinCodeInput.svelte L250",
         "  Type:      code",
-        "  Community: 14",
+        "  Community: 11",
         "  Degree:    3",
         "",
         "Connections (3):"
@@ -311,28 +325,29 @@
     },
     {
       "symbol": "handleOutsideClick",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-svelte-carbon/atlas.db --format plain --repo src explain handleOutsideClick",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain handleOutsideClick",
       "atlas_tokens": 12,
-      "graphify_tokens": 77,
-      "atlas_ms": 14.727,
-      "graphify_ms": 107.412,
+      "graphify_tokens": 90,
+      "atlas_ms": 13.963,
+      "graphify_ms": 85.432,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "handleOutsideClick f@ComboBox.svelte:549 df9 d9"
+        "handleOutsideClick f@ComboBox.svelte:593 df11 d10"
       ],
       "graphify_stdout_head": [
         "Node: handleOutsideClick()",
         "  ID:        combobox_combobox_handleoutsideclick",
-        "  Source:    ComboBox/ComboBox.svelte L550",
+        "  Source:    ComboBox/ComboBox.svelte L594",
         "  Type:      code",
-        "  Community: 0",
-        "  Degree:    3",
+        "  Community: 13",
+        "  Degree:    4",
         "",
-        "Connections (3):"
+        "Connections (4):"
       ]
     }
   ]

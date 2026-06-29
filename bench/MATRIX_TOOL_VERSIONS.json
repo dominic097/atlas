@@ -1,0 +1,1248 @@
+{
+  "generated_at_unix": 1782722956,
+  "platform": {
+    "system": "Darwin",
+    "release": "25.5.0",
+    "machine": "arm64",
+    "python": "3.14.6"
+  },
+  "core_tools": [
+    {
+      "tool": "atlas",
+      "status": "ok",
+      "ok": true,
+      "command": "bin/atlas version",
+      "version": "atlas dev (none, unknown)",
+      "stdout": [],
+      "stderr": [
+        "atlas dev (none, unknown)"
+      ],
+      "exit_code": 0,
+      "seconds": 0.01
+    },
+    {
+      "tool": "graphify",
+      "status": "ok",
+      "ok": true,
+      "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify --version",
+      "version": "graphify 0.8.49",
+      "stdout": [
+        "graphify 0.8.49"
+      ],
+      "stderr": [],
+      "exit_code": 0,
+      "seconds": 0.036,
+      "discovered_version": "graphifyy 0.8.49",
+      "binary": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify"
+    },
+    {
+      "tool": "go",
+      "status": "ok",
+      "ok": true,
+      "command": "/usr/local/go/bin/go version",
+      "version": "go version go1.25.0 darwin/arm64",
+      "stdout": [
+        "go version go1.25.0 darwin/arm64"
+      ],
+      "stderr": [],
+      "exit_code": 0,
+      "seconds": 0.011
+    },
+    {
+      "tool": "python",
+      "status": "ok",
+      "ok": true,
+      "command": "/opt/homebrew/opt/python@3.14/bin/python3.14 --version",
+      "version": "Python 3.14.6",
+      "stdout": [
+        "Python 3.14.6"
+      ],
+      "stderr": [],
+      "exit_code": 0,
+      "seconds": 0.008
+    },
+    {
+      "tool": "java",
+      "status": "ok",
+      "ok": true,
+      "command": "/usr/bin/java -version",
+      "version": "openjdk version \"17.0.18\" 2026-01-20",
+      "stdout": [],
+      "stderr": [
+        "openjdk version \"17.0.18\" 2026-01-20",
+        "OpenJDK Runtime Environment Homebrew (build 17.0.18+0)",
+        "OpenJDK 64-Bit Server VM Homebrew (build 17.0.18+0, mixed mode, sharing)"
+      ],
+      "exit_code": 0,
+      "seconds": 0.025
+    },
+    {
+      "tool": "maven",
+      "status": "ok",
+      "ok": true,
+      "command": "/opt/homebrew/bin/mvn --version",
+      "version": "Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)",
+      "stdout": [
+        "Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)",
+        "Maven home: /opt/homebrew/Cellar/maven/3.9.16/libexec",
+        "Java version: 17.0.18, vendor: Homebrew, runtime: /opt/homebrew/Cellar/openjdk@17/17.0.18/libexec/openjdk.jdk/Contents/Home",
+        "Default locale: en_US, platform encoding: UTF-8",
+        "OS name: \"mac os x\", version: \"26.5.1\", arch: \"aarch64\", family: \"mac\""
+      ],
+      "stderr": [],
+      "exit_code": 0,
+      "seconds": 0.379
+    },
+    {
+      "tool": "scip-go",
+      "status": "ok",
+      "ok": true,
+      "command": "/Users/damirdarasu/go/bin/scip-go --version",
+      "version": "0.2.7",
+      "stdout": [
+        "0.2.7"
+      ],
+      "stderr": [],
+      "exit_code": 0,
+      "seconds": 0.093
+    },
+    {
+      "tool": "scip-python",
+      "status": "ok",
+      "ok": true,
+      "command": "/opt/homebrew/bin/scip-python --version",
+      "version": "0.6.6",
+      "stdout": [
+        "0.6.6"
+      ],
+      "stderr": [],
+      "exit_code": 0,
+      "seconds": 0.152
+    },
+    {
+      "tool": "scip-typescript",
+      "status": "ok",
+      "ok": true,
+      "command": "/opt/homebrew/bin/npx --yes -p @sourcegraph/scip-typescript scip-typescript --version",
+      "version": "0.4.0",
+      "stdout": [
+        "0.4.0"
+      ],
+      "stderr": [],
+      "exit_code": 0,
+      "seconds": 0.459
+    },
+    {
+      "tool": "scip-java",
+      "status": "ok",
+      "ok": true,
+      "command": "/tmp/atlas-bench-tools/scip-java --version",
+      "version": "0.12.3",
+      "stdout": [
+        "0.12.3"
+      ],
+      "stderr": [],
+      "exit_code": 0,
+      "seconds": 0.387
+    },
+    {
+      "tool": "gopls",
+      "status": "ok",
+      "ok": true,
+      "command": "/Users/damirdarasu/go/bin/gopls version",
+      "version": "golang.org/x/tools/gopls v0.22.0",
+      "stdout": [
+        "golang.org/x/tools/gopls v0.22.0"
+      ],
+      "stderr": [],
+      "exit_code": 0,
+      "seconds": 0.037
+    },
+    {
+      "tool": "pyright",
+      "status": "ok",
+      "ok": true,
+      "command": "/opt/homebrew/bin/pyright --version",
+      "version": "pyright 1.1.411",
+      "stdout": [
+        "pyright 1.1.411"
+      ],
+      "stderr": [],
+      "exit_code": 0,
+      "seconds": 0.115
+    },
+    {
+      "tool": "tsc",
+      "status": "ok",
+      "ok": true,
+      "command": "/opt/homebrew/bin/npx --yes -p typescript tsc --version",
+      "version": "Version 5.9.3",
+      "stdout": [
+        "Version 5.9.3"
+      ],
+      "stderr": [],
+      "exit_code": 0,
+      "seconds": 0.294
+    },
+    {
+      "tool": "jdtls",
+      "status": "ok",
+      "ok": true,
+      "command": "/opt/homebrew/bin/jdtls",
+      "version": "1.58.0",
+      "binary": "/opt/homebrew/bin/jdtls",
+      "resolved_binary": "/opt/homebrew/Cellar/jdtls/1.58.0/bin/jdtls",
+      "java_home": "/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home",
+      "note": "JDTLS starts an LSP server instead of printing a stable --version line; version is derived from the installed package path and benchmark Java runtime."
+    },
+    {
+      "tool": "clangd",
+      "status": "ok",
+      "ok": true,
+      "command": "/usr/bin/clangd --version",
+      "version": "Apple clangd version 17.0.0 (clang-1700.6.4.2)",
+      "stdout": [
+        "Apple clangd version 17.0.0 (clang-1700.6.4.2)",
+        "Features: mac+xpc",
+        "Platform: arm64-apple-darwin25.5.0"
+      ],
+      "stderr": [],
+      "exit_code": 0,
+      "seconds": 0.01
+    },
+    {
+      "tool": "rust-analyzer",
+      "status": "ok",
+      "ok": true,
+      "command": "/opt/homebrew/bin/rust-analyzer --version",
+      "version": "rust-analyzer 0.0.0 (69ccffdb5b 2026-06-21)",
+      "stdout": [
+        "rust-analyzer 0.0.0 (69ccffdb5b 2026-06-21)"
+      ],
+      "stderr": [],
+      "exit_code": 0,
+      "seconds": 0.018
+    },
+    {
+      "tool": "dotnet",
+      "status": "ok",
+      "ok": true,
+      "command": "/opt/homebrew/bin/dotnet --version",
+      "version": "10.0.301",
+      "stdout": [
+        "10.0.301"
+      ],
+      "stderr": [],
+      "exit_code": 0,
+      "seconds": 0.178
+    },
+    {
+      "tool": "ruby",
+      "status": "ok",
+      "ok": true,
+      "command": "/usr/bin/ruby --version",
+      "version": "ruby 2.6.10p210 (2022-04-12 revision 67958) [universal.arm64e-darwin25]",
+      "stdout": [
+        "ruby 2.6.10p210 (2022-04-12 revision 67958) [universal.arm64e-darwin25]"
+      ],
+      "stderr": [],
+      "exit_code": 0,
+      "seconds": 0.017
+    },
+    {
+      "tool": "php",
+      "status": "ok",
+      "ok": true,
+      "command": "/opt/homebrew/bin/php --version",
+      "version": "PHP 8.4.14 (cli) (built: Oct 21 2025 19:23:55) (NTS)",
+      "stdout": [
+        "PHP 8.4.14 (cli) (built: Oct 21 2025 19:23:55) (NTS)",
+        "Copyright (c) The PHP Group",
+        "Built by Homebrew",
+        "Zend Engine v4.4.14, Copyright (c) Zend Technologies",
+        "    with Zend OPcache v8.4.14, Copyright (c), by Zend Technologies"
+      ],
+      "stderr": [],
+      "exit_code": 0,
+      "seconds": 0.108
+    },
+    {
+      "tool": "pwsh",
+      "status": "ok",
+      "ok": true,
+      "command": "/usr/local/bin/pwsh --version",
+      "version": "PowerShell 7.4.6",
+      "stdout": [
+        "PowerShell 7.4.6"
+      ],
+      "stderr": [],
+      "exit_code": 0,
+      "seconds": 0.306
+    },
+    {
+      "tool": "sourcekit-lsp",
+      "status": "ok",
+      "ok": true,
+      "command": "/usr/bin/sourcekit-lsp (no version flag); /usr/bin/swift --version",
+      "version": "Apple Swift version 6.2.4 (swiftlang-6.2.4.1.4 clang-1700.6.4.2)",
+      "stdout": [
+        "Apple Swift version 6.2.4 (swiftlang-6.2.4.1.4 clang-1700.6.4.2)",
+        "Target: arm64-apple-macosx26.0"
+      ],
+      "stderr": [
+        "swift-driver version: 1.127.15"
+      ],
+      "exit_code": 0,
+      "seconds": 0.384,
+      "binary": "/usr/bin/sourcekit-lsp",
+      "note": "sourcekit-lsp has no version flag in this toolchain; Swift toolchain version is recorded as the closest reproducible native version."
+    }
+  ],
+  "live_smoke_tools": [
+    {
+      "artifact": "bench/LIVE_APEX_SMOKE.json",
+      "language": "apex",
+      "native_tool": "apex-source-counter",
+      "native_status": "ok",
+      "native_command": "python3 <apex source counter> /tmp/atlas-live-apex-recipes/repo/force-app",
+      "metric_versions": {},
+      "richer_native_baselines": {
+        "apex-source-counter": {
+          "status": "ok",
+          "ok": true,
+          "note": "benchmark-owned Apex source counter used as the scriptable parser coverage proxy"
+        },
+        "sf": {
+          "status": "missing",
+          "ok": false,
+          "note": "Salesforce CLI not installed; source-only Apex parser proxy used for this smoke"
+        },
+        "sfdx": {
+          "status": "missing",
+          "ok": false,
+          "note": "sfdx CLI not installed"
+        },
+        "apex-language-server": {
+          "status": "missing",
+          "ok": false,
+          "note": "Apex language server is not installed; source counter coverage proxy used for this smoke"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_ASTRO_SMOKE.json",
+      "language": "astro",
+      "native_tool": "astro-compiler",
+      "native_status": "ok",
+      "native_command": "/opt/homebrew/bin/node /tmp/atlas-live-astro-blog-tutorial/astro-compiler/astro_stats.js /tmp/atlas-live-astro-blog-tutorial/repo/src",
+      "metric_versions": {
+        "compiler_version": "4.0.0"
+      },
+      "richer_native_baselines": {
+        "astro": {
+          "status": "missing",
+          "ok": false,
+          "note": "astro CLI not installed; @astrojs/compiler used as the scriptable source parser baseline"
+        },
+        "astro-language-server": {
+          "status": "missing",
+          "ok": false,
+          "note": "Astro language server is not installed; @astrojs/compiler parse coverage used for this smoke"
+        },
+        "@astrojs/compiler": {
+          "status": "ok",
+          "ok": true,
+          "note": "compiler parse plus frontmatter definition coverage proxy"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_BASH_SMOKE.json",
+      "language": "bash",
+      "native_tool": "bash-n",
+      "native_status": "ok",
+      "native_command": "/bin/bash -n <5 shell files>",
+      "metric_versions": {
+        "bash_version": "GNU bash, version 3.2.57(1)-release (arm64-apple-darwin25)"
+      },
+      "richer_native_baselines": {
+        "shellcheck": {
+          "status": "missing",
+          "ok": false,
+          "note": "shellcheck not installed; /bin/bash -n plus function counting used as the native baseline"
+        },
+        "shfmt": {
+          "status": "missing",
+          "ok": false,
+          "note": "shfmt not installed"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_BLADE_SMOKE.json",
+      "language": "blade",
+      "native_tool": "blade-directive-counter",
+      "native_status": "ok",
+      "native_command": "python3 <blade directive counter> /tmp/atlas-live-blade-bookstack/repo/resources/views",
+      "metric_versions": {},
+      "richer_native_baselines": {
+        "blade-directive-counter": {
+          "status": "ok",
+          "ok": true,
+          "note": "benchmark-owned Blade directive counter used as the scriptable source parser proxy"
+        },
+        "laravel": {
+          "status": "missing",
+          "ok": false,
+          "note": "Laravel application runtime is not installed for this source-only smoke"
+        },
+        "blade-language-server": {
+          "status": "missing",
+          "ok": false,
+          "note": "Blade language server is not installed; directive coverage proxy used for this smoke"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_BYOND_SMOKE.json",
+      "language": "byond",
+      "native_tool": "byond-source-counter",
+      "native_status": "ok",
+      "native_command": "python3 <byond source counter> /tmp/atlas-live-byond-tgstation/repo/code/modules/mob",
+      "metric_versions": {},
+      "richer_native_baselines": {
+        "byond-source-counter": {
+          "status": "ok",
+          "ok": true,
+          "note": "benchmark-owned BYOND source counter used as the scriptable parser coverage proxy"
+        },
+        "dreamchecker": {
+          "status": "missing",
+          "ok": false,
+          "note": "dreamchecker not installed; source-only BYOND parser proxy used for this smoke"
+        },
+        "dm-langserver": {
+          "status": "missing",
+          "ok": false,
+          "note": "BYOND/DM language server is not installed; source counter coverage proxy used for this smoke"
+        },
+        "tree-sitter-dm": {
+          "status": "missing",
+          "ok": false,
+          "note": "graphify's richer DM extractor requires optional tree_sitter_dm, which is not installed in the graphify tool environment on this machine"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_CSHARP_SMOKE.json",
+      "language": "csharp",
+      "native_tool": "roslyn",
+      "native_status": "ok",
+      "native_command": "/opt/homebrew/bin/dotnet run --no-build -- /tmp/atlas-live-csharp-dapper/repo (Roslyn syntax tree counter)",
+      "metric_versions": {
+        "roslyn_version": "5.6.0.0",
+        "tool_versions": {
+          "dotnet": "10.0.301"
+        }
+      },
+      "richer_native_baselines": {
+        "csharp-source-counter": {
+          "status": "ok",
+          "ok": true,
+          "note": "deterministic C# source counter used as the scriptable parser coverage proxy"
+        },
+        "dotnet": {
+          "status": "available",
+          "ok": true,
+          "note": "dotnet is available and the Roslyn syntax-tree counter is used when it can be built"
+        },
+        "csc": {
+          "status": "missing",
+          "ok": false,
+          "note": "csc not installed"
+        },
+        "omnisharp": {
+          "status": "missing",
+          "ok": false,
+          "note": "OmniSharp not installed"
+        },
+        "csharp-ls": {
+          "status": "missing",
+          "ok": false,
+          "note": "csharp-ls not installed"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_CUDA_SMOKE.json",
+      "language": "cuda",
+      "native_tool": "cuda-source-counter",
+      "native_status": "ok",
+      "native_command": "python3 <cuda source counter> /tmp/atlas-live-cuda-samples/repo/cpp/0_Introduction/simpleAtomicIntrinsics",
+      "metric_versions": {},
+      "richer_native_baselines": {
+        "cuda-source-counter": {
+          "status": "ok",
+          "ok": true,
+          "note": "benchmark-owned CUDA .cu/.cuh function counter used as the extension-dispatch coverage proxy"
+        },
+        "nvcc": {
+          "status": "missing",
+          "ok": false,
+          "note": "nvcc not installed; source-only parser proxy used for this smoke"
+        },
+        "clangd": {
+          "status": "available",
+          "ok": true,
+          "note": "clangd is available, but this smoke uses source-only CUDA extension coverage to avoid compile database coupling"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_DART_SMOKE.json",
+      "language": "dart",
+      "native_tool": "tree-sitter-dart",
+      "native_status": "ok",
+      "native_command": "/tmp/atlas-live-dart-http/tree-sitter-dart-venv/bin/python -c <tree-sitter-dart definition counter> /tmp/atlas-live-dart-http/repo/pkgs/http/lib",
+      "metric_versions": {
+        "tree_sitter_version": "0.25.2",
+        "tree_sitter_dart_version": "0.1.0"
+      },
+      "richer_native_baselines": {
+        "dart": {
+          "status": "missing",
+          "ok": false,
+          "note": "dart SDK not installed; tree-sitter-dart parser used as the isolated definition baseline"
+        },
+        "flutter": {
+          "status": "missing",
+          "ok": false,
+          "note": "flutter not installed"
+        },
+        "dart_language_server": {
+          "status": "missing",
+          "ok": false,
+          "note": "dart_language_server not installed"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_DELPHI_SMOKE.json",
+      "language": "delphi",
+      "native_tool": "delphi-lazarus-source-counter",
+      "native_status": "ok",
+      "native_command": "python3 <delphi/lazarus source counter> /tmp/atlas-live-delphi-lazarus/repo/ide",
+      "metric_versions": {},
+      "richer_native_baselines": {
+        "delphi-lazarus-source-counter": {
+          "status": "ok",
+          "ok": true,
+          "note": "benchmark-owned Delphi/Lazarus form and package counter used as the scriptable parser coverage proxy"
+        },
+        "fpc": {
+          "status": "missing",
+          "ok": false,
+          "note": "Free Pascal compiler not installed; source-only form/package parser proxy used for this smoke"
+        },
+        "lazbuild": {
+          "status": "missing",
+          "ok": false,
+          "note": "lazbuild not installed; source-only form/package parser proxy used for this smoke"
+        },
+        "pasls": {
+          "status": "missing",
+          "ok": false,
+          "note": "Pascal language server not installed"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_DOTNET_SMOKE.json",
+      "language": "dotnet",
+      "native_tool": "python-dotnet-project",
+      "native_status": "ok",
+      "native_command": "/opt/homebrew/bin/python3 -c <dotnet project counter> /tmp/atlas-live-dotnet-dapper/repo",
+      "metric_versions": {},
+      "richer_native_baselines": {
+        "dotnet": {
+          "status": "available",
+          "ok": true,
+          "note": "dotnet is available but this harness avoids restore/build coupling"
+        },
+        "msbuild": {
+          "status": "missing",
+          "ok": false,
+          "note": "msbuild not installed"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_EJS_SMOKE.json",
+      "language": "ejs",
+      "native_tool": "ejs-template-counter",
+      "native_status": "ok",
+      "native_command": "python3 <ejs template counter> /tmp/atlas-live-ejs-express/repo/examples",
+      "metric_versions": {},
+      "richer_native_baselines": {
+        "ejs-template-counter": {
+          "status": "ok",
+          "ok": true,
+          "note": "benchmark-owned EJS template/include counter used as the scriptable parser coverage proxy"
+        },
+        "ejs": {
+          "status": "missing",
+          "ok": false,
+          "note": "EJS CLI not installed; source-only template parser proxy used for this smoke"
+        },
+        "ejs-language-server": {
+          "status": "missing",
+          "ok": false,
+          "note": "EJS language server is not installed; source counter coverage proxy used for this graphify detector-only smoke"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_ELIXIR_SMOKE.json",
+      "language": "elixir",
+      "native_tool": "tree-sitter-elixir",
+      "native_status": "ok",
+      "native_command": "/tmp/atlas-live-elixir-phoenix/tree-sitter-elixir-venv/bin/python -c <tree-sitter-elixir definition counter> /tmp/atlas-live-elixir-phoenix/repo/lib",
+      "metric_versions": {
+        "tree_sitter_version": "0.25.2",
+        "tree_sitter_elixir_version": "0.3.5"
+      },
+      "richer_native_baselines": {
+        "elixir": {
+          "status": "missing",
+          "ok": false,
+          "note": "elixir CLI not installed; tree-sitter-elixir parser used as the isolated definition baseline"
+        },
+        "mix": {
+          "status": "missing",
+          "ok": false,
+          "note": "mix not installed"
+        },
+        "lexical": {
+          "status": "missing",
+          "ok": false,
+          "note": "Lexical language server not installed"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_ETS_SMOKE.json",
+      "language": "ets",
+      "native_tool": "ets-source-counter",
+      "native_status": "ok",
+      "native_command": "python3 <ets source counter> /tmp/atlas-live-ets-openharmony-tabs/repo/code/ArkTS1.2/TabsSample/entry/src/main/ets",
+      "metric_versions": {},
+      "richer_native_baselines": {
+        "ets-source-counter": {
+          "status": "ok",
+          "ok": true,
+          "note": "benchmark-owned ArkTS/ETS declaration counter used as the scriptable parser coverage proxy"
+        },
+        "arkts": {
+          "status": "missing",
+          "ok": false,
+          "note": "ArkTS compiler CLI not installed; source-only parser proxy used for this smoke"
+        },
+        "hvigor": {
+          "status": "missing",
+          "ok": false,
+          "note": "hvigor not installed; OpenHarmony build execution is avoided for this source-only smoke"
+        },
+        "ohpm": {
+          "status": "missing",
+          "ok": false,
+          "note": "ohpm not installed"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_FORTRAN_SMOKE.json",
+      "language": "fortran",
+      "native_tool": "tree-sitter-fortran",
+      "native_status": "ok",
+      "native_command": "/tmp/atlas-live-fortran-stdlib/tree-sitter-fortran-venv/bin/python -c <tree-sitter-fortran definition counter> /tmp/atlas-live-fortran-stdlib/repo/src",
+      "metric_versions": {
+        "tree_sitter_version": "0.25.2",
+        "tree_sitter_fortran_version": "0.6.0"
+      },
+      "richer_native_baselines": {
+        "gfortran": {
+          "status": "missing",
+          "ok": false,
+          "note": "gfortran not installed; tree-sitter-fortran parser used as the isolated definition baseline"
+        },
+        "fortls": {
+          "status": "missing",
+          "ok": false,
+          "note": "fortls language server not installed"
+        },
+        "fpm": {
+          "status": "missing",
+          "ok": false,
+          "note": "fpm not installed; source parser baseline used instead of dependency/build execution"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_GROOVY_SMOKE.json",
+      "language": "groovy",
+      "native_tool": "tree-sitter-groovy",
+      "native_status": "partial",
+      "native_command": "/tmp/atlas-live-groovy-nextflow/tree-sitter-groovy-venv/bin/python -c <tree-sitter-groovy definition counter> /tmp/atlas-live-groovy-nextflow/repo/modules/nf-commons/src/main",
+      "metric_versions": {
+        "tree_sitter_version": "0.25.2",
+        "tree_sitter_groovy_version": "0.1.2"
+      },
+      "richer_native_baselines": {
+        "groovy": {
+          "status": "missing",
+          "ok": false,
+          "note": "groovy CLI not installed; tree-sitter-groovy parser used as the isolated definition baseline"
+        },
+        "gradle": {
+          "status": "missing",
+          "ok": false,
+          "note": "gradle not installed; source parser baseline used instead of dependency/build execution"
+        },
+        "groovy-language-server": {
+          "status": "missing",
+          "ok": false,
+          "note": "Groovy language server is not installed; tree-sitter-groovy parse coverage used for this smoke"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_JSON_SMOKE.json",
+      "language": "json",
+      "native_tool": "python-json",
+      "native_status": "ok",
+      "native_command": "/opt/homebrew/bin/python3 -c <python-json key counter> /tmp/atlas-live-json-eslint-create-config/repo",
+      "metric_versions": {},
+      "richer_native_baselines": {
+        "python-json": {
+          "status": "ok",
+          "ok": true,
+          "note": "Python stdlib JSON parser used as the isolated object-key coverage baseline"
+        },
+        "ajv": {
+          "status": "missing",
+          "ok": false,
+          "note": "ajv not installed; schema validation is not a definition index baseline"
+        },
+        "jq": {
+          "status": "available",
+          "ok": true,
+          "note": "jq is available for queries but not used as a definition coverage baseline"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_JULIA_SMOKE.json",
+      "language": "julia",
+      "native_tool": "tree-sitter-julia",
+      "native_status": "partial",
+      "native_command": "/tmp/atlas-live-julia-json/tree-sitter-julia-venv/bin/python -c <tree-sitter-julia definition counter> /tmp/atlas-live-julia-json/repo/src",
+      "metric_versions": {
+        "tree_sitter_version": "0.25.2",
+        "tree_sitter_julia_version": "0.23.1"
+      },
+      "richer_native_baselines": {
+        "julia": {
+          "status": "missing",
+          "ok": false,
+          "note": "julia CLI not installed; tree-sitter-julia parser used as the isolated definition baseline"
+        },
+        "LanguageServer.jl": {
+          "status": "missing_adapter",
+          "ok": false,
+          "note": "LanguageServer.jl is not wired into this harness; tree-sitter-julia source parse coverage is used for this smoke"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_KOTLIN_SMOKE.json",
+      "language": "kotlin",
+      "native_tool": "tree-sitter-kotlin",
+      "native_status": "partial",
+      "native_command": "/tmp/atlas-live-kotlin-okhttp/tree-sitter-kotlin-venv/bin/python -c <tree-sitter-kotlin definition counter> /tmp/atlas-live-kotlin-okhttp/repo/okhttp/src/commonJvmAndroid/kotlin",
+      "metric_versions": {
+        "tree_sitter_version": "0.25.2",
+        "tree_sitter_kotlin_version": "1.1.0"
+      },
+      "richer_native_baselines": {
+        "kotlinc": {
+          "status": "missing",
+          "ok": false,
+          "note": "kotlinc not installed; tree-sitter-kotlin parser used as the isolated definition baseline"
+        },
+        "kotlin-language-server": {
+          "status": "missing",
+          "ok": false,
+          "note": "kotlin-language-server not installed"
+        },
+        "ktlint": {
+          "status": "missing",
+          "ok": false,
+          "note": "ktlint not installed"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_LUA_SMOKE.json",
+      "language": "lua",
+      "native_tool": "luaparser",
+      "native_status": "ok",
+      "native_command": "/tmp/atlas-live-lua-lazy/luaparser-venv/bin/python -c <luaparser definition counter> /tmp/atlas-live-lua-lazy/repo",
+      "metric_versions": {
+        "luaparser_version": "4.0.1"
+      },
+      "richer_native_baselines": {
+        "lua": {
+          "status": "missing",
+          "ok": false,
+          "note": "lua interpreter not installed"
+        },
+        "luac": {
+          "status": "missing",
+          "ok": false,
+          "note": "luac not installed"
+        },
+        "luacheck": {
+          "status": "missing",
+          "ok": false,
+          "note": "luacheck not installed"
+        },
+        "stylua": {
+          "status": "missing",
+          "ok": false,
+          "note": "stylua not installed"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_MARKDOWN_SMOKE.json",
+      "language": "markdown",
+      "native_tool": "markdown-it-py",
+      "native_status": "ok",
+      "native_command": "/tmp/atlas-live-markdown-mdbook/markdown-it-venv/bin/python -c <markdown-it-py heading counter> /tmp/atlas-live-markdown-mdbook/repo/guide/src",
+      "metric_versions": {
+        "markdown_it_py_version": "4.0.0"
+      },
+      "richer_native_baselines": {
+        "markdown-it-py": {
+          "status": "ok",
+          "ok": true,
+          "note": "CommonMark heading parser used as the isolated Markdown section baseline"
+        },
+        "markdownlint": {
+          "status": "missing",
+          "ok": false,
+          "note": "markdownlint not installed; it is lint-focused, not a definition index baseline"
+        },
+        "remark": {
+          "status": "missing",
+          "ok": false,
+          "note": "remark CLI not installed; markdown-it-py used as the scriptable parser baseline"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_OBJC_SMOKE.json",
+      "language": "objc",
+      "native_tool": "tree-sitter-objc",
+      "native_status": "partial",
+      "native_command": "/tmp/atlas-live-objc-sdwebimage/tree-sitter-objc-venv/bin/python -c <tree-sitter-objc definition counter> /tmp/atlas-live-objc-sdwebimage/repo/SDWebImage",
+      "metric_versions": {
+        "tree_sitter_version": "0.25.2",
+        "tree_sitter_objc_version": "3.0.2"
+      },
+      "richer_native_baselines": {
+        "clang": {
+          "status": "available",
+          "ok": true,
+          "note": "clang is available for syntax/build checks; tree-sitter-objc is used for source-only definition coverage"
+        },
+        "sourcekit-lsp": {
+          "status": "available",
+          "ok": true,
+          "note": "sourcekit-lsp is available but Objective-C documentSymbol coverage is not wired into this harness; tree-sitter-objc used instead"
+        },
+        "clangd": {
+          "status": "missing_adapter",
+          "ok": false,
+          "note": "clangd adapter not implemented for Objective-C in this harness yet"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_PASCAL_SMOKE.json",
+      "language": "pascal",
+      "native_tool": "pascal-regex-counter",
+      "native_status": "ok",
+      "native_command": "/opt/homebrew/bin/python3 -c <pascal declaration counter> /tmp/atlas-live-pascal-pascalscript/repo/Source",
+      "metric_versions": {},
+      "richer_native_baselines": {
+        "fpc": {
+          "status": "missing",
+          "ok": false,
+          "note": "Free Pascal compiler not installed; declaration counter used as source-only coverage proxy"
+        },
+        "pasls": {
+          "status": "missing",
+          "ok": false,
+          "note": "Pascal language server not installed"
+        },
+        "tree-sitter-delphi": {
+          "status": "unusable",
+          "ok": false,
+          "note": "tree-sitter-delphi 0.1.0 installs as delphi_tree_sitter but cannot load its tree-sitter library in this environment"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_PHP_SMOKE.json",
+      "language": "php",
+      "native_tool": "php-tokenizer",
+      "native_status": "ok",
+      "native_command": "/opt/homebrew/bin/php /tmp/atlas-live-php-slim/php_token_stats.php /tmp/atlas-live-php-slim/repo",
+      "metric_versions": {
+        "php_version": "8.4.14"
+      },
+      "richer_native_baselines": {
+        "intelephense": {
+          "status": "missing",
+          "ok": false,
+          "note": "intelephense not installed"
+        },
+        "phpstan": {
+          "status": "missing",
+          "ok": false,
+          "note": "phpstan not installed"
+        },
+        "psalm": {
+          "status": "missing",
+          "ok": false,
+          "note": "psalm not installed"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_POWERSHELL_SMOKE.json",
+      "language": "powershell",
+      "native_tool": "pwsh-parser",
+      "native_status": "ok",
+      "native_command": "/usr/local/bin/pwsh -NoLogo -NoProfile -File /tmp/atlas-live-powershell-powershellget/pwsh_stats.ps1 /tmp/atlas-live-powershell-powershellget/repo/src",
+      "metric_versions": {
+        "powershell_version": "7.4.6"
+      },
+      "richer_native_baselines": {
+        "pwsh": {
+          "status": "available",
+          "ok": true,
+          "note": "PowerShell parser used as native syntax/function-definition baseline"
+        },
+        "powershell-editor-services": {
+          "status": "missing",
+          "ok": false,
+          "note": "PowerShellEditorServices LSP is not installed; pwsh AST parser used for this smoke"
+        },
+        "psscriptanalyzer": {
+          "status": "missing",
+          "ok": false,
+          "note": "PSScriptAnalyzer not installed; it is lint-focused, not a definition index baseline"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_RAZOR_SMOKE.json",
+      "language": "razor",
+      "native_tool": "razor-directive-counter",
+      "native_status": "ok",
+      "native_command": "python3 <razor directive counter> /tmp/atlas-live-razor-eshoponweb/repo/src",
+      "metric_versions": {},
+      "richer_native_baselines": {
+        "razor-directive-counter": {
+          "status": "ok",
+          "ok": true,
+          "note": "benchmark-owned Razor directive/component counter used as the scriptable source parser proxy"
+        },
+        "dotnet": {
+          "status": "available",
+          "ok": true,
+          "note": "dotnet is available but this harness avoids restore/build coupling"
+        },
+        "razor-language-server": {
+          "status": "missing",
+          "ok": false,
+          "note": "Razor language server is not installed; directive/component coverage proxy used for this smoke"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_RUBY_SMOKE.json",
+      "language": "ruby",
+      "native_tool": "ruby-ripper",
+      "native_status": "ok",
+      "native_command": "/usr/bin/ruby /tmp/atlas-live-ruby-sinatra/ripper_stats.rb /tmp/atlas-live-ruby-sinatra/repo",
+      "metric_versions": {
+        "ruby_version": "2.6.10"
+      },
+      "richer_native_baselines": {
+        "solargraph": {
+          "status": "missing",
+          "ok": false,
+          "note": "solargraph not installed"
+        },
+        "ruby-lsp": {
+          "status": "missing",
+          "ok": false,
+          "note": "ruby-lsp not installed"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_RUST_SMOKE.json",
+      "language": "rust",
+      "native_tool": "rust-analyzer",
+      "native_status": "ok",
+      "native_command": "/opt/homebrew/bin/rust-analyzer documentSymbol <16 Rust files>",
+      "metric_versions": {
+        "tool_versions": {
+          "rust-analyzer": "rust-analyzer 0.0.0 (69ccffdb5b 2026-06-21)",
+          "cargo": "cargo 1.96.0 (30a34c682 2026-05-25) (Homebrew)",
+          "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25) (Homebrew)"
+        }
+      },
+      "richer_native_baselines": {
+        "rust-source-counter": {
+          "status": "ok",
+          "ok": true,
+          "note": "deterministic Rust source counter used as the scriptable parser coverage proxy"
+        },
+        "rust-analyzer": {
+          "status": "missing_adapter",
+          "ok": false,
+          "note": "rust-analyzer adapter not implemented in this harness yet"
+        },
+        "cargo": {
+          "status": "available",
+          "ok": true,
+          "note": "cargo is available but not a code-intelligence definition baseline by itself"
+        },
+        "rustc": {
+          "status": "available",
+          "ok": true,
+          "note": "rustc is available but not a code-intelligence definition baseline by itself"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_R_SMOKE.json",
+      "language": "r",
+      "native_tool": "r-source-counter",
+      "native_status": "ok",
+      "native_command": "python3 <R source counter> /tmp/atlas-live-r-ggplot2/repo/R",
+      "metric_versions": {},
+      "richer_native_baselines": {
+        "r-source-counter": {
+          "status": "ok",
+          "ok": true,
+          "note": "benchmark-owned R function/type/variable counter used as the scriptable parser coverage proxy"
+        },
+        "Rscript": {
+          "status": "missing",
+          "ok": false,
+          "note": "Rscript not installed; source-only parser proxy used for this smoke"
+        },
+        "languageserver": {
+          "status": "missing_adapter",
+          "ok": false,
+          "note": "R languageserver is not installed or wired into this harness; source counter coverage proxy used for this graphify detector-only smoke"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_SCALA_SMOKE.json",
+      "language": "scala",
+      "native_tool": "tree-sitter-scala",
+      "native_status": "partial",
+      "native_command": "/tmp/atlas-live-scala-cats/tree-sitter-scala-venv/bin/python -c <tree-sitter-scala definition counter> /tmp/atlas-live-scala-cats/repo/core/src/main/scala",
+      "metric_versions": {
+        "tree_sitter_version": "0.25.2",
+        "tree_sitter_scala_version": "0.26.0"
+      },
+      "richer_native_baselines": {
+        "metals": {
+          "status": "missing",
+          "ok": false,
+          "note": "Metals not installed"
+        },
+        "scalac": {
+          "status": "missing",
+          "ok": false,
+          "note": "scalac not installed; tree-sitter-scala parser used as the isolated definition baseline"
+        },
+        "scala-cli": {
+          "status": "missing",
+          "ok": false,
+          "note": "scala-cli not installed"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_SQL_SMOKE.json",
+      "language": "sql",
+      "native_tool": "sqlfluff",
+      "native_status": "ok",
+      "native_command": "/tmp/atlas-live-sql-hasura/sqlfluff-venv/bin/sqlfluff parse --dialect postgres <82 SQL files>",
+      "metric_versions": {
+        "sqlfluff_version": "sqlfluff, version 3.5.0"
+      },
+      "richer_native_baselines": {
+        "psql": {
+          "status": "unavailable",
+          "ok": false,
+          "note": "psql is installed but requires a live PostgreSQL database; sqlfluff parser used as the scriptable native baseline"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_SVELTE_SMOKE.json",
+      "language": "svelte",
+      "native_tool": "svelte-compiler",
+      "native_status": "ok",
+      "native_command": "/opt/homebrew/bin/node /tmp/atlas-live-svelte-carbon/svelte-compiler/svelte_stats.js /tmp/atlas-live-svelte-carbon/repo/src",
+      "metric_versions": {
+        "compiler_version": "5.56.4"
+      },
+      "richer_native_baselines": {
+        "svelte-check": {
+          "status": "missing",
+          "ok": false,
+          "note": "svelte-check not installed; Svelte compiler parser used as the scriptable SFC baseline"
+        },
+        "svelte-language-server": {
+          "status": "missing",
+          "ok": false,
+          "note": "Svelte language server is not installed; Svelte compiler parse coverage used for this smoke"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_SWIFT_SMOKE.json",
+      "language": "swift",
+      "native_tool": "sourcekit-lsp",
+      "native_status": "ok",
+      "native_command": "/usr/bin/sourcekit-lsp --scratch-path /tmp/atlas-live-swift-argument-parser/sourcekit-scratch --default-workspace-type swiftPM",
+      "metric_versions": {
+        "swift_version": "Apple Swift version 6.2.4 (swiftlang-6.2.4.1.4 clang-1700.6.4.2)"
+      },
+      "richer_native_baselines": {
+        "sourcekit-lsp": {
+          "status": "ok",
+          "ok": true,
+          "note": ""
+        },
+        "swift-syntax": {
+          "status": "missing",
+          "ok": false,
+          "note": "swift-syntax CLI not installed; SourceKit-LSP documentSymbol used as the native baseline"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_TERRAFORM_SMOKE.json",
+      "language": "terraform",
+      "native_tool": "python-hcl2",
+      "native_status": "ok",
+      "native_command": "/tmp/atlas-live-terraform-vpc/hcl2-venv/bin/python -c <hcl2 definition counter> /tmp/atlas-live-terraform-vpc/repo",
+      "metric_versions": {
+        "python_hcl2_version": "8.1.2"
+      },
+      "richer_native_baselines": {
+        "terraform": {
+          "status": "missing",
+          "ok": false,
+          "note": "terraform CLI not installed; python-hcl2 parser used as the scriptable native baseline"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_VERILOG_SMOKE.json",
+      "language": "verilog",
+      "native_tool": "tree-sitter-systemverilog",
+      "native_status": "partial",
+      "native_command": "/tmp/atlas-live-verilog-ibex/tree-sitter-systemverilog-venv/bin/python -c <tree-sitter-systemverilog definition counter> /tmp/atlas-live-verilog-ibex/repo/rtl",
+      "metric_versions": {
+        "tree_sitter_version": "0.25.2",
+        "tree_sitter_systemverilog_version": "0.3.1"
+      },
+      "richer_native_baselines": {
+        "verilator": {
+          "status": "missing",
+          "ok": false,
+          "note": "verilator not installed; tree-sitter-systemverilog parser used as the isolated definition baseline"
+        },
+        "slang": {
+          "status": "missing",
+          "ok": false,
+          "note": "slang not installed"
+        },
+        "svlint": {
+          "status": "missing",
+          "ok": false,
+          "note": "svlint not installed"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_VUE_SMOKE.json",
+      "language": "vue",
+      "native_tool": "vue-compiler-sfc",
+      "native_status": "ok",
+      "native_command": "/opt/homebrew/bin/node /tmp/atlas-live-vue-realworld/vue-compiler/vue_sfc_stats.js /tmp/atlas-live-vue-realworld/repo/src",
+      "metric_versions": {
+        "compiler_version": "3.5.22"
+      },
+      "richer_native_baselines": {
+        "vue-tsc": {
+          "status": "missing",
+          "ok": false,
+          "note": "vue-tsc not installed; @vue/compiler-sfc used as the scriptable SFC parser baseline"
+        },
+        "volar": {
+          "status": "missing",
+          "ok": false,
+          "note": "Volar language server is not installed; compiler-sfc parse coverage used for this smoke"
+        }
+      }
+    },
+    {
+      "artifact": "bench/LIVE_ZIG_SMOKE.json",
+      "language": "zig",
+      "native_tool": "tree-sitter-zig",
+      "native_status": "partial",
+      "native_command": "/tmp/atlas-live-zig-zls/tree-sitter-zig-venv/bin/python -c <tree-sitter-zig definition counter> /tmp/atlas-live-zig-zls/repo/src",
+      "metric_versions": {
+        "tree_sitter_version": "0.25.2",
+        "tree_sitter_zig_version": "1.1.2"
+      },
+      "richer_native_baselines": {
+        "zig": {
+          "status": "missing",
+          "ok": false,
+          "note": "zig CLI not installed; tree-sitter-zig parser used as the isolated definition baseline"
+        },
+        "zls": {
+          "status": "missing",
+          "ok": false,
+          "note": "zls language server not installed"
+        }
+      }
+    }
+  ]
+}

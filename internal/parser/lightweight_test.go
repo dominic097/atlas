@@ -44,63 +44,66 @@ func TestLanguageForPathReviewContextTextFormats(t *testing.T) {
 
 func TestLanguageForPathGraphifyDispatchFormats(t *testing.T) {
 	cases := map[string]string{
-		"src/lib.rs":            "rust",
-		"app/models/user.rb":    "ruby",
-		"src/Main.kt":           "kotlin",
-		"build.gradle.kts":      "kotlin",
-		"src/Main.scala":        "scala",
-		"src/index.php":         "php",
-		"views/home.blade.php":  "blade",
-		"Sources/App.swift":     "swift",
-		"plugin/init.lua":       "lua",
-		"plugin/init.luau":      "lua",
-		"addon/MyAddon.toc":     "lua",
-		"src/main.zig":          "zig",
-		"lib/app.ex":            "elixir",
-		"lib/app.exs":           "elixir",
-		"AppDelegate.m":         "objc",
-		"ViewController.mm":     "objc",
-		"src/main.jl":           "julia",
-		"solver.F90":            "fortran",
-		"solver.f03":            "fortran",
-		"lib/main.dart":         "dart",
-		"rtl/core.v":            "verilog",
-		"rtl/core.sv":           "verilog",
-		"rtl/core.svh":          "verilog",
-		"src/unit.pas":          "pascal",
-		"src/unit.pp":           "pascal",
-		"src/project.dpr":       "pascal",
-		"src/package.dpk":       "pascal",
-		"src/main.lpr":          "pascal",
-		"src/include.inc":       "pascal",
-		"forms/main.dfm":        "delphi",
-		"forms/main.lfm":        "delphi",
-		"forms/pkg.lpk":         "delphi",
-		"infra/main.tf":         "terraform",
-		"infra/vars.tfvars":     "terraform",
-		"infra/module.hcl":      "terraform",
-		"code/game.dm":          "byond",
-		"code/project.dme":      "byond",
-		"code/icon.dmi":         "byond",
-		"code/map.dmm":          "byond",
-		"code/ui.dmf":           "byond",
-		"App.sln":               "dotnet",
-		"App.slnx":              "dotnet",
-		"App/App.csproj":        "dotnet",
-		"App/App.fsproj":        "dotnet",
-		"App/App.vbproj":        "dotnet",
-		"Pages/Index.razor":     "razor",
-		"Pages/Index.cshtml":    "razor",
-		"force-app/Foo.cls":     "apex",
-		"force-app/Foo.trigger": "apex",
-		"web/App.vue":           "vue",
-		"web/App.svelte":        "svelte",
-		"web/App.astro":         "astro",
-		"native/kernel.cu":      "cpp",
-		"native/kernel.cuh":     "cpp",
-		"docs/design.qmd":       "markdown",
-		"scripts/profile.psm1":  "powershell",
-		"scripts/manifest.psd1": "powershell",
+		"src/lib.rs":                         "rust",
+		"app/models/user.rb":                 "ruby",
+		"src/Main.kt":                        "kotlin",
+		"build.gradle.kts":                   "kotlin",
+		"src/Main.scala":                     "scala",
+		"src/index.php":                      "php",
+		"views/home.blade.php":               "blade",
+		"Sources/App.swift":                  "swift",
+		"plugin/init.lua":                    "lua",
+		"plugin/init.luau":                   "lua",
+		"addon/MyAddon.toc":                  "lua",
+		"src/main.zig":                       "zig",
+		"lib/app.ex":                         "elixir",
+		"lib/app.exs":                        "elixir",
+		"AppDelegate.m":                      "objc",
+		"ViewController.mm":                  "objc",
+		"src/main.jl":                        "julia",
+		"solver.F90":                         "fortran",
+		"solver.f03":                         "fortran",
+		"lib/main.dart":                      "dart",
+		"rtl/core.v":                         "verilog",
+		"rtl/core.sv":                        "verilog",
+		"rtl/core.svh":                       "verilog",
+		"src/unit.pas":                       "pascal",
+		"src/unit.pp":                        "pascal",
+		"src/project.dpr":                    "pascal",
+		"src/package.dpk":                    "pascal",
+		"src/main.lpr":                       "pascal",
+		"src/include.inc":                    "pascal",
+		"forms/main.dfm":                     "delphi",
+		"forms/main.lfm":                     "delphi",
+		"forms/pkg.lpk":                      "delphi",
+		"infra/main.tf":                      "terraform",
+		"infra/vars.tfvars":                  "terraform",
+		"infra/module.hcl":                   "terraform",
+		"code/game.dm":                       "byond",
+		"code/project.dme":                   "byond",
+		"code/icon.dmi":                      "byond",
+		"code/map.dmm":                       "byond",
+		"code/ui.dmf":                        "byond",
+		"App.sln":                            "dotnet",
+		"App.slnx":                           "dotnet",
+		"App/App.csproj":                     "dotnet",
+		"App/App.fsproj":                     "dotnet",
+		"App/App.vbproj":                     "dotnet",
+		"Pages/Index.razor":                  "razor",
+		"Pages/Index.cshtml":                 "razor",
+		"force-app/Foo.cls":                  "apex",
+		"force-app/Foo.trigger":              "apex",
+		"web/App.vue":                        "vue",
+		"web/App.svelte":                     "svelte",
+		"web/App.astro":                      "astro",
+		"views/index.ejs":                    "ejs",
+		"entry/src/main/ets/MainAbility.ets": "ets",
+		"R/plot-build.R":                     "r",
+		"native/kernel.cu":                   "cpp",
+		"native/kernel.cuh":                  "cpp",
+		"docs/design.qmd":                    "markdown",
+		"scripts/profile.psm1":               "powershell",
+		"scripts/manifest.psd1":              "powershell",
 	}
 
 	for path, want := range cases {
@@ -258,6 +261,173 @@ func TestParseAdditionalGraphifyLanguageSymbols(t *testing.T) {
 				t.Fatalf("imports = %#v, want %q", res.Imports, tc.wantImport)
 			}
 		})
+	}
+}
+
+func TestParseRustNestedGenericAndRawIdentifierFunctions(t *testing.T) {
+	res, err := Parse("repo", "org/repo", "src/lib.rs", "", []byte(`
+pub fn patterns_from_path<P: AsRef<Path>>(path: P) -> io::Result<Vec<String>> {
+    todo!()
+}
+
+fn r#async(mut stderr: process::ChildStderr) -> StderrReader {
+    todo!()
+}
+`))
+	if err != nil {
+		t.Fatalf("Parse rust: %v", err)
+	}
+	for _, want := range []string{"patterns_from_path", "r#async"} {
+		sym := findSymbol(res.Symbols, want)
+		if sym == nil {
+			t.Fatalf("missing rust symbol %q; symbols=%+v", want, res.Symbols)
+		}
+		if sym.Kind != "function" {
+			t.Fatalf("%s kind = %q, want function", want, sym.Kind)
+		}
+	}
+}
+
+func TestParsePascalDefinitions(t *testing.T) {
+	res, err := Parse("repo", "org/repo", "Source/uPSCompiler.pas", "", []byte(`
+unit uPSCompiler;
+
+interface
+
+type
+  TPSPascalCompiler = class
+  end;
+
+procedure RegisterClassLibraryRuntime;
+function MakeHash(const Value: string): Longint;
+constructor TPSPascalCompiler.Create;
+destructor TPSPascalCompiler.Destroy;
+class procedure TPSPascalCompiler.RegisterStandardLibrary;
+class function TPSPascalCompiler.CompileUnit: Boolean;
+
+implementation
+
+end.
+`))
+	if err != nil {
+		t.Fatalf("Parse pascal: %v", err)
+	}
+	want := map[string]string{
+		"uPSCompiler":                               "unit",
+		"TPSPascalCompiler":                         "type",
+		"RegisterClassLibraryRuntime":               "function",
+		"MakeHash":                                  "function",
+		"TPSPascalCompiler.Create":                  "function",
+		"TPSPascalCompiler.Destroy":                 "function",
+		"TPSPascalCompiler.RegisterStandardLibrary": "function",
+		"TPSPascalCompiler.CompileUnit":             "function",
+	}
+	for name, kind := range want {
+		sym := findSymbol(res.Symbols, name)
+		if sym == nil {
+			t.Fatalf("missing pascal symbol %q; symbols=%+v", name, res.Symbols)
+		}
+		if sym.Kind != kind {
+			t.Fatalf("%s kind = %q, want %q", name, sym.Kind, kind)
+		}
+	}
+}
+
+func TestParseBladeDefinitions(t *testing.T) {
+	res, err := Parse("repo", "org/repo", "resources/views/settings/layout.blade.php", "", []byte(`
+@extends('layouts.simple')
+@section('body')
+  @include('settings.parts.navbar')
+  @includeIf('form.user-select')
+  @component('components.alert')
+    @yield('after-content')
+  @endcomponent
+  <livewire:user-picker />
+  <x-dropdown.item wire:click="saveRole('admin')" />
+@endsection
+`))
+	if err != nil {
+		t.Fatalf("Parse blade: %v", err)
+	}
+	want := map[string]string{
+		"settings.layout":       "template",
+		"layouts.simple":        "layout",
+		"body":                  "section",
+		"settings.parts.navbar": "include",
+		"form.user-select":      "include",
+		"components.alert":      "component",
+		"after-content":         "slot",
+		"user-picker":           "component",
+		"dropdown.item":         "component",
+		"saveRole('admin')":     "handler",
+	}
+	for name, kind := range want {
+		sym := findSymbol(res.Symbols, name)
+		if sym == nil {
+			t.Fatalf("missing blade symbol %q; symbols=%+v", name, res.Symbols)
+		}
+		if sym.Kind != kind {
+			t.Fatalf("%s kind = %q, want %q", name, sym.Kind, kind)
+		}
+	}
+	for _, wantImport := range []string{"layouts.simple", "settings.parts.navbar", "form.user-select", "components.alert"} {
+		if !containsString(res.Imports, wantImport) {
+			t.Fatalf("imports = %#v, want %q", res.Imports, wantImport)
+		}
+	}
+}
+
+func TestParseRazorDefinitions(t *testing.T) {
+	res, err := Parse("repo", "org/repo", "src/BlazorAdmin/Pages/CatalogItemPage/Create.razor", "", []byte(`
+@page "/catalog-items/create"
+@using Microsoft.AspNetCore.Components.Forms
+@inject IJSRuntime JSRuntime
+@inherits BlazorAdmin.Helpers.BlazorComponent
+@model ConfirmEmailModel
+
+<EditForm Model="@Item">
+  <DataAnnotationsValidator />
+  <InputText @bind-Value="Item.Name" />
+  <div>plain html should not be a component</div>
+</EditForm>
+
+@code {
+  public void CreateClick() {}
+  protected override async Task OnInitializedAsync() {}
+}
+`))
+	if err != nil {
+		t.Fatalf("Parse razor: %v", err)
+	}
+	want := map[string]string{
+		"BlazorAdmin.Pages.CatalogItemPage.Create": "component",
+		"/catalog-items/create":                    "route",
+		"Microsoft.AspNetCore.Components.Forms":    "import",
+		"IJSRuntime":                               "service",
+		"BlazorAdmin.Helpers.BlazorComponent":      "base",
+		"ConfirmEmailModel":                        "model",
+		"EditForm":                                 "component",
+		"DataAnnotationsValidator":                 "component",
+		"InputText":                                "component",
+		"CreateClick":                              "method",
+		"OnInitializedAsync":                       "method",
+	}
+	for name, kind := range want {
+		sym := findSymbol(res.Symbols, name)
+		if sym == nil {
+			t.Fatalf("missing razor symbol %q; symbols=%+v", name, res.Symbols)
+		}
+		if sym.Kind != kind {
+			t.Fatalf("%s kind = %q, want %q", name, sym.Kind, kind)
+		}
+	}
+	if findSymbol(res.Symbols, "Div") != nil {
+		t.Fatalf("html Div tag should not be indexed as a Razor component: %+v", res.Symbols)
+	}
+	for _, wantImport := range []string{"Microsoft.AspNetCore.Components.Forms", "IJSRuntime"} {
+		if !containsString(res.Imports, wantImport) {
+			t.Fatalf("imports = %#v, want %q", res.Imports, wantImport)
+		}
 	}
 }
 
@@ -996,6 +1166,581 @@ lint:
 	}
 	if findSymbol(res.Symbols, ".PHONY") != nil {
 		t.Fatal(".PHONY should not be indexed as a target symbol")
+	}
+}
+
+func TestParseMarkdownSectionsIgnoreFencedCode(t *testing.T) {
+	content := []byte(`# Guide
+
+intro
+
+` + "```rust" + `
+# fn main() {
+#     println!("hidden line");
+# }
+` + "```" + `
+
+#not-a-heading
+
+## Install ##
+
+~~~sh
+### not a shell heading
+~~~
+
+### Usage
+`)
+
+	res, err := Parse("repo", "org/repo", "guide.md", "", content)
+	if err != nil {
+		t.Fatalf("Parse markdown: %v", err)
+	}
+	want := []string{"Guide", "Install", "Usage"}
+	for _, name := range want {
+		sym := findSymbol(res.Symbols, name)
+		if sym == nil {
+			t.Fatalf("missing markdown section %q; symbols=%+v", name, res.Symbols)
+		}
+		if sym.Kind != "section" {
+			t.Fatalf("%s kind = %q, want section", name, sym.Kind)
+		}
+	}
+	for _, name := range []string{"fn main() {", "not a shell heading", "not-a-heading"} {
+		if findSymbol(res.Symbols, name) != nil {
+			t.Fatalf("markdown false-positive heading %q was indexed", name)
+		}
+	}
+}
+
+func TestParseJSONConfigKeys(t *testing.T) {
+	content := []byte(`{
+  "scripts": {
+    "test": "go test ./...",
+    "lint": "golangci-lint run"
+  },
+  "compilerOptions": {
+    "outDir": "dist"
+  },
+  "contributes": {
+    "commands": [
+      {"command": "atlas.review", "title": "Review"}
+    ]
+  }
+}`)
+
+	res, err := Parse("repo", "org/repo", "package.json", "", content)
+	if err != nil {
+		t.Fatalf("Parse json: %v", err)
+	}
+	for _, name := range []string{"scripts", "scripts.test", "compilerOptions.outDir", "contributes.commands[].command"} {
+		sym := findSymbol(res.Symbols, name)
+		if sym == nil {
+			t.Fatalf("missing json key %q; symbols=%+v", name, res.Symbols)
+		}
+		if sym.Kind != "key" {
+			t.Fatalf("%s kind = %q, want key", name, sym.Kind)
+		}
+		if sym.Metadata["source"] != "json_parser" {
+			t.Fatalf("%s metadata source = %#v, want json_parser", name, sym.Metadata["source"])
+		}
+	}
+	if findSymbol(res.Symbols, "package.json") != nil {
+		t.Fatal("valid json should not fall back to a file-level document symbol")
+	}
+}
+
+func TestParseInvalidJSONFallsBackToDocument(t *testing.T) {
+	res, err := Parse("repo", "org/repo", "broken.json", "", []byte(`{"scripts":`))
+	if err != nil {
+		t.Fatalf("Parse invalid json: %v", err)
+	}
+	sym := findSymbol(res.Symbols, "broken.json")
+	if sym == nil {
+		t.Fatalf("missing fallback document; symbols=%+v", res.Symbols)
+	}
+	if sym.Kind != "document" {
+		t.Fatalf("fallback kind = %q, want document", sym.Kind)
+	}
+}
+
+func TestParseDotnetProjectFiles(t *testing.T) {
+	csproj, err := Parse("repo", "org/repo", "Dapper/Dapper.csproj", "", []byte(`<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net461;netstandard2.0;net8.0</TargetFrameworks>
+  </PropertyGroup>
+  <ItemGroup>
+    <!--<PackageReference Include="Commented.Package" />-->
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" />
+    <ProjectReference Include="..\Dapper.ProviderTools\Dapper.ProviderTools.csproj" />
+  </ItemGroup>
+</Project>`))
+	if err != nil {
+		t.Fatalf("Parse csproj: %v", err)
+	}
+	wantCSProj := map[string]string{
+		"Dapper":                        "project",
+		"Microsoft.NET.Sdk":             "sdk",
+		"Microsoft.Bcl.AsyncInterfaces": "package",
+		"Dapper.ProviderTools":          "project_reference",
+		"netstandard2.0":                "target_framework",
+	}
+	for name, kind := range wantCSProj {
+		sym := findSymbol(csproj.Symbols, name)
+		if sym == nil {
+			t.Fatalf("missing csproj symbol %q; symbols=%+v", name, csproj.Symbols)
+		}
+		if sym.Kind != kind {
+			t.Fatalf("%s kind = %q, want %q", name, sym.Kind, kind)
+		}
+	}
+	if !containsString(csproj.Imports, `..\Dapper.ProviderTools\Dapper.ProviderTools.csproj`) {
+		t.Fatalf("csproj imports = %#v, want ProjectReference path", csproj.Imports)
+	}
+	if findSymbol(csproj.Symbols, "Commented.Package") != nil {
+		t.Fatal("commented PackageReference should not be indexed")
+	}
+
+	slnx, err := Parse("repo", "org/repo", "Dapper.slnx", "", []byte(`<Solution>
+  <Project Path="Dapper/Dapper.csproj" />
+  <Project Path="tests/Dapper.Tests/Dapper.Tests.csproj" />
+</Solution>`))
+	if err != nil {
+		t.Fatalf("Parse slnx: %v", err)
+	}
+	for _, name := range []string{"Dapper", "Dapper.Tests"} {
+		sym := findSymbol(slnx.Symbols, name)
+		if sym == nil {
+			t.Fatalf("missing slnx project %q; symbols=%+v", name, slnx.Symbols)
+		}
+		if sym.Kind != "project" {
+			t.Fatalf("%s kind = %q, want project", name, sym.Kind)
+		}
+	}
+
+	sln, err := Parse("repo", "org/repo", "Dapper.sln", "", []byte(`Project("{GUID}") = "Dapper", "Dapper\Dapper.csproj", "{PROJECT-GUID}"
+EndProject
+`))
+	if err != nil {
+		t.Fatalf("Parse sln: %v", err)
+	}
+	if sym := findSymbol(sln.Symbols, "Dapper"); sym == nil || sym.Kind != "project" {
+		t.Fatalf("missing sln project Dapper; symbols=%+v", sln.Symbols)
+	}
+}
+
+func TestParseAstroDefinitions(t *testing.T) {
+	res, err := Parse("repo", "org/repo", "src/pages/tags/[tag].astro", "", []byte(`---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import BlogPost from "../../components/BlogPost.astro";
+
+export async function getStaticPaths() {
+  return [];
+}
+
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+const pageTitle = "Tag Index";
+---
+
+<BaseLayout pageTitle={tag}>
+  <BlogPost url="/" title="Hello" />
+</BaseLayout>
+`))
+	if err != nil {
+		t.Fatalf("Parse astro: %v", err)
+	}
+	want := map[string]string{
+		"[tag]":          "component",
+		"getStaticPaths": "function",
+		"tag":            "variable",
+		"posts":          "variable",
+		"pageTitle":      "variable",
+		"BaseLayout":     "component",
+		"BlogPost":       "component",
+	}
+	for name, kind := range want {
+		sym := findSymbol(res.Symbols, name)
+		if sym == nil {
+			t.Fatalf("missing astro symbol %q; symbols=%+v", name, res.Symbols)
+		}
+		if sym.Kind != kind {
+			t.Fatalf("%s kind = %q, want %q", name, sym.Kind, kind)
+		}
+	}
+	if !containsString(res.Imports, "../../layouts/BaseLayout.astro") {
+		t.Fatalf("astro imports = %#v, want BaseLayout import", res.Imports)
+	}
+}
+
+func TestParseApexDefinitions(t *testing.T) {
+	classRes, err := Parse("repo", "org/repo", "force-app/main/default/classes/AccountService.cls", "", []byte(`
+public inherited sharing class AccountService extends BaseService implements Queueable {
+  public enum SortOrder { ASC, DESC }
+  public interface ServiceShape {
+    void execute();
+  }
+
+  public AccountService() {}
+
+  @AuraEnabled(cacheable=true)
+  public static List<Account> listAccounts() {
+    List<Account> accounts = [SELECT Id, Name FROM Account LIMIT 10];
+    // DELETE request text in a comment must not become DML context.
+    insert accounts;
+    Database.update(accounts);
+    return accounts;
+  }
+
+  testMethod static void legacyTest() {}
+  public void execute(QueueableContext context) {}
+}
+`))
+	if err != nil {
+		t.Fatalf("Parse apex class: %v", err)
+	}
+	wantClass := []struct {
+		name string
+		kind string
+	}{
+		{"AccountService", "type"},
+		{"SortOrder", "type"},
+		{"ServiceShape", "type"},
+		{"AccountService", "constructor"},
+		{"listAccounts", "method"},
+		{"legacyTest", "method"},
+		{"execute", "method"},
+		{"Account", "sobject"},
+		{"insert", "dml"},
+		{"update", "dml"},
+	}
+	for _, want := range wantClass {
+		matches := symbolsNamedKind(classRes.Symbols, want.name, want.kind)
+		if len(matches) == 0 {
+			t.Fatalf("missing apex %s %q; symbols=%+v", want.kind, want.name, classRes.Symbols)
+		}
+	}
+	if sym := findSymbol(classRes.Symbols, "listAccounts"); sym == nil || sym.Metadata["annotations"] != "auraenabled" {
+		t.Fatalf("listAccounts annotation metadata = %#v", sym)
+	}
+	if len(symbolsNamedKind(classRes.Symbols, "delete", "dml")) > 0 {
+		t.Fatalf("comment-only delete DML should not be indexed; symbols=%+v", classRes.Symbols)
+	}
+
+	triggerRes, err := Parse("repo", "org/repo", "force-app/main/default/triggers/AccountTrigger.trigger", "", []byte(`
+trigger AccountTrigger on Account (before insert, after update) {
+  AccountService.listAccounts();
+}
+`))
+	if err != nil {
+		t.Fatalf("Parse apex trigger: %v", err)
+	}
+	for name, kind := range map[string]string{
+		"AccountTrigger": "trigger",
+		"Account":        "sobject",
+	} {
+		if len(symbolsNamedKind(triggerRes.Symbols, name, kind)) == 0 {
+			t.Fatalf("missing apex trigger %s %q; symbols=%+v", kind, name, triggerRes.Symbols)
+		}
+	}
+}
+
+func TestParseDetectorOnlyGraphifyFormats(t *testing.T) {
+	ejs, err := Parse("repo", "org/repo", "views/users/index.ejs", "", []byte(`
+<%- include('../partials/header') %>
+<% function formatUser(user) { return user.name } %>
+<% const pageTitle = "Users"; %>
+<ul>
+  <% users.forEach(function(user) { %>
+    <li><%= formatUser(user) %></li>
+  <% }) %>
+</ul>
+`))
+	if err != nil {
+		t.Fatalf("Parse ejs: %v", err)
+	}
+	for name, kind := range map[string]string{
+		"users.index":        "template",
+		"../partials/header": "include",
+		"formatUser":         "function",
+		"pageTitle":          "variable",
+	} {
+		if len(symbolsNamedKind(ejs.Symbols, name, kind)) == 0 {
+			t.Fatalf("missing EJS %s %q; symbols=%+v", kind, name, ejs.Symbols)
+		}
+	}
+	if !containsString(ejs.Imports, "../partials/header") {
+		t.Fatalf("EJS imports = %#v, want partial include", ejs.Imports)
+	}
+
+	ets, err := Parse("repo", "org/repo", "entry/src/main/ets/pages/Index.ets", "", []byte(`
+import router from '@ohos.router';
+import Logger from '../common/Logger';
+
+@Entry
+@Component
+struct Index {
+  @State message: string = 'Hello';
+  private count: number = 0;
+
+  aboutToAppear() {
+    Logger.info('show');
+  }
+
+  build() {
+    Column() {
+      Text(this.message)
+      if (this.count > 0) {
+        Text('count')
+      }
+    }
+  }
+
+  constructor() {}
+}
+
+export function openDetail(id: string): void {
+  router.pushUrl({ url: 'pages/Detail' });
+}
+`))
+	if err != nil {
+		t.Fatalf("Parse ets: %v", err)
+	}
+	for name, kind := range map[string]string{
+		"Index":         "type",
+		"message":       "variable",
+		"count":         "variable",
+		"aboutToAppear": "method",
+		"build":         "method",
+		"constructor":   "constructor",
+		"openDetail":    "function",
+	} {
+		if len(symbolsNamedKind(ets.Symbols, name, kind)) == 0 {
+			t.Fatalf("missing ETS %s %q; symbols=%+v", kind, name, ets.Symbols)
+		}
+	}
+	if findSymbol(ets.Symbols, "Column") != nil {
+		t.Fatalf("ArkUI component call Column should not be indexed as a method; symbols=%+v", ets.Symbols)
+	}
+	if findSymbol(ets.Symbols, "if") != nil {
+		t.Fatalf("control-flow keyword if should not be indexed as a method; symbols=%+v", ets.Symbols)
+	}
+	for _, want := range []string{"@ohos.router", "../common/Logger"} {
+		if !containsString(ets.Imports, want) {
+			t.Fatalf("ETS imports = %#v, want %q", ets.Imports, want)
+		}
+	}
+
+	r, err := Parse("repo", "org/repo", "R/build_plot.R", "", []byte(`
+library(ggplot2)
+source("R/helpers.R")
+
+build_plot <- function(data) {
+  ggplot(data)
+}
+
+summarise.data = function(data) {
+  data
+}
+
+ggplot.default <-
+  function(data, mapping = aes(), ...) {
+    data
+  }
+
+setClass("PlotSpec", slots = list(title = "character"))
+GeomPoint <- ggproto("GeomPoint", Geom)
+plot_cache <- new.env()
+`))
+	if err != nil {
+		t.Fatalf("Parse r: %v", err)
+	}
+	for name, kind := range map[string]string{
+		"build_plot":     "function",
+		"summarise.data": "function",
+		"ggplot.default": "function",
+		"PlotSpec":       "type",
+		"GeomPoint":      "type",
+		"plot_cache":     "variable",
+	} {
+		if len(symbolsNamedKind(r.Symbols, name, kind)) == 0 {
+			t.Fatalf("missing R %s %q; symbols=%+v", kind, name, r.Symbols)
+		}
+	}
+	for _, want := range []string{"ggplot2", "R/helpers.R"} {
+		if !containsString(r.Imports, want) {
+			t.Fatalf("R imports = %#v, want %q", r.Imports, want)
+		}
+	}
+}
+
+func TestParseByondDefinitions(t *testing.T) {
+	res, err := Parse("repo", "org/repo", "code/modules/mob/living/living.dm", "", []byte(`#include "helpers.dm"
+
+/mob/living
+	name = "living mob"
+	Initialize(mapload)
+		if(mapload)
+			update_transform()
+	proc/prepare_data_huds()
+		med_hud_set_health()
+
+/mob/living/Destroy()
+	return ..()
+
+/mob/living/proc/ZImpactDamage(turf/impacted_turf, levels)
+	return levels
+
+/// Modifier for mobs landing on their feet after a fall
+/datum/movespeed_modifier/landed_on_feet
+	multiplicative_slowdown = 0.5
+
+/obj/item/proc/equip_to_slot(slot)
+	return TRUE
+
+proc/global_helper()
+	return TRUE
+
+// /mob/living/proc/commented_out()
+`))
+	if err != nil {
+		t.Fatalf("Parse byond dm: %v", err)
+	}
+	for name, kind := range map[string]string{
+		"/mob/living":                              "type",
+		"/mob/living/Initialize":                   "method",
+		"/mob/living/prepare_data_huds":            "method",
+		"/mob/living/Destroy":                      "method",
+		"/mob/living/ZImpactDamage":                "method",
+		"/datum/movespeed_modifier/landed_on_feet": "type",
+		"/obj/item":                                "type",
+		"/obj/item/equip_to_slot":                  "method",
+		"global_helper":                            "proc",
+	} {
+		if len(symbolsNamedKind(res.Symbols, name, kind)) == 0 {
+			t.Fatalf("missing BYOND %s %q; symbols=%+v", kind, name, res.Symbols)
+		}
+	}
+	for _, unexpected := range []string{"if", "update_transform", "/mob/living/commented_out"} {
+		if findSymbol(res.Symbols, unexpected) != nil {
+			t.Fatalf("unexpected BYOND false-positive %q; symbols=%+v", unexpected, res.Symbols)
+		}
+	}
+	if !containsString(res.Imports, "helpers.dm") {
+		t.Fatalf("BYOND imports = %#v, want helpers.dm", res.Imports)
+	}
+}
+
+func TestParseByondResourceDefinitions(t *testing.T) {
+	dmf, err := Parse("repo", "org/repo", "code/ui.dmf", "", []byte(`window "main"
+	elem "chat"
+	type = output
+	elem "input"
+	type = input
+`))
+	if err != nil {
+		t.Fatalf("Parse byond dmf: %v", err)
+	}
+	for name, kind := range map[string]string{
+		"main":             "window",
+		"main/chat":        "element",
+		"main/chat:output": "element_type",
+		"main/input":       "element",
+		"main/input:input": "element_type",
+	} {
+		if len(symbolsNamedKind(dmf.Symbols, name, kind)) == 0 {
+			t.Fatalf("missing BYOND DMF %s %q; symbols=%+v", kind, name, dmf.Symbols)
+		}
+	}
+
+	dmi, err := Parse("repo", "org/repo", "icons/mob.dmi", "", []byte(`# BEGIN DMI
+state = "standing"
+state = dead
+# END DMI
+`))
+	if err != nil {
+		t.Fatalf("Parse byond dmi: %v", err)
+	}
+	for _, state := range []string{"standing", "dead"} {
+		if len(symbolsNamedKind(dmi.Symbols, state, "state")) == 0 {
+			t.Fatalf("missing BYOND DMI state %q; symbols=%+v", state, dmi.Symbols)
+		}
+	}
+
+	dmm, err := Parse("repo", "org/repo", "maps/station.dmm", "", []byte(`"aa" = (/turf/open/floor,/area/station/hallway)
+(1,1,1) = {"aa"}
+`))
+	if err != nil {
+		t.Fatalf("Parse byond dmm: %v", err)
+	}
+	for _, ref := range []string{"/turf/open/floor", "/area/station/hallway"} {
+		if len(symbolsNamedKind(dmm.Symbols, ref, "map_reference")) == 0 {
+			t.Fatalf("missing BYOND DMM reference %q; symbols=%+v", ref, dmm.Symbols)
+		}
+	}
+}
+
+func TestParseDelphiLazarusDefinitions(t *testing.T) {
+	form, err := Parse("repo", "org/repo", "ide/aboutfrm.lfm", "", []byte(`object AboutForm: TAboutForm
+  OnClose = FormClose
+  OnCreate = AboutFormCreate
+  object Notebook: TPageControl
+    OnChange = NotebookPageChanged
+    object VersionPage: TTabSheet
+    end
+  end
+end
+`))
+	if err != nil {
+		t.Fatalf("Parse delphi form: %v", err)
+	}
+	for name, kind := range map[string]string{
+		"AboutForm":           "component",
+		"TAboutForm":          "component_type",
+		"Notebook":            "component",
+		"TPageControl":        "component_type",
+		"VersionPage":         "component",
+		"TTabSheet":           "component_type",
+		"FormClose":           "event",
+		"AboutFormCreate":     "event",
+		"NotebookPageChanged": "event",
+	} {
+		if len(symbolsNamedKind(form.Symbols, name, kind)) == 0 {
+			t.Fatalf("missing Delphi form %s %q; symbols=%+v", kind, name, form.Symbols)
+		}
+	}
+
+	pkg, err := Parse("repo", "org/repo", "ide/packages/ideproject/ideproject.lpk", "", []byte(`<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Package Version="5">
+    <Name Value="IdeProject"/>
+    <Files>
+      <Item>
+        <Filename Value="buildmanager.pas"/>
+        <UnitName Value="BuildManager"/>
+      </Item>
+    </Files>
+    <RequiredPkgs>
+      <Item>
+        <PackageName Value="IdePackager"/>
+      </Item>
+    </RequiredPkgs>
+  </Package>
+</CONFIG>
+`))
+	if err != nil {
+		t.Fatalf("Parse lazarus package: %v", err)
+	}
+	for name, kind := range map[string]string{
+		"IdeProject":   "package",
+		"BuildManager": "unit",
+		"IdePackager":  "dependency",
+	} {
+		if len(symbolsNamedKind(pkg.Symbols, name, kind)) == 0 {
+			t.Fatalf("missing Lazarus package %s %q; symbols=%+v", kind, name, pkg.Symbols)
+		}
+	}
+	if !containsString(pkg.Imports, "IdePackager") {
+		t.Fatalf("Lazarus package imports = %#v, want IdePackager", pkg.Imports)
 	}
 }
 

@@ -171,3 +171,43 @@ int FreeFn() {
 		t.Errorf("DBImpl::Get qualified_name = %q, want DBImpl::Get", qualified)
 	}
 }
+
+func TestCppSymbols_CUDAKernelDefinitions(t *testing.T) {
+	src := []byte(`
+#include <cuda_runtime.h>
+
+__global__ void testKernel(int *g_odata) {
+  atomicAdd(&g_odata[0], 10);
+}
+
+int main() {
+  testKernel<<<1, 1>>>(nullptr);
+  return 0;
+}
+`)
+
+	res, err := Parse("repo-cuda", "owner/repo", "simpleAtomicIntrinsics.cu", "", src)
+	if err != nil {
+		t.Fatalf("Parse returned error: %v", err)
+	}
+	if got := LanguageForPath("simpleAtomicIntrinsics.cu"); got != "cpp" {
+		t.Fatalf("LanguageForPath(.cu) = %q, want cpp", got)
+	}
+
+	type key struct {
+		name string
+		kind string
+	}
+	symbols := map[key]bool{}
+	for _, sym := range res.Symbols {
+		symbols[key{sym.Name, sym.Kind}] = true
+	}
+	for _, want := range []key{
+		{"testKernel", "function"},
+		{"main", "function"},
+	} {
+		if !symbols[want] {
+			t.Errorf("missing CUDA symbol %s/%s; got=%+v", want.name, want.kind, res.Symbols)
+		}
+	}
+}

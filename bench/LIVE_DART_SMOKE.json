@@ -2,8 +2,10 @@
   "language": "dart",
   "repo": "https://github.com/dart-lang/http",
   "commit": "5d94ef52582867e077bf41c3fa20fb8b1d1d834e",
+  "graphify_detector_only": "",
   "commands": {
     "clone": "git clone --depth 1 https://github.com/dart-lang/http /tmp/atlas-live-dart-http/repo",
+    "sparse_checkout": "",
     "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-dart-http/atlas.db --json index /tmp/atlas-live-dart-http/repo/pkgs/http/lib",
     "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-dart-http/atlas.db --json index /tmp/atlas-live-dart-http/repo/pkgs/http/lib",
     "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
@@ -19,12 +21,12 @@
     "target_path": "/tmp/atlas-live-dart-http/repo/pkgs/http/lib"
   },
   "atlas": {
-    "cold_wall_seconds": 0.155,
-    "reindex_wall_seconds": 0.022,
+    "cold_wall_seconds": 0.103,
+    "reindex_wall_seconds": 0.026,
     "index": {
-      "repo_id": "25a2df3e-2501-4e89-9354-fb33d04abb8e",
+      "repo_id": "456e43f0-3dbd-457c-9a63-be8bb3c86f8c",
       "repo_full_name": "lib",
-      "snapshot_id": "d9b84265-88fa-448a-bf5c-ac7abcbf5fbf",
+      "snapshot_id": "dc42dc20-fe37-4605-ae25-1e6d5908637f",
       "commit_sha": "5d94ef52582867e077bf41c3fa20fb8b1d1d834e",
       "indexed_files": 27,
       "symbols": 184,
@@ -43,9 +45,9 @@
         "delta_check": 0,
         "ensure_repo": 2,
         "go_types": 0,
-        "lexical": 19,
-        "parse": 29,
-        "persist": 20,
+        "lexical": 26,
+        "parse": 27,
+        "persist": 15,
         "resolve_head": 0,
         "routes": 0,
         "sort": 0,
@@ -53,9 +55,9 @@
       }
     },
     "reindex": {
-      "repo_id": "25a2df3e-2501-4e89-9354-fb33d04abb8e",
+      "repo_id": "456e43f0-3dbd-457c-9a63-be8bb3c86f8c",
       "repo_full_name": "lib",
-      "snapshot_id": "d9b84265-88fa-448a-bf5c-ac7abcbf5fbf",
+      "snapshot_id": "dc42dc20-fe37-4605-ae25-1e6d5908637f",
       "commit_sha": "5d94ef52582867e077bf41c3fa20fb8b1d1d834e",
       "indexed_files": 27,
       "symbols": 184,
@@ -123,7 +125,7 @@
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 0.566,
+    "seconds": 0.429,
     "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
@@ -143,7 +145,7 @@
     "tool": "tree-sitter-dart",
     "status": "ok",
     "ok": true,
-    "seconds": 0.075,
+    "seconds": 0.081,
     "command": "/tmp/atlas-live-dart-http/tree-sitter-dart-venv/bin/python -c <tree-sitter-dart definition counter> /tmp/atlas-live-dart-http/repo/pkgs/http/lib",
     "metrics": {
       "files": 27,
@@ -193,21 +195,30 @@
       "cycle 2: after adding a Dart-specific parser, Atlas/tree-sitter-dart definition coverage matched on the live package slice and exact-symbol query rows exceeded 5x for latency and token output vs graphify."
     ]
   },
+  "query_warmup": {
+    "symbol": "Client",
+    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-dart-http/atlas.db --format plain --repo lib explain Client",
+    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Client",
+    "atlas_returncode": 0,
+    "graphify_returncode": 0,
+    "note": "Untimed warm-up for both tools before measured query latency rows."
+  },
   "queries": [
     {
       "symbol": "Client",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-dart-http/atlas.db --format plain --repo lib explain Client",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Client",
-      "atlas_tokens": 8,
+      "atlas_tokens": 7,
       "graphify_tokens": 42,
-      "atlas_ms": 13.254,
-      "graphify_ms": 107.397,
+      "atlas_ms": 12.483,
+      "graphify_ms": 81.204,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Client t@client.dart:20 df2 c6 d1"
+        "Client t@client:20 df2 c6 d1"
       ],
       "graphify_stdout_head": [
         "Node: client",
@@ -222,18 +233,19 @@
     },
     {
       "symbol": "BaseClient",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-dart-http/atlas.db --format plain --repo lib explain BaseClient",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain BaseClient",
-      "atlas_tokens": 8,
+      "atlas_tokens": 7,
       "graphify_tokens": 101,
-      "atlas_ms": 12.45,
-      "graphify_ms": 97.51,
+      "atlas_ms": 13.019,
+      "graphify_ms": 90.902,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "BaseClient t@base_client.dart:15"
+        "BaseClient t@base_client:15"
       ],
       "graphify_stdout_head": [
         "Node: BaseClient",
@@ -248,18 +260,19 @@
     },
     {
       "symbol": "Request",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-dart-http/atlas.db --format plain --repo lib explain Request",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Request",
-      "atlas_tokens": 8,
+      "atlas_tokens": 7,
       "graphify_tokens": 51,
-      "atlas_ms": 12.854,
-      "graphify_ms": 88.3,
+      "atlas_ms": 12.36,
+      "graphify_ms": 79.273,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Request t@request.dart:14 df2 c3"
+        "Request t@request:14 df2 c3"
       ],
       "graphify_stdout_head": [
         "Node: request",
@@ -274,18 +287,19 @@
     },
     {
       "symbol": "Response",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-dart-http/atlas.db --format plain --repo lib explain Response",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Response",
-      "atlas_tokens": 9,
+      "atlas_tokens": 8,
       "graphify_tokens": 59,
-      "atlas_ms": 13.009,
-      "graphify_ms": 88.326,
+      "atlas_ms": 12.034,
+      "graphify_ms": 76.472,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Response t@response.dart:14 df2 c1 d1"
+        "Response t@response:14 df2 c1 d1"
       ],
       "graphify_stdout_head": [
         "Node: Response",
@@ -300,18 +314,19 @@
     },
     {
       "symbol": "send",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-dart-http/atlas.db --format plain --repo lib explain send",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain send",
-      "atlas_tokens": 8,
+      "atlas_tokens": 7,
       "graphify_tokens": 42,
-      "atlas_ms": 13.908,
-      "graphify_ms": 97.893,
+      "atlas_ms": 12.848,
+      "graphify_ms": 76.377,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "send f@retry.dart:113 df7 c4 d18"
+        "send f@retry:113 df7 c4 d18"
       ],
       "graphify_stdout_head": [
         "Node: send",
@@ -326,18 +341,19 @@
     },
     {
       "symbol": "RetryClient",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-dart-http/atlas.db --format plain --repo lib explain RetryClient",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain RetryClient",
-      "atlas_tokens": 8,
+      "atlas_tokens": 6,
       "graphify_tokens": 55,
-      "atlas_ms": 14.58,
-      "graphify_ms": 88.046,
+      "atlas_ms": 13.781,
+      "graphify_ms": 90.288,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "RetryClient t@retry.dart:11 df2"
+        "RetryClient t@retry:11 df2"
       ],
       "graphify_stdout_head": [
         "Node: RetryClient",

@@ -21,12 +21,14 @@ import argparse
 import ast
 import json
 import os
+import platform
 import queue
 import re
 import shlex
 import shutil
 import sqlite3
 import subprocess
+import sys
 import threading
 import time
 from pathlib import Path
@@ -164,6 +166,20 @@ def command_prefix(command: str) -> list[str] | None:
     return [first] + parts[1:]
 
 
+def java21_env() -> dict[str, str]:
+    """Prefer a local Java 21 runtime for tools such as JDTLS when available."""
+    env = os.environ.copy()
+    candidates = [
+        Path("/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home"),
+        Path("/usr/local/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home"),
+    ]
+    java_home = next((path for path in candidates if (path / "bin/java").exists()), None)
+    if java_home:
+        env["JAVA_HOME"] = str(java_home)
+        env["PATH"] = f"{java_home / 'bin'}{os.pathsep}{env.get('PATH', '')}"
+    return env
+
+
 def resolve_graphify(value: str) -> str | None:
     found = executable(value)
     if found:
@@ -195,7 +211,7 @@ def graphify_python_for(binary: str) -> str | None:
                     return candidate
     uv = shutil.which("uv")
     if uv:
-        probe = run([uv, "tool", "run", "graphifyy", "python", "-c", "import sys; print(sys.executable)"], timeout=30)
+        probe = run([uv, "tool", "run", "--from", "graphifyy", "python", "-c", "import sys; print(sys.executable)"], timeout=30)
         if probe.returncode == 0 and probe.stdout.strip():
             return probe.stdout.strip().splitlines()[-1]
     return None
@@ -245,13 +261,16 @@ def discover_graphify_runtime() -> dict[str, Any]:
 import importlib.metadata as md
 import inspect
 import json
+import tempfile
 from pathlib import Path
 
 import graphify.detect as detect
 import graphify.extract as extract
 
+
 def fn_name(fn):
     return getattr(fn, "__name__", repr(fn))
+
 
 dispatch = [
     {"extension": key, "extractor": fn_name(fn), "module": getattr(fn, "__module__", "")}
@@ -262,10 +281,25 @@ for sample in ("view.blade.php",):
     fn = extract._get_extractor(Path(sample))
     if fn is not None:
         special.append({"extension": "*.blade.php", "extractor": fn_name(fn), "module": getattr(fn, "__module__", "")})
+
+with tempfile.TemporaryDirectory() as td:
+    root = Path(td)
+    by_path = {}
+    for i, ext in enumerate(sorted(detect.CODE_EXTENSIONS)):
+        path = root / f"sample_{i:03d}{ext}"
+        path.write_text("// graphify discovery smoke\n", encoding="utf-8")
+        by_path[str(path.resolve())] = ext
+    detected = detect.detect(root)
+    detect_smoke_code_extensions = sorted(
+        by_path.get(str(Path(path).resolve()), Path(path).suffix)
+        for path in detected.get("files", {}).get("code", [])
+    )
+
 try:
     version = "graphifyy " + md.version("graphifyy")
 except Exception:
     version = "graphifyy unknown"
+
 print(json.dumps({
     "version": version,
     "source_root": str(Path(inspect.getsourcefile(extract)).resolve().parent),
@@ -274,6 +308,8 @@ print(json.dumps({
     "dispatch": dispatch,
     "special": special,
     "code_extensions": sorted(detect.CODE_EXTENSIONS),
+    "detect_smoke_code_extensions": detect_smoke_code_extensions,
+    "detect_smoke_total_files": detected.get("total_files", 0),
 }, sort_keys=True))
 '''
     probe = run([py, "-c", script], timeout=30)
@@ -309,6 +345,11 @@ print(json.dumps({
             "code_extension_count": len(code_exts),
             "detector_only_code_extensions": detector_only,
             "rows": graphify_rows_from_runtime(dispatch, special),
+            "dispatch": dispatch,
+            "special": special,
+            "code_extensions": code_exts,
+            "detect_smoke_code_extensions": runtime.get("detect_smoke_code_extensions", []),
+            "detect_smoke_total_files": runtime.get("detect_smoke_total_files", 0),
         }
     )
     return data
@@ -1012,12 +1053,14 @@ def run_jdtls(cmd_prefix: list[str] | None, repo: Path, target: Path, workdir: P
     stderr_tail: list[str] = []
     start = time.time()
     try:
+        env = java21_env()
         proc = subprocess.Popen(
             cmd,
             cwd=build_root,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
+            env=env,
         )
     except OSError as exc:
         return base_result("jdtls", "failed", str(exc))
@@ -1119,6 +1162,7 @@ def run_jdtls(cmd_prefix: list[str] | None, repo: Path, target: Path, workdir: P
             "diagnostic_files": len(diagnostics),
             "diagnostics": sum(diagnostics.values()),
             "initialized": True,
+            "java_home": env.get("JAVA_HOME", ""),
             "stderr_tail": stderr_tail[-5:],
         }
         if doc_symbol_files < len(sources):
@@ -1281,6 +1325,16 @@ def query_token_rows(atlas_bin: str | None, graphify_bin: str | None, db: Path, 
     except json.JSONDecodeError:
         return []
 
+    if names:
+        warm_name = names[0]
+        warm_atlas = run([atlas_bin, "--db", f"sqlite://{db}", "--format", "plain", "explain", warm_name])
+        warm_graphify = run([graphify_bin, "explain", warm_name], cwd=target)
+        log.append(
+            f"$ query warm-up {warm_name}\n"
+            f"atlas_status={warm_atlas.returncode} graphify_status={warm_graphify.returncode}\n"
+            "note=untimed warm-up for both tools before measured query latency rows"
+        )
+
     rows: list[dict[str, Any]] = []
     for name in names[:4]:
         t0 = time.time()
@@ -1439,6 +1493,204 @@ def tool_cell(result: dict[str, Any], key: str) -> str:
     return "ok"
 
 
+def version_probe(name: str, command: list[str] | None, timeout: int = 30) -> dict[str, Any]:
+    if not command:
+        return {
+            "tool": name,
+            "status": "missing",
+            "ok": False,
+            "command": "",
+            "version": "",
+            "stdout": "",
+            "stderr": "",
+            "exit_code": 127,
+        }
+    start = time.time()
+    try:
+        result = run(command, timeout=timeout)
+    except (subprocess.TimeoutExpired, OSError) as exc:
+        return {
+            "tool": name,
+            "status": "failed",
+            "ok": False,
+            "command": " ".join(command),
+            "version": "",
+            "stdout": "",
+            "stderr": str(exc),
+            "seconds": round(time.time() - start, 3),
+        }
+    stdout = result.stdout.strip()
+    stderr = result.stderr.strip()
+    first_line = (stdout or stderr).splitlines()[0] if (stdout or stderr) else ""
+    return {
+        "tool": name,
+        "status": "ok" if result.returncode == 0 else "failed",
+        "ok": result.returncode == 0,
+        "command": " ".join(command),
+        "version": first_line,
+        "stdout": stdout.splitlines()[:20],
+        "stderr": stderr.splitlines()[:20],
+        "exit_code": result.returncode,
+        "seconds": round(time.time() - start, 3),
+    }
+
+
+def version_command(prefix: list[str] | None, *args: str) -> list[str] | None:
+    if not prefix:
+        return None
+    return [*prefix, *args]
+
+
+def jdtls_manifest_entry(args: argparse.Namespace) -> dict[str, Any]:
+    prefix = command_prefix(args.jdtls)
+    if not prefix:
+        return version_probe("jdtls", None)
+    binary = prefix[0]
+    resolved = str(Path(binary).resolve())
+    version = ""
+    parts = Path(resolved).parts
+    if "jdtls" in parts:
+        idx = parts.index("jdtls")
+        if len(parts) > idx + 1:
+            version = parts[idx + 1]
+    env = java21_env()
+    return {
+        "tool": "jdtls",
+        "status": "ok",
+        "ok": True,
+        "command": " ".join(prefix),
+        "version": version or "unknown",
+        "binary": binary,
+        "resolved_binary": resolved,
+        "java_home": env.get("JAVA_HOME", ""),
+        "note": "JDTLS starts an LSP server instead of printing a stable --version line; version is derived from the installed package path and benchmark Java runtime.",
+    }
+
+
+def sourcekit_lsp_manifest_entry() -> dict[str, Any]:
+    binary = executable("sourcekit-lsp")
+    if not binary:
+        return version_probe("sourcekit-lsp", None)
+    swift = executable("swift")
+    if not swift:
+        return {
+            "tool": "sourcekit-lsp",
+            "status": "ok",
+            "ok": True,
+            "command": binary,
+            "version": "unknown",
+            "binary": binary,
+            "note": "sourcekit-lsp is installed but this toolchain exposes no version flag and swift is unavailable.",
+        }
+    entry = version_probe("sourcekit-lsp", [swift, "--version"])
+    entry["tool"] = "sourcekit-lsp"
+    entry["command"] = f"{binary} (no version flag); {swift} --version"
+    entry["binary"] = binary
+    entry["note"] = "sourcekit-lsp has no version flag in this toolchain; Swift toolchain version is recorded as the closest reproducible native version."
+    return entry
+
+
+def smoke_tool_versions() -> list[dict[str, Any]]:
+    versions: list[dict[str, Any]] = []
+    for path, display_path in live_smoke_paths():
+        try:
+            smoke = json.loads(path.read_text())
+        except (OSError, json.JSONDecodeError) as exc:
+            versions.append({"artifact": display_path, "status": "unreadable", "error": str(exc)})
+            continue
+        native = smoke.get("native_baseline") or {}
+        metrics = native.get("metrics") or {}
+        metric_versions = {
+            key: value
+            for key, value in metrics.items()
+            if key.endswith("_version") or key == "tool_versions"
+        }
+        versions.append(
+            {
+                "artifact": display_path,
+                "language": smoke.get("language"),
+                "native_tool": native.get("tool"),
+                "native_status": native.get("status"),
+                "native_command": native.get("command"),
+                "metric_versions": metric_versions,
+                "richer_native_baselines": smoke.get("richer_native_baselines") or {},
+            }
+        )
+    return versions
+
+
+def benchmark_tool_manifest(args: argparse.Namespace, graphify_discovery: dict[str, Any]) -> dict[str, Any]:
+    graphify_bin = resolve_graphify(args.graphify)
+    probes = [
+        version_probe("atlas", version_command([executable(args.atlas)] if executable(args.atlas) else None, "version")),
+        {
+            **version_probe("graphify", version_command([graphify_bin] if graphify_bin else None, "--version")),
+            "discovered_version": graphify_discovery.get("version", ""),
+            "binary": graphify_discovery.get("binary", graphify_bin or ""),
+        },
+        version_probe("go", version_command([executable("go")] if executable("go") else None, "version")),
+        version_probe("python", [sys.executable, "--version"]),
+        version_probe("java", version_command([executable("java")] if executable("java") else None, "-version")),
+        version_probe("maven", version_command([executable("mvn")] if executable("mvn") else None, "--version")),
+        version_probe("scip-go", version_command([executable(args.scip_go)] if executable(args.scip_go) else None, "--version")),
+        version_probe("scip-python", version_command([executable(args.scip_python)] if executable(args.scip_python) else None, "--version")),
+        version_probe("scip-typescript", version_command(tool_command(args.scip_typescript, "@sourcegraph/scip-typescript", "scip-typescript"), "--version")),
+        version_probe("scip-java", version_command(command_prefix(args.scip_java), "--version")),
+        version_probe("gopls", version_command([executable(args.gopls)] if executable(args.gopls) else None, "version")),
+        version_probe("pyright", version_command([executable(args.pyright)] if executable(args.pyright) else None, "--version")),
+        version_probe("tsc", version_command(tool_command(args.tsc, "typescript", "tsc"), "--version")),
+        jdtls_manifest_entry(args),
+        version_probe("clangd", version_command(command_prefix(args.clangd), "--version")),
+        version_probe("rust-analyzer", version_command([executable("rust-analyzer")] if executable("rust-analyzer") else None, "--version")),
+        version_probe("dotnet", version_command([executable("dotnet")] if executable("dotnet") else None, "--version")),
+        version_probe("ruby", version_command([executable("ruby")] if executable("ruby") else None, "--version")),
+        version_probe("php", version_command([executable("php")] if executable("php") else None, "--version")),
+        version_probe("pwsh", version_command([executable("pwsh")] if executable("pwsh") else None, "--version")),
+        sourcekit_lsp_manifest_entry(),
+    ]
+    return {
+        "generated_at_unix": int(time.time()),
+        "platform": {
+            "system": platform.system(),
+            "release": platform.release(),
+            "machine": platform.machine(),
+            "python": sys.version.split()[0],
+        },
+        "core_tools": probes,
+        "live_smoke_tools": smoke_tool_versions(),
+    }
+
+
+def render_tool_manifest(tool_manifest: dict[str, Any]) -> list[str]:
+    if not tool_manifest:
+        return []
+    lines: list[str] = []
+    w = lines.append
+    w("## Tool version manifest")
+    w("")
+    w("Raw artifact: `bench/MATRIX_TOOL_VERSIONS.json`.")
+    platform_info = tool_manifest.get("platform") or {}
+    if platform_info:
+        w(
+            f"- Platform: {platform_info.get('system')} {platform_info.get('release')} "
+            f"{platform_info.get('machine')}; Python {platform_info.get('python')}."
+        )
+    w("")
+    w("| tool | status | version / first output line | command |")
+    w("|---|---|---|---|")
+    for item in tool_manifest.get("core_tools") or []:
+        version = item.get("version") or item.get("discovered_version") or ""
+        if item.get("tool") == "graphify" and item.get("discovered_version"):
+            version = item.get("discovered_version")
+        w(f"| {item.get('tool')} | {item.get('status')} | `{version}` | `{item.get('command', '')}` |")
+    smoke_count = len(tool_manifest.get("live_smoke_tools") or [])
+    versioned = sum(1 for item in tool_manifest.get("live_smoke_tools") or [] if item.get("metric_versions"))
+    w("")
+    w(f"- Live smoke native-version details: {versioned}/{smoke_count} artifacts expose explicit native tool or library version fields in raw JSON; all artifacts include native command/status.")
+    w("")
+    return lines
+
+
 def atlas_speed_line(atlas: dict[str, Any], graphify: dict[str, Any]) -> str:
     am = atlas.get("metrics", {})
     cold = am.get("cold_seconds")
@@ -1454,10 +1706,317 @@ def scip_navigation_symbols(metrics: dict[str, Any]) -> int:
 
 def live_smoke_paths() -> list[tuple[Path, str]]:
     bench_dir = Path(__file__).parent
-    paths = sorted(bench_dir.glob("LIVE_*_SMOKE.json"))
+    paths = sorted(path for path in bench_dir.glob("LIVE_*_SMOKE.json") if path.name != "LIVE_MCP_CONTEXT_SMOKE.json")
     if not paths:
         return []
     return [(path, f"bench/{path.name}") for path in paths]
+
+
+GRAPHIFY_AUDIT_EVIDENCE = {
+    "go": [("core", "go")],
+    "python": [("core", "python")],
+    "javascript": [("core", "javascript")],
+    "typescript": [("core", "typescript")],
+    "java": [("core", "java")],
+    "c": [("core", "c")],
+    "cpp/cuda": [("core", "cpp"), ("smoke", "cuda")],
+    "groovy/gradle": [("smoke", "groovy")],
+    "csharp": [("smoke", "csharp")],
+    "rust": [("smoke", "rust")],
+    "ruby": [("smoke", "ruby")],
+    "kotlin": [("smoke", "kotlin")],
+    "scala": [("smoke", "scala")],
+    "php": [("smoke", "php")],
+    "blade": [("smoke", "blade")],
+    "swift": [("smoke", "swift")],
+    "lua": [("smoke", "lua")],
+    "zig": [("smoke", "zig")],
+    "powershell": [("smoke", "powershell")],
+    "elixir": [("smoke", "elixir")],
+    "objective-c": [("smoke", "objc")],
+    "julia": [("smoke", "julia")],
+    "fortran": [("smoke", "fortran")],
+    "dart": [("smoke", "dart")],
+    "verilog/systemverilog": [("smoke", "verilog")],
+    "sql": [("smoke", "sql")],
+    "markdown": [("smoke", "markdown")],
+    "pascal": [("smoke", "pascal")],
+    "delphi/lazarus forms": [("smoke", "delphi")],
+    "shell": [("smoke", "bash")],
+    "json config": [("smoke", "json")],
+    "terraform/hcl": [("smoke", "terraform")],
+    "byond dm": [("smoke", "byond")],
+    "dotnet project": [("smoke", "dotnet")],
+    "razor": [("smoke", "razor")],
+    "apex": [("smoke", "apex")],
+    "vue": [("smoke", "vue")],
+    "svelte": [("smoke", "svelte")],
+    "astro": [("smoke", "astro")],
+}
+
+GRAPHIFY_DETECTOR_ONLY_EVIDENCE = {
+    ".ejs": [("smoke", "ejs")],
+    ".ets": [("smoke", "ets")],
+    ".r": [("smoke", "r")],
+}
+
+
+def _coverage_ratio_text(coverage: dict[str, Any]) -> str:
+    for key, value in sorted(coverage.items()):
+        if key.startswith("atlas_vs_") and key.endswith("_definition_ratio"):
+            return f"{key}={value}"
+    return "coverage=n/a"
+
+
+def _ratio_x(num: float, den: float) -> str:
+    value = ratio(num, den)
+    return "n/a" if value is None else f"{value}x"
+
+
+def smoke_audit_summary(language: str) -> tuple[bool, str]:
+    path = Path(__file__).parent / f"LIVE_{language.upper()}_SMOKE.json"
+    display_path = f"bench/{path.name}"
+    if not path.exists():
+        return False, f"`{display_path}` missing"
+    try:
+        smoke = json.loads(path.read_text())
+    except (OSError, json.JSONDecodeError) as exc:
+        return False, f"`{display_path}` unreadable: {exc}"
+
+    native = smoke.get("native_baseline") or {}
+    coverage = smoke.get("coverage") or {}
+    atlas = smoke.get("atlas", {}).get("index", {})
+    queries = smoke.get("queries") or []
+    qt = query_totals(queries) if queries else {}
+    query_bits = ""
+    if qt:
+        latency_ratio = _ratio_x(qt.get("graphify_ms", 0), qt.get("atlas_ms", 0))
+        token_ratio = _ratio_x(qt.get("graphify_tokens", 0), qt.get("atlas_tokens", 0))
+        query_bits = f", query eq {qt.get('equivalent_rows')}/{qt.get('rows')}, latency {latency_ratio}, tokens {token_ratio}"
+    native_metrics = native.get("metrics") or {}
+    native_has_evidence = bool(native.get("ok")) or bool(native_metrics.get("definitions")) or native.get("status") in {"partial", "proxy"}
+    ok = bool(atlas.get("indexed_files")) and native_has_evidence
+    status = "ok" if native.get("ok") else f"native_limited={native.get('status', 'unknown')}"
+    summary = (
+        f"`{display_path}` {status}; repo `{smoke.get('repo')}` commit `{smoke.get('commit')}`; "
+        f"native `{native.get('tool', 'native')}`; {_coverage_ratio_text(coverage)}{query_bits}"
+    )
+    return ok, summary
+
+
+def core_audit_summary(language: str, results_by_language: dict[str, dict[str, Any]]) -> tuple[bool, str]:
+    result = results_by_language.get(language)
+    if not result:
+        return False, f"core matrix row `{language}` missing from this report run"
+    atlas = result.get("tools", {}).get("atlas", {})
+    graphify = result.get("tools", {}).get("graphify", {})
+    native_tools = [tool for tool in MATRIX.get(language, []) if tool not in {"atlas", "graphify"}]
+    native_bits = []
+    native_ok = False
+    for tool in native_tools:
+        data = result.get("tools", {}).get(tool, {})
+        state = "ok" if data.get("ok") else data.get("status", "missing")
+        native_bits.append(f"{tool}:{state}")
+        native_ok = native_ok or bool(data.get("ok"))
+    qt = query_totals(result.get("queries") or [])
+    ok = bool(atlas.get("ok")) and bool(graphify.get("ok")) and native_ok
+    summary = (
+        f"core matrix `{language}` {'ok' if ok else 'partial'}; native {', '.join(native_bits) or 'n/a'}; "
+        f"query eq {qt.get('equivalent_rows')}/{qt.get('rows')}, "
+        f"latency {_ratio_x(qt.get('graphify_ms', 0), qt.get('atlas_ms', 0))}, "
+        f"tokens {_ratio_x(qt.get('graphify_tokens', 0), qt.get('atlas_tokens', 0))}"
+    )
+    return ok, summary
+
+
+def audit_evidence_summary(items: list[tuple[str, str]], results_by_language: dict[str, dict[str, Any]]) -> tuple[bool, str]:
+    if not items:
+        return False, "no Atlas evidence mapping"
+    ok = True
+    summaries: list[str] = []
+    for kind, language in items:
+        if kind == "core":
+            item_ok, summary = core_audit_summary(language, results_by_language)
+        elif kind == "smoke":
+            item_ok, summary = smoke_audit_summary(language)
+        else:
+            item_ok, summary = False, f"unknown evidence kind `{kind}` for `{language}`"
+        ok = ok and item_ok
+        summaries.append(summary)
+    return ok, "<br>".join(summaries)
+
+
+def render_graphify_coverage_audit(graphify_discovery: dict[str, Any], results: list[dict[str, Any]]) -> list[str]:
+    results_by_language = {result["language"]: result for result in results}
+    rows = list(graphify_discovery.get("rows") or [])
+    detector_only = list(graphify_discovery.get("detector_only_code_extensions") or [])
+
+    audited_rows: list[tuple[str, bool, str, str]] = []
+    for family, exts, extractor, _atlas_status in rows:
+        evidence = GRAPHIFY_AUDIT_EVIDENCE.get(family, [])
+        ok, summary = audit_evidence_summary(evidence, results_by_language)
+        audited_rows.append((family, ok, f"`{exts}` via `{extractor}`", summary))
+    for ext in detector_only:
+        evidence = GRAPHIFY_DETECTOR_ONLY_EVIDENCE.get(ext, [])
+        ok, summary = audit_evidence_summary(evidence, results_by_language)
+        audited_rows.append((f"detector-only {ext}", ok, f"`{ext}` in `CODE_EXTENSIONS`, no `_DISPATCH` extractor", summary))
+
+    missing = [name for name, ok, _support, _summary in audited_rows if not ok]
+    deterministic_total = len(rows)
+    deterministic_ok = sum(1 for name, ok, _support, _summary in audited_rows[:deterministic_total] if ok)
+    detector_ok = sum(1 for name, ok, _support, _summary in audited_rows[deterministic_total:] if ok)
+
+    lines: list[str] = []
+    w = lines.append
+    w("## graphify coverage audit")
+    w("")
+    w(
+        f"- Deterministic graphify families covered by Atlas evidence: {deterministic_ok}/{deterministic_total}. "
+        f"Detector-only extensions covered by live Atlas smokes: {detector_ok}/{len(detector_only)}."
+    )
+    unsupported = graphify_discovery.get("unsupported_rows") or []
+    if unsupported:
+        w(f"- Unsupported graphify rows: {unsupported}.")
+    else:
+        w("- Unsupported graphify rows: none.")
+    if missing:
+        w(f"- Missing or partial evidence: {', '.join(f'`{name}`' for name in missing)}.")
+    else:
+        w("- Missing evidence: none.")
+    w("")
+    w("| graphify support | status | Atlas evidence |")
+    w("|---|---|---|")
+    for name, ok, support, summary in audited_rows:
+        w(f"| {name}<br>{support} | {'ok' if ok else 'partial'} | {summary} |")
+    w("")
+    return lines
+
+
+def render_saturation_report() -> list[str]:
+    path = Path(__file__).parent / "SATURATION_REPORT.json"
+    display_path = f"bench/{path.name}"
+    if not path.exists():
+        return []
+    try:
+        report = json.loads(path.read_text())
+    except (OSError, json.JSONDecodeError) as exc:
+        return [f"## Saturation loop evidence", "", f"- Could not load `{display_path}`: {exc}.", ""]
+
+    lines: list[str] = []
+    w = lines.append
+    w("## Saturation loop evidence")
+    w("")
+    w(
+        f"Raw artifacts: `{display_path}` and `bench/SATURATION_REPORT.md`. "
+        f"Iterations requested per language: {report.get('iterations_requested')}."
+    )
+    w("")
+    w("| language | status | iterations | equivalent rows by pass | graphify missing rows by pass | coverage ratio by pass |")
+    w("|---|---|---:|---|---|---|")
+    for item in report.get("languages") or []:
+        iterations = item.get("iterations") or []
+        eq = ", ".join(f"{it.get('queries', {}).get('equivalent_rows')}/{it.get('queries', {}).get('rows')}" for it in iterations)
+        missing = ", ".join(str(it.get("queries", {}).get("graphify_missing")) for it in iterations)
+        coverage = ", ".join(str(it.get("coverage_ratio")) for it in iterations)
+        w(
+            f"| {item.get('language')} | {item.get('status')} | {item.get('iterations_run')} | "
+            f"{eq} | {missing} | {coverage} |"
+        )
+    saturated = [item.get("language") for item in report.get("languages") or [] if item.get("saturated")]
+    if saturated:
+        w("")
+        w(
+            "Saturation note: these languages are marked saturated only for graphify-equivalent query-score improvement. "
+            "Their native coverage proxies remain in the live smoke artifacts; no 5x query claim is made where graphify exposes no equivalent rows."
+        )
+    w("")
+    return lines
+
+
+def render_mcp_context_smoke() -> list[str]:
+    path = Path(__file__).parent / "LIVE_MCP_CONTEXT_SMOKE.json"
+    display_path = f"bench/{path.name}"
+    if not path.exists():
+        return []
+    try:
+        smoke = json.loads(path.read_text())
+    except (OSError, json.JSONDecodeError) as exc:
+        return [f"- Could not load `{display_path}`: {exc}.", ""]
+
+    commands = smoke.get("commands", {})
+    index = smoke.get("index", {})
+    index_result = index.get("result", {})
+    metrics = smoke.get("metrics", {})
+    graphify = smoke.get("graphify", {})
+    quality = smoke.get("quality", {})
+    registrations = smoke.get("agent_registrations") or [smoke.get("agent_registration", {})]
+
+    lines: list[str] = []
+    w = lines.append
+    w("## Pulse local MCP context smoke")
+    w("")
+    w(
+        f"Raw artifact: `{display_path}`. Smoke used a fresh shallow clone of `{smoke.get('repo')}` "
+        f"at commit `{smoke.get('commit')}` and indexed it into local SQLite."
+    )
+    w("")
+    w("Commands:")
+    w("")
+    for key, label in (
+        ("atlas_index", "Atlas index"),
+        ("atlas_install_codex_mcp", "Codex MCP registration"),
+        ("atlas_install_claude_mcp", "Claude MCP registration"),
+        ("atlas_cli_context", "Atlas CLI context"),
+        ("atlas_mcp", "Atlas MCP HTTP server"),
+    ):
+        if commands.get(key):
+            w(f"- {label}: `{commands[key]}`")
+    if graphify.get("query_command"):
+        w(f"- graphify query: `{graphify['query_command']}`")
+    w("")
+    w("Results:")
+    w("")
+    w(
+        f"- Atlas indexed {index_result.get('indexed_files')} files, {index_result.get('symbols')} symbols, "
+        f"and {index_result.get('edges')} edges into SQLite in {index.get('seconds')}s."
+    )
+    reg_bits = []
+    for reg in registrations:
+        if not reg:
+            continue
+        ok = reg.get("contains_atlas_server") and reg.get("contains_sqlite_db")
+        extra = ""
+        if reg.get("agent") == "claude":
+            extra = f", skill markdown written={bool(reg.get('skill_markdown_written'))}"
+        reg_bits.append(f"{reg.get('agent')}: {'ok' if ok else 'failed'}{extra}")
+    if reg_bits:
+        w(f"- Local agent registration checks: {', '.join(reg_bits)}.")
+    w(
+        f"- Token cost: raw changed file {metrics.get('raw_changed_file_tokens')} tokens, "
+        f"Atlas MCP plain context {metrics.get('atlas_mcp_context_plain_tokens')} tokens, "
+        f"Atlas MCP JSON context {metrics.get('atlas_mcp_context_json_tokens')} tokens."
+    )
+    if metrics.get("raw_file_to_mcp_plain_token_ratio") is not None:
+        w(f"- Raw-file/MCP-plain token ratio: {metrics['raw_file_to_mcp_plain_token_ratio']}x.")
+    if metrics.get("graphify_to_mcp_plain_token_ratio") is not None:
+        w(
+            f"- graphify/MCP-plain token ratio: {metrics['graphify_to_mcp_plain_token_ratio']}x; "
+            f"latency ratio: {metrics.get('graphify_to_mcp_plain_latency_ratio')}x."
+        )
+    checks = [
+        "contains_changed_file",
+        "contains_router_symbol",
+        "contains_serve_http_symbol",
+        "has_body_excerpt",
+    ]
+    passed = [key for key in checks if quality.get(key)]
+    w(f"- Useful-context checks passed: {len(passed)}/{len(checks)} ({', '.join(passed)}).")
+    if (metrics.get("raw_file_to_mcp_plain_token_ratio") or 0) >= 5:
+        w("5x note: this smoke proves the Pulse-style local MCP path is more than 5x lower token cost than raw changed-file context while preserving review-relevant symbols.")
+    else:
+        w("Saturation note: this smoke does not prove the raw-file/MCP token-cost 5x target; inspect the raw artifact before claiming it.")
+    w("")
+    return lines
 
 
 def render_live_smokes() -> list[str]:
@@ -1492,14 +2051,27 @@ def render_one_live_smoke(path: Path, display_path: str) -> list[str]:
     w = lines.append
     raw_language = str(smoke.get("language", path.stem))
     language = {
+        "apex": "Apex",
+        "astro": "Astro",
+        "blade": "Blade",
+        "byond": "BYOND/DM",
         "csharp": "C#",
+        "cuda": "CUDA C++",
         "dart": "Dart",
+        "delphi": "Delphi/Lazarus",
+        "dotnet": ".NET Project",
+        "ejs": "EJS",
         "elixir": "Elixir",
+        "ets": "ETS/ArkTS",
         "groovy": "Groovy/Gradle",
+        "json": "JSON Config",
         "kotlin": "Kotlin",
+        "markdown": "Markdown",
         "objc": "Objective-C",
         "php": "PHP",
         "powershell": "PowerShell",
+        "r": "R",
+        "razor": "Razor",
         "ruby": "Ruby",
         "rust": "Rust",
         "scala": "Scala",
@@ -1547,6 +2119,11 @@ def render_one_live_smoke(path: Path, display_path: str) -> list[str]:
         w(
             f"- graphify rebuilt {graphify_metrics.get('nodes')} nodes and {graphify_metrics.get('links')} links "
             f"in {graphify_seconds}s."
+        )
+    if smoke.get("graphify_detector_only"):
+        w(
+            f"- graphify detector-only caveat: `{smoke['graphify_detector_only']}` is present in `CODE_EXTENSIONS`, "
+            "but this installed graphify runtime has no `_DISPATCH` extractor for it; graphify query rows are kept as missing-baseline evidence rather than 5x proof."
         )
     w("- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.")
     native = smoke.get("native_baseline") or {}
@@ -1615,7 +2192,19 @@ def render_one_live_smoke(path: Path, display_path: str) -> list[str]:
         latency_ratio = ratio(total_graphify_ms, total_atlas_ms)
         token_ratio = ratio(total_graphify_tokens, total_atlas_tokens)
     language_label = language
-    if (latency_ratio or 0) >= 5 and (token_ratio or 0) >= 5:
+    if equivalent_rows == 0:
+        w(
+            f"No-equivalent saturation note: this {language_label} smoke proves Atlas indexes the live language slice "
+            "and matches the native coverage proxy, but graphify returned no equivalent query rows. Latency/token ratios "
+            "from missing rows are not treated as 5x evidence; see the saturation loop artifact where applicable."
+        )
+    elif smoke.get("graphify_detector_only"):
+        w(
+            f"Detector-only saturation note: this {language_label} smoke proves Atlas indexes the live language slice "
+            "and matches the native coverage proxy, but it does not prove graphify/native 5x query superiority for this extension because "
+            "the installed graphify runtime has no deterministic extractor for it."
+        )
+    elif (latency_ratio or 0) >= 5 and (token_ratio or 0) >= 5:
         w(
             f"5x note: this {language_label} smoke meets the 5x threshold on equivalent query rows "
             f"for latency ({latency_ratio}x) and token output ({token_ratio}x). Accuracy still uses the "
@@ -1625,19 +2214,26 @@ def render_one_live_smoke(path: Path, display_path: str) -> list[str]:
         w(
             f"Saturation note: this {language_label} smoke proves Atlas has lower latency than graphify "
             f"on these live queries ({latency_ratio}x overall), but it does not prove every 5x target "
-            f"(token ratio {token_ratio}x overall). Pulse should use `atlas context`/MCP with a hard "
-            "token budget rather than raw `search --json` when measuring review-context token cost."
+            f"(token ratio {token_ratio}x overall). Use the raw JSON rows to distinguish exact-symbol "
+            "lookup from budgeted context output before making a 5x token claim."
         )
     w("")
     return lines
 
 
-def render(results: list[dict[str, Any]]) -> str:
-    graphify_discovery = discover_graphify_runtime()
+def render(
+    results: list[dict[str, Any]],
+    graphify_discovery: dict[str, Any] | None = None,
+    tool_manifest: dict[str, Any] | None = None,
+) -> str:
+    if graphify_discovery is None:
+        graphify_discovery = discover_graphify_runtime()
     lines: list[str] = []
     w = lines.append
     w("# Atlas code-intelligence matrix benchmark\n")
     w("This report benchmarks Atlas against the agreed per-language baselines. Raw metrics are kept separate by tool because Atlas, graphify, SCIP, and LSP servers expose different surfaces.\n")
+    for line in render_tool_manifest(tool_manifest or {}):
+        w(line)
     w("## graphify language discovery\n")
     w(f"- Installed graphify: {graphify_discovery['version']} (`{graphify_discovery['binary']}`).")
     if graphify_discovery.get("python"):
@@ -1649,6 +2245,7 @@ def render(results: list[dict[str, Any]]) -> str:
         w(f"- Detect source: `{graphify_discovery['detect_source']}`.")
     for item in graphify_discovery["evidence"]:
         w(f"- Evidence: {item}")
+    w("- Raw discovery artifact: `bench/GRAPHIFY_LANGUAGE_DISCOVERY.json`.")
     if graphify_discovery.get("help_command_count") is not None:
         w(f"- Runtime help probe: `graphify --help` succeeded and listed {graphify_discovery['help_command_count']} command/help lines.")
     if graphify_discovery.get("dispatch_count"):
@@ -1656,6 +2253,11 @@ def render(results: list[dict[str, Any]]) -> str:
             f"- Runtime support probe: `_DISPATCH` plus filename-special extractors exposed "
             f"{graphify_discovery['dispatch_count']} deterministic extractor entries; "
             f"`CODE_EXTENSIONS` exposed {graphify_discovery['code_extension_count']} code extensions."
+        )
+    if graphify_discovery.get("detect_smoke_total_files"):
+        w(
+            f"- Runtime detect smoke: generated one sample per `CODE_EXTENSIONS` entry; "
+            f"`detect()` returned {graphify_discovery['detect_smoke_total_files']} code files."
         )
     if graphify_discovery.get("runtime_error"):
         w(f"- Runtime discovery warning: {graphify_discovery['runtime_error']}. Falling back to the checked-in family table.")
@@ -1666,6 +2268,12 @@ def render(results: list[dict[str, Any]]) -> str:
     for family, exts, extractor, atlas_status in graphify_discovery["rows"]:
         w(f"| {family} | `{exts}` | `{extractor}` | {atlas_status} |")
     w("")
+    for line in render_graphify_coverage_audit(graphify_discovery, results):
+        w(line)
+    for line in render_saturation_report():
+        w(line)
+    for line in render_mcp_context_smoke():
+        w(line)
     for line in render_live_smokes():
         w(line)
     w("## Tool matrix\n")
@@ -1975,9 +2583,16 @@ def main() -> None:
         print(f"[matrix] {lang}", flush=True)
         results.append(run_language(lang, args, workdir))
 
-    output.write_text(render(results))
+    graphify_discovery = discover_graphify_runtime()
+    tool_manifest = benchmark_tool_manifest(args, graphify_discovery)
+
+    output.write_text(render(results, graphify_discovery, tool_manifest))
     output.with_suffix(".json").write_text(json.dumps(results, indent=2))
-    print(f"[matrix] wrote {output} and {output.with_suffix('.json')}")
+    discovery_output = output.parent / "GRAPHIFY_LANGUAGE_DISCOVERY.json"
+    discovery_output.write_text(json.dumps(graphify_discovery, indent=2) + "\n")
+    tool_versions_output = output.parent / "MATRIX_TOOL_VERSIONS.json"
+    tool_versions_output.write_text(json.dumps(tool_manifest, indent=2) + "\n")
+    print(f"[matrix] wrote {output}, {output.with_suffix('.json')}, {discovery_output}, and {tool_versions_output}")
 
 
 if __name__ == "__main__":

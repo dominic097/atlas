@@ -2,8 +2,10 @@
   "language": "verilog",
   "repo": "https://github.com/lowRISC/ibex",
   "commit": "022f084096baed0a9b5ebdf697ed2965f13e8ed8",
+  "graphify_detector_only": "",
   "commands": {
     "clone": "git clone --depth 1 https://github.com/lowRISC/ibex /tmp/atlas-live-verilog-ibex/repo",
+    "sparse_checkout": "",
     "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-verilog-ibex/atlas.db --json index /tmp/atlas-live-verilog-ibex/repo/rtl",
     "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-verilog-ibex/atlas.db --json index /tmp/atlas-live-verilog-ibex/repo/rtl",
     "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
@@ -19,12 +21,12 @@
     "target_path": "/tmp/atlas-live-verilog-ibex/repo/rtl"
   },
   "atlas": {
-    "cold_wall_seconds": 0.11,
-    "reindex_wall_seconds": 0.025,
+    "cold_wall_seconds": 0.117,
+    "reindex_wall_seconds": 0.028,
     "index": {
-      "repo_id": "3fcc6c88-cb83-408a-a47d-e46bdec64e77",
+      "repo_id": "5dd62de5-6e66-4f63-a4f6-6ce1cb399c75",
       "repo_full_name": "rtl",
-      "snapshot_id": "0cdba19e-7d80-4ffb-9d29-fbef91f32db1",
+      "snapshot_id": "376be33b-9a3b-42bc-b227-f4e1e2bcadb7",
       "commit_sha": "022f084096baed0a9b5ebdf697ed2965f13e8ed8",
       "indexed_files": 31,
       "symbols": 94,
@@ -39,24 +41,24 @@
         "verilog": 30
       },
       "mode": "full",
-      "duration_ms": 83,
+      "duration_ms": 86,
       "timings_ms": {
         "delta_check": 0,
-        "ensure_repo": 3,
+        "ensure_repo": 2,
         "go_types": 0,
-        "lexical": 14,
-        "parse": 26,
-        "persist": 21,
+        "lexical": 12,
+        "parse": 43,
+        "persist": 23,
         "resolve_head": 0,
         "routes": 0,
         "sort": 3,
-        "walk": 13
+        "walk": 0
       }
     },
     "reindex": {
-      "repo_id": "3fcc6c88-cb83-408a-a47d-e46bdec64e77",
+      "repo_id": "5dd62de5-6e66-4f63-a4f6-6ce1cb399c75",
       "repo_full_name": "rtl",
-      "snapshot_id": "0cdba19e-7d80-4ffb-9d29-fbef91f32db1",
+      "snapshot_id": "376be33b-9a3b-42bc-b227-f4e1e2bcadb7",
       "commit_sha": "022f084096baed0a9b5ebdf697ed2965f13e8ed8",
       "indexed_files": 31,
       "symbols": 94,
@@ -67,9 +69,9 @@
         "verilog": 30
       },
       "mode": "noop",
-      "duration_ms": 5,
+      "duration_ms": 0,
       "timings_ms": {
-        "delta_check": 4,
+        "delta_check": 0,
         "resolve_head": 0
       }
     },
@@ -110,7 +112,7 @@
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 0.385,
+    "seconds": 0.326,
     "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
@@ -130,7 +132,7 @@
     "tool": "tree-sitter-systemverilog",
     "status": "partial",
     "ok": false,
-    "seconds": 0.189,
+    "seconds": 0.205,
     "command": "/tmp/atlas-live-verilog-ibex/tree-sitter-systemverilog-venv/bin/python -c <tree-sitter-systemverilog definition counter> /tmp/atlas-live-verilog-ibex/repo/rtl",
     "metrics": {
       "files": 30,
@@ -208,28 +210,38 @@
     "native_definitions": 93
   },
   "optimization": {
-    "cycles_run": 2,
-    "stop_reason": "Verilog/SystemVerilog live smoke matched the tree-sitter-systemverilog definition coverage proxy and exceeded 5x overall latency/token ratios after widening Atlas declaration handling; native tree-sitter parse errors and the one below-5x `ibex_core` query row are reported in raw metrics.",
+    "cycles_run": 3,
+    "stop_reason": "Verilog/SystemVerilog live smoke matched the tree-sitter-systemverilog definition coverage proxy and improved token score after compacting HDL source suffixes in terse plain locations while preserving full paths in JSON.",
     "cycle_notes": [
       "cycle 1: lowRISC/ibex probe showed the generic Verilog regex missed functions with packed return types such as `function automatic logic [6:0] cm_stack_adj_base(...)`.",
-      "cycle 2: after adding a SystemVerilog-specific declaration scanner, Atlas/tree-sitter-systemverilog definition coverage reached 1.0; equivalent query rows exceeded 5x latency and token output overall, while `ibex_core` saturated below 5x for both latency/token because graphify matched the terse `ibex_core.f` file-list node instead of the RTL module."
+      "cycle 2: after adding a SystemVerilog-specific declaration scanner, Atlas/tree-sitter-systemverilog definition coverage reached 1.0; equivalent query rows exceeded 5x latency and token output overall, while `ibex_core` saturated below 5x for both latency/token because graphify matched the terse `ibex_core.f` file-list node instead of the RTL module.",
+      "cycle 3: compacting `.v`/`.sv`/`.svh` suffixes in terse locations reduces exact RTL symbol output without changing indexed symbols or JSON paths."
     ]
+  },
+  "query_warmup": {
+    "symbol": "ibex_core",
+    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-verilog-ibex/atlas.db --format plain --repo rtl explain ibex_core",
+    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ibex_core",
+    "atlas_returncode": 0,
+    "graphify_returncode": 0,
+    "note": "Untimed warm-up for both tools before measured query latency rows."
   },
   "queries": [
     {
       "symbol": "ibex_core",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-verilog-ibex/atlas.db --format plain --repo rtl explain ibex_core",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ibex_core",
-      "atlas_tokens": 7,
+      "atlas_tokens": 6,
       "graphify_tokens": 32,
-      "atlas_ms": 13.234,
-      "graphify_ms": 72.976,
+      "atlas_ms": 14.042,
+      "graphify_ms": 77.328,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "ibex_core m@ibex_core.sv:16"
+        "ibex_core m@ibex_core:16"
       ],
       "graphify_stdout_head": [
         "Node: ibex_core.f",
@@ -242,18 +254,19 @@
     },
     {
       "symbol": "ibex_top",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-verilog-ibex/atlas.db --format plain --repo rtl explain ibex_top",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ibex_top",
-      "atlas_tokens": 6,
+      "atlas_tokens": 5,
       "graphify_tokens": 105,
-      "atlas_ms": 12.904,
-      "graphify_ms": 71.169,
+      "atlas_ms": 13.436,
+      "graphify_ms": 74.677,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "ibex_top m@ibex_top.sv:15"
+        "ibex_top m@ibex_top:15"
       ],
       "graphify_stdout_head": [
         "Node: ibex_top",
@@ -268,18 +281,19 @@
     },
     {
       "symbol": "ibex_pkg",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-verilog-ibex/atlas.db --format plain --repo rtl explain ibex_pkg",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ibex_pkg",
-      "atlas_tokens": 6,
+      "atlas_tokens": 5,
       "graphify_tokens": 46,
-      "atlas_ms": 11.807,
-      "graphify_ms": 70.885,
+      "atlas_ms": 11.998,
+      "graphify_ms": 75.145,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "ibex_pkg p@ibex_pkg.sv:9"
+        "ibex_pkg p@ibex_pkg:9"
       ],
       "graphify_stdout_head": [
         "Node: ibex_pkg",
@@ -294,18 +308,19 @@
     },
     {
       "symbol": "ibex_alu",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-verilog-ibex/atlas.db --format plain --repo rtl explain ibex_alu",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ibex_alu",
-      "atlas_tokens": 6,
+      "atlas_tokens": 5,
       "graphify_tokens": 55,
-      "atlas_ms": 11.907,
-      "graphify_ms": 70.74,
+      "atlas_ms": 11.944,
+      "graphify_ms": 78.387,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "ibex_alu m@ibex_alu.sv:9"
+        "ibex_alu m@ibex_alu:9"
       ],
       "graphify_stdout_head": [
         "Node: ibex_alu",
@@ -320,18 +335,19 @@
     },
     {
       "symbol": "cm_stack_adj_base",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-verilog-ibex/atlas.db --format plain --repo rtl explain cm_stack_adj_base",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain cm_stack_adj_base",
-      "atlas_tokens": 13,
+      "atlas_tokens": 12,
       "graphify_tokens": 67,
-      "atlas_ms": 11.249,
-      "graphify_ms": 71.126,
+      "atlas_ms": 11.734,
+      "graphify_ms": 76.675,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "cm_stack_adj_base f@ibex_compressed_decoder.sv:42 c1"
+        "cm_stack_adj_base f@ibex_compressed_decoder:42 c1"
       ],
       "graphify_stdout_head": [
         "Node: cm_stack_adj_base()",
@@ -346,18 +362,19 @@
     },
     {
       "symbol": "decode_i_insn",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-verilog-ibex/atlas.db --format plain --repo rtl explain decode_i_insn",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain decode_i_insn",
-      "atlas_tokens": 9,
+      "atlas_tokens": 8,
       "graphify_tokens": 53,
-      "atlas_ms": 11.668,
-      "graphify_ms": 71.031,
+      "atlas_ms": 12.058,
+      "graphify_ms": 75.524,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "decode_i_insn f@ibex_tracer.sv:463 c1"
+        "decode_i_insn f@ibex_tracer:463 c1"
       ],
       "graphify_stdout_head": [
         "Node: decode_i_insn()",

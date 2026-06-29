@@ -9,9 +9,12 @@ import "testing"
 //   - a bare-name call helper() -> qualified_ref == bare == "helper", empty recv_type.
 //   - a self.method() call inside a class -> recv_type == enclosing class name.
 const pyCallSource = `import os
+import requests as req, urllib3
 
 DEFAULT_TIMEOUT = 30
 api_version = "v1"
+
+from urllib.parse import urljoin as join_url, urlencode
 
 if os.name:
     def platform_helper():
@@ -214,6 +217,23 @@ func TestPythonMethodSymbols(t *testing.T) {
 		}
 		if meta["recv_type"] != "Greeter" {
 			t.Fatalf("method %s recv_type = %v, want Greeter", name, meta["recv_type"])
+		}
+	}
+}
+
+func TestPythonImportAliasesAndFromMembers(t *testing.T) {
+	res, err := Parse("repo-1", "owner/repo", "sample.py", "python", []byte(pyCallSource))
+	if err != nil {
+		t.Fatalf("Parse returned error: %v", err)
+	}
+	for _, want := range []string{"requests", "urllib3", "urllib.parse", "urllib.parse.urljoin", "urllib.parse.urlencode"} {
+		if !containsString(res.Imports, want) {
+			t.Fatalf("missing import %q; imports=%+v", want, res.Imports)
+		}
+	}
+	for _, bad := range []string{"requests as req", "urljoin as join_url"} {
+		if containsString(res.Imports, bad) {
+			t.Fatalf("import alias leaked as import target %q; imports=%+v", bad, res.Imports)
 		}
 	}
 }

@@ -2,8 +2,10 @@
   "language": "ruby",
   "repo": "https://github.com/sinatra/sinatra",
   "commit": "5236d3459b8b9015e5ce21ddd0c6beb0db4081d4",
+  "graphify_detector_only": "",
   "commands": {
     "clone": "git clone --depth 1 https://github.com/sinatra/sinatra /tmp/atlas-live-ruby-sinatra/repo",
+    "sparse_checkout": "",
     "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-ruby-sinatra/atlas.db --json index /tmp/atlas-live-ruby-sinatra/repo",
     "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-ruby-sinatra/atlas.db --json index /tmp/atlas-live-ruby-sinatra/repo",
     "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
@@ -13,18 +15,19 @@
       "call",
       "route",
       "settings"
-    ]
+    ],
+    "target_path": "/tmp/atlas-live-ruby-sinatra/repo"
   },
   "atlas": {
-    "cold_wall_seconds": 0.342,
-    "reindex_wall_seconds": 0.02,
+    "cold_wall_seconds": 0.272,
+    "reindex_wall_seconds": 0.025,
     "index": {
-      "repo_id": "2e1aa797-cd8a-47b6-969a-29a89cc14dc4",
+      "repo_id": "54898536-c05d-4609-9a9a-0763c6fd4b10",
       "repo_full_name": "repo",
-      "snapshot_id": "48df7846-cace-497e-9abe-174d01f6adfd",
+      "snapshot_id": "01a3fc0f-1ed5-4640-9e4e-f819bb20a859",
       "commit_sha": "5236d3459b8b9015e5ce21ddd0c6beb0db4081d4",
       "indexed_files": 178,
-      "symbols": 1506,
+      "symbols": 1450,
       "edges": 3970,
       "edge_kinds": {
         "calls": 3750,
@@ -40,14 +43,14 @@
         "yaml": 10
       },
       "mode": "full",
-      "duration_ms": 266,
+      "duration_ms": 235,
       "timings_ms": {
         "delta_check": 0,
         "ensure_repo": 0,
         "go_types": 0,
-        "lexical": 151,
-        "parse": 46,
-        "persist": 65,
+        "lexical": 136,
+        "parse": 35,
+        "persist": 60,
         "resolve_head": 0,
         "routes": 0,
         "sort": 1,
@@ -55,12 +58,12 @@
       }
     },
     "reindex": {
-      "repo_id": "2e1aa797-cd8a-47b6-969a-29a89cc14dc4",
+      "repo_id": "54898536-c05d-4609-9a9a-0763c6fd4b10",
       "repo_full_name": "repo",
-      "snapshot_id": "48df7846-cace-497e-9abe-174d01f6adfd",
+      "snapshot_id": "01a3fc0f-1ed5-4640-9e4e-f819bb20a859",
       "commit_sha": "5236d3459b8b9015e5ce21ddd0c6beb0db4081d4",
       "indexed_files": 178,
-      "symbols": 1506,
+      "symbols": 1450,
       "edges": 3970,
       "routes": 0,
       "languages": {
@@ -87,7 +90,7 @@
       {
         "language": "markdown",
         "kind": "section",
-        "count": 284
+        "count": 228
       },
       {
         "language": "ruby",
@@ -130,7 +133,7 @@
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 0.866,
+    "seconds": 0.721,
     "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
@@ -152,7 +155,7 @@
     "tool": "ruby-ripper",
     "status": "ok",
     "ok": true,
-    "seconds": 0.159,
+    "seconds": 0.166,
     "command": "/usr/bin/ruby /tmp/atlas-live-ruby-sinatra/ripper_stats.rb /tmp/atlas-live-ruby-sinatra/repo",
     "metrics": {
       "files": 147,
@@ -179,9 +182,9 @@
     }
   },
   "coverage": {
-    "atlas_vs_ripper_definition_ratio": 1.01,
+    "atlas_vs_ruby_ripper_definition_ratio": 1.01,
     "atlas_ruby_definition_symbols": 1173,
-    "ripper_definitions": 1164
+    "native_definitions": 1164
   },
   "optimization": {
     "cycles_run": 2,
@@ -191,28 +194,37 @@
       "cycle 2: after parser patch, Atlas/Ripper definition ratio reached 1.01 and equivalent query rows exceeded 5x for latency and token output vs graphify."
     ]
   },
+  "query_warmup": {
+    "symbol": "initialize",
+    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ruby-sinatra/atlas.db --format plain --repo repo explain initialize",
+    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain initialize",
+    "atlas_returncode": 0,
+    "graphify_returncode": 0,
+    "note": "Untimed warm-up for both tools before measured query latency rows."
+  },
   "queries": [
     {
       "symbol": "initialize",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ruby-sinatra/atlas.db --format plain --repo repo explain initialize",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain initialize",
       "atlas_tokens": 8,
       "graphify_tokens": 61,
-      "atlas_ms": 16.316,
-      "graphify_ms": 111.241,
+      "atlas_ms": 13.7,
+      "graphify_ms": 90.373,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "initialize m@base.rb:97 df27 c1 d3"
+        "initialize m@base:97 df27 c1 d3"
       ],
       "graphify_stdout_head": [
         "Node: .initialize()",
         "  ID:        sinatra_base_acceptentry_initialize",
         "  Source:    lib/sinatra/base.rb L98",
         "  Type:      code",
-        "  Community: 22",
+        "  Community: 23",
         "  Degree:    2",
         "",
         "Connections (2):"
@@ -220,25 +232,26 @@
     },
     {
       "symbol": "call",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ruby-sinatra/atlas.db --format plain --repo repo explain call",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain call",
-      "atlas_tokens": 8,
+      "atlas_tokens": 7,
       "graphify_tokens": 89,
-      "atlas_ms": 16.018,
-      "graphify_ms": 103.485,
+      "atlas_ms": 14.037,
+      "graphify_ms": 108.646,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "call m@base.rb:226 df33 c15 d13"
+        "call m@base:226 df33 c15 d13"
       ],
       "graphify_stdout_head": [
         "Node: .call()",
         "  ID:        sinatra_base_extendedrack_call",
         "  Source:    lib/sinatra/base.rb L226",
         "  Type:      code",
-        "  Community: 39",
+        "  Community: 14",
         "  Degree:    5",
         "",
         "Connections (5):"
@@ -246,25 +259,26 @@
     },
     {
       "symbol": "route",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ruby-sinatra/atlas.db --format plain --repo repo explain route",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain route",
       "atlas_tokens": 7,
       "graphify_tokens": 96,
-      "atlas_ms": 13.919,
-      "graphify_ms": 103.783,
+      "atlas_ms": 13.28,
+      "graphify_ms": 94.267,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "route m@base.rb:1775 df2 c2 d1"
+        "route m@base:1775 df2 c2 d1"
       ],
       "graphify_stdout_head": [
         "Node: .route!()",
         "  ID:        sinatra_base_base_route",
         "  Source:    lib/sinatra/base.rb L1064",
         "  Type:      code",
-        "  Community: 4",
+        "  Community: 6",
         "  Degree:    6",
         "",
         "Connections (6):"
@@ -272,25 +286,26 @@
     },
     {
       "symbol": "settings",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ruby-sinatra/atlas.db --format plain --repo repo explain settings",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain settings",
-      "atlas_tokens": 7,
+      "atlas_tokens": 6,
       "graphify_tokens": 58,
-      "atlas_ms": 13.857,
-      "graphify_ms": 102.544,
+      "atlas_ms": 13.291,
+      "graphify_ms": 93.757,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "settings m@base.rb:1017 df6"
+        "settings m@base:1017 df6"
       ],
       "graphify_stdout_head": [
         "Node: .settings()",
         "  ID:        sinatra_base_base_settings",
         "  Source:    lib/sinatra/base.rb L1017",
         "  Type:      code",
-        "  Community: 32",
+        "  Community: 24",
         "  Degree:    2",
         "",
         "Connections (2):"

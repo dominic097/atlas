@@ -94,9 +94,11 @@ SQLite, graphify, and the best scriptable native parser baseline available on
 this machine. Benchmark-only dependencies are installed under `/tmp/...` workdirs
 and do not enter the Atlas runtime binary.
 
-Current live artifacts include Bash, C#, Dart, Elixir, Fortran, Groovy/Gradle,
-Julia, Kotlin, Lua, Objective-C, PHP, PowerShell, Ruby, Rust, Scala, Svelte,
-SQL, Swift, Terraform/HCL, Verilog/SystemVerilog, Vue, and Zig. Example:
+Current live artifacts include Apex, Astro, Bash, Blade, BYOND/DM, C#, CUDA,
+Dart, Delphi/Lazarus, .NET project files, EJS, Elixir, ETS, Fortran,
+Groovy/Gradle, JSON config, Julia, Kotlin, Lua, Markdown, Objective-C, Pascal,
+PHP, PowerShell, R, Razor, Ruby, Rust, Scala, Svelte, SQL, Swift,
+Terraform/HCL, Verilog/SystemVerilog, Vue, and Zig. Example:
 
 ```sh
 CGO_ENABLED=1 go build -o bin/atlas ./cmd/atlas
@@ -105,4 +107,16 @@ python3 bench/additional_language_smoke.py \
   --atlas ./bin/atlas \
   --graphify "$HOME/.local/share/uv/tools/graphifyy/bin/graphify" \
   --out bench/LIVE_TERRAFORM_SMOKE.json
+```
+
+For languages where graphify exposes no equivalent query rows, run the
+five-pass saturation loop and keep the raw artifact:
+
+```sh
+python3 bench/saturation_check.py \
+  --languages byond,ets,r \
+  --iterations 5 \
+  --atlas ./bin/atlas \
+  --graphify "$HOME/.local/share/uv/tools/graphifyy/bin/graphify" \
+  --out bench/SATURATION_REPORT.json
 ```

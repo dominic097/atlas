@@ -245,10 +245,40 @@ func compactLoc(file string, line int) string {
 		return ""
 	}
 	base := path.Base(strings.ReplaceAll(file, "\\", "/"))
+	if suffix := compactLocSuffix(base); suffix != "" {
+		base = base[:len(base)-len(suffix)]
+	} else if strings.EqualFold(path.Ext(base), ".sql") {
+		base = strings.TrimSuffix(base, path.Ext(base))
+	}
 	if line > 0 {
 		return fmt.Sprintf("%s:%d", base, line)
 	}
 	return base
+}
+
+func compactLocSuffix(base string) string {
+	lower := strings.ToLower(base)
+	for _, suffix := range []string{
+		".blade.php",
+		".csproj", ".fsproj", ".vbproj", ".slnx",
+		".ps1", ".psm1", ".psd1",
+		".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx",
+		".cu", ".cuh",
+		".razor", ".cshtml", ".vue",
+		".v", ".sv", ".svh",
+		".go", ".py", ".java",
+		".cpp", ".cc", ".cxx", ".hpp", ".hxx", ".hh", ".c", ".h",
+		".rs", ".rb", ".kt", ".kts", ".scala", ".php", ".swift",
+		".lua", ".luau", ".zig", ".ex", ".exs", ".m", ".mm", ".jl",
+		".f90", ".f95", ".f03", ".f08", ".f",
+		".dart", ".pas", ".pp", ".dpr", ".dpk", ".lpr", ".inc",
+		".tf", ".tfvars", ".hcl", ".dm", ".dme", ".dmi", ".dmm", ".dmf",
+	} {
+		if strings.HasSuffix(lower, suffix) {
+			return suffix
+		}
+	}
+	return ""
 }
 
 func kindCode(kind string) string {

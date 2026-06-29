@@ -1,0 +1,597 @@
+{
+  "language": "delphi",
+  "repo": "https://github.com/fpc/Lazarus",
+  "commit": "a37c7c35c6a271b377cd799c48586ea2689a8e0f",
+  "graphify_detector_only": "",
+  "commands": {
+    "clone": "git clone --depth 1 --filter=blob:none --sparse https://github.com/fpc/Lazarus /tmp/atlas-live-delphi-lazarus/repo",
+    "sparse_checkout": "git -C /tmp/atlas-live-delphi-lazarus/repo sparse-checkout set ide",
+    "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-delphi-lazarus/atlas.db --json index /tmp/atlas-live-delphi-lazarus/repo/ide",
+    "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-delphi-lazarus/atlas.db --json index /tmp/atlas-live-delphi-lazarus/repo/ide",
+    "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "native_baseline": "python3 <delphi/lazarus source counter> /tmp/atlas-live-delphi-lazarus/repo/ide",
+    "query_symbols": [
+      "AboutForm",
+      "FormClose",
+      "Notebook",
+      "TPageControl",
+      "IdeProject",
+      "BuildManager",
+      "IdePackager"
+    ],
+    "target_path": "/tmp/atlas-live-delphi-lazarus/repo/ide"
+  },
+  "atlas": {
+    "cold_wall_seconds": 7.385,
+    "reindex_wall_seconds": 0.038,
+    "index": {
+      "repo_id": "fab2d485-685d-407f-a4b0-35bf240cf07e",
+      "repo_full_name": "ide",
+      "snapshot_id": "e5718d0a-8294-4445-81f3-2cd11382e266",
+      "commit_sha": "a37c7c35c6a271b377cd799c48586ea2689a8e0f",
+      "indexed_files": 594,
+      "symbols": 39171,
+      "edges": 73200,
+      "edge_kinds": {
+        "calls": 65730,
+        "imports": 7470
+      },
+      "routes": 0,
+      "languages": {
+        "delphi": 206,
+        "makefile": 6,
+        "pascal": 376,
+        "text": 1,
+        "xml": 5
+      },
+      "mode": "full",
+      "duration_ms": 7168,
+      "timings_ms": {
+        "delta_check": 0,
+        "ensure_repo": 0,
+        "go_types": 0,
+        "lexical": 3638,
+        "parse": 1090,
+        "persist": 2385,
+        "resolve_head": 0,
+        "routes": 4,
+        "sort": 37,
+        "walk": 8
+      }
+    },
+    "reindex": {
+      "repo_id": "fab2d485-685d-407f-a4b0-35bf240cf07e",
+      "repo_full_name": "ide",
+      "snapshot_id": "e5718d0a-8294-4445-81f3-2cd11382e266",
+      "commit_sha": "a37c7c35c6a271b377cd799c48586ea2689a8e0f",
+      "indexed_files": 594,
+      "symbols": 39171,
+      "edges": 73200,
+      "routes": 0,
+      "languages": {
+        "delphi": 206,
+        "makefile": 6,
+        "pascal": 376,
+        "text": 1,
+        "xml": 5
+      },
+      "mode": "noop",
+      "duration_ms": 0,
+      "timings_ms": {
+        "delta_check": 0,
+        "resolve_head": 0
+      }
+    },
+    "symbol_breakdown": [
+      {
+        "language": "delphi",
+        "kind": "component",
+        "count": 4595
+      },
+      {
+        "language": "delphi",
+        "kind": "component_type",
+        "count": 4595
+      },
+      {
+        "language": "delphi",
+        "kind": "dependency",
+        "count": 14
+      },
+      {
+        "language": "delphi",
+        "kind": "event",
+        "count": 1976
+      },
+      {
+        "language": "delphi",
+        "kind": "package",
+        "count": 5
+      },
+      {
+        "language": "delphi",
+        "kind": "unit",
+        "count": 123
+      },
+      {
+        "language": "makefile",
+        "kind": "target",
+        "count": 307
+      },
+      {
+        "language": "pascal",
+        "kind": "document",
+        "count": 9
+      },
+      {
+        "language": "pascal",
+        "kind": "function",
+        "count": 26098
+      },
+      {
+        "language": "pascal",
+        "kind": "type",
+        "count": 1077
+      },
+      {
+        "language": "pascal",
+        "kind": "unit",
+        "count": 366
+      },
+      {
+        "language": "text",
+        "kind": "document",
+        "count": 1
+      },
+      {
+        "language": "xml",
+        "kind": "document",
+        "count": 5
+      }
+    ],
+    "edge_breakdown": [
+      {
+        "kind": "calls",
+        "count": 65730
+      },
+      {
+        "kind": "imports",
+        "count": 7470
+      }
+    ],
+    "delphi_definition_symbols": 11308
+  },
+  "graphify": {
+    "status": "ok",
+    "ok": true,
+    "seconds": 14.155,
+    "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "stdout_head": [
+      "Re-extracting code files in . (no LLM needed)...",
+      "  AST extraction: 100/582 uncached files (17%) [14 workers]",
+      "  AST extraction: 200/582 uncached files (34%) [14 workers]",
+      "  AST extraction: 300/582 uncached files (51%) [14 workers]",
+      "  AST extraction: 400/582 uncached files (68%) [14 workers]",
+      "  AST extraction: 500/582 uncached files (85%) [14 workers]",
+      "  AST extraction: 582/582 files (100%) [14 workers]",
+      "[graphify watch] Skipped graph.html: Graph has 19383 nodes - too large for HTML viz (limit: 5000). Use --no-viz, raise GRAPHIFY_VIZ_NODE_LIMIT, or reduce input size.",
+      "[graphify watch] Rebuilt: 19383 nodes, 29702 edges, 929 communities",
+      "[graphify watch] graph.json and GRAPH_REPORT.md updated in graphify-out",
+      "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
+      "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
+    ],
+    "stderr_head": [],
+    "metrics": {
+      "nodes": 19383,
+      "links": 29702,
+      "calls": 10195
+    }
+  },
+  "native_baseline": {
+    "tool": "delphi-lazarus-source-counter",
+    "status": "ok",
+    "ok": true,
+    "seconds": 0.026,
+    "command": "python3 <delphi/lazarus source counter> /tmp/atlas-live-delphi-lazarus/repo/ide",
+    "metrics": {
+      "files": 206,
+      "parsed_files": 206,
+      "parse_errors": 0,
+      "definition_counts": {
+        "component": 4595,
+        "component_type": 4595,
+        "event": 1976,
+        "package": 5,
+        "dependency": 14,
+        "unit": 123
+      },
+      "definitions": 11308,
+      "sample_definitions": [
+        {
+          "kind": "component",
+          "name": "AboutForm",
+          "path": "aboutfrm.lfm"
+        },
+        {
+          "kind": "component_type",
+          "name": "TAboutForm",
+          "path": "aboutfrm.lfm"
+        },
+        {
+          "kind": "event",
+          "name": "FormClose",
+          "path": "aboutfrm.lfm"
+        },
+        {
+          "kind": "event",
+          "name": "AboutFormCreate",
+          "path": "aboutfrm.lfm"
+        },
+        {
+          "kind": "event",
+          "name": "FormShow",
+          "path": "aboutfrm.lfm"
+        },
+        {
+          "kind": "component",
+          "name": "Notebook",
+          "path": "aboutfrm.lfm"
+        },
+        {
+          "kind": "component_type",
+          "name": "TPageControl",
+          "path": "aboutfrm.lfm"
+        },
+        {
+          "kind": "event",
+          "name": "NotebookPageChanged",
+          "path": "aboutfrm.lfm"
+        },
+        {
+          "kind": "component",
+          "name": "VersionPage",
+          "path": "aboutfrm.lfm"
+        },
+        {
+          "kind": "component_type",
+          "name": "TTabSheet",
+          "path": "aboutfrm.lfm"
+        },
+        {
+          "kind": "component",
+          "name": "LogoImage",
+          "path": "aboutfrm.lfm"
+        },
+        {
+          "kind": "component_type",
+          "name": "TImage",
+          "path": "aboutfrm.lfm"
+        },
+        {
+          "kind": "component",
+          "name": "VersionLabel",
+          "path": "aboutfrm.lfm"
+        },
+        {
+          "kind": "component_type",
+          "name": "TLabel",
+          "path": "aboutfrm.lfm"
+        },
+        {
+          "kind": "component",
+          "name": "BuildDateLabel",
+          "path": "aboutfrm.lfm"
+        },
+        {
+          "kind": "component_type",
+          "name": "TLabel",
+          "path": "aboutfrm.lfm"
+        },
+        {
+          "kind": "component",
+          "name": "FPCVersionLabel",
+          "path": "aboutfrm.lfm"
+        },
+        {
+          "kind": "component_type",
+          "name": "TLabel",
+          "path": "aboutfrm.lfm"
+        },
+        {
+          "kind": "component",
+          "name": "RevisionLabel",
+          "path": "aboutfrm.lfm"
+        },
+        {
+          "kind": "component_type",
+          "name": "TLabel",
+          "path": "aboutfrm.lfm"
+        },
+        {
+          "kind": "component",
+          "name": "PlatformLabel",
+          "path": "aboutfrm.lfm"
+        },
+        {
+          "kind": "component_type",
+          "name": "TLabel",
+          "path": "aboutfrm.lfm"
+        },
+        {
+          "kind": "component",
+          "name": "AboutPage",
+          "path": "aboutfrm.lfm"
+        },
+        {
+          "kind": "component_type",
+          "name": "TTabSheet",
+          "path": "aboutfrm.lfm"
+        },
+        {
+          "kind": "component",
+          "name": "OfficialLabel",
+          "path": "aboutfrm.lfm"
+        },
+        {
+          "kind": "component_type",
+          "name": "TLabel",
+          "path": "aboutfrm.lfm"
+        },
+        {
+          "kind": "component",
+          "name": "OfficialURLLabel",
+          "path": "aboutfrm.lfm"
+        },
+        {
+          "kind": "component_type",
+          "name": "TLabel",
+          "path": "aboutfrm.lfm"
+        },
+        {
+          "kind": "event",
+          "name": "URLLabelMouseDown",
+          "path": "aboutfrm.lfm"
+        },
+        {
+          "kind": "event",
+          "name": "URLLabelMouseEnter",
+          "path": "aboutfrm.lfm"
+        }
+      ]
+    }
+  },
+  "richer_native_baselines": {
+    "delphi-lazarus-source-counter": {
+      "status": "ok",
+      "ok": true,
+      "note": "benchmark-owned Delphi/Lazarus form and package counter used as the scriptable parser coverage proxy"
+    },
+    "fpc": {
+      "status": "missing",
+      "ok": false,
+      "note": "Free Pascal compiler not installed; source-only form/package parser proxy used for this smoke"
+    },
+    "lazbuild": {
+      "status": "missing",
+      "ok": false,
+      "note": "lazbuild not installed; source-only form/package parser proxy used for this smoke"
+    },
+    "pasls": {
+      "status": "missing",
+      "ok": false,
+      "note": "Pascal language server not installed"
+    }
+  },
+  "coverage": {
+    "atlas_vs_delphi_lazarus_source_counter_definition_ratio": 1.0,
+    "atlas_delphi_definition_symbols": 11308,
+    "native_definitions": 11308
+  },
+  "optimization": {
+    "cycles_run": 2,
+    "stop_reason": "Delphi/Lazarus live smoke replaces the generic one-regex form fallback with a dedicated parser for form component instances, component classes, event handlers, package names, package dependencies, and units.",
+    "cycle_notes": [
+      "cycle 1: fpc/Lazarus IDE probe showed the generic Delphi fallback indexed only form component instance names and missed event handlers plus .lpk package/unit/dependency context exposed by graphify.",
+      "cycle 2: after adding a dedicated Delphi/Lazarus parser and benchmark-owned source counter, Atlas covers form and package context on the live Lazarus IDE slice."
+    ]
+  },
+  "query_warmup": {
+    "symbol": "AboutForm",
+    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-delphi-lazarus/atlas.db --format plain --repo ide explain AboutForm",
+    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain AboutForm",
+    "atlas_returncode": 0,
+    "graphify_returncode": 0,
+    "note": "Untimed warm-up for both tools before measured query latency rows."
+  },
+  "queries": [
+    {
+      "symbol": "AboutForm",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-delphi-lazarus/atlas.db --format plain --repo ide explain AboutForm",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain AboutForm",
+      "atlas_tokens": 6,
+      "graphify_tokens": 50,
+      "atlas_ms": 36.756,
+      "graphify_ms": 357.847,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "AboutForm c@aboutfrm.lfm:1"
+      ],
+      "graphify_stdout_head": [
+        "Node: AboutFormCreate()",
+        "  ID:        aboutfrm_aboutformcreate",
+        "  Source:    aboutfrm.lfm L18",
+        "  Type:      code",
+        "  Community: 322",
+        "  Degree:    1",
+        "",
+        "Connections (1):"
+      ]
+    },
+    {
+      "symbol": "FormClose",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-delphi-lazarus/atlas.db --format plain --repo ide explain FormClose",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain FormClose",
+      "atlas_tokens": 9,
+      "graphify_tokens": 47,
+      "atlas_ms": 38.859,
+      "graphify_ms": 357.931,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "FormClose e@aboutfrm.lfm:17 df66 c33"
+      ],
+      "graphify_stdout_head": [
+        "Node: FormClose()",
+        "  ID:        aboutfrm_formclose",
+        "  Source:    aboutfrm.lfm L17",
+        "  Type:      code",
+        "  Community: 322",
+        "  Degree:    1",
+        "",
+        "Connections (1):"
+      ]
+    },
+    {
+      "symbol": "Notebook",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-delphi-lazarus/atlas.db --format plain --repo ide explain Notebook",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Notebook",
+      "atlas_tokens": 7,
+      "graphify_tokens": 53,
+      "atlas_ms": 37.102,
+      "graphify_ms": 351.196,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "Notebook c@aboutfrm.lfm:20 df3"
+      ],
+      "graphify_stdout_head": [
+        "Node: NotebookPageChanged()",
+        "  ID:        aboutfrm_notebookpagechanged",
+        "  Source:    aboutfrm.lfm L29",
+        "  Type:      code",
+        "  Community: 322",
+        "  Degree:    1",
+        "",
+        "Connections (1):"
+      ]
+    },
+    {
+      "symbol": "TPageControl",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-delphi-lazarus/atlas.db --format plain --repo ide explain TPageControl",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain TPageControl",
+      "atlas_tokens": 9,
+      "graphify_tokens": 71,
+      "atlas_ms": 45.704,
+      "graphify_ms": 355.692,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "TPageControl c@aboutfrm.lfm:20 df19 c1"
+      ],
+      "graphify_stdout_head": [
+        "Node: TPageControl",
+        "  ID:        aboutfrm_tpagecontrol",
+        "  Source:    aboutfrm.lfm L20",
+        "  Type:      code",
+        "  Community: 322",
+        "  Degree:    3",
+        "",
+        "Connections (3):"
+      ]
+    },
+    {
+      "symbol": "IdeProject",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-delphi-lazarus/atlas.db --format plain --repo ide explain IdeProject",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain IdeProject",
+      "atlas_tokens": 9,
+      "graphify_tokens": 50,
+      "atlas_ms": 36.465,
+      "graphify_ms": 355.333,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "IdeProject d@idedebugger.lpk:357 df3"
+      ],
+      "graphify_stdout_head": [
+        "Node: IdeProject",
+        "  ID:        ideproject",
+        "  Source:    packages/idedebugger/idedebugger.lpk L1",
+        "  Type:      code",
+        "  Community: 23",
+        "  Degree:    1",
+        "",
+        "Connections (1):"
+      ]
+    },
+    {
+      "symbol": "BuildManager",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-delphi-lazarus/atlas.db --format plain --repo ide explain BuildManager",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain BuildManager",
+      "atlas_tokens": 8,
+      "graphify_tokens": 268,
+      "atlas_ms": 36.586,
+      "graphify_ms": 359.216,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "BuildManager u@buildmanager:28 df2"
+      ],
+      "graphify_stdout_head": [
+        "Node: BuildManager",
+        "  ID:        ideproject_buildmanager_buildmanager",
+        "  Source:    packages/ideproject/buildmanager.pas L28",
+        "  Type:      code",
+        "  Community: 430",
+        "  Degree:    18",
+        "",
+        "Connections (18):"
+      ]
+    },
+    {
+      "symbol": "IdePackager",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-delphi-lazarus/atlas.db --format plain --repo ide explain IdePackager",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain IdePackager",
+      "atlas_tokens": 9,
+      "graphify_tokens": 165,
+      "atlas_ms": 37.451,
+      "graphify_ms": 350.304,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "IdePackager p@idepackager.lpk:5 df3"
+      ],
+      "graphify_stdout_head": [
+        "Node: IdePackager",
+        "  ID:        packages_idepackager_idepackager_lpk_idepackager_idepackager_idepackager",
+        "  Source:    packages/idepackager/idepackager.lpk L1",
+        "  Type:      code",
+        "  Community: 624",
+        "  Degree:    10",
+        "",
+        "Connections (10):"
+      ]
+    }
+  ]
+}

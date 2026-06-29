@@ -2,8 +2,10 @@
   "language": "bash",
   "repo": "https://github.com/nvm-sh/nvm",
   "commit": "a6ec73943099a86fba98bde3b04a1c60944a4549",
+  "graphify_detector_only": "",
   "commands": {
     "clone": "git clone --depth 1 https://github.com/nvm-sh/nvm /tmp/atlas-live-bash-nvm/repo",
+    "sparse_checkout": "",
     "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-bash-nvm/atlas.db --json index /tmp/atlas-live-bash-nvm/repo",
     "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-bash-nvm/atlas.db --json index /tmp/atlas-live-bash-nvm/repo",
     "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
@@ -13,18 +15,19 @@
       "nvm_install_binary",
       "nvm_die_on_prefix",
       "nvm_get_os"
-    ]
+    ],
+    "target_path": "/tmp/atlas-live-bash-nvm/repo"
   },
   "atlas": {
-    "cold_wall_seconds": 0.215,
-    "reindex_wall_seconds": 0.021,
+    "cold_wall_seconds": 0.163,
+    "reindex_wall_seconds": 0.025,
     "index": {
-      "repo_id": "4efa7f98-cdc9-4a1b-8f83-8b8450372a9a",
+      "repo_id": "c7ac70ad-4e98-4c02-b921-eff42789ff85",
       "repo_full_name": "repo",
-      "snapshot_id": "fb7b8c4a-33b7-4b24-9c8f-a51207fc3552",
+      "snapshot_id": "fbe0f00f-f42b-45fb-be7c-6732becefba1",
       "commit_sha": "a6ec73943099a86fba98bde3b04a1c60944a4549",
       "indexed_files": 64,
-      "symbols": 468,
+      "symbols": 479,
       "edges": 102,
       "edge_kinds": {
         "calls": 102
@@ -42,27 +45,27 @@
         "yaml": 18
       },
       "mode": "full",
-      "duration_ms": 131,
+      "duration_ms": 123,
       "timings_ms": {
         "delta_check": 0,
         "ensure_repo": 0,
         "go_types": 0,
-        "lexical": 56,
-        "parse": 27,
+        "lexical": 54,
+        "parse": 36,
         "persist": 30,
         "resolve_head": 0,
         "routes": 0,
         "sort": 0,
-        "walk": 16
+        "walk": 1
       }
     },
     "reindex": {
-      "repo_id": "4efa7f98-cdc9-4a1b-8f83-8b8450372a9a",
+      "repo_id": "c7ac70ad-4e98-4c02-b921-eff42789ff85",
       "repo_full_name": "repo",
-      "snapshot_id": "fb7b8c4a-33b7-4b24-9c8f-a51207fc3552",
+      "snapshot_id": "fbe0f00f-f42b-45fb-be7c-6732becefba1",
       "commit_sha": "a6ec73943099a86fba98bde3b04a1c60944a4549",
       "indexed_files": 64,
-      "symbols": 468,
+      "symbols": 479,
       "edges": 102,
       "routes": 0,
       "languages": {
@@ -102,7 +105,12 @@
       {
         "language": "json",
         "kind": "document",
-        "count": 6
+        "count": 4
+      },
+      {
+        "language": "json",
+        "kind": "key",
+        "count": 47
       },
       {
         "language": "makefile",
@@ -117,7 +125,7 @@
       {
         "language": "markdown",
         "kind": "section",
-        "count": 257
+        "count": 223
       },
       {
         "language": "text",
@@ -141,20 +149,20 @@
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 0.645,
+    "seconds": 0.551,
     "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
       "  AST extraction: 300/300 files (100%) [14 workers]",
-      "[graphify watch] Rebuilt: 531 nodes, 807 edges, 28 communities",
+      "[graphify watch] Rebuilt: 452 nodes, 729 edges, 31 communities",
       "[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out",
       "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
       "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
     ],
     "stderr_head": [],
     "metrics": {
-      "nodes": 531,
-      "links": 807,
+      "nodes": 452,
+      "links": 729,
       "calls": 292
     }
   },
@@ -199,28 +207,37 @@
       "cycle 1: nvm-sh/nvm smoke reached 1.0 Atlas/native function coverage and exceeded 5x query latency plus token output vs graphify on exact function queries."
     ]
   },
+  "query_warmup": {
+    "symbol": "nvm",
+    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-bash-nvm/atlas.db --format plain --repo repo explain nvm",
+    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain nvm",
+    "atlas_returncode": 0,
+    "graphify_returncode": 0,
+    "note": "Untimed warm-up for both tools before measured query latency rows."
+  },
   "queries": [
     {
       "symbol": "nvm",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-bash-nvm/atlas.db --format plain --repo repo explain nvm",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain nvm",
-      "atlas_tokens": 4,
+      "atlas_tokens": 5,
       "graphify_tokens": 269,
-      "atlas_ms": 13.881,
-      "graphify_ms": 97.326,
+      "atlas_ms": 12.298,
+      "graphify_ms": 84.038,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "nvm f@nvm.sh:3154"
+        "nvm f@nvm.sh:3154 d1"
       ],
       "graphify_stdout_head": [
         "Node: nvm.sh",
         "  ID:        nvm",
         "  Source:    nvm.sh L1",
         "  Type:      code",
-        "  Community: 0",
+        "  Community: 5",
         "  Degree:    117",
         "",
         "Connections (117):"
@@ -228,12 +245,13 @@
     },
     {
       "symbol": "nvm_install_binary",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-bash-nvm/atlas.db --format plain --repo repo explain nvm_install_binary",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain nvm_install_binary",
       "atlas_tokens": 8,
       "graphify_tokens": 87,
-      "atlas_ms": 13.089,
-      "graphify_ms": 94.474,
+      "atlas_ms": 12.47,
+      "graphify_ms": 83.141,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -246,7 +264,7 @@
         "  ID:        nvm_nvm_install_binary",
         "  Source:    nvm.sh L2331",
         "  Type:      code",
-        "  Community: 0",
+        "  Community: 11",
         "  Degree:    5",
         "",
         "Connections (5):"
@@ -254,12 +272,13 @@
     },
     {
       "symbol": "nvm_die_on_prefix",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-bash-nvm/atlas.db --format plain --repo repo explain nvm_die_on_prefix",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain nvm_die_on_prefix",
       "atlas_tokens": 8,
       "graphify_tokens": 90,
-      "atlas_ms": 13.39,
-      "graphify_ms": 97.377,
+      "atlas_ms": 12.192,
+      "graphify_ms": 81.912,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -272,7 +291,7 @@
         "  ID:        nvm_nvm_die_on_prefix",
         "  Source:    nvm.sh L2863",
         "  Type:      code",
-        "  Community: 0",
+        "  Community: 5",
         "  Degree:    5",
         "",
         "Connections (5):"
@@ -280,12 +299,13 @@
     },
     {
       "symbol": "nvm_get_os",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-bash-nvm/atlas.db --format plain --repo repo explain nvm_get_os",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain nvm_get_os",
       "atlas_tokens": 6,
       "graphify_tokens": 52,
-      "atlas_ms": 13.016,
-      "graphify_ms": 99.984,
+      "atlas_ms": 12.337,
+      "graphify_ms": 80.538,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -298,7 +318,7 @@
         "  ID:        nvm_nvm_get_os",
         "  Source:    nvm.sh L2129",
         "  Type:      code",
-        "  Community: 0",
+        "  Community: 4",
         "  Degree:    2",
         "",
         "Connections (2):"

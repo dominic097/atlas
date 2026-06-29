@@ -1,0 +1,514 @@
+{
+  "language": "ets",
+  "repo": "https://github.com/openharmony/applications_app_samples",
+  "commit": "a826ab0e75fe51d028c1c5af58188e908736b53b",
+  "graphify_detector_only": ".ets",
+  "commands": {
+    "clone": "git clone --depth 1 --filter=blob:none --sparse https://github.com/openharmony/applications_app_samples /tmp/atlas-live-ets-openharmony-tabs/repo",
+    "sparse_checkout": "git -C /tmp/atlas-live-ets-openharmony-tabs/repo sparse-checkout set code/ArkTS1.2/TabsSample/entry/src/main/ets",
+    "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-ets-openharmony-tabs/atlas.db --json index /tmp/atlas-live-ets-openharmony-tabs/repo/code/ArkTS1.2/TabsSample/entry/src/main/ets",
+    "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-ets-openharmony-tabs/atlas.db --json index /tmp/atlas-live-ets-openharmony-tabs/repo/code/ArkTS1.2/TabsSample/entry/src/main/ets",
+    "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "native_baseline": "python3 <ets source counter> /tmp/atlas-live-ets-openharmony-tabs/repo/code/ArkTS1.2/TabsSample/entry/src/main/ets",
+    "query_symbols": [
+      "MyStateSample",
+      "ComExampleTrivialApplication",
+      "WaterFlowDataSource",
+      "notifyDataReload",
+      "ArticleNode",
+      "TabViewComponent",
+      "CollapseMenuSection",
+      "articleItemBuilder"
+    ],
+    "target_path": "/tmp/atlas-live-ets-openharmony-tabs/repo/code/ArkTS1.2/TabsSample/entry/src/main/ets"
+  },
+  "atlas": {
+    "cold_wall_seconds": 0.117,
+    "reindex_wall_seconds": 0.021,
+    "index": {
+      "repo_id": "61d3d8db-3307-43de-ad02-02dd79ea6fb0",
+      "repo_full_name": "ets",
+      "snapshot_id": "e27f9ba9-62d9-46a6-8b02-5ab5913bc298",
+      "commit_sha": "a826ab0e75fe51d028c1c5af58188e908736b53b",
+      "indexed_files": 18,
+      "symbols": 157,
+      "edges": 757,
+      "edge_kinds": {
+        "calls": 704,
+        "imports": 53
+      },
+      "routes": 0,
+      "languages": {
+        "ets": 18
+      },
+      "mode": "full",
+      "duration_ms": 80,
+      "timings_ms": {
+        "delta_check": 0,
+        "ensure_repo": 0,
+        "go_types": 0,
+        "lexical": 28,
+        "parse": 10,
+        "persist": 31,
+        "resolve_head": 0,
+        "routes": 0,
+        "sort": 0,
+        "walk": 8
+      }
+    },
+    "reindex": {
+      "repo_id": "61d3d8db-3307-43de-ad02-02dd79ea6fb0",
+      "repo_full_name": "ets",
+      "snapshot_id": "e27f9ba9-62d9-46a6-8b02-5ab5913bc298",
+      "commit_sha": "a826ab0e75fe51d028c1c5af58188e908736b53b",
+      "indexed_files": 18,
+      "symbols": 157,
+      "edges": 757,
+      "routes": 0,
+      "languages": {
+        "ets": 18
+      },
+      "mode": "noop",
+      "duration_ms": 0,
+      "timings_ms": {
+        "delta_check": 0,
+        "resolve_head": 0
+      }
+    },
+    "symbol_breakdown": [
+      {
+        "language": "ets",
+        "kind": "constructor",
+        "count": 4
+      },
+      {
+        "language": "ets",
+        "kind": "document",
+        "count": 4
+      },
+      {
+        "language": "ets",
+        "kind": "method",
+        "count": 69
+      },
+      {
+        "language": "ets",
+        "kind": "type",
+        "count": 20
+      },
+      {
+        "language": "ets",
+        "kind": "variable",
+        "count": 60
+      }
+    ],
+    "edge_breakdown": [
+      {
+        "kind": "calls",
+        "count": 704
+      },
+      {
+        "kind": "imports",
+        "count": 53
+      }
+    ],
+    "ets_definition_symbols": 153
+  },
+  "graphify": {
+    "status": "ok",
+    "ok": true,
+    "seconds": 0.123,
+    "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "stdout_head": [
+      "Re-extracting code files in . (no LLM needed)...",
+      "[graphify watch] Rebuilt: 0 nodes, 0 edges, 0 communities",
+      "[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out",
+      "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
+      "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
+    ],
+    "stderr_head": [],
+    "metrics": {
+      "nodes": 0,
+      "links": 0,
+      "calls": 0
+    }
+  },
+  "native_baseline": {
+    "tool": "ets-source-counter",
+    "status": "ok",
+    "ok": true,
+    "seconds": 0.004,
+    "command": "python3 <ets source counter> /tmp/atlas-live-ets-openharmony-tabs/repo/code/ArkTS1.2/TabsSample/entry/src/main/ets",
+    "metrics": {
+      "files": 18,
+      "parsed_files": 18,
+      "parse_errors": 0,
+      "definition_counts": {
+        "type": 20,
+        "function": 0,
+        "method": 69,
+        "constructor": 4,
+        "variable": 60
+      },
+      "definitions": 153,
+      "sample_definitions": [
+        {
+          "kind": "type",
+          "name": "Constants",
+          "path": "constants/Constants.ets"
+        },
+        {
+          "kind": "variable",
+          "name": "ORDINARY_MENU",
+          "path": "constants/Constants.ets"
+        },
+        {
+          "kind": "variable",
+          "name": "COLLAPSE_MENU",
+          "path": "constants/Constants.ets"
+        },
+        {
+          "kind": "type",
+          "name": "EntryAbility",
+          "path": "entryability/EntryAbility.ets"
+        },
+        {
+          "kind": "method",
+          "name": "onCreate",
+          "path": "entryability/EntryAbility.ets"
+        },
+        {
+          "kind": "method",
+          "name": "onWindowStageCreate",
+          "path": "entryability/EntryAbility.ets"
+        },
+        {
+          "kind": "type",
+          "name": "ArticleNode",
+          "path": "model/collapsemenu/ArticleNode.ets"
+        },
+        {
+          "kind": "variable",
+          "name": "type",
+          "path": "model/collapsemenu/ArticleNode.ets"
+        },
+        {
+          "kind": "variable",
+          "name": "title",
+          "path": "model/collapsemenu/ArticleNode.ets"
+        },
+        {
+          "kind": "type",
+          "name": "BasicDataSource",
+          "path": "model/collapsemenu/BasicDataSource.ets"
+        },
+        {
+          "kind": "variable",
+          "name": "listeners",
+          "path": "model/collapsemenu/BasicDataSource.ets"
+        },
+        {
+          "kind": "method",
+          "name": "registerDataChangeListener",
+          "path": "model/collapsemenu/BasicDataSource.ets"
+        },
+        {
+          "kind": "method",
+          "name": "unregisterDataChangeListener",
+          "path": "model/collapsemenu/BasicDataSource.ets"
+        },
+        {
+          "kind": "variable",
+          "name": "pos",
+          "path": "model/collapsemenu/BasicDataSource.ets"
+        },
+        {
+          "kind": "method",
+          "name": "notifyDataReload",
+          "path": "model/collapsemenu/BasicDataSource.ets"
+        },
+        {
+          "kind": "method",
+          "name": "notifyDataAdd",
+          "path": "model/collapsemenu/BasicDataSource.ets"
+        },
+        {
+          "kind": "method",
+          "name": "notifyDataChange",
+          "path": "model/collapsemenu/BasicDataSource.ets"
+        },
+        {
+          "kind": "method",
+          "name": "notifyDataDelete",
+          "path": "model/collapsemenu/BasicDataSource.ets"
+        },
+        {
+          "kind": "type",
+          "name": "ArticleSource",
+          "path": "model/collapsemenu/BasicDataSource.ets"
+        },
+        {
+          "kind": "variable",
+          "name": "articleData",
+          "path": "model/collapsemenu/BasicDataSource.ets"
+        },
+        {
+          "kind": "constructor",
+          "name": "constructor",
+          "path": "model/collapsemenu/BasicDataSource.ets"
+        },
+        {
+          "kind": "method",
+          "name": "totalCount",
+          "path": "model/collapsemenu/BasicDataSource.ets"
+        },
+        {
+          "kind": "method",
+          "name": "getData",
+          "path": "model/collapsemenu/BasicDataSource.ets"
+        },
+        {
+          "kind": "method",
+          "name": "addData",
+          "path": "model/collapsemenu/BasicDataSource.ets"
+        },
+        {
+          "kind": "method",
+          "name": "updateData",
+          "path": "model/collapsemenu/BasicDataSource.ets"
+        },
+        {
+          "kind": "method",
+          "name": "pushData",
+          "path": "model/collapsemenu/BasicDataSource.ets"
+        },
+        {
+          "kind": "type",
+          "name": "TreeNode",
+          "path": "model/collapsemenu/TreeNode.ets"
+        },
+        {
+          "kind": "variable",
+          "name": "expand",
+          "path": "model/collapsemenu/TreeNode.ets"
+        },
+        {
+          "kind": "variable",
+          "name": "type",
+          "path": "model/collapsemenu/TreeNode.ets"
+        },
+        {
+          "kind": "variable",
+          "name": "title",
+          "path": "model/collapsemenu/TreeNode.ets"
+        }
+      ]
+    }
+  },
+  "richer_native_baselines": {
+    "ets-source-counter": {
+      "status": "ok",
+      "ok": true,
+      "note": "benchmark-owned ArkTS/ETS declaration counter used as the scriptable parser coverage proxy"
+    },
+    "arkts": {
+      "status": "missing",
+      "ok": false,
+      "note": "ArkTS compiler CLI not installed; source-only parser proxy used for this smoke"
+    },
+    "hvigor": {
+      "status": "missing",
+      "ok": false,
+      "note": "hvigor not installed; OpenHarmony build execution is avoided for this source-only smoke"
+    },
+    "ohpm": {
+      "status": "missing",
+      "ok": false,
+      "note": "ohpm not installed"
+    }
+  },
+  "coverage": {
+    "atlas_vs_ets_source_counter_definition_ratio": 1.0,
+    "atlas_ets_definition_symbols": 153,
+    "native_definitions": 153
+  },
+  "optimization": {
+    "cycles_run": 5,
+    "stop_reason": "ETS live smoke covers a graphify detector-only extension with ArkTS/ETS declarations while avoiding control-flow false positives; the five-pass saturation report records that graphify exposes no equivalent query rows in this runtime.",
+    "cycle_notes": [
+      "cycle 1: OpenHarmony TabsSample probe showed the generic ETS regex would index control-flow keywords such as if(...) as methods on live ArkTS files.",
+      "cycle 2: after adding an ETS-specific scanner, Atlas indexes structs/classes/functions/methods/constructors/fields/state variables while skipping control-flow and ArkUI component-call noise.",
+      "cycles 3-5: repeated live smokes kept native coverage at 1.0 and graphify-equivalent query rows at 0/8, so ETS query-score improvement is saturated until graphify ships a deterministic ETS extractor."
+    ]
+  },
+  "query_warmup": {
+    "symbol": "MyStateSample",
+    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ets-openharmony-tabs/atlas.db --format plain --repo ets explain MyStateSample",
+    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain MyStateSample",
+    "atlas_returncode": 0,
+    "graphify_returncode": 0,
+    "note": "Untimed warm-up for both tools before measured query latency rows."
+  },
+  "queries": [
+    {
+      "symbol": "MyStateSample",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ets-openharmony-tabs/atlas.db --format plain --repo ets explain MyStateSample",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain MyStateSample",
+      "atlas_tokens": 8,
+      "graphify_tokens": 10,
+      "atlas_ms": 12.235,
+      "graphify_ms": 74.375,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": true,
+      "atlas_stdout_head": [
+        "MyStateSample t@Index.ets:25 c1"
+      ],
+      "graphify_stdout_head": [
+        "No node matching 'MyStateSample' found."
+      ]
+    },
+    {
+      "symbol": "ComExampleTrivialApplication",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ets-openharmony-tabs/atlas.db --format plain --repo ets explain ComExampleTrivialApplication",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ComExampleTrivialApplication",
+      "atlas_tokens": 11,
+      "graphify_tokens": 13,
+      "atlas_ms": 12.306,
+      "graphify_ms": 76.301,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": true,
+      "atlas_stdout_head": [
+        "ComExampleTrivialApplication t@Index.ets:59"
+      ],
+      "graphify_stdout_head": [
+        "No node matching 'ComExampleTrivialApplication' found."
+      ]
+    },
+    {
+      "symbol": "WaterFlowDataSource",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ets-openharmony-tabs/atlas.db --format plain --repo ets explain WaterFlowDataSource",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain WaterFlowDataSource",
+      "atlas_tokens": 12,
+      "graphify_tokens": 11,
+      "atlas_ms": 12.173,
+      "graphify_ms": 122.841,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": true,
+      "atlas_stdout_head": [
+        "WaterFlowDataSource t@WaterFlowDataSource.ets:21"
+      ],
+      "graphify_stdout_head": [
+        "No node matching 'WaterFlowDataSource' found."
+      ]
+    },
+    {
+      "symbol": "notifyDataReload",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ets-openharmony-tabs/atlas.db --format plain --repo ets explain notifyDataReload",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain notifyDataReload",
+      "atlas_tokens": 12,
+      "graphify_tokens": 10,
+      "atlas_ms": 13.973,
+      "graphify_ms": 81.888,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": true,
+      "atlas_stdout_head": [
+        "notifyDataReload m@BasicDataSource.ets:40 df3 c2"
+      ],
+      "graphify_stdout_head": [
+        "No node matching 'notifyDataReload' found."
+      ]
+    },
+    {
+      "symbol": "ArticleNode",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ets-openharmony-tabs/atlas.db --format plain --repo ets explain ArticleNode",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ArticleNode",
+      "atlas_tokens": 8,
+      "graphify_tokens": 9,
+      "atlas_ms": 11.965,
+      "graphify_ms": 79.414,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": true,
+      "atlas_stdout_head": [
+        "ArticleNode t@ArticleNode.ets:24"
+      ],
+      "graphify_stdout_head": [
+        "No node matching 'ArticleNode' found."
+      ]
+    },
+    {
+      "symbol": "TabViewComponent",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ets-openharmony-tabs/atlas.db --format plain --repo ets explain TabViewComponent",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain TabViewComponent",
+      "atlas_tokens": 8,
+      "graphify_tokens": 10,
+      "atlas_ms": 13.155,
+      "graphify_ms": 79.14,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": true,
+      "atlas_stdout_head": [
+        "TabViewComponent t@TabBar.ets:24"
+      ],
+      "graphify_stdout_head": [
+        "No node matching 'TabViewComponent' found."
+      ]
+    },
+    {
+      "symbol": "CollapseMenuSection",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ets-openharmony-tabs/atlas.db --format plain --repo ets explain CollapseMenuSection",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain CollapseMenuSection",
+      "atlas_tokens": 12,
+      "graphify_tokens": 11,
+      "atlas_ms": 13.363,
+      "graphify_ms": 77.271,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": true,
+      "atlas_stdout_head": [
+        "CollapseMenuSection t@CollapseMenuSection.ets:44"
+      ],
+      "graphify_stdout_head": [
+        "No node matching 'CollapseMenuSection' found."
+      ]
+    },
+    {
+      "symbol": "articleItemBuilder",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ets-openharmony-tabs/atlas.db --format plain --repo ets explain articleItemBuilder",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain articleItemBuilder",
+      "atlas_tokens": 14,
+      "graphify_tokens": 11,
+      "atlas_ms": 12.108,
+      "graphify_ms": 79.298,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": true,
+      "atlas_stdout_head": [
+        "articleItemBuilder m@CollapseMenuSection.ets:118 df2 c1 d1"
+      ],
+      "graphify_stdout_head": [
+        "No node matching 'articleItemBuilder' found."
+      ]
+    }
+  ]
+}

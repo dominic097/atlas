@@ -365,19 +365,61 @@ func isPythonConstantName(name string) bool {
 }
 
 var (
-	pyFromRe   = regexp.MustCompile(`from\s+([\w.]+)\s+import`)
-	pyImportRe = regexp.MustCompile(`(?m)^\s*import\s+([\w.,\s]+)`)
+	pyFromRe   = regexp.MustCompile(`from\s+([\w.]+)\s+import\s+([^\n#]+)`)
+	pyImportRe = regexp.MustCompile(`(?m)^\s*import\s+([^\n#]+)`)
 )
 
 func extractPythonImport(node *tree_sitter.Node, src []byte) []string {
 	text := nodeText(node, src)
 	var out []string
-	for _, re := range []*regexp.Regexp{pyFromRe, pyImportRe} {
+	for _, m := range pyFromRe.FindAllStringSubmatch(text, -1) {
+		module := strings.TrimSpace(m[1])
+		if module == "" {
+			continue
+		}
+		out = append(out, module)
+		for _, part := range strings.Split(m[2], ",") {
+			name := pythonImportName(part)
+			if name == "" || name == "*" {
+				continue
+			}
+			out = append(out, module+"."+name)
+		}
+	}
+	for _, m := range pyImportRe.FindAllStringSubmatch(text, -1) {
+		for _, part := range strings.Split(m[1], ",") {
+			if p := pythonImportName(part); p != "" {
+				out = append(out, p)
+			}
+		}
+	}
+	return out
+}
+
+func pythonImportName(part string) string {
+	part = strings.TrimSpace(part)
+	if part == "" {
+		return ""
+	}
+	if fields := strings.Fields(part); len(fields) > 0 {
+		return strings.TrimSpace(fields[0])
+	}
+	return ""
+}
+
+var (
+	jsImportFromRe   = regexp.MustCompile(`\bfrom\s+['"]([^'"]+)['"]`)
+	jsImportBareRe   = regexp.MustCompile(`(?m)^\s*import\s+['"]([^'"]+)['"]`)
+	jsRequireRe      = regexp.MustCompile(`\brequire\s*\(\s*['"]([^'"]+)['"]\s*\)`)
+	jsExportAssignRe = regexp.MustCompile(`\bmodule\.exports\b|\bexports\.[A-Za-z_$][A-Za-z0-9_$]*`)
+)
+
+func extractJSImportsFromText(text string) []string {
+	out := make([]string, 0)
+	for _, re := range []*regexp.Regexp{jsImportFromRe, jsImportBareRe, jsRequireRe} {
 		for _, m := range re.FindAllStringSubmatch(text, -1) {
-			for _, part := range strings.Split(m[1], ",") {
-				if p := strings.TrimSpace(part); p != "" {
-					out = append(out, p)
-				}
+			if len(m) > 1 && strings.TrimSpace(m[1]) != "" {
+				out = append(out, strings.TrimSpace(m[1]))
 			}
 		}
 	}
@@ -393,7 +435,9 @@ func walkJSAST(root *tree_sitter.Node, src []byte) ([]symbolDraft, []string) {
 	walkNode(root, func(node *tree_sitter.Node) bool {
 		switch node.Kind() {
 		case "import_statement":
-			imports = append(imports, extractJSImport(node, src)...)
+			imports = append(imports, extractJSImportsFromText(nodeText(node, src))...)
+		case "export_statement":
+			imports = append(imports, extractJSImportsFromText(nodeText(node, src))...)
 		case "function_declaration", "function_expression":
 			if sym, ok := simpleSymbol(node, src, "function"); ok {
 				symbols = append(symbols, sym)
@@ -413,22 +457,17 @@ func walkJSAST(root *tree_sitter.Node, src []byte) ([]symbolDraft, []string) {
 				symbols = append(symbols, sym)
 			}
 		case "lexical_declaration", "variable_declaration":
+			imports = append(imports, extractJSImportsFromText(nodeText(node, src))...)
 			symbols = append(symbols, jsVariableSymbols(node, src)...)
+		case "expression_statement":
+			text := nodeText(node, src)
+			if jsExportAssignRe.MatchString(text) {
+				imports = append(imports, extractJSImportsFromText(text)...)
+			}
 		}
 		return true
 	})
 	return symbols, imports
-}
-
-var jsImportRe = regexp.MustCompile(`from\s+['"]([^'"]+)['"]`)
-
-func extractJSImport(node *tree_sitter.Node, src []byte) []string {
-	text := nodeText(node, src)
-	var out []string
-	for _, m := range jsImportRe.FindAllStringSubmatch(text, -1) {
-		out = append(out, m[1])
-	}
-	return out
 }
 
 func jsClassSymbols(node *tree_sitter.Node, src []byte) []symbolDraft {

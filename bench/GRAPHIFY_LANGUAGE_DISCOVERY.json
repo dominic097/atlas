@@ -1,0 +1,888 @@
+{
+  "version": "graphifyy 0.8.49",
+  "binary": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify",
+  "source_root": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/lib/python3.12/site-packages/graphify",
+  "dispatch_count": 89,
+  "code_extension_count": 88,
+  "evidence": [
+    "CLI help from `graphify --help` did not enumerate languages, but confirmed `update`, `extract`, and code-only AST update commands.",
+    "`graphify.detect.CODE_EXTENSIONS` plus a runtime `detect()` smoke listed code extensions.",
+    "`graphify.extract._DISPATCH` provided the deterministic extractor map used as the parser-parity target."
+  ],
+  "detector_only_code_extensions": [
+    ".ejs",
+    ".ets",
+    ".r"
+  ],
+  "rows": [
+    [
+      "go",
+      ".go",
+      "extract_go",
+      "native go/parser + go/types"
+    ],
+    [
+      "python",
+      ".py",
+      "extract_python",
+      "tree-sitter"
+    ],
+    [
+      "javascript",
+      ".js .jsx .mjs",
+      "extract_js",
+      "tree-sitter"
+    ],
+    [
+      "typescript",
+      ".ts .tsx",
+      "extract_js",
+      "tree-sitter"
+    ],
+    [
+      "java",
+      ".java",
+      "extract_java",
+      "tree-sitter"
+    ],
+    [
+      "groovy/gradle",
+      ".groovy .gradle",
+      "extract_groovy",
+      "lightweight regex"
+    ],
+    [
+      "c",
+      ".c .h",
+      "extract_c",
+      "tree-sitter"
+    ],
+    [
+      "cpp/cuda",
+      ".cpp .cc .cxx .hpp .cu .cuh",
+      "extract_cpp",
+      "tree-sitter"
+    ],
+    [
+      "csharp",
+      ".cs",
+      "extract_csharp",
+      "lightweight regex"
+    ],
+    [
+      "rust",
+      ".rs",
+      "extract_rust",
+      "lightweight regex"
+    ],
+    [
+      "ruby",
+      ".rb",
+      "extract_ruby",
+      "lightweight regex"
+    ],
+    [
+      "kotlin",
+      ".kt .kts",
+      "extract_kotlin",
+      "lightweight regex"
+    ],
+    [
+      "scala",
+      ".scala",
+      "extract_scala",
+      "lightweight regex"
+    ],
+    [
+      "php",
+      ".php",
+      "extract_php",
+      "lightweight regex"
+    ],
+    [
+      "blade",
+      "*.blade.php",
+      "extract_blade",
+      "lightweight regex"
+    ],
+    [
+      "swift",
+      ".swift",
+      "extract_swift",
+      "lightweight regex"
+    ],
+    [
+      "lua",
+      ".lua .luau .toc",
+      "extract_lua",
+      "lightweight regex"
+    ],
+    [
+      "zig",
+      ".zig",
+      "extract_zig",
+      "lightweight regex"
+    ],
+    [
+      "powershell",
+      ".ps1 .psm1 .psd1",
+      "extract_powershell/extract_powershell_manifest",
+      "lightweight regex"
+    ],
+    [
+      "elixir",
+      ".ex .exs",
+      "extract_elixir",
+      "lightweight regex"
+    ],
+    [
+      "objective-c",
+      ".m .mm",
+      "extract_objc",
+      "lightweight regex"
+    ],
+    [
+      "julia",
+      ".jl",
+      "extract_julia",
+      "lightweight regex"
+    ],
+    [
+      "fortran",
+      ".f .F .f90 .F90 .f95 .F95 .f03 .F03 .f08 .F08",
+      "extract_fortran",
+      "lightweight regex"
+    ],
+    [
+      "dart",
+      ".dart",
+      "extract_dart",
+      "lightweight regex"
+    ],
+    [
+      "verilog/systemverilog",
+      ".v .sv .svh",
+      "extract_verilog",
+      "lightweight regex"
+    ],
+    [
+      "sql",
+      ".sql",
+      "extract_sql",
+      "lightweight regex"
+    ],
+    [
+      "markdown",
+      ".md .mdx .qmd",
+      "extract_markdown",
+      "document parser"
+    ],
+    [
+      "pascal",
+      ".pas .pp .dpr .dpk .lpr .inc",
+      "extract_pascal",
+      "lightweight regex"
+    ],
+    [
+      "delphi/lazarus forms",
+      ".dfm .lfm .lpk",
+      "extract_delphi_form/extract_lazarus_form/extract_lazarus_package",
+      "lightweight regex/document fallback"
+    ],
+    [
+      "shell",
+      ".sh .bash",
+      "extract_bash",
+      "lightweight regex"
+    ],
+    [
+      "json config",
+      ".json",
+      "extract_json",
+      "document parser"
+    ],
+    [
+      "terraform/hcl",
+      ".tf .tfvars .hcl",
+      "extract_terraform",
+      "lightweight regex"
+    ],
+    [
+      "byond dm",
+      ".dm .dme .dmi .dmm .dmf",
+      "extract_dm/extract_dmf/extract_dmi/extract_dmm",
+      "lightweight regex/document fallback"
+    ],
+    [
+      "dotnet project",
+      ".sln .slnx .csproj .fsproj .vbproj",
+      "extract_csproj/extract_sln/extract_slnx",
+      "lightweight regex"
+    ],
+    [
+      "razor",
+      ".razor .cshtml",
+      "extract_razor",
+      "lightweight regex"
+    ],
+    [
+      "apex",
+      ".cls .trigger",
+      "extract_apex",
+      "lightweight regex"
+    ],
+    [
+      "vue",
+      ".vue",
+      "extract_js",
+      "lightweight regex"
+    ],
+    [
+      "svelte",
+      ".svelte",
+      "extract_svelte",
+      "lightweight regex"
+    ],
+    [
+      "astro",
+      ".astro",
+      "extract_astro",
+      "lightweight regex"
+    ]
+  ],
+  "runtime_error": "",
+  "help_command_count": 148,
+  "python": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/python3",
+  "extract_source": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/lib/python3.12/site-packages/graphify/extract.py",
+  "detect_source": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/lib/python3.12/site-packages/graphify/detect.py",
+  "dispatch": [
+    {
+      "extension": ".F",
+      "extractor": "extract_fortran",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".F03",
+      "extractor": "extract_fortran",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".F08",
+      "extractor": "extract_fortran",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".F90",
+      "extractor": "extract_fortran",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".F95",
+      "extractor": "extract_fortran",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".astro",
+      "extractor": "extract_astro",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".bash",
+      "extractor": "extract_bash",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".c",
+      "extractor": "extract_c",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".cc",
+      "extractor": "extract_cpp",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".cls",
+      "extractor": "extract_apex",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".cpp",
+      "extractor": "extract_cpp",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".cs",
+      "extractor": "extract_csharp",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".cshtml",
+      "extractor": "extract_razor",
+      "module": "graphify.extractors.razor"
+    },
+    {
+      "extension": ".csproj",
+      "extractor": "extract_csproj",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".cu",
+      "extractor": "extract_cpp",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".cuh",
+      "extractor": "extract_cpp",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".cxx",
+      "extractor": "extract_cpp",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".dart",
+      "extractor": "extract_dart",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".dfm",
+      "extractor": "extract_delphi_form",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".dm",
+      "extractor": "extract_dm",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".dme",
+      "extractor": "extract_dm",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".dmf",
+      "extractor": "extract_dmf",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".dmi",
+      "extractor": "extract_dmi",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".dmm",
+      "extractor": "extract_dmm",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".dpk",
+      "extractor": "extract_pascal",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".dpr",
+      "extractor": "extract_pascal",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".ex",
+      "extractor": "extract_elixir",
+      "module": "graphify.extractors.elixir"
+    },
+    {
+      "extension": ".exs",
+      "extractor": "extract_elixir",
+      "module": "graphify.extractors.elixir"
+    },
+    {
+      "extension": ".f",
+      "extractor": "extract_fortran",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".f03",
+      "extractor": "extract_fortran",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".f08",
+      "extractor": "extract_fortran",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".f90",
+      "extractor": "extract_fortran",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".f95",
+      "extractor": "extract_fortran",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".fsproj",
+      "extractor": "extract_csproj",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".go",
+      "extractor": "extract_go",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".gradle",
+      "extractor": "extract_groovy",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".groovy",
+      "extractor": "extract_groovy",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".h",
+      "extractor": "extract_c",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".hcl",
+      "extractor": "extract_terraform",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".hpp",
+      "extractor": "extract_cpp",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".inc",
+      "extractor": "extract_pascal",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".java",
+      "extractor": "extract_java",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".jl",
+      "extractor": "extract_julia",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".js",
+      "extractor": "extract_js",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".json",
+      "extractor": "extract_json",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".jsx",
+      "extractor": "extract_js",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".kt",
+      "extractor": "extract_kotlin",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".kts",
+      "extractor": "extract_kotlin",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".lfm",
+      "extractor": "extract_lazarus_form",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".lpk",
+      "extractor": "extract_lazarus_package",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".lpr",
+      "extractor": "extract_pascal",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".lua",
+      "extractor": "extract_lua",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".luau",
+      "extractor": "extract_lua",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".m",
+      "extractor": "extract_objc",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".md",
+      "extractor": "extract_markdown",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".mdx",
+      "extractor": "extract_markdown",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".mjs",
+      "extractor": "extract_js",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".mm",
+      "extractor": "extract_objc",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".pas",
+      "extractor": "extract_pascal",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".php",
+      "extractor": "extract_php",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".pp",
+      "extractor": "extract_pascal",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".ps1",
+      "extractor": "extract_powershell",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".psd1",
+      "extractor": "extract_powershell_manifest",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".psm1",
+      "extractor": "extract_powershell",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".py",
+      "extractor": "extract_python",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".qmd",
+      "extractor": "extract_markdown",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".razor",
+      "extractor": "extract_razor",
+      "module": "graphify.extractors.razor"
+    },
+    {
+      "extension": ".rb",
+      "extractor": "extract_ruby",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".rs",
+      "extractor": "extract_rust",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".scala",
+      "extractor": "extract_scala",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".sh",
+      "extractor": "extract_bash",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".sln",
+      "extractor": "extract_sln",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".slnx",
+      "extractor": "extract_slnx",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".sql",
+      "extractor": "extract_sql",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".sv",
+      "extractor": "extract_verilog",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".svelte",
+      "extractor": "extract_svelte",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".svh",
+      "extractor": "extract_verilog",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".swift",
+      "extractor": "extract_swift",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".tf",
+      "extractor": "extract_terraform",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".tfvars",
+      "extractor": "extract_terraform",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".toc",
+      "extractor": "extract_lua",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".trigger",
+      "extractor": "extract_apex",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".ts",
+      "extractor": "extract_js",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".tsx",
+      "extractor": "extract_js",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".v",
+      "extractor": "extract_verilog",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".vbproj",
+      "extractor": "extract_csproj",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".vue",
+      "extractor": "extract_js",
+      "module": "graphify.extract"
+    },
+    {
+      "extension": ".zig",
+      "extractor": "extract_zig",
+      "module": "graphify.extractors.zig"
+    }
+  ],
+  "special": [
+    {
+      "extension": "*.blade.php",
+      "extractor": "extract_blade",
+      "module": "graphify.extractors.blade"
+    }
+  ],
+  "code_extensions": [
+    ".F",
+    ".F03",
+    ".F08",
+    ".F90",
+    ".F95",
+    ".astro",
+    ".bash",
+    ".c",
+    ".cc",
+    ".cls",
+    ".cpp",
+    ".cs",
+    ".cshtml",
+    ".csproj",
+    ".cu",
+    ".cuh",
+    ".cxx",
+    ".dart",
+    ".dfm",
+    ".dm",
+    ".dme",
+    ".dmf",
+    ".dmi",
+    ".dmm",
+    ".dpk",
+    ".dpr",
+    ".ejs",
+    ".ets",
+    ".ex",
+    ".exs",
+    ".f",
+    ".f03",
+    ".f08",
+    ".f90",
+    ".f95",
+    ".fsproj",
+    ".go",
+    ".gradle",
+    ".groovy",
+    ".h",
+    ".hcl",
+    ".hpp",
+    ".inc",
+    ".java",
+    ".jl",
+    ".js",
+    ".json",
+    ".jsx",
+    ".kt",
+    ".kts",
+    ".lfm",
+    ".lpk",
+    ".lpr",
+    ".lua",
+    ".luau",
+    ".m",
+    ".mjs",
+    ".mm",
+    ".pas",
+    ".php",
+    ".pp",
+    ".ps1",
+    ".psd1",
+    ".psm1",
+    ".py",
+    ".r",
+    ".razor",
+    ".rb",
+    ".rs",
+    ".scala",
+    ".sh",
+    ".sln",
+    ".slnx",
+    ".sql",
+    ".sv",
+    ".svelte",
+    ".svh",
+    ".swift",
+    ".tf",
+    ".tfvars",
+    ".toc",
+    ".trigger",
+    ".ts",
+    ".tsx",
+    ".v",
+    ".vbproj",
+    ".vue",
+    ".zig"
+  ],
+  "detect_smoke_code_extensions": [
+    ".F",
+    ".F03",
+    ".F08",
+    ".F90",
+    ".F95",
+    ".astro",
+    ".bash",
+    ".c",
+    ".cc",
+    ".cls",
+    ".cpp",
+    ".cs",
+    ".cshtml",
+    ".csproj",
+    ".cu",
+    ".cuh",
+    ".cxx",
+    ".dart",
+    ".dfm",
+    ".dm",
+    ".dme",
+    ".dmf",
+    ".dmi",
+    ".dmm",
+    ".dpk",
+    ".dpr",
+    ".ejs",
+    ".ets",
+    ".ex",
+    ".exs",
+    ".f",
+    ".f03",
+    ".f08",
+    ".f90",
+    ".f95",
+    ".fsproj",
+    ".go",
+    ".gradle",
+    ".groovy",
+    ".h",
+    ".hcl",
+    ".hpp",
+    ".inc",
+    ".java",
+    ".jl",
+    ".js",
+    ".json",
+    ".jsx",
+    ".kt",
+    ".kts",
+    ".lfm",
+    ".lpk",
+    ".lpr",
+    ".lua",
+    ".luau",
+    ".m",
+    ".mjs",
+    ".mm",
+    ".pas",
+    ".php",
+    ".pp",
+    ".ps1",
+    ".psd1",
+    ".psm1",
+    ".py",
+    ".r",
+    ".razor",
+    ".rb",
+    ".rs",
+    ".scala",
+    ".sh",
+    ".sln",
+    ".slnx",
+    ".sql",
+    ".sv",
+    ".svelte",
+    ".svh",
+    ".swift",
+    ".tf",
+    ".tfvars",
+    ".toc",
+    ".trigger",
+    ".ts",
+    ".tsx",
+    ".v",
+    ".vbproj",
+    ".vue",
+    ".zig"
+  ],
+  "detect_smoke_total_files": 88
+}

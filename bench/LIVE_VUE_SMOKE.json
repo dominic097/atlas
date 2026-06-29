@@ -2,8 +2,10 @@
   "language": "vue",
   "repo": "https://github.com/gothinkster/vue-realworld-example-app",
   "commit": "f7e48c8178602ce25d43293bc6f8ca51d84ae222",
+  "graphify_detector_only": "",
   "commands": {
     "clone": "git clone --depth 1 https://github.com/gothinkster/vue-realworld-example-app /tmp/atlas-live-vue-realworld/repo",
+    "sparse_checkout": "",
     "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-vue-realworld/atlas.db --json index /tmp/atlas-live-vue-realworld/repo/src",
     "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-vue-realworld/atlas.db --json index /tmp/atlas-live-vue-realworld/repo/src",
     "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
@@ -17,19 +19,19 @@
     "target_path": "/tmp/atlas-live-vue-realworld/repo/src"
   },
   "atlas": {
-    "cold_wall_seconds": 0.126,
-    "reindex_wall_seconds": 0.027,
+    "cold_wall_seconds": 0.097,
+    "reindex_wall_seconds": 0.021,
     "index": {
-      "repo_id": "d10e0b24-f60a-4a92-a22a-1e90f0c85d13",
+      "repo_id": "6d338783-617f-420f-a456-ec44a2dcad58",
       "repo_full_name": "src",
-      "snapshot_id": "1189f228-2962-4014-8c5f-1c0035039451",
+      "snapshot_id": "9da6f2aa-dc7f-4f85-b2b2-13a12b300b86",
       "commit_sha": "f7e48c8178602ce25d43293bc6f8ca51d84ae222",
       "indexed_files": 32,
       "symbols": 165,
-      "edges": 390,
+      "edges": 391,
       "edge_kinds": {
         "calls": 282,
-        "imports": 108
+        "imports": 109
       },
       "routes": 0,
       "languages": {
@@ -37,14 +39,14 @@
         "vue": 20
       },
       "mode": "full",
-      "duration_ms": 29,
+      "duration_ms": 64,
       "timings_ms": {
         "delta_check": 0,
         "ensure_repo": 0,
         "go_types": 0,
-        "lexical": 16,
-        "parse": 5,
-        "persist": 6,
+        "lexical": 23,
+        "parse": 19,
+        "persist": 21,
         "resolve_head": 0,
         "routes": 0,
         "sort": 0,
@@ -52,13 +54,13 @@
       }
     },
     "reindex": {
-      "repo_id": "d10e0b24-f60a-4a92-a22a-1e90f0c85d13",
+      "repo_id": "6d338783-617f-420f-a456-ec44a2dcad58",
       "repo_full_name": "src",
-      "snapshot_id": "1189f228-2962-4014-8c5f-1c0035039451",
+      "snapshot_id": "9da6f2aa-dc7f-4f85-b2b2-13a12b300b86",
       "commit_sha": "f7e48c8178602ce25d43293bc6f8ca51d84ae222",
       "indexed_files": 32,
       "symbols": 165,
-      "edges": 390,
+      "edges": 391,
       "routes": 0,
       "languages": {
         "javascript": 12,
@@ -105,7 +107,7 @@
       },
       {
         "kind": "imports",
-        "count": 108
+        "count": 109
       }
     ],
     "vue_definition_symbols": 119
@@ -113,7 +115,7 @@
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 0.439,
+    "seconds": 0.276,
     "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
@@ -133,7 +135,7 @@
     "tool": "vue-compiler-sfc",
     "status": "ok",
     "ok": true,
-    "seconds": 0.109,
+    "seconds": 0.202,
     "command": "/opt/homebrew/bin/node /tmp/atlas-live-vue-realworld/vue-compiler/vue_sfc_stats.js /tmp/atlas-live-vue-realworld/repo/src",
     "metrics": {
       "files": 20,
@@ -165,27 +167,37 @@
     "native_definitions": 119
   },
   "optimization": {
-    "cycles_run": 1,
-    "stop_reason": "Vue live smoke matched @vue/compiler-sfc script declaration coverage and exceeded 5x query latency plus token output on cycle 1.",
+    "cycles_run": 2,
+    "stop_reason": "Vue live smoke matched @vue/compiler-sfc script declaration coverage and improved token score after compacting `.vue` suffixes in terse plain locations while preserving full paths in JSON.",
     "cycle_notes": [
-      "cycle 1: vue-realworld smoke used @vue/compiler-sfc as an isolated SFC parser baseline; Atlas matched top-level script declaration coverage while keeping exact-symbol explain output terse."
+      "cycle 1: vue-realworld smoke used @vue/compiler-sfc as an isolated SFC parser baseline; Atlas matched top-level script declaration coverage while keeping exact-symbol explain output terse.",
+      "cycle 2: compacting `.vue` suffixes in terse locations reduces exact SFC symbol output without changing indexed symbols or JSON paths."
     ]
+  },
+  "query_warmup": {
+    "symbol": "parseMarkdown",
+    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-vue-realworld/atlas.db --format plain --repo src explain parseMarkdown",
+    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain parseMarkdown",
+    "atlas_returncode": 0,
+    "graphify_returncode": 0,
+    "note": "Untimed warm-up for both tools before measured query latency rows."
   },
   "queries": [
     {
       "symbol": "parseMarkdown",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-vue-realworld/atlas.db --format plain --repo src explain parseMarkdown",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain parseMarkdown",
-      "atlas_tokens": 8,
+      "atlas_tokens": 7,
       "graphify_tokens": 51,
-      "atlas_ms": 13.88,
-      "graphify_ms": 88.956,
+      "atlas_ms": 12.269,
+      "graphify_ms": 76.959,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "parseMarkdown f@Article.vue:101"
+        "parseMarkdown f@Article:101"
       ],
       "graphify_stdout_head": [
         "Node: parseMarkdown()",
@@ -200,18 +212,19 @@
     },
     {
       "symbol": "follow",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-vue-realworld/atlas.db --format plain --repo src explain follow",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain follow",
-      "atlas_tokens": 7,
+      "atlas_tokens": 6,
       "graphify_tokens": 48,
-      "atlas_ms": 13.161,
-      "graphify_ms": 88.325,
+      "atlas_ms": 12.117,
+      "graphify_ms": 74.343,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "follow f@Profile.vue:142 c1"
+        "follow f@Profile:142 c1"
       ],
       "graphify_stdout_head": [
         "Node: follow()",
@@ -226,18 +239,19 @@
     },
     {
       "symbol": "goTo",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-vue-realworld/atlas.db --format plain --repo src explain goTo",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain goTo",
-      "atlas_tokens": 5,
+      "atlas_tokens": 4,
       "graphify_tokens": 45,
-      "atlas_ms": 13.236,
-      "graphify_ms": 86.649,
+      "atlas_ms": 12.177,
+      "graphify_ms": 75.946,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "goTo f@Home.vue:110"
+        "goTo f@Home:110"
       ],
       "graphify_stdout_head": [
         "Node: goTo()",
@@ -252,18 +266,19 @@
     },
     {
       "symbol": "onPageChange",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-vue-realworld/atlas.db --format plain --repo src explain onPageChange",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain onPageChange",
-      "atlas_tokens": 8,
+      "atlas_tokens": 7,
       "graphify_tokens": 49,
-      "atlas_ms": 13.38,
-      "graphify_ms": 89.522,
+      "atlas_ms": 12.068,
+      "graphify_ms": 75.255,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "onPageChange f@Home.vue:114 df2"
+        "onPageChange f@Home:114 df2"
       ],
       "graphify_stdout_head": [
         "Node: onPageChange()",

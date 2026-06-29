@@ -2,12 +2,14 @@
   "language": "csharp",
   "repo": "https://github.com/DapperLib/Dapper",
   "commit": "72a54c475f75e18cb93cba0809d00a5e6e49efd9",
+  "graphify_detector_only": "",
   "commands": {
     "clone": "git clone --depth 1 https://github.com/DapperLib/Dapper /tmp/atlas-live-csharp-dapper/repo",
+    "sparse_checkout": "",
     "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-csharp-dapper/atlas.db --json index /tmp/atlas-live-csharp-dapper/repo",
     "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-csharp-dapper/atlas.db --json index /tmp/atlas-live-csharp-dapper/repo",
     "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
-    "native_baseline": "",
+    "native_baseline": "/opt/homebrew/bin/dotnet run --no-build -- /tmp/atlas-live-csharp-dapper/repo (Roslyn syntax tree counter)",
     "query_symbols": [
       "SqlMapper",
       "CommandDefinition",
@@ -17,19 +19,19 @@
     "target_path": "/tmp/atlas-live-csharp-dapper/repo"
   },
   "atlas": {
-    "cold_wall_seconds": 0.756,
-    "reindex_wall_seconds": 0.029,
+    "cold_wall_seconds": 0.644,
+    "reindex_wall_seconds": 0.037,
     "index": {
-      "repo_id": "4af605a8-85e2-4f10-864a-e28f450decf5",
+      "repo_id": "6e12b187-a5d8-42f1-97c2-4adafd68b2e2",
       "repo_full_name": "repo",
-      "snapshot_id": "0752d744-ca53-4abd-a1ab-fca0209aebee",
+      "snapshot_id": "356c7529-29e6-4021-b329-5a152e7354de",
       "commit_sha": "72a54c475f75e18cb93cba0809d00a5e6e49efd9",
       "indexed_files": 207,
-      "symbols": 3619,
-      "edges": 8244,
+      "symbols": 3673,
+      "edges": 8243,
       "edge_kinds": {
         "calls": 7570,
-        "imports": 674
+        "imports": 673
       },
       "routes": 0,
       "languages": {
@@ -45,28 +47,28 @@
         "yaml": 6
       },
       "mode": "full",
-      "duration_ms": 640,
+      "duration_ms": 606,
       "timings_ms": {
         "delta_check": 0,
         "ensure_repo": 0,
         "go_types": 0,
-        "lexical": 371,
-        "parse": 119,
-        "persist": 142,
+        "lexical": 334,
+        "parse": 134,
+        "persist": 132,
         "resolve_head": 0,
         "routes": 0,
-        "sort": 3,
-        "walk": 2
+        "sort": 2,
+        "walk": 1
       }
     },
     "reindex": {
-      "repo_id": "4af605a8-85e2-4f10-864a-e28f450decf5",
+      "repo_id": "6e12b187-a5d8-42f1-97c2-4adafd68b2e2",
       "repo_full_name": "repo",
-      "snapshot_id": "0752d744-ca53-4abd-a1ab-fca0209aebee",
+      "snapshot_id": "356c7529-29e6-4021-b329-5a152e7354de",
       "commit_sha": "72a54c475f75e18cb93cba0809d00a5e6e49efd9",
       "indexed_files": 207,
-      "symbols": 3619,
-      "edges": 8244,
+      "symbols": 3673,
+      "edges": 8243,
       "routes": 0,
       "languages": {
         "batch": 1,
@@ -130,18 +132,13 @@
       },
       {
         "language": "dotnet",
-        "kind": "document",
-        "count": 1
-      },
-      {
-        "language": "dotnet",
         "kind": "package",
-        "count": 65
+        "count": 64
       },
       {
         "language": "dotnet",
         "kind": "project",
-        "count": 11
+        "count": 21
       },
       {
         "language": "dotnet",
@@ -149,9 +146,24 @@
         "count": 11
       },
       {
+        "language": "dotnet",
+        "kind": "sdk",
+        "count": 11
+      },
+      {
+        "language": "dotnet",
+        "kind": "target_framework",
+        "count": 25
+      },
+      {
         "language": "json",
         "kind": "document",
-        "count": 4
+        "count": 1
+      },
+      {
+        "language": "json",
+        "kind": "key",
+        "count": 13
       },
       {
         "language": "markdown",
@@ -191,7 +203,7 @@
       },
       {
         "kind": "imports",
-        "count": 674
+        "count": 673
       }
     ],
     "csharp_definition_symbols": 3419
@@ -199,13 +211,13 @@
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 1.598,
+    "seconds": 1.447,
     "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
       "  AST extraction: 100/182 uncached files (54%) [14 workers]",
       "  AST extraction: 182/182 files (100%) [14 workers]",
-      "[graphify watch] Rebuilt: 2463 nodes, 5135 edges, 184 communities",
+      "[graphify watch] Rebuilt: 2463 nodes, 5135 edges, 185 communities",
       "[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out",
       "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
       "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
@@ -219,15 +231,39 @@
   },
   "native_baseline": {
     "tool": "roslyn",
-    "status": "missing",
-    "ok": false,
-    "note": "dotnet/Roslyn, csc, mcs, OmniSharp, and csharp-ls are not installed on this machine; this smoke records Atlas vs graphify and leaves the native C# baseline explicit."
+    "status": "ok",
+    "ok": true,
+    "seconds": 2.62,
+    "command": "/opt/homebrew/bin/dotnet run --no-build -- /tmp/atlas-live-csharp-dapper/repo (Roslyn syntax tree counter)",
+    "metrics": {
+      "files": 157,
+      "parsed_files": 157,
+      "parse_errors": 0,
+      "definition_counts": {
+        "class": 377,
+        "interface": 9,
+        "struct": 13,
+        "enum": 22,
+        "record": 4,
+        "method": 1430
+      },
+      "definitions": 1855,
+      "roslyn_version": "5.6.0.0",
+      "tool_versions": {
+        "dotnet": "10.0.301"
+      }
+    }
   },
   "richer_native_baselines": {
+    "csharp-source-counter": {
+      "status": "ok",
+      "ok": true,
+      "note": "deterministic C# source counter used as the scriptable parser coverage proxy"
+    },
     "dotnet": {
-      "status": "missing",
-      "ok": false,
-      "note": "dotnet SDK/Roslyn not installed"
+      "status": "available",
+      "ok": true,
+      "note": "dotnet is available and the Roslyn syntax-tree counter is used when it can be built"
     },
     "csc": {
       "status": "missing",
@@ -246,27 +282,37 @@
     }
   },
   "coverage": {
-    "atlas_vs_roslyn_definition_ratio": null,
+    "atlas_vs_roslyn_definition_ratio": 1.84,
     "atlas_csharp_definition_symbols": 3419,
-    "native_definitions": 0
+    "native_definitions": 1855
   },
   "optimization": {
-    "cycles_run": 2,
-    "stop_reason": "C# live smoke improves Atlas type/method recall on real Dapper code and records Atlas/graphify query metrics; native Roslyn/OmniSharp coverage remains pending because C# tooling is not installed on this machine.",
+    "cycles_run": 3,
+    "stop_reason": "C# live smoke improves Atlas type/method recall on real Dapper code, records Atlas/graphify query metrics, and measures coverage against a Roslyn syntax-tree baseline when dotnet is installed.",
     "cycle_notes": [
       "cycle 1: Dapper probe exposed an Atlas C# parser gap: multi-modifier declarations such as `public static partial class SqlMapper` were missed, leaving 1,332 C# definition symbols.",
-      "cycle 2: after expanding C# modifier/type/method regexes, the same Dapper checkout indexes 3,419 C# definition symbols and resolves Dapper type queries that were previously absent."
+      "cycle 2: after expanding C# modifier/type/method regexes, the same Dapper checkout indexes 3,419 C# definition symbols and resolves Dapper type queries that were previously absent.",
+      "cycle 3: added a Roslyn syntax-tree counter using the installed dotnet SDK, with deterministic source-counter fallback when Roslyn is unavailable."
     ]
+  },
+  "query_warmup": {
+    "symbol": "SqlMapper",
+    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-csharp-dapper/atlas.db --format plain --repo repo explain SqlMapper",
+    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain SqlMapper",
+    "atlas_returncode": 0,
+    "graphify_returncode": 0,
+    "note": "Untimed warm-up for both tools before measured query latency rows."
   },
   "queries": [
     {
       "symbol": "SqlMapper",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-csharp-dapper/atlas.db --format plain --repo repo explain SqlMapper",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain SqlMapper",
       "atlas_tokens": 10,
       "graphify_tokens": 296,
-      "atlas_ms": 17.785,
-      "graphify_ms": 132.377,
+      "atlas_ms": 14.84,
+      "graphify_ms": 120.399,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -287,12 +333,13 @@
     },
     {
       "symbol": "CommandDefinition",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-csharp-dapper/atlas.db --format plain --repo repo explain CommandDefinition",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain CommandDefinition",
       "atlas_tokens": 13,
       "graphify_tokens": 293,
-      "atlas_ms": 20.273,
-      "graphify_ms": 131.104,
+      "atlas_ms": 18.041,
+      "graphify_ms": 114.687,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -313,12 +360,13 @@
     },
     {
       "symbol": "DynamicParameters",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-csharp-dapper/atlas.db --format plain --repo repo explain DynamicParameters",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain DynamicParameters",
       "atlas_tokens": 18,
       "graphify_tokens": 69,
-      "atlas_ms": 18.26,
-      "graphify_ms": 130.765,
+      "atlas_ms": 17.532,
+      "graphify_ms": 115.266,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -331,7 +379,7 @@
         "  ID:        dynamicparameters",
         "  Source:",
         "  Type:      code",
-        "  Community: 43",
+        "  Community: 64",
         "  Degree:    3",
         "",
         "Connections (3):"
@@ -339,12 +387,13 @@
     },
     {
       "symbol": "TypeHandlerCache",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-csharp-dapper/atlas.db --format plain --repo repo explain TypeHandlerCache",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain TypeHandlerCache",
       "atlas_tokens": 13,
       "graphify_tokens": 106,
-      "atlas_ms": 15.133,
-      "graphify_ms": 128.136,
+      "atlas_ms": 13.714,
+      "graphify_ms": 115.341,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,

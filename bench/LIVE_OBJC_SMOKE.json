@@ -2,8 +2,10 @@
   "language": "objc",
   "repo": "https://github.com/SDWebImage/SDWebImage",
   "commit": "c3ad5e1a9bf55c9b76d4c362430b5fcded96c502",
+  "graphify_detector_only": "",
   "commands": {
     "clone": "git clone --depth 1 https://github.com/SDWebImage/SDWebImage /tmp/atlas-live-objc-sdwebimage/repo",
+    "sparse_checkout": "",
     "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-objc-sdwebimage/atlas.db --json index /tmp/atlas-live-objc-sdwebimage/repo/SDWebImage",
     "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-objc-sdwebimage/atlas.db --json index /tmp/atlas-live-objc-sdwebimage/repo/SDWebImage",
     "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
@@ -18,12 +20,12 @@
     "target_path": "/tmp/atlas-live-objc-sdwebimage/repo/SDWebImage"
   },
   "atlas": {
-    "cold_wall_seconds": 0.255,
-    "reindex_wall_seconds": 0.037,
+    "cold_wall_seconds": 0.216,
+    "reindex_wall_seconds": 0.026,
     "index": {
-      "repo_id": "9702ab1d-bd94-481a-8a92-6c183b9de781",
+      "repo_id": "a48c73ae-6956-44b7-96a4-0fb3f88c33a5",
       "repo_full_name": "SDWebImage",
-      "snapshot_id": "0e9ea33e-b619-438b-8029-5593f34de2cc",
+      "snapshot_id": "83611102-304f-4c3f-956e-3ee3831b6afb",
       "commit_sha": "c3ad5e1a9bf55c9b76d4c362430b5fcded96c502",
       "indexed_files": 147,
       "symbols": 975,
@@ -38,24 +40,24 @@
         "objc": 72
       },
       "mode": "full",
-      "duration_ms": 192,
+      "duration_ms": 179,
       "timings_ms": {
         "delta_check": 0,
-        "ensure_repo": 3,
+        "ensure_repo": 0,
         "go_types": 0,
-        "lexical": 86,
-        "parse": 48,
-        "persist": 32,
+        "lexical": 96,
+        "parse": 39,
+        "persist": 26,
         "resolve_head": 0,
         "routes": 0,
-        "sort": 5,
+        "sort": 0,
         "walk": 15
       }
     },
     "reindex": {
-      "repo_id": "9702ab1d-bd94-481a-8a92-6c183b9de781",
+      "repo_id": "a48c73ae-6956-44b7-96a4-0fb3f88c33a5",
       "repo_full_name": "SDWebImage",
-      "snapshot_id": "0e9ea33e-b619-438b-8029-5593f34de2cc",
+      "snapshot_id": "83611102-304f-4c3f-956e-3ee3831b6afb",
       "commit_sha": "c3ad5e1a9bf55c9b76d4c362430b5fcded96c502",
       "indexed_files": 147,
       "symbols": 975,
@@ -109,7 +111,7 @@
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 0.735,
+    "seconds": 0.644,
     "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
@@ -132,7 +134,7 @@
     "tool": "tree-sitter-objc",
     "status": "partial",
     "ok": false,
-    "seconds": 0.124,
+    "seconds": 0.131,
     "command": "/tmp/atlas-live-objc-sdwebimage/tree-sitter-objc-venv/bin/python -c <tree-sitter-objc definition counter> /tmp/atlas-live-objc-sdwebimage/repo/SDWebImage",
     "metrics": {
       "files": 72,
@@ -199,21 +201,30 @@
       "cycle 2: after adding an Objective-C-specific parser, Atlas preserves selectors such as `storeImage:forKey:completion:`; graphify flattens those selector names, so the colon-selector row is kept as a visible graphify-missing caveat."
     ]
   },
+  "query_warmup": {
+    "symbol": "SDImageCache",
+    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-objc-sdwebimage/atlas.db --format plain --repo SDWebImage explain SDImageCache",
+    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain SDImageCache",
+    "atlas_returncode": 0,
+    "graphify_returncode": 0,
+    "note": "Untimed warm-up for both tools before measured query latency rows."
+  },
   "queries": [
     {
       "symbol": "SDImageCache",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-objc-sdwebimage/atlas.db --format plain --repo SDWebImage explain SDImageCache",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain SDImageCache",
-      "atlas_tokens": 9,
+      "atlas_tokens": 8,
       "graphify_tokens": 300,
-      "atlas_ms": 12.308,
-      "graphify_ms": 99.109,
+      "atlas_ms": 12.837,
+      "graphify_ms": 91.936,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "SDImageCache t@SDImageCache.m:68 df3"
+        "SDImageCache t@SDImageCache:68 df3"
       ],
       "graphify_stdout_head": [
         "Node: SDImageCache",
@@ -228,18 +239,19 @@
     },
     {
       "symbol": "SDWebImageManager",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-objc-sdwebimage/atlas.db --format plain --repo SDWebImage explain SDWebImageManager",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain SDWebImageManager",
       "atlas_tokens": 11,
       "graphify_tokens": 414,
-      "atlas_ms": 14.063,
-      "graphify_ms": 109.113,
+      "atlas_ms": 12.272,
+      "graphify_ms": 91.515,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "SDWebImageManager t@SDWebImageManager.m:29 df2"
+        "SDWebImageManager t@SDWebImageManager:29 df2"
       ],
       "graphify_stdout_head": [
         "Node: SDWebImageManager",
@@ -254,18 +266,19 @@
     },
     {
       "symbol": "sharedImageCache",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-objc-sdwebimage/atlas.db --format plain --repo SDWebImage explain sharedImageCache",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain sharedImageCache",
-      "atlas_tokens": 9,
+      "atlas_tokens": 8,
       "graphify_tokens": 57,
-      "atlas_ms": 13.844,
-      "graphify_ms": 95.012,
+      "atlas_ms": 12.736,
+      "graphify_ms": 93.5,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "sharedImageCache m@SDImageCache.m:85"
+        "sharedImageCache m@SDImageCache:85"
       ],
       "graphify_stdout_head": [
         "Node: -sharedImageCache",
@@ -280,18 +293,19 @@
     },
     {
       "symbol": "storeImage:forKey:completion:",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-objc-sdwebimage/atlas.db --format plain --repo SDWebImage explain storeImage:forKey:completion:",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain storeImage:forKey:completion:",
       "atlas_tokens": 12,
       "graphify_tokens": 14,
-      "atlas_ms": 11.604,
-      "graphify_ms": 86.381,
+      "atlas_ms": 11.883,
+      "graphify_ms": 90.502,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": true,
       "atlas_stdout_head": [
-        "storeImage:forKey:completion: m@SDImageCache.m:209"
+        "storeImage:forKey:completion: m@SDImageCache:209"
       ],
       "graphify_stdout_head": [
         "No node matching 'storeImage:forKey:completion:' found."
@@ -299,18 +313,19 @@
     },
     {
       "symbol": "objectForKey:",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-objc-sdwebimage/atlas.db --format plain --repo SDWebImage explain objectForKey:",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain objectForKey:",
       "atlas_tokens": 8,
       "graphify_tokens": 56,
-      "atlas_ms": 11.856,
-      "graphify_ms": 87.341,
+      "atlas_ms": 12.048,
+      "graphify_ms": 92.899,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "objectForKey: m@SDMemoryCache.m:97"
+        "objectForKey: m@SDMemoryCache:97"
       ],
       "graphify_stdout_head": [
         "Node: -objectForKey",

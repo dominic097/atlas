@@ -2,8 +2,10 @@
   "language": "zig",
   "repo": "https://github.com/zigtools/zls",
   "commit": "8da87d4f3305a550e7b739bad764e34bf1e46a08",
+  "graphify_detector_only": "",
   "commands": {
     "clone": "git clone --depth 1 https://github.com/zigtools/zls /tmp/atlas-live-zig-zls/repo",
+    "sparse_checkout": "",
     "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-zig-zls/atlas.db --json index /tmp/atlas-live-zig-zls/repo/src",
     "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-zig-zls/atlas.db --json index /tmp/atlas-live-zig-zls/repo/src",
     "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
@@ -18,15 +20,15 @@
     "target_path": "/tmp/atlas-live-zig-zls/repo/src"
   },
   "atlas": {
-    "cold_wall_seconds": 1.077,
-    "reindex_wall_seconds": 0.025,
+    "cold_wall_seconds": 0.94,
+    "reindex_wall_seconds": 0.031,
     "index": {
-      "repo_id": "4d44c7e7-79a5-44d1-8046-98ca1e277013",
+      "repo_id": "56f784a9-d03f-42af-9c79-41c7ace8068b",
       "repo_full_name": "src",
-      "snapshot_id": "0c17d66b-9957-480b-ba6b-1d88e958c32c",
+      "snapshot_id": "3eb2f32a-d44f-4af1-875e-421eda4f0c61",
       "commit_sha": "8da87d4f3305a550e7b739bad764e34bf1e46a08",
       "indexed_files": 45,
-      "symbols": 5297,
+      "symbols": 5302,
       "edges": 11835,
       "edge_kinds": {
         "calls": 11553,
@@ -39,27 +41,27 @@
         "zig": 43
       },
       "mode": "full",
-      "duration_ms": 962,
+      "duration_ms": 886,
       "timings_ms": {
         "delta_check": 0,
         "ensure_repo": 0,
         "go_types": 0,
-        "lexical": 474,
-        "parse": 253,
-        "persist": 227,
+        "lexical": 461,
+        "parse": 213,
+        "persist": 206,
         "resolve_head": 0,
         "routes": 0,
         "sort": 4,
-        "walk": 1
+        "walk": 0
       }
     },
     "reindex": {
-      "repo_id": "4d44c7e7-79a5-44d1-8046-98ca1e277013",
+      "repo_id": "56f784a9-d03f-42af-9c79-41c7ace8068b",
       "repo_full_name": "src",
-      "snapshot_id": "0c17d66b-9957-480b-ba6b-1d88e958c32c",
+      "snapshot_id": "3eb2f32a-d44f-4af1-875e-421eda4f0c61",
       "commit_sha": "8da87d4f3305a550e7b739bad764e34bf1e46a08",
       "indexed_files": 45,
-      "symbols": 5297,
+      "symbols": 5302,
       "edges": 11835,
       "routes": 0,
       "languages": {
@@ -77,8 +79,8 @@
     "symbol_breakdown": [
       {
         "language": "json",
-        "kind": "document",
-        "count": 1
+        "kind": "key",
+        "count": 6
       },
       {
         "language": "markdown",
@@ -121,7 +123,7 @@
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 0.685,
+    "seconds": 0.58,
     "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
@@ -141,7 +143,7 @@
     "tool": "tree-sitter-zig",
     "status": "partial",
     "ok": false,
-    "seconds": 0.226,
+    "seconds": 0.212,
     "command": "/tmp/atlas-live-zig-zls/tree-sitter-zig-venv/bin/python -c <tree-sitter-zig definition counter> /tmp/atlas-live-zig-zls/repo/src",
     "metrics": {
       "files": 43,
@@ -188,21 +190,30 @@
       "cycle 2: after widening Zig declaration rules and correcting the native compound-const counter, Atlas/tree-sitter-zig definition ratio reached 1.0 while exact-symbol query rows exceeded 5x for latency and token output vs graphify."
     ]
   },
+  "query_warmup": {
+    "symbol": "Server",
+    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-zig-zls/atlas.db --format plain --repo src explain Server",
+    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Server",
+    "atlas_returncode": 0,
+    "graphify_returncode": 0,
+    "note": "Untimed warm-up for both tools before measured query latency rows."
+  },
   "queries": [
     {
       "symbol": "Server",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-zig-zls/atlas.db --format plain --repo src explain Server",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Server",
-      "atlas_tokens": 7,
+      "atlas_tokens": 6,
       "graphify_tokens": 268,
-      "atlas_ms": 16.71,
-      "graphify_ms": 103.246,
+      "atlas_ms": 15.477,
+      "graphify_ms": 88.121,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Server k@Server.zig:5 df7 d1"
+        "Server k@Server:5 df7 d1"
       ],
       "graphify_stdout_head": [
         "Node: Server.zig",
@@ -217,18 +228,19 @@
     },
     {
       "symbol": "DocumentStore",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-zig-zls/atlas.db --format plain --repo src explain DocumentStore",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain DocumentStore",
-      "atlas_tokens": 11,
+      "atlas_tokens": 10,
       "graphify_tokens": 277,
-      "atlas_ms": 17.593,
-      "graphify_ms": 102.641,
+      "atlas_ms": 15.551,
+      "graphify_ms": 87.823,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "DocumentStore k@DocumentStore.zig:17 df15 d3"
+        "DocumentStore k@DocumentStore:17 df15 d3"
       ],
       "graphify_stdout_head": [
         "Node: DocumentStore.zig",
@@ -243,18 +255,19 @@
     },
     {
       "symbol": "Analyser",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-zig-zls/atlas.db --format plain --repo src explain Analyser",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Analyser",
-      "atlas_tokens": 8,
+      "atlas_tokens": 7,
       "graphify_tokens": 259,
-      "atlas_ms": 17.349,
-      "graphify_ms": 102.959,
+      "atlas_ms": 15.706,
+      "graphify_ms": 90.904,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Analyser k@Server.zig:16 df12 d1"
+        "Analyser k@Server:16 df12 d1"
       ],
       "graphify_stdout_head": [
         "Node: InternPool.zig",
@@ -269,18 +282,19 @@
     },
     {
       "symbol": "Config",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-zig-zls/atlas.db --format plain --repo src explain Config",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Config",
-      "atlas_tokens": 9,
+      "atlas_tokens": 8,
       "graphify_tokens": 79,
-      "atlas_ms": 17.113,
-      "graphify_ms": 105.624,
+      "atlas_ms": 14.988,
+      "graphify_ms": 88.385,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Config t@DocumentStore.zig:38 df10 d1"
+        "Config t@DocumentStore:38 df10 d1"
       ],
       "graphify_stdout_head": [
         "Node: Config.zig",
@@ -295,18 +309,19 @@
     },
     {
       "symbol": "main",
+      "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-zig-zls/atlas.db --format plain --repo src explain main",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain main",
-      "atlas_tokens": 9,
+      "atlas_tokens": 8,
       "graphify_tokens": 202,
-      "atlas_ms": 16.903,
-      "graphify_ms": 102.943,
+      "atlas_ms": 15.581,
+      "graphify_ms": 88.65,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "main f@build_runner.zig:46 df4 c2 d1"
+        "main f@build_runner:46 df4 c2 d1"
       ],
       "graphify_stdout_head": [
         "Node: main()",

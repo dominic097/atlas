@@ -225,3 +225,23 @@ enum Mode { Ready }
 		}
 	}
 }
+
+func TestJSImports_CommonJSAndSideEffectForms(t *testing.T) {
+	src := `
+import './polyfill'
+import express from 'express'
+export { Router } from './router'
+const debug = require('debug')('app')
+module.exports = require('./legacy')
+exports.view = require("./view")
+`
+	res, err := Parse("repo1", "owner/repo", "imports.js", "javascript", []byte(src))
+	if err != nil {
+		t.Fatalf("Parse returned error: %v", err)
+	}
+	for _, want := range []string{"./polyfill", "express", "./router", "debug", "./legacy", "./view"} {
+		if !containsString(res.Imports, want) {
+			t.Fatalf("missing import %q; imports=%+v", want, res.Imports)
+		}
+	}
+}
