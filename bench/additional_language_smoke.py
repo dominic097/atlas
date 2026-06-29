@@ -5532,11 +5532,12 @@ def run_smoke(language: str, atlas_bin: str, graphify_bin: str | None) -> dict[s
         }
     elif language == "apex":
         optimization = {
-            "cycles_run": 2,
-            "stop_reason": "Apex live smoke matched the source-counter coverage proxy after adding an Apex-specific parser for Salesforce classes, triggers, constructors, SOQL SObjects, and DML operations.",
+            "cycles_run": 3,
+            "stop_reason": "Apex native tree-sitter declaration parsing plus SOQL/DML source recovery matched the source-counter coverage proxy after routing `.cls` and `.trigger` files off `parseRegexFallback`.",
             "cycle_notes": [
                 "cycle 1: trailheadapps/apex-recipes probe showed the generic Apex rules indexed classes/triggers/methods but missed richer graphify-style SOQL/DML context and misclassified constructors after nested interface/enum declarations.",
                 "cycle 2: after adding a dedicated Apex parser, Atlas records class/interface/enum types, triggers, constructors, methods, SOQL SObjects, and DML operation context against the live Salesforce sample app.",
+                "cycle 3: vendored tree-sitter-sfapex declaration parsing verifies Apex class/interface/enum, method, constructor, and trigger definitions while preserving exact SOQL SObject and DML operation recovery; live coverage stayed at 1072/1072 definitions.",
             ],
         }
     elif language == "byond":

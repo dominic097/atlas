@@ -229,7 +229,7 @@
       "apex",
       ".cls .trigger",
       "extract_apex",
-      "lightweight regex"
+      "native tree-sitter Apex"
     ],
     [
       "vue",

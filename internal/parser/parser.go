@@ -449,7 +449,15 @@ func Parse(repoID, repoFullName, filePath, language string, content []byte) (Res
 			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
-	case "delphi", "byond", "dotnet", "apex", "ets", "p4":
+	case "apex":
+		if syms, apexImports, ok := parseApexNative(filePath, content); ok {
+			rawSyms = syms
+			imports = apexImports
+		} else {
+			rawSyms, imports = parseRegexFallback(filePath, language, content)
+		}
+		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
+	case "delphi", "byond", "dotnet", "ets", "p4":
 		rawSyms, imports = parseRegexFallback(filePath, language, content)
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "html", "css":

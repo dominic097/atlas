@@ -111,7 +111,7 @@ GRAPHIFY_LANGUAGE_FAMILIES = [
     ("byond dm", [".dm", ".dme", ".dmi", ".dmm", ".dmf"], "lightweight regex/document fallback"),
     ("dotnet project", [".sln", ".slnx", ".csproj", ".fsproj", ".vbproj"], "lightweight regex"),
     ("razor", [".razor", ".cshtml"], "native Razor source parser"),
-    ("apex", [".cls", ".trigger"], "lightweight regex"),
+    ("apex", [".cls", ".trigger"], "native tree-sitter Apex"),
     ("vue", [".vue"], "native SFC/tree-sitter AST"),
     ("svelte", [".svelte"], "native SFC/tree-sitter AST"),
     ("astro", [".astro"], "native Astro/tree-sitter AST"),

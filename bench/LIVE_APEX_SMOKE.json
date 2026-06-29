@@ -21,15 +21,15 @@
     "target_path": "/tmp/atlas-live-apex-recipes/repo/force-app"
   },
   "atlas": {
-    "cold_wall_seconds": 1.365,
-    "reindex_wall_seconds": 0.024,
+    "cold_wall_seconds": 1.284,
+    "reindex_wall_seconds": 0.035,
     "index": {
-      "repo_id": "154201af-cc8f-4b6a-a856-5e478d8b384d",
+      "repo_id": "6f4d7d44-a2eb-4b08-940e-cd13e27d5368",
       "repo_full_name": "force-app",
-      "snapshot_id": "d8daa384-f111-42ba-901c-478615f07223",
+      "snapshot_id": "b3788ed6-e0ce-4507-bb46-ac52f3fc709e",
       "commit_sha": "cb5cd9d3621985b816476e5a317b5a0016fc3576",
-      "indexed_files": 501,
-      "symbols": 5101,
+      "indexed_files": 503,
+      "symbols": 5221,
       "edges": 5045,
       "edge_kinds": {
         "calls": 5006,
@@ -39,49 +39,58 @@
       "languages": {
         "apex": 142,
         "css": 3,
+        "docx": 1,
         "html": 7,
+        "image": 1,
         "javascript": 18,
         "json": 3,
         "markdown": 74,
         "xml": 254
       },
       "mode": "full",
-      "duration_ms": 1282,
+      "duration_ms": 1259,
       "timings_ms": {
+        "build_symbols_edges": 1,
         "delta_check": 0,
+        "discover_files": 2,
+        "doc_links": 0,
         "ensure_repo": 0,
+        "gitignore_scan": 11,
         "go_types": 0,
-        "lexical": 472,
-        "parse": 132,
-        "persist": 671,
+        "lexical": 912,
+        "parse": 330,
+        "persist": 912,
         "resolve_head": 0,
         "routes": 0,
-        "sort": 1,
-        "walk": 3
+        "sort": 0,
+        "walk": 2,
+        "write_sqlite": 912
       }
     },
     "reindex": {
-      "repo_id": "154201af-cc8f-4b6a-a856-5e478d8b384d",
+      "repo_id": "6f4d7d44-a2eb-4b08-940e-cd13e27d5368",
       "repo_full_name": "force-app",
-      "snapshot_id": "d8daa384-f111-42ba-901c-478615f07223",
+      "snapshot_id": "b3788ed6-e0ce-4507-bb46-ac52f3fc709e",
       "commit_sha": "cb5cd9d3621985b816476e5a317b5a0016fc3576",
-      "indexed_files": 501,
-      "symbols": 5101,
+      "indexed_files": 503,
+      "symbols": 5221,
       "edges": 5045,
       "routes": 0,
       "languages": {
         "apex": 142,
         "css": 3,
+        "docx": 1,
         "html": 7,
+        "image": 1,
         "javascript": 18,
         "json": 3,
         "markdown": 74,
         "xml": 254
       },
       "mode": "noop",
-      "duration_ms": 0,
+      "duration_ms": 17,
       "timings_ms": {
-        "delta_check": 0,
+        "delta_check": 17,
         "resolve_head": 0
       }
     },
@@ -117,6 +126,16 @@
         "count": 190
       },
       {
+        "language": "docx",
+        "kind": "document",
+        "count": 1
+      },
+      {
+        "language": "image",
+        "kind": "image",
+        "count": 1
+      },
+      {
         "language": "javascript",
         "kind": "class",
         "count": 9
@@ -139,7 +158,7 @@
       {
         "language": "javascript",
         "kind": "method",
-        "count": 22
+        "count": 140
       },
       {
         "language": "javascript",
@@ -177,14 +196,14 @@
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 1.944,
+    "seconds": 1.733,
     "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
       "  AST extraction: 100/237 uncached files (42%) [14 workers]",
       "  AST extraction: 200/237 uncached files (84%) [14 workers]",
       "  AST extraction: 237/237 files (100%) [14 workers]",
-      "[graphify watch] Rebuilt: 3992 nodes, 3824 edges, 608 communities",
+      "[graphify watch] Rebuilt: 3992 nodes, 3824 edges, 607 communities",
       "[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out",
       "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
       "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
@@ -200,7 +219,7 @@
     "tool": "apex-source-counter",
     "status": "ok",
     "ok": true,
-    "seconds": 0.025,
+    "seconds": 0.023,
     "command": "python3 <apex source counter> /tmp/atlas-live-apex-recipes/repo/force-app",
     "metrics": {
       "files": 142,
@@ -397,11 +416,12 @@
     "native_definitions": 1072
   },
   "optimization": {
-    "cycles_run": 2,
-    "stop_reason": "Apex live smoke matched the source-counter coverage proxy after adding an Apex-specific parser for Salesforce classes, triggers, constructors, SOQL SObjects, and DML operations.",
+    "cycles_run": 3,
+    "stop_reason": "Apex native tree-sitter declaration parsing plus SOQL/DML source recovery matched the source-counter coverage proxy after routing `.cls` and `.trigger` files off `parseRegexFallback`.",
     "cycle_notes": [
       "cycle 1: trailheadapps/apex-recipes probe showed the generic Apex rules indexed classes/triggers/methods but missed richer graphify-style SOQL/DML context and misclassified constructors after nested interface/enum declarations.",
-      "cycle 2: after adding a dedicated Apex parser, Atlas records class/interface/enum types, triggers, constructors, methods, SOQL SObjects, and DML operation context against the live Salesforce sample app."
+      "cycle 2: after adding a dedicated Apex parser, Atlas records class/interface/enum types, triggers, constructors, methods, SOQL SObjects, and DML operation context against the live Salesforce sample app.",
+      "cycle 3: vendored tree-sitter-sfapex declaration parsing verifies Apex class/interface/enum, method, constructor, and trigger definitions while preserving exact SOQL SObject and DML operation recovery; live coverage stayed at 1072/1072 definitions."
     ]
   },
   "query_warmup": {
@@ -420,8 +440,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain SOQLRecipes",
       "atlas_tokens": 8,
       "graphify_tokens": 262,
-      "atlas_ms": 16.125,
-      "graphify_ms": 145.285,
+      "atlas_ms": 15.122,
+      "graphify_ms": 132.931,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -447,8 +467,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain DMLRecipes",
       "atlas_tokens": 7,
       "graphify_tokens": 60,
-      "atlas_ms": 16.394,
-      "graphify_ms": 145.145,
+      "atlas_ms": 15.202,
+      "graphify_ms": 131.437,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -461,7 +481,7 @@
         "  ID:        data_recipes_dmlrecipes_dmlrecipes",
         "  Source:    main/default/classes/Data Recipes/DMLRecipes.cls L7",
         "  Type:      code",
-        "  Community: 77",
+        "  Community: 78",
         "  Degree:    1",
         "",
         "Connections (1):"
@@ -474,8 +494,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain AccountTrigger",
       "atlas_tokens": 11,
       "graphify_tokens": 97,
-      "atlas_ms": 16.624,
-      "graphify_ms": 145.117,
+      "atlas_ms": 15.433,
+      "graphify_ms": 133.743,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -501,8 +521,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Account",
       "atlas_tokens": 13,
       "graphify_tokens": 76,
-      "atlas_ms": 18.395,
-      "graphify_ms": 149.905,
+      "atlas_ms": 17.927,
+      "graphify_ms": 138.548,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -528,21 +548,21 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain insert",
       "atlas_tokens": 9,
       "graphify_tokens": 65,
-      "atlas_ms": 18.075,
-      "graphify_ms": 143.748,
+      "atlas_ms": 18.551,
+      "graphify_ms": 133.542,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "insert d@DMLRecipes.cls:28 df101 d42"
+        "insert d@DMLRecipes.cls:28 df101 d43"
       ],
       "graphify_stdout_head": [
         "Node: insert",
         "  ID:        main_default_classes_data_recipes_dmlrecipes_cls_dml_insert",
         "  Source:    main/default/classes/Data Recipes/DMLRecipes.cls L28",
         "  Type:      code",
-        "  Community: 77",
+        "  Community: 78",
         "  Degree:    1",
         "",
         "Connections (1):"
@@ -555,8 +575,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain listAccounts",
       "atlas_tokens": 3,
       "graphify_tokens": 9,
-      "atlas_ms": 17.206,
-      "graphify_ms": 145.855,
+      "atlas_ms": 14.896,
+      "graphify_ms": 131.044,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
