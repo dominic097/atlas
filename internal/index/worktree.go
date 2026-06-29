@@ -160,7 +160,7 @@ func scanWorkTree(ctx context.Context, drv store.StorageDriver, baseSnapshotID, 
 			// A file that vanished mid-walk is not fatal to the whole scan.
 			return nil
 		}
-		if info.Size() > maxFileBytes {
+		if info.Size() > fileSizeCap(lang) {
 			return nil
 		}
 

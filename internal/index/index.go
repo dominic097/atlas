@@ -41,6 +41,20 @@ import (
 // (generated bundles / vendored blobs blow up the parser for no graph value).
 const maxFileBytes = 1 << 20 // 1 MB
 
+// maxDocBytes is the larger ceiling for binary office documents: they embed media
+// so the package is big, but only the (small) XML text is read, so the source-file
+// cap would wrongly skip an ordinary slide deck.
+const maxDocBytes = 64 << 20 // 64 MB
+
+// fileSizeCap returns the size ceiling for a language: the document cap for office
+// formats, otherwise the source-file cap.
+func fileSizeCap(language string) int64 {
+	if parser.IsDocumentFormat(language) {
+		return maxDocBytes
+	}
+	return maxFileBytes
+}
+
 // Options configures a single indexing run.
 type Options struct {
 	// Reindex forces a full rebuild. The local SQLite tier already rebuilds the
@@ -303,7 +317,7 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 			// A file that vanished mid-walk is not fatal to the whole index.
 			return nil
 		}
-		if info.Size() > maxFileBytes {
+		if info.Size() > fileSizeCap(lang) {
 			return nil
 		}
 

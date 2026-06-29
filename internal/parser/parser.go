@@ -177,6 +177,12 @@ func LanguageForPath(path string) string {
 		return "csv"
 	case ".txt", ".rst":
 		return "text"
+	case ".pptx":
+		return "pptx"
+	case ".docx":
+		return "docx"
+	case ".xlsx":
+		return "xlsx"
 	default:
 		return ""
 	}
@@ -212,7 +218,8 @@ func Supported(lang string) bool {
 		"csharp", "groovy", "bash", "html", "css",
 		"markdown", "mdx", "yaml", "json", "proto", "toml", "xml", "plist",
 		"gomod", "gosum", "config", "makefile", "batch", "powershell",
-		"sql", "csv", "text", "dockerfile":
+		"sql", "csv", "text", "dockerfile",
+		"pptx", "docx", "xlsx":
 		return true
 	default:
 		return false
@@ -254,6 +261,11 @@ func Parse(repoID, repoFullName, filePath, language string, content []byte) (Res
 	defer func() { tsCleanup() }()
 
 	switch language {
+	case "pptx", "docx", "xlsx":
+		// Binary office documents: extract searchable text directly into document
+		// symbols. They have no source-code comments/bodies, so they bypass the
+		// symbolDraft enrichment below and return their own Result.
+		return parseOfficeDocument(repoID, repoFullName, filePath, language, content)
 	case "go":
 		// Native go/parser is the highest-fidelity path. Parse once, then reuse
 		// the AST for both symbol and call-edge extraction.
