@@ -5654,11 +5654,12 @@ def run_smoke(language: str, atlas_bin: str, graphify_bin: str | None) -> dict[s
         }
     elif language == "objc":
         optimization = {
-            "cycles_run": 2,
-            "stop_reason": "Objective-C live smoke matched the graphify-scoped tree-sitter-objc definition coverage proxy and exceeded 5x latency/token thresholds on equivalent rows after preserving full multi-part selectors in Atlas.",
+            "cycles_run": 3,
+            "stop_reason": "Objective-C native tree-sitter AST parsing matched the graphify-scoped tree-sitter-objc definition coverage proxy and exceeded 5x latency/token thresholds on equivalent rows after preserving full multi-part selectors in Atlas.",
             "cycle_notes": [
                 "cycle 1: SDWebImage probe showed Atlas only captured the first Objective-C selector segment, losing precision for multi-argument methods.",
                 "cycle 2: after adding an Objective-C-specific parser, Atlas preserves selectors such as `storeImage:forKey:completion:`; graphify flattens those selector names, so the colon-selector row is kept as a visible graphify-missing caveat.",
+                "cycle 3: replacing the regex selector parser with a tree-sitter-objc AST walker preserved exact type/method coverage on graphify-scoped `.m` and `.mm` files.",
             ],
         }
     elif language == "pascal":

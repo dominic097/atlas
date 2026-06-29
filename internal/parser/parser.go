@@ -307,8 +307,16 @@ func Parse(repoID, repoFullName, filePath, language string, content []byte) (Res
 			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
+	case "objc":
+		if syms, ok := parseObjCNative(content); ok {
+			rawSyms = syms
+			imports = parseLightweightImports(language, content)
+		} else {
+			rawSyms, imports = parseRegexFallback(filePath, language, content)
+		}
+		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "groovy", "bash",
-		"objc", "julia", "fortran", "dart", "verilog", "pascal",
+		"julia", "fortran", "dart", "verilog", "pascal",
 		"delphi", "terraform", "byond", "dotnet", "razor", "apex", "blade",
 		"vue", "svelte", "astro", "ejs", "ets", "r", "powershell", "sql", "p4":
 		rawSyms, imports = parseRegexFallback(filePath, language, content)

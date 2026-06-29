@@ -95,7 +95,7 @@ GRAPHIFY_LANGUAGE_FAMILIES = [
     ("zig", [".zig"], "native tree-sitter tags"),
     ("powershell", [".ps1", ".psm1", ".psd1"], "lightweight regex"),
     ("elixir", [".ex", ".exs"], "native tree-sitter AST"),
-    ("objective-c", [".m", ".mm"], "lightweight regex"),
+    ("objective-c", [".m", ".mm"], "native tree-sitter AST"),
     ("julia", [".jl"], "lightweight regex"),
     ("fortran", [".f", ".F", ".f90", ".F90", ".f95", ".F95", ".f03", ".F03", ".f08", ".F08"], "lightweight regex"),
     ("dart", [".dart"], "lightweight regex"),

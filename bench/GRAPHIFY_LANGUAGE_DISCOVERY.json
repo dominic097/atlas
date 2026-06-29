@@ -139,7 +139,7 @@
       "objective-c",
       ".m .mm",
       "extract_objc",
-      "lightweight regex"
+      "native tree-sitter AST"
     ],
     [
       "julia",

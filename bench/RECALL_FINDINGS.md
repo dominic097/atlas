@@ -58,6 +58,7 @@ validated with the focused parser test suite.
 | Lang | Repo slice | Independent baseline | Atlas defs | Baseline defs | Recall/coverage | graphify latency | graphify tokens | Notes |
 | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | --- |
 | elixir | phoenixframework/phoenix `lib` | tree-sitter-elixir 0.3.5 | 1642 | 1642 | 1.00x | 6.61x | 22.95x | Native tree-sitter AST walker preserves module/protocol/implementation/function/macro/delegate/guard kinds and adds operator-function support. |
+| objective-c | SDWebImage/SDWebImage `.m`/`.mm` graphify scope | tree-sitter-objc 3.0.2 | 971 | 971 | 1.00x | 6.78x | 23.63x | Native tree-sitter AST walker preserves full Objective-C selectors; `storeImage:forKey:completion:` remains documented as graphify-missing because graphify flattens selector names. |
 
 ## The consistent definition surface (applied uniformly to all 7 languages)
 
