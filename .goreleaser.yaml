@@ -75,7 +75,7 @@ nfpms:
     ids:
       - atlas
     vendor: atlas
-    homepage: "https://github.com/dominic097/atlas"
+    homepage: "https://github.com/aziron-ai/atlas"
     maintainer: "atlas maintainers <atlas-maintainers@users.noreply.github.com>"
     description: "Atlas deterministic local code-intelligence CLI using embedded SQLite by default."
     license: "Apache-2.0"
@@ -130,12 +130,12 @@ homebrew_casks:
       owner: dominic097
       name: homebrew-atlas
       token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
-    homepage: "https://github.com/dominic097/atlas"
+    homepage: "https://github.com/aziron-ai/atlas"
     description: "Atlas deterministic code intelligence: symbols, calls, routes, impact, cross-repo."
     license: "Apache-2.0"
     url:
-      template: "https://github.com/dominic097/atlas/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
-      verified: github.com/dominic097/atlas/
+      template: "https://github.com/aziron-ai/atlas/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+      verified: github.com/aziron-ai/atlas/
     hooks:
       post:
         install: |
@@ -156,7 +156,7 @@ changelog:
 
 release:
   github:
-    owner: dominic097
+    owner: aziron-ai
     name: atlas
   target_commitish: main
   draft: false

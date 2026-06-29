@@ -14,7 +14,7 @@ git push origin v0.1.0
 
 ## Release Repositories
 
-- Release assets: `dominic097/atlas`
+- Release assets: `aziron-ai/atlas`
 - Homebrew tap: `dominic097/homebrew-atlas`
 - Homebrew install name: `dominic097/atlas/atlas`
 - npm package name: `atlas`
@@ -23,7 +23,7 @@ The release-asset repository must exist before a tag is pushed. Homebrew and npm
 both download native archives from that public release URL. Releases are pinned
 to the public repository's `main` branch as `target_commitish`, because the
 source build can run from a private repository while the public release assets
-live in `dominic097/atlas`.
+live in `aziron-ai/atlas`.
 
 ## Why A Cross-Compile Image
 
@@ -44,7 +44,7 @@ local indexing, search, impact, or MCP.
 | Secret | Used by | Purpose |
 |--------|---------|---------|
 | `GITHUB_TOKEN` | `goreleaser` | default token when releases are published from the same repository |
-| `ATLAS_RELEASE_TOKEN` | `goreleaser` | optional PAT with contents write access to `dominic097/atlas` when releasing from another repository |
+| `ATLAS_RELEASE_TOKEN` | `goreleaser` | optional PAT with contents write access to `aziron-ai/atlas` when releasing from another repository |
 | `HOMEBREW_TAP_TOKEN` | `goreleaser` | PAT with contents write access to `dominic097/homebrew-atlas` so GoReleaser can push `Casks/atlas.rb` |
 | `NPM_TOKEN` | `npm` | npm automation token with publish rights for the `atlas` package |
 
@@ -54,7 +54,7 @@ no signing key secret is needed.
 ## Current External Prerequisites
 
 - `dominic097/homebrew-atlas` exists and is writable by the current GitHub user.
-- `dominic097/atlas` must be created before the release workflow can publish
+- `aziron-ai/atlas` must exist before the release workflow can publish
   clean public release assets.
 - The exact npm package name `atlas` is already registered on npm. Publishing
   under that exact name requires owner access to the existing package plus an

@@ -82,7 +82,7 @@ const version = pkg.version;
 const asset = `atlas_${version}_${goos}_${goarch}.tar.gz`;
 const baseURL =
   process.env.ATLAS_DOWNLOAD_BASE_URL ||
-  `https://github.com/dominic097/atlas/releases/download/v${version}`;
+  `https://github.com/aziron-ai/atlas/releases/download/v${version}`;
 const archive = path.join(os.tmpdir(), asset);
 
 download(`${baseURL}/${asset}`, archive);
