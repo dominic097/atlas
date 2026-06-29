@@ -32,7 +32,7 @@ type RepoIndexSummary struct {
 // segmented paths share one implementation. fullNameOverride wins when set (the
 // segmented path passes each nested repo's name); otherwise in.Repo, else the dir
 // base name.
-func (e *localEngine) indexOne(ctx context.Context, in IndexInput, abs, fullNameOverride string) (*IndexResult, error) {
+func (e *localEngine) indexOne(ctx context.Context, in IndexInput, abs, fullNameOverride string, skipPaths []string) (*IndexResult, error) {
 	fullName := strings.TrimSpace(fullNameOverride)
 	if fullName == "" {
 		fullName = in.Repo
@@ -46,7 +46,7 @@ func (e *localEngine) indexOne(ctx context.Context, in IndexInput, abs, fullName
 		return nil, err
 	}
 	snap, stats, err := index.Run(ctx, e.store, lx, "", fullName, abs,
-		index.Options{Reindex: in.Reindex, Scope: e.cfg.Scope, EnableVectors: enableVectors})
+		index.Options{Reindex: in.Reindex, Scope: e.cfg.Scope, EnableVectors: enableVectors, SkipPaths: skipPaths})
 	if err != nil {
 		return nil, err
 	}
@@ -77,12 +77,28 @@ func (e *localEngine) indexOne(ctx context.Context, in IndexInput, abs, fullName
 //
 // A single repo failing is collected (RepoIndexSummary.Error) and the run
 // continues; the call only errors if EVERY repo failed.
-func (e *localEngine) indexSegmented(ctx context.Context, in IndexInput, root string, repos []string) (*IndexResult, error) {
+func (e *localEngine) indexSegmented(ctx context.Context, in IndexInput, root string, nested []string, includeRoot bool) (*IndexResult, error) {
 	enableVectors := in.EnableVectors || e.cfg.EnableVector
 	lx, err := e.ensureLexical()
 	if err != nil {
 		return nil, err
 	}
+
+	// One index job per nested repo, plus — when the workspace root is itself a git
+	// repo — a final job for the root's OWN loose files with every nested repo
+	// pruned, so the outer repo's top-level sources are covered exactly once.
+	type segJob struct {
+		root, name string
+		skip       []string
+	}
+	jobs := make([]segJob, 0, len(nested)+1)
+	for _, r := range nested {
+		jobs = append(jobs, segJob{root: r, name: filepath.Base(r)})
+	}
+	if includeRoot {
+		jobs = append(jobs, segJob{root: root, name: filepath.Base(root), skip: nested})
+	}
+
 	pc := index.ProgressFromContext(ctx)
 	start := time.Now()
 	agg := &IndexResult{
@@ -92,15 +108,15 @@ func (e *localEngine) indexSegmented(ctx context.Context, in IndexInput, root st
 		Languages:    map[string]int{},
 	}
 	var failed []string
-	for i, repoRoot := range repos {
+	for i, job := range jobs {
 		if ctx.Err() != nil {
 			break
 		}
-		name := filepath.Base(repoRoot)
-		pc.SetRepo(name, i+1, len(repos))
-		snap, stats, rerr := index.Run(ctx, e.store, lx, "", name, repoRoot,
-			index.Options{Reindex: in.Reindex, Scope: e.cfg.Scope, EnableVectors: enableVectors})
-		summary := RepoIndexSummary{Repo: name, Root: repoRoot}
+		name := job.name
+		pc.SetRepo(name, i+1, len(jobs))
+		snap, stats, rerr := index.Run(ctx, e.store, lx, "", name, job.root,
+			index.Options{Reindex: in.Reindex, Scope: e.cfg.Scope, EnableVectors: enableVectors, SkipPaths: job.skip})
+		summary := RepoIndexSummary{Repo: name, Root: job.root}
 		if rerr != nil {
 			summary.Error = rerr.Error()
 			failed = append(failed, name)
@@ -134,8 +150,8 @@ func (e *localEngine) indexSegmented(ctx context.Context, in IndexInput, root st
 	}
 	agg.DurationMS = time.Since(start).Milliseconds()
 	pc.SetPhase("done")
-	if len(repos) > 0 && len(failed) == len(repos) {
-		return agg, fmt.Errorf("engine: all %d repos failed to index (first: %s)", len(repos), failed[0])
+	if len(jobs) > 0 && len(failed) == len(jobs) {
+		return agg, fmt.Errorf("engine: all %d repos failed to index (first: %s)", len(jobs), failed[0])
 	}
 	return agg, nil
 }

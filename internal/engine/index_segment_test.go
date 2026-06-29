@@ -81,6 +81,52 @@ func TestIndexSegmentsWorkspace(t *testing.T) {
 	}
 }
 
+func TestIndexSegmentsOuterRepoWithNested(t *testing.T) {
+	// The Aziron case: the workspace root is ITSELF a git repo (tracks loose
+	// top-level files) AND contains several nested repos. Segmentation must still
+	// trigger, index each nested repo, AND index the root's own loose files with the
+	// nested repos pruned (so no file is indexed twice).
+	ws := t.TempDir()
+	if err := os.MkdirAll(filepath.Join(ws, ".git"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(ws, "root.go"), []byte("package root\n\nfunc Root() {}\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	mkRepo(t, ws, "svc-a", "package a\n\nfunc A() {}\n")
+	mkRepo(t, ws, "svc-b", "package b\n\nfunc B() {}\n")
+
+	eng := newTestEngine(t, false)
+	res, err := eng.Index(context.Background(), IndexInput{ProjectPath: ws})
+	if err != nil {
+		t.Fatalf("Index: %v", err)
+	}
+	if res.Mode != "segmented" {
+		t.Fatalf("Mode = %q, want segmented (outer repo + nested)", res.Mode)
+	}
+	if len(res.Repos) != 3 {
+		t.Fatalf("Repos = %d, want 3 (svc-a, svc-b, root)", len(res.Repos))
+	}
+	// The root job must see ONLY its loose file — the two nested repos are pruned, so
+	// it indexes 1 file, not 3. This proves SkipPaths prevents double-indexing.
+	rootName := filepath.Base(ws)
+	var rootSummary *RepoIndexSummary
+	for i := range res.Repos {
+		if res.Repos[i].Repo == rootName {
+			rootSummary = &res.Repos[i]
+		}
+	}
+	if rootSummary == nil {
+		t.Fatalf("no summary for the root repo %q in %+v", rootName, res.Repos)
+	}
+	if rootSummary.Files != 1 {
+		t.Errorf("root repo Files = %d, want 1 (nested repos must be pruned, not re-walked)", rootSummary.Files)
+	}
+	if rootSummary.Symbols < 1 {
+		t.Errorf("root repo Symbols = %d, want >=1 (Root func)", rootSummary.Symbols)
+	}
+}
+
 func TestIndexSingleRepoNotSegmented(t *testing.T) {
 	// Pointing directly AT a repo (its root has .git) indexes it as one repo and
 	// never goes hunting for nested repos.
