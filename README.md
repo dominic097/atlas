@@ -22,11 +22,11 @@ make build
 
 # after a release is published
 brew install --cask dominic097/atlas/atlas
-npm install -g @dominic097/atlas
+npm install -g @aziron/atlas
 ```
 
 Homebrew installs from the public `dominic097/homebrew-atlas` tap. The npm
-wrapper is published as `@dominic097/atlas` and exposes the binary command as
+wrapper is published as `@aziron/atlas` and exposes the binary command as
 `atlas`. The exact unscoped npm package name `atlas` is already owned by another
 maintainer, so publishing that name still requires owner access or transfer.
 
@@ -79,7 +79,7 @@ Tagged releases produce:
 - Linux `.deb`, `.rpm`, and `.apk` packages
 - checksums, SBOMs, and keyless cosign signatures
 - a Homebrew cask in `dominic097/homebrew-atlas`
-- an npm wrapper package named `@dominic097/atlas` that exposes `atlas`
+- an npm wrapper package named `@aziron/atlas` that exposes `atlas`
 
 ## License
 

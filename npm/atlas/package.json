@@ -1,5 +1,5 @@
 {
-  "name": "@dominic097/atlas",
+  "name": "@aziron/atlas",
   "version": "0.1.22",
   "description": "Atlas local code-intelligence CLI. Installs the native atlas binary and uses embedded SQLite by default.",
   "license": "Apache-2.0",

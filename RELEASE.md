@@ -10,14 +10,14 @@ git push origin v0.1.0
 | Job | Produces |
 |-----|----------|
 | `goreleaser` | per-OS/arch binaries, `tar.gz` archives, Linux `.deb`/`.rpm`/`.apk` packages, `checksums.txt`, per-archive SBOMs, a keyless cosign signature over the checksums, the Homebrew cask, and the GitHub Release |
-| `npm` | Publishes `@dominic097/atlas`, an npm wrapper that installs and runs the local native `atlas` binary from the GitHub Release |
+| `npm` | Publishes `@aziron/atlas`, an npm wrapper that installs and runs the local native `atlas` binary from the GitHub Release |
 
 ## Release Repositories
 
 - Release assets: `aziron-ai/atlas`
 - Homebrew tap: `dominic097/homebrew-atlas`
 - Homebrew install name: `dominic097/atlas/atlas`
-- npm package name: `@dominic097/atlas`
+- npm package name: `@aziron/atlas`
 - npm binary name: `atlas`
 
 The release-asset repository must exist before a tag is pushed. Homebrew and npm
@@ -47,7 +47,7 @@ local indexing, search, impact, or MCP.
 | `GITHUB_TOKEN` | `goreleaser` | default token when releases are published from the same repository |
 | `ATLAS_RELEASE_TOKEN` | `goreleaser` | optional PAT with contents write access to `aziron-ai/atlas` when releasing from another repository |
 | `HOMEBREW_TAP_TOKEN` | `goreleaser` | PAT with contents write access to `dominic097/homebrew-atlas` so GoReleaser can push `Casks/atlas.rb` |
-| `NPM_TOKEN` | `npm` | required npm automation token with publish rights for the `@dominic097/atlas` package |
+| `NPM_TOKEN` | `npm` | required automation/bypass-capable npm token with publish rights for the `@aziron/atlas` package |
 
 Keyless cosign signing uses GitHub OIDC (`id-token: write` plus Fulcio/Rekor);
 no signing key secret is needed.
@@ -58,10 +58,12 @@ no signing key secret is needed.
 - `aziron-ai/atlas` must exist before the release workflow can publish
   clean public release assets.
 - `NPM_TOKEN` must be configured in `MsysTechnologiesllc/aziron-atlas` before a
-  tag is pushed. The release workflow fails if npm cannot be published.
+  tag is pushed. For unattended GitHub Actions publishing, use an npm token that
+  can publish without browser or OTP interaction. The release workflow fails if
+  npm cannot be published.
 - The exact npm package name `atlas` is already registered on npm. The current
   fallback keeps the installed binary name as `atlas` by publishing the scoped
-  package `@dominic097/atlas`.
+  package `@aziron/atlas`.
 
 ## Validate Locally Before Tagging
 
@@ -94,7 +96,7 @@ gh workflow run npm-publish.yml \
 ```
 
 That workflow verifies the matching `aziron-ai/atlas` GitHub Release exists,
-publishes `@dominic097/atlas`, reads the version back from npm, installs the
+publishes `@aziron/atlas`, reads the version back from npm, installs the
 package from the public registry, and runs the installed `atlas` binary.
 
 ## Verifying Signatures

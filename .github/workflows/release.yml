@@ -84,7 +84,7 @@ jobs:
         run: |
           set -euo pipefail
           for i in {1..12}; do
-            published="$(npm view "@dominic097/atlas@$ATLAS_VERSION" version --registry=https://registry.npmjs.org/ 2>/dev/null || true)"
+            published="$(npm view "@aziron/atlas@$ATLAS_VERSION" version --registry=https://registry.npmjs.org/ 2>/dev/null || true)"
             if [ "$published" = "$ATLAS_VERSION" ]; then
               break
             fi
@@ -93,7 +93,7 @@ jobs:
           test "$published" = "$ATLAS_VERSION"
 
           tmp="$(mktemp -d)"
-          npm_config_prefix="$tmp/prefix" npm install -g "@dominic097/atlas@$ATLAS_VERSION"
+          npm_config_prefix="$tmp/prefix" npm install -g "@aziron/atlas@$ATLAS_VERSION"
           "$tmp/prefix/bin/atlas" version | tee "$tmp/version.txt"
           grep "atlas $ATLAS_VERSION" "$tmp/version.txt"
           "$tmp/prefix/bin/atlas" --db "sqlite://$tmp/atlas.db" --repo npm/release-smoke status
