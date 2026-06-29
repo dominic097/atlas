@@ -210,7 +210,8 @@ h3 {
 .hero-visual,
 .executive-panel,
 .proof-layout,
-.download-panel {
+.download-panel,
+.install-guide {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -372,9 +373,93 @@ h3 {
 
 .executive-panel,
 .proof-layout,
-.download-panel {
+.download-panel,
+.install-guide {
   margin-top: 1rem;
   padding: 1rem;
+}
+
+.install-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.install-card,
+.usage-step,
+.install-data {
+  background: #f8fbfd;
+  border: 1px solid #dfe6ef;
+  border-radius: 8px;
+  min-width: 0;
+  padding: 1rem;
+}
+
+.install-card h3,
+.usage-step h3 {
+  margin-top: 0.25rem;
+}
+
+.install-card pre,
+.usage-step pre,
+.install-data pre {
+  background: #111827;
+  border-radius: 8px;
+  color: #eef5ff;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  margin: 0.75rem 0 0;
+  overflow-x: auto;
+  padding: 0.78rem;
+}
+
+.install-card code,
+.usage-step code,
+.install-data code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+.install-note,
+.usage-step p,
+.install-data p {
+  color: var(--muted);
+  margin: 0.6rem 0 0;
+}
+
+.usage-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 0.75rem;
+}
+
+.usage-step {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.step-number {
+  background: var(--teal);
+  border-radius: 999px;
+  color: white;
+  display: inline-grid;
+  font-weight: 780;
+  height: 1.85rem;
+  place-items: center;
+  width: 1.85rem;
+}
+
+.install-data {
+  align-items: center;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  margin-top: 0.75rem;
+}
+
+.install-data pre {
+  margin: 0;
 }
 
 .decision-metrics {
@@ -858,6 +943,9 @@ td:first-child {
   .intro,
   .proof-layout,
   .download-panel,
+  .install-grid,
+  .usage-grid,
+  .install-data,
   .comparison-bars,
   .dashboard-grid {
     grid-template-columns: 1fr;
@@ -906,6 +994,7 @@ td:first-child {
   .executive-panel,
   .proof-layout,
   .download-panel,
+  .install-guide,
   .hero-visual {
     padding: 0.85rem;
   }

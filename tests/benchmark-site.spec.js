@@ -23,6 +23,11 @@ test.describe("Atlas benchmark site", () => {
       expect(response.status()).toBe(200);
       await expect(page.getByRole("heading", { name: /smaller, faster review context/i })).toBeVisible();
       await expect(page.getByTestId("product-hero-visual")).toContainText("Token consumption");
+      await expect(page.getByTestId("install-guide")).toContainText("brew install --cask dominic097/atlas/atlas");
+      await expect(page.getByTestId("install-guide")).toContainText("npm install -g @dominic097/atlas");
+      await expect(page.getByTestId("install-guide")).toContainText("atlas index . --reindex");
+      await expect(page.getByTestId("install-guide")).toContainText("atlas context --paths path/to/changed-file.go");
+      await expect(page.getByTestId("install-guide")).toContainText("atlas mcp --transport http --http 127.0.0.1:8765");
       await expect(page.getByTestId("executive-performance")).toBeVisible();
       await expect(page.getByTestId("token-latency-charts")).toContainText("Core language ratios");
       await expect(page.getByTestId("accuracy-positioning")).toBeVisible();

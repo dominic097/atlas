@@ -19,6 +19,7 @@
         </div>
         <div class="nav-links">
           <a href="#product">Product</a>
+          <a href="#install">Install</a>
           <a href="#performance">Performance</a>
           <a href="#accuracy">Accuracy</a>
           <a href="#downloads">Data</a>
@@ -35,6 +36,7 @@
           <p class="lead">Atlas indexes code locally, stores the graph in SQLite, and retrieves bounded context for review agents. This page positions the product with benchmark JSON: token consumption, latency, and accuracy evidence against graphify and language-native baselines.</p>
           <div class="hero-actions">
             <a class="primary" href="data/benchmark-data.json" download>Download benchmark data</a>
+            <a class="secondary" href="#install">Install and use</a>
             <a class="secondary" href="#performance">View executive proof</a>
             <a class="secondary" href="https://github.com/dominic097/atlas/releases/latest">Download atlas</a>
           </div>
@@ -52,6 +54,80 @@
             <span>Bounded context</span>
             <span>Review agent</span>
           </div>
+        </div>
+      </section>
+
+      <section id="install" class="install-guide" data-testid="install-guide" aria-labelledby="install-title">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Install and use</p>
+            <h2 id="install-title">Run atlas as a local binary with embedded SQLite</h2>
+            <p>Every install surface exposes the same <span class="mono">atlas</span> command. The default database is <span class="mono">sqlite://./.atlas/atlas.db</span>, so indexing and review-context retrieval do not require a hosted service.</p>
+          </div>
+          <div class="source-links">
+            <a href="https://github.com/dominic097/atlas/releases/latest">Latest release</a>
+            <a href="https://github.com/dominic097/homebrew-atlas">Homebrew tap</a>
+            <a href="https://www.npmjs.com/package/@dominic097/atlas">npm package</a>
+          </div>
+        </div>
+        <div class="install-grid">
+          <article class="install-card">
+            <span class="label">Homebrew</span>
+            <h3>macOS cask</h3>
+            <pre><code>brew install --cask dominic097/atlas/atlas
+atlas version</code></pre>
+          </article>
+          <article class="install-card">
+            <span class="label">npm</span>
+            <h3>Node wrapper, atlas bin</h3>
+            <pre><code>npm install -g @dominic097/atlas
+atlas version</code></pre>
+          </article>
+          <article class="install-card">
+            <span class="label">Linux packages</span>
+            <h3>amd64 and arm64 release assets</h3>
+            <pre><code>curl -LO https://github.com/dominic097/atlas/releases/download/v0.1.21/atlas_0.1.21_linux_amd64.tar.gz
+tar -xzf atlas_0.1.21_linux_amd64.tar.gz
+sudo install -m 0755 atlas /usr/local/bin/atlas
+atlas version</code></pre>
+            <p class="install-note">Release assets also include Linux <span class="mono">.deb</span>, <span class="mono">.rpm</span>, and <span class="mono">.apk</span> packages for amd64 and arm64.</p>
+          </article>
+        </div>
+        <div class="usage-grid">
+          <article class="usage-step">
+            <span class="step-number">1</span>
+            <div>
+              <h3>Index a repository</h3>
+              <pre><code>atlas index . --reindex</code></pre>
+              <p>Builds the local symbol, call, route, and lexical graph into SQLite.</p>
+            </div>
+          </article>
+          <article class="usage-step">
+            <span class="step-number">2</span>
+            <div>
+              <h3>Retrieve bounded review context</h3>
+              <pre><code>atlas context --paths path/to/changed-file.go --query "review risk" --format json</code></pre>
+              <p>Returns token-budgeted context around changed paths for review agents.</p>
+            </div>
+          </article>
+          <article class="usage-step">
+            <span class="step-number">3</span>
+            <div>
+              <h3>Expose MCP tools locally</h3>
+              <pre><code>atlas mcp --transport http --http 127.0.0.1:8765
+atlas install skill --agent codex
+atlas install skill --agent claude</code></pre>
+              <p>Lets local assistant tools query Atlas for search, impact, and context without sending the repository graph to a server.</p>
+            </div>
+          </article>
+        </div>
+        <div class="install-data">
+          <div>
+            <span class="label">Benchmark data</span>
+            <p>Download the same JSON used by this page for internal review, dashboards, and procurement evidence.</p>
+          </div>
+          <pre><code>curl -LO https://dominic097.github.io/atlas/data/benchmark-data.json
+curl -LO https://dominic097.github.io/atlas/data/raw/MATRIX_REPORT.json</code></pre>
         </div>
       </section>
 
