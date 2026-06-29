@@ -21,12 +21,12 @@
     "target_path": "/tmp/atlas-live-blade-bookstack/repo/resources/views"
   },
   "atlas": {
-    "cold_wall_seconds": 0.277,
-    "reindex_wall_seconds": 0.019,
+    "cold_wall_seconds": 0.221,
+    "reindex_wall_seconds": 0.025,
     "index": {
-      "repo_id": "8c026faa-02f7-4a70-846f-8caeca0695ce",
+      "repo_id": "f5ec5b01-7eae-4b69-9758-f9b2fa5ab12d",
       "repo_full_name": "views",
-      "snapshot_id": "b4d54134-8e31-49c9-9f5c-24f0e8113266",
+      "snapshot_id": "f6b3aa13-dcbc-40e1-be23-6f681c6e98ab",
       "commit_sha": "f7df78b91b12ff1d8e248ded7747e76203904b8e",
       "indexed_files": 304,
       "symbols": 1093,
@@ -41,24 +41,29 @@
         "markdown": 1
       },
       "mode": "full",
-      "duration_ms": 234,
+      "duration_ms": 186,
       "timings_ms": {
+        "build_symbols_edges": 0,
         "delta_check": 0,
-        "ensure_repo": 1,
+        "discover_files": 1,
+        "doc_links": 0,
+        "ensure_repo": 13,
+        "gitignore_scan": 19,
         "go_types": 0,
-        "lexical": 146,
-        "parse": 17,
-        "persist": 53,
+        "lexical": 136,
+        "parse": 15,
+        "persist": 136,
         "resolve_head": 0,
         "routes": 0,
         "sort": 0,
-        "walk": 14
+        "walk": 1,
+        "write_sqlite": 136
       }
     },
     "reindex": {
-      "repo_id": "8c026faa-02f7-4a70-846f-8caeca0695ce",
+      "repo_id": "f5ec5b01-7eae-4b69-9758-f9b2fa5ab12d",
       "repo_full_name": "views",
-      "snapshot_id": "b4d54134-8e31-49c9-9f5c-24f0e8113266",
+      "snapshot_id": "f6b3aa13-dcbc-40e1-be23-6f681c6e98ab",
       "commit_sha": "f7df78b91b12ff1d8e248ded7747e76203904b8e",
       "indexed_files": 304,
       "symbols": 1093,
@@ -69,9 +74,9 @@
         "markdown": 1
       },
       "mode": "noop",
-      "duration_ms": 0,
+      "duration_ms": 10,
       "timings_ms": {
-        "delta_check": 0,
+        "delta_check": 10,
         "resolve_head": 0
       }
     },
@@ -127,7 +132,7 @@
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 0.819,
+    "seconds": 0.762,
     "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
@@ -151,7 +156,7 @@
     "tool": "blade-directive-counter",
     "status": "ok",
     "ok": true,
-    "seconds": 0.008,
+    "seconds": 0.007,
     "command": "python3 <blade directive counter> /tmp/atlas-live-blade-bookstack/repo/resources/views",
     "metrics": {
       "files": 303,
@@ -344,12 +349,13 @@
     "native_definitions": 1090
   },
   "optimization": {
-    "cycles_run": 3,
-    "stop_reason": "Blade live smoke matched the directive-counter coverage proxy and improved token score after compacting verbose `.blade.php` suffixes in terse plain locations while preserving full paths in JSON.",
+    "cycles_run": 4,
+    "stop_reason": "Blade native source parser matched the directive-counter coverage proxy after routing `.blade.php` files off `parseRegexFallback`, while preserving the compact terse locations that keep the token ratio above 5x.",
     "cycle_notes": [
       "cycle 1: BookStack probe showed the generic Blade rules matched graphify's @include target labels but missed file template identity plus @extends/@section/@yield and component directives useful for code-review context.",
       "cycle 2: after adding a Blade-specific parser, Atlas matched the benchmark-owned directive coverage proxy and exact @include query rows exceeded 5x for latency and token output vs graphify.",
-      "cycle 3: compacting Blade terse locations from `file.blade.php:line` to `file:line` improved the live BookStack summed token ratio from 5.04x to 6.10x without changing indexed symbols or JSON paths."
+      "cycle 3: compacting Blade terse locations from `file.blade.php:line` to `file:line` improved the live BookStack summed token ratio from 5.04x to 6.10x without changing indexed symbols or JSON paths.",
+      "cycle 4: replacing the prior regex fallback route with a native source scanner preserved exact BookStack coverage at 1090/1090 definitions and kept all six graphify comparison queries equivalent."
     ]
   },
   "query_warmup": {
@@ -368,8 +374,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain settings.parts.navbar",
       "atlas_tokens": 9,
       "graphify_tokens": 60,
-      "atlas_ms": 14.024,
-      "graphify_ms": 103.236,
+      "atlas_ms": 13.734,
+      "graphify_ms": 78.318,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -395,8 +401,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain home.parts.sidebar",
       "atlas_tokens": 8,
       "graphify_tokens": 57,
-      "atlas_ms": 13.748,
-      "graphify_ms": 90.541,
+      "atlas_ms": 12.869,
+      "graphify_ms": 78.561,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -422,8 +428,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain entities.view-toggle",
       "atlas_tokens": 15,
       "graphify_tokens": 80,
-      "atlas_ms": 15.681,
-      "graphify_ms": 107.455,
+      "atlas_ms": 12.664,
+      "graphify_ms": 78.139,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -449,8 +455,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain common.dark-mode-toggle",
       "atlas_tokens": 12,
       "graphify_tokens": 59,
-      "atlas_ms": 13.738,
-      "graphify_ms": 90.157,
+      "atlas_ms": 12.625,
+      "graphify_ms": 78.586,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -476,8 +482,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain form.user-select",
       "atlas_tokens": 11,
       "graphify_tokens": 66,
-      "atlas_ms": 14.23,
-      "graphify_ms": 87.108,
+      "atlas_ms": 12.934,
+      "graphify_ms": 78.161,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -503,8 +509,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain books.parts.list",
       "atlas_tokens": 7,
       "graphify_tokens": 56,
-      "atlas_ms": 12.18,
-      "graphify_ms": 84.813,
+      "atlas_ms": 12.702,
+      "graphify_ms": 79.007,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,

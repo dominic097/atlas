@@ -5509,12 +5509,13 @@ def run_smoke(language: str, atlas_bin: str, graphify_bin: str | None) -> dict[s
         }
     elif language == "blade":
         optimization = {
-            "cycles_run": 3,
-            "stop_reason": "Blade live smoke matched the directive-counter coverage proxy and improved token score after compacting verbose `.blade.php` suffixes in terse plain locations while preserving full paths in JSON.",
+            "cycles_run": 4,
+            "stop_reason": "Blade native source parser matched the directive-counter coverage proxy after routing `.blade.php` files off `parseRegexFallback`, while preserving the compact terse locations that keep the token ratio above 5x.",
             "cycle_notes": [
                 "cycle 1: BookStack probe showed the generic Blade rules matched graphify's @include target labels but missed file template identity plus @extends/@section/@yield and component directives useful for code-review context.",
                 "cycle 2: after adding a Blade-specific parser, Atlas matched the benchmark-owned directive coverage proxy and exact @include query rows exceeded 5x for latency and token output vs graphify.",
                 "cycle 3: compacting Blade terse locations from `file.blade.php:line` to `file:line` improved the live BookStack summed token ratio from 5.04x to 6.10x without changing indexed symbols or JSON paths.",
+                "cycle 4: replacing the prior regex fallback route with a native source scanner preserved exact BookStack coverage at 1090/1090 definitions and kept all six graphify comparison queries equivalent.",
             ],
         }
     elif language == "razor":

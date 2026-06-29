@@ -89,7 +89,7 @@ GRAPHIFY_LANGUAGE_FAMILIES = [
     ("kotlin", [".kt", ".kts"], "native tree-sitter tags"),
     ("scala", [".scala"], "native tree-sitter tags"),
     ("php", [".php"], "native tree-sitter tags"),
-    ("blade", ["*.blade.php"], "lightweight regex"),
+    ("blade", ["*.blade.php"], "native Blade source parser"),
     ("swift", [".swift"], "native tree-sitter tags"),
     ("lua", [".lua", ".luau", ".toc"], "native tree-sitter tags"),
     ("zig", [".zig"], "native tree-sitter tags"),

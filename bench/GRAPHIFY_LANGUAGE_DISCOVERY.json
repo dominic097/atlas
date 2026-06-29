@@ -103,7 +103,7 @@
       "blade",
       "*.blade.php",
       "extract_blade",
-      "lightweight regex"
+      "native Blade source parser"
     ],
     [
       "swift",
