@@ -1331,7 +1331,9 @@ func cppTypeSymbols(node *tree_sitter.Node, src []byte) []symbolDraft {
 		case "function_definition":
 			// Inline-defined member (`int bar() { ... }`).
 			name := cppFunctionName(member, src)
-			if name == "" {
+			if name == "" || isMacroAnnotationName(name) {
+				// Skip Clang annotation / test macros mis-parsed as members
+				// (e.g. a method whose body trails LOCKS_EXCLUDED(mu_)).
 				continue
 			}
 			out = append(out, symbolDraft{
@@ -1389,6 +1391,14 @@ func cppMemberDeclSymbol(member *tree_sitter.Node, src []byte, typeName string) 
 	if name == "" {
 		return symbolDraft{}, false
 	}
+	// Clang thread-safety annotations trail a data-field declaration
+	// (e.g. `int x_ GUARDED_BY(mu_);`, `EXCLUSIVE_LOCKS_REQUIRED(mu_)`,
+	// `LOCKS_EXCLUDED(mu_)`) and tree-sitter-cpp mis-parses the ALL-CAPS macro as a
+	// function declarator on the field. They are never real members — skip them so
+	// they don't inflate method definitions (precision).
+	if isMacroAnnotationName(name) {
+		return symbolDraft{}, false
+	}
 	return symbolDraft{
 		name:      name,
 		kind:      cppMemberKind(name, typeName),
@@ -1396,6 +1406,18 @@ func cppMemberDeclSymbol(member *tree_sitter.Node, src []byte, typeName string) 
 		endLine:   int(member.EndPosition().Row) + 1,
 		recvType:  typeName,
 	}, true
+}
+
+// isMacroAnnotationName reports whether name is an ALL-CAPS underscored macro
+// identifier (e.g. a Clang annotation like GUARDED_BY). C/C++ never name a real
+// member that way, so a "method" parsed with such a name is a mis-parsed macro.
+func isMacroAnnotationName(name string) bool {
+	if !strings.Contains(name, "_") {
+		return false
+	}
+	// All-caps (equals its own uppercase) and contains at least one letter
+	// (differs from its own lowercase).
+	return name == strings.ToUpper(name) && name != strings.ToLower(name)
 }
 
 // cppFunctionName pulls the declared name out of a C++ function_definition's
@@ -1452,6 +1474,13 @@ func cFunctionSymbol(node *tree_sitter.Node, src []byte) (symbolDraft, bool) {
 	}
 	name, qualified, recvType := cppFunctionIdentity(node, src)
 	if name == "" {
+		return symbolDraft{}, false
+	}
+	// ALL-CAPS underscored "functions" are macro invocations mis-parsed as
+	// function definitions — Clang annotations (EXCLUSIVE_LOCKS_REQUIRED,
+	// LOCKS_EXCLUDED) and test-framework macros (TEST_F, TEST_P). clangd, the
+	// semantic truth, never emits them as symbols, so neither should Atlas.
+	if isMacroAnnotationName(name) {
 		return symbolDraft{}, false
 	}
 	kind := "function"
