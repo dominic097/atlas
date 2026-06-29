@@ -5673,11 +5673,12 @@ def run_smoke(language: str, atlas_bin: str, graphify_bin: str | None) -> dict[s
         }
     elif language == "julia":
         optimization = {
-            "cycles_run": 2,
-            "stop_reason": "Julia live smoke met the current 5x latency/token thresholds and matched the tree-sitter-julia definition coverage proxy after masking docstrings/strings and supporting macro-prefixed structs.",
+            "cycles_run": 3,
+            "stop_reason": "Julia native tree-sitter AST parsing met the current 5x latency/token thresholds and matched the tree-sitter-julia definition coverage proxy.",
             "cycle_notes": [
                 "cycle 1: JuliaIO/JSON.jl probe showed generic Julia regex parsing missed macros/constants and counted docstring examples as real definitions.",
                 "cycle 2: after adding a Julia-specific parser with non-code masking, method-assignment detection, and macro-prefixed struct support, Atlas matched the tree-sitter-julia source definition proxy.",
+                "cycle 3: replacing the regex parser with a tree-sitter-julia AST walker preserved exact module/type/function/macro/constant coverage and kept callable assignment handling precise.",
             ],
         }
     elif language == "json":

@@ -21,55 +21,60 @@
     "target_path": "/tmp/atlas-live-julia-json/repo/src"
   },
   "atlas": {
-    "cold_wall_seconds": 0.146,
-    "reindex_wall_seconds": 0.024,
+    "cold_wall_seconds": 0.126,
+    "reindex_wall_seconds": 0.025,
     "index": {
-      "repo_id": "db5fb19b-b77f-467f-80fd-4f7a88255e0c",
+      "repo_id": "1ba4efc7-49e6-4262-922b-d004e3b79834",
       "repo_full_name": "src",
-      "snapshot_id": "fcf5a61f-e3b2-4c9e-aecd-d19fdc3c02ae",
+      "snapshot_id": "9a35cace-0d85-40db-bb31-38c1a1293762",
       "commit_sha": "e5ef310dece16746843753e4c3b44e868b917b64",
       "indexed_files": 6,
       "symbols": 310,
-      "edges": 1047,
+      "edges": 1049,
       "edge_kinds": {
         "calls": 1039,
-        "imports": 8
+        "imports": 10
       },
       "routes": 0,
       "languages": {
         "julia": 6
       },
       "mode": "full",
-      "duration_ms": 102,
+      "duration_ms": 89,
       "timings_ms": {
+        "build_symbols_edges": 0,
         "delta_check": 0,
-        "ensure_repo": 2,
+        "discover_files": 0,
+        "doc_links": 0,
+        "ensure_repo": 0,
+        "gitignore_scan": 15,
         "go_types": 0,
-        "lexical": 47,
-        "parse": 35,
-        "persist": 16,
+        "lexical": 53,
+        "parse": 18,
+        "persist": 53,
         "resolve_head": 0,
         "routes": 0,
         "sort": 0,
-        "walk": 0
+        "walk": 0,
+        "write_sqlite": 53
       }
     },
     "reindex": {
-      "repo_id": "db5fb19b-b77f-467f-80fd-4f7a88255e0c",
+      "repo_id": "1ba4efc7-49e6-4262-922b-d004e3b79834",
       "repo_full_name": "src",
-      "snapshot_id": "fcf5a61f-e3b2-4c9e-aecd-d19fdc3c02ae",
+      "snapshot_id": "9a35cace-0d85-40db-bb31-38c1a1293762",
       "commit_sha": "e5ef310dece16746843753e4c3b44e868b917b64",
       "indexed_files": 6,
       "symbols": 310,
-      "edges": 1047,
+      "edges": 1049,
       "routes": 0,
       "languages": {
         "julia": 6
       },
       "mode": "noop",
-      "duration_ms": 0,
+      "duration_ms": 4,
       "timings_ms": {
-        "delta_check": 0,
+        "delta_check": 4,
         "resolve_head": 0
       }
     },
@@ -107,7 +112,7 @@
       },
       {
         "kind": "imports",
-        "count": 8
+        "count": 10
       }
     ],
     "julia_definition_symbols": 310
@@ -115,7 +120,7 @@
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 0.19,
+    "seconds": 0.159,
     "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
@@ -135,7 +140,7 @@
     "tool": "tree-sitter-julia",
     "status": "partial",
     "ok": false,
-    "seconds": 0.098,
+    "seconds": 0.055,
     "command": "/tmp/atlas-live-julia-json/tree-sitter-julia-venv/bin/python -c <tree-sitter-julia definition counter> /tmp/atlas-live-julia-json/repo/src",
     "metrics": {
       "files": 6,
@@ -177,11 +182,12 @@
     "native_definitions": 310
   },
   "optimization": {
-    "cycles_run": 2,
-    "stop_reason": "Julia live smoke met the current 5x latency/token thresholds and matched the tree-sitter-julia definition coverage proxy after masking docstrings/strings and supporting macro-prefixed structs.",
+    "cycles_run": 3,
+    "stop_reason": "Julia native tree-sitter AST parsing met the current 5x latency/token thresholds and matched the tree-sitter-julia definition coverage proxy.",
     "cycle_notes": [
       "cycle 1: JuliaIO/JSON.jl probe showed generic Julia regex parsing missed macros/constants and counted docstring examples as real definitions.",
-      "cycle 2: after adding a Julia-specific parser with non-code masking, method-assignment detection, and macro-prefixed struct support, Atlas matched the tree-sitter-julia source definition proxy."
+      "cycle 2: after adding a Julia-specific parser with non-code masking, method-assignment detection, and macro-prefixed struct support, Atlas matched the tree-sitter-julia source definition proxy.",
+      "cycle 3: replacing the regex parser with a tree-sitter-julia AST walker preserved exact module/type/function/macro/constant coverage and kept callable assignment handling precise."
     ]
   },
   "query_warmup": {
@@ -200,8 +206,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain JSON",
       "atlas_tokens": 3,
       "graphify_tokens": 38,
-      "atlas_ms": 11.642,
-      "graphify_ms": 74.514,
+      "atlas_ms": 12.029,
+      "graphify_ms": 70.308,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -227,8 +233,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain JSONText",
       "atlas_tokens": 6,
       "graphify_tokens": 51,
-      "atlas_ms": 12.032,
-      "graphify_ms": 73.121,
+      "atlas_ms": 12.125,
+      "graphify_ms": 70.489,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -254,8 +260,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Object",
       "atlas_tokens": 7,
       "graphify_tokens": 75,
-      "atlas_ms": 11.988,
-      "graphify_ms": 72.949,
+      "atlas_ms": 12.42,
+      "graphify_ms": 71.455,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -281,8 +287,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain parse",
       "atlas_tokens": 7,
       "graphify_tokens": 167,
-      "atlas_ms": 11.946,
-      "graphify_ms": 73.814,
+      "atlas_ms": 12.396,
+      "graphify_ms": 70.05,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -308,8 +314,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain json",
       "atlas_tokens": 6,
       "graphify_tokens": 38,
-      "atlas_ms": 12.487,
-      "graphify_ms": 72.815,
+      "atlas_ms": 12.339,
+      "graphify_ms": 70.521,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -335,8 +341,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain LazyValue",
       "atlas_tokens": 6,
       "graphify_tokens": 9,
-      "atlas_ms": 11.453,
-      "graphify_ms": 72.092,
+      "atlas_ms": 12.144,
+      "graphify_ms": 69.943,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,

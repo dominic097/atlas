@@ -145,7 +145,7 @@
       "julia",
       ".jl",
       "extract_julia",
-      "lightweight regex"
+      "native tree-sitter AST"
     ],
     [
       "fortran",
