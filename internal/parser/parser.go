@@ -185,6 +185,8 @@ func LanguageForPath(path string) string {
 		return "xlsx"
 	case ".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tif", ".tiff", ".webp":
 		return "image"
+	case ".pdf":
+		return "pdf"
 	default:
 		return ""
 	}
@@ -221,7 +223,7 @@ func Supported(lang string) bool {
 		"markdown", "mdx", "yaml", "json", "proto", "toml", "xml", "plist",
 		"gomod", "gosum", "config", "makefile", "batch", "powershell",
 		"sql", "csv", "text", "dockerfile",
-		"pptx", "docx", "xlsx", "image":
+		"pptx", "docx", "xlsx", "image", "pdf":
 		return true
 	default:
 		return false
@@ -271,6 +273,9 @@ func Parse(repoID, repoFullName, filePath, language string, content []byte) (Res
 	case "image":
 		// Images: catalog + optional OCR text, also returning their own Result.
 		return parseImage(repoID, repoFullName, filePath, content)
+	case "pdf":
+		// PDF: extract page text into document/page symbols.
+		return parsePDF(repoID, repoFullName, filePath, content)
 	case "go":
 		// Native go/parser is the highest-fidelity path. Parse once, then reuse
 		// the AST for both symbol and call-edge extraction.

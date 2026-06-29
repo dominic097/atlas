@@ -19,7 +19,7 @@ import (
 // text from (office OOXML packages plus images). They share the larger index size
 // ceiling because the file carries embedded media but only its text is read.
 var documentFormats = map[string]struct{}{
-	"pptx": {}, "docx": {}, "xlsx": {}, "image": {},
+	"pptx": {}, "docx": {}, "xlsx": {}, "image": {}, "pdf": {},
 }
 
 // IsDocumentFormat reports whether a language is one of the binary document

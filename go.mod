@@ -59,13 +59,18 @@ require (
 	github.com/golang/snappy v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/json-iterator/go v0.0.0-20171115153421-f7279a603ede // indirect
+	github.com/ledongthuc/pdf v0.0.0-20250511090121-5959a4027728 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-pointer v0.0.1 // indirect
 	github.com/mschoch/smat v0.2.0 // indirect
 	github.com/ncruces/go-strftime v1.0.0 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/spf13/pflag v1.0.9 // indirect
+	github.com/tree-sitter-grammars/tree-sitter-kotlin v1.1.0 // indirect
+	github.com/tree-sitter-grammars/tree-sitter-lua v0.5.0 // indirect
+	github.com/tree-sitter-grammars/tree-sitter-zig v1.1.2 // indirect
 	github.com/tree-sitter/tree-sitter-go v0.25.0 // indirect
+	github.com/tree-sitter/tree-sitter-scala v0.23.4 // indirect
 	go.etcd.io/bbolt v1.4.0 // indirect
 	golang.org/x/mod v0.37.0 // indirect
 	golang.org/x/sys v0.46.0 // indirect
