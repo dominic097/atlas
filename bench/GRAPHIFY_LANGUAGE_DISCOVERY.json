@@ -247,7 +247,7 @@
       "astro",
       ".astro",
       "extract_astro",
-      "lightweight regex"
+      "native Astro/tree-sitter AST"
     ]
   ],
   "runtime_error": "",

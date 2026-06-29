@@ -5707,11 +5707,12 @@ def run_smoke(language: str, atlas_bin: str, graphify_bin: str | None) -> dict[s
         }
     elif language == "astro":
         optimization = {
-            "cycles_run": 2,
-            "stop_reason": "Astro live smoke matched the @astrojs/compiler/frontmatter coverage proxy after adding an Astro-specific parser for component files, component tags, frontmatter functions, and variables.",
+            "cycles_run": 3,
+            "stop_reason": "Astro native frontmatter and component-tag parsing matched the @astrojs/compiler coverage proxy after replacing the regex fallback route.",
             "cycle_notes": [
                 "cycle 1: withastro/blog-tutorial-demo probe showed the generic regex missed Astro component/file symbols and component tags.",
                 "cycle 2: after adding an Astro-specific parser, Atlas matched @astrojs/compiler/source coverage and exact-symbol rows exceeded 5x where graphify exposed matching labels.",
+                "cycle 3: routing Astro off parseRegexFallback preserved exact coverage with tree-sitter JavaScript/TypeScript frontmatter declarations and deterministic component-tag scanning.",
             ],
         }
     return {

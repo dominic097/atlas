@@ -114,7 +114,7 @@ GRAPHIFY_LANGUAGE_FAMILIES = [
     ("apex", [".cls", ".trigger"], "lightweight regex"),
     ("vue", [".vue"], "native SFC/tree-sitter AST"),
     ("svelte", [".svelte"], "native SFC/tree-sitter AST"),
-    ("astro", [".astro"], "lightweight regex"),
+    ("astro", [".astro"], "native Astro/tree-sitter AST"),
 ]
 
 
