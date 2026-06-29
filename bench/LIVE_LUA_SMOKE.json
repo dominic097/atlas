@@ -19,18 +19,18 @@
     "target_path": "/tmp/atlas-live-lua-lazy/repo"
   },
   "atlas": {
-    "cold_wall_seconds": 0.774,
-    "reindex_wall_seconds": 0.024,
+    "cold_wall_seconds": 0.979,
+    "reindex_wall_seconds": 0.037,
     "index": {
-      "repo_id": "836622d8-f053-44d7-b518-ffe072e840d2",
+      "repo_id": "9d37e3c6-f57a-4d69-9316-9d6d7fc600ca",
       "repo_full_name": "repo",
-      "snapshot_id": "6ce58546-9b79-4691-b302-7c3344ea4e4d",
+      "snapshot_id": "a7bbbb6b-3079-459c-9d6e-e242f41464e7",
       "commit_sha": "306a05526ada86a7b30af95c5cc81ffba93fef97",
       "indexed_files": 90,
-      "symbols": 5221,
-      "edges": 3929,
+      "symbols": 1001,
+      "edges": 3543,
       "edge_kinds": {
-        "calls": 3733,
+        "calls": 3347,
         "imports": 196
       },
       "routes": 0,
@@ -44,28 +44,33 @@
         "yaml": 14
       },
       "mode": "full",
-      "duration_ms": 726,
+      "duration_ms": 207,
       "timings_ms": {
+        "build_symbols_edges": 0,
         "delta_check": 0,
+        "discover_files": 0,
+        "doc_links": 0,
         "ensure_repo": 0,
+        "gitignore_scan": 11,
         "go_types": 0,
-        "lexical": 472,
-        "parse": 142,
-        "persist": 108,
+        "lexical": 153,
+        "parse": 39,
+        "persist": 153,
         "resolve_head": 0,
         "routes": 0,
-        "sort": 1,
-        "walk": 0
+        "sort": 0,
+        "walk": 0,
+        "write_sqlite": 153
       }
     },
     "reindex": {
-      "repo_id": "836622d8-f053-44d7-b518-ffe072e840d2",
+      "repo_id": "9d37e3c6-f57a-4d69-9316-9d6d7fc600ca",
       "repo_full_name": "repo",
-      "snapshot_id": "6ce58546-9b79-4691-b302-7c3344ea4e4d",
+      "snapshot_id": "a7bbbb6b-3079-459c-9d6e-e242f41464e7",
       "commit_sha": "306a05526ada86a7b30af95c5cc81ffba93fef97",
       "indexed_files": 90,
-      "symbols": 5221,
-      "edges": 3929,
+      "symbols": 1001,
+      "edges": 3543,
       "routes": 0,
       "languages": {
         "config": 1,
@@ -77,9 +82,9 @@
         "yaml": 14
       },
       "mode": "noop",
-      "duration_ms": 0,
+      "duration_ms": 13,
       "timings_ms": {
-        "delta_check": 0,
+        "delta_check": 13,
         "resolve_head": 0
       }
     },
@@ -96,18 +101,8 @@
       },
       {
         "language": "lua",
-        "kind": "document",
-        "count": 1
-      },
-      {
-        "language": "lua",
         "kind": "function",
-        "count": 551
-      },
-      {
-        "language": "lua",
-        "kind": "variable",
-        "count": 4112
+        "count": 444
       },
       {
         "language": "markdown",
@@ -133,19 +128,19 @@
     "edge_breakdown": [
       {
         "kind": "calls",
-        "count": 3733
+        "count": 3347
       },
       {
         "kind": "imports",
         "count": 196
       }
     ],
-    "lua_definition_symbols": 551
+    "lua_definition_symbols": 444
   },
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 0.48,
+    "seconds": 0.635,
     "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
@@ -204,8 +199,8 @@
     }
   },
   "coverage": {
-    "atlas_vs_luaparser_definition_ratio": 1.24,
-    "atlas_lua_definition_symbols": 551,
+    "atlas_vs_luaparser_definition_ratio": 1.0,
+    "atlas_lua_definition_symbols": 444,
     "native_definitions": 444
   },
   "optimization": {
@@ -231,8 +226,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Loader.load",
       "atlas_tokens": 6,
       "graphify_tokens": 146,
-      "atlas_ms": 15.397,
-      "graphify_ms": 92.38,
+      "atlas_ms": 14.792,
+      "graphify_ms": 102.143,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -258,8 +253,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Async.new",
       "atlas_tokens": 5,
       "graphify_tokens": 58,
-      "atlas_ms": 14.284,
-      "graphify_ms": 91.845,
+      "atlas_ms": 14.81,
+      "graphify_ms": 101.411,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -285,8 +280,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain M.add",
       "atlas_tokens": 5,
       "graphify_tokens": 65,
-      "atlas_ms": 14.198,
-      "graphify_ms": 88.806,
+      "atlas_ms": 14.664,
+      "graphify_ms": 103.973,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -312,14 +307,14 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain M.reload",
       "atlas_tokens": 7,
       "graphify_tokens": 78,
-      "atlas_ms": 14.381,
-      "graphify_ms": 89.223,
+      "atlas_ms": 15.532,
+      "graphify_ms": 103.94,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "M.reload f@loader:250 df2 d3"
+        "M.reload f@loader:250 df2 d1"
       ],
       "graphify_stdout_head": [
         "Node: M.reload()",

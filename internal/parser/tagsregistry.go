@@ -3,11 +3,16 @@ package parser
 import (
 	"unsafe"
 
+	tree_sitter_swift "github.com/dominic097/atlas/internal/parser/tree_sitter_swift"
+	tree_sitter_kotlin "github.com/tree-sitter-grammars/tree-sitter-kotlin/bindings/go"
+	tree_sitter_lua "github.com/tree-sitter-grammars/tree-sitter-lua/bindings/go"
+	tree_sitter_zig "github.com/tree-sitter-grammars/tree-sitter-zig/bindings/go"
 	tree_sitter "github.com/tree-sitter/go-tree-sitter"
 	tree_sitter_csharp "github.com/tree-sitter/tree-sitter-c-sharp/bindings/go"
 	tree_sitter_php "github.com/tree-sitter/tree-sitter-php/bindings/go"
 	tree_sitter_ruby "github.com/tree-sitter/tree-sitter-ruby/bindings/go"
 	tree_sitter_rust "github.com/tree-sitter/tree-sitter-rust/bindings/go"
+	tree_sitter_scala "github.com/tree-sitter/tree-sitter-scala/bindings/go"
 )
 
 // tagsregistry.go is the language→grammar registry for the GENERIC tags-query
@@ -30,6 +35,16 @@ func tagsLanguagePointer(language string) unsafe.Pointer {
 		return tree_sitter_csharp.Language()
 	case "php":
 		return tree_sitter_php.LanguagePHP()
+	case "kotlin":
+		return tree_sitter_kotlin.Language()
+	case "scala":
+		return tree_sitter_scala.Language()
+	case "swift":
+		return tree_sitter_swift.Language()
+	case "lua":
+		return tree_sitter_lua.Language()
+	case "zig":
+		return tree_sitter_zig.Language()
 	default:
 		return nil
 	}

@@ -2,11 +2,11 @@ package parser
 
 import "testing"
 
-// tagsquery_test.go verifies that Rust, Ruby, C# and PHP are extracted via the
-// GENERIC native tree-sitter tags-query path (tagsquery.go), NOT the regex
-// fallback. Each test drives the full Parse() entrypoint (so it exercises
-// routing → grammar → compiled query → promotion to graph.CodeSymbol) and
-// asserts the real AST definitions are recovered with their Atlas kinds.
+// tagsquery_test.go verifies that languages registered in tagsregistry.go are
+// extracted via the GENERIC native tree-sitter tags-query path (tagsquery.go),
+// NOT the regex fallback. Each test drives the full Parse() entrypoint (so it
+// exercises routing → grammar → compiled query → promotion to graph.CodeSymbol)
+// and asserts the real AST definitions are recovered with their Atlas kinds.
 
 // symbolPairs runs the full native Parse path and returns the set of
 // (name,kind) pairs, asserting the language stamp / line / signature invariants
@@ -255,11 +255,11 @@ enum Suit
 	})
 }
 
-// TestTagsLanguagesRouteNative asserts the four languages are registered for the
-// native tags path (and the registry/embedded query resolve), guarding against a
-// regression that silently drops one back to the regex fallback.
+// TestTagsLanguagesRouteNative asserts each tags-query language is registered
+// for the native path (and the registry/embedded query resolve), guarding
+// against a regression that silently drops one back to the regex fallback.
 func TestTagsLanguagesRouteNative(t *testing.T) {
-	for _, lang := range []string{"rust", "ruby", "csharp", "php"} {
+	for _, lang := range []string{"rust", "ruby", "csharp", "php", "kotlin", "scala", "swift", "lua", "zig"} {
 		if !tagsParsedLanguage(lang) {
 			t.Errorf("%s: not routed to native tags path", lang)
 		}

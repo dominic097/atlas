@@ -20,18 +20,18 @@
     "target_path": "/tmp/atlas-live-scala-cats/repo/core/src/main/scala"
   },
   "atlas": {
-    "cold_wall_seconds": 1.096,
-    "reindex_wall_seconds": 0.034,
+    "cold_wall_seconds": 2.017,
+    "reindex_wall_seconds": 0.028,
     "index": {
-      "repo_id": "874d45b8-e411-449a-910e-f291718ac2fe",
+      "repo_id": "d6b25bb3-3889-4fb4-8ac5-15330477e54e",
       "repo_full_name": "scala",
-      "snapshot_id": "c1321ac0-fce0-477b-adfe-5c65ef7021bb",
+      "snapshot_id": "bfce5b91-c1ba-4d2b-a0ef-971c11706641",
       "commit_sha": "851965a582940d804f9a23179f58a53fc97f07dc",
       "indexed_files": 206,
-      "symbols": 7859,
-      "edges": 9436,
+      "symbols": 7840,
+      "edges": 9385,
       "edge_kinds": {
-        "calls": 9157,
+        "calls": 9106,
         "imports": 279
       },
       "routes": 0,
@@ -39,77 +39,77 @@
         "scala": 206
       },
       "mode": "full",
-      "duration_ms": 1055,
+      "duration_ms": 1177,
       "timings_ms": {
+        "build_symbols_edges": 3,
         "delta_check": 0,
+        "discover_files": 1,
+        "doc_links": 1,
         "ensure_repo": 0,
+        "gitignore_scan": 13,
         "go_types": 0,
-        "lexical": 741,
-        "parse": 82,
-        "persist": 224,
+        "lexical": 817,
+        "parse": 341,
+        "persist": 817,
         "resolve_head": 0,
-        "routes": 1,
-        "sort": 3,
-        "walk": 1
+        "routes": 0,
+        "sort": 1,
+        "walk": 1,
+        "write_sqlite": 817
       }
     },
     "reindex": {
-      "repo_id": "874d45b8-e411-449a-910e-f291718ac2fe",
+      "repo_id": "d6b25bb3-3889-4fb4-8ac5-15330477e54e",
       "repo_full_name": "scala",
-      "snapshot_id": "c1321ac0-fce0-477b-adfe-5c65ef7021bb",
+      "snapshot_id": "bfce5b91-c1ba-4d2b-a0ef-971c11706641",
       "commit_sha": "851965a582940d804f9a23179f58a53fc97f07dc",
       "indexed_files": 206,
-      "symbols": 7859,
-      "edges": 9436,
+      "symbols": 7840,
+      "edges": 9385,
       "routes": 0,
       "languages": {
         "scala": 206
       },
       "mode": "noop",
-      "duration_ms": 0,
+      "duration_ms": 8,
       "timings_ms": {
-        "delta_check": 0,
+        "delta_check": 8,
         "resolve_head": 0
       }
     },
     "symbol_breakdown": [
       {
         "language": "scala",
-        "kind": "document",
-        "count": 1
-      },
-      {
-        "language": "scala",
         "kind": "function",
-        "count": 5160
+        "count": 5155
       },
       {
         "language": "scala",
         "kind": "type",
-        "count": 1658
+        "count": 1664
       },
       {
         "language": "scala",
         "kind": "variable",
-        "count": 1040
+        "count": 1021
       }
     ],
     "edge_breakdown": [
       {
         "kind": "calls",
-        "count": 9157
+        "count": 9106
       },
       {
         "kind": "imports",
         "count": 279
       }
     ],
-    "scala_definition_symbols": 7858
+    "scala_definition_symbols": 7840
   },
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 2.582,
+    "seconds": 2.872,
     "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
@@ -132,7 +132,7 @@
     "tool": "tree-sitter-scala",
     "status": "partial",
     "ok": false,
-    "seconds": 0.429,
+    "seconds": 0.464,
     "command": "/tmp/atlas-live-scala-cats/tree-sitter-scala-venv/bin/python -c <tree-sitter-scala definition counter> /tmp/atlas-live-scala-cats/repo/core/src/main/scala",
     "metrics": {
       "files": 206,
@@ -177,7 +177,7 @@
   },
   "coverage": {
     "atlas_vs_tree_sitter_scala_definition_ratio": 1.0,
-    "atlas_scala_definition_symbols": 7858,
+    "atlas_scala_definition_symbols": 7840,
     "native_definitions": 7840
   },
   "optimization": {
@@ -204,8 +204,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Functor",
       "atlas_tokens": 6,
       "graphify_tokens": 308,
-      "atlas_ms": 15.963,
-      "graphify_ms": 159.231,
+      "atlas_ms": 18.173,
+      "graphify_ms": 176.474,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -231,8 +231,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Applicative",
       "atlas_tokens": 9,
       "graphify_tokens": 272,
-      "atlas_ms": 16.96,
-      "graphify_ms": 160.201,
+      "atlas_ms": 18.612,
+      "graphify_ms": 179.561,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -245,7 +245,7 @@
         "  ID:        applicative",
         "  Source:",
         "  Type:      code",
-        "  Community: 70",
+        "  Community: 71",
         "  Degree:    40",
         "",
         "Connections (40):"
@@ -258,14 +258,14 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Monad",
       "atlas_tokens": 6,
       "graphify_tokens": 291,
-      "atlas_ms": 19.039,
-      "graphify_ms": 160.094,
+      "atlas_ms": 19.279,
+      "graphify_ms": 181.431,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Monad t@Monad:33 df2 c1 d2"
+        "Monad t@Monad:33 df2 c1"
       ],
       "graphify_stdout_head": [
         "Node: Monad",
@@ -285,8 +285,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Traverse",
       "atlas_tokens": 7,
       "graphify_tokens": 91,
-      "atlas_ms": 17.335,
-      "graphify_ms": 158.165,
+      "atlas_ms": 18.045,
+      "graphify_ms": 176.085,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -299,7 +299,7 @@
         "  ID:        cats_composed_traverse",
         "  Source:    cats/Composed.scala L134",
         "  Type:      code",
-        "  Community: 69",
+        "  Community: 70",
         "  Degree:    6",
         "",
         "Connections (6):"
@@ -312,8 +312,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Eval",
       "atlas_tokens": 4,
       "graphify_tokens": 256,
-      "atlas_ms": 17.964,
-      "graphify_ms": 161.45,
+      "atlas_ms": 20.505,
+      "graphify_ms": 174.025,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -326,7 +326,7 @@
         "  ID:        cats_eval_eval",
         "  Source:    cats/Eval.scala L58",
         "  Type:      code",
-        "  Community: 28",
+        "  Community: 29",
         "  Degree:    153",
         "",
         "Connections (153):"

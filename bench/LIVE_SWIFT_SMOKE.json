@@ -19,24 +19,25 @@
     "target_path": "/tmp/atlas-live-swift-argument-parser/repo"
   },
   "atlas": {
-    "cold_wall_seconds": 0.702,
-    "reindex_wall_seconds": 0.024,
+    "cold_wall_seconds": 1.247,
+    "reindex_wall_seconds": 0.034,
     "index": {
-      "repo_id": "b08c46c5-ea2c-4963-a8da-389bb1ab65a4",
+      "repo_id": "5b6e8c30-ec34-4742-b64d-0ca7d6ae1c4e",
       "repo_full_name": "repo",
-      "snapshot_id": "f7176e28-ae8c-496f-997b-81bbe70c4411",
+      "snapshot_id": "470d2840-60ba-44f3-b9b2-02a3195a0705",
       "commit_sha": "8122bc5941426c9494c78ff5ad01951e81c02f53",
-      "indexed_files": 237,
-      "symbols": 5058,
-      "edges": 7588,
+      "indexed_files": 238,
+      "symbols": 5926,
+      "edges": 7430,
       "edge_kinds": {
-        "calls": 7382,
+        "calls": 7224,
         "imports": 206
       },
       "routes": 0,
       "languages": {
         "bash": 5,
         "config": 1,
+        "image": 1,
         "json": 11,
         "markdown": 38,
         "swift": 165,
@@ -44,32 +45,38 @@
         "yaml": 4
       },
       "mode": "full",
-      "duration_ms": 669,
+      "duration_ms": 1212,
       "timings_ms": {
+        "build_symbols_edges": 2,
         "delta_check": 0,
-        "ensure_repo": 1,
+        "discover_files": 1,
+        "doc_links": 0,
+        "ensure_repo": 0,
+        "gitignore_scan": 13,
         "go_types": 0,
-        "lexical": 433,
-        "parse": 65,
-        "persist": 155,
+        "lexical": 600,
+        "parse": 593,
+        "persist": 600,
         "resolve_head": 0,
         "routes": 0,
-        "sort": 2,
-        "walk": 10
+        "sort": 1,
+        "walk": 1,
+        "write_sqlite": 600
       }
     },
     "reindex": {
-      "repo_id": "b08c46c5-ea2c-4963-a8da-389bb1ab65a4",
+      "repo_id": "5b6e8c30-ec34-4742-b64d-0ca7d6ae1c4e",
       "repo_full_name": "repo",
-      "snapshot_id": "f7176e28-ae8c-496f-997b-81bbe70c4411",
+      "snapshot_id": "470d2840-60ba-44f3-b9b2-02a3195a0705",
       "commit_sha": "8122bc5941426c9494c78ff5ad01951e81c02f53",
-      "indexed_files": 237,
-      "symbols": 5058,
-      "edges": 7588,
+      "indexed_files": 238,
+      "symbols": 5926,
+      "edges": 7430,
       "routes": 0,
       "languages": {
         "bash": 5,
         "config": 1,
+        "image": 1,
         "json": 11,
         "markdown": 38,
         "swift": 165,
@@ -77,9 +84,9 @@
         "yaml": 4
       },
       "mode": "noop",
-      "duration_ms": 0,
+      "duration_ms": 11,
       "timings_ms": {
-        "delta_check": 0,
+        "delta_check": 11,
         "resolve_head": 0
       }
     },
@@ -92,6 +99,11 @@
       {
         "language": "config",
         "kind": "document",
+        "count": 1
+      },
+      {
+        "language": "image",
+        "kind": "image",
         "count": 1
       },
       {
@@ -116,23 +128,23 @@
       },
       {
         "language": "swift",
-        "kind": "document",
-        "count": 1
+        "kind": "constant",
+        "count": 320
       },
       {
         "language": "swift",
         "kind": "function",
-        "count": 1109
+        "count": 1231
       },
       {
         "language": "swift",
         "kind": "type",
-        "count": 1135
+        "count": 1202
       },
       {
         "language": "swift",
         "kind": "variable",
-        "count": 2067
+        "count": 2426
       },
       {
         "language": "text",
@@ -148,26 +160,26 @@
     "edge_breakdown": [
       {
         "kind": "calls",
-        "count": 7382
+        "count": 7224
       },
       {
         "kind": "imports",
         "count": 206
       }
     ],
-    "swift_definition_symbols": 248
+    "swift_definition_symbols": 257
   },
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 1.544,
+    "seconds": 1.701,
     "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
       "  AST extraction: 100/219 uncached files (45%) [14 workers]",
       "  AST extraction: 200/219 uncached files (91%) [14 workers]",
       "  AST extraction: 219/219 files (100%) [14 workers]",
-      "[graphify watch] Rebuilt: 2838 nodes, 6444 edges, 208 communities",
+      "[graphify watch] Rebuilt: 2838 nodes, 6444 edges, 207 communities",
       "[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out",
       "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
       "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
@@ -183,7 +195,7 @@
     "tool": "sourcekit-lsp",
     "status": "ok",
     "ok": true,
-    "seconds": 3.457,
+    "seconds": 0.992,
     "command": "/usr/bin/sourcekit-lsp --scratch-path /tmp/atlas-live-swift-argument-parser/sourcekit-scratch --default-workspace-type swiftPM",
     "metrics": {
       "sample_files": 16,
@@ -227,8 +239,8 @@
     }
   },
   "coverage": {
-    "atlas_vs_sourcekit_lsp_definition_ratio": 1.19,
-    "atlas_swift_definition_symbols": 248,
+    "atlas_vs_sourcekit_lsp_definition_ratio": 1.23,
+    "atlas_swift_definition_symbols": 257,
     "native_definitions": 209,
     "coverage_scope": "16 sampled files from sourcekit-lsp"
   },
@@ -253,16 +265,16 @@
       "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-swift-argument-parser/atlas.db --format plain --repo repo explain ArgumentParser",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ArgumentParser",
-      "atlas_tokens": 9,
+      "atlas_tokens": 3,
       "graphify_tokens": 332,
-      "atlas_ms": 14.858,
-      "graphify_ms": 132.957,
+      "atlas_ms": 17.0,
+      "graphify_ms": 147.749,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "ArgumentParser t@SplitArgumentTests:16"
+        "ArgumentParser"
       ],
       "graphify_stdout_head": [
         "Node: ArgumentParser",
@@ -282,21 +294,21 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain parse",
       "atlas_tokens": 10,
       "graphify_tokens": 139,
-      "atlas_ms": 18.518,
-      "graphify_ms": 142.741,
+      "atlas_ms": 18.646,
+      "graphify_ms": 143.501,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "parse f@ParsableArguments:89 df5 c55 d6"
+        "parse f@ParsableArguments:89 df5 c56 d12"
       ],
       "graphify_stdout_head": [
         "Node: .parse()",
         "  ID:        parsable_types_parsablearguments_parsablearguments_parse",
         "  Source:    Sources/ArgumentParser/Parsable Types/ParsableArguments.swift L89",
         "  Type:      code",
-        "  Community: 30",
+        "  Community: 31",
         "  Degree:    8",
         "",
         "Connections (8):"
@@ -309,21 +321,21 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain run",
       "atlas_tokens": 6,
       "graphify_tokens": 48,
-      "atlas_ms": 17.648,
-      "graphify_ms": 135.699,
+      "atlas_ms": 18.878,
+      "graphify_ms": 144.785,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "run f@Color:22 df25 c16 d7"
+        "run f@Color:23 df25 c16 d8"
       ],
       "graphify_stdout_head": [
         "Node: .run()",
         "  ID:        color_color_color_run",
         "  Source:    Examples/color/Color.swift L23",
         "  Type:      code",
-        "  Community: 120",
+        "  Community: 121",
         "  Degree:    1",
         "",
         "Connections (1):"
@@ -336,14 +348,14 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain help",
       "atlas_tokens": 7,
       "graphify_tokens": 44,
-      "atlas_ms": 17.109,
-      "graphify_ms": 131.126,
+      "atlas_ms": 18.602,
+      "graphify_ms": 147.211,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "help v@Flag:454 df19 c10 d12"
+        "help v@Flag:455 df21 c9 d11"
       ],
       "graphify_stdout_head": [
         "Node: Help",

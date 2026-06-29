@@ -2,6 +2,7 @@ package parser
 
 import (
 	"embed"
+	"regexp"
 	"sort"
 	"strings"
 	"sync"
@@ -178,18 +179,16 @@ func tagsSymbols(language string, grammar *tree_sitter.Language, tagsQuery strin
 	var drafts []symbolDraft
 	matches := cursor.Matches(entry.query, root, content)
 	for match := matches.Next(); match != nil; match = matches.Next() {
-		// Find the @name node (if any) for this match once, then emit a draft for
-		// each @definition.* capture in the match. Most tags patterns have exactly
-		// one of each, but alternations (e.g. ruby's class/singleton_class) can
-		// carry a single name with one def capture per match.
-		var nameNode *tree_sitter.Node
+		// Find @name nodes for this match, then emit one draft for each name in
+		// the definition node. Most patterns have one name; Zig compound const
+		// declarations can legitimately have several.
+		var nameNodes []*tree_sitter.Node
 		if entry.hasName {
 			for i := range match.Captures {
 				c := &match.Captures[i]
 				if uint(c.Index) == entry.nameIdx {
 					n := c.Node
-					nameNode = &n
-					break
+					nameNodes = append(nameNodes, &n)
 				}
 			}
 		}
@@ -200,26 +199,160 @@ func tagsSymbols(language string, grammar *tree_sitter.Language, tagsQuery strin
 				continue
 			}
 			defNode := c.Node
-			name := ""
-			if nameNode != nil {
-				name = strings.TrimSpace(nodeText(nameNode, content))
-			}
-			if name == "" {
-				name = strings.TrimSpace(tagsDefFallbackName(&defNode, content))
-			}
-			if name == "" {
+			if skipTagsDefinition(language, kind, &defNode) {
 				continue
 			}
-			drafts = append(drafts, symbolDraft{
-				name:      name,
-				kind:      kind,
-				signature: tagsFirstLine(&defNode, content),
-				startLine: int(defNode.StartPosition().Row) + 1,
-				endLine:   int(defNode.EndPosition().Row) + 1,
-			})
+			var names []string
+			if language == "zig" && kind == "constant" {
+				names = zigConstantNames(&defNode, content)
+			} else {
+				names = namesForTagsDefinition(language, nameNodes, &defNode, content)
+			}
+			if len(names) == 0 {
+				if fallback := strings.TrimSpace(tagsDefFallbackName(&defNode, content)); fallback != "" {
+					names = append(names, fallback)
+				}
+			}
+			for _, name := range names {
+				if name == "" {
+					continue
+				}
+				drafts = append(drafts, symbolDraft{
+					name:      name,
+					kind:      kind,
+					signature: tagsFirstLine(&defNode, content),
+					startLine: int(defNode.StartPosition().Row) + 1,
+					endLine:   int(defNode.EndPosition().Row) + 1,
+				})
+			}
 		}
 	}
 	return sortDedupDrafts(drafts)
+}
+
+var zigConstantHeaderRE = regexp.MustCompile(`(?:^|,)\s*(?:pub\s+)?(?:(?:export|extern(?:\s+"[^"]+")?)\s+)?(?:threadlocal\s+)?(?:const|var)\s+(@"[^"]+"|[A-Za-z_][A-Za-z0-9_]*)`)
+
+func zigConstantNames(def *tree_sitter.Node, src []byte) []string {
+	if def == nil {
+		return nil
+	}
+	header := nodeText(def, src)
+	if i := strings.IndexByte(header, '='); i >= 0 {
+		header = header[:i]
+	}
+	seen := map[string]bool{}
+	var names []string
+	for _, match := range zigConstantHeaderRE.FindAllStringSubmatch(header, -1) {
+		if len(match) < 2 || match[1] == "" || seen[match[1]] {
+			continue
+		}
+		seen[match[1]] = true
+		names = append(names, match[1])
+	}
+	return names
+}
+
+func namesForTagsDefinition(language string, nameNodes []*tree_sitter.Node, def *tree_sitter.Node, src []byte) []string {
+	if def == nil || len(nameNodes) == 0 {
+		return nil
+	}
+	seen := map[string]bool{}
+	var names []string
+	for _, n := range nameNodes {
+		if n == nil || !nodeWithin(n, def) {
+			continue
+		}
+		name := strings.TrimSpace(tagsNameText(language, n, src))
+		if name == "" || seen[name] {
+			continue
+		}
+		seen[name] = true
+		names = append(names, name)
+	}
+	return names
+}
+
+func tagsNameText(language string, n *tree_sitter.Node, src []byte) string {
+	if language == "lua" {
+		if name := luaNameText(n, src); name != "" {
+			return name
+		}
+	}
+	return nodeText(n, src)
+}
+
+func luaNameText(n *tree_sitter.Node, src []byte) string {
+	if n == nil {
+		return ""
+	}
+	switch n.Kind() {
+	case "identifier":
+		return nodeText(n, src)
+	case "variable":
+		for i := uint(0); i < n.ChildCount(); i++ {
+			if name := luaNameText(n.Child(i), src); name != "" {
+				return name
+			}
+		}
+	case "dot_index_expression":
+		return joinNonEmpty(".", luaNameText(n.ChildByFieldName("table"), src), luaNameText(n.ChildByFieldName("field"), src))
+	case "method_index_expression":
+		return joinNonEmpty(":", luaNameText(n.ChildByFieldName("table"), src), luaNameText(n.ChildByFieldName("method"), src))
+	case "bracket_index_expression":
+		return joinNonEmpty(".", luaNameText(n.ChildByFieldName("table"), src), luaNameText(n.ChildByFieldName("field"), src))
+	case "string":
+		return strings.Trim(strings.TrimSpace(nodeText(n, src)), `"'`)
+	default:
+		return strings.TrimSpace(nodeText(n, src))
+	}
+	return ""
+}
+
+func joinNonEmpty(sep, left, right string) string {
+	left = strings.TrimSpace(left)
+	right = strings.TrimSpace(right)
+	if left == "" {
+		return right
+	}
+	if right == "" {
+		return left
+	}
+	return left + sep + right
+}
+
+func nodeWithin(child, parent *tree_sitter.Node) bool {
+	if child == nil || parent == nil {
+		return false
+	}
+	return child.StartByte() >= parent.StartByte() && child.EndByte() <= parent.EndByte()
+}
+
+func skipTagsDefinition(language, kind string, def *tree_sitter.Node) bool {
+	if language == "zig" && kind == "constant" {
+		return nodeHasAnyKind(def, map[string]bool{
+			"struct_declaration":    true,
+			"enum_declaration":      true,
+			"union_declaration":     true,
+			"opaque_declaration":    true,
+			"error_set_declaration": true,
+		})
+	}
+	return false
+}
+
+func nodeHasAnyKind(n *tree_sitter.Node, kinds map[string]bool) bool {
+	if n == nil {
+		return false
+	}
+	if kinds[n.Kind()] {
+		return true
+	}
+	for i := uint(0); i < n.ChildCount(); i++ {
+		if nodeHasAnyKind(n.Child(i), kinds) {
+			return true
+		}
+	}
+	return false
 }
 
 // tagsDefFallbackName derives a name for a definition node when the tags query

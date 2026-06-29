@@ -1579,7 +1579,7 @@ func parseLightweightCodeSymbols(path, language string, content []byte) ([]symbo
 	if language == "elixir" {
 		scanText = maskElixirNonCode(text)
 	}
-	imports := regexCaptures(scanText, lightweightImportRules[language]...)
+	imports := parseLightweightImports(language, content)
 	rules := lightweightSymbolRules[language]
 	symbols := make([]symbolDraft, 0)
 	for _, rule := range rules {
@@ -1602,6 +1602,15 @@ func parseLightweightCodeSymbols(path, language string, content []byte) ([]symbo
 		symbols = append(symbols, docDraft(language, "document", filepath.Base(path), 1, len(strings.Split(text, "\n")), text))
 	}
 	return dedupeSymbolDrafts(symbols), imports
+}
+
+func parseLightweightImports(language string, content []byte) []string {
+	text := string(content)
+	scanText := text
+	if language == "elixir" {
+		scanText = maskElixirNonCode(text)
+	}
+	return regexCaptures(scanText, lightweightImportRules[language]...)
 }
 
 func maskElixirNonCode(text string) string {

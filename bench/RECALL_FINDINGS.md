@@ -19,6 +19,35 @@ The C/C++ recall unit tests (`internal/parser`) pass: `TestCSymbols_RecallRootCa
 `TestCppSymbols_CUDAKernelDefinitions`, `TestCppMacroAnnotationsNotMethods`,
 `TestCppCallEdges`.
 
+## Native parser migration addendum — B2 code languages
+
+Measured 2026-06-30 after routing Kotlin, Scala, Swift, Lua, and Zig through
+native tree-sitter tags queries instead of `parseRegexFallback`. Each language
+was indexed from the real repository named below, compared against graphify
+exact-symbol queries, and checked against the strongest local independent
+baseline available on this machine.
+
+Validation gate for this addendum:
+
+| Check | Command | Result |
+| --- | --- | --- |
+| Parser tests | `go test ./internal/parser` | PASS (exit 0) |
+| Build | `go build ./...` | PASS (exit 0) |
+| Vet | `go vet ./...` | PASS (exit 0) |
+| Test | `go test ./...` | PASS (exit 0) |
+
+| Lang | Repo slice | Independent baseline | Atlas defs | Baseline defs | Recall/coverage | graphify latency | graphify tokens | Notes |
+| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | --- |
+| kotlin | square/okhttp `src/commonJvmAndroid/kotlin` | tree-sitter-kotlin 1.1.0 | 3875 | 3876 raw | 1.00x | 7.08x | 27.06x | Unique `(path, kind, name)` sets match exactly. The one raw-count gap is tree-sitter-kotlin reporting `connectResult` twice for one source declaration in `SequentialExchangeFinder.kt`; this is the measurement ceiling. |
+| scala | typelevel/cats core slice | tree-sitter-scala 0.26.0 | 7840 | 7840 | 1.00x | 9.38x | 38.06x | Exact parity after upgrading the Go grammar binding to match the Python baseline version. |
+| swift | apple/swift-argument-parser | SourceKit-LSP sampled `documentSymbol` | 257 | 209 | 1.23x | 7.98x | 21.65x | Coverage scope is the 16 files SourceKit-LSP sampled successfully. |
+| lua | folke/lazy.nvim | luaparser 4.0.1 | 444 | 444 | 1.00x | 6.88x | 15.09x | Exact parity after normalizing dotted, method, and bracket-index function assignment names such as `package.loaders.l`. |
+| zig | zigtools/zls slice | tree-sitter-zig 1.1.2 | 6462 | 5279 | 1.22x | 5.55x | 28.55x | Atlas keeps type declarations and const/var declarations precise while supporting quoted identifiers and compound const headers. |
+
+The durable rendered artifact for this addendum is the regenerated
+`bench/MATRIX_REPORT.md`; the matching per-language raw JSON benchmark files
+remain under `bench/` until the final artifact cleanup pass.
+
 ## The consistent definition surface (applied uniformly to all 7 languages)
 
 A symbol is counted as a **definition** iff it is a top-level **or member**

@@ -18,6 +18,9 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/lib/pq v1.10.9
 	github.com/spf13/cobra v1.10.2
+	github.com/tree-sitter-grammars/tree-sitter-kotlin v1.1.0
+	github.com/tree-sitter-grammars/tree-sitter-lua v0.5.0
+	github.com/tree-sitter-grammars/tree-sitter-zig v1.1.2
 	github.com/tree-sitter/go-tree-sitter v0.25.0
 	github.com/tree-sitter/tree-sitter-c v0.24.2
 	github.com/tree-sitter/tree-sitter-c-sharp v0.23.5
@@ -28,6 +31,7 @@ require (
 	github.com/tree-sitter/tree-sitter-python v0.25.0
 	github.com/tree-sitter/tree-sitter-ruby v0.23.1
 	github.com/tree-sitter/tree-sitter-rust v0.24.2
+	github.com/tree-sitter/tree-sitter-scala v0.26.0
 	github.com/tree-sitter/tree-sitter-typescript v0.23.2
 	golang.org/x/sync v0.21.0
 	golang.org/x/tools v0.46.0
@@ -66,11 +70,7 @@ require (
 	github.com/ncruces/go-strftime v1.0.0 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/spf13/pflag v1.0.9 // indirect
-	github.com/tree-sitter-grammars/tree-sitter-kotlin v1.1.0 // indirect
-	github.com/tree-sitter-grammars/tree-sitter-lua v0.5.0 // indirect
-	github.com/tree-sitter-grammars/tree-sitter-zig v1.1.2 // indirect
 	github.com/tree-sitter/tree-sitter-go v0.25.0 // indirect
-	github.com/tree-sitter/tree-sitter-scala v0.23.4 // indirect
 	go.etcd.io/bbolt v1.4.0 // indirect
 	golang.org/x/mod v0.37.0 // indirect
 	golang.org/x/sys v0.46.0 // indirect

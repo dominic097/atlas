@@ -5438,11 +5438,12 @@ def run_smoke(language: str, atlas_bin: str, graphify_bin: str | None) -> dict[s
         }
     elif language == "kotlin":
         optimization = {
-            "cycles_run": 2,
-            "stop_reason": "Kotlin live smoke met the current 5x latency/token thresholds and exceeded the tree-sitter-kotlin definition coverage proxy after widening Atlas Kotlin modifier handling.",
+            "cycles_run": 3,
+            "stop_reason": "Kotlin live smoke met the current 5x latency/token thresholds and matched the unique tree-sitter-kotlin definition set exactly. The remaining one-count raw gap is a duplicated native counter entry for `connectResult` in `SequentialExchangeFinder.kt`, so this is recorded as a measurement ceiling rather than an Atlas recall miss.",
             "cycle_notes": [
                 "cycle 1: square/okhttp smoke found Atlas/tree-sitter-kotlin definition ratio 0.78; biggest gap was Kotlin modifiers before type/function/property declarations.",
                 "cycle 2: after widening Kotlin declaration regexes for actual/open/value/fun-interface/override forms, Atlas/tree-sitter-kotlin definition ratio reached 1.01 and equivalent query rows exceeded 5x for latency and token output vs graphify.",
+                "cycle 3: after routing Kotlin through native tags queries and preserving lightweight imports, Atlas and tree-sitter-kotlin had identical unique (path, kind, name) coverage; the raw native counter still reports `connectResult` twice at one source declaration.",
             ],
         }
     elif language == "lua":

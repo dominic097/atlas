@@ -1,6 +1,6 @@
 {
   "version": "graphifyy 0.8.49",
-  "binary": "/Users/damirdarasu/.local/bin/graphify",
+  "binary": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify",
   "source_root": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/lib/python3.12/site-packages/graphify",
   "dispatch_count": 89,
   "code_extension_count": 88,

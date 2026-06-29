@@ -20,18 +20,18 @@
     "target_path": "/tmp/atlas-live-kotlin-okhttp/repo/okhttp/src/commonJvmAndroid/kotlin"
   },
   "atlas": {
-    "cold_wall_seconds": 0.596,
-    "reindex_wall_seconds": 0.024,
+    "cold_wall_seconds": 0.7,
+    "reindex_wall_seconds": 0.043,
     "index": {
-      "repo_id": "0e9aa060-e6ba-42d6-bd25-13124ae891c0",
+      "repo_id": "fe7e5e17-36bc-4b66-a406-aab739a8315f",
       "repo_full_name": "kotlin",
-      "snapshot_id": "14d6d251-99ae-4978-b6df-7b097cdce7bf",
+      "snapshot_id": "c07d6015-4108-436e-bec4-2e24f69f5ed8",
       "commit_sha": "0cadfa2997513d20bf88ca530c963a1266f17af9",
       "indexed_files": 138,
-      "symbols": 3912,
-      "edges": 7554,
+      "symbols": 3901,
+      "edges": 7504,
       "edge_kinds": {
-        "calls": 6335,
+        "calls": 6285,
         "imports": 1219
       },
       "routes": 0,
@@ -39,78 +39,88 @@
         "kotlin": 138
       },
       "mode": "full",
-      "duration_ms": 565,
+      "duration_ms": 595,
       "timings_ms": {
+        "build_symbols_edges": 1,
         "delta_check": 0,
+        "discover_files": 1,
+        "doc_links": 0,
         "ensure_repo": 1,
+        "gitignore_scan": 13,
         "go_types": 0,
-        "lexical": 365,
-        "parse": 47,
-        "persist": 141,
+        "lexical": 489,
+        "parse": 87,
+        "persist": 489,
         "resolve_head": 0,
         "routes": 0,
-        "sort": 2,
-        "walk": 7
+        "sort": 1,
+        "walk": 1,
+        "write_sqlite": 489
       }
     },
     "reindex": {
-      "repo_id": "0e9aa060-e6ba-42d6-bd25-13124ae891c0",
+      "repo_id": "fe7e5e17-36bc-4b66-a406-aab739a8315f",
       "repo_full_name": "kotlin",
-      "snapshot_id": "14d6d251-99ae-4978-b6df-7b097cdce7bf",
+      "snapshot_id": "c07d6015-4108-436e-bec4-2e24f69f5ed8",
       "commit_sha": "0cadfa2997513d20bf88ca530c963a1266f17af9",
       "indexed_files": 138,
-      "symbols": 3912,
-      "edges": 7554,
+      "symbols": 3901,
+      "edges": 7504,
       "routes": 0,
       "languages": {
         "kotlin": 138
       },
       "mode": "noop",
-      "duration_ms": 0,
+      "duration_ms": 12,
       "timings_ms": {
-        "delta_check": 0,
+        "delta_check": 12,
         "resolve_head": 0
       }
     },
     "symbol_breakdown": [
       {
         "language": "kotlin",
+        "kind": "constant",
+        "count": 26
+      },
+      {
+        "language": "kotlin",
         "kind": "function",
-        "count": 1554
+        "count": 1586
       },
       {
         "language": "kotlin",
         "kind": "type",
-        "count": 172
+        "count": 187
       },
       {
         "language": "kotlin",
         "kind": "variable",
-        "count": 2186
+        "count": 2102
       }
     ],
     "edge_breakdown": [
       {
         "kind": "calls",
-        "count": 6335
+        "count": 6285
       },
       {
         "kind": "imports",
         "count": 1219
       }
     ],
-    "kotlin_definition_symbols": 3912
+    "kotlin_definition_symbols": 3875
   },
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 1.095,
+    "seconds": 1.257,
     "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
       "  AST extraction: 100/137 uncached files (72%) [14 workers]",
       "  AST extraction: 137/137 files (100%) [14 workers]",
-      "[graphify watch] Rebuilt: 1844 nodes, 5202 edges, 107 communities",
+      "[graphify watch] Rebuilt: 1844 nodes, 5202 edges, 106 communities",
       "[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out",
       "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
       "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
@@ -170,16 +180,17 @@
     }
   },
   "coverage": {
-    "atlas_vs_tree_sitter_kotlin_definition_ratio": 1.01,
-    "atlas_kotlin_definition_symbols": 3912,
+    "atlas_vs_tree_sitter_kotlin_definition_ratio": 1.0,
+    "atlas_kotlin_definition_symbols": 3875,
     "native_definitions": 3876
   },
   "optimization": {
-    "cycles_run": 2,
-    "stop_reason": "Kotlin live smoke met the current 5x latency/token thresholds and exceeded the tree-sitter-kotlin definition coverage proxy after widening Atlas Kotlin modifier handling.",
+    "cycles_run": 3,
+    "stop_reason": "Kotlin live smoke met the current 5x latency/token thresholds and matched the unique tree-sitter-kotlin definition set exactly. The remaining one-count raw gap is a duplicated native counter entry for `connectResult` in `SequentialExchangeFinder.kt`, so this is recorded as a measurement ceiling rather than an Atlas recall miss.",
     "cycle_notes": [
       "cycle 1: square/okhttp smoke found Atlas/tree-sitter-kotlin definition ratio 0.78; biggest gap was Kotlin modifiers before type/function/property declarations.",
-      "cycle 2: after widening Kotlin declaration regexes for actual/open/value/fun-interface/override forms, Atlas/tree-sitter-kotlin definition ratio reached 1.01 and equivalent query rows exceeded 5x for latency and token output vs graphify."
+      "cycle 2: after widening Kotlin declaration regexes for actual/open/value/fun-interface/override forms, Atlas/tree-sitter-kotlin definition ratio reached 1.01 and equivalent query rows exceeded 5x for latency and token output vs graphify.",
+      "cycle 3: after routing Kotlin through native tags queries and preserving lightweight imports, Atlas and tree-sitter-kotlin had identical unique (path, kind, name) coverage; the raw native counter still reports `connectResult` twice at one source declaration."
     ]
   },
   "query_warmup": {
@@ -198,8 +209,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain OkHttpClient",
       "atlas_tokens": 8,
       "graphify_tokens": 255,
-      "atlas_ms": 15.313,
-      "graphify_ms": 104.149,
+      "atlas_ms": 17.729,
+      "graphify_ms": 129.63,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -212,7 +223,7 @@
         "  ID:        okhttp3_okhttpclient_okhttpclient",
         "  Source:    okhttp3/OkHttpClient.kt L132",
         "  Type:      code",
-        "  Community: 40",
+        "  Community: 39",
         "  Degree:    62",
         "",
         "Connections (62):"
@@ -225,8 +236,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Request",
       "atlas_tokens": 6,
       "graphify_tokens": 56,
-      "atlas_ms": 14.589,
-      "graphify_ms": 103.731,
+      "atlas_ms": 16.936,
+      "graphify_ms": 120.456,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -239,7 +250,7 @@
         "  ID:        okhttp3_call_call_request",
         "  Source:    okhttp3/Call.kt L28",
         "  Type:      code",
-        "  Community: 39",
+        "  Community: 38",
         "  Degree:    2",
         "",
         "Connections (2):"
@@ -252,8 +263,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Response",
       "atlas_tokens": 6,
       "graphify_tokens": 97,
-      "atlas_ms": 15.899,
-      "graphify_ms": 105.045,
+      "atlas_ms": 17.327,
+      "graphify_ms": 117.375,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -266,7 +277,7 @@
         "  ID:        okhttp3_cache_entry_response",
         "  Source:    okhttp3/Cache.kt L687",
         "  Type:      code",
-        "  Community: 19",
+        "  Community: 10",
         "  Degree:    6",
         "",
         "Connections (6):"
@@ -279,14 +290,14 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain HttpUrl",
       "atlas_tokens": 7,
       "graphify_tokens": 239,
-      "atlas_ms": 15.467,
-      "graphify_ms": 102.528,
+      "atlas_ms": 17.174,
+      "graphify_ms": 118.643,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "HttpUrl t@HttpUrl:294 c1 d5"
+        "HttpUrl t@HttpUrl:294 c1 d6"
       ],
       "graphify_stdout_head": [
         "Node: HttpUrl",
@@ -306,14 +317,14 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Headers",
       "atlas_tokens": 6,
       "graphify_tokens": 246,
-      "atlas_ms": 14.824,
-      "graphify_ms": 103.337,
+      "atlas_ms": 16.049,
+      "graphify_ms": 116.876,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Headers t@Headers:66 c3"
+        "Headers t@Headers:65 c3"
       ],
       "graphify_stdout_head": [
         "Node: Headers",
