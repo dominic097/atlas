@@ -39,10 +39,15 @@ def toks(s: str) -> int:
     return max(1, len(s) // 4)
 
 
-def find_func_pos(repo: Path, name: str):
-    """Locate the (relfile, line, col) of `func name(` or `func (recv) name(` —
-    the position gopls needs. Returns the first match (1-based line/col)."""
-    pat = re.compile(r"\bfunc\b.*?\b(" + re.escape(name) + r")\s*(?:\[|\()")
+def find_func_positions(repo: Path, name: str):
+    """Locate EVERY real definition of `name` — `func name(` or
+    `func (recv) name(` — anchored at the start of a line so call sites like
+    `l.WithField("func", func(){})` are not mistaken for definitions. Returns a
+    list of (relfile, line, col) (1-based). Overloaded names (e.g. the package
+    func + Logger method + Entry method all named WithField) yield several
+    positions; their callers are unioned, matching Atlas's by-name `callers` op."""
+    pat = re.compile(r"^\s*func\s+(?:\([^)]*\)\s+)?(" + re.escape(name) + r")\b\s*(?:\[|\()")
+    out = []
     for p in repo.rglob("*.go"):
         try:
             text = p.read_text(errors="ignore")
@@ -51,26 +56,41 @@ def find_func_pos(repo: Path, name: str):
         for i, line in enumerate(text.splitlines(), start=1):
             m = pat.search(line)
             if m:
-                col = m.start(1) + 1  # 1-based
-                return str(p.relative_to(repo)), i, col
-    return None, 0, 0
+                out.append((str(p.relative_to(repo)), i, m.start(1) + 1))
+    return out
 
 
-def gopls_callers(repo: Path, relfile: str, line: int, col: int):
-    """Precise caller function names via gopls call_hierarchy."""
-    r = sh(["gopls", "call_hierarchy", f"{relfile}:{line}:{col}"], cwd=str(repo))
-    names = []
-    for ln in r.stdout.splitlines():
-        # caller[N]: ranges .. from/to function NAME in FILE:line:col-col
-        m = re.search(r"from/to function (\w+) in ", ln)
-        if ln.startswith("caller[") and m:
-            names.append(m.group(1))
-    return sorted(set(names))
+def gopls_callers(repo: Path, positions):
+    """Precise caller function names via gopls call_hierarchy, UNIONed across all
+    definition positions of the (possibly overloaded) symbol."""
+    names = set()
+    for relfile, line, col in positions:
+        r = sh(["gopls", "call_hierarchy", f"{relfile}:{line}:{col}"], cwd=str(repo))
+        for ln in r.stdout.splitlines():
+            # caller[N]: ranges .. from/to function NAME in FILE:line:col-col
+            m = re.search(r"from/to function (\w+) in ", ln)
+            if ln.startswith("caller[") and m:
+                names.add(m.group(1))
+    return sorted(names)
 
 
 def atlas_ctx(atlas, db, sym, op):
-    r = sh([atlas, "--db", db, "--format", "plain", op, sym])
-    return r.stdout.strip()
+    """Atlas's full answer for the op, as an agent gets it via MCP/JSON (uncapped).
+
+    The `plain` CLI format caps lists at 12 for human display, which silently
+    drops callers for a "list all callers" question; the MCP `callers` tool an
+    agent actually calls returns the complete set. We emit the full caller-name
+    list (compact, one line) so the benchmark feeds the LLM Atlas's real answer.
+    """
+    r = sh([atlas, "--db", db, "--json", op, sym])
+    try:
+        callers = json.loads(r.stdout).get("callers", [])
+        names = [c.get("symbol") or c.get("name") for c in callers]
+        names = [n for n in names if n]
+        return f"atlas {op} {sym} (total {len(names)}):\n" + ", ".join(names)
+    except Exception:
+        # Fall back to the plain format if JSON is unavailable for this op.
+        return sh([atlas, "--db", db, "--format", "plain", op, sym]).stdout.strip()
 
 
 def graphify_ctx(graphify, repo: Path, sym):
@@ -102,11 +122,12 @@ def main():
     repo = Path(args.repo)
     qset = []
     for sym in [s.strip() for s in args.symbols.split(",") if s.strip()]:
-        relfile, line, col = find_func_pos(repo, sym)
-        if not relfile:
+        positions = find_func_positions(repo, sym)
+        if not positions:
             print(f"[skip] {sym}: no func def found")
             continue
-        callers = gopls_callers(repo, relfile, line, col)
+        relfile, line, col = positions[0]  # representative def for the baseline file
+        callers = gopls_callers(repo, positions)  # UNION across all overloads
         if len(callers) < 2:
             print(f"[skip] {sym}: too few callers ({len(callers)}) for a meaningful question")
             continue
@@ -122,7 +143,8 @@ def main():
             "question": f"List the names of the functions that directly call `{sym}`. "
                         f"Answer with ONLY a comma-separated list of function names, nothing else.",
             "truth": callers,
-            "truth_source": f"gopls call_hierarchy {relfile}:{line}:{col}",
+            "truth_source": f"gopls call_hierarchy (union of {len(positions)} def position(s): "
+                            + ", ".join(f"{r}:{l}:{c}" for r, l, c in positions) + ")",
             "contexts": {"atlas": ctx_atlas, "graphify": ctx_gfy, "baseline": ctx_base},
             "ctx_tokens": {"atlas": toks(ctx_atlas), "graphify": toks(ctx_gfy), "baseline": toks(ctx_base)},
         }
