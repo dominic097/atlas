@@ -226,13 +226,21 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 			skipPathSet[filepath.Clean(ap)] = struct{}{}
 		}
 	}
+	gitHandledIgnore := false
 	if opts.RespectGitignore {
 		phaseStart = time.Now()
-		for p := range gitIgnoredPaths(ctx, absRoot) {
+		gi := gitIgnoredPaths(ctx, absRoot)
+		for p := range gi {
 			skipPathSet[p] = struct{}{}
 		}
+		gitHandledIgnore = gi != nil // non-nil only inside a real git repo
 		phase("gitignore_scan", phaseStart)
 	}
+	// `.atlasignore` is honored in ANY folder (git or not) — this is how a plain
+	// documents directory excludes files. It inherits `.gitignore` only for a
+	// non-git folder under RespectGitignore; inside a git repo the exact,
+	// tracked-file-aware gitIgnoredPaths above already covered .gitignore.
+	ignorer := loadIgnoreMatcher(absRoot, opts.RespectGitignore && !gitHandledIgnore)
 
 	phaseStart = time.Now()
 	walkErr := filepath.WalkDir(absRoot, func(path string, entry fs.DirEntry, err error) error {
@@ -262,6 +270,9 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 			if _, skip := skipDirs[entry.Name()]; skip {
 				return filepath.SkipDir
 			}
+			if ignorer.ignored(rel, true) {
+				return filepath.SkipDir
+			}
 			return nil
 		}
 
@@ -276,6 +287,10 @@ func Run(ctx context.Context, drv store.StorageDriver, lx *lexical.Index, repoID
 			if _, skip := skipPathSet[filepath.Clean(path)]; skip {
 				return nil
 			}
+		}
+		// An .atlasignore/.gitignore file rule (git-independent).
+		if ignorer.ignored(rel, false) {
+			return nil
 		}
 
 		lang := parser.LanguageForPath(rel)
