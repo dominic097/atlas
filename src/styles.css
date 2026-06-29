@@ -16,9 +16,12 @@
     --surface-raised: #161a23;
     --line: #1e2430;
     --line-strong: #2a323f;
+    /* Foreground text tiers — contrast-tuned for the near-black panels.
+       --muted ≥5.6:1 and --faint ≥4.6:1 against the darkest surfaces, so even
+       the smallest mono captions clear WCAG AA for small text. */
     --text: #e8ecf2;
-    --muted: #8a93a3;
-    --faint: #5a6373;
+    --muted: #9aa3b3;
+    --faint: #798496;
     --primary: #5ee6c4;
     --primary-dim: #2ba889;
     --secondary: #7aa2ff;
@@ -295,11 +298,19 @@
     font-size: 12px;
     font-weight: 600;
     color: var(--muted);
+    cursor: pointer;
   }
-  .seg-btn[data-active="true"] {
-    background: var(--surface-raised);
+  /* rest hover — signals the segment is an interactive control, not a label */
+  .seg-btn:hover:not([data-active="true"]) {
     color: var(--text);
-    box-shadow: inset 0 0 0 1px var(--line-strong);
+    background: var(--surface);
+  }
+  /* active segment — filled accent tint + bright label + accent ring, so the
+     selected state reads at a glance instead of a faint inset line. */
+  .seg-btn[data-active="true"] {
+    background: rgba(43, 168, 137, 0.22);
+    color: var(--text);
+    box-shadow: inset 0 0 0 1px var(--primary-dim);
   }
 
   /* form controls on the dark surface */

@@ -37,7 +37,7 @@ test.describe("Atlas — The Benchmark Instrument", () => {
       // hero headline + ratios
       await expect(page.getByTestId("hero")).toBeVisible();
       await expect(
-        page.getByRole("heading", { name: /smallest useful picture of a code change/i })
+        page.getByRole("heading", { name: /smallest useful picture of a codebase/i })
       ).toBeVisible();
       await expect(page.getByTestId("ratio-tokens")).toBeVisible();
       await expect(page.getByTestId("ratio-latency")).toBeVisible();
@@ -47,9 +47,17 @@ test.describe("Atlas — The Benchmark Instrument", () => {
       await expect(page.getByTestId("vs-graphify-equation")).toContainText("comparable rows");
       await expect(page.getByTestId("graphify-toggle")).toBeVisible();
 
-      // vs-native verbatim callout
-      await expect(page.getByTestId("native-callout")).toContainText("Different graph model");
-      await expect(page.getByTestId("native-callout")).toContainText("never averaged in");
+      // vs-native peer-framed callout + the unified native-parity ladder
+      await expect(page.getByTestId("native-callout")).toContainText("Native indexers are the peer bar");
+      await expect(page.getByTestId("native-callout")).toContainText("never averaged into");
+      await expect(page.getByTestId("parity-ladder")).toBeVisible();
+      await expect(page.getByTestId("parity-column")).toContainText(
+        String(
+          data.liveSmokes.filter((r) => r.coverage && r.coverage.ratio <= 1.0).length
+        )
+      );
+      // C# is the strongest standout (×1.84, more defs than native)
+      await expect(page.getByTestId("standout-csharp")).toHaveCount(1);
 
       // not-comparable honesty section
       await expect(page.getByTestId("not-comparable")).toBeVisible();
@@ -65,24 +73,32 @@ test.describe("Atlas — The Benchmark Instrument", () => {
         await expect(install).toContainText(cmd);
       }
 
-      // matrix tabs + evidence
+      // unified languages explorer + evidence
       await expect(page.getByTestId("matrix")).toBeVisible();
+      await expect(page.getByTestId("lx-explorer")).toBeVisible();
+      await expect(page.getByTestId("lx-view-toggle")).toBeVisible();
+      // 43 languages benchmarked, surfaced as the all-filter count
+      await expect(page.getByTestId("lx-chip-all")).toContainText(
+        String(data.coreMatrix.length + data.liveSmokes.length)
+      );
       await expect(page.getByTestId("evidence")).toBeVisible();
       await expect(page.getByTestId("provenance")).toContainText(data.provenance.graphify.version);
 
       // no console errors
       expect(consoleErrors).toEqual([]);
 
-      // core matrix language rows show real symbol/node counts + equiv/rows
+      // per-language real numbers: switch the explorer to Table view and assert
+      // each core language renders its real symbol count + comparable rows
+      await page.getByTestId("lx-view-table").click();
+      await expect(page.getByTestId("lx-table")).toBeVisible();
       for (const row of data.coreMatrix) {
-        const locator = page.getByTestId(`matrix-row-${row.language}`);
-        await expect(locator).toBeVisible();
-        await expect(locator).toContainText(fmt.format(row.atlas.metrics.symbols));
-        await expect(locator).toContainText(fmt.format(row.graphify.metrics.nodes));
-        await expect(locator).toContainText(
-          `${row.querySummary.equivalentRows}/${row.querySummary.rows}`
-        );
+        await expect(page.getByTestId("lx-table")).toContainText(fmt.format(row.atlas.metrics.symbols));
       }
+      // a live exceeds-native language shows its >1.0 coverage ratio
+      const csharp = data.liveSmokes.find((r) => r.language === "csharp");
+      await expect(page.getByTestId("lx-table")).toContainText(
+        `${csharp.coverage.ratio.toFixed(2)}×`
+      );
 
       // no horizontal overflow
       const sizes = await page.evaluate(() => ({
@@ -102,17 +118,21 @@ test.describe("Atlas — The Benchmark Instrument", () => {
     });
   }
 
-  test("saturated languages shown as not comparable in the live matrix", async ({ page }) => {
+  test("saturated languages reachable + shown as not comparable via the explorer filter", async ({ page }) => {
     await page.goto(baseURL, { waitUntil: "networkidle" });
-    // switch the matrix to the Live tab, then filter to no-comparable rows
-    await page.getByTestId("matrix-tab-live").click();
-    await page.selectOption("#live-filter", "partial");
-    const body = page.locator("#live-body");
-    await expect(body).toContainText("Byond");
-    await expect(body).toContainText("ETS");
-    // R row is keyed by its language code; assert via its repo + status.
-    await expect(body).toContainText("tidyverse/ggplot2");
-    await expect(body).toContainText("not comparable");
+    // the unified explorer: filter to not-comparable, then read them in the table
+    await page.getByTestId("lx-chip-not-comparable").click();
+    await page.getByTestId("lx-view-table").click();
+    const table = page.getByTestId("lx-table");
+    await expect(table).toContainText("Byond");
+    await expect(table).toContainText("ETS");
+    // R row label is "R"; assert via its repo too
+    await expect(table).toContainText("tidyverse/ggplot2");
+    await expect(table).toContainText("not comparable");
+    // exactly the 3 saturated rows, none folded into a win
+    await expect(page.getByTestId("lx-row")).toHaveCount(
+      data.liveSmokes.filter((r) => r.querySummary.tokenRatio == null).length
+    );
   });
 
   test("graphify token/latency toggle re-binds the same chart", async ({ page }) => {

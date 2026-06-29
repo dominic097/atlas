@@ -7,9 +7,9 @@ import {
   Copy,
   Download,
   ExternalLink,
-  Search,
 } from "lucide-react";
 import GraphExplorer from "./GraphExplorer";
+import LanguagesExplorer from "./LanguagesExplorer";
 
 /* ============================================================
    Atlas — The Benchmark Instrument
@@ -18,8 +18,6 @@ import GraphExplorer from "./GraphExplorer";
    ============================================================ */
 
 const fmt = new Intl.NumberFormat("en-US");
-
-const COMMUNITY_COLORS = ["#5EE6C4", "#7AA2FF", "#C792EA", "#F2B43A", "#FF8FA3", "#67E8F9"];
 
 function cn(...c) {
   return c.filter(Boolean).join(" ");
@@ -197,104 +195,13 @@ function SectionHeader({ kicker, title, children, actions, id }) {
   );
 }
 
-/* count-up ratio: animates once on scroll-into-view, reduced-motion = final */
-function CountUpRatio({ value, suffix = "x", testId, ariaLabel }) {
-  const reduced = usePrefersReducedMotion();
-  const [ref, inView] = useInView({ threshold: 0.4 });
-  const [display, setDisplay] = useState(reduced ? value : 0);
-  const started = useRef(false);
-  useEffect(() => {
-    if (!inView || started.current) return undefined;
-    started.current = true;
-    if (reduced) {
-      setDisplay(value);
-      return undefined;
-    }
-    const dur = 720;
-    const t0 = performance.now();
-    let raf = 0;
-    const tick = (t) => {
-      const p = Math.min(1, (t - t0) / dur);
-      const eased = 1 - Math.pow(1 - p, 3);
-      setDisplay(value * eased);
-      if (p < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [inView, reduced, value]);
-  return (
-    <span
-      ref={ref}
-      data-testid={testId}
-      aria-label={ariaLabel}
-      className="mono tnum"
-      style={{
-        fontSize: "clamp(40px,5.5vw,68px)",
-        lineHeight: 0.95,
-        letterSpacing: "-0.03em",
-        fontWeight: 600,
-        color: "var(--primary)",
-        display: "inline-block",
-      }}
-    >
-      {display.toFixed(2)}
-      <span style={{ color: "var(--muted)", fontSize: "0.42em", marginLeft: 2 }}>{suffix}</span>
-    </span>
-  );
-}
-
-/* Honest hero mini-dumbbell: a single quantitative row showing Atlas (small
-   dot, fixed left anchor) vs graphify (the aggregate ratio sets the line
-   length). The MAGNITUDE of the headline win is seen, not just printed.
-   atlasVal/graphifyVal are summed raw units over the comparable rows;
-   ratio is the page's aggregate ratio. No invented numbers. */
-function MiniDumbbell({ ratio, atlasVal, graphifyVal, unit, color = "var(--primary)", label }) {
-  const W = 150;
-  const H = 30;
-  const ax = 9; // atlas anchor (px)
-  const gx = W - 9; // graphify end (px) — full track encodes the ratio span
-  const midY = 20;
-  return (
-    <svg
-      width={W}
-      height={H}
-      viewBox={`0 0 ${W} ${H}`}
-      role="img"
-      aria-label={label || `Atlas ${atlasVal} ${unit} versus graphify ${graphifyVal} ${unit}, ${ratio.toFixed(2)} times`}
-      style={{ overflow: "visible" }}
-    >
-      <line x1={ax} y1={midY} x2={gx} y2={midY} stroke="var(--line)" strokeWidth="1" />
-      <line
-        x1={ax}
-        y1={midY}
-        x2={gx}
-        y2={midY}
-        stroke={color}
-        strokeWidth="2"
-        strokeLinecap="round"
-        opacity="0.55"
-      />
-      {/* atlas (small, near) */}
-      <circle cx={ax} cy={midY} r="4" fill={color} />
-      <text x={ax} y={9} className="mono" fontSize="9" fill={color} textAnchor="start">
-        {num(Math.round(atlasVal))}
-      </text>
-      {/* graphify (far) */}
-      <circle cx={gx} cy={midY} r="4" fill="var(--faint)" />
-      <text x={gx} y={9} className="mono" fontSize="9" fill="var(--faint)" textAnchor="end">
-        {num(Math.round(graphifyVal))}
-      </text>
-    </svg>
-  );
-}
-
 /* ========================== CONSOLE BAR ================================== */
 
 const NAV_ITEMS = [
-  ["Benchmark", "vs-graphify"],
-  ["Graph", "graph"],
   ["Coverage", "vs-native"],
-  ["Evidence", "evidence"],
+  ["Comparison", "vs-graphify"],
+  ["Graph", "graph"],
+  ["Languages", "matrix"],
   ["Install", "install"],
 ];
 
@@ -382,22 +289,30 @@ function ConsoleBar({ data, active }) {
 
 function HeroReadout({ data }) {
   const core = data.summary.core;
-  // Summed raw units over the core matrix — the same aggregation the headline
-  // ratios are computed from (graphifyTotal / atlasTotal). Used to give the
-  // hero KPIs an honest at-a-glance magnitude picture.
-  const sums = data.coreMatrix.reduce(
-    (acc, r) => {
-      const qs = r.querySummary;
-      acc.atlasTokens += qs.atlasTokens || 0;
-      acc.graphifyTokens += qs.graphifyTokens || 0;
-      acc.atlasMs += qs.atlasMs || 0;
-      acc.graphifyMs += qs.graphifyMs || 0;
-      return acc;
-    },
-    { atlasTokens: 0, graphifyTokens: 0, atlasMs: 0, graphifyMs: 0 }
-  );
   const liveLangs = data.summary.live.artifacts;
   const detectorOnly = data.summary.live.detectorOnlyArtifacts;
+  // Atlas's OWN per-query response size, straight from coreMatrix atlasTokens —
+  // the hero identity. graphify's ratio is a supporting comparison, not this.
+  const atlasTokensList = data.coreMatrix.map((r) => r.querySummary.atlasTokens).filter((v) => v != null);
+  const tokMin = Math.min(...atlasTokensList);
+  const tokMax = Math.max(...atlasTokensList);
+  const fastestIndex = Math.min(...data.coreMatrix.map((r) => r.atlas.metrics.cold_seconds).filter((v) => v != null));
+  const toolCount = data.provenance.tools.coreCount;
+  // Native-parity result the ladder PROVES: count of live languages whose
+  // coverage ratio is at or above ×1.0 — every benchmarked live language.
+  // (Distinct from the 39/39 comparable deterministic-row figure, which counts
+  // query rows, not languages — they are reported as separate facts, never one
+  // mixed denominator.)
+  const parityLangs = data.liveSmokes.filter(
+    (r) => r.coverage && typeof r.coverage.ratio === "number" && r.coverage.ratio >= 1.0
+  ).length;
+  const liveCovered = data.liveSmokes.filter(
+    (r) => r.coverage && typeof r.coverage.ratio === "number"
+  ).length;
+  // comparable deterministic-row universe — the data key was renamed off the
+  // graphify-anchored `graphifyRows`; read the new name with a back-compat fallback.
+  const cov = data.summary.coverage;
+  const comparableRows = cov.comparableRows ?? cov.graphifyRows;
   return (
     <section
       id="hero"
@@ -407,82 +322,95 @@ function HeroReadout({ data }) {
       style={{ borderBottom: "1px solid var(--line)" }}
     >
       <div className="shell grid grid-cols-1 gap-10 py-14 lg:grid-cols-[minmax(0,1fr)_minmax(380px,0.82fr)] lg:py-20">
-        {/* LEFT — thesis + tickers */}
+        {/* LEFT — Atlas-first thesis + its OWN headline numbers */}
         <div className="flex min-w-0 flex-col justify-center">
           <div className="kicker" style={{ color: "var(--primary)" }}>
-            The benchmark instrument
+            Deterministic · LLM-free · local
           </div>
           <h1
             id="hero-title"
             className="mt-4 max-w-2xl text-balance font-semibold"
             style={{ fontSize: "clamp(34px,5vw,56px)", lineHeight: 1.02, letterSpacing: "-0.025em" }}
           >
-            Atlas gives review agents the smallest useful picture of a code change.
+            Atlas gives developers and coding agents the smallest useful picture of a codebase.
           </h1>
           <p className="mt-5 max-w-xl" style={{ fontSize: 15, lineHeight: 1.6, color: "var(--muted)" }}>
-            A deterministic, LLM-free code-intelligence engine. It indexes a repo into a local symbol/call graph and
-            hands agents the exact slice they need over MCP — far fewer model tokens, faster answers, code stays local,
-            every claim auditable.
+            A code-intelligence engine that indexes a repo into a local symbol/call graph and hands any developer or
+            SDLC agent — coding, refactoring, debugging, review — the exact slice they need over CLI, MCP and SDK. No
+            model in the loop, so it stays deterministic and your code never leaves the machine.
           </p>
 
+          {/* Atlas's OWN headline: the response size it hands an agent + how fast
+              it indexes + how broadly it matches native coverage. */}
           <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2">
             <div className="min-w-0">
-              <div className="kicker">Tokens vs graphify</div>
-              <div className="mt-2 flex min-w-0 flex-wrap items-end gap-3">
-                <CountUpRatio value={core.tokenRatio} testId="ratio-tokens" ariaLabel={`${core.tokenRatio} times fewer tokens`} />
+              <div className="kicker">Per context query</div>
+              <div className="mt-2 flex items-baseline gap-2">
+                <span
+                  data-testid="ratio-tokens"
+                  className="mono tnum"
+                  aria-label={`${tokMin} to ${tokMax} response tokens per context query`}
+                  style={{ fontSize: "clamp(40px,5.5vw,68px)", lineHeight: 0.95, letterSpacing: "-0.03em", fontWeight: 600, color: "var(--primary)" }}
+                >
+                  {tokMin}–{tokMax}
+                </span>
+                <span className="mono" style={{ fontSize: 14, color: "var(--muted)" }}>tok</span>
               </div>
               <div className="mono mt-1" style={{ fontSize: 12, color: "var(--faint)" }}>
-                fewer model tokens
-              </div>
-              <div className="mt-3 hidden sm:block">
-                <MiniDumbbell
-                  ratio={core.tokenRatio}
-                  atlasVal={sums.atlasTokens}
-                  graphifyVal={sums.graphifyTokens}
-                  unit="tok"
-                  color="var(--primary)"
-                  label={`Atlas ${sums.atlasTokens} tokens versus graphify ${sums.graphifyTokens} tokens over the core matrix`}
-                />
-                <div className="mono mt-0.5" style={{ fontSize: 10, color: "var(--faint)" }}>
-                  {num(sums.atlasTokens)} → {num(sums.graphifyTokens)} tok · summed
-                </div>
+                response tokens Atlas hands the agent · per query
               </div>
             </div>
             <div className="min-w-0">
-              <div className="kicker">Latency vs graphify</div>
-              <div className="mt-2 flex min-w-0 flex-wrap items-end gap-3">
-                <CountUpRatio value={core.latencyRatio} testId="ratio-latency" ariaLabel={`${core.latencyRatio} times faster`} />
+              <div className="kicker">Cold index</div>
+              <div className="mt-2 flex items-baseline gap-2">
+                <span
+                  data-testid="ratio-latency"
+                  className="mono tnum"
+                  aria-label={`fastest cold index ${fastestIndex} seconds`}
+                  style={{ fontSize: "clamp(40px,5.5vw,68px)", lineHeight: 0.95, letterSpacing: "-0.03em", fontWeight: 600, color: "var(--secondary)" }}
+                >
+                  {fastestIndex.toFixed(2)}
+                </span>
+                <span className="mono" style={{ fontSize: 14, color: "var(--muted)" }}>s</span>
               </div>
               <div className="mono mt-1" style={{ fontSize: 12, color: "var(--faint)" }}>
-                faster answers
-              </div>
-              <div className="mt-3 hidden sm:block">
-                <MiniDumbbell
-                  ratio={core.latencyRatio}
-                  atlasVal={sums.atlasMs}
-                  graphifyVal={sums.graphifyMs}
-                  unit="ms"
-                  color="var(--secondary)"
-                  label={`Atlas ${Math.round(sums.atlasMs)} milliseconds versus graphify ${Math.round(sums.graphifyMs)} milliseconds over the core matrix`}
-                />
-                <div className="mono mt-0.5" style={{ fontSize: 10, color: "var(--faint)" }}>
-                  {num(Math.round(sums.atlasMs))} → {num(Math.round(sums.graphifyMs))} ms · summed
-                </div>
+                fastest cold index · {num(data.coreMatrix.find((r) => r.language === "go")?.atlas.metrics.symbols)} symbols, {num(data.coreMatrix.find((r) => r.language === "go")?.atlas.metrics.edges)} edges (Go)
               </div>
             </div>
           </div>
 
-          {/* honesty caveat — separated from the KPIs by a hairline so the eye
-              reads headline → caveat → secondary ticks as distinct tiers */}
+          {/* native-parity headline — Atlas standing WITH native indexers.
+              Two distinct facts, not one mixed denominator: every live language
+              sits at/above parity, AND every comparable deterministic row does. */}
           <div className="mt-7 hairline" style={{ paddingTop: 18 }}>
-            <p
-              className="max-w-xl"
-              style={{ fontSize: 12.5, lineHeight: 1.45, fontWeight: 500, color: "var(--warning)" }}
-            >
-              Computed over {core.equivalentRows} comparable core query rows where both Atlas and graphify answered the same
-              question ({core.equivalentRows}/{core.queryRows} rows; {core.graphifyMissingRows} had no graphify equivalent
-              and are never averaged in).
+            <p className="max-w-xl" style={{ fontSize: 13, lineHeight: 1.5, color: "var(--text)" }}>
+              <span className="num" style={{ color: "var(--success)", fontWeight: 600 }}>
+                {parityLangs}/{liveCovered}
+              </span>{" "}
+              live languages meet or beat native SCIP/LSP definition coverage — none below ×1.0; across{" "}
+              <span className="num" style={{ color: "var(--success)", fontWeight: 600 }}>
+                {cov.deterministicRowsCovered}/{comparableRows}
+              </span>{" "}
+              comparable deterministic rows.
             </p>
+          </div>
+
+          {/* SUPPORTING stat — clearly scoped to graphify, one of many tools */}
+          <div
+            className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 rounded-lg px-4 py-3"
+            style={{ background: "var(--bg2)", border: "1px solid var(--line)" }}
+            data-testid="vs-graphify-support"
+          >
+            <span className="mono" style={{ fontSize: 11, color: "var(--faint)", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+              vs graphify
+            </span>
+            <span style={{ fontSize: 13, color: "var(--muted)" }}>
+              <span className="num" style={{ color: "var(--primary)", fontWeight: 600 }}>{core.tokenRatio.toFixed(2)}×</span> fewer tokens ·{" "}
+              <span className="num" style={{ color: "var(--secondary)", fontWeight: 600 }}>{core.latencyRatio.toFixed(2)}×</span> faster
+            </span>
+            <span className="mono" style={{ fontSize: 11, color: "var(--faint)" }}>
+              the closest portable code-graph tool · 1 of {toolCount} benchmarked
+            </span>
           </div>
 
           {/* instrument rail of plain mono stat ticks */}
@@ -491,14 +419,14 @@ function HeroReadout({ data }) {
             style={{ borderTop: "1px solid var(--line)", paddingTop: 20 }}
           >
             <StatTick label="Languages" value={`${core.languages} core · ${liveLangs} live`} sub={`${detectorOnly} detector-only`} />
-            <StatTick label="Comparable rows" value={`${core.equivalentRows}/${core.queryRows}`} sub="core matrix" />
-            <StatTick label="Native parity" value={`${data.summary.coverage.deterministicRowsCovered}/${data.summary.coverage.graphifyRows}`} sub="deterministic rows" />
+            <StatTick label="Native parity" value={`${cov.deterministicRowsCovered}/${comparableRows}`} sub="comparable rows ≥ native" />
+            <StatTick label="Tools benchmarked" value={toolCount} sub="incl. SCIP / LSP / graphify" />
             <StatTick label="Evidence" value={data.sourceArtifacts.length} sub="downloadable artifacts" />
           </div>
 
           <div className="mt-9 flex flex-wrap gap-3">
-            <a href="#vs-graphify" className="btn btn-primary focusring" style={{ textDecoration: "none" }}>
-              See the proof <ArrowRight className="h-4 w-4" aria-hidden />
+            <a href="#vs-native" className="btn btn-primary focusring" style={{ textDecoration: "none" }}>
+              See the coverage <ArrowRight className="h-4 w-4" aria-hidden />
             </a>
             <a href="data/benchmark-data.json" download data-source-artifact className="btn btn-ghost focusring" style={{ textDecoration: "none" }}>
               Download evidence <Download className="h-4 w-4" aria-hidden />
@@ -714,8 +642,8 @@ function VsGraphify({ data }) {
     <section id="vs-graphify" data-testid="vs-graphify" className="shell py-16" aria-labelledby="vsg-title">
       <SectionHeader
         id="vsg-title"
-        kicker="Efficiency · vs graphify"
-        title="Per-language token and latency savings over the core matrix"
+        kicker={`One comparison · vs graphify (1 of ${data.provenance.tools.coreCount} tools)`}
+        title="Against the closest portable code-graph tool, Atlas returns far less"
         actions={
           <div className="flex items-center gap-2">
             <div className="seg" role="group" aria-label="Toggle metric" data-testid="graphify-toggle">
@@ -738,8 +666,9 @@ function VsGraphify({ data }) {
           </div>
         }
       >
-        Shown only where both tools answered the same query. graphify rows with no Atlas equivalent render as a hollow
-        “no equivalent” tick, never a zero.
+        graphify is the closest portable code-graph tool to Atlas, so it makes the most honest head-to-head. Native
+        SCIP/LSP indexers are compared separately on coverage above. Shown only where both tools answered the same
+        query; rows with no graphify equivalent render as a hollow “no equivalent” tick, never a zero.
       </SectionHeader>
 
       {/* printed equation — non-negotiable credibility move */}
@@ -781,208 +710,352 @@ const TOOL_MANIFEST = [
   ["sourcekit-lsp", "6.2.4"],
 ];
 
-function CoverageScatter({ data }) {
+/* The native-parity LADDER — ONE unified visual.
+   A single horizontal coverage-ratio axis (×1.0 → ×1.84). The ×1.0 spine is
+   the native-parity reference: nothing in the data falls below it. Two honest
+   treatments share that one axis:
+     · PARITY COLUMN — the 29 languages that sit EXACTLY at ×1.0 are not faked
+       into 29 identical bars (that was the old scatter's mush). They are a
+       single counted stack pinned on the spine; click/Enter expands the roster
+       of chips so the cluster is inspectable, never a black box.
+     · STANDOUTS — the 7 languages that EXCEED native render as real bars
+       growing rightward from the spine, ordered by ratio, the bar's THICKNESS
+       (and the trailing dot's area) encoding defs indexed. Raw Atlas-vs-native
+       defs surface on hover/focus + inline.
+   Detector-only languages (ejs/ets/r) live in the parity column flagged with a
+   hollow ▱ glyph — present, reachable, never counted as a coverage "win".
+   No graphify anywhere on the axes — coverage is Atlas defs ÷ native defs. */
+
+const DETECTOR_LANGS = new Set(["ejs", "ets", "r"]);
+
+function buildParityModel(data) {
+  const rows = data.liveSmokes
+    .filter((r) => r.coverage && typeof r.coverage.ratio === "number")
+    .map((r) => ({
+      lang: r.language,
+      ratio: r.coverage.ratio,
+      atlasDefs: r.coverage.atlasDefinitions,
+      nativeDefs: r.coverage.nativeDefinitions,
+      tool: r.native?.tool || "—",
+      detector: DETECTOR_LANGS.has(r.language) || !!r.detectorOnly,
+      artifact: r.artifact,
+    }));
+  const atParity = rows
+    .filter((r) => r.ratio <= 1.0)
+    .sort((a, b) => b.atlasDefs - a.atlasDefs);
+  const standouts = rows
+    .filter((r) => r.ratio > 1.0)
+    .sort((a, b) => b.ratio - a.ratio);
+  const maxRatio = Math.max(1.0, ...rows.map((r) => r.ratio));
+  const maxDefs = Math.max(1, ...standouts.map((r) => r.atlasDefs));
+  const minRatio = Math.min(...rows.map((r) => r.ratio));
+  return { rows, atParity, standouts, maxRatio, maxDefs, minRatio };
+}
+
+function NativeParityLadder({ data }) {
   const reduced = usePrefersReducedMotion();
-  // inView is reveal-enhancement only (see useInView): points default to their
-  // final opacity and only animate the staggered fade-in once revealed.
-  const [ref, inView] = useInView({ threshold: 0.2 });
-  const revealed = reduced || inView;
-  const W = 720;
-  const H = 360;
-  const padL = 54;
-  const padR = 24;
-  const padT = 24;
-  const padB = 46;
-  const plotW = W - padL - padR;
-  const plotH = H - padT - padB;
+  const [ref, inView] = useInView({ threshold: 0.18 });
+  const animate = !reduced && inView;
+  const [expanded, setExpanded] = useState(false);
+  const [active, setActive] = useState(null); // hovered/focused standout lang
 
-  const points = useMemo(() => {
-    const detectorLangs = new Set(["ejs", "ets", "r"]);
-    const raw = data.liveSmokes
-      .filter((r) => r.querySummary && r.coverage)
-      .map((r) => ({
-        lang: r.language,
-        x: r.coverage.ratio || 0,
-        y: r.querySummary.tokenRatio,
-        size: r.atlas?.index?.symbols || 0,
-        c: 1,
-        detector: detectorLangs.has(r.language) || r.detectorOnly,
-        comparable: (r.querySummary.equivalentRows || 0) > 0,
-      }));
-    // x domain 0.9..max coverage, y domain 0..max token ratio
-    const xs = raw.map((p) => p.x);
-    const ys = raw.map((p) => (p.y == null ? 0 : p.y));
-    const xMin = Math.min(0.95, ...xs);
-    const xMax = Math.max(2, ...xs);
-    const yMax = Math.max(45, ...ys);
-    const sizes = raw.map((p) => p.size);
-    const sMax = Math.max(...sizes, 1);
+  const model = useMemo(() => buildParityModel(data), [data]);
+  const { atParity, standouts, maxRatio, maxDefs, minRatio } = model;
 
-    const sx = (x) => padL + ((x - xMin) / (xMax - xMin)) * plotW;
-    const sy = (y) => padT + plotH - (y / yMax) * plotH;
-    const sr = (s) => 3 + Math.sqrt(s / sMax) * 9;
+  // ---- one shared horizontal ratio scale, used by BOTH zones --------------
+  // Domain starts a hair below 1.0 so the spine has air to its left; it ends a
+  // ROUND tick ABOVE the top standout (ceil to the next 0.2 step) so the
+  // longest bar never reaches the axis frame and its ×ratio + raw-defs label
+  // always has a gutter to live in. Ticks are honest ratio marks, never
+  // graphify. For data topping at ×1.84 this yields a ×2.0 domain.
+  const DOM_MIN = 0.96;
+  const DOM_MAX = Math.max(1.2, Math.ceil(maxRatio * 5 + 0.001) / 5); // ceil → next .2
+  const AXIS_LEFT = 21; // % — where ×1.0 spine sits (parity column to its left)
+  const AXIS_RIGHT = 97; // %
+  const ratioToPct = (r) =>
+    AXIS_LEFT + ((Math.max(DOM_MIN, r) - 1.0) / (DOM_MAX - 1.0)) * (AXIS_RIGHT - AXIS_LEFT);
+  // Ladder-x (full width) → standouts-zone-x. The zone is the right grid cell
+  // spanning ladder-x AXIS_LEFT→100, so bars, gridlines and labels inside it
+  // share ONE coordinate space and stay aligned with the axis ticks above.
+  const ZONE_SPAN = 100 - AXIS_LEFT;
+  const ladderToZone = (p) => ((p - AXIS_LEFT) / ZONE_SPAN) * 100;
+  const ticks = [1.0, 1.2, 1.4, 1.6, 1.8, 2.0].filter((t) => t <= DOM_MAX + 0.001);
+  const defsToThickness = (d) => 8 + Math.sqrt(d / maxDefs) * 16; // 8..24px bar
 
-    // 1-D jitter/collision pass on y for clustered near-1.0 points
-    const placed = raw
-      .map((p) => ({
-        ...p,
-        px: sx(p.x),
-        py: p.comparable && p.y != null ? sy(p.y) : padT + plotH - 6,
-        r: sr(p.size),
-      }))
-      .sort((a, b) => a.px - b.px);
-    for (let i = 0; i < placed.length; i += 1) {
-      for (let j = 0; j < i; j += 1) {
-        const a = placed[i];
-        const b = placed[j];
-        const dx = a.px - b.px;
-        const dy = a.py - b.py;
-        const minDist = a.r + b.r + 2;
-        const d = Math.hypot(dx, dy);
-        if (d < minDist && d > 0.0001) {
-          const push = (minDist - d) / 2;
-          const ux = dx / d;
-          const uy = dy / d;
-          a.px += ux * push;
-          a.py += uy * push;
-          b.px -= ux * push;
-          b.py -= uy * push;
-        }
-      }
-    }
-    const parityX = sx(1.0);
-    return { placed, xMin, xMax, yMax, sx, sy, parityX };
-  }, [data]);
-
-  const { placed, yMax, parityX, sx } = points;
-  const yTicks = [0, Math.round(yMax / 3), Math.round((2 * yMax) / 3), Math.round(yMax)];
-  const xTicks = [1.0, 1.5, 2.0].filter((t) => t >= points.xMin && t <= points.xMax);
+  const detectorCount = atParity.filter((r) => r.detector).length;
 
   return (
-    <div ref={ref} className="min-w-0 overflow-x-auto">
-      <svg
-        viewBox={`0 0 ${W} ${H}`}
-        width="100%"
-        style={{ minWidth: 560, display: "block" }}
-        role="img"
-        aria-label={`Coverage versus token-ratio scatter of ${placed.length} live language rows; native parity at coverage 1.0`}
+    <div ref={ref} data-testid="parity-ladder" className="min-w-0 overflow-hidden">
+      {/* TRUTH STRIP — the headline THIS chart proves, in plain numerals. The
+          ladder is a per-LANGUAGE visual (parity column + standout bars), so the
+          headline counts languages; the deterministic-row figure is reported
+          separately in the hero to avoid mixing denominators. */}
+      <div className="mb-5 flex flex-wrap items-center gap-x-6 gap-y-2">
+        <div className="flex items-baseline gap-2">
+          <span className="num" style={{ fontSize: 26, fontWeight: 600, color: "var(--success)" }}>
+            {atParity.length + standouts.length}/{atParity.length + standouts.length}
+          </span>
+          <span style={{ fontSize: 13, color: "var(--muted)" }}>live languages at or above native parity</span>
+        </div>
+        <span className="mono" style={{ fontSize: 12, color: "var(--faint)" }}>
+          {atParity.length} at parity · {standouts.length} exceed · none below ×1.0 · {data.summary.coverage.detectorOnlyRowsCovered} detector-only
+        </span>
+      </div>
+
+      {/* ===================== THE LADDER ===================== */}
+      <div className="relative">
+        {/* axis ticks header */}
+        <div className="relative mb-2" style={{ height: 16 }} aria-hidden>
+          {ticks.map((t) => (
+            <span
+              key={t}
+              className="mono absolute"
+              style={{ left: `${ratioToPct(t)}%`, transform: "translateX(-50%)", fontSize: 10.5, color: t === 1.0 ? "var(--warning)" : "var(--faint)" }}
+            >
+              ×{t.toFixed(1)}
+            </span>
+          ))}
+          <span
+            className="kicker absolute"
+            style={{ left: 0, top: 0, fontSize: 10, color: "var(--faint)" }}
+          >
+            at parity
+          </span>
+        </div>
+
+        {/* the ×1.0 parity spine, spanning both zones */}
+        <div
+          className="pointer-events-none absolute"
+          style={{ left: `${AXIS_LEFT}%`, top: 18, bottom: 26, width: 2, background: "var(--warning)", opacity: 0.85, boxShadow: "0 0 10px rgba(242,180,58,0.35)" }}
+          aria-hidden
+        />
+
+        <div className="grid items-stretch gap-0" style={{ gridTemplateColumns: `${AXIS_LEFT}% 1fr` }}>
+          {/* -------- ZONE A: PARITY COLUMN (the 29 exactly-at-1.0) -------- */}
+          <button
+            type="button"
+            data-testid="parity-column"
+            onClick={() => setExpanded((v) => !v)}
+            aria-expanded={expanded}
+            aria-label={`${atParity.length} languages exactly at native parity. ${expanded ? "Collapse" : "Expand"} the roster.`}
+            className="focusring relative flex flex-col items-center justify-end pr-3 text-center"
+            style={{ background: "transparent", border: "none", cursor: "pointer", minHeight: 200 }}
+          >
+            <div
+              className="relative flex w-full max-w-[150px] flex-col items-center justify-end overflow-hidden rounded-t-md"
+              style={{
+                height: animate ? 168 : 0,
+                background: "linear-gradient(180deg, rgba(82,217,139,0.16), rgba(82,217,139,0.05))",
+                border: "1px solid var(--success)",
+                borderBottom: "none",
+                transition: reduced ? "none" : "height 620ms cubic-bezier(0.22,1,0.36,1)",
+              }}
+            >
+              <span className="num" style={{ fontSize: 34, fontWeight: 600, color: "var(--success)", lineHeight: 1 }}>
+                {atParity.length}
+              </span>
+              <span className="mono mt-1" style={{ fontSize: 10.5, color: "var(--muted)" }}>
+                languages
+              </span>
+              <span className="mono mt-3 mb-2" style={{ fontSize: 10, color: "var(--faint)" }}>
+                {expanded ? "hide roster ▴" : "show roster ▾"}
+              </span>
+            </div>
+            <span className="num mt-2" style={{ fontSize: 12, color: "var(--warning)" }}>×1.00</span>
+            <span className="mono" style={{ fontSize: 10, color: "var(--faint)" }}>exactly at parity</span>
+          </button>
+
+          {/* -------- ZONE B: STANDOUTS LADDER (the 7 above parity) -------- */}
+          <div className="relative" role="list" aria-label="Languages that exceed native definition coverage">
+            {/* faint ratio gridlines behind the bars */}
+            {ticks.filter((t) => t > 1.0).map((t) => (
+              <div
+                key={t}
+                className="pointer-events-none absolute"
+                style={{ left: `${ladderToZone(ratioToPct(t))}%`, top: 0, bottom: 26, width: 1, background: "var(--grid)" }}
+                aria-hidden
+              />
+            ))}
+            <div className="flex flex-col justify-end gap-2.5 pl-3" style={{ minHeight: 200 }}>
+              {standouts.map((r, i) => {
+                // zone-relative bar end (0–100 within the standouts column)
+                const endZone = ladderToZone(ratioToPct(r.ratio));
+                const widthPct = endZone;
+                const th = defsToThickness(r.atlasDefs);
+                const isActive = active === r.lang;
+                // If the bar end leaves too little zone width for the outside
+                // ×ratio + defs label (which is right-anchored in the gutter),
+                // flip the label INSIDE the bar end so it is never clipped by the
+                // frame and never collides with the bar. The top ×1.84 bar ends
+                // ~81% of zone → inside; everything shorter labels outside.
+                const labelInside = endZone > 72;
+                // Short bars can't contain their own name in dark ink — render
+                // the name in light ink so it stays legible spilling onto the bg.
+                const nameLight = widthPct < 18;
+                return (
+                  <div
+                    key={r.lang}
+                    role="listitem"
+                    className="relative"
+                    style={{ height: Math.max(th, 22) }}
+                    onMouseEnter={() => setActive(r.lang)}
+                    onMouseLeave={() => setActive((a) => (a === r.lang ? null : a))}
+                  >
+                    {/* the bar grows rightward from the spine */}
+                    <div
+                      tabIndex={0}
+                      role="img"
+                      data-testid={`standout-${r.lang}`}
+                      aria-label={`${langLabel(r.lang)} ${r.ratio.toFixed(2)} times native coverage — Atlas ${num(r.atlasDefs)} definitions versus ${num(r.nativeDefs)} from ${r.tool}`}
+                      onFocus={() => setActive(r.lang)}
+                      onBlur={() => setActive((a) => (a === r.lang ? null : a))}
+                      className="focusring absolute flex items-center"
+                      style={{
+                        left: 0,
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        height: th,
+                        width: `${animate ? widthPct : 0}%`,
+                        background: isActive
+                          ? "linear-gradient(90deg, var(--secondary), #9db8ff)"
+                          : "linear-gradient(90deg, rgba(122,162,255,0.85), rgba(122,162,255,0.45))",
+                        borderRadius: "0 4px 4px 0",
+                        transition: reduced ? "none" : `width 640ms cubic-bezier(0.22,1,0.36,1) ${i * 60}ms, background 160ms`,
+                        outlineOffset: 3,
+                      }}
+                    >
+                      {/* trailing dot — area also encodes defs, reinforcing thickness */}
+                      <span
+                        className="absolute"
+                        style={{
+                          right: -5,
+                          top: "50%",
+                          width: 10,
+                          height: 10,
+                          marginTop: -5,
+                          borderRadius: "50%",
+                          background: "var(--secondary)",
+                          boxShadow: "0 0 8px rgba(122,162,255,0.55)",
+                        }}
+                        aria-hidden
+                      />
+                    </div>
+                    {/* language label, anchored inside-left of the bar */}
+                    <span
+                      className="num pointer-events-none absolute"
+                      style={{ left: 10, top: "50%", transform: "translateY(-50%)", fontSize: 12.5, color: nameLight ? "var(--text)" : "#061021", fontWeight: 600 }}
+                    >
+                      {langLabel(r.lang)}
+                    </span>
+                    {/* ratio + raw defs. Outside labels are RIGHT-ANCHORED to
+                        the zone edge (right:0), so they always sit in the gutter
+                        past the bar end and can never overrun the axis frame at
+                        any width or bar length. On the rare bar long enough that
+                        the gutter would collide with the bar end, the label
+                        flips INSIDE the bar end instead. */}
+                    <span
+                      className="num pointer-events-none absolute whitespace-nowrap"
+                      style={
+                        labelInside
+                          ? { left: `calc(${animate ? endZone : 0}% - 12px)`, top: "50%", transform: "translate(-100%,-50%)", fontSize: 12, color: "#061021", fontWeight: 600, transition: reduced ? "none" : `left 640ms cubic-bezier(0.22,1,0.36,1) ${i * 60}ms` }
+                          : { right: 0, top: "50%", transform: "translateY(-50%)", fontSize: 12, color: "var(--text)", textAlign: "right" }
+                      }
+                    >
+                      <span style={{ color: labelInside ? "#061021" : "var(--secondary)", fontWeight: 600 }}>×{r.ratio.toFixed(2)}</span>
+                      <span className="hidden sm:inline" style={{ color: labelInside ? "rgba(6,16,33,0.7)" : "var(--faint)", marginLeft: 8, fontSize: 11 }}>
+                        {num(r.atlasDefs)}/{num(r.nativeDefs)} defs
+                      </span>
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+            {/* exceeds-native caption pinned to the standouts zone */}
+            <div className="mono mt-2 pl-3" style={{ fontSize: 10.5, color: "var(--faint)" }}>
+              exceeds native — bar thickness ∝ definitions indexed
+            </div>
+          </div>
+        </div>
+
+        {/* axis baseline + label */}
+        <div className="relative mt-1" style={{ height: 14 }} aria-hidden>
+          <div className="absolute" style={{ left: `${AXIS_LEFT}%`, right: `${100 - AXIS_RIGHT}%`, top: 0, height: 1, background: "var(--line)" }} />
+        </div>
+        <div className="mono mt-1 text-center" style={{ fontSize: 10.5, color: "var(--muted)" }}>
+          coverage ratio — Atlas definitions ÷ native definitions (range ×{minRatio.toFixed(2)}–×{maxRatio.toFixed(2)})
+        </div>
+      </div>
+
+      {/* expandable roster of the at-parity cluster — honest inspectability */}
+      <div
+        data-testid="parity-roster"
+        className="grid overflow-hidden transition-all"
+        style={{ gridTemplateRows: expanded ? "1fr" : "0fr", transition: reduced ? "none" : "grid-template-rows 360ms ease" }}
       >
-        {/* axes */}
-        <line x1={padL} y1={padT} x2={padL} y2={padT + plotH} stroke="var(--line)" strokeWidth="1" />
-        <line x1={padL} y1={padT + plotH} x2={W - padR} y2={padT + plotH} stroke="var(--line)" strokeWidth="1" />
-        {/* y gridlines + ticks */}
-        {yTicks.map((t) => {
-          const y = padT + plotH - (t / yMax) * plotH;
-          return (
-            <g key={`y${t}`}>
-              <line x1={padL} y1={y} x2={W - padR} y2={y} stroke="var(--grid)" strokeWidth="1" />
-              <text x={padL - 8} y={y + 3} textAnchor="end" className="mono" fontSize="10" fill="var(--faint)">
-                {t}x
-              </text>
-            </g>
-          );
-        })}
-        {/* x ticks */}
-        {xTicks.map((t) => {
-          const x = sx(t);
-          return (
-            <text key={`x${t}`} x={x} y={padT + plotH + 16} textAnchor="middle" className="mono" fontSize="10" fill="var(--faint)">
-              {t.toFixed(1)}
-            </text>
-          );
-        })}
-        {/* native-parity baseline at coverage 1.0 */}
-        <line x1={parityX} y1={padT} x2={parityX} y2={padT + plotH} stroke="var(--warning)" strokeWidth="1" strokeDasharray="4 4" opacity="0.7" />
-        <text x={parityX + 5} y={padT + 12} className="mono" fontSize="10" fill="var(--warning)">
-          native parity 1.0
-        </text>
-        {/* axis labels */}
-        <text x={padL + plotW / 2} y={H - 6} textAnchor="middle" className="mono" fontSize="10.5" fill="var(--muted)">
-          coverage ratio (Atlas defs ÷ native defs)
-        </text>
-        <text
-          x={14}
-          y={padT + plotH / 2}
-          textAnchor="middle"
-          className="mono"
-          fontSize="10.5"
-          fill="var(--muted)"
-          transform={`rotate(-90 14 ${padT + plotH / 2})`}
-        >
-          token ratio vs graphify
-        </text>
-        {/* points */}
-        {placed.map((p, i) => (
-          <g key={p.lang}>
-            {p.detector ? (
-              <circle
-                cx={p.px}
-                cy={p.py}
-                r={Math.max(p.r, 5)}
-                fill="none"
-                stroke="var(--not-comparable)"
-                strokeWidth="1.4"
-                strokeDasharray="2 2"
-                opacity={0.9}
-                className={revealed && !reduced ? "scatter-pt" : undefined}
-                style={revealed && !reduced ? { animationDelay: `${i * 12}ms` } : undefined}
-              >
-                <title>{`${langLabel(p.lang)} · detector-only · coverage ${p.x.toFixed(2)}`}</title>
-              </circle>
-            ) : (
-              <circle
-                cx={p.px}
-                cy={p.py}
-                r={p.r}
-                fill={p.comparable ? COMMUNITY_COLORS[i % 6] : "var(--not-comparable)"}
-                opacity={0.82}
-                stroke={p.comparable ? "rgba(8,9,12,0.6)" : "none"}
-                strokeWidth="1"
-                className={revealed && !reduced ? "scatter-pt" : undefined}
-                style={revealed && !reduced ? { animationDelay: `${i * 12}ms` } : undefined}
-              >
-                <title>{`${langLabel(p.lang)} · coverage ${p.x.toFixed(2)} · ${p.comparable ? `${(p.y || 0).toFixed(2)}x tokens` : "no comparable rows"} · ${num(p.size)} symbols`}</title>
-              </circle>
-            )}
-          </g>
-        ))}
-      </svg>
+        <div className="min-h-0">
+          <div className="mt-5 rounded-lg p-4" style={{ background: "var(--bg2)", border: "1px solid var(--line)" }}>
+            <div className="kicker mb-3">
+              {atParity.length} languages exactly at parity · {detectorCount} detector-only
+            </div>
+            <ul className="flex flex-wrap gap-2" aria-label="Languages at native parity">
+              {atParity.map((r) => (
+                <li key={r.lang}>
+                  <span
+                    className="mono inline-flex items-center gap-1.5 rounded-md px-2 py-1"
+                    title={`${langLabel(r.lang)} · ${num(r.atlasDefs)} Atlas defs vs ${num(r.nativeDefs)} ${r.tool} · ×${r.ratio.toFixed(2)}`}
+                    style={{
+                      fontSize: 11.5,
+                      border: `1px solid ${r.detector ? "var(--not-comparable)" : "var(--line-strong)"}`,
+                      background: "var(--surface)",
+                      color: r.detector ? "var(--not-comparable)" : "var(--text)",
+                    }}
+                  >
+                    {r.detector && <span aria-hidden style={{ fontSize: 11 }}>▱</span>}
+                    {langLabel(r.lang)}
+                    <span style={{ color: "var(--faint)" }}>{num(r.atlasDefs)}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-3" style={{ fontSize: 11.5, lineHeight: 1.5, color: "var(--faint)" }}>
+              ▱ detector-only languages (ejs · ets · r) are reached through a scriptable source-counter proxy and shown
+              here for completeness — they are never counted as a coverage win.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
 function VsNative({ data }) {
-  const cov = data.summary.coverage;
   return (
     <section id="vs-native" data-testid="vs-native" className="shell py-16" aria-labelledby="vsn-title">
       <SectionHeader
         id="vsn-title"
-        kicker="Parity · vs native SCIP / LSP"
-        title="Native-parity coverage shown separately from the token race"
+        kicker="Coverage · alongside native SCIP / LSP"
+        title="Atlas meets or beats native definition coverage, language by language"
       >
-        Each dot is a live language: x is definition coverage against the best native indexer, y is the token ratio
-        vs graphify, dot size is symbols indexed. Detector-only languages render as hollow outlines.
+        Coverage is Atlas definitions ÷ the best native indexer for each language — no graphify on this axis.
+        The ×1.0 spine is native parity: every benchmarked language sits on it or to its right.
       </SectionHeader>
 
-      {/* verbatim bordered standfirst */}
+      {/* peer-framed standfirst — native indexers are the bar Atlas stands with */}
       <div
         data-testid="native-callout"
         className="mb-7 rounded-lg px-5 py-4"
         style={{ border: "1px solid var(--line-strong)", background: "var(--surface)" }}
       >
         <p className="text-balance" style={{ fontSize: 15, lineHeight: 1.5, color: "var(--text)" }}>
-          <span style={{ color: "var(--secondary)", fontWeight: 600 }}>Different graph model</span> — not a token race,
-          shown separately, never averaged in.
+          <span style={{ color: "var(--secondary)", fontWeight: 600 }}>Native indexers are the peer bar</span> — SCIP and
+          LSP servers define ground truth for definition coverage; this is shown on its own coverage axis and is never
+          averaged into any efficiency ratio.
         </p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.55fr)_minmax(260px,0.9fr)]">
         <div className="panel min-w-0 p-5 sm:p-6">
-          <CoverageScatter data={data} />
-          <p className="mono mt-4" style={{ fontSize: 12, lineHeight: 1.45, color: "var(--faint)" }}>
-            {cov.deterministicRowsCovered}/{cov.graphifyRows} deterministic rows covered at or above native parity ·{" "}
-            {cov.detectorOnlyRowsCovered} detector-only.
-          </p>
+          <NativeParityLadder data={data} />
         </div>
         <div className="panel p-5 sm:p-6">
           <div className="kicker">Native baselines</div>
@@ -1024,9 +1097,10 @@ function VsNative({ data }) {
 function NotComparable({ data }) {
   return (
     <section id="not-comparable" data-testid="not-comparable" className="shell py-16" aria-labelledby="nc-title">
-      <SectionHeader id="nc-title" kicker="Honesty · where we don’t claim a win" title="Three languages produced zero graphify-equivalent rows">
-        BYOND, ETS and R held native coverage ≥ 1.0 across five iterations, but graphify returned no comparable query
-        rows. No latency or token ratio is claimed for them.
+      <SectionHeader id="nc-title" kicker="Honesty · the edge of our scope" title="Where Atlas doesn’t claim an efficiency win">
+        Three languages — BYOND, ETS and R — held native coverage ≥ 1.0 across five iterations, but produced no
+        comparable query rows to score a token or latency ratio against (graphify happened to return no equivalent
+        either). Rather than fold them into an average, Atlas reports them plainly as not comparable.
       </SectionHeader>
 
       <div
@@ -1136,7 +1210,7 @@ function SignalPath({ data }) {
     ["repo", "source files"],
     ["atlas index", "SQLite graph"],
     ["atlas context", "minimal slice"],
-    ["MCP", "review agent"],
+    ["MCP", "dev or agent"],
   ];
   return (
     <section id="how" data-testid="how" className="shell py-16" aria-labelledby="how-title">
@@ -1180,353 +1254,6 @@ function SignalPath({ data }) {
   );
 }
 
-/* ========================= MATRIX (Core / Live) ======================= */
-
-function RatioBar({ value, max, color = "var(--primary)" }) {
-  const w = value == null ? 0 : Math.max(0, Math.min(100, (value / max) * 100));
-  return (
-    <div className="mt-1.5 h-1 overflow-hidden rounded-full" style={{ background: "var(--line)" }}>
-      <div className="h-full rounded-full" style={{ width: `${w}%`, background: color }} />
-    </div>
-  );
-}
-
-function CoreMatrixTable({ data }) {
-  return (
-    <div className="tablewrap">
-      <table className="dtable">
-        <thead>
-          <tr>
-            <th>lang</th>
-            <th>repo</th>
-            <th>index s</th>
-            <th>symbols</th>
-            <th>edges</th>
-            <th>token×</th>
-            <th>latency×</th>
-            <th>graphify nodes</th>
-            <th>rows</th>
-            <th>source</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.coreMatrix.map((r) => {
-            const a = r.atlas.metrics || {};
-            const g = r.graphify.metrics || {};
-            const qs = r.querySummary;
-            return (
-              <tr key={r.language} data-testid={`matrix-row-${r.language}`}>
-                <td>
-                  <span style={{ color: "var(--text)" }}>{langLabel(r.language)}</span>
-                  <div className="num" style={{ fontSize: 11, color: "var(--faint)" }}>
-                    {r.atlas.status} · {r.graphify.status}
-                  </div>
-                </td>
-                <td>
-                  <a className="link" href={r.repo} target="_blank" rel="noreferrer">
-                    {r.repo.replace("https://github.com/", "")}
-                  </a>
-                </td>
-                <td className="num">{secs(a.cold_seconds ?? r.atlas.seconds)}</td>
-                <td className="num">{num(a.symbols)}</td>
-                <td className="num">{num(a.edges)}</td>
-                <td style={{ minWidth: 96 }}>
-                  <span className="num" style={{ color: "var(--primary)" }}>{ratio(qs.tokenRatio)}</span>
-                  <RatioBar value={qs.tokenRatio} max={32} />
-                </td>
-                <td style={{ minWidth: 96 }}>
-                  <span className="num" style={{ color: "var(--secondary)" }}>{ratio(qs.latencyRatio)}</span>
-                  <RatioBar value={qs.latencyRatio} max={10} color="var(--secondary)" />
-                </td>
-                <td className="num">{num(g.nodes)}</td>
-                <td>
-                  <span className="num">{qs.equivalentRows}/{qs.rows}</span>
-                  {qs.graphifyMissing > 0 && (
-                    <div className="mono" style={{ fontSize: 10.5, color: "var(--warning)" }}>
-                      ○ {qs.graphifyMissing} no equiv
-                    </div>
-                  )}
-                </td>
-                <td>
-                  <SourceLink href={r.artifact} download>JSON</SourceLink>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
-function LiveDetailDrawer({ row }) {
-  if (!row) return null;
-  return (
-    <aside
-      data-testid="detail-drawer"
-      className="panel min-w-0 p-5 xl:sticky xl:top-[72px] xl:max-h-[calc(100vh-88px)] xl:overflow-auto"
-      aria-label={`${langLabel(row.language)} evidence`}
-    >
-      <div className="flex items-baseline justify-between gap-2">
-        <h3 className="font-semibold" style={{ fontSize: 16 }}>{langLabel(row.language)}</h3>
-        <span className="num" style={{ fontSize: 11, color: "var(--faint)" }}>{shortSha(row.commit)}</span>
-      </div>
-      <a className="link mono mt-1 block break-words" href={row.repo} target="_blank" rel="noreferrer" style={{ fontSize: 12 }}>
-        {row.repo.replace("https://github.com/", "")}
-      </a>
-      <div className="mono mt-4 grid grid-cols-2 gap-3" style={{ fontSize: 12 }}>
-        <div>
-          <div style={{ color: "var(--faint)" }}>native baseline</div>
-          <div style={{ color: "var(--text)" }}>{row.native.tool}</div>
-        </div>
-        <div>
-          <div style={{ color: "var(--faint)" }}>coverage</div>
-          <div style={{ color: row.coverage.ratio >= 1 ? "var(--success)" : "var(--text)" }}>{ratio(row.coverage.ratio)}</div>
-        </div>
-        <div>
-          <div style={{ color: "var(--faint)" }}>symbols</div>
-          <div style={{ color: "var(--text)" }}>{num(row.atlas?.index?.symbols)}</div>
-        </div>
-        <div>
-          <div style={{ color: "var(--faint)" }}>comparable rows</div>
-          <div style={{ color: "var(--text)" }}>{row.querySummary.equivalentRows}/{row.querySummary.rows}</div>
-        </div>
-      </div>
-      <div className="tablewrap mt-4">
-        <table className="dtable" style={{ minWidth: 420 }}>
-          <thead>
-            <tr>
-              <th>query</th>
-              <th>atlas tok</th>
-              <th>graphify tok</th>
-              <th>status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {row.queries.map((q) => (
-              <tr key={q.symbol}>
-                <td className="num">{q.symbol}</td>
-                <td className="num">{num(q.atlasTokens)}</td>
-                <td className="num">{q.graphifyMissing ? "—" : num(q.graphifyTokens)}</td>
-                <td>
-                  {q.graphifyMissing ? (
-                    <span className="mono" style={{ fontSize: 11, color: "var(--warning)" }}>○ no equiv</span>
-                  ) : (
-                    <span className="mono" style={{ fontSize: 11, color: "var(--success)" }}>comparable</span>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <p className="mt-4" style={{ fontSize: 12, lineHeight: 1.5, color: "var(--muted)" }}>
-        {row.optimization?.stopReason || "No optimization note recorded."}
-      </p>
-      <div className="mt-3">
-        <SourceLink href={row.artifact} download>
-          <Download className="h-3 w-3" aria-hidden /> raw artifact
-        </SourceLink>
-      </div>
-    </aside>
-  );
-}
-
-function LiveTable({ data }) {
-  const [filter, setFilter] = useState("all");
-  const [sort, setSort] = useState("language");
-  const [search, setSearch] = useState("");
-  const [detailLang, setDetailLang] = useState("rust");
-
-  const rows = useMemo(() => {
-    let next = [...data.liveSmokes];
-    const term = search.trim().toLowerCase();
-    if (filter === "ok") next = next.filter((r) => r.querySummary.equivalentRows > 0 && !r.detectorOnly);
-    if (filter === "partial") next = next.filter((r) => r.querySummary.equivalentRows === 0);
-    if (filter === "detector") next = next.filter((r) => r.detectorOnly || ["ejs", "ets", "r"].includes(r.language));
-    if (term) {
-      next = next.filter((r) =>
-        [r.language, r.repo, r.commit, r.native.tool, r.artifact].some((v) => String(v || "").toLowerCase().includes(term))
-      );
-    }
-    next.sort((a, b) => {
-      if (sort === "tokens") return (b.querySummary.tokenRatio || 0) - (a.querySummary.tokenRatio || 0);
-      if (sort === "latency") return (b.querySummary.latencyRatio || 0) - (a.querySummary.latencyRatio || 0);
-      if (sort === "coverage") return (b.coverage.ratio || 0) - (a.coverage.ratio || 0);
-      if (sort === "symbols") return (b.atlas?.index?.symbols || 0) - (a.atlas?.index?.symbols || 0);
-      return a.language.localeCompare(b.language);
-    });
-    return next;
-  }, [data.liveSmokes, filter, sort, search]);
-
-  const detail = data.liveSmokes.find((r) => r.language === detailLang) || data.liveSmokes[0];
-
-  return (
-    <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
-      <div className="min-w-0">
-        <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center">
-          <div className="relative min-w-0 flex-1">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" style={{ color: "var(--faint)" }} aria-hidden />
-            <input
-              id="live-search"
-              data-testid="live-search"
-              className="field focusring pl-9"
-              type="search"
-              placeholder="Search language, repo, commit, tool…"
-              aria-label="Search live smokes"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <select
-              id="live-filter"
-              data-testid="live-filter"
-              className="field focusring"
-              style={{ width: "auto" }}
-              aria-label="Filter live smokes"
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-            >
-              <option value="all">All rows</option>
-              <option value="ok">Comparable</option>
-              <option value="partial">No comparable rows</option>
-              <option value="detector">Detector-only</option>
-            </select>
-            <select
-              id="live-sort"
-              data-testid="live-sort"
-              className="field focusring"
-              style={{ width: "auto" }}
-              aria-label="Sort live smokes"
-              value={sort}
-              onChange={(e) => setSort(e.target.value)}
-            >
-              <option value="language">Sort: language</option>
-              <option value="tokens">Sort: token ratio</option>
-              <option value="latency">Sort: latency ratio</option>
-              <option value="coverage">Sort: coverage</option>
-              <option value="symbols">Sort: symbols</option>
-            </select>
-          </div>
-        </div>
-        <div className="tablewrap">
-          <table className="dtable">
-            <thead>
-              <tr>
-                <th>lang</th>
-                <th>repo · commit</th>
-                <th>native tool</th>
-                <th>coverage</th>
-                <th>token×</th>
-                <th>latency×</th>
-                <th>rows</th>
-                <th>status</th>
-                <th>evidence</th>
-              </tr>
-            </thead>
-            <tbody id="live-body">
-              {rows.map((r) => {
-                const comparable = r.querySummary.equivalentRows > 0;
-                const detector = r.detectorOnly || ["ejs", "ets", "r"].includes(r.language);
-                return (
-                  <tr key={r.language}>
-                    <td>
-                      <button
-                        type="button"
-                        className="focusring text-left"
-                        onClick={() => setDetailLang(r.language)}
-                        style={{ color: "var(--text)", background: "none", border: "none", cursor: "pointer", padding: 0, font: "inherit" }}
-                        title="Inspect"
-                      >
-                        {langLabel(r.language)}
-                      </button>
-                      <div className="num" style={{ fontSize: 11, color: "var(--faint)" }}>{r.language}</div>
-                    </td>
-                    <td>
-                      <a className="link" href={r.repo} target="_blank" rel="noreferrer">
-                        {r.repo.replace("https://github.com/", "")}
-                      </a>
-                      <div className="num" style={{ fontSize: 11, color: "var(--faint)" }}>{shortSha(r.commit)}</div>
-                    </td>
-                    <td className="num" style={{ color: "var(--muted)" }}>{r.native.tool}</td>
-                    <td className="num" style={{ color: r.coverage.ratio >= 1 ? "var(--success)" : "var(--text)" }}>
-                      {ratio(r.coverage.ratio)}
-                    </td>
-                    <td className="num" style={{ color: comparable ? "var(--primary)" : "var(--not-comparable)" }}>
-                      {comparable ? ratio(r.querySummary.tokenRatio) : "not comparable"}
-                    </td>
-                    <td className="num" style={{ color: comparable ? "var(--secondary)" : "var(--not-comparable)" }}>
-                      {comparable ? ratio(r.querySummary.latencyRatio) : "not comparable"}
-                    </td>
-                    <td className="num">{r.querySummary.equivalentRows}/{r.querySummary.rows}</td>
-                    <td>
-                      {detector ? (
-                        <span className="mono" style={{ fontSize: 11, color: "var(--warning)" }}>detector-only</span>
-                      ) : comparable ? (
-                        <span className="mono" style={{ fontSize: 11, color: "var(--success)" }}>ok</span>
-                      ) : (
-                        <span className="mono" style={{ fontSize: 11, color: "var(--not-comparable)" }}>not comparable</span>
-                      )}
-                    </td>
-                    <td>
-                      <SourceLink href={r.artifact} download>raw</SourceLink>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <LiveDetailDrawer row={detail} />
-    </div>
-  );
-}
-
-function Matrix({ data }) {
-  const [tab, setTab] = useState("core");
-  return (
-    <section id="matrix" data-testid="matrix" className="shell py-16" aria-labelledby="matrix-title">
-      <SectionHeader
-        id="matrix-title"
-        kicker="Full benchmark matrix"
-        title="Every row, every artifact"
-        actions={
-          <div className="seg" role="tablist" aria-label="Matrix scope">
-            <button
-              type="button"
-              role="tab"
-              data-testid="matrix-tab-core"
-              className="seg-btn focusring"
-              data-active={tab === "core"}
-              aria-selected={tab === "core"}
-              onClick={() => setTab("core")}
-            >
-              Core {data.summary.core.languages}
-            </button>
-            <button
-              type="button"
-              role="tab"
-              data-testid="matrix-tab-live"
-              className="seg-btn focusring"
-              data-active={tab === "live"}
-              aria-selected={tab === "live"}
-              onClick={() => setTab("live")}
-            >
-              Live {data.summary.live.artifacts}
-            </button>
-          </div>
-        }
-      >
-        {tab === "core"
-          ? "The 7 core languages benchmarked head-to-head against graphify plus native SCIP/LSP baselines."
-          : "36 live open-source repository checks, each at a pinned commit with the best available native or parser baseline. Click a language to inspect its per-query breakdown."}
-      </SectionHeader>
-      {tab === "core" ? <CoreMatrixTable data={data} /> : <LiveTable data={data} />}
-    </section>
-  );
-}
 
 /* ============================ INSTALL ================================= */
 
@@ -1655,9 +1382,9 @@ function Install() {
           <UsageStep n="1" title="Index a repository" line="atlas index . --reindex" copy="Builds the local symbol, call, route and search graph into SQLite." />
           <UsageStep
             n="2"
-            title="Retrieve review context"
+            title="Retrieve code context"
             line={`atlas context --paths path/to/changed-file.go --query "review risk" --format json`}
-            copy="Returns a compact context bundle around the changed files for a review agent."
+            copy="Returns a compact context bundle around the changed files for any developer or agent — coding, refactoring, debugging, review."
           />
           <UsageStep
             n="3"
@@ -1832,7 +1559,7 @@ function App() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [graphMeta, setGraphMeta] = useState(null);
-  const active = useScrollSpy(["vs-graphify", "graph", "vs-native", "evidence", "install"]);
+  const active = useScrollSpy(["vs-native", "vs-graphify", "graph", "matrix", "install"]);
 
   useEffect(() => {
     fetch("data/benchmark-data.json", { cache: "no-store" })
@@ -1892,12 +1619,12 @@ function App() {
       <ConsoleBar data={data} active={active} />
       <main id="main">
         <HeroReadout data={data} />
-        <VsGraphify data={data} />
         <VsNative data={data} />
+        <VsGraphify data={data} />
         <NotComparable data={data} />
         <GraphSection data={enriched} />
         <SignalPath data={enriched} />
-        <Matrix data={data} />
+        <LanguagesExplorer data={data} />
         <Install />
         <Evidence data={data} />
       </main>

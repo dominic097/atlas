@@ -1572,7 +1572,7 @@
       "detectorOnlyArtifacts": 3
     },
     "coverage": {
-      "graphifyRows": 39,
+      "comparableRows": 39,
       "deterministicRowsCovered": 39,
       "detectorOnlyRowsCovered": 3
     },
