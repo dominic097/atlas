@@ -1,0 +1,428 @@
+{
+  "generated_at_unix": 1782722670,
+  "iterations_requested": 5,
+  "atlas": "bin/atlas",
+  "graphify": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify",
+  "languages": [
+    {
+      "language": "byond",
+      "status": "saturated_no_equivalent_graphify_rows",
+      "iterations_run": 5,
+      "non_improving_iterations": 5,
+      "saturated": true,
+      "note": "Five repeated live benchmark attempts produced zero graphify-equivalent query rows while Atlas maintained native coverage >= 1.0; no honest 5x latency/token ratio can be computed.",
+      "iterations": [
+        {
+          "language": "byond",
+          "seconds": 43.48,
+          "artifact": "bench/LIVE_BYOND_SMOKE.json",
+          "commit": "4c88909444709d715adfb8f96e9e96cccd986095",
+          "coverage_ratio": 1.0,
+          "coverage": {
+            "atlas_vs_byond_source_counter_definition_ratio": 1.0,
+            "atlas_byond_definition_symbols": 8874,
+            "native_definitions": 8874
+          },
+          "graphify_detector_only": "",
+          "queries": {
+            "rows": 6,
+            "equivalent_rows": 0,
+            "atlas_missing": 0,
+            "graphify_missing": 6,
+            "atlas_tokens": 0,
+            "graphify_tokens": 0,
+            "atlas_ms": 0,
+            "graphify_ms": 0,
+            "token_ratio": null,
+            "latency_ratio": null
+          },
+          "iteration": 1
+        },
+        {
+          "language": "byond",
+          "seconds": 38.003,
+          "artifact": "bench/LIVE_BYOND_SMOKE.json",
+          "commit": "4c88909444709d715adfb8f96e9e96cccd986095",
+          "coverage_ratio": 1.0,
+          "coverage": {
+            "atlas_vs_byond_source_counter_definition_ratio": 1.0,
+            "atlas_byond_definition_symbols": 8874,
+            "native_definitions": 8874
+          },
+          "graphify_detector_only": "",
+          "queries": {
+            "rows": 6,
+            "equivalent_rows": 0,
+            "atlas_missing": 0,
+            "graphify_missing": 6,
+            "atlas_tokens": 0,
+            "graphify_tokens": 0,
+            "atlas_ms": 0,
+            "graphify_ms": 0,
+            "token_ratio": null,
+            "latency_ratio": null
+          },
+          "iteration": 2
+        },
+        {
+          "language": "byond",
+          "seconds": 39.073,
+          "artifact": "bench/LIVE_BYOND_SMOKE.json",
+          "commit": "4c88909444709d715adfb8f96e9e96cccd986095",
+          "coverage_ratio": 1.0,
+          "coverage": {
+            "atlas_vs_byond_source_counter_definition_ratio": 1.0,
+            "atlas_byond_definition_symbols": 8874,
+            "native_definitions": 8874
+          },
+          "graphify_detector_only": "",
+          "queries": {
+            "rows": 6,
+            "equivalent_rows": 0,
+            "atlas_missing": 0,
+            "graphify_missing": 6,
+            "atlas_tokens": 0,
+            "graphify_tokens": 0,
+            "atlas_ms": 0,
+            "graphify_ms": 0,
+            "token_ratio": null,
+            "latency_ratio": null
+          },
+          "iteration": 3
+        },
+        {
+          "language": "byond",
+          "seconds": 36.141,
+          "artifact": "bench/LIVE_BYOND_SMOKE.json",
+          "commit": "4c88909444709d715adfb8f96e9e96cccd986095",
+          "coverage_ratio": 1.0,
+          "coverage": {
+            "atlas_vs_byond_source_counter_definition_ratio": 1.0,
+            "atlas_byond_definition_symbols": 8874,
+            "native_definitions": 8874
+          },
+          "graphify_detector_only": "",
+          "queries": {
+            "rows": 6,
+            "equivalent_rows": 0,
+            "atlas_missing": 0,
+            "graphify_missing": 6,
+            "atlas_tokens": 0,
+            "graphify_tokens": 0,
+            "atlas_ms": 0,
+            "graphify_ms": 0,
+            "token_ratio": null,
+            "latency_ratio": null
+          },
+          "iteration": 4
+        },
+        {
+          "language": "byond",
+          "seconds": 31.847,
+          "artifact": "bench/LIVE_BYOND_SMOKE.json",
+          "commit": "4c88909444709d715adfb8f96e9e96cccd986095",
+          "coverage_ratio": 1.0,
+          "coverage": {
+            "atlas_vs_byond_source_counter_definition_ratio": 1.0,
+            "atlas_byond_definition_symbols": 8874,
+            "native_definitions": 8874
+          },
+          "graphify_detector_only": "",
+          "queries": {
+            "rows": 6,
+            "equivalent_rows": 0,
+            "atlas_missing": 0,
+            "graphify_missing": 6,
+            "atlas_tokens": 0,
+            "graphify_tokens": 0,
+            "atlas_ms": 0,
+            "graphify_ms": 0,
+            "token_ratio": null,
+            "latency_ratio": null
+          },
+          "iteration": 5
+        }
+      ]
+    },
+    {
+      "language": "ets",
+      "status": "saturated_no_equivalent_graphify_rows",
+      "iterations_run": 5,
+      "non_improving_iterations": 5,
+      "saturated": true,
+      "note": "Five repeated live benchmark attempts produced zero graphify-equivalent query rows while Atlas maintained native coverage >= 1.0; no honest 5x latency/token ratio can be computed.",
+      "iterations": [
+        {
+          "language": "ets",
+          "seconds": 4.206,
+          "artifact": "bench/LIVE_ETS_SMOKE.json",
+          "commit": "a826ab0e75fe51d028c1c5af58188e908736b53b",
+          "coverage_ratio": 1.0,
+          "coverage": {
+            "atlas_vs_ets_source_counter_definition_ratio": 1.0,
+            "atlas_ets_definition_symbols": 153,
+            "native_definitions": 153
+          },
+          "graphify_detector_only": ".ets",
+          "queries": {
+            "rows": 8,
+            "equivalent_rows": 0,
+            "atlas_missing": 0,
+            "graphify_missing": 8,
+            "atlas_tokens": 0,
+            "graphify_tokens": 0,
+            "atlas_ms": 0,
+            "graphify_ms": 0,
+            "token_ratio": null,
+            "latency_ratio": null
+          },
+          "iteration": 1
+        },
+        {
+          "language": "ets",
+          "seconds": 4.137,
+          "artifact": "bench/LIVE_ETS_SMOKE.json",
+          "commit": "a826ab0e75fe51d028c1c5af58188e908736b53b",
+          "coverage_ratio": 1.0,
+          "coverage": {
+            "atlas_vs_ets_source_counter_definition_ratio": 1.0,
+            "atlas_ets_definition_symbols": 153,
+            "native_definitions": 153
+          },
+          "graphify_detector_only": ".ets",
+          "queries": {
+            "rows": 8,
+            "equivalent_rows": 0,
+            "atlas_missing": 0,
+            "graphify_missing": 8,
+            "atlas_tokens": 0,
+            "graphify_tokens": 0,
+            "atlas_ms": 0,
+            "graphify_ms": 0,
+            "token_ratio": null,
+            "latency_ratio": null
+          },
+          "iteration": 2
+        },
+        {
+          "language": "ets",
+          "seconds": 4.237,
+          "artifact": "bench/LIVE_ETS_SMOKE.json",
+          "commit": "a826ab0e75fe51d028c1c5af58188e908736b53b",
+          "coverage_ratio": 1.0,
+          "coverage": {
+            "atlas_vs_ets_source_counter_definition_ratio": 1.0,
+            "atlas_ets_definition_symbols": 153,
+            "native_definitions": 153
+          },
+          "graphify_detector_only": ".ets",
+          "queries": {
+            "rows": 8,
+            "equivalent_rows": 0,
+            "atlas_missing": 0,
+            "graphify_missing": 8,
+            "atlas_tokens": 0,
+            "graphify_tokens": 0,
+            "atlas_ms": 0,
+            "graphify_ms": 0,
+            "token_ratio": null,
+            "latency_ratio": null
+          },
+          "iteration": 3
+        },
+        {
+          "language": "ets",
+          "seconds": 4.246,
+          "artifact": "bench/LIVE_ETS_SMOKE.json",
+          "commit": "a826ab0e75fe51d028c1c5af58188e908736b53b",
+          "coverage_ratio": 1.0,
+          "coverage": {
+            "atlas_vs_ets_source_counter_definition_ratio": 1.0,
+            "atlas_ets_definition_symbols": 153,
+            "native_definitions": 153
+          },
+          "graphify_detector_only": ".ets",
+          "queries": {
+            "rows": 8,
+            "equivalent_rows": 0,
+            "atlas_missing": 0,
+            "graphify_missing": 8,
+            "atlas_tokens": 0,
+            "graphify_tokens": 0,
+            "atlas_ms": 0,
+            "graphify_ms": 0,
+            "token_ratio": null,
+            "latency_ratio": null
+          },
+          "iteration": 4
+        },
+        {
+          "language": "ets",
+          "seconds": 4.24,
+          "artifact": "bench/LIVE_ETS_SMOKE.json",
+          "commit": "a826ab0e75fe51d028c1c5af58188e908736b53b",
+          "coverage_ratio": 1.0,
+          "coverage": {
+            "atlas_vs_ets_source_counter_definition_ratio": 1.0,
+            "atlas_ets_definition_symbols": 153,
+            "native_definitions": 153
+          },
+          "graphify_detector_only": ".ets",
+          "queries": {
+            "rows": 8,
+            "equivalent_rows": 0,
+            "atlas_missing": 0,
+            "graphify_missing": 8,
+            "atlas_tokens": 0,
+            "graphify_tokens": 0,
+            "atlas_ms": 0,
+            "graphify_ms": 0,
+            "token_ratio": null,
+            "latency_ratio": null
+          },
+          "iteration": 5
+        }
+      ]
+    },
+    {
+      "language": "r",
+      "status": "saturated_no_equivalent_graphify_rows",
+      "iterations_run": 5,
+      "non_improving_iterations": 5,
+      "saturated": true,
+      "note": "Five repeated live benchmark attempts produced zero graphify-equivalent query rows while Atlas maintained native coverage >= 1.0; no honest 5x latency/token ratio can be computed.",
+      "iterations": [
+        {
+          "language": "r",
+          "seconds": 3.805,
+          "artifact": "bench/LIVE_R_SMOKE.json",
+          "commit": "6870419aa6e106c3580c45c81d5b688cb31758bd",
+          "coverage_ratio": 1.0,
+          "coverage": {
+            "atlas_vs_r_source_counter_definition_ratio": 1.0,
+            "atlas_r_definition_symbols": 3011,
+            "native_definitions": 3011
+          },
+          "graphify_detector_only": ".r",
+          "queries": {
+            "rows": 8,
+            "equivalent_rows": 0,
+            "atlas_missing": 0,
+            "graphify_missing": 8,
+            "atlas_tokens": 0,
+            "graphify_tokens": 0,
+            "atlas_ms": 0,
+            "graphify_ms": 0,
+            "token_ratio": null,
+            "latency_ratio": null
+          },
+          "iteration": 1
+        },
+        {
+          "language": "r",
+          "seconds": 3.765,
+          "artifact": "bench/LIVE_R_SMOKE.json",
+          "commit": "6870419aa6e106c3580c45c81d5b688cb31758bd",
+          "coverage_ratio": 1.0,
+          "coverage": {
+            "atlas_vs_r_source_counter_definition_ratio": 1.0,
+            "atlas_r_definition_symbols": 3011,
+            "native_definitions": 3011
+          },
+          "graphify_detector_only": ".r",
+          "queries": {
+            "rows": 8,
+            "equivalent_rows": 0,
+            "atlas_missing": 0,
+            "graphify_missing": 8,
+            "atlas_tokens": 0,
+            "graphify_tokens": 0,
+            "atlas_ms": 0,
+            "graphify_ms": 0,
+            "token_ratio": null,
+            "latency_ratio": null
+          },
+          "iteration": 2
+        },
+        {
+          "language": "r",
+          "seconds": 3.729,
+          "artifact": "bench/LIVE_R_SMOKE.json",
+          "commit": "6870419aa6e106c3580c45c81d5b688cb31758bd",
+          "coverage_ratio": 1.0,
+          "coverage": {
+            "atlas_vs_r_source_counter_definition_ratio": 1.0,
+            "atlas_r_definition_symbols": 3011,
+            "native_definitions": 3011
+          },
+          "graphify_detector_only": ".r",
+          "queries": {
+            "rows": 8,
+            "equivalent_rows": 0,
+            "atlas_missing": 0,
+            "graphify_missing": 8,
+            "atlas_tokens": 0,
+            "graphify_tokens": 0,
+            "atlas_ms": 0,
+            "graphify_ms": 0,
+            "token_ratio": null,
+            "latency_ratio": null
+          },
+          "iteration": 3
+        },
+        {
+          "language": "r",
+          "seconds": 5.387,
+          "artifact": "bench/LIVE_R_SMOKE.json",
+          "commit": "6870419aa6e106c3580c45c81d5b688cb31758bd",
+          "coverage_ratio": 1.0,
+          "coverage": {
+            "atlas_vs_r_source_counter_definition_ratio": 1.0,
+            "atlas_r_definition_symbols": 3011,
+            "native_definitions": 3011
+          },
+          "graphify_detector_only": ".r",
+          "queries": {
+            "rows": 8,
+            "equivalent_rows": 0,
+            "atlas_missing": 0,
+            "graphify_missing": 8,
+            "atlas_tokens": 0,
+            "graphify_tokens": 0,
+            "atlas_ms": 0,
+            "graphify_ms": 0,
+            "token_ratio": null,
+            "latency_ratio": null
+          },
+          "iteration": 4
+        },
+        {
+          "language": "r",
+          "seconds": 4.536,
+          "artifact": "bench/LIVE_R_SMOKE.json",
+          "commit": "6870419aa6e106c3580c45c81d5b688cb31758bd",
+          "coverage_ratio": 1.0,
+          "coverage": {
+            "atlas_vs_r_source_counter_definition_ratio": 1.0,
+            "atlas_r_definition_symbols": 3011,
+            "native_definitions": 3011
+          },
+          "graphify_detector_only": ".r",
+          "queries": {
+            "rows": 8,
+            "equivalent_rows": 0,
+            "atlas_missing": 0,
+            "graphify_missing": 8,
+            "atlas_tokens": 0,
+            "graphify_tokens": 0,
+            "atlas_ms": 0,
+            "graphify_ms": 0,
+            "token_ratio": null,
+            "latency_ratio": null
+          },
+          "iteration": 5
+        }
+      ]
+    }
+  ]
+}

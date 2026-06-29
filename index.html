@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Atlas Benchmark Ground Truth</title>
+    <meta name="description" content="Atlas benchmark dashboard generated from raw JSON artifacts.">
+    <link rel="stylesheet" href="assets/styles.css">
+    <script defer src="assets/app.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to benchmark</a>
+    <header class="site-header">
+      <nav class="nav" aria-label="Primary">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">A</span>
+          <span class="brand-title">Atlas</span>
+          <span class="brand-subtitle">Benchmark ground truth</span>
+        </div>
+        <div class="nav-links">
+          <a href="#matrix">Matrix</a>
+          <a href="#coverage">Coverage</a>
+          <a href="#live">Live smokes</a>
+          <a href="#evidence">Artifacts</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="intro" aria-labelledby="page-title">
+        <div>
+          <h1 id="page-title">Local code-intelligence benchmark evidence</h1>
+          <p class="lead">This page renders from benchmark JSON artifacts: core language matrix, graphify runtime discovery, live open-source repository smokes, tool versions, and saturation evidence.</p>
+        </div>
+        <div class="actions">
+          <a class="primary" href="#matrix">View matrix</a>
+          <a class="secondary" href="https://github.com/dominic097/atlas/releases/latest">Download atlas</a>
+        </div>
+      </section>
+
+      <section id="kpis" class="kpis" aria-label="Benchmark summary"></section>
+
+      <div id="app-error" class="callout" hidden></div>
+
+      <section class="panel" aria-labelledby="method-title">
+        <div class="panel-heading">
+          <div>
+            <h2 id="method-title">Methodology and provenance</h2>
+            <p>Ratios are shown only for equivalent query rows. Saturated rows stay visible without invented 5x claims.</p>
+          </div>
+          <div class="source-links">
+            <a data-source-artifact href="data/benchmark-data.json">derived JSON</a>
+            <a data-source-artifact href="data/raw/MATRIX_REPORT.json">matrix JSON</a>
+            <a data-source-artifact href="data/raw/SATURATION_REPORT.json">saturation JSON</a>
+          </div>
+        </div>
+        <div id="provenance-body"></div>
+      </section>
+
+      <section id="matrix" class="panel" data-testid="core-matrix" aria-labelledby="matrix-title">
+        <div class="panel-heading">
+          <div>
+            <h2 id="matrix-title">Core matrix</h2>
+            <p>Go, Python, JavaScript, TypeScript, Java, C, and C++ against graphify plus native baselines.</p>
+          </div>
+          <div class="source-links">
+            <a data-source-artifact href="data/raw/MATRIX_REPORT.json">MATRIX_REPORT.json</a>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Language</th>
+                <th>Repo</th>
+                <th>Atlas</th>
+                <th>graphify</th>
+                <th>Atlas graph</th>
+                <th>graphify graph</th>
+                <th>Atlas calls</th>
+                <th>graphify calls</th>
+                <th>Latency</th>
+                <th>Tokens</th>
+                <th>Queries</th>
+                <th>Source</th>
+              </tr>
+            </thead>
+            <tbody id="core-matrix-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="coverage" class="panel" data-testid="coverage-audit" aria-labelledby="coverage-title">
+        <div class="panel-heading">
+          <div>
+            <h2 id="coverage-title">Graphify coverage audit</h2>
+            <p>Runtime graphify support discovered from extractor dispatch, code extensions, and detect smoke evidence.</p>
+          </div>
+          <div class="source-links">
+            <a data-source-artifact href="data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json">GRAPHIFY_LANGUAGE_DISCOVERY.json</a>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Family</th>
+                <th>Extensions</th>
+                <th>graphify extractor</th>
+                <th>Support type</th>
+                <th>Atlas evidence</th>
+                <th>Source</th>
+              </tr>
+            </thead>
+            <tbody id="coverage-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="live" class="panel" aria-labelledby="live-title">
+        <div class="panel-heading">
+          <div>
+            <h2 id="live-title">Live repository smokes</h2>
+            <p>Each row uses a real open-source repo commit, Atlas indexing, graphify comparison, and best available native/parser baseline.</p>
+          </div>
+          <span id="live-count" class="chip">0 rows</span>
+        </div>
+        <div class="toolbar">
+          <input id="live-search" type="search" placeholder="Search language, repo, commit, artifact" aria-label="Search live smokes">
+          <div class="filters">
+            <select id="live-filter" aria-label="Filter live smokes">
+              <option value="all">All rows</option>
+              <option value="comparable">Comparable rows</option>
+              <option value="saturated">No comparable rows</option>
+              <option value="detector">Detector-only</option>
+            </select>
+            <select id="live-sort" aria-label="Sort live smokes">
+              <option value="language">Language</option>
+              <option value="latency">Latency ratio</option>
+              <option value="tokens">Token ratio</option>
+              <option value="coverage">Coverage ratio</option>
+              <option value="cycles">Optimization cycles</option>
+            </select>
+          </div>
+        </div>
+        <div class="dashboard-grid">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Language</th>
+                  <th>Repo / commit</th>
+                  <th>Native baseline</th>
+                  <th>Coverage</th>
+                  <th>Queries</th>
+                  <th>Latency</th>
+                  <th>Tokens</th>
+                  <th>Cycles</th>
+                  <th>Status</th>
+                  <th>Evidence</th>
+                </tr>
+              </thead>
+              <tbody id="live-body"></tbody>
+            </table>
+          </div>
+          <aside id="detail" class="detail-drawer" aria-label="Selected language evidence"></aside>
+        </div>
+      </section>
+
+      <section id="saturation" class="panel" data-testid="saturation-evidence" aria-labelledby="saturation-title">
+        <div class="panel-heading">
+          <div>
+            <h2 id="saturation-title">Saturation and non-comparable rows</h2>
+            <p>These rows have repeated live attempts and native coverage evidence, but graphify produced zero equivalent query rows.</p>
+          </div>
+          <div class="source-links">
+            <a data-source-artifact href="data/raw/SATURATION_REPORT.json">SATURATION_REPORT.json</a>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Language</th>
+                <th>Status</th>
+                <th>Iterations</th>
+                <th>Equivalent rows by pass</th>
+                <th>graphify missing by pass</th>
+                <th>Ratio</th>
+                <th>Source</th>
+              </tr>
+            </thead>
+            <tbody id="saturation-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="evidence" class="panel" aria-labelledby="evidence-title">
+        <div class="panel-heading">
+          <div>
+            <h2 id="evidence-title">Raw JSON artifacts</h2>
+            <p>The dashboard is generated from these committed benchmark artifacts. Generated at <span id="generated-at" class="mono"></span>.</p>
+          </div>
+        </div>
+        <div id="artifact-grid" class="artifact-grid"></div>
+      </section>
+
+      <section class="callout" aria-labelledby="caveats-title">
+        <h2 id="caveats-title">Caveats</h2>
+        <ul id="caveats"></ul>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>atlas is published as a local binary and release asset. The benchmark page is static and data-driven from raw JSON evidence.</p>
+    </footer>
+  </body>
+</html>

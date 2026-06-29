@@ -1,0 +1,368 @@
+{
+  "language": "fortran",
+  "repo": "https://github.com/fortran-lang/stdlib",
+  "commit": "4c8521d5658455a576946cca3bfe2bd8ede36e24",
+  "graphify_detector_only": "",
+  "commands": {
+    "clone": "git clone --depth 1 https://github.com/fortran-lang/stdlib /tmp/atlas-live-fortran-stdlib/repo",
+    "sparse_checkout": "",
+    "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-fortran-stdlib/atlas.db --json index /tmp/atlas-live-fortran-stdlib/repo/src",
+    "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-fortran-stdlib/atlas.db --json index /tmp/atlas-live-fortran-stdlib/repo/src",
+    "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "native_baseline": "/tmp/atlas-live-fortran-stdlib/tree-sitter-fortran-venv/bin/python -c <tree-sitter-fortran definition counter> /tmp/atlas-live-fortran-stdlib/repo/src",
+    "query_symbols": [
+      "stdlib_array",
+      "stdlib_datetime",
+      "datetime_type",
+      "hashmap_type",
+      "loading",
+      "free_chaining_map"
+    ],
+    "target_path": "/tmp/atlas-live-fortran-stdlib/repo/src"
+  },
+  "atlas": {
+    "cold_wall_seconds": 0.16,
+    "reindex_wall_seconds": 0.02,
+    "index": {
+      "repo_id": "57f6d808-c69f-4f1e-9ad3-a7684a4be01c",
+      "repo_full_name": "src",
+      "snapshot_id": "b10026c7-83b4-4e30-9966-646261e2baec",
+      "commit_sha": "4c8521d5658455a576946cca3bfe2bd8ede36e24",
+      "indexed_files": 53,
+      "symbols": 414,
+      "edges": 4543,
+      "edge_kinds": {
+        "calls": 4486,
+        "imports": 57
+      },
+      "routes": 0,
+      "languages": {
+        "c": 2,
+        "fortran": 22,
+        "text": 29
+      },
+      "mode": "full",
+      "duration_ms": 127,
+      "timings_ms": {
+        "delta_check": 0,
+        "ensure_repo": 0,
+        "go_types": 0,
+        "lexical": 44,
+        "parse": 34,
+        "persist": 45,
+        "resolve_head": 0,
+        "routes": 0,
+        "sort": 1,
+        "walk": 1
+      }
+    },
+    "reindex": {
+      "repo_id": "57f6d808-c69f-4f1e-9ad3-a7684a4be01c",
+      "repo_full_name": "src",
+      "snapshot_id": "b10026c7-83b4-4e30-9966-646261e2baec",
+      "commit_sha": "4c8521d5658455a576946cca3bfe2bd8ede36e24",
+      "indexed_files": 53,
+      "symbols": 414,
+      "edges": 4543,
+      "routes": 0,
+      "languages": {
+        "c": 2,
+        "fortran": 22,
+        "text": 29
+      },
+      "mode": "noop",
+      "duration_ms": 0,
+      "timings_ms": {
+        "delta_check": 0,
+        "resolve_head": 0
+      }
+    },
+    "symbol_breakdown": [
+      {
+        "language": "c",
+        "kind": "function",
+        "count": 19
+      },
+      {
+        "language": "fortran",
+        "kind": "document",
+        "count": 2
+      },
+      {
+        "language": "fortran",
+        "kind": "function",
+        "count": 335
+      },
+      {
+        "language": "fortran",
+        "kind": "module",
+        "count": 11
+      },
+      {
+        "language": "fortran",
+        "kind": "type",
+        "count": 18
+      },
+      {
+        "language": "text",
+        "kind": "document",
+        "count": 29
+      }
+    ],
+    "edge_breakdown": [
+      {
+        "kind": "calls",
+        "count": 4486
+      },
+      {
+        "kind": "imports",
+        "count": 57
+      }
+    ],
+    "fortran_definition_symbols": 364
+  },
+  "graphify": {
+    "status": "ok",
+    "ok": true,
+    "seconds": 0.718,
+    "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "stdout_head": [
+      "Re-extracting code files in . (no LLM needed)...",
+      "[graphify watch] Rebuilt: 453 nodes, 815 edges, 20 communities",
+      "[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out",
+      "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
+      "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
+    ],
+    "stderr_head": [],
+    "metrics": {
+      "nodes": 453,
+      "links": 815,
+      "calls": 58
+    }
+  },
+  "native_baseline": {
+    "tool": "tree-sitter-fortran",
+    "status": "ok",
+    "ok": true,
+    "seconds": 0.11,
+    "command": "/tmp/atlas-live-fortran-stdlib/tree-sitter-fortran-venv/bin/python -c <tree-sitter-fortran definition counter> /tmp/atlas-live-fortran-stdlib/repo/src",
+    "metrics": {
+      "files": 22,
+      "parsed_files": 22,
+      "parse_errors": 0,
+      "definition_counts": {
+        "module": 11,
+        "type": 18,
+        "function": 185,
+        "subroutine": 150,
+        "program": 0
+      },
+      "definitions": 364,
+      "tree_sitter_version": "0.25.2",
+      "tree_sitter_fortran_version": "0.6.0",
+      "parse_error_samples": []
+    }
+  },
+  "richer_native_baselines": {
+    "gfortran": {
+      "status": "missing",
+      "ok": false,
+      "note": "gfortran not installed; tree-sitter-fortran parser used as the isolated definition baseline"
+    },
+    "fortls": {
+      "status": "missing",
+      "ok": false,
+      "note": "fortls language server not installed"
+    },
+    "fpm": {
+      "status": "missing",
+      "ok": false,
+      "note": "fpm not installed; source parser baseline used instead of dependency/build execution"
+    }
+  },
+  "coverage": {
+    "atlas_vs_tree_sitter_fortran_definition_ratio": 1.0,
+    "atlas_fortran_definition_symbols": 364,
+    "native_definitions": 364
+  },
+  "optimization": {
+    "cycles_run": 2,
+    "stop_reason": "Fortran live smoke matched the tree-sitter-fortran definition coverage proxy and met the current 5x latency/token thresholds after widening Atlas Fortran declaration handling.",
+    "cycle_notes": [
+      "cycle 1: fortran-lang/stdlib probe showed the generic Fortran regex could misclassify `module procedure` interface entries as modules and miss `module function`/`module subroutine` definitions.",
+      "cycle 2: after tightening module matching and widening function/subroutine modifiers plus typed functions, Atlas/tree-sitter-fortran definition coverage reached 1.0 and exact-symbol query rows exceeded 5x for latency and token output vs graphify."
+    ]
+  },
+  "query_warmup": {
+    "symbol": "stdlib_array",
+    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-fortran-stdlib/atlas.db --format plain --repo src explain stdlib_array",
+    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain stdlib_array",
+    "atlas_returncode": 0,
+    "graphify_returncode": 0,
+    "note": "Untimed warm-up for both tools before measured query latency rows."
+  },
+  "queries": [
+    {
+      "symbol": "stdlib_array",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-fortran-stdlib/atlas.db --format plain --repo src explain stdlib_array",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain stdlib_array",
+      "atlas_tokens": 7,
+      "graphify_tokens": 83,
+      "atlas_ms": 11.999,
+      "graphify_ms": 79.767,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "stdlib_array m@stdlib_array:6"
+      ],
+      "graphify_stdout_head": [
+        "Node: stdlib_array",
+        "  ID:        array_stdlib_array_stdlib_array",
+        "  Source:    array/stdlib_array.f90 L6",
+        "  Type:      code",
+        "  Community: 12",
+        "  Degree:    4",
+        "",
+        "Connections (4):"
+      ]
+    },
+    {
+      "symbol": "stdlib_datetime",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-fortran-stdlib/atlas.db --format plain --repo src explain stdlib_datetime",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain stdlib_datetime",
+      "atlas_tokens": 9,
+      "graphify_tokens": 253,
+      "atlas_ms": 12.466,
+      "graphify_ms": 80.609,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "stdlib_datetime m@stdlib_datetime:1"
+      ],
+      "graphify_stdout_head": [
+        "Node: stdlib_datetime",
+        "  ID:        datetime_stdlib_datetime_stdlib_datetime",
+        "  Source:    datetime/stdlib_datetime.f90 L1",
+        "  Type:      code",
+        "  Community: 2",
+        "  Degree:    47",
+        "",
+        "Connections (47):"
+      ]
+    },
+    {
+      "symbol": "datetime_type",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-fortran-stdlib/atlas.db --format plain --repo src explain datetime_type",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain datetime_type",
+      "atlas_tokens": 9,
+      "graphify_tokens": 267,
+      "atlas_ms": 12.047,
+      "graphify_ms": 79.543,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "datetime_type t@stdlib_datetime:21 c3"
+      ],
+      "graphify_stdout_head": [
+        "Node: datetime_type",
+        "  ID:        datetime_stdlib_datetime_datetime_type",
+        "  Source:    datetime/stdlib_datetime.f90 L21",
+        "  Type:      code",
+        "  Community: 2",
+        "  Degree:    24",
+        "",
+        "Connections (24):"
+      ]
+    },
+    {
+      "symbol": "hashmap_type",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-fortran-stdlib/atlas.db --format plain --repo src explain hashmap_type",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain hashmap_type",
+      "atlas_tokens": 8,
+      "graphify_tokens": 292,
+      "atlas_ms": 11.816,
+      "graphify_ms": 78.883,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "hashmap_type t@stdlib_hashmaps:76"
+      ],
+      "graphify_stdout_head": [
+        "Node: hashmap_type",
+        "  ID:        hashmaps_stdlib_hashmaps_hashmap_type",
+        "  Source:    hashmaps/stdlib_hashmaps.f90 L76",
+        "  Type:      code",
+        "  Community: 5",
+        "  Degree:    31",
+        "",
+        "Connections (31):"
+      ]
+    },
+    {
+      "symbol": "loading",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-fortran-stdlib/atlas.db --format plain --repo src explain loading",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain loading",
+      "atlas_tokens": 7,
+      "graphify_tokens": 65,
+      "atlas_ms": 12.066,
+      "graphify_ms": 80.689,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "loading f@stdlib_hashmaps:229"
+      ],
+      "graphify_stdout_head": [
+        "Node: loading()",
+        "  ID:        hashmaps_stdlib_hashmaps_loading",
+        "  Source:    hashmaps/stdlib_hashmaps.f90 L229",
+        "  Type:      code",
+        "  Community: 5",
+        "  Degree:    2",
+        "",
+        "Connections (2):"
+      ]
+    },
+    {
+      "symbol": "free_chaining_map",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-fortran-stdlib/atlas.db --format plain --repo src explain free_chaining_map",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain free_chaining_map",
+      "atlas_tokens": 14,
+      "graphify_tokens": 103,
+      "atlas_ms": 12.172,
+      "graphify_ms": 79.943,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "free_chaining_map f@stdlib_hashmap_chaining:222 df2 c1 d1"
+      ],
+      "graphify_stdout_head": [
+        "Node: free_chaining_map()",
+        "  ID:        hashmaps_stdlib_hashmap_chaining_free_chaining_map",
+        "  Source:    hashmaps/stdlib_hashmap_chaining.f90 L222",
+        "  Type:      code",
+        "  Community: 6",
+        "  Degree:    4",
+        "",
+        "Connections (4):"
+      ]
+    }
+  ]
+}

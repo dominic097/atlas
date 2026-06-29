@@ -1,0 +1,342 @@
+{
+  "language": "objc",
+  "repo": "https://github.com/SDWebImage/SDWebImage",
+  "commit": "c3ad5e1a9bf55c9b76d4c362430b5fcded96c502",
+  "graphify_detector_only": "",
+  "commands": {
+    "clone": "git clone --depth 1 https://github.com/SDWebImage/SDWebImage /tmp/atlas-live-objc-sdwebimage/repo",
+    "sparse_checkout": "",
+    "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-objc-sdwebimage/atlas.db --json index /tmp/atlas-live-objc-sdwebimage/repo/SDWebImage",
+    "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-objc-sdwebimage/atlas.db --json index /tmp/atlas-live-objc-sdwebimage/repo/SDWebImage",
+    "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "native_baseline": "/tmp/atlas-live-objc-sdwebimage/tree-sitter-objc-venv/bin/python -c <tree-sitter-objc definition counter> /tmp/atlas-live-objc-sdwebimage/repo/SDWebImage",
+    "query_symbols": [
+      "SDImageCache",
+      "SDWebImageManager",
+      "sharedImageCache",
+      "storeImage:forKey:completion:",
+      "objectForKey:"
+    ],
+    "target_path": "/tmp/atlas-live-objc-sdwebimage/repo/SDWebImage"
+  },
+  "atlas": {
+    "cold_wall_seconds": 0.216,
+    "reindex_wall_seconds": 0.026,
+    "index": {
+      "repo_id": "a48c73ae-6956-44b7-96a4-0fb3f88c33a5",
+      "repo_full_name": "SDWebImage",
+      "snapshot_id": "83611102-304f-4c3f-956e-3ee3831b6afb",
+      "commit_sha": "c3ad5e1a9bf55c9b76d4c362430b5fcded96c502",
+      "indexed_files": 147,
+      "symbols": 975,
+      "edges": 1742,
+      "edge_kinds": {
+        "calls": 1716,
+        "imports": 26
+      },
+      "routes": 0,
+      "languages": {
+        "c": 75,
+        "objc": 72
+      },
+      "mode": "full",
+      "duration_ms": 179,
+      "timings_ms": {
+        "delta_check": 0,
+        "ensure_repo": 0,
+        "go_types": 0,
+        "lexical": 96,
+        "parse": 39,
+        "persist": 26,
+        "resolve_head": 0,
+        "routes": 0,
+        "sort": 0,
+        "walk": 15
+      }
+    },
+    "reindex": {
+      "repo_id": "a48c73ae-6956-44b7-96a4-0fb3f88c33a5",
+      "repo_full_name": "SDWebImage",
+      "snapshot_id": "83611102-304f-4c3f-956e-3ee3831b6afb",
+      "commit_sha": "c3ad5e1a9bf55c9b76d4c362430b5fcded96c502",
+      "indexed_files": 147,
+      "symbols": 975,
+      "edges": 1742,
+      "routes": 0,
+      "languages": {
+        "c": 75,
+        "objc": 72
+      },
+      "mode": "noop",
+      "duration_ms": 0,
+      "timings_ms": {
+        "delta_check": 0,
+        "resolve_head": 0
+      }
+    },
+    "symbol_breakdown": [
+      {
+        "language": "c",
+        "kind": "function",
+        "count": 1
+      },
+      {
+        "language": "c",
+        "kind": "struct",
+        "count": 1
+      },
+      {
+        "language": "objc",
+        "kind": "method",
+        "count": 831
+      },
+      {
+        "language": "objc",
+        "kind": "type",
+        "count": 142
+      }
+    ],
+    "edge_breakdown": [
+      {
+        "kind": "calls",
+        "count": 1716
+      },
+      {
+        "kind": "imports",
+        "count": 26
+      }
+    ],
+    "objc_definition_symbols": 973
+  },
+  "graphify": {
+    "status": "ok",
+    "ok": true,
+    "seconds": 0.644,
+    "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "stdout_head": [
+      "Re-extracting code files in . (no LLM needed)...",
+      "  AST extraction: 100/208 uncached files (48%) [14 workers]",
+      "  AST extraction: 200/208 uncached files (96%) [14 workers]",
+      "  AST extraction: 208/208 files (100%) [14 workers]",
+      "[graphify watch] Rebuilt: 1101 nodes, 1009 edges, 145 communities",
+      "[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out",
+      "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
+      "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
+    ],
+    "stderr_head": [],
+    "metrics": {
+      "nodes": 1101,
+      "links": 1009,
+      "calls": 0
+    }
+  },
+  "native_baseline": {
+    "tool": "tree-sitter-objc",
+    "status": "partial",
+    "ok": false,
+    "seconds": 0.131,
+    "command": "/tmp/atlas-live-objc-sdwebimage/tree-sitter-objc-venv/bin/python -c <tree-sitter-objc definition counter> /tmp/atlas-live-objc-sdwebimage/repo/SDWebImage",
+    "metrics": {
+      "files": 72,
+      "parsed_files": 67,
+      "parse_errors": 5,
+      "definition_counts": {
+        "type": 141,
+        "method": 830
+      },
+      "definitions": 971,
+      "tree_sitter_version": "0.25.2",
+      "tree_sitter_objc_version": "3.0.2",
+      "parse_error_samples": [
+        {
+          "path": "Core/SDAnimatedImageView.m",
+          "error": "tree-sitter parse error"
+        },
+        {
+          "path": "Core/SDGraphicsImageRenderer.m",
+          "error": "tree-sitter parse error"
+        },
+        {
+          "path": "Core/SDImageCoderHelper.m",
+          "error": "tree-sitter parse error"
+        },
+        {
+          "path": "Core/SDImageIOAnimatedCoder.m",
+          "error": "tree-sitter parse error"
+        },
+        {
+          "path": "Core/UIView+WebCache.m",
+          "error": "tree-sitter parse error"
+        }
+      ]
+    }
+  },
+  "richer_native_baselines": {
+    "clang": {
+      "status": "available",
+      "ok": true,
+      "note": "clang is available for syntax/build checks; tree-sitter-objc is used for source-only definition coverage"
+    },
+    "sourcekit-lsp": {
+      "status": "available",
+      "ok": true,
+      "note": "sourcekit-lsp is available but Objective-C documentSymbol coverage is not wired into this harness; tree-sitter-objc used instead"
+    },
+    "clangd": {
+      "status": "missing_adapter",
+      "ok": false,
+      "note": "clangd adapter not implemented for Objective-C in this harness yet"
+    }
+  },
+  "coverage": {
+    "atlas_vs_tree_sitter_objc_definition_ratio": 1.0,
+    "atlas_objc_definition_symbols": 973,
+    "native_definitions": 971
+  },
+  "optimization": {
+    "cycles_run": 2,
+    "stop_reason": "Objective-C live smoke matched the graphify-scoped tree-sitter-objc definition coverage proxy and exceeded 5x latency/token thresholds on equivalent rows after preserving full multi-part selectors in Atlas.",
+    "cycle_notes": [
+      "cycle 1: SDWebImage probe showed Atlas only captured the first Objective-C selector segment, losing precision for multi-argument methods.",
+      "cycle 2: after adding an Objective-C-specific parser, Atlas preserves selectors such as `storeImage:forKey:completion:`; graphify flattens those selector names, so the colon-selector row is kept as a visible graphify-missing caveat."
+    ]
+  },
+  "query_warmup": {
+    "symbol": "SDImageCache",
+    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-objc-sdwebimage/atlas.db --format plain --repo SDWebImage explain SDImageCache",
+    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain SDImageCache",
+    "atlas_returncode": 0,
+    "graphify_returncode": 0,
+    "note": "Untimed warm-up for both tools before measured query latency rows."
+  },
+  "queries": [
+    {
+      "symbol": "SDImageCache",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-objc-sdwebimage/atlas.db --format plain --repo SDWebImage explain SDImageCache",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain SDImageCache",
+      "atlas_tokens": 8,
+      "graphify_tokens": 300,
+      "atlas_ms": 12.837,
+      "graphify_ms": 91.936,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "SDImageCache t@SDImageCache:68 df3"
+      ],
+      "graphify_stdout_head": [
+        "Node: SDImageCache",
+        "  ID:        core_sdimagecache_sdimagecache",
+        "  Source:    Core/SDImageCache.m L69",
+        "  Type:      code",
+        "  Community: 0",
+        "  Degree:    64",
+        "",
+        "Connections (64):"
+      ]
+    },
+    {
+      "symbol": "SDWebImageManager",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-objc-sdwebimage/atlas.db --format plain --repo SDWebImage explain SDWebImageManager",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain SDWebImageManager",
+      "atlas_tokens": 11,
+      "graphify_tokens": 414,
+      "atlas_ms": 12.272,
+      "graphify_ms": 91.515,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "SDWebImageManager t@SDWebImageManager:29 df2"
+      ],
+      "graphify_stdout_head": [
+        "Node: SDWebImageManager",
+        "  ID:        core_sdwebimagemanager_sdwebimagemanager",
+        "  Source:    Core/SDWebImageManager.m L30",
+        "  Type:      code",
+        "  Community: 8",
+        "  Degree:    32",
+        "",
+        "Connections (32):"
+      ]
+    },
+    {
+      "symbol": "sharedImageCache",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-objc-sdwebimage/atlas.db --format plain --repo SDWebImage explain sharedImageCache",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain sharedImageCache",
+      "atlas_tokens": 8,
+      "graphify_tokens": 57,
+      "atlas_ms": 12.736,
+      "graphify_ms": 93.5,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "sharedImageCache m@SDImageCache:85"
+      ],
+      "graphify_stdout_head": [
+        "Node: -sharedImageCache",
+        "  ID:        core_sdimagecache_sdimagecache_sharedimagecache",
+        "  Source:    Core/SDImageCache.m L85",
+        "  Type:      code",
+        "  Community: 0",
+        "  Degree:    1",
+        "",
+        "Connections (1):"
+      ]
+    },
+    {
+      "symbol": "storeImage:forKey:completion:",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-objc-sdwebimage/atlas.db --format plain --repo SDWebImage explain storeImage:forKey:completion:",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain storeImage:forKey:completion:",
+      "atlas_tokens": 12,
+      "graphify_tokens": 14,
+      "atlas_ms": 11.883,
+      "graphify_ms": 90.502,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": true,
+      "atlas_stdout_head": [
+        "storeImage:forKey:completion: m@SDImageCache:209"
+      ],
+      "graphify_stdout_head": [
+        "No node matching 'storeImage:forKey:completion:' found."
+      ]
+    },
+    {
+      "symbol": "objectForKey:",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-objc-sdwebimage/atlas.db --format plain --repo SDWebImage explain objectForKey:",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain objectForKey:",
+      "atlas_tokens": 8,
+      "graphify_tokens": 56,
+      "atlas_ms": 12.048,
+      "graphify_ms": 92.899,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "objectForKey: m@SDMemoryCache:97"
+      ],
+      "graphify_stdout_head": [
+        "Node: -objectForKey",
+        "  ID:        core_sdmemorycache_sdmemorycache_objectforkey",
+        "  Source:    Core/SDMemoryCache.m L97",
+        "  Type:      code",
+        "  Community: 18",
+        "  Degree:    1",
+        "",
+        "Connections (1):"
+      ]
+    }
+  ]
+}

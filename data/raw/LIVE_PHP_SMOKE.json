@@ -1,0 +1,333 @@
+{
+  "language": "php",
+  "repo": "https://github.com/slimphp/Slim",
+  "commit": "0da7dd2fc66956730b6633f6a056b35e59126583",
+  "graphify_detector_only": "",
+  "commands": {
+    "clone": "git clone --depth 1 https://github.com/slimphp/Slim /tmp/atlas-live-php-slim/repo",
+    "sparse_checkout": "",
+    "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-php-slim/atlas.db --json index /tmp/atlas-live-php-slim/repo",
+    "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-php-slim/atlas.db --json index /tmp/atlas-live-php-slim/repo",
+    "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "native_baseline": "/opt/homebrew/bin/php /tmp/atlas-live-php-slim/php_token_stats.php /tmp/atlas-live-php-slim/repo",
+    "query_symbols": [
+      "handle",
+      "process",
+      "addRoute",
+      "getResponseFactory"
+    ],
+    "target_path": "/tmp/atlas-live-php-slim/repo"
+  },
+  "atlas": {
+    "cold_wall_seconds": 0.288,
+    "reindex_wall_seconds": 0.021,
+    "index": {
+      "repo_id": "556022eb-ba3b-4f70-92ba-0db5b5958558",
+      "repo_full_name": "repo",
+      "snapshot_id": "a05a3c5d-2d0d-4084-9cd8-1142c2f0336f",
+      "commit_sha": "0da7dd2fc66956730b6633f6a056b35e59126583",
+      "indexed_files": 140,
+      "symbols": 1144,
+      "edges": 6546,
+      "edge_kinds": {
+        "calls": 5722,
+        "imports": 824
+      },
+      "routes": 0,
+      "languages": {
+        "config": 1,
+        "json": 1,
+        "markdown": 8,
+        "php": 125,
+        "xml": 1,
+        "yaml": 4
+      },
+      "mode": "full",
+      "duration_ms": 248,
+      "timings_ms": {
+        "delta_check": 0,
+        "ensure_repo": 2,
+        "go_types": 0,
+        "lexical": 116,
+        "parse": 34,
+        "persist": 83,
+        "resolve_head": 0,
+        "routes": 0,
+        "sort": 1,
+        "walk": 8
+      }
+    },
+    "reindex": {
+      "repo_id": "556022eb-ba3b-4f70-92ba-0db5b5958558",
+      "repo_full_name": "repo",
+      "snapshot_id": "a05a3c5d-2d0d-4084-9cd8-1142c2f0336f",
+      "commit_sha": "0da7dd2fc66956730b6633f6a056b35e59126583",
+      "indexed_files": 140,
+      "symbols": 1144,
+      "edges": 6546,
+      "routes": 0,
+      "languages": {
+        "config": 1,
+        "json": 1,
+        "markdown": 8,
+        "php": 125,
+        "xml": 1,
+        "yaml": 4
+      },
+      "mode": "noop",
+      "duration_ms": 0,
+      "timings_ms": {
+        "delta_check": 0,
+        "resolve_head": 0
+      }
+    },
+    "symbol_breakdown": [
+      {
+        "language": "config",
+        "kind": "document",
+        "count": 1
+      },
+      {
+        "language": "json",
+        "kind": "key",
+        "count": 65
+      },
+      {
+        "language": "markdown",
+        "kind": "document",
+        "count": 1
+      },
+      {
+        "language": "markdown",
+        "kind": "section",
+        "count": 81
+      },
+      {
+        "language": "php",
+        "kind": "document",
+        "count": 1
+      },
+      {
+        "language": "php",
+        "kind": "function",
+        "count": 742
+      },
+      {
+        "language": "php",
+        "kind": "namespace",
+        "count": 124
+      },
+      {
+        "language": "php",
+        "kind": "type",
+        "count": 124
+      },
+      {
+        "language": "xml",
+        "kind": "document",
+        "count": 1
+      },
+      {
+        "language": "yaml",
+        "kind": "document",
+        "count": 4
+      }
+    ],
+    "edge_breakdown": [
+      {
+        "kind": "calls",
+        "count": 5722
+      },
+      {
+        "kind": "imports",
+        "count": 824
+      }
+    ],
+    "php_definition_symbols": 866
+  },
+  "graphify": {
+    "status": "ok",
+    "ok": true,
+    "seconds": 0.582,
+    "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "stdout_head": [
+      "Re-extracting code files in . (no LLM needed)...",
+      "  AST extraction: 100/134 uncached files (74%) [14 workers]",
+      "  AST extraction: 134/134 files (100%) [14 workers]",
+      "[graphify watch] Rebuilt: 1152 nodes, 2115 edges, 91 communities",
+      "[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out",
+      "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
+      "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
+    ],
+    "stderr_head": [],
+    "metrics": {
+      "nodes": 1152,
+      "links": 2115,
+      "calls": 169
+    }
+  },
+  "native_baseline": {
+    "tool": "php-tokenizer",
+    "status": "ok",
+    "ok": true,
+    "seconds": 0.336,
+    "command": "/opt/homebrew/bin/php /tmp/atlas-live-php-slim/php_token_stats.php /tmp/atlas-live-php-slim/repo",
+    "metrics": {
+      "files": 125,
+      "parsed_files": 125,
+      "parse_errors": 0,
+      "classes": 106,
+      "interfaces": 18,
+      "traits": 0,
+      "enums": 0,
+      "functions": 742,
+      "requires": 1,
+      "namespaces": 124,
+      "uses": 881,
+      "use_functions": 163,
+      "php_version": "8.4.14",
+      "definitions": 866
+    }
+  },
+  "richer_native_baselines": {
+    "intelephense": {
+      "status": "missing",
+      "ok": false,
+      "note": "intelephense not installed"
+    },
+    "phpstan": {
+      "status": "missing",
+      "ok": false,
+      "note": "phpstan not installed"
+    },
+    "psalm": {
+      "status": "missing",
+      "ok": false,
+      "note": "psalm not installed"
+    }
+  },
+  "coverage": {
+    "atlas_vs_php_tokenizer_definition_ratio": 1.0,
+    "atlas_php_definition_symbols": 866,
+    "native_definitions": 866
+  },
+  "optimization": {
+    "cycles_run": 2,
+    "stop_reason": "PHP live smoke met the current 5x latency/token thresholds and matched PHP tokenizer definition coverage after separating `use function` imports from real function definitions in the native baseline.",
+    "cycle_notes": [
+      "cycle 1: Slim smoke found an apparent Atlas/PHP-tokenizer definition ratio of 0.96; biggest gap was the native tokenizer script counting `use function` imports as definitions.",
+      "cycle 2: after benchmark baseline correction, Atlas/PHP-tokenizer definition ratio reached 1.0 and equivalent query rows exceeded 5x for latency and token output vs graphify."
+    ]
+  },
+  "query_warmup": {
+    "symbol": "handle",
+    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-php-slim/atlas.db --format plain --repo repo explain handle",
+    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain handle",
+    "atlas_returncode": 0,
+    "graphify_returncode": 0,
+    "note": "Untimed warm-up for both tools before measured query latency rows."
+  },
+  "queries": [
+    {
+      "symbol": "handle",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-php-slim/atlas.db --format plain --repo repo explain handle",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain handle",
+      "atlas_tokens": 7,
+      "graphify_tokens": 78,
+      "atlas_ms": 14.811,
+      "graphify_ms": 108.19,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "handle f@App:207 df11 c69 d20"
+      ],
+      "graphify_stdout_head": [
+        "Node: .handle()",
+        "  ID:        slim_app_app_handle",
+        "  Source:    Slim/App.php L207",
+        "  Type:      code",
+        "  Community: 43",
+        "  Degree:    4",
+        "",
+        "Connections (4):"
+      ]
+    },
+    {
+      "symbol": "process",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-php-slim/atlas.db --format plain --repo repo explain process",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain process",
+      "atlas_tokens": 12,
+      "graphify_tokens": 116,
+      "atlas_ms": 14.003,
+      "graphify_ms": 96.875,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "process f@BodyParsingMiddleware:54 df10 c14 d15"
+      ],
+      "graphify_stdout_head": [
+        "Node: .process()",
+        "  ID:        middleware_bodyparsingmiddleware_bodyparsingmiddleware_process",
+        "  Source:    Slim/Middleware/BodyParsingMiddleware.php L55",
+        "  Type:      code",
+        "  Community: 0",
+        "  Degree:    5",
+        "",
+        "Connections (5):"
+      ]
+    },
+    {
+      "symbol": "addRoute",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-php-slim/atlas.db --format plain --repo repo explain addRoute",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain addRoute",
+      "atlas_tokens": 2,
+      "graphify_tokens": 8,
+      "atlas_ms": 12.723,
+      "graphify_ms": 93.636,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": true,
+      "atlas_stdout_head": [
+        "addRoute"
+      ],
+      "graphify_stdout_head": [
+        "No node matching 'addRoute' found."
+      ]
+    },
+    {
+      "symbol": "getResponseFactory",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-php-slim/atlas.db --format plain --repo repo explain getResponseFactory",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain getResponseFactory",
+      "atlas_tokens": 12,
+      "graphify_tokens": 77,
+      "atlas_ms": 14.04,
+      "graphify_ms": 96.832,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "getResponseFactory f@Psr17Factory:35 df7 c50 d3"
+      ],
+      "graphify_stdout_head": [
+        "Node: .getResponseFactory()",
+        "  ID:        psr17_psr17factory_psr17factory_getresponsefactory",
+        "  Source:    Slim/Factory/Psr17/Psr17Factory.php L35",
+        "  Type:      code",
+        "  Community: 17",
+        "  Degree:    2",
+        "",
+        "Connections (2):"
+      ]
+    }
+  ]
+}

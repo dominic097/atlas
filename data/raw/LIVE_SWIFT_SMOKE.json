@@ -1,0 +1,360 @@
+{
+  "language": "swift",
+  "repo": "https://github.com/apple/swift-argument-parser",
+  "commit": "8122bc5941426c9494c78ff5ad01951e81c02f53",
+  "graphify_detector_only": "",
+  "commands": {
+    "clone": "git clone --depth 1 https://github.com/apple/swift-argument-parser /tmp/atlas-live-swift-argument-parser/repo",
+    "sparse_checkout": "",
+    "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-swift-argument-parser/atlas.db --json index /tmp/atlas-live-swift-argument-parser/repo",
+    "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-swift-argument-parser/atlas.db --json index /tmp/atlas-live-swift-argument-parser/repo",
+    "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "native_baseline": "/usr/bin/sourcekit-lsp --scratch-path /tmp/atlas-live-swift-argument-parser/sourcekit-scratch --default-workspace-type swiftPM",
+    "query_symbols": [
+      "ArgumentParser",
+      "parse",
+      "run",
+      "help"
+    ],
+    "target_path": "/tmp/atlas-live-swift-argument-parser/repo"
+  },
+  "atlas": {
+    "cold_wall_seconds": 0.702,
+    "reindex_wall_seconds": 0.024,
+    "index": {
+      "repo_id": "b08c46c5-ea2c-4963-a8da-389bb1ab65a4",
+      "repo_full_name": "repo",
+      "snapshot_id": "f7176e28-ae8c-496f-997b-81bbe70c4411",
+      "commit_sha": "8122bc5941426c9494c78ff5ad01951e81c02f53",
+      "indexed_files": 237,
+      "symbols": 5058,
+      "edges": 7588,
+      "edge_kinds": {
+        "calls": 7382,
+        "imports": 206
+      },
+      "routes": 0,
+      "languages": {
+        "bash": 5,
+        "config": 1,
+        "json": 11,
+        "markdown": 38,
+        "swift": 165,
+        "text": 13,
+        "yaml": 4
+      },
+      "mode": "full",
+      "duration_ms": 669,
+      "timings_ms": {
+        "delta_check": 0,
+        "ensure_repo": 1,
+        "go_types": 0,
+        "lexical": 433,
+        "parse": 65,
+        "persist": 155,
+        "resolve_head": 0,
+        "routes": 0,
+        "sort": 2,
+        "walk": 10
+      }
+    },
+    "reindex": {
+      "repo_id": "b08c46c5-ea2c-4963-a8da-389bb1ab65a4",
+      "repo_full_name": "repo",
+      "snapshot_id": "f7176e28-ae8c-496f-997b-81bbe70c4411",
+      "commit_sha": "8122bc5941426c9494c78ff5ad01951e81c02f53",
+      "indexed_files": 237,
+      "symbols": 5058,
+      "edges": 7588,
+      "routes": 0,
+      "languages": {
+        "bash": 5,
+        "config": 1,
+        "json": 11,
+        "markdown": 38,
+        "swift": 165,
+        "text": 13,
+        "yaml": 4
+      },
+      "mode": "noop",
+      "duration_ms": 0,
+      "timings_ms": {
+        "delta_check": 0,
+        "resolve_head": 0
+      }
+    },
+    "symbol_breakdown": [
+      {
+        "language": "bash",
+        "kind": "function",
+        "count": 12
+      },
+      {
+        "language": "config",
+        "kind": "document",
+        "count": 1
+      },
+      {
+        "language": "json",
+        "kind": "document",
+        "count": 1
+      },
+      {
+        "language": "json",
+        "kind": "key",
+        "count": 400
+      },
+      {
+        "language": "markdown",
+        "kind": "document",
+        "count": 2
+      },
+      {
+        "language": "markdown",
+        "kind": "section",
+        "count": 313
+      },
+      {
+        "language": "swift",
+        "kind": "document",
+        "count": 1
+      },
+      {
+        "language": "swift",
+        "kind": "function",
+        "count": 1109
+      },
+      {
+        "language": "swift",
+        "kind": "type",
+        "count": 1135
+      },
+      {
+        "language": "swift",
+        "kind": "variable",
+        "count": 2067
+      },
+      {
+        "language": "text",
+        "kind": "document",
+        "count": 13
+      },
+      {
+        "language": "yaml",
+        "kind": "document",
+        "count": 4
+      }
+    ],
+    "edge_breakdown": [
+      {
+        "kind": "calls",
+        "count": 7382
+      },
+      {
+        "kind": "imports",
+        "count": 206
+      }
+    ],
+    "swift_definition_symbols": 248
+  },
+  "graphify": {
+    "status": "ok",
+    "ok": true,
+    "seconds": 1.544,
+    "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "stdout_head": [
+      "Re-extracting code files in . (no LLM needed)...",
+      "  AST extraction: 100/219 uncached files (45%) [14 workers]",
+      "  AST extraction: 200/219 uncached files (91%) [14 workers]",
+      "  AST extraction: 219/219 files (100%) [14 workers]",
+      "[graphify watch] Rebuilt: 2838 nodes, 6444 edges, 208 communities",
+      "[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out",
+      "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
+      "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
+    ],
+    "stderr_head": [],
+    "metrics": {
+      "nodes": 2838,
+      "links": 6444,
+      "calls": 994
+    }
+  },
+  "native_baseline": {
+    "tool": "sourcekit-lsp",
+    "status": "ok",
+    "ok": true,
+    "seconds": 3.457,
+    "command": "/usr/bin/sourcekit-lsp --scratch-path /tmp/atlas-live-swift-argument-parser/sourcekit-scratch --default-workspace-type swiftPM",
+    "metrics": {
+      "sample_files": 16,
+      "document_symbol_files": 16,
+      "document_symbols": 209,
+      "definitions": 209,
+      "diagnostic_files": 0,
+      "diagnostics": 0,
+      "sample_paths": [
+        "Examples/color/Color.swift",
+        "Examples/count-lines/CountLines.swift",
+        "Examples/default-as-flag/DefaultAsFlag.swift",
+        "Examples/math/Math.swift",
+        "Examples/repeat/Repeat.swift",
+        "Examples/roll/SplitMix64.swift",
+        "Examples/roll/main.swift",
+        "Package.swift",
+        "Plugins/GenerateCommon/GeneratePlugin.swift",
+        "Plugins/GenerateCommon/GeneratePluginError.swift",
+        "Plugins/GenerateCommon/PackagePlugin+Helpers.swift",
+        "Plugins/GenerateDoccReference/GenerateDoccReference.swift",
+        "Plugins/GenerateManual/GenerateManualPlugin.swift",
+        "Sources/ArgumentParser/Completions/BashCompletionsGenerator.swift",
+        "Sources/ArgumentParser/Completions/CompletionsGenerator.swift",
+        "Sources/ArgumentParser/Completions/FishCompletionsGenerator.swift"
+      ],
+      "swift_version": "Apple Swift version 6.2.4 (swiftlang-6.2.4.1.4 clang-1700.6.4.2)",
+      "stderr_tail": []
+    }
+  },
+  "richer_native_baselines": {
+    "sourcekit-lsp": {
+      "status": "ok",
+      "ok": true,
+      "note": ""
+    },
+    "swift-syntax": {
+      "status": "missing",
+      "ok": false,
+      "note": "swift-syntax CLI not installed; SourceKit-LSP documentSymbol used as the native baseline"
+    }
+  },
+  "coverage": {
+    "atlas_vs_sourcekit_lsp_definition_ratio": 1.19,
+    "atlas_swift_definition_symbols": 248,
+    "native_definitions": 209,
+    "coverage_scope": "16 sampled files from sourcekit-lsp"
+  },
+  "optimization": {
+    "cycles_run": 1,
+    "stop_reason": "Swift live smoke met the current 5x latency/token thresholds and exceeded the SourceKit-LSP sampled definition coverage proxy on cycle 1.",
+    "cycle_notes": [
+      "cycle 1: apple/swift-argument-parser smoke reached 1.19x Atlas/SourceKit-LSP sampled definition coverage, 8.07x query latency, and 14.82x token output vs graphify."
+    ]
+  },
+  "query_warmup": {
+    "symbol": "ArgumentParser",
+    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-swift-argument-parser/atlas.db --format plain --repo repo explain ArgumentParser",
+    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ArgumentParser",
+    "atlas_returncode": 0,
+    "graphify_returncode": 0,
+    "note": "Untimed warm-up for both tools before measured query latency rows."
+  },
+  "queries": [
+    {
+      "symbol": "ArgumentParser",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-swift-argument-parser/atlas.db --format plain --repo repo explain ArgumentParser",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ArgumentParser",
+      "atlas_tokens": 9,
+      "graphify_tokens": 332,
+      "atlas_ms": 14.858,
+      "graphify_ms": 132.957,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "ArgumentParser t@SplitArgumentTests:16"
+      ],
+      "graphify_stdout_head": [
+        "Node: ArgumentParser",
+        "  ID:        argumentparser",
+        "  Source:    Tools/generate-manual/GenerateManual.swift L12",
+        "  Type:      code",
+        "  Community: 16",
+        "  Degree:    89",
+        "",
+        "Connections (89):"
+      ]
+    },
+    {
+      "symbol": "parse",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-swift-argument-parser/atlas.db --format plain --repo repo explain parse",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain parse",
+      "atlas_tokens": 10,
+      "graphify_tokens": 139,
+      "atlas_ms": 18.518,
+      "graphify_ms": 142.741,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "parse f@ParsableArguments:89 df5 c55 d6"
+      ],
+      "graphify_stdout_head": [
+        "Node: .parse()",
+        "  ID:        parsable_types_parsablearguments_parsablearguments_parse",
+        "  Source:    Sources/ArgumentParser/Parsable Types/ParsableArguments.swift L89",
+        "  Type:      code",
+        "  Community: 30",
+        "  Degree:    8",
+        "",
+        "Connections (8):"
+      ]
+    },
+    {
+      "symbol": "run",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-swift-argument-parser/atlas.db --format plain --repo repo explain run",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain run",
+      "atlas_tokens": 6,
+      "graphify_tokens": 48,
+      "atlas_ms": 17.648,
+      "graphify_ms": 135.699,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "run f@Color:22 df25 c16 d7"
+      ],
+      "graphify_stdout_head": [
+        "Node: .run()",
+        "  ID:        color_color_color_run",
+        "  Source:    Examples/color/Color.swift L23",
+        "  Type:      code",
+        "  Community: 120",
+        "  Degree:    1",
+        "",
+        "Connections (1):"
+      ]
+    },
+    {
+      "symbol": "help",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-swift-argument-parser/atlas.db --format plain --repo repo explain help",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain help",
+      "atlas_tokens": 7,
+      "graphify_tokens": 44,
+      "atlas_ms": 17.109,
+      "graphify_ms": 131.126,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "help v@Flag:454 df19 c10 d12"
+      ],
+      "graphify_stdout_head": [
+        "Node: Help",
+        "  ID:        help",
+        "  Source:",
+        "  Type:      code",
+        "  Community: 20",
+        "  Degree:    2",
+        "",
+        "Connections (2):"
+      ]
+    }
+  ]
+}

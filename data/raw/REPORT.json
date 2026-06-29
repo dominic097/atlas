@@ -1,0 +1,339 @@
+[
+  {
+    "lang": "go",
+    "repo": "https://github.com/sirupsen/logrus",
+    "subdir": "",
+    "target": "/tmp/langbench/go",
+    "graphify": {
+      "ok": true,
+      "seconds": 1.03,
+      "nodes": 696,
+      "calls": 325,
+      "extracted": 190
+    },
+    "atlas": {
+      "ok": true,
+      "seconds": 0.85,
+      "files": 115,
+      "symbols": 633,
+      "edges": 2989,
+      "calls": 2081,
+      "recv_typed": 621,
+      "sources": {
+        "go_ast": 2081
+      },
+      "internal_calls": 1118
+    },
+    "queries": [
+      [
+        "log",
+        96,
+        83
+      ],
+      [
+        "newEntry",
+        62,
+        75
+      ],
+      [
+        "releaseEntry",
+        175,
+        76
+      ],
+      [
+        "Log",
+        96,
+        96
+      ]
+    ]
+  },
+  {
+    "lang": "python",
+    "repo": "https://github.com/psf/requests",
+    "subdir": "src",
+    "target": "/tmp/langbench/python/src",
+    "graphify": {
+      "ok": true,
+      "seconds": 0.73,
+      "nodes": 580,
+      "calls": 229,
+      "extracted": 221
+    },
+    "atlas": {
+      "ok": true,
+      "seconds": 0.21,
+      "files": 44,
+      "symbols": 192,
+      "edges": 1111,
+      "calls": 961,
+      "recv_typed": 73,
+      "sources": {
+        "python_ts": 961
+      },
+      "internal_calls": 212
+    },
+    "queries": [
+      [
+        "Session",
+        246,
+        122
+      ],
+      [
+        "PreparedRequest",
+        247,
+        141
+      ],
+      [
+        "HTTPAdapter",
+        243,
+        120
+      ],
+      [
+        "Response",
+        242,
+        121
+      ]
+    ]
+  },
+  {
+    "lang": "javascript",
+    "repo": "https://github.com/expressjs/express",
+    "subdir": "lib",
+    "target": "/tmp/langbench/javascript/lib",
+    "graphify": {
+      "ok": true,
+      "seconds": 0.2,
+      "nodes": 28,
+      "calls": 3,
+      "extracted": 3
+    },
+    "atlas": {
+      "ok": true,
+      "seconds": 0.09,
+      "files": 11,
+      "symbols": 92,
+      "edges": 435,
+      "calls": 435,
+      "recv_typed": 0,
+      "sources": {
+        "javascript_ts": 435
+      },
+      "internal_calls": 108
+    },
+    "queries": [
+      [
+        "defineGetter",
+        47,
+        52
+      ],
+      [
+        "resolve",
+        61,
+        38
+      ],
+      [
+        "sendFile",
+        46,
+        43
+      ],
+      [
+        "acceptParams",
+        56,
+        28
+      ]
+    ]
+  },
+  {
+    "lang": "typescript",
+    "repo": "https://github.com/pmndrs/zustand",
+    "subdir": "src",
+    "target": "/tmp/langbench/typescript/src",
+    "graphify": {
+      "ok": true,
+      "seconds": 0.21,
+      "nodes": 111,
+      "calls": 6,
+      "extracted": 6
+    },
+    "atlas": {
+      "ok": true,
+      "seconds": 0.1,
+      "files": 21,
+      "symbols": 60,
+      "edges": 214,
+      "calls": 197,
+      "recv_typed": 8,
+      "sources": {
+        "javascript_ts": 197
+      },
+      "internal_calls": 58
+    },
+    "queries": [
+      [
+        "devtoolsImpl",
+        53,
+        86
+      ],
+      [
+        "shallow",
+        75,
+        54
+      ],
+      [
+        "hydrate",
+        8,
+        43
+      ],
+      [
+        "persistImpl",
+        52,
+        55
+      ]
+    ]
+  },
+  {
+    "lang": "java",
+    "repo": "https://github.com/google/gson",
+    "subdir": "gson/src/main/java",
+    "target": "/tmp/langbench/java/gson/src/main/java",
+    "graphify": {
+      "ok": true,
+      "seconds": 0.94,
+      "nodes": 1016,
+      "calls": 927,
+      "extracted": 599
+    },
+    "atlas": {
+      "ok": true,
+      "seconds": 0.41,
+      "files": 176,
+      "symbols": 771,
+      "edges": 3782,
+      "calls": 3105,
+      "recv_typed": 2326,
+      "sources": {
+        "java_ts": 3105
+      },
+      "internal_calls": 2134
+    },
+    "queries": [
+      [
+        "TypeAdapters",
+        173,
+        199
+      ],
+      [
+        "TypeAdapter",
+        84,
+        167
+      ],
+      [
+        "create",
+        64,
+        320
+      ],
+      [
+        "write",
+        112,
+        450
+      ]
+    ]
+  },
+  {
+    "lang": "c",
+    "repo": "https://github.com/DaveGamble/cJSON",
+    "subdir": "",
+    "target": "/tmp/langbench/c",
+    "graphify": {
+      "ok": true,
+      "seconds": 1.04,
+      "nodes": 971,
+      "calls": 1018,
+      "extracted": 492
+    },
+    "atlas": {
+      "ok": true,
+      "seconds": 0.61,
+      "files": 254,
+      "symbols": 1449,
+      "edges": 4757,
+      "calls": 4417,
+      "recv_typed": 18,
+      "sources": {
+        "cpp_ts": 4275,
+        "python_ts": 142
+      },
+      "internal_calls": 1617
+    },
+    "queries": [
+      [
+        "cJSON_Delete",
+        284,
+        131
+      ],
+      [
+        "cjson_functions_should_not_crash_with_null_pointers",
+        288,
+        146
+      ],
+      [
+        "cJSON_CreateObject",
+        332,
+        165
+      ],
+      [
+        "UnityPrint",
+        302,
+        120
+      ]
+    ]
+  },
+  {
+    "lang": "cpp",
+    "repo": "https://github.com/google/leveldb",
+    "subdir": "",
+    "target": "/tmp/langbench/cpp",
+    "graphify": {
+      "ok": true,
+      "seconds": 1.29,
+      "nodes": 2206,
+      "calls": 1195,
+      "extracted": 1027
+    },
+    "atlas": {
+      "ok": true,
+      "seconds": 0.63,
+      "files": 288,
+      "symbols": 370,
+      "edges": 10119,
+      "calls": 9537,
+      "recv_typed": 1977,
+      "sources": {
+        "cpp_ts": 9537
+      },
+      "internal_calls": 302
+    },
+    "queries": [
+      [
+        "ExecErrorCheck",
+        78,
+        65
+      ],
+      [
+        "CheckEqual",
+        84,
+        61
+      ],
+      [
+        "Free",
+        61,
+        43
+      ],
+      [
+        "main",
+        66,
+        157
+      ]
+    ]
+  }
+]
