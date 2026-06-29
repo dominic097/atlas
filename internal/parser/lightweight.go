@@ -1406,6 +1406,22 @@ var lightweightSymbolRules = map[string][]regexSymbolRule{
 		symbolRule("function", `(?m)^\s*(?:public|private|protected|static|final|abstract|\s)*function\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(`),
 		symbolRule("namespace", `(?m)^\s*namespace\s+([A-Za-z_\\][A-Za-z0-9_\\]*)\s*;`),
 	},
+	"p4": {
+		// P4_16 top-level declarations (the packet-processing DSL, github.com/p4lang).
+		symbolRule("parser", `(?m)^\s*parser\s+([A-Za-z_][A-Za-z0-9_]*)\s*[(<]`),
+		symbolRule("control", `(?m)^\s*control\s+([A-Za-z_][A-Za-z0-9_]*)\s*[(<]`),
+		symbolRule("package", `(?m)^\s*package\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(`),
+		symbolRule("action", `(?m)^\s*action\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(`),
+		symbolRule("table", `(?m)^\s*table\s+([A-Za-z_][A-Za-z0-9_]*)\s*\{`),
+		symbolRule("header_union", `(?m)^\s*header_union\s+([A-Za-z_][A-Za-z0-9_]*)\s*\{`),
+		symbolRule("header", `(?m)^\s*header\s+([A-Za-z_][A-Za-z0-9_]*)\s*\{`),
+		symbolRule("struct", `(?m)^\s*struct\s+([A-Za-z_][A-Za-z0-9_]*)\s*\{`),
+		symbolRule("enum", `(?m)^\s*enum\s+(?:bit<\d+>\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*\{`),
+		symbolRule("extern", `(?m)^\s*extern\s+([A-Za-z_][A-Za-z0-9_]*)\s*\{`),
+		symbolRule("type", `(?m)^\s*(?:typedef|type)\s+.+\s+([A-Za-z_][A-Za-z0-9_]*)\s*;`),
+		symbolRule("constant", `(?m)^\s*const\s+.+\s+([A-Za-z_][A-Za-z0-9_]*)\s*=`),
+		symbolRule("state", `(?m)^\s*state\s+([A-Za-z_][A-Za-z0-9_]*)\s*\{`),
+	},
 	"swift": {
 		symbolRule("type", `(?m)^\s*(?:public|private|internal|open|final|\s)*(?:class|struct|enum|protocol|actor|extension)\s+([A-Za-z_][A-Za-z0-9_]*)`),
 		symbolRule("function", `(?m)^\s*(?:public|private|internal|open|static|class|mutating|async|override|\s)*func\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(`),

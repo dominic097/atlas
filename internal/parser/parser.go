@@ -133,6 +133,8 @@ func LanguageForPath(path string) string {
 		return "svelte"
 	case ".astro":
 		return "astro"
+	case ".p4":
+		return "p4"
 	case ".ejs":
 		return "ejs"
 	case ".ets":
@@ -206,7 +208,7 @@ func Supported(lang string) bool {
 		"rust", "ruby", "kotlin", "scala", "php", "swift", "lua", "zig",
 		"elixir", "objc", "julia", "fortran", "dart", "verilog", "pascal",
 		"delphi", "terraform", "byond", "dotnet", "razor", "apex", "blade",
-		"vue", "svelte", "astro", "ejs", "ets", "r",
+		"vue", "svelte", "astro", "ejs", "ets", "r", "p4",
 		"csharp", "groovy", "bash", "html", "css",
 		"markdown", "mdx", "yaml", "json", "proto", "toml", "xml", "plist",
 		"gomod", "gosum", "config", "makefile", "batch", "powershell",
@@ -262,7 +264,7 @@ func Parse(repoID, repoFullName, filePath, language string, content []byte) (Res
 		"rust", "ruby", "kotlin", "scala", "php", "swift", "lua", "zig",
 		"elixir", "objc", "julia", "fortran", "dart", "verilog", "pascal",
 		"delphi", "terraform", "byond", "dotnet", "razor", "apex", "blade",
-		"vue", "svelte", "astro", "ejs", "ets", "r", "powershell", "sql":
+		"vue", "svelte", "astro", "ejs", "ets", "r", "powershell", "sql", "p4":
 		rawSyms, imports = parseRegexFallback(filePath, language, content)
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "html", "css":
