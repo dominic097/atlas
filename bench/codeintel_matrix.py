@@ -80,7 +80,7 @@ GRAPHIFY_LANGUAGE_FAMILIES = [
     ("javascript", [".js", ".jsx", ".mjs"], "tree-sitter"),
     ("typescript", [".ts", ".tsx"], "tree-sitter"),
     ("java", [".java"], "tree-sitter"),
-    ("groovy/gradle", [".groovy", ".gradle"], "lightweight regex"),
+    ("groovy/gradle", [".groovy", ".gradle"], "native tree-sitter AST"),
     ("c", [".c", ".h"], "tree-sitter"),
     ("cpp/cuda", [".cpp", ".cc", ".cxx", ".hpp", ".cu", ".cuh"], "tree-sitter"),
     ("csharp", [".cs"], "native tree-sitter tags"),

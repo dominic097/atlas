@@ -5648,12 +5648,13 @@ def run_smoke(language: str, atlas_bin: str, graphify_bin: str | None) -> dict[s
         }
     elif language == "groovy":
         optimization = {
-            "cycles_run": 3,
-            "stop_reason": "Groovy/Gradle live smoke met the current 5x latency/token thresholds after widening Atlas Groovy declaration handling; definition coverage is saturated by tree-sitter-groovy parse errors on real Nextflow files, so the 1.59x native ratio is not claimed as exact recall.",
+            "cycles_run": 4,
+            "stop_reason": "Groovy/Gradle native tree-sitter AST parsing met the current 5x latency/token thresholds and stayed above the partial tree-sitter-groovy baseline with source-shape recovery for real Nextflow files that the grammar marks as parse errors.",
             "cycle_notes": [
                 "cycle 1: Nextflow nf-commons probe showed the biggest Atlas gap was typed Groovy methods, interfaces, enums, traits, constructors, and Gradle task declarations beyond class plus untyped def parsing.",
                 "cycle 2: after parser widening, Atlas/tree-sitter-groovy definition ratio was inflated by control-flow false positives such as if/for/catch/synchronized being indexed as methods.",
                 "cycle 3: after restricting constructor and return-type matching, Atlas resolves the shared query symbols and exceeds 5x latency/token output vs graphify; native coverage remains partial because tree-sitter-groovy reports parse errors for most files in this real repo slice.",
+                "cycle 4: replacing the regex route with a tree-sitter-groovy verifier preserved the declaration surface; the native route marks grammar-missed declarations as recovery instead of routing Groovy through parseRegexFallback.",
             ],
         }
     elif language == "objc":

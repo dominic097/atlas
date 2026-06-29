@@ -49,7 +49,7 @@
       "groovy/gradle",
       ".groovy .gradle",
       "extract_groovy",
-      "lightweight regex"
+      "native tree-sitter AST"
     ],
     [
       "c",

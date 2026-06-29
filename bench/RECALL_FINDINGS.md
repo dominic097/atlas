@@ -75,6 +75,7 @@ validated with the focused parser test suite.
 | fortran | fortran-lang/stdlib `src` | tree-sitter-fortran 0.6.0 | 364 | 364 | 1.00x | 6.06x | 19.69x | Native tree-sitter AST walker preserves module/type/function/subroutine coverage, keeps subroutines normalized to Atlas `function`, and adds native `program` symbols for future slices. |
 | verilog | lowRISC/ibex RTL slice | tree-sitter-systemverilog 0.3.1 | 93 | 93 | 1.00x | 5.51x | 8.73x | Native tree-sitter AST walker preserves module/package/function coverage and adds native interface/class/task/program/checker support for future slices; the baseline parser marked 10 files as parse-error partial while still producing the matched definition proxy. |
 | pascal | remobjects/pascalscript `Source` | pascal declaration counter | 6432 | 6432 | 1.00x | 8.29x | 12.84x | Native tree-sitter-pascal route verified 6297 declarations directly and used source-shape recovery for 135 package/preprocessor-heavy declarations the grammar cannot expose, preserving exact coverage without routing through `parseRegexFallback`. |
+| groovy | nextflow-io/nextflow `modules/nf-commons/src/main` | tree-sitter-groovy 0.1.2 | 837 | 525 | 1.59x | 6.10x | 9.97x | Native tree-sitter-groovy route verified 511 declarations directly and used source-shape recovery for 326 declarations in real files where the baseline grammar reports parse errors; stronger Groovy CLI/LSP baselines are unavailable on this machine. |
 
 ## The consistent definition surface (applied uniformly to all 7 languages)
 

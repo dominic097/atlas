@@ -14,6 +14,7 @@ go 1.25.0
 
 require (
 	github.com/UserNobody14/tree-sitter-dart v0.0.0-20260520003023-a9bdfa3db2fb
+	github.com/amaanq/tree-sitter-groovy v0.1.2
 	github.com/blevesearch/bleve/v2 v2.6.0
 	github.com/fsnotify/fsnotify v1.10.1
 	github.com/gmlarumbe/tree-sitter-systemverilog v0.3.1
