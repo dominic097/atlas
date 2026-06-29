@@ -1,7 +1,8 @@
 # Phase 3 spike — compact integer-ID + dictionary schema
 
-**Status:** spike complete. Design locked, win confirmed empirically. The full
-storage compaction is the next focused build (not done in this commit).
+**Status:** spike complete + FOUR slices SHIPPED. Design locked, win confirmed
+empirically, and the high-confidence slices are implemented and measured on real
+data (see §6).
 
 This is the measurement spike the plan called for: build the compact schema, load a
 real repo, measure DB-size vs the TEXT-uuid baseline, lock the design, *then* migrate.
@@ -101,6 +102,38 @@ Gate the new schema behind a version bump; on an old DB, reindex. Verify each sl
 with: `go test ./...` green, the existing full-vs-delta parity tests, and an
 explicit old-vs-new byte-identical check on every touched op's output (the same bar
 that caught the Phase 1 parity bug).
+
+## 6. SHIPPED slices + measured win (real 643 MB DB, row-parity verified)
+
+Implemented behind the `sqliteSchemaVersion` drop-fresh gate (dev-stage: a version
+mismatch rebuilds the derived `.atlas.db` from the working tree — no in-place data
+migration). SQLite tier; Postgres kept on TEXT (per-driver scan funcs).
+
+- **v2** — drop-fresh `Migrate` gate + remove 4 dead/shadowed indexes
+  (idx_files_snapshot, idx_symbols_node, idx_coverage_snapshot, idx_embeddings_snapshot).
+- **v3** — edges drop the write-only uuid `id` → rowid (kills the 38 MB edge-PK
+  autoindex + 36 B/row).
+- **v4** — files/symbols/edges/routes store the snapshot's compact integer surrogate
+  (sid) in snapshot_id; readers splice `snapshot_id = (SELECT sid FROM snapshots
+  WHERE id = ?)` and re-attach the public uuid on scan; coverage/embeddings stay TEXT.
+- **Phase 4** — GraphExport --all streams (no whole-graph slices held); SQLite
+  mmap_size tunable (ATLAS_MMAP_SIZE, default 512 MiB).
+
+Measured by rebuilding the compacted tables with ONLY these shipped transforms from
+the real `pulse-review-live.db` (128,825 symbols, 743,343 edges), via `dbstat`:
+
+| Storage | Original | Shipped | Saved |
+|---|---:|---:|---:|
+| edges + indexes | 424.4 MB | 235.1 MB | **−189 MB (−45%)** |
+| symbols + indexes | 214.4 MB | 182.4 MB | −32 MB (−15%) |
+| **subtotal** | **638.8 MB** | **417.5 MB** | **−221 MB (≈ −35% of the DB)** |
+
+This is ~73 % of the spike's projected −48 %. The remaining ~13 % is the not-yet-
+shipped medium-risk slices: edge `metadata` typed columns (~38 MB; present-vs-absent
+key recompose) and kind/language dictionary (~10 MB; ORDER-BY-on-kind hazard). Output
+verified byte-identical: full-vs-delta SQL parity + 14 index delta/parity tests +
+TestSnapshotSurrogateRoundTripsPublicID (non-UUID id round-trips; unknown→empty) +
+TestStreamFullGraphMatchesSliceFold + e2e (stats re-emits the exact public uuid).
 
 ## 5. Reproduce
 
