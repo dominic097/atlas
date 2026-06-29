@@ -21,15 +21,15 @@
     "target_path": "/tmp/atlas-live-verilog-ibex/repo/rtl"
   },
   "atlas": {
-    "cold_wall_seconds": 0.117,
-    "reindex_wall_seconds": 0.028,
+    "cold_wall_seconds": 0.136,
+    "reindex_wall_seconds": 0.026,
     "index": {
-      "repo_id": "5dd62de5-6e66-4f63-a4f6-6ce1cb399c75",
+      "repo_id": "4ea26502-7ff2-4a3f-b03c-3f2d65dd3463",
       "repo_full_name": "rtl",
-      "snapshot_id": "376be33b-9a3b-42bc-b227-f4e1e2bcadb7",
+      "snapshot_id": "354c6bb7-7971-4475-abcc-6743593eb249",
       "commit_sha": "022f084096baed0a9b5ebdf697ed2965f13e8ed8",
       "indexed_files": 31,
-      "symbols": 94,
+      "symbols": 93,
       "edges": 2666,
       "edge_kinds": {
         "calls": 2653,
@@ -41,27 +41,32 @@
         "verilog": 30
       },
       "mode": "full",
-      "duration_ms": 86,
+      "duration_ms": 102,
       "timings_ms": {
+        "build_symbols_edges": 0,
         "delta_check": 0,
-        "ensure_repo": 2,
+        "discover_files": 0,
+        "doc_links": 0,
+        "ensure_repo": 0,
+        "gitignore_scan": 18,
         "go_types": 0,
-        "lexical": 12,
-        "parse": 43,
-        "persist": 23,
+        "lexical": 35,
+        "parse": 47,
+        "persist": 35,
         "resolve_head": 0,
         "routes": 0,
-        "sort": 3,
-        "walk": 0
+        "sort": 0,
+        "walk": 0,
+        "write_sqlite": 35
       }
     },
     "reindex": {
-      "repo_id": "5dd62de5-6e66-4f63-a4f6-6ce1cb399c75",
+      "repo_id": "4ea26502-7ff2-4a3f-b03c-3f2d65dd3463",
       "repo_full_name": "rtl",
-      "snapshot_id": "376be33b-9a3b-42bc-b227-f4e1e2bcadb7",
+      "snapshot_id": "354c6bb7-7971-4475-abcc-6743593eb249",
       "commit_sha": "022f084096baed0a9b5ebdf697ed2965f13e8ed8",
       "indexed_files": 31,
-      "symbols": 94,
+      "symbols": 93,
       "edges": 2666,
       "routes": 0,
       "languages": {
@@ -69,18 +74,13 @@
         "verilog": 30
       },
       "mode": "noop",
-      "duration_ms": 0,
+      "duration_ms": 11,
       "timings_ms": {
-        "delta_check": 0,
+        "delta_check": 11,
         "resolve_head": 0
       }
     },
     "symbol_breakdown": [
-      {
-        "language": "fortran",
-        "kind": "document",
-        "count": 1
-      },
       {
         "language": "verilog",
         "kind": "function",
@@ -112,7 +112,7 @@
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 0.326,
+    "seconds": 0.297,
     "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
@@ -132,7 +132,7 @@
     "tool": "tree-sitter-systemverilog",
     "status": "partial",
     "ok": false,
-    "seconds": 0.205,
+    "seconds": 0.136,
     "command": "/tmp/atlas-live-verilog-ibex/tree-sitter-systemverilog-venv/bin/python -c <tree-sitter-systemverilog definition counter> /tmp/atlas-live-verilog-ibex/repo/rtl",
     "metrics": {
       "files": 30,
@@ -210,12 +210,13 @@
     "native_definitions": 93
   },
   "optimization": {
-    "cycles_run": 3,
-    "stop_reason": "Verilog/SystemVerilog live smoke matched the tree-sitter-systemverilog definition coverage proxy and improved token score after compacting HDL source suffixes in terse plain locations while preserving full paths in JSON.",
+    "cycles_run": 4,
+    "stop_reason": "Verilog/SystemVerilog native tree-sitter AST parsing matched the tree-sitter-systemverilog definition coverage proxy and met the current 5x latency/token thresholds.",
     "cycle_notes": [
       "cycle 1: lowRISC/ibex probe showed the generic Verilog regex missed functions with packed return types such as `function automatic logic [6:0] cm_stack_adj_base(...)`.",
       "cycle 2: after adding a SystemVerilog-specific declaration scanner, Atlas/tree-sitter-systemverilog definition coverage reached 1.0; equivalent query rows exceeded 5x latency and token output overall, while `ibex_core` saturated below 5x for both latency/token because graphify matched the terse `ibex_core.f` file-list node instead of the RTL module.",
-      "cycle 3: compacting `.v`/`.sv`/`.svh` suffixes in terse locations reduces exact RTL symbol output without changing indexed symbols or JSON paths."
+      "cycle 3: compacting `.v`/`.sv`/`.svh` suffixes in terse locations reduces exact RTL symbol output without changing indexed symbols or JSON paths.",
+      "cycle 4: replacing the regex route with a tree-sitter-systemverilog AST walker preserved exact module/package/function coverage and added native interface/class/task/program/checker support for future slices."
     ]
   },
   "query_warmup": {
@@ -234,8 +235,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ibex_core",
       "atlas_tokens": 6,
       "graphify_tokens": 32,
-      "atlas_ms": 14.042,
-      "graphify_ms": 77.328,
+      "atlas_ms": 13.88,
+      "graphify_ms": 70.388,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -259,8 +260,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ibex_top",
       "atlas_tokens": 5,
       "graphify_tokens": 105,
-      "atlas_ms": 13.436,
-      "graphify_ms": 74.677,
+      "atlas_ms": 13.489,
+      "graphify_ms": 70.676,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -286,8 +287,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ibex_pkg",
       "atlas_tokens": 5,
       "graphify_tokens": 46,
-      "atlas_ms": 11.998,
-      "graphify_ms": 75.145,
+      "atlas_ms": 12.427,
+      "graphify_ms": 70.396,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -313,8 +314,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ibex_alu",
       "atlas_tokens": 5,
       "graphify_tokens": 55,
-      "atlas_ms": 11.944,
-      "graphify_ms": 78.387,
+      "atlas_ms": 12.588,
+      "graphify_ms": 70.496,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -340,8 +341,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain cm_stack_adj_base",
       "atlas_tokens": 12,
       "graphify_tokens": 67,
-      "atlas_ms": 11.734,
-      "graphify_ms": 76.675,
+      "atlas_ms": 12.266,
+      "graphify_ms": 70.176,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -367,8 +368,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain decode_i_insn",
       "atlas_tokens": 8,
       "graphify_tokens": 53,
-      "atlas_ms": 12.058,
-      "graphify_ms": 75.524,
+      "atlas_ms": 11.888,
+      "graphify_ms": 69.946,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,

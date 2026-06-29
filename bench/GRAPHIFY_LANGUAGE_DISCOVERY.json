@@ -163,7 +163,7 @@
       "verilog/systemverilog",
       ".v .sv .svh",
       "extract_verilog",
-      "lightweight regex"
+      "native tree-sitter AST"
     ],
     [
       "sql",

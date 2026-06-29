@@ -16,6 +16,7 @@ require (
 	github.com/UserNobody14/tree-sitter-dart v0.0.0-20260520003023-a9bdfa3db2fb
 	github.com/blevesearch/bleve/v2 v2.6.0
 	github.com/fsnotify/fsnotify v1.10.1
+	github.com/gmlarumbe/tree-sitter-systemverilog v0.3.1
 	github.com/google/uuid v1.6.0
 	github.com/lib/pq v1.10.9
 	github.com/r-lib/tree-sitter-r v1.3.0

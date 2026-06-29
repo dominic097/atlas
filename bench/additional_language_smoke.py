@@ -5637,12 +5637,13 @@ def run_smoke(language: str, atlas_bin: str, graphify_bin: str | None) -> dict[s
         }
     elif language == "verilog":
         optimization = {
-            "cycles_run": 3,
-            "stop_reason": "Verilog/SystemVerilog live smoke matched the tree-sitter-systemverilog definition coverage proxy and improved token score after compacting HDL source suffixes in terse plain locations while preserving full paths in JSON.",
+            "cycles_run": 4,
+            "stop_reason": "Verilog/SystemVerilog native tree-sitter AST parsing matched the tree-sitter-systemverilog definition coverage proxy and met the current 5x latency/token thresholds.",
             "cycle_notes": [
                 "cycle 1: lowRISC/ibex probe showed the generic Verilog regex missed functions with packed return types such as `function automatic logic [6:0] cm_stack_adj_base(...)`.",
                 "cycle 2: after adding a SystemVerilog-specific declaration scanner, Atlas/tree-sitter-systemverilog definition coverage reached 1.0; equivalent query rows exceeded 5x latency and token output overall, while `ibex_core` saturated below 5x for both latency/token because graphify matched the terse `ibex_core.f` file-list node instead of the RTL module.",
                 "cycle 3: compacting `.v`/`.sv`/`.svh` suffixes in terse locations reduces exact RTL symbol output without changing indexed symbols or JSON paths.",
+                "cycle 4: replacing the regex route with a tree-sitter-systemverilog AST walker preserved exact module/package/function coverage and added native interface/class/task/program/checker support for future slices.",
             ],
         }
     elif language == "groovy":

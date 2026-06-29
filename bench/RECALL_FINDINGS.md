@@ -73,6 +73,7 @@ validated with the focused parser test suite.
 | Lang | Repo slice | Independent baseline | Atlas defs | Baseline defs | Recall/coverage | graphify latency | graphify tokens | Notes |
 | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | --- |
 | fortran | fortran-lang/stdlib `src` | tree-sitter-fortran 0.6.0 | 364 | 364 | 1.00x | 6.06x | 19.69x | Native tree-sitter AST walker preserves module/type/function/subroutine coverage, keeps subroutines normalized to Atlas `function`, and adds native `program` symbols for future slices. |
+| verilog | lowRISC/ibex RTL slice | tree-sitter-systemverilog 0.3.1 | 93 | 93 | 1.00x | 5.51x | 8.73x | Native tree-sitter AST walker preserves module/package/function coverage and adds native interface/class/task/program/checker support for future slices; the baseline parser marked 10 files as parse-error partial while still producing the matched definition proxy. |
 
 ## The consistent definition surface (applied uniformly to all 7 languages)
 

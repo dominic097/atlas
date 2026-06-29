@@ -51,6 +51,8 @@ github.com/elixir-lang/tree-sitter-elixir v0.3.5 h1:Ir60dE/aHPt80uil58ukW1CTC+15
 github.com/elixir-lang/tree-sitter-elixir v0.3.5/go.mod h1:wNBVf64kzvhSbZ8ojVtBF1jRiqGY0lsuK5Kx/60s6Z0=
 github.com/fsnotify/fsnotify v1.10.1 h1:b0/UzAf9yR5rhf3RPm9gf3ehBPpf0oZKIjtpKrx59Ho=
 github.com/fsnotify/fsnotify v1.10.1/go.mod h1:TLheqan6HD6GBK6PrDWyDPBaEV8LspOxvPSjC+bVfgo=
+github.com/gmlarumbe/tree-sitter-systemverilog v0.3.1 h1:zab7MuYKIL1sRlHdRbECLVtxNedLfwpjsE0otUYd4tM=
+github.com/gmlarumbe/tree-sitter-systemverilog v0.3.1/go.mod h1:yy5DSmipHYZg9UPIsJRWxfzXP1cOnhFMMr9ZcWqNfZ4=
 github.com/golang/snappy v1.0.0 h1:Oy607GVXHs7RtbggtPBnr2RmDArIsAefDwvrdWvRhGs=
 github.com/golang/snappy v1.0.0/go.mod h1:/XxbfmMg8lxefKM7IXC3fBNl/7bRcc72aCRzEWrmP2Q=
 github.com/google/go-cmp v0.7.0 h1:wk8382ETsv4JYUZwIsn6YpYiWiBsYLSJiTsyBybVuN8=

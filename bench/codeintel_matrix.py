@@ -100,7 +100,7 @@ GRAPHIFY_LANGUAGE_FAMILIES = [
     ("fortran", [".f", ".F", ".f90", ".F90", ".f95", ".F95", ".f03", ".F03", ".f08", ".F08"], "native tree-sitter AST"),
     ("dart", [".dart"], "native tree-sitter AST"),
     ("r", [".r", ".R"], "native tree-sitter AST"),
-    ("verilog/systemverilog", [".v", ".sv", ".svh"], "lightweight regex"),
+    ("verilog/systemverilog", [".v", ".sv", ".svh"], "native tree-sitter AST"),
     ("sql", [".sql"], "lightweight regex"),
     ("markdown", [".md", ".mdx", ".qmd"], "document parser"),
     ("pascal", [".pas", ".pp", ".dpr", ".dpk", ".lpr", ".inc"], "lightweight regex"),
