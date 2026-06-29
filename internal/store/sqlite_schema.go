@@ -22,8 +22,14 @@ CREATE TABLE IF NOT EXISTS repos (
 CREATE UNIQUE INDEX IF NOT EXISTS idx_repos_scope_fullname
 	ON repos (scope, lower(full_name));
 
+-- snapshots carries BOTH the public uuid (id) and a compact internal integer
+-- surrogate (sid). Child rows (files/symbols/edges/routes) store the small sid in
+-- their snapshot_id column instead of the 36B uuid — the surrogate never leaves the
+-- store (readers re-attach the public uuid), so output is unchanged. id stays UNIQUE
+-- so ON CONFLICT(id) upserts and uuid lookups keep working.
 CREATE TABLE IF NOT EXISTS snapshots (
-	id           TEXT PRIMARY KEY,
+	sid          INTEGER PRIMARY KEY,
+	id           TEXT NOT NULL UNIQUE,
 	repo_id      TEXT NOT NULL,
 	commit_sha   TEXT NOT NULL DEFAULT '',
 	branch       TEXT NOT NULL DEFAULT '',
@@ -42,7 +48,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_snapshots_repo_commit
 
 CREATE TABLE IF NOT EXISTS files (
 	id          TEXT PRIMARY KEY,
-	snapshot_id TEXT NOT NULL,
+	snapshot_id INTEGER NOT NULL,
 	path        TEXT NOT NULL,
 	language    TEXT NOT NULL DEFAULT '',
 	size_bytes  INTEGER NOT NULL DEFAULT 0,
@@ -57,7 +63,7 @@ CREATE INDEX IF NOT EXISTS idx_files_snapshot_path ON files (snapshot_id, path);
 
 CREATE TABLE IF NOT EXISTS symbols (
 	id          TEXT PRIMARY KEY,
-	snapshot_id TEXT NOT NULL,
+	snapshot_id INTEGER NOT NULL,
 	node_id     TEXT NOT NULL DEFAULT '',
 	repo_id     TEXT NOT NULL DEFAULT '',
 	path        TEXT NOT NULL DEFAULT '',
@@ -81,7 +87,7 @@ CREATE INDEX IF NOT EXISTS idx_symbols_snapshot_path ON symbols (snapshot_id, pa
 -- drop the 36B/row + the uuid-PK autoindex. DependencyEdge.ID stays empty after a
 -- round-trip; nothing reads it.
 CREATE TABLE IF NOT EXISTS edges (
-	snapshot_id TEXT NOT NULL,
+	snapshot_id INTEGER NOT NULL,
 	from_file   TEXT NOT NULL DEFAULT '',
 	from_symbol TEXT NOT NULL DEFAULT '',
 	to_ref      TEXT NOT NULL DEFAULT '',
@@ -96,7 +102,7 @@ CREATE INDEX IF NOT EXISTS idx_edges_snapshot_fromfile ON edges (snapshot_id, fr
 
 CREATE TABLE IF NOT EXISTS routes (
 	id             TEXT PRIMARY KEY,
-	snapshot_id    TEXT NOT NULL,
+	snapshot_id    INTEGER NOT NULL,
 	repo_full_name TEXT NOT NULL DEFAULT '',
 	method         TEXT NOT NULL DEFAULT '',
 	path_pattern   TEXT NOT NULL DEFAULT '',

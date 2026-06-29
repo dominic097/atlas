@@ -73,12 +73,13 @@ func openSQLite(ctx context.Context, path string) (StorageDriver, error) {
 // ops, where the actual query is a few ms but schema replay was not.
 //
 // Compact-schema bumps: v2 = redundant indexes removed; v3 = edges drop the
-// write-only uuid id (rowid). Because a local .atlas.db is a DERIVED cache (the
-// git working tree is the source of truth), a version MISMATCH does a clean
-// DROP+recreate rather than an in-place data migration: the caller (atlas index /
-// atlas watch) reindexes from the working tree afterward. No migration code, no
-// partial-state risk.
-const sqliteSchemaVersion = 3
+// write-only uuid id (rowid); v4 = files/symbols/edges/routes store the snapshot's
+// compact integer surrogate (sid) instead of the 36B uuid in snapshot_id. Because a
+// local .atlas.db is a DERIVED cache (the git working tree is the source of truth),
+// a version MISMATCH does a clean DROP+recreate rather than an in-place data
+// migration: the caller (atlas index / atlas watch) reindexes from the working tree
+// afterward. No migration code, no partial-state risk.
+const sqliteSchemaVersion = 4
 
 func (d *sqliteDriver) Migrate(ctx context.Context) error {
 	var ver int
@@ -430,9 +431,20 @@ func (d *sqliteDriver) SaveSnapshot(ctx context.Context, s *graph.Snapshot, file
 		return fmt.Errorf("store: save snapshot: %w", err)
 	}
 
+	// Resolve the compact integer surrogate for this snapshot; child rows store sid
+	// (not the 36B uuid) in their snapshot_id column. The snapshot was just upserted,
+	// so it must exist.
+	sid, ok, err := resolveSID(ctx, tx, s.ID)
+	if err != nil {
+		return fmt.Errorf("store: resolve snapshot sid: %w", err)
+	}
+	if !ok {
+		return fmt.Errorf("store: snapshot %s missing after upsert", s.ID)
+	}
+
 	// Rebuild child rows from scratch.
 	for _, table := range []string{"files", "symbols", "edges", "routes"} {
-		if _, err := tx.ExecContext(ctx, `DELETE FROM `+table+` WHERE snapshot_id = ?`, s.ID); err != nil {
+		if _, err := tx.ExecContext(ctx, `DELETE FROM `+table+` WHERE snapshot_id = ?`, sid); err != nil {
 			return fmt.Errorf("store: clear %s: %w", table, err)
 		}
 	}
@@ -448,7 +460,7 @@ func (d *sqliteDriver) SaveSnapshot(ctx context.Context, s *graph.Snapshot, file
 		if err != nil {
 			return fmt.Errorf("store: marshal imports for %s: %w", f.Path, err)
 		}
-		fileRows = append(fileRows, []any{id, s.ID, f.Path, f.Language, f.SizeBytes, f.Hash, imp, f.DocSummary})
+		fileRows = append(fileRows, []any{id, sid, f.Path, f.Language, f.SizeBytes, f.Hash, imp, f.DocSummary})
 	}
 	if err := sqliteBulkInsert(ctx, tx,
 		`INSERT INTO files (id, snapshot_id, path, language, size_bytes, hash, imports, doc_summary) VALUES `,
@@ -467,7 +479,7 @@ func (d *sqliteDriver) SaveSnapshot(ctx context.Context, s *graph.Snapshot, file
 		if err != nil {
 			return fmt.Errorf("store: marshal symbol metadata for %s: %w", sym.Name, err)
 		}
-		symbolRows = append(symbolRows, []any{id, s.ID, string(sym.NodeID), sym.RepoID, sym.Path, sym.Language,
+		symbolRows = append(symbolRows, []any{id, sid, string(sym.NodeID), sym.RepoID, sym.Path, sym.Language,
 			sym.Kind, sym.Name, sym.Signature, sym.Doc, sym.StartLine, sym.EndLine, m})
 	}
 	if err := sqliteBulkInsert(ctx, tx,
@@ -483,7 +495,7 @@ func (d *sqliteDriver) SaveSnapshot(ctx context.Context, s *graph.Snapshot, file
 		if err != nil {
 			return fmt.Errorf("store: marshal edge metadata: %w", err)
 		}
-		edgeRows = append(edgeRows, []any{s.ID, e.FromFile, e.FromSymbol, e.ToRef, string(e.Kind), e.Language, e.Line, m})
+		edgeRows = append(edgeRows, []any{sid, e.FromFile, e.FromSymbol, e.ToRef, string(e.Kind), e.Language, e.Line, m})
 	}
 	if err := sqliteBulkInsert(ctx, tx,
 		`INSERT INTO edges (snapshot_id, from_file, from_symbol, to_ref, kind, language, line, metadata) VALUES `,
@@ -502,7 +514,7 @@ func (d *sqliteDriver) SaveSnapshot(ctx context.Context, s *graph.Snapshot, file
 		if err != nil {
 			return fmt.Errorf("store: marshal route metadata: %w", err)
 		}
-		routeRows = append(routeRows, []any{id, s.ID, rt.RepoFullName, rt.Method, rt.PathPattern,
+		routeRows = append(routeRows, []any{id, sid, rt.RepoFullName, rt.Method, rt.PathPattern,
 			rt.HandlerFile, rt.Role, rt.Source, rt.Confidence, m})
 	}
 	if err := sqliteBulkInsert(ctx, tx,
@@ -538,6 +550,15 @@ func (d *sqliteDriver) ReplaceFileRows(ctx context.Context, snapshotID string, f
 	}
 	defer tx.Rollback()
 
+	// Resolve the compact integer surrogate once; child deletes + inserts key on it.
+	sid, ok, err := resolveSID(ctx, tx, snapshotID)
+	if err != nil {
+		return fmt.Errorf("store: resolve snapshot sid: %w", err)
+	}
+	if !ok {
+		return fmt.Errorf("store: snapshot %s not found", snapshotID)
+	}
+
 	// fileScope drives the files/symbols/routes deletes (keyed by path/path/handler_file);
 	// edgeScope (a superset including Go reverse-dep files) drives the edges delete
 	// (keyed by from_file). A reverse-dep file is in edgeScope but NOT fileScope, so only
@@ -550,13 +571,13 @@ func (d *sqliteDriver) ReplaceFileRows(ctx context.Context, snapshotID string, f
 			{"symbols", "path"},
 			{"routes", "handler_file"},
 		} {
-			if err := sqliteDeleteByFileColumn(ctx, tx, del.table, del.col, snapshotID, fileScope); err != nil {
+			if err := sqliteDeleteByFileColumn(ctx, tx, del.table, del.col, sid, fileScope); err != nil {
 				return fmt.Errorf("store: replace clear %s: %w", del.table, err)
 			}
 		}
 	}
 	if len(edgeScope) > 0 {
-		if err := sqliteDeleteByFileColumn(ctx, tx, "edges", "from_file", snapshotID, edgeScope); err != nil {
+		if err := sqliteDeleteByFileColumn(ctx, tx, "edges", "from_file", sid, edgeScope); err != nil {
 			return fmt.Errorf("store: replace clear edges: %w", err)
 		}
 	}
@@ -575,7 +596,7 @@ func (d *sqliteDriver) ReplaceFileRows(ctx context.Context, snapshotID string, f
 		if err != nil {
 			return fmt.Errorf("store: marshal imports for %s: %w", f.Path, err)
 		}
-		fileRows = append(fileRows, []any{id, snapshotID, f.Path, f.Language, f.SizeBytes, f.Hash, imp, f.DocSummary})
+		fileRows = append(fileRows, []any{id, sid, f.Path, f.Language, f.SizeBytes, f.Hash, imp, f.DocSummary})
 	}
 	if err := sqliteBulkInsert(ctx, tx,
 		`INSERT INTO files (id, snapshot_id, path, language, size_bytes, hash, imports, doc_summary) VALUES `,
@@ -594,7 +615,7 @@ func (d *sqliteDriver) ReplaceFileRows(ctx context.Context, snapshotID string, f
 		if err != nil {
 			return fmt.Errorf("store: marshal symbol metadata for %s: %w", sym.Name, err)
 		}
-		symbolRows = append(symbolRows, []any{id, snapshotID, string(sym.NodeID), sym.RepoID, sym.Path, sym.Language,
+		symbolRows = append(symbolRows, []any{id, sid, string(sym.NodeID), sym.RepoID, sym.Path, sym.Language,
 			sym.Kind, sym.Name, sym.Signature, sym.Doc, sym.StartLine, sym.EndLine, m})
 	}
 	if err := sqliteBulkInsert(ctx, tx,
@@ -610,7 +631,7 @@ func (d *sqliteDriver) ReplaceFileRows(ctx context.Context, snapshotID string, f
 		if err != nil {
 			return fmt.Errorf("store: marshal edge metadata: %w", err)
 		}
-		edgeRows = append(edgeRows, []any{snapshotID, e.FromFile, e.FromSymbol, e.ToRef, string(e.Kind), e.Language, e.Line, m})
+		edgeRows = append(edgeRows, []any{sid, e.FromFile, e.FromSymbol, e.ToRef, string(e.Kind), e.Language, e.Line, m})
 	}
 	if err := sqliteBulkInsert(ctx, tx,
 		`INSERT INTO edges (snapshot_id, from_file, from_symbol, to_ref, kind, language, line, metadata) VALUES `,
@@ -629,7 +650,7 @@ func (d *sqliteDriver) ReplaceFileRows(ctx context.Context, snapshotID string, f
 		if err != nil {
 			return fmt.Errorf("store: marshal route metadata: %w", err)
 		}
-		routeRows = append(routeRows, []any{id, snapshotID, rt.RepoFullName, rt.Method, rt.PathPattern,
+		routeRows = append(routeRows, []any{id, sid, rt.RepoFullName, rt.Method, rt.PathPattern,
 			rt.HandlerFile, rt.Role, rt.Source, rt.Confidence, m})
 	}
 	if err := sqliteBulkInsert(ctx, tx,
@@ -653,10 +674,10 @@ func (d *sqliteDriver) ReplaceFileRows(ctx context.Context, snapshotID string, f
 }
 
 // sqliteDeleteByFileColumn deletes every row of `table` whose `col` (a file-path
-// column) is in `paths`, scoped to snapshotID, using a chunked IN-list so a large
-// affected set never blows SQLite's bound-parameter limit. col is a fixed
-// identifier ("path"|"from_file"|"handler_file"), never user input.
-func sqliteDeleteByFileColumn(ctx context.Context, tx *sql.Tx, table, col, snapshotID string, paths []string) error {
+// column) is in `paths`, scoped to the snapshot surrogate `sid`, using a chunked
+// IN-list so a large affected set never blows SQLite's bound-parameter limit. col
+// is a fixed identifier ("path"|"from_file"|"handler_file"), never user input.
+func sqliteDeleteByFileColumn(ctx context.Context, tx *sql.Tx, table, col string, sid int64, paths []string) error {
 	if len(paths) == 0 {
 		return nil
 	}
@@ -669,7 +690,7 @@ func sqliteDeleteByFileColumn(ctx context.Context, tx *sql.Tx, table, col, snaps
 		placeholders := strings.Repeat("?,", len(chunk))
 		placeholders = placeholders[:len(placeholders)-1]
 		args := make([]any, 0, len(chunk)+1)
-		args = append(args, snapshotID)
+		args = append(args, sid)
 		for _, p := range chunk {
 			args = append(args, p)
 		}
@@ -820,18 +841,50 @@ const symbolCols = `id, snapshot_id, node_id, repo_id, path, language, kind, nam
 // DependencyEdge.ID is left zero on read; no consumer reads it.
 const edgeCols = `snapshot_id, from_file, from_symbol, to_ref, kind, language, line, metadata`
 
+// sqliteQuerier is satisfied by both *sql.DB and *sql.Tx, so the snapshot-id
+// resolver works inside and outside a transaction.
+type sqliteQuerier interface {
+	QueryRowContext(ctx context.Context, query string, args ...any) *sql.Row
+}
+
+// Readers resolve the public snapshot uuid to the compact internal integer
+// surrogate INSIDE the SQL — they splice `snapshot_id = (SELECT sid FROM snapshots
+// WHERE id = ?)` in place of a literal `snapshot_id = ?`. This keeps the bound arg
+// list + ordering UNCHANGED, and an unknown uuid yields NULL so `snapshot_id =
+// NULL` matches no rows — preserving the old "unknown snapshot → empty" behavior
+// with no Go-side error path.
+//
+// resolveSID returns the integer surrogate for a snapshot uuid, used by the WRITE
+// paths (bulk inserts/deletes can't splice a per-row subquery). (0,false) means the
+// snapshot row does not exist yet.
+func resolveSID(ctx context.Context, q sqliteQuerier, snapshotID string) (int64, bool, error) {
+	var sid int64
+	switch err := q.QueryRowContext(ctx, `SELECT sid FROM snapshots WHERE id = ?`, snapshotID).Scan(&sid); err {
+	case nil:
+		return sid, true, nil
+	case sql.ErrNoRows:
+		return 0, false, nil
+	default:
+		return 0, false, err
+	}
+}
+
 // scanSymbolRow decodes one symbols row into a graph.CodeSymbol (node_id +
-// metadata included), matching ListSymbols exactly.
-func scanSymbolRow(sc interface{ Scan(...any) error }) (graph.CodeSymbol, error) {
+// metadata included), matching ListSymbols exactly. The snapshot_id column is the
+// compact integer surrogate, so it is scanned into a throwaway and the public uuid
+// (snapshotID, known by every caller) is re-attached — keeping output identical.
+func scanSymbolRow(sc interface{ Scan(...any) error }, snapshotID string) (graph.CodeSymbol, error) {
 	var (
 		sym    graph.CodeSymbol
+		sidDis int64
 		nodeID string
 		meta   sql.NullString
 	)
-	if err := sc.Scan(&sym.ID, &sym.SnapshotID, &nodeID, &sym.RepoID, &sym.Path, &sym.Language,
+	if err := sc.Scan(&sym.ID, &sidDis, &nodeID, &sym.RepoID, &sym.Path, &sym.Language,
 		&sym.Kind, &sym.Name, &sym.Signature, &sym.Doc, &sym.StartLine, &sym.EndLine, &meta); err != nil {
 		return graph.CodeSymbol{}, err
 	}
+	sym.SnapshotID = snapshotID
 	sym.NodeID = graph.NodeID(nodeID)
 	m, err := unmarshalJSONMap(meta.String)
 	if err != nil {
@@ -842,16 +895,19 @@ func scanSymbolRow(sc interface{ Scan(...any) error }) (graph.CodeSymbol, error)
 }
 
 // scanEdgeRow decodes one edges row into a graph.DependencyEdge (metadata
-// included), matching ListEdges exactly.
-func scanEdgeRow(sc interface{ Scan(...any) error }) (graph.DependencyEdge, error) {
+// included), matching ListEdges exactly. snapshot_id is the integer surrogate; the
+// public uuid is re-attached from the caller's snapshotID.
+func scanEdgeRow(sc interface{ Scan(...any) error }, snapshotID string) (graph.DependencyEdge, error) {
 	var (
-		e    graph.DependencyEdge
-		kind string
-		meta sql.NullString
+		e      graph.DependencyEdge
+		sidDis int64
+		kind   string
+		meta   sql.NullString
 	)
-	if err := sc.Scan(&e.SnapshotID, &e.FromFile, &e.FromSymbol, &e.ToRef, &kind, &e.Language, &e.Line, &meta); err != nil {
+	if err := sc.Scan(&sidDis, &e.FromFile, &e.FromSymbol, &e.ToRef, &kind, &e.Language, &e.Line, &meta); err != nil {
 		return graph.DependencyEdge{}, err
 	}
+	e.SnapshotID = snapshotID
 	e.Kind = graph.EdgeKind(kind)
 	m, err := unmarshalJSONMap(meta.String)
 	if err != nil {
@@ -864,7 +920,7 @@ func scanEdgeRow(sc interface{ Scan(...any) error }) (graph.DependencyEdge, erro
 func (d *sqliteDriver) ListSymbols(ctx context.Context, snapshotID string) ([]graph.CodeSymbol, error) {
 	rows, err := d.db.QueryContext(ctx, `
 		SELECT `+symbolCols+`
-		FROM symbols WHERE snapshot_id = ?
+		FROM symbols WHERE snapshot_id = (SELECT sid FROM snapshots WHERE id = ?)
 		ORDER BY path, start_line, name`,
 		snapshotID,
 	)
@@ -875,7 +931,7 @@ func (d *sqliteDriver) ListSymbols(ctx context.Context, snapshotID string) ([]gr
 
 	var out []graph.CodeSymbol
 	for rows.Next() {
-		sym, err := scanSymbolRow(rows)
+		sym, err := scanSymbolRow(rows, snapshotID)
 		if err != nil {
 			return nil, fmt.Errorf("store: scan symbol: %w", err)
 		}
@@ -887,7 +943,7 @@ func (d *sqliteDriver) ListSymbols(ctx context.Context, snapshotID string) ([]gr
 func (d *sqliteDriver) ListEdges(ctx context.Context, snapshotID string) ([]graph.DependencyEdge, error) {
 	rows, err := d.db.QueryContext(ctx, `
 		SELECT `+edgeCols+`
-		FROM edges WHERE snapshot_id = ?
+		FROM edges WHERE snapshot_id = (SELECT sid FROM snapshots WHERE id = ?)
 		ORDER BY from_file, to_ref, kind`,
 		snapshotID,
 	)
@@ -898,7 +954,7 @@ func (d *sqliteDriver) ListEdges(ctx context.Context, snapshotID string) ([]grap
 
 	var out []graph.DependencyEdge
 	for rows.Next() {
-		e, err := scanEdgeRow(rows)
+		e, err := scanEdgeRow(rows, snapshotID)
 		if err != nil {
 			return nil, fmt.Errorf("store: scan edge: %w", err)
 		}
@@ -916,7 +972,7 @@ func (d *sqliteDriver) StreamSymbols(ctx context.Context, snapshotID string, bat
 	}
 	rows, err := d.db.QueryContext(ctx, `
 		SELECT `+symbolCols+`
-		FROM symbols WHERE snapshot_id = ?
+		FROM symbols WHERE snapshot_id = (SELECT sid FROM snapshots WHERE id = ?)
 		ORDER BY path, start_line, name`,
 		snapshotID,
 	)
@@ -926,7 +982,7 @@ func (d *sqliteDriver) StreamSymbols(ctx context.Context, snapshotID string, bat
 	defer rows.Close()
 	buf := make([]graph.CodeSymbol, 0, batch)
 	for rows.Next() {
-		sym, err := scanSymbolRow(rows)
+		sym, err := scanSymbolRow(rows, snapshotID)
 		if err != nil {
 			return fmt.Errorf("store: scan symbol: %w", err)
 		}
@@ -953,7 +1009,7 @@ func (d *sqliteDriver) StreamEdges(ctx context.Context, snapshotID string, batch
 	}
 	rows, err := d.db.QueryContext(ctx, `
 		SELECT `+edgeCols+`
-		FROM edges WHERE snapshot_id = ?
+		FROM edges WHERE snapshot_id = (SELECT sid FROM snapshots WHERE id = ?)
 		ORDER BY from_file, to_ref, kind`,
 		snapshotID,
 	)
@@ -963,7 +1019,7 @@ func (d *sqliteDriver) StreamEdges(ctx context.Context, snapshotID string, batch
 	defer rows.Close()
 	buf := make([]graph.DependencyEdge, 0, batch)
 	for rows.Next() {
-		e, err := scanEdgeRow(rows)
+		e, err := scanEdgeRow(rows, snapshotID)
 		if err != nil {
 			return fmt.Errorf("store: scan edge: %w", err)
 		}
@@ -989,7 +1045,7 @@ func (d *sqliteDriver) StreamEdges(ctx context.Context, snapshotID string, batch
 func (d *sqliteDriver) SymbolsByName(ctx context.Context, snapshotID, name string) ([]graph.CodeSymbol, error) {
 	rows, err := d.db.QueryContext(ctx, `
 		SELECT `+symbolCols+`
-		FROM symbols WHERE snapshot_id = ? AND name = ?
+		FROM symbols WHERE snapshot_id = (SELECT sid FROM snapshots WHERE id = ?) AND name = ?
 		ORDER BY path, start_line`,
 		snapshotID, name,
 	)
@@ -1000,7 +1056,7 @@ func (d *sqliteDriver) SymbolsByName(ctx context.Context, snapshotID, name strin
 
 	var out []graph.CodeSymbol
 	for rows.Next() {
-		sym, err := scanSymbolRow(rows)
+		sym, err := scanSymbolRow(rows, snapshotID)
 		if err != nil {
 			return nil, fmt.Errorf("store: scan symbol: %w", err)
 		}
@@ -1044,14 +1100,14 @@ func (d *sqliteDriver) SymbolsByNames(ctx context.Context, snapshotID string, na
 		// deterministic "first candidate" selection. The leading name keeps each
 		// name's rows contiguous.
 		query := `SELECT ` + symbolCols + `
-			FROM symbols WHERE snapshot_id = ? AND name IN (` + placeholders + `)
+			FROM symbols WHERE snapshot_id = (SELECT sid FROM snapshots WHERE id = ?) AND name IN (` + placeholders + `)
 			ORDER BY name, path, start_line`
 		rows, err := d.db.QueryContext(ctx, query, args...)
 		if err != nil {
 			return nil, fmt.Errorf("store: symbols by names: %w", err)
 		}
 		for rows.Next() {
-			sym, err := scanSymbolRow(rows)
+			sym, err := scanSymbolRow(rows, snapshotID)
 			if err != nil {
 				rows.Close()
 				return nil, fmt.Errorf("store: scan symbol: %w", err)
@@ -1072,7 +1128,7 @@ func (d *sqliteDriver) SymbolsByNames(ctx context.Context, snapshotID string, na
 func (d *sqliteDriver) SymbolsByPath(ctx context.Context, snapshotID, path string) ([]graph.CodeSymbol, error) {
 	rows, err := d.db.QueryContext(ctx, `
 		SELECT `+symbolCols+`
-		FROM symbols WHERE snapshot_id = ? AND path = ?
+		FROM symbols WHERE snapshot_id = (SELECT sid FROM snapshots WHERE id = ?) AND path = ?
 		ORDER BY start_line, name`,
 		snapshotID, path,
 	)
@@ -1083,7 +1139,7 @@ func (d *sqliteDriver) SymbolsByPath(ctx context.Context, snapshotID, path strin
 
 	var out []graph.CodeSymbol
 	for rows.Next() {
-		sym, err := scanSymbolRow(rows)
+		sym, err := scanSymbolRow(rows, snapshotID)
 		if err != nil {
 			return nil, fmt.Errorf("store: scan symbol: %w", err)
 		}
@@ -1119,14 +1175,14 @@ func (d *sqliteDriver) SymbolsByIDs(ctx context.Context, snapshotID string, ids 
 		}
 
 		query := `SELECT ` + symbolCols + `
-			FROM symbols WHERE snapshot_id = ? AND id IN (` + placeholders + `)
+			FROM symbols WHERE snapshot_id = (SELECT sid FROM snapshots WHERE id = ?) AND id IN (` + placeholders + `)
 			ORDER BY path, start_line, name`
 		rows, err := d.db.QueryContext(ctx, query, args...)
 		if err != nil {
 			return nil, fmt.Errorf("store: symbols by ids: %w", err)
 		}
 		for rows.Next() {
-			sym, err := scanSymbolRow(rows)
+			sym, err := scanSymbolRow(rows, snapshotID)
 			if err != nil {
 				rows.Close()
 				return nil, fmt.Errorf("store: scan symbol: %w", err)
@@ -1171,13 +1227,13 @@ func (d *sqliteDriver) CallEdgesByToRefs(ctx context.Context, snapshotID string,
 		}
 
 		query := `SELECT ` + edgeCols + `
-			FROM edges WHERE snapshot_id = ? AND kind = 'calls' AND to_ref IN (` + placeholders + `)`
+			FROM edges WHERE snapshot_id = (SELECT sid FROM snapshots WHERE id = ?) AND kind = 'calls' AND to_ref IN (` + placeholders + `)`
 		rows, err := d.db.QueryContext(ctx, query, args...)
 		if err != nil {
 			return nil, fmt.Errorf("store: call edges by to_refs: %w", err)
 		}
 		for rows.Next() {
-			e, err := scanEdgeRow(rows)
+			e, err := scanEdgeRow(rows, snapshotID)
 			if err != nil {
 				rows.Close()
 				return nil, fmt.Errorf("store: scan edge: %w", err)
@@ -1212,13 +1268,13 @@ func (d *sqliteDriver) CallEdgesByFromSymbols(ctx context.Context, snapshotID st
 			args = append(args, fs)
 		}
 		query := `SELECT ` + edgeCols + `
-			FROM edges WHERE snapshot_id = ? AND kind = 'calls' AND from_symbol IN (` + placeholders + `)`
+			FROM edges WHERE snapshot_id = (SELECT sid FROM snapshots WHERE id = ?) AND kind = 'calls' AND from_symbol IN (` + placeholders + `)`
 		rows, err := d.db.QueryContext(ctx, query, args...)
 		if err != nil {
 			return nil, fmt.Errorf("store: call edges by from_symbols: %w", err)
 		}
 		for rows.Next() {
-			e, err := scanEdgeRow(rows)
+			e, err := scanEdgeRow(rows, snapshotID)
 			if err != nil {
 				rows.Close()
 				return nil, fmt.Errorf("store: scan edge: %w", err)
@@ -1259,13 +1315,13 @@ func (d *sqliteDriver) RefEdgesByToRefs(ctx context.Context, snapshotID string, 
 		}
 
 		query := `SELECT ` + edgeCols + `
-			FROM edges WHERE snapshot_id = ? AND kind = 'references' AND to_ref IN (` + placeholders + `)`
+			FROM edges WHERE snapshot_id = (SELECT sid FROM snapshots WHERE id = ?) AND kind = 'references' AND to_ref IN (` + placeholders + `)`
 		rows, err := d.db.QueryContext(ctx, query, args...)
 		if err != nil {
 			return nil, fmt.Errorf("store: ref edges by to_refs: %w", err)
 		}
 		for rows.Next() {
-			e, err := scanEdgeRow(rows)
+			e, err := scanEdgeRow(rows, snapshotID)
 			if err != nil {
 				rows.Close()
 				return nil, fmt.Errorf("store: scan edge: %w", err)
@@ -1310,14 +1366,14 @@ func (d *sqliteDriver) EdgesByFromFiles(ctx context.Context, snapshotID string, 
 		// ORDER BY from_file, to_ref, kind mirrors ListEdges so the targeted slice
 		// arrives in the SAME order the load-all filter produced.
 		query := `SELECT ` + edgeCols + `
-			FROM edges WHERE snapshot_id = ? AND from_file IN (` + placeholders + `)
+			FROM edges WHERE snapshot_id = (SELECT sid FROM snapshots WHERE id = ?) AND from_file IN (` + placeholders + `)
 			ORDER BY from_file, to_ref, kind`
 		rows, err := d.db.QueryContext(ctx, query, args...)
 		if err != nil {
 			return nil, fmt.Errorf("store: edges by from_files: %w", err)
 		}
 		for rows.Next() {
-			e, err := scanEdgeRow(rows)
+			e, err := scanEdgeRow(rows, snapshotID)
 			if err != nil {
 				rows.Close()
 				return nil, fmt.Errorf("store: scan edge: %w", err)
@@ -1341,11 +1397,11 @@ func (d *sqliteDriver) ListRoutes(ctx context.Context, snapshotID, role string) 
 	const cols = `id, snapshot_id, repo_full_name, method, path_pattern, handler_file, role, source, confidence, metadata`
 	if strings.TrimSpace(role) == "" {
 		rows, err = d.db.QueryContext(ctx,
-			`SELECT `+cols+` FROM routes WHERE snapshot_id = ? ORDER BY method, path_pattern`,
+			`SELECT `+cols+` FROM routes WHERE snapshot_id = (SELECT sid FROM snapshots WHERE id = ?) ORDER BY method, path_pattern`,
 			snapshotID)
 	} else {
 		rows, err = d.db.QueryContext(ctx,
-			`SELECT `+cols+` FROM routes WHERE snapshot_id = ? AND role = ? ORDER BY method, path_pattern`,
+			`SELECT `+cols+` FROM routes WHERE snapshot_id = (SELECT sid FROM snapshots WHERE id = ?) AND role = ? ORDER BY method, path_pattern`,
 			snapshotID, role)
 	}
 	if err != nil {
@@ -1356,13 +1412,15 @@ func (d *sqliteDriver) ListRoutes(ctx context.Context, snapshotID, role string) 
 	var out []graph.Route
 	for rows.Next() {
 		var (
-			rt   graph.Route
-			meta sql.NullString
+			rt     graph.Route
+			sidDis int64
+			meta   sql.NullString
 		)
-		if err := rows.Scan(&rt.ID, &rt.SnapshotID, &rt.RepoFullName, &rt.Method, &rt.PathPattern,
+		if err := rows.Scan(&rt.ID, &sidDis, &rt.RepoFullName, &rt.Method, &rt.PathPattern,
 			&rt.HandlerFile, &rt.Role, &rt.Source, &rt.Confidence, &meta); err != nil {
 			return nil, fmt.Errorf("store: scan route: %w", err)
 		}
+		rt.SnapshotID = snapshotID
 		if rt.Metadata, err = unmarshalJSONMap(meta.String); err != nil {
 			return nil, fmt.Errorf("store: unmarshal route metadata: %w", err)
 		}
@@ -1375,7 +1433,7 @@ func (d *sqliteDriver) ListRoutes(ctx context.Context, snapshotID, role string) 
 func (d *sqliteDriver) ListFiles(ctx context.Context, snapshotID string) ([]graph.File, error) {
 	rows, err := d.db.QueryContext(ctx,
 		`SELECT id, snapshot_id, path, language, size_bytes, hash, imports, doc_summary
-		 FROM files WHERE snapshot_id = ? ORDER BY path`,
+		 FROM files WHERE snapshot_id = (SELECT sid FROM snapshots WHERE id = ?) ORDER BY path`,
 		snapshotID)
 	if err != nil {
 		return nil, fmt.Errorf("store: list files: %w", err)
@@ -1385,13 +1443,15 @@ func (d *sqliteDriver) ListFiles(ctx context.Context, snapshotID string) ([]grap
 	var out []graph.File
 	for rows.Next() {
 		var (
-			f    graph.File
-			imp  sql.NullString
-			docS sql.NullString
+			f      graph.File
+			sidDis int64
+			imp    sql.NullString
+			docS   sql.NullString
 		)
-		if err := rows.Scan(&f.ID, &f.SnapshotID, &f.Path, &f.Language, &f.SizeBytes, &f.Hash, &imp, &docS); err != nil {
+		if err := rows.Scan(&f.ID, &sidDis, &f.Path, &f.Language, &f.SizeBytes, &f.Hash, &imp, &docS); err != nil {
 			return nil, fmt.Errorf("store: scan file: %w", err)
 		}
+		f.SnapshotID = snapshotID
 		if f.Imports, err = unmarshalStrings(imp); err != nil {
 			return nil, fmt.Errorf("store: unmarshal file imports: %w", err)
 		}
@@ -1424,7 +1484,7 @@ func (d *sqliteDriver) FilesByPaths(ctx context.Context, snapshotID string, path
 			args = append(args, p)
 		}
 		query := `SELECT id, snapshot_id, path, language, size_bytes, hash, imports, doc_summary
-			FROM files WHERE snapshot_id = ? AND path IN (` + placeholders + `)
+			FROM files WHERE snapshot_id = (SELECT sid FROM snapshots WHERE id = ?) AND path IN (` + placeholders + `)
 			ORDER BY path`
 		rows, err := d.db.QueryContext(ctx, query, args...)
 		if err != nil {
@@ -1432,14 +1492,16 @@ func (d *sqliteDriver) FilesByPaths(ctx context.Context, snapshotID string, path
 		}
 		for rows.Next() {
 			var (
-				f    graph.File
-				imp  sql.NullString
-				docS sql.NullString
+				f      graph.File
+				sidDis int64
+				imp    sql.NullString
+				docS   sql.NullString
 			)
-			if err := rows.Scan(&f.ID, &f.SnapshotID, &f.Path, &f.Language, &f.SizeBytes, &f.Hash, &imp, &docS); err != nil {
+			if err := rows.Scan(&f.ID, &sidDis, &f.Path, &f.Language, &f.SizeBytes, &f.Hash, &imp, &docS); err != nil {
 				rows.Close()
 				return nil, fmt.Errorf("store: scan file: %w", err)
 			}
+			f.SnapshotID = snapshotID
 			if f.Imports, err = unmarshalStrings(imp); err != nil {
 				rows.Close()
 				return nil, fmt.Errorf("store: unmarshal file imports: %w", err)
