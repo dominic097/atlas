@@ -456,6 +456,8 @@ end function stdlib_get_cwd
 module subroutine free_chaining_map(map)
 end subroutine free_chaining_map
 end module stdlib_hashmaps
+program stdlib_driver
+end program stdlib_driver
 `))
 	if err != nil {
 		t.Fatalf("Parse: %v", err)
@@ -468,6 +470,7 @@ end module stdlib_hashmaps
 		"eq_stringlist":          "function",
 		"stdlib_get_cwd":         "function",
 		"free_chaining_map":      "function",
+		"stdlib_driver":          "program",
 	} {
 		sym := findSymbol(res.Symbols, name)
 		if sym == nil {

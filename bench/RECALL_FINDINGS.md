@@ -63,6 +63,17 @@ validated with the focused parser test suite.
 | dart | dart-lang/http `pkgs/http/lib` | tree-sitter-dart 0.1.0 | 180 | 180 | 1.00x | 6.25x | 8.54x | Native tree-sitter AST walker preserves type/function/constructor/getter/setter/typedef coverage while avoiding constructor-call false positives. |
 | r | tidyverse/ggplot2 `R` | r-source-counter | 3010 | 3011 | 1.00x | n/a | n/a | Native tree-sitter AST walker matches r-source-counter functions/types exactly and omits one source-counter false positive (`i = ...` inside a single-quoted string literal in `geom-dotplot.R`); graphify has no deterministic R extractor rows in this runtime. |
 
+## Native parser migration addendum — B4 in progress
+
+Measured 2026-06-30 while converting the B4 languages in strict order. Rows
+are added only after the language is routed off `parseRegexFallback`,
+benchmarked against graphify and the strongest local independent baseline, and
+validated with the focused parser test suite.
+
+| Lang | Repo slice | Independent baseline | Atlas defs | Baseline defs | Recall/coverage | graphify latency | graphify tokens | Notes |
+| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | --- |
+| fortran | fortran-lang/stdlib `src` | tree-sitter-fortran 0.6.0 | 364 | 364 | 1.00x | 6.06x | 19.69x | Native tree-sitter AST walker preserves module/type/function/subroutine coverage, keeps subroutines normalized to Atlas `function`, and adds native `program` symbols for future slices. |
+
 ## The consistent definition surface (applied uniformly to all 7 languages)
 
 A symbol is counted as a **definition** iff it is a top-level **or member**

@@ -5325,7 +5325,7 @@ def run_smoke(language: str, atlas_bin: str, graphify_bin: str | None) -> dict[s
         "sql": ("table", "view", "function", "procedure", "trigger"),
         "swift": ("function", "type", "variable"),
         "elixir": ("module", "protocol", "implementation", "function", "macro", "delegate", "guard"),
-        "fortran": ("module", "type", "function"),
+        "fortran": ("module", "type", "function", "program"),
         "verilog": ("module", "interface", "package", "class", "function", "task", "program", "checker"),
         "groovy": ("class", "interface", "enum", "trait", "method", "function", "task"),
         "objc": ("type", "method"),
@@ -5627,11 +5627,12 @@ def run_smoke(language: str, atlas_bin: str, graphify_bin: str | None) -> dict[s
         }
     elif language == "fortran":
         optimization = {
-            "cycles_run": 2,
-            "stop_reason": "Fortran live smoke matched the tree-sitter-fortran definition coverage proxy and met the current 5x latency/token thresholds after widening Atlas Fortran declaration handling.",
+            "cycles_run": 3,
+            "stop_reason": "Fortran native tree-sitter AST parsing matched the tree-sitter-fortran definition coverage proxy and met the current 5x latency/token thresholds.",
             "cycle_notes": [
                 "cycle 1: fortran-lang/stdlib probe showed the generic Fortran regex could misclassify `module procedure` interface entries as modules and miss `module function`/`module subroutine` definitions.",
                 "cycle 2: after tightening module matching and widening function/subroutine modifiers plus typed functions, Atlas/tree-sitter-fortran definition coverage reached 1.0 and exact-symbol query rows exceeded 5x for latency and token output vs graphify.",
+                "cycle 3: replacing the regex route with a tree-sitter-fortran AST walker preserved exact module/type/function/subroutine coverage, kept subroutines normalized to Atlas function symbols, and added native program symbols for future slices.",
             ],
         }
     elif language == "verilog":
