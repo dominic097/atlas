@@ -91,6 +91,7 @@ validated with the focused parser test suite.
 | vue | gothinkster/vue-realworld-example-app `src` | `@vue/compiler-sfc` 3.5.22 | 119 | 119 | 1.00x | 5.51x | 8.04x | Native SFC block extraction plus tree-sitter JavaScript/TypeScript declaration parsing matched the compiler-sfc script declaration baseline exactly and kept `.vue` files off `parseRegexFallback`. |
 | svelte | carbon-design-system/carbon-components-svelte `src` | Svelte compiler 5.56.4 | 1278 | 1278 | 1.00x | 5.92x | 8.81x | Native SFC block extraction plus tree-sitter JavaScript/TypeScript declaration parsing matched the Svelte compiler script declaration baseline exactly and removed the prior regex over-count. |
 | astro | withastro/blog-tutorial-demo `src` | `@astrojs/compiler` 4.0.0 | 58 | 58 | 1.00x | 5.66x | 10.54x | Native Astro parser matched compiler coverage with file components, component tags, and tree-sitter frontmatter declarations; graphify still lacks the `pageTitle` variable row, so the latency/token ratios use the 5/6 equivalent queries. |
+| razor | dotnet-architecture/eShopOnWeb `src` | razor directive/component counter | 208 | 208 | 1.00x | 6.52x | 7.88x | Native Razor source parser matched file view/component, directive, component-tag, and `@code` method coverage exactly while keeping Razor files off `parseRegexFallback`. |
 
 ## The consistent definition surface (applied uniformly to all 7 languages)
 

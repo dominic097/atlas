@@ -403,6 +403,14 @@ func Parse(repoID, repoFullName, filePath, language string, content []byte) (Res
 			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
+	case "razor":
+		if syms, razorImports, ok := parseRazorNative(filePath, content); ok {
+			rawSyms = syms
+			imports = razorImports
+		} else {
+			rawSyms, imports = parseRegexFallback(filePath, language, content)
+		}
+		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "pascal":
 		if syms, ok := parsePascalNative(content); ok {
 			rawSyms = syms
@@ -411,7 +419,7 @@ func Parse(repoID, repoFullName, filePath, language string, content []byte) (Res
 			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
-	case "delphi", "terraform", "byond", "dotnet", "razor", "apex", "blade",
+	case "delphi", "terraform", "byond", "dotnet", "apex", "blade",
 		"ejs", "ets", "sql", "p4":
 		rawSyms, imports = parseRegexFallback(filePath, language, content)
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)

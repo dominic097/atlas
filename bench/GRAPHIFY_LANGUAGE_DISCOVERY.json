@@ -223,7 +223,7 @@
       "razor",
       ".razor .cshtml",
       "extract_razor",
-      "lightweight regex"
+      "native Razor source parser"
     ],
     [
       "apex",

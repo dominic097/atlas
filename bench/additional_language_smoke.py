@@ -5519,12 +5519,13 @@ def run_smoke(language: str, atlas_bin: str, graphify_bin: str | None) -> dict[s
         }
     elif language == "razor":
         optimization = {
-            "cycles_run": 3,
-            "stop_reason": "Razor live smoke matched the directive/component coverage proxy and improved token score after compacting Razor view suffixes in terse plain locations while preserving full paths in JSON.",
+            "cycles_run": 4,
+            "stop_reason": "Razor native source parsing matched the directive/component coverage proxy after replacing the regex fallback route and preserving compact Razor view output.",
             "cycle_notes": [
                 "cycle 1: eShopOnWeb probe showed the generic Razor rules missed file identity, @model/@inherits, injected services as symbols, and @code methods while graphify exposes those as code-review context.",
                 "cycle 2: after adding a Razor-specific parser, Atlas matched the benchmark-owned coverage proxy and exact directive/component query rows are reported against graphify with honest saturation notes if below 5x.",
                 "cycle 3: compacting `.razor`/`.cshtml` suffixes in terse locations reduces exact view/component output without changing indexed symbols or JSON paths.",
+                "cycle 4: routing Razor off parseRegexFallback preserved exact source-parser coverage using deterministic directive, component-tag, and @code method scanning.",
             ],
         }
     elif language == "apex":

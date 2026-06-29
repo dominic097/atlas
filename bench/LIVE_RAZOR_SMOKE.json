@@ -21,19 +21,19 @@
     "target_path": "/tmp/atlas-live-razor-eshoponweb/repo/src"
   },
   "atlas": {
-    "cold_wall_seconds": 0.277,
-    "reindex_wall_seconds": 0.022,
+    "cold_wall_seconds": 0.445,
+    "reindex_wall_seconds": 0.03,
     "index": {
-      "repo_id": "17b90711-1eaf-4a5e-b3ac-8c85897600ff",
+      "repo_id": "baadc7a7-1c27-4dfb-9917-8e7a9618c05b",
       "repo_full_name": "src",
-      "snapshot_id": "8dadf04c-3079-4865-84d7-31dbdb6bc2fa",
+      "snapshot_id": "b5ef0f60-0887-4cc4-9b31-2c9a643fad9e",
       "commit_sha": "4da8212117e87d808d4bbc7da6286fd2147ce606",
-      "indexed_files": 333,
-      "symbols": 1283,
-      "edges": 3113,
+      "indexed_files": 354,
+      "symbols": 1353,
+      "edges": 2436,
       "edge_kinds": {
-        "calls": 2331,
-        "imports": 782
+        "calls": 2327,
+        "imports": 109
       },
       "routes": 0,
       "languages": {
@@ -41,6 +41,7 @@
         "css": 34,
         "dockerfile": 2,
         "dotnet": 6,
+        "image": 21,
         "javascript": 2,
         "json": 16,
         "markdown": 2,
@@ -48,34 +49,40 @@
         "xml": 1
       },
       "mode": "full",
-      "duration_ms": 235,
+      "duration_ms": 409,
       "timings_ms": {
+        "build_symbols_edges": 0,
         "delta_check": 0,
+        "discover_files": 2,
+        "doc_links": 0,
         "ensure_repo": 0,
+        "gitignore_scan": 11,
         "go_types": 0,
-        "lexical": 138,
-        "parse": 40,
-        "persist": 44,
+        "lexical": 176,
+        "parse": 217,
+        "persist": 176,
         "resolve_head": 0,
         "routes": 0,
         "sort": 0,
-        "walk": 10
+        "walk": 2,
+        "write_sqlite": 176
       }
     },
     "reindex": {
-      "repo_id": "17b90711-1eaf-4a5e-b3ac-8c85897600ff",
+      "repo_id": "baadc7a7-1c27-4dfb-9917-8e7a9618c05b",
       "repo_full_name": "src",
-      "snapshot_id": "8dadf04c-3079-4865-84d7-31dbdb6bc2fa",
+      "snapshot_id": "b5ef0f60-0887-4cc4-9b31-2c9a643fad9e",
       "commit_sha": "4da8212117e87d808d4bbc7da6286fd2147ce606",
-      "indexed_files": 333,
-      "symbols": 1283,
-      "edges": 3113,
+      "indexed_files": 354,
+      "symbols": 1353,
+      "edges": 2436,
       "routes": 0,
       "languages": {
         "csharp": 209,
         "css": 34,
         "dockerfile": 2,
         "dotnet": 6,
+        "image": 21,
         "javascript": 2,
         "json": 16,
         "markdown": 2,
@@ -83,9 +90,9 @@
         "xml": 1
       },
       "mode": "noop",
-      "duration_ms": 0,
+      "duration_ms": 12,
       "timings_ms": {
-        "delta_check": 0,
+        "delta_check": 12,
         "resolve_head": 0
       }
     },
@@ -93,12 +100,27 @@
       {
         "language": "csharp",
         "kind": "class",
-        "count": 194
+        "count": 195
+      },
+      {
+        "language": "csharp",
+        "kind": "constant",
+        "count": 4
+      },
+      {
+        "language": "csharp",
+        "kind": "constructor",
+        "count": 111
       },
       {
         "language": "csharp",
         "kind": "enum",
         "count": 1
+      },
+      {
+        "language": "csharp",
+        "kind": "field",
+        "count": 280
       },
       {
         "language": "csharp",
@@ -108,12 +130,7 @@
       {
         "language": "csharp",
         "kind": "method",
-        "count": 592
-      },
-      {
-        "language": "csharp",
-        "kind": "struct",
-        "count": 1
+        "count": 246
       },
       {
         "language": "dockerfile",
@@ -139,6 +156,11 @@
         "language": "dotnet",
         "kind": "sdk",
         "count": 6
+      },
+      {
+        "language": "image",
+        "kind": "image",
+        "count": 21
       },
       {
         "language": "json",
@@ -204,11 +226,11 @@
     "edge_breakdown": [
       {
         "kind": "calls",
-        "count": 2331
+        "count": 2327
       },
       {
         "kind": "imports",
-        "count": 782
+        "count": 109
       }
     ],
     "razor_definition_symbols": 208
@@ -216,7 +238,7 @@
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 2.925,
+    "seconds": 2.83,
     "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
@@ -433,12 +455,13 @@
     "native_definitions": 208
   },
   "optimization": {
-    "cycles_run": 3,
-    "stop_reason": "Razor live smoke matched the directive/component coverage proxy and improved token score after compacting Razor view suffixes in terse plain locations while preserving full paths in JSON.",
+    "cycles_run": 4,
+    "stop_reason": "Razor native source parsing matched the directive/component coverage proxy after replacing the regex fallback route and preserving compact Razor view output.",
     "cycle_notes": [
       "cycle 1: eShopOnWeb probe showed the generic Razor rules missed file identity, @model/@inherits, injected services as symbols, and @code methods while graphify exposes those as code-review context.",
       "cycle 2: after adding a Razor-specific parser, Atlas matched the benchmark-owned coverage proxy and exact directive/component query rows are reported against graphify with honest saturation notes if below 5x.",
-      "cycle 3: compacting `.razor`/`.cshtml` suffixes in terse locations reduces exact view/component output without changing indexed symbols or JSON paths."
+      "cycle 3: compacting `.razor`/`.cshtml` suffixes in terse locations reduces exact view/component output without changing indexed symbols or JSON paths.",
+      "cycle 4: routing Razor off parseRegexFallback preserved exact source-parser coverage using deterministic directive, component-tag, and @code method scanning."
     ]
   },
   "query_warmup": {
@@ -457,8 +480,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain EditForm",
       "atlas_tokens": 6,
       "graphify_tokens": 63,
-      "atlas_ms": 12.185,
-      "graphify_ms": 91.115,
+      "atlas_ms": 13.165,
+      "graphify_ms": 85.08,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -484,8 +507,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain IJSRuntime",
       "atlas_tokens": 6,
       "graphify_tokens": 57,
-      "atlas_ms": 13.605,
-      "graphify_ms": 90.218,
+      "atlas_ms": 13.634,
+      "graphify_ms": 85.59,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -511,8 +534,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ICatalogItemService",
       "atlas_tokens": 8,
       "graphify_tokens": 69,
-      "atlas_ms": 12.434,
-      "graphify_ms": 90.932,
+      "atlas_ms": 12.819,
+      "graphify_ms": 85.54,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -538,14 +561,14 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain BlazorAdmin.Helpers.BlazorComponent",
       "atlas_tokens": 12,
       "graphify_tokens": 77,
-      "atlas_ms": 12.479,
-      "graphify_ms": 89.684,
+      "atlas_ms": 13.368,
+      "graphify_ms": 85.996,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "BlazorAdmin.Helpers.BlazorComponent b@Create:4 df7"
+        "BlazorAdmin.Helpers.BlazorComponent b@Create:5 df7"
       ],
       "graphify_stdout_head": [
         "Node: BlazorAdmin.Helpers.BlazorComponent",
@@ -565,8 +588,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain CreateClick",
       "atlas_tokens": 8,
       "graphify_tokens": 60,
-      "atlas_ms": 12.565,
-      "graphify_ms": 89.172,
+      "atlas_ms": 13.008,
+      "graphify_ms": 85.148,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -592,8 +615,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ConfirmEmailModel",
       "atlas_tokens": 9,
       "graphify_tokens": 60,
-      "atlas_ms": 12.354,
-      "graphify_ms": 89.845,
+      "atlas_ms": 12.744,
+      "graphify_ms": 85.867,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
