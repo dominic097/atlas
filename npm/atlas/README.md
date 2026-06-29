@@ -5,9 +5,16 @@ Installs the native `atlas` CLI for local code intelligence.
 Atlas runs locally and uses embedded SQLite by default:
 
 ```sh
-npx atlas version
-npx atlas index .
-npx atlas search "auth middleware"
+npm install -g @dominic097/atlas
+atlas version
+atlas index .
+atlas search "auth middleware"
+```
+
+For one-off use without a global install:
+
+```sh
+npx @dominic097/atlas version
 ```
 
 The package downloads the matching GitHub Release archive for macOS/Linux
