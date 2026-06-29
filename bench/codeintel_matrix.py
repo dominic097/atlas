@@ -113,7 +113,7 @@ GRAPHIFY_LANGUAGE_FAMILIES = [
     ("razor", [".razor", ".cshtml"], "lightweight regex"),
     ("apex", [".cls", ".trigger"], "lightweight regex"),
     ("vue", [".vue"], "native SFC/tree-sitter AST"),
-    ("svelte", [".svelte"], "lightweight regex"),
+    ("svelte", [".svelte"], "native SFC/tree-sitter AST"),
     ("astro", [".astro"], "lightweight regex"),
 ]
 

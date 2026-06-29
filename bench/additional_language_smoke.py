@@ -5576,9 +5576,12 @@ def run_smoke(language: str, atlas_bin: str, graphify_bin: str | None) -> dict[s
         }
     elif language == "svelte":
         optimization = {
-            "cycles_run": 1,
-            "stop_reason": "Svelte live smoke exceeded 5x query latency plus token output and exceeded the Svelte compiler script-declaration coverage proxy on cycle 1.",
-            "cycle_notes": ["cycle 1: carbon-components-svelte smoke used the native Svelte compiler as an isolated SFC parser baseline; Atlas indexed at least the compiler-counted top-level script declarations and resolved exact component function symbols."],
+            "cycles_run": 2,
+            "stop_reason": "Svelte native SFC script parsing matched the Svelte compiler script-declaration coverage proxy exactly after replacing the regex route.",
+            "cycle_notes": [
+                "cycle 1: carbon-components-svelte smoke used the native Svelte compiler as an isolated SFC parser baseline; Atlas indexed at least the compiler-counted top-level script declarations and resolved exact component function symbols.",
+                "cycle 2: replacing the regex route with native SFC block extraction plus tree-sitter JavaScript/TypeScript declaration parsing removed the prior over-count and matched the compiler definition count exactly.",
+            ],
         }
     elif language == "sql":
         optimization = {

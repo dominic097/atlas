@@ -1,7 +1,7 @@
 {
   "language": "svelte",
   "repo": "https://github.com/carbon-design-system/carbon-components-svelte",
-  "commit": "454a3881cd2b5ac3e47b92d7524a8faa5d99f03d",
+  "commit": "4a2c72288d8a21e5fe489d042fc72d2ae7eb7097",
   "graphify_detector_only": "",
   "commands": {
     "clone": "git clone --depth 1 https://github.com/carbon-design-system/carbon-components-svelte /tmp/atlas-live-svelte-carbon/repo",
@@ -20,19 +20,19 @@
     "target_path": "/tmp/atlas-live-svelte-carbon/repo/src"
   },
   "atlas": {
-    "cold_wall_seconds": 0.343,
-    "reindex_wall_seconds": 0.022,
+    "cold_wall_seconds": 0.304,
+    "reindex_wall_seconds": 0.039,
     "index": {
-      "repo_id": "e86c9c40-b21c-4570-8623-7f26a44c4d90",
+      "repo_id": "f24f177f-6964-4603-9d6b-b2c17f7bdd4f",
       "repo_full_name": "src",
-      "snapshot_id": "9c3640ff-8606-4544-9fbb-7fa037e8ecd2",
-      "commit_sha": "454a3881cd2b5ac3e47b92d7524a8faa5d99f03d",
+      "snapshot_id": "5b66cf1f-22fe-4847-9c3a-76b68f80ddf0",
+      "commit_sha": "4a2c72288d8a21e5fe489d042fc72d2ae7eb7097",
       "indexed_files": 424,
-      "symbols": 1923,
-      "edges": 4184,
+      "symbols": 1735,
+      "edges": 4051,
       "edge_kinds": {
-        "calls": 3252,
-        "imports": 932
+        "calls": 3118,
+        "imports": 933
       },
       "routes": 0,
       "languages": {
@@ -41,28 +41,33 @@
         "typescript": 42
       },
       "mode": "full",
-      "duration_ms": 312,
+      "duration_ms": 268,
       "timings_ms": {
+        "build_symbols_edges": 0,
         "delta_check": 0,
+        "discover_files": 6,
+        "doc_links": 0,
         "ensure_repo": 0,
+        "gitignore_scan": 14,
         "go_types": 0,
-        "lexical": 196,
-        "parse": 25,
-        "persist": 67,
+        "lexical": 191,
+        "parse": 54,
+        "persist": 191,
         "resolve_head": 0,
         "routes": 0,
-        "sort": 1,
-        "walk": 20
+        "sort": 0,
+        "walk": 6,
+        "write_sqlite": 191
       }
     },
     "reindex": {
-      "repo_id": "e86c9c40-b21c-4570-8623-7f26a44c4d90",
+      "repo_id": "f24f177f-6964-4603-9d6b-b2c17f7bdd4f",
       "repo_full_name": "src",
-      "snapshot_id": "9c3640ff-8606-4544-9fbb-7fa037e8ecd2",
-      "commit_sha": "454a3881cd2b5ac3e47b92d7524a8faa5d99f03d",
+      "snapshot_id": "5b66cf1f-22fe-4847-9c3a-76b68f80ddf0",
+      "commit_sha": "4a2c72288d8a21e5fe489d042fc72d2ae7eb7097",
       "indexed_files": 424,
-      "symbols": 1923,
-      "edges": 4184,
+      "symbols": 1735,
+      "edges": 4051,
       "routes": 0,
       "languages": {
         "javascript": 120,
@@ -70,9 +75,9 @@
         "typescript": 42
       },
       "mode": "noop",
-      "duration_ms": 0,
+      "duration_ms": 11,
       "timings_ms": {
-        "delta_check": 0,
+        "delta_check": 11,
         "resolve_head": 0
       }
     },
@@ -89,18 +94,18 @@
       },
       {
         "language": "javascript",
+        "kind": "method",
+        "count": 3
+      },
+      {
+        "language": "javascript",
         "kind": "variable",
         "count": 64
       },
       {
         "language": "svelte",
-        "kind": "document",
-        "count": 146
-      },
-      {
-        "language": "svelte",
         "kind": "function",
-        "count": 1323
+        "count": 1278
       },
       {
         "language": "typescript",
@@ -131,19 +136,19 @@
     "edge_breakdown": [
       {
         "kind": "calls",
-        "count": 3252
+        "count": 3118
       },
       {
         "kind": "imports",
-        "count": 932
+        "count": 933
       }
     ],
-    "svelte_definition_symbols": 1323
+    "svelte_definition_symbols": 1278
   },
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 1.516,
+    "seconds": 1.456,
     "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
@@ -168,7 +173,7 @@
     "tool": "svelte-compiler",
     "status": "ok",
     "ok": true,
-    "seconds": 0.342,
+    "seconds": 0.232,
     "command": "/opt/homebrew/bin/node /tmp/atlas-live-svelte-carbon/svelte-compiler/svelte_stats.js /tmp/atlas-live-svelte-carbon/repo/src",
     "metrics": {
       "files": 262,
@@ -195,15 +200,16 @@
     }
   },
   "coverage": {
-    "atlas_vs_svelte_compiler_definition_ratio": 1.04,
-    "atlas_svelte_definition_symbols": 1323,
+    "atlas_vs_svelte_compiler_definition_ratio": 1.0,
+    "atlas_svelte_definition_symbols": 1278,
     "native_definitions": 1278
   },
   "optimization": {
-    "cycles_run": 1,
-    "stop_reason": "Svelte live smoke exceeded 5x query latency plus token output and exceeded the Svelte compiler script-declaration coverage proxy on cycle 1.",
+    "cycles_run": 2,
+    "stop_reason": "Svelte native SFC script parsing matched the Svelte compiler script-declaration coverage proxy exactly after replacing the regex route.",
     "cycle_notes": [
-      "cycle 1: carbon-components-svelte smoke used the native Svelte compiler as an isolated SFC parser baseline; Atlas indexed at least the compiler-counted top-level script declarations and resolved exact component function symbols."
+      "cycle 1: carbon-components-svelte smoke used the native Svelte compiler as an isolated SFC parser baseline; Atlas indexed at least the compiler-counted top-level script declarations and resolved exact component function symbols.",
+      "cycle 2: replacing the regex route with native SFC block extraction plus tree-sitter JavaScript/TypeScript declaration parsing removed the prior over-count and matched the compiler definition count exactly."
     ]
   },
   "query_warmup": {
@@ -222,8 +228,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain setChar",
       "atlas_tokens": 9,
       "graphify_tokens": 78,
-      "atlas_ms": 12.954,
-      "graphify_ms": 84.556,
+      "atlas_ms": 12.637,
+      "graphify_ms": 81.877,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -249,8 +255,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain focusInput",
       "atlas_tokens": 10,
       "graphify_tokens": 141,
-      "atlas_ms": 12.742,
-      "graphify_ms": 84.822,
+      "atlas_ms": 13.219,
+      "graphify_ms": 80.469,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -276,8 +282,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain handleInput",
       "atlas_tokens": 11,
       "graphify_tokens": 88,
-      "atlas_ms": 13.39,
-      "graphify_ms": 84.546,
+      "atlas_ms": 12.949,
+      "graphify_ms": 80.93,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -303,8 +309,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain handleKeydown",
       "atlas_tokens": 12,
       "graphify_tokens": 79,
-      "atlas_ms": 14.273,
-      "graphify_ms": 84.848,
+      "atlas_ms": 14.087,
+      "graphify_ms": 79.105,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -330,14 +336,14 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain handleOutsideClick",
       "atlas_tokens": 12,
       "graphify_tokens": 90,
-      "atlas_ms": 13.963,
-      "graphify_ms": 85.432,
+      "atlas_ms": 14.947,
+      "graphify_ms": 79.465,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "handleOutsideClick f@ComboBox.svelte:593 df11 d10"
+        "handleOutsideClick f@ComboBox.svelte:594 df11 d17"
       ],
       "graphify_stdout_head": [
         "Node: handleOutsideClick()",

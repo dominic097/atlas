@@ -390,6 +390,55 @@ function loadArticles() {
 	}
 }
 
+func TestParseSvelteNativeScriptDefinitions(t *testing.T) {
+	res, err := Parse("repo", "org/repo", "web/Widget.svelte", "", []byte(`<script context="module">
+import registry from './registry'
+const moduleName = 'Widget'
+</script>
+
+<script lang="ts">
+import { tick } from 'svelte'
+let value = 0
+function setValue(next: number) {
+  const normalized = next || 0
+  value = normalized
+}
+// let ignoredComment = true
+</script>
+
+<button>{value}</button>
+`))
+	if err != nil {
+		t.Fatalf("Parse svelte: %v", err)
+	}
+	want := map[string]int{
+		"moduleName": 3,
+		"value":      8,
+		"setValue":   9,
+		"normalized": 10,
+	}
+	for name, line := range want {
+		sym := findSymbol(res.Symbols, name)
+		if sym == nil {
+			t.Fatalf("missing Svelte symbol %q; symbols=%+v", name, res.Symbols)
+		}
+		if sym.Kind != "function" {
+			t.Fatalf("Svelte symbol %q kind = %q, want function", name, sym.Kind)
+		}
+		if sym.StartLine != line {
+			t.Fatalf("Svelte symbol %q line = %d, want %d", name, sym.StartLine, line)
+		}
+	}
+	if findSymbol(res.Symbols, "ignoredComment") != nil {
+		t.Fatalf("commented Svelte declaration was indexed: %+v", res.Symbols)
+	}
+	for _, wantImport := range []string{"./registry", "svelte"} {
+		if !containsString(res.Imports, wantImport) {
+			t.Fatalf("Svelte imports = %#v, want %q", res.Imports, wantImport)
+		}
+	}
+}
+
 func TestParsePascalDefinitions(t *testing.T) {
 	res, err := Parse("repo", "org/repo", "Source/uPSCompiler.pas", "", []byte(`
 unit uPSCompiler;

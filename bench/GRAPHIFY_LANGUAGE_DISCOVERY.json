@@ -241,7 +241,7 @@
       "svelte",
       ".svelte",
       "extract_svelte",
-      "lightweight regex"
+      "native SFC/tree-sitter AST"
     ],
     [
       "astro",

@@ -387,6 +387,14 @@ func Parse(repoID, repoFullName, filePath, language string, content []byte) (Res
 			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
+	case "svelte":
+		if syms, svelteImports, ok := parseSvelteNative(content); ok {
+			rawSyms = syms
+			imports = svelteImports
+		} else {
+			rawSyms, imports = parseRegexFallback(filePath, language, content)
+		}
+		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "pascal":
 		if syms, ok := parsePascalNative(content); ok {
 			rawSyms = syms
@@ -396,7 +404,7 @@ func Parse(repoID, repoFullName, filePath, language string, content []byte) (Res
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "delphi", "terraform", "byond", "dotnet", "razor", "apex", "blade",
-		"svelte", "astro", "ejs", "ets", "sql", "p4":
+		"astro", "ejs", "ets", "sql", "p4":
 		rawSyms, imports = parseRegexFallback(filePath, language, content)
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "html", "css":
