@@ -1,5 +1,5 @@
 {
-  "generated_at_unix": 1782722956,
+  "generated_at_unix": 1782738887,
   "platform": {
     "system": "Darwin",
     "release": "25.5.0",
@@ -11,14 +11,14 @@
       "tool": "atlas",
       "status": "ok",
       "ok": true,
-      "command": "bin/atlas version",
+      "command": "/tmp/atlas_regen version",
       "version": "atlas dev (none, unknown)",
       "stdout": [],
       "stderr": [
         "atlas dev (none, unknown)"
       ],
       "exit_code": 0,
-      "seconds": 0.01
+      "seconds": 0.012
     },
     {
       "tool": "graphify",
@@ -31,9 +31,9 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.036,
+      "seconds": 0.035,
       "discovered_version": "graphifyy 0.8.49",
-      "binary": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify"
+      "binary": "/Users/damirdarasu/.local/bin/graphify"
     },
     {
       "tool": "go",
@@ -46,7 +46,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.011
+      "seconds": 0.053
     },
     {
       "tool": "python",
@@ -59,13 +59,13 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.008
+      "seconds": 0.009
     },
     {
       "tool": "java",
       "status": "ok",
       "ok": true,
-      "command": "/usr/bin/java -version",
+      "command": "/opt/homebrew/opt/openjdk@17/bin/java -version",
       "version": "openjdk version \"17.0.18\" 2026-01-20",
       "stdout": [],
       "stderr": [
@@ -74,7 +74,7 @@
         "OpenJDK 64-Bit Server VM Homebrew (build 17.0.18+0, mixed mode, sharing)"
       ],
       "exit_code": 0,
-      "seconds": 0.025
+      "seconds": 0.674
     },
     {
       "tool": "maven",
@@ -85,13 +85,13 @@
       "stdout": [
         "Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)",
         "Maven home: /opt/homebrew/Cellar/maven/3.9.16/libexec",
-        "Java version: 17.0.18, vendor: Homebrew, runtime: /opt/homebrew/Cellar/openjdk@17/17.0.18/libexec/openjdk.jdk/Contents/Home",
+        "Java version: 25.0.2, vendor: Homebrew, runtime: /opt/homebrew/Cellar/openjdk/25.0.2/libexec/openjdk.jdk/Contents/Home",
         "Default locale: en_US, platform encoding: UTF-8",
         "OS name: \"mac os x\", version: \"26.5.1\", arch: \"aarch64\", family: \"mac\""
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.379
+      "seconds": 0.517
     },
     {
       "tool": "scip-go",
@@ -104,7 +104,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.093
+      "seconds": 0.092
     },
     {
       "tool": "scip-python",
@@ -117,33 +117,30 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.152
+      "seconds": 0.112
     },
     {
       "tool": "scip-typescript",
       "status": "ok",
       "ok": true,
-      "command": "/opt/homebrew/bin/npx --yes -p @sourcegraph/scip-typescript scip-typescript --version",
+      "command": "/Users/damirdarasu/.nvm/versions/node/v23.10.0/bin/npx --yes -p @sourcegraph/scip-typescript scip-typescript --version",
       "version": "0.4.0",
       "stdout": [
         "0.4.0"
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.459
+      "seconds": 0.864
     },
     {
       "tool": "scip-java",
-      "status": "ok",
-      "ok": true,
-      "command": "/tmp/atlas-bench-tools/scip-java --version",
-      "version": "0.12.3",
-      "stdout": [
-        "0.12.3"
-      ],
-      "stderr": [],
-      "exit_code": 0,
-      "seconds": 0.387
+      "status": "missing",
+      "ok": false,
+      "command": "",
+      "version": "",
+      "stdout": "",
+      "stderr": "",
+      "exit_code": 127
     },
     {
       "tool": "gopls",
@@ -156,7 +153,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.037
+      "seconds": 0.041
     },
     {
       "tool": "pyright",
@@ -169,20 +166,20 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.115
+      "seconds": 0.084
     },
     {
       "tool": "tsc",
       "status": "ok",
       "ok": true,
-      "command": "/opt/homebrew/bin/npx --yes -p typescript tsc --version",
+      "command": "/Users/damirdarasu/.nvm/versions/node/v23.10.0/bin/npx --yes -p typescript tsc --version",
       "version": "Version 5.9.3",
       "stdout": [
         "Version 5.9.3"
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.294
+      "seconds": 0.343
     },
     {
       "tool": "jdtls",
@@ -208,7 +205,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.01
+      "seconds": 0.012
     },
     {
       "tool": "rust-analyzer",
@@ -221,7 +218,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.018
+      "seconds": 0.021
     },
     {
       "tool": "dotnet",
@@ -234,7 +231,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.178
+      "seconds": 0.196
     },
     {
       "tool": "ruby",
@@ -247,7 +244,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.017
+      "seconds": 0.021
     },
     {
       "tool": "php",
@@ -264,7 +261,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.108
+      "seconds": 0.316
     },
     {
       "tool": "pwsh",
@@ -277,7 +274,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.306
+      "seconds": 0.388
     },
     {
       "tool": "sourcekit-lsp",
@@ -293,7 +290,7 @@
         "swift-driver version: 1.127.15"
       ],
       "exit_code": 0,
-      "seconds": 0.384,
+      "seconds": 0.485,
       "binary": "/usr/bin/sourcekit-lsp",
       "note": "sourcekit-lsp has no version flag in this toolchain; Swift toolchain version is recorded as the closest reproducible native version."
     }
