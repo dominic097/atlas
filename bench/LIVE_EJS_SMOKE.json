@@ -22,15 +22,15 @@
     "target_path": "/tmp/atlas-live-ejs-express/repo/examples"
   },
   "atlas": {
-    "cold_wall_seconds": 0.097,
-    "reindex_wall_seconds": 0.021,
+    "cold_wall_seconds": 0.119,
+    "reindex_wall_seconds": 0.033,
     "index": {
-      "repo_id": "d256fecf-f324-4cbe-ad37-4b2bb5fc10a7",
+      "repo_id": "8a56a401-eedc-40f5-a6e9-cdb1cd050852",
       "repo_full_name": "examples",
-      "snapshot_id": "8a08683c-256e-4943-ae20-9c0afed0ec70",
+      "snapshot_id": "ecafe38b-b106-4c52-9b8d-7e225c7beaa1",
       "commit_sha": "18e5985b8a9d5e8423db0a9121f22bdaecd5b120",
       "indexed_files": 77,
-      "symbols": 251,
+      "symbols": 280,
       "edges": 767,
       "edge_kinds": {
         "calls": 669,
@@ -46,27 +46,32 @@
         "text": 4
       },
       "mode": "full",
-      "duration_ms": 59,
+      "duration_ms": 91,
       "timings_ms": {
+        "build_symbols_edges": 0,
         "delta_check": 0,
-        "ensure_repo": 1,
+        "discover_files": 1,
+        "doc_links": 0,
+        "ensure_repo": 3,
+        "gitignore_scan": 11,
         "go_types": 0,
-        "lexical": 16,
-        "parse": 16,
-        "persist": 19,
+        "lexical": 52,
+        "parse": 21,
+        "persist": 52,
         "resolve_head": 0,
         "routes": 0,
         "sort": 0,
-        "walk": 5
+        "walk": 1,
+        "write_sqlite": 52
       }
     },
     "reindex": {
-      "repo_id": "d256fecf-f324-4cbe-ad37-4b2bb5fc10a7",
+      "repo_id": "8a56a401-eedc-40f5-a6e9-cdb1cd050852",
       "repo_full_name": "examples",
-      "snapshot_id": "8a08683c-256e-4943-ae20-9c0afed0ec70",
+      "snapshot_id": "ecafe38b-b106-4c52-9b8d-7e225c7beaa1",
       "commit_sha": "18e5985b8a9d5e8423db0a9121f22bdaecd5b120",
       "indexed_files": 77,
-      "symbols": 251,
+      "symbols": 280,
       "edges": 767,
       "routes": 60,
       "languages": {
@@ -78,9 +83,9 @@
         "text": 4
       },
       "mode": "noop",
-      "duration_ms": 4,
+      "duration_ms": 7,
       "timings_ms": {
-        "delta_check": 4,
+        "delta_check": 7,
         "resolve_head": 0
       }
     },
@@ -99,6 +104,11 @@
         "language": "javascript",
         "kind": "function",
         "count": 17
+      },
+      {
+        "language": "javascript",
+        "kind": "method",
+        "count": 29
       },
       {
         "language": "javascript",
@@ -131,7 +141,7 @@
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 0.317,
+    "seconds": 0.293,
     "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
@@ -341,11 +351,12 @@
     "native_definitions": 36
   },
   "optimization": {
-    "cycles_run": 2,
-    "stop_reason": "EJS live smoke covers a graphify detector-only extension by adding Atlas template-file, include, function, and variable symbols; graphify has no deterministic EJS extractor in this installed runtime.",
+    "cycles_run": 3,
+    "stop_reason": "EJS native source parser matched the template-counter coverage proxy after routing `.ejs` files off `parseRegexFallback`; graphify remains a detector-only ceiling in this installed runtime.",
     "cycle_notes": [
       "cycle 1: expressjs/express examples probe showed Atlas could map .ejs files but only extracted include/function/variable tags, missing file-level template identity.",
-      "cycle 2: after adding an EJS-specific parser, Atlas records template identity plus include edges against the live Express EJS slice; graphify query rows remain detector-only caveats."
+      "cycle 2: after adding an EJS-specific parser, Atlas records template identity plus include edges against the live Express EJS slice; graphify query rows remain detector-only caveats.",
+      "cycle 3: replacing the prior regex fallback route with a native EJS tag scanner preserved exact Express coverage at 36/36 definitions while the single graphify-equivalent query stayed above the 5x latency/token threshold."
     ]
   },
   "query_warmup": {
@@ -364,8 +375,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain login",
       "atlas_tokens": 5,
       "graphify_tokens": 8,
-      "atlas_ms": 12.05,
-      "graphify_ms": 76.097,
+      "atlas_ms": 12.822,
+      "graphify_ms": 69.763,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -382,16 +393,16 @@
       "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ejs-express/atlas.db --format plain --repo examples explain index",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain index",
-      "atlas_tokens": 6,
+      "atlas_tokens": 7,
       "graphify_tokens": 48,
-      "atlas_ms": 12.325,
-      "graphify_ms": 76.349,
+      "atlas_ms": 13.362,
+      "graphify_ms": 69.611,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "index t@index.ejs:1 df3 r1"
+        "index t@index.ejs:1 df5 d1 r1"
       ],
       "graphify_stdout_head": [
         "Node: index()",
@@ -411,8 +422,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain header",
       "atlas_tokens": 6,
       "graphify_tokens": 8,
-      "atlas_ms": 12.215,
-      "graphify_ms": 75.49,
+      "atlas_ms": 12.246,
+      "graphify_ms": 69.858,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -431,8 +442,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain footer",
       "atlas_tokens": 5,
       "graphify_tokens": 8,
-      "atlas_ms": 12.131,
-      "graphify_ms": 75.008,
+      "atlas_ms": 12.557,
+      "graphify_ms": 68.702,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -451,8 +462,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ../header",
       "atlas_tokens": 7,
       "graphify_tokens": 9,
-      "atlas_ms": 11.775,
-      "graphify_ms": 75.232,
+      "atlas_ms": 12.514,
+      "graphify_ms": 70.011,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -471,8 +482,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ../footer",
       "atlas_tokens": 7,
       "graphify_tokens": 9,
-      "atlas_ms": 12.129,
-      "graphify_ms": 74.627,
+      "atlas_ms": 13.128,
+      "graphify_ms": 69.496,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -491,8 +502,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain error_header",
       "atlas_tokens": 7,
       "graphify_tokens": 9,
-      "atlas_ms": 11.802,
-      "graphify_ms": 77.753,
+      "atlas_ms": 12.61,
+      "graphify_ms": 68.781,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,

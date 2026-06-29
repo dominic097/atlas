@@ -5420,11 +5420,12 @@ def run_smoke(language: str, atlas_bin: str, graphify_bin: str | None) -> dict[s
         }
     elif language == "ejs":
         optimization = {
-            "cycles_run": 2,
-            "stop_reason": "EJS live smoke covers a graphify detector-only extension by adding Atlas template-file, include, function, and variable symbols; graphify has no deterministic EJS extractor in this installed runtime.",
+            "cycles_run": 3,
+            "stop_reason": "EJS native source parser matched the template-counter coverage proxy after routing `.ejs` files off `parseRegexFallback`; graphify remains a detector-only ceiling in this installed runtime.",
             "cycle_notes": [
                 "cycle 1: expressjs/express examples probe showed Atlas could map .ejs files but only extracted include/function/variable tags, missing file-level template identity.",
                 "cycle 2: after adding an EJS-specific parser, Atlas records template identity plus include edges against the live Express EJS slice; graphify query rows remain detector-only caveats.",
+                "cycle 3: replacing the prior regex fallback route with a native EJS tag scanner preserved exact Express coverage at 36/36 definitions while the single graphify-equivalent query stayed above the 5x latency/token threshold.",
             ],
         }
     elif language == "ets":
