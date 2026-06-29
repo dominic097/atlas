@@ -160,6 +160,15 @@ func TestHTTPHandler_ToolsList(t *testing.T) {
 	if len(resp.Result.Tools) == 0 {
 		t.Fatal("tools list is empty")
 	}
+	for _, tool := range resp.Result.Tools {
+		required, ok := tool.InputSchema["required"].([]any)
+		if !ok {
+			t.Fatalf("%s inputSchema.required type = %T, want []any", tool.Name, tool.InputSchema["required"])
+		}
+		if required == nil {
+			t.Fatalf("%s inputSchema.required is nil", tool.Name)
+		}
+	}
 	// status must be present in the advertised catalog.
 	var found bool
 	for _, tool := range resp.Result.Tools {

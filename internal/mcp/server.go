@@ -49,6 +49,9 @@ func NewServer(eng engine.Engine) *Server {
 // intelligence only; agentic tools (rca/fix/review) live in Pulse.
 func coreTools() []Tool {
 	obj := func(props map[string]any, required ...string) map[string]any {
+		if required == nil {
+			required = []string{}
+		}
 		return map[string]any{"type": "object", "properties": props, "required": required}
 	}
 	str := map[string]any{"type": "string"}
