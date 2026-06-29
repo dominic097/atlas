@@ -93,7 +93,7 @@ GRAPHIFY_LANGUAGE_FAMILIES = [
     ("swift", [".swift"], "native tree-sitter tags"),
     ("lua", [".lua", ".luau", ".toc"], "native tree-sitter tags"),
     ("zig", [".zig"], "native tree-sitter tags"),
-    ("powershell", [".ps1", ".psm1", ".psd1"], "lightweight regex"),
+    ("powershell", [".ps1", ".psm1", ".psd1"], "native tree-sitter AST"),
     ("elixir", [".ex", ".exs"], "native tree-sitter AST"),
     ("objective-c", [".m", ".mm"], "native tree-sitter AST"),
     ("julia", [".jl"], "native tree-sitter AST"),

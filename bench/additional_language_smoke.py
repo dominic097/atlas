@@ -5473,11 +5473,12 @@ def run_smoke(language: str, atlas_bin: str, graphify_bin: str | None) -> dict[s
         }
     elif language == "powershell":
         optimization = {
-            "cycles_run": 2,
-            "stop_reason": "PowerShell live smoke matched pwsh AST function-definition coverage and improved token score after compacting PowerShell script suffixes in terse plain locations while preserving full paths in JSON.",
+            "cycles_run": 3,
+            "stop_reason": "PowerShell native tree-sitter AST parsing matched pwsh AST function-definition coverage after replacing the regex route, while preserving source-import extraction and compact plain output paths.",
             "cycle_notes": [
                 "cycle 1: PowerShellGet src smoke used the native PowerShell parser for syntax/function-definition truth; Atlas matched function coverage and kept exact-symbol explain output terse.",
                 "cycle 2: compacting `.ps1`/`.psm1`/`.psd1` suffixes in terse locations improved the live PowerShellGet summed token ratio from 5.74x to 6.68x without changing indexed symbols or JSON paths.",
+                "cycle 3: replacing the regex route with tree-sitter-powershell preserved exact function coverage on the live PowerShellGet slice and added native class/method extraction for richer PowerShell files.",
             ],
         }
     elif language == "r":

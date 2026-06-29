@@ -127,7 +127,7 @@
       "powershell",
       ".ps1 .psm1 .psd1",
       "extract_powershell/extract_powershell_manifest",
-      "lightweight regex"
+      "native tree-sitter AST"
     ],
     [
       "elixir",

@@ -19,46 +19,51 @@
     "target_path": "/tmp/atlas-live-powershell-powershellget/repo/src"
   },
   "atlas": {
-    "cold_wall_seconds": 0.12,
-    "reindex_wall_seconds": 0.021,
+    "cold_wall_seconds": 0.083,
+    "reindex_wall_seconds": 0.029,
     "index": {
-      "repo_id": "726d9ca3-d66a-42fe-8527-bcb1e9e8a453",
+      "repo_id": "1261bf72-7dea-4098-9905-3f47d0978136",
       "repo_full_name": "src",
-      "snapshot_id": "0fe53b07-960f-4297-82e6-b3d599af9b33",
+      "snapshot_id": "f8e9469d-7202-4d0c-a572-bd667f563f41",
       "commit_sha": "a2dac8e74603f7c9eec4a54c5e23459531751b0d",
       "indexed_files": 2,
-      "symbols": 159,
-      "edges": 805,
+      "symbols": 28,
+      "edges": 803,
       "edge_kinds": {
-        "calls": 805
+        "calls": 803
       },
       "routes": 0,
       "languages": {
         "powershell": 2
       },
       "mode": "full",
-      "duration_ms": 77,
+      "duration_ms": 59,
       "timings_ms": {
+        "build_symbols_edges": 0,
         "delta_check": 0,
+        "discover_files": 0,
+        "doc_links": 0,
         "ensure_repo": 0,
+        "gitignore_scan": 11,
         "go_types": 0,
-        "lexical": 18,
-        "parse": 51,
-        "persist": 7,
+        "lexical": 17,
+        "parse": 29,
+        "persist": 17,
         "resolve_head": 0,
         "routes": 0,
         "sort": 0,
-        "walk": 0
+        "walk": 0,
+        "write_sqlite": 17
       }
     },
     "reindex": {
-      "repo_id": "726d9ca3-d66a-42fe-8527-bcb1e9e8a453",
+      "repo_id": "1261bf72-7dea-4098-9905-3f47d0978136",
       "repo_full_name": "src",
-      "snapshot_id": "0fe53b07-960f-4297-82e6-b3d599af9b33",
+      "snapshot_id": "f8e9469d-7202-4d0c-a572-bd667f563f41",
       "commit_sha": "a2dac8e74603f7c9eec4a54c5e23459531751b0d",
       "indexed_files": 2,
-      "symbols": 159,
-      "edges": 805,
+      "symbols": 28,
+      "edges": 803,
       "routes": 0,
       "languages": {
         "powershell": 2
@@ -73,24 +78,14 @@
     "symbol_breakdown": [
       {
         "language": "powershell",
-        "kind": "document",
-        "count": 1
-      },
-      {
-        "language": "powershell",
         "kind": "function",
         "count": 28
-      },
-      {
-        "language": "powershell",
-        "kind": "variable",
-        "count": 130
       }
     ],
     "edge_breakdown": [
       {
         "kind": "calls",
-        "count": 805
+        "count": 803
       }
     ],
     "powershell_definition_symbols": 28
@@ -98,7 +93,7 @@
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 0.14,
+    "seconds": 0.124,
     "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
@@ -118,7 +113,7 @@
     "tool": "pwsh-parser",
     "status": "ok",
     "ok": true,
-    "seconds": 0.714,
+    "seconds": 0.205,
     "command": "/usr/local/bin/pwsh -NoLogo -NoProfile -File /tmp/atlas-live-powershell-powershellget/pwsh_stats.ps1 /tmp/atlas-live-powershell-powershellget/repo/src",
     "metrics": {
       "files": 2,
@@ -154,11 +149,12 @@
     "native_definitions": 28
   },
   "optimization": {
-    "cycles_run": 2,
-    "stop_reason": "PowerShell live smoke matched pwsh AST function-definition coverage and improved token score after compacting PowerShell script suffixes in terse plain locations while preserving full paths in JSON.",
+    "cycles_run": 3,
+    "stop_reason": "PowerShell native tree-sitter AST parsing matched pwsh AST function-definition coverage after replacing the regex route, while preserving source-import extraction and compact plain output paths.",
     "cycle_notes": [
       "cycle 1: PowerShellGet src smoke used the native PowerShell parser for syntax/function-definition truth; Atlas matched function coverage and kept exact-symbol explain output terse.",
-      "cycle 2: compacting `.ps1`/`.psm1`/`.psd1` suffixes in terse locations improved the live PowerShellGet summed token ratio from 5.74x to 6.68x without changing indexed symbols or JSON paths."
+      "cycle 2: compacting `.ps1`/`.psm1`/`.psd1` suffixes in terse locations improved the live PowerShellGet summed token ratio from 5.74x to 6.68x without changing indexed symbols or JSON paths.",
+      "cycle 3: replacing the regex route with tree-sitter-powershell preserved exact function coverage on the live PowerShellGet slice and added native class/method extraction for richer PowerShell files."
     ]
   },
   "query_warmup": {
@@ -177,14 +173,14 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Find-Module",
       "atlas_tokens": 8,
       "graphify_tokens": 66,
-      "atlas_ms": 11.894,
-      "graphify_ms": 86.563,
+      "atlas_ms": 12.298,
+      "graphify_ms": 68.431,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Find-Module f@PowerShellGet:409"
+        "Find-Module f@PowerShellGet:410"
       ],
       "graphify_stdout_head": [
         "Node: Find-Module()",
@@ -204,14 +200,14 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Install-Module",
       "atlas_tokens": 9,
       "graphify_tokens": 67,
-      "atlas_ms": 14.181,
-      "graphify_ms": 81.918,
+      "atlas_ms": 12.677,
+      "graphify_ms": 68.004,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Install-Module f@PowerShellGet:1036"
+        "Install-Module f@PowerShellGet:1037"
       ],
       "graphify_stdout_head": [
         "Node: Install-Module()",
@@ -231,14 +227,14 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Register-PSRepository",
       "atlas_tokens": 10,
       "graphify_tokens": 57,
-      "atlas_ms": 11.968,
-      "graphify_ms": 76.33,
+      "atlas_ms": 12.46,
+      "graphify_ms": 67.653,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Register-PSRepository f@PowerShellGet:1715"
+        "Register-PSRepository f@PowerShellGet:1716"
       ],
       "graphify_stdout_head": [
         "Node: Register-PSRepository()",
@@ -258,14 +254,14 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Update-ModuleManifest",
       "atlas_tokens": 10,
       "graphify_tokens": 57,
-      "atlas_ms": 12.137,
-      "graphify_ms": 75.029,
+      "atlas_ms": 12.292,
+      "graphify_ms": 67.977,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Update-ModuleManifest f@PowerShellGet:2881"
+        "Update-ModuleManifest f@PowerShellGet:2882"
       ],
       "graphify_stdout_head": [
         "Node: Update-ModuleManifest()",

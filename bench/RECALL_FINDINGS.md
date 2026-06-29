@@ -77,6 +77,7 @@ validated with the focused parser test suite.
 | pascal | remobjects/pascalscript `Source` | pascal declaration counter | 6432 | 6432 | 1.00x | 8.29x | 12.84x | Native tree-sitter-pascal route verified 6297 declarations directly and used source-shape recovery for 135 package/preprocessor-heavy declarations the grammar cannot expose, preserving exact coverage without routing through `parseRegexFallback`. |
 | groovy | nextflow-io/nextflow `modules/nf-commons/src/main` | tree-sitter-groovy 0.1.2 | 837 | 525 | 1.59x | 6.10x | 9.97x | Native tree-sitter-groovy route verified 511 declarations directly and used source-shape recovery for 326 declarations in real files where the baseline grammar reports parse errors; stronger Groovy CLI/LSP baselines are unavailable on this machine. |
 | bash | nvm-sh/nvm repo | `/bin/bash -n` + source counter | 158 | 158 | 1.00x | 6.19x | 18.44x | Native tree-sitter-bash route directly verified all 158 live shell function definitions and preserved source-import extraction without routing Bash through `parseRegexFallback`. |
+| powershell | PowerShell/PowerShellGet `src` | `pwsh` AST parser | 28 | 28 | 1.00x | 5.47x | 6.68x | Native tree-sitter-powershell route matched the pwsh FunctionDefinitionAst baseline exactly on the live slice, preserved `Import-Module`/`using module` import extraction, and no longer emits regex variable/doc symbols. |
 
 ## The consistent definition surface (applied uniformly to all 7 languages)
 

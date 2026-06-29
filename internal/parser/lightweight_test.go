@@ -292,6 +292,53 @@ fn r#async(mut stderr: process::ChildStderr) -> StderrReader {
 	}
 }
 
+func TestParsePowerShellNativeDefinitions(t *testing.T) {
+	res, err := Parse("repo", "org/repo", "scripts/install.ps1", "", []byte(`
+using module './lib/common.psm1'
+Import-Module -Name Pester
+
+function Invoke-Install {
+  Invoke-Verify
+}
+
+filter Select-Install {
+  process { $_ }
+}
+
+workflow Start-Install { }
+
+class Installer {
+  [void]Run() { }
+  Installer() { }
+}
+
+# function Ignored-Install { }
+`))
+	if err != nil {
+		t.Fatalf("Parse powershell: %v", err)
+	}
+	want := map[string]string{
+		"Invoke-Install": "function",
+		"Select-Install": "function",
+		"Start-Install":  "function",
+		"Installer":      "class",
+		"Run":            "method",
+	}
+	for name, kind := range want {
+		if len(symbolsNamedKind(res.Symbols, name, kind)) == 0 {
+			t.Fatalf("missing PowerShell %s %q; symbols=%+v", kind, name, res.Symbols)
+		}
+	}
+	if findSymbol(res.Symbols, "Ignored-Install") != nil {
+		t.Fatalf("commented PowerShell function was indexed: %+v", res.Symbols)
+	}
+	for _, wantImport := range []string{"./lib/common.psm1", "Pester"} {
+		if !containsString(res.Imports, wantImport) {
+			t.Fatalf("PowerShell imports = %#v, want %q", res.Imports, wantImport)
+		}
+	}
+}
+
 func TestParsePascalDefinitions(t *testing.T) {
 	res, err := Parse("repo", "org/repo", "Source/uPSCompiler.pas", "", []byte(`
 unit uPSCompiler;
