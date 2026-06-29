@@ -1,5 +1,5 @@
 {
-  "generated_at_unix": 1782776733,
+  "generated_at_unix": 1782777006,
   "platform": {
     "system": "Darwin",
     "release": "25.5.0",
@@ -18,7 +18,7 @@
         "atlas dev (none, unknown)"
       ],
       "exit_code": 0,
-      "seconds": 0.012
+      "seconds": 0.011
     },
     {
       "tool": "graphify",
@@ -31,7 +31,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.033,
+      "seconds": 0.032,
       "discovered_version": "graphifyy 0.8.49",
       "binary": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify"
     },
@@ -46,7 +46,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.011
+      "seconds": 0.01
     },
     {
       "tool": "python",
@@ -74,7 +74,7 @@
         "OpenJDK 64-Bit Server VM Homebrew (build 17.0.18+0, mixed mode, sharing)"
       ],
       "exit_code": 0,
-      "seconds": 0.024
+      "seconds": 0.027
     },
     {
       "tool": "maven",
@@ -91,7 +91,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.427
+      "seconds": 0.394
     },
     {
       "tool": "scip-go",
@@ -104,7 +104,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.062
+      "seconds": 0.065
     },
     {
       "tool": "scip-python",
@@ -117,7 +117,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.13
+      "seconds": 0.133
     },
     {
       "tool": "scip-typescript",
@@ -130,7 +130,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.943
+      "seconds": 0.4
     },
     {
       "tool": "scip-java",
@@ -179,7 +179,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.247
+      "seconds": 0.251
     },
     {
       "tool": "jdtls",
@@ -261,7 +261,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.039
+      "seconds": 0.044
     },
     {
       "tool": "pwsh",
@@ -290,7 +290,7 @@
         "swift-driver version: 1.127.15"
       ],
       "exit_code": 0,
-      "seconds": 0.063,
+      "seconds": 0.066,
       "binary": "/usr/bin/sourcekit-lsp",
       "note": "sourcekit-lsp has no version flag in this toolchain; Swift toolchain version is recorded as the closest reproducible native version."
     }

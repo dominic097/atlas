@@ -187,7 +187,7 @@
       "delphi/lazarus forms",
       ".dfm .lfm .lpk",
       "extract_delphi_form/extract_lazarus_form/extract_lazarus_package",
-      "lightweight regex/document fallback"
+      "native Delphi/Lazarus source parser"
     ],
     [
       "shell",

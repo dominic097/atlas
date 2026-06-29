@@ -1,7 +1,7 @@
 {
   "language": "delphi",
   "repo": "https://github.com/fpc/Lazarus",
-  "commit": "a37c7c35c6a271b377cd799c48586ea2689a8e0f",
+  "commit": "e1cc57bb27e48541ffe4bf66c78a8dddfc4f6630",
   "graphify_detector_only": "",
   "commands": {
     "clone": "git clone --depth 1 --filter=blob:none --sparse https://github.com/fpc/Lazarus /tmp/atlas-live-delphi-lazarus/repo",
@@ -22,19 +22,19 @@
     "target_path": "/tmp/atlas-live-delphi-lazarus/repo/ide"
   },
   "atlas": {
-    "cold_wall_seconds": 7.385,
-    "reindex_wall_seconds": 0.038,
+    "cold_wall_seconds": 4.279,
+    "reindex_wall_seconds": 0.041,
     "index": {
-      "repo_id": "fab2d485-685d-407f-a4b0-35bf240cf07e",
+      "repo_id": "7da0d6e4-9c87-4489-b1c4-01d6a2d35774",
       "repo_full_name": "ide",
-      "snapshot_id": "e5718d0a-8294-4445-81f3-2cd11382e266",
-      "commit_sha": "a37c7c35c6a271b377cd799c48586ea2689a8e0f",
+      "snapshot_id": "585ee16d-bf69-4c1e-8acf-dcb2c8a377f5",
+      "commit_sha": "e1cc57bb27e48541ffe4bf66c78a8dddfc4f6630",
       "indexed_files": 594,
-      "symbols": 39171,
-      "edges": 73200,
+      "symbols": 39161,
+      "edges": 73203,
       "edge_kinds": {
-        "calls": 65730,
-        "imports": 7470
+        "calls": 65732,
+        "imports": 7471
       },
       "routes": 0,
       "languages": {
@@ -45,28 +45,33 @@
         "xml": 5
       },
       "mode": "full",
-      "duration_ms": 7168,
+      "duration_ms": 4222,
       "timings_ms": {
+        "build_symbols_edges": 26,
         "delta_check": 0,
+        "discover_files": 2,
+        "doc_links": 5,
         "ensure_repo": 0,
+        "gitignore_scan": 11,
         "go_types": 0,
-        "lexical": 3638,
-        "parse": 1090,
-        "persist": 2385,
+        "lexical": 3695,
+        "parse": 485,
+        "persist": 3695,
         "resolve_head": 0,
-        "routes": 4,
-        "sort": 37,
-        "walk": 8
+        "routes": 3,
+        "sort": 17,
+        "walk": 2,
+        "write_sqlite": 3695
       }
     },
     "reindex": {
-      "repo_id": "fab2d485-685d-407f-a4b0-35bf240cf07e",
+      "repo_id": "7da0d6e4-9c87-4489-b1c4-01d6a2d35774",
       "repo_full_name": "ide",
-      "snapshot_id": "e5718d0a-8294-4445-81f3-2cd11382e266",
-      "commit_sha": "a37c7c35c6a271b377cd799c48586ea2689a8e0f",
+      "snapshot_id": "585ee16d-bf69-4c1e-8acf-dcb2c8a377f5",
+      "commit_sha": "e1cc57bb27e48541ffe4bf66c78a8dddfc4f6630",
       "indexed_files": 594,
-      "symbols": 39171,
-      "edges": 73200,
+      "symbols": 39161,
+      "edges": 73203,
       "routes": 0,
       "languages": {
         "delphi": 206,
@@ -76,9 +81,9 @@
         "xml": 5
       },
       "mode": "noop",
-      "duration_ms": 0,
+      "duration_ms": 21,
       "timings_ms": {
-        "delta_check": 0,
+        "delta_check": 21,
         "resolve_head": 0
       }
     },
@@ -120,18 +125,13 @@
       },
       {
         "language": "pascal",
-        "kind": "document",
-        "count": 9
-      },
-      {
-        "language": "pascal",
         "kind": "function",
         "count": 26098
       },
       {
         "language": "pascal",
         "kind": "type",
-        "count": 1077
+        "count": 1076
       },
       {
         "language": "pascal",
@@ -152,11 +152,11 @@
     "edge_breakdown": [
       {
         "kind": "calls",
-        "count": 65730
+        "count": 65732
       },
       {
         "kind": "imports",
-        "count": 7470
+        "count": 7471
       }
     ],
     "delphi_definition_symbols": 11308
@@ -164,7 +164,7 @@
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 14.155,
+    "seconds": 9.421,
     "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
@@ -175,7 +175,7 @@
       "  AST extraction: 500/582 uncached files (85%) [14 workers]",
       "  AST extraction: 582/582 files (100%) [14 workers]",
       "[graphify watch] Skipped graph.html: Graph has 19383 nodes - too large for HTML viz (limit: 5000). Use --no-viz, raise GRAPHIFY_VIZ_NODE_LIMIT, or reduce input size.",
-      "[graphify watch] Rebuilt: 19383 nodes, 29702 edges, 929 communities",
+      "[graphify watch] Rebuilt: 19383 nodes, 29702 edges, 923 communities",
       "[graphify watch] graph.json and GRAPH_REPORT.md updated in graphify-out",
       "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
       "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
@@ -191,7 +191,7 @@
     "tool": "delphi-lazarus-source-counter",
     "status": "ok",
     "ok": true,
-    "seconds": 0.026,
+    "seconds": 0.023,
     "command": "python3 <delphi/lazarus source counter> /tmp/atlas-live-delphi-lazarus/repo/ide",
     "metrics": {
       "files": 206,
@@ -388,11 +388,12 @@
     "native_definitions": 11308
   },
   "optimization": {
-    "cycles_run": 2,
-    "stop_reason": "Delphi/Lazarus live smoke replaces the generic one-regex form fallback with a dedicated parser for form component instances, component classes, event handlers, package names, package dependencies, and units.",
+    "cycles_run": 3,
+    "stop_reason": "Delphi/Lazarus native source parser matches the benchmark-owned form/package coverage proxy after routing `.dfm`, `.lfm`, and `.lpk` files off `parseRegexFallback`.",
     "cycle_notes": [
       "cycle 1: fpc/Lazarus IDE probe showed the generic Delphi fallback indexed only form component instance names and missed event handlers plus .lpk package/unit/dependency context exposed by graphify.",
-      "cycle 2: after adding a dedicated Delphi/Lazarus parser and benchmark-owned source counter, Atlas covers form and package context on the live Lazarus IDE slice."
+      "cycle 2: after adding a dedicated Delphi/Lazarus parser and benchmark-owned source counter, Atlas covers form and package context on the live Lazarus IDE slice.",
+      "cycle 3: moving the dedicated Delphi/Lazarus parser to the native route preserved exact live coverage at 11308/11308 definitions and kept all seven graphify comparison queries equivalent."
     ]
   },
   "query_warmup": {
@@ -411,8 +412,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain AboutForm",
       "atlas_tokens": 6,
       "graphify_tokens": 50,
-      "atlas_ms": 36.756,
-      "graphify_ms": 357.847,
+      "atlas_ms": 29.009,
+      "graphify_ms": 346.364,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -425,7 +426,7 @@
         "  ID:        aboutfrm_aboutformcreate",
         "  Source:    aboutfrm.lfm L18",
         "  Type:      code",
-        "  Community: 322",
+        "  Community: 324",
         "  Degree:    1",
         "",
         "Connections (1):"
@@ -438,8 +439,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain FormClose",
       "atlas_tokens": 9,
       "graphify_tokens": 47,
-      "atlas_ms": 38.859,
-      "graphify_ms": 357.931,
+      "atlas_ms": 30.874,
+      "graphify_ms": 349.079,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -452,7 +453,7 @@
         "  ID:        aboutfrm_formclose",
         "  Source:    aboutfrm.lfm L17",
         "  Type:      code",
-        "  Community: 322",
+        "  Community: 324",
         "  Degree:    1",
         "",
         "Connections (1):"
@@ -465,8 +466,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Notebook",
       "atlas_tokens": 7,
       "graphify_tokens": 53,
-      "atlas_ms": 37.102,
-      "graphify_ms": 351.196,
+      "atlas_ms": 29.351,
+      "graphify_ms": 345.786,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -479,7 +480,7 @@
         "  ID:        aboutfrm_notebookpagechanged",
         "  Source:    aboutfrm.lfm L29",
         "  Type:      code",
-        "  Community: 322",
+        "  Community: 324",
         "  Degree:    1",
         "",
         "Connections (1):"
@@ -492,8 +493,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain TPageControl",
       "atlas_tokens": 9,
       "graphify_tokens": 71,
-      "atlas_ms": 45.704,
-      "graphify_ms": 355.692,
+      "atlas_ms": 36.625,
+      "graphify_ms": 352.058,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -506,7 +507,7 @@
         "  ID:        aboutfrm_tpagecontrol",
         "  Source:    aboutfrm.lfm L20",
         "  Type:      code",
-        "  Community: 322",
+        "  Community: 324",
         "  Degree:    3",
         "",
         "Connections (3):"
@@ -519,8 +520,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain IdeProject",
       "atlas_tokens": 9,
       "graphify_tokens": 50,
-      "atlas_ms": 36.465,
-      "graphify_ms": 355.333,
+      "atlas_ms": 30.365,
+      "graphify_ms": 351.123,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -546,8 +547,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain BuildManager",
       "atlas_tokens": 8,
       "graphify_tokens": 268,
-      "atlas_ms": 36.586,
-      "graphify_ms": 359.216,
+      "atlas_ms": 29.597,
+      "graphify_ms": 344.489,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -560,7 +561,7 @@
         "  ID:        ideproject_buildmanager_buildmanager",
         "  Source:    packages/ideproject/buildmanager.pas L28",
         "  Type:      code",
-        "  Community: 430",
+        "  Community: 434",
         "  Degree:    18",
         "",
         "Connections (18):"
@@ -573,8 +574,8 @@
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain IdePackager",
       "atlas_tokens": 9,
       "graphify_tokens": 165,
-      "atlas_ms": 37.451,
-      "graphify_ms": 350.304,
+      "atlas_ms": 29.282,
+      "graphify_ms": 353.408,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -587,7 +588,7 @@
         "  ID:        packages_idepackager_idepackager_lpk_idepackager_idepackager_idepackager",
         "  Source:    packages/idepackager/idepackager.lpk L1",
         "  Type:      code",
-        "  Community: 624",
+        "  Community: 626",
         "  Degree:    10",
         "",
         "Connections (10):"

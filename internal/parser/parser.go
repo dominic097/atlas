@@ -490,7 +490,12 @@ func Parse(repoID, repoFullName, filePath, language string, content []byte) (Res
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "delphi":
-		rawSyms, imports = parseRegexFallback(filePath, language, content)
+		if syms, delphiImports, ok := parseDelphiNative(filePath, content); ok {
+			rawSyms = syms
+			imports = delphiImports
+		} else {
+			rawSyms, imports = parseRegexFallback(filePath, language, content)
+		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "html", "css":
 	// Pulse records these as file-level context even though there is no

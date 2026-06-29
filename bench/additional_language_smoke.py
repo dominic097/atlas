@@ -5556,11 +5556,12 @@ def run_smoke(language: str, atlas_bin: str, graphify_bin: str | None) -> dict[s
         }
     elif language == "delphi":
         optimization = {
-            "cycles_run": 2,
-            "stop_reason": "Delphi/Lazarus live smoke replaces the generic one-regex form fallback with a dedicated parser for form component instances, component classes, event handlers, package names, package dependencies, and units.",
+            "cycles_run": 3,
+            "stop_reason": "Delphi/Lazarus native source parser matches the benchmark-owned form/package coverage proxy after routing `.dfm`, `.lfm`, and `.lpk` files off `parseRegexFallback`.",
             "cycle_notes": [
                 "cycle 1: fpc/Lazarus IDE probe showed the generic Delphi fallback indexed only form component instance names and missed event handlers plus .lpk package/unit/dependency context exposed by graphify.",
                 "cycle 2: after adding a dedicated Delphi/Lazarus parser and benchmark-owned source counter, Atlas covers form and package context on the live Lazarus IDE slice.",
+                "cycle 3: moving the dedicated Delphi/Lazarus parser to the native route preserved exact live coverage at 11308/11308 definitions and kept all seven graphify comparison queries equivalent.",
             ],
         }
     elif language == "rust":
