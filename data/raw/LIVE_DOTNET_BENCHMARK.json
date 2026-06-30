@@ -18,22 +18,23 @@
       "Dapper.ProviderTools",
       "net8.0"
     ],
-    "target_path": "/tmp/atlas-live-dotnet-dapper/repo"
+    "target_path": "/tmp/atlas-live-dotnet-dapper/repo",
+    "atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-dotnet-dapper/atlas.db serve --addr 127.0.0.1:4188"
   },
   "atlas": {
-    "cold_wall_seconds": 0.645,
-    "reindex_wall_seconds": 0.024,
+    "cold_wall_seconds": 0.407,
+    "reindex_wall_seconds": 0.019,
     "index": {
-      "repo_id": "0fcdc263-c760-4811-b573-39d910300ee1",
+      "repo_id": "0a07e091-6d85-4762-a668-ae971d55f077",
       "repo_full_name": "repo",
-      "snapshot_id": "295f18a4-67eb-46bb-a3e9-825a129d9d39",
+      "snapshot_id": "f5cd149a-1406-434c-bb13-a88324d4beed",
       "commit_sha": "72a54c475f75e18cb93cba0809d00a5e6e49efd9",
-      "indexed_files": 207,
-      "symbols": 3673,
-      "edges": 8243,
+      "indexed_files": 210,
+      "symbols": 3152,
+      "edges": 8180,
       "edge_kinds": {
-        "calls": 7570,
-        "imports": 673
+        "calls": 8113,
+        "imports": 67
       },
       "routes": 0,
       "languages": {
@@ -41,6 +42,7 @@
         "config": 1,
         "csharp": 157,
         "dotnet": 12,
+        "image": 3,
         "json": 4,
         "markdown": 8,
         "powershell": 1,
@@ -49,34 +51,40 @@
         "yaml": 6
       },
       "mode": "full",
-      "duration_ms": 599,
+      "duration_ms": 407,
       "timings_ms": {
+        "build_symbols_edges": 2,
         "delta_check": 0,
+        "discover_files": 1,
+        "doc_links": 0,
         "ensure_repo": 0,
+        "gitignore_scan": 12,
         "go_types": 0,
-        "lexical": 325,
-        "parse": 131,
-        "persist": 137,
+        "lexical": 195,
+        "parse": 194,
+        "persist": 195,
         "resolve_head": 0,
         "routes": 0,
-        "sort": 2,
-        "walk": 1
+        "sort": 1,
+        "walk": 1,
+        "write_sqlite": 195
       }
     },
     "reindex": {
-      "repo_id": "0fcdc263-c760-4811-b573-39d910300ee1",
+      "repo_id": "0a07e091-6d85-4762-a668-ae971d55f077",
       "repo_full_name": "repo",
-      "snapshot_id": "295f18a4-67eb-46bb-a3e9-825a129d9d39",
+      "snapshot_id": "f5cd149a-1406-434c-bb13-a88324d4beed",
       "commit_sha": "72a54c475f75e18cb93cba0809d00a5e6e49efd9",
-      "indexed_files": 207,
-      "symbols": 3673,
-      "edges": 8243,
+      "indexed_files": 210,
+      "symbols": 3152,
+      "edges": 8180,
       "routes": 0,
       "languages": {
         "batch": 1,
         "config": 1,
         "csharp": 157,
         "dotnet": 12,
+        "image": 3,
         "json": 4,
         "markdown": 8,
         "powershell": 1,
@@ -85,9 +93,9 @@
         "yaml": 6
       },
       "mode": "noop",
-      "duration_ms": 0,
+      "duration_ms": 19,
       "timings_ms": {
-        "delta_check": 0,
+        "delta_check": 19,
         "resolve_head": 0
       }
     },
@@ -105,12 +113,27 @@
       {
         "language": "csharp",
         "kind": "class",
-        "count": 421
+        "count": 424
+      },
+      {
+        "language": "csharp",
+        "kind": "constant",
+        "count": 62
+      },
+      {
+        "language": "csharp",
+        "kind": "constructor",
+        "count": 150
       },
       {
         "language": "csharp",
         "kind": "enum",
         "count": 22
+      },
+      {
+        "language": "csharp",
+        "kind": "field",
+        "count": 637
       },
       {
         "language": "csharp",
@@ -120,17 +143,17 @@
       {
         "language": "csharp",
         "kind": "method",
-        "count": 2950
+        "count": 1525
       },
       {
         "language": "csharp",
-        "kind": "record",
-        "count": 2
+        "kind": "module",
+        "count": 55
       },
       {
         "language": "csharp",
         "kind": "struct",
-        "count": 15
+        "count": 13
       },
       {
         "language": "dotnet",
@@ -158,6 +181,11 @@
         "count": 25
       },
       {
+        "language": "image",
+        "kind": "image",
+        "count": 3
+      },
+      {
         "language": "json",
         "kind": "document",
         "count": 1
@@ -178,11 +206,6 @@
         "count": 79
       },
       {
-        "language": "powershell",
-        "kind": "variable",
-        "count": 2
-      },
-      {
         "language": "text",
         "kind": "document",
         "count": 15
@@ -201,11 +224,11 @@
     "edge_breakdown": [
       {
         "kind": "calls",
-        "count": 7570
+        "count": 8113
       },
       {
         "kind": "imports",
-        "count": 673
+        "count": 67
       }
     ],
     "dotnet_definition_symbols": 132
@@ -431,28 +454,28 @@
   },
   "query_warmup": {
     "symbol": "Dapper",
-    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-dotnet-dapper/atlas.db --format plain --repo repo explain Dapper",
+    "atlas_command": "curl -fsS http://127.0.0.1:4188/api/v1/symbols/Dapper/explain?repo_id=repo&format=plain",
     "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Dapper",
     "atlas_returncode": 0,
     "graphify_returncode": 0,
-    "note": "Untimed warm-up for both tools before measured query latency rows."
+    "note": "Untimed warm-up for Atlas warm serve and graphify before measured query latency rows."
   },
   "queries": [
     {
       "symbol": "Dapper",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-dotnet-dapper/atlas.db --format plain --repo repo explain Dapper",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4188/api/v1/symbols/Dapper/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Dapper",
-      "atlas_tokens": 10,
+      "atlas_tokens": 2,
       "graphify_tokens": 56,
-      "atlas_ms": 14.003,
+      "atlas_ms": 8.289,
       "graphify_ms": 122.175,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Dapper p@Dapper.EntityFramework:13 df6 c1"
+        "Dapper p@Dapper.EntityFramework:13"
       ],
       "graphify_stdout_head": [
         "Node: Dapper",
@@ -463,23 +486,34 @@
         "  Degree:    1",
         "",
         "Connections (1):"
+      ],
+      "atlas_ms_samples": [
+        8.429,
+        8.29,
+        8.222,
+        8.289,
+        8.67,
+        8.565,
+        8.274,
+        8.156,
+        7.856
       ]
     },
     {
       "symbol": "Dapper.Tests",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-dotnet-dapper/atlas.db --format plain --repo repo explain Dapper.Tests",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4188/api/v1/symbols/Dapper.Tests/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Dapper.Tests",
-      "atlas_tokens": 7,
+      "atlas_tokens": 2,
       "graphify_tokens": 57,
-      "atlas_ms": 13.23,
+      "atlas_ms": 7.487,
       "graphify_ms": 117.522,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Dapper.Tests p@Dapper:36 df2"
+        "Dapper.Tests p@Dapper:36"
       ],
       "graphify_stdout_head": [
         "Node: Dapper.Tests",
@@ -490,23 +524,34 @@
         "  Degree:    1",
         "",
         "Connections (1):"
+      ],
+      "atlas_ms_samples": [
+        7.72,
+        7.361,
+        7.476,
+        7.457,
+        7.641,
+        7.456,
+        7.487,
+        8.581,
+        8.933
       ]
     },
     {
       "symbol": "Microsoft.NET.Sdk",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-dotnet-dapper/atlas.db --format plain --repo repo explain Microsoft.NET.Sdk",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4188/api/v1/symbols/Microsoft.NET.Sdk/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Microsoft.NET.Sdk",
-      "atlas_tokens": 15,
+      "atlas_tokens": 2,
       "graphify_tokens": 90,
-      "atlas_ms": 13.61,
+      "atlas_ms": 7.455,
       "graphify_ms": 116.902,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Microsoft.NET.Sdk s@Dapper.EntityFramework.StrongName:1 df10"
+        "Microsoft.NET.Sdk s@Dapper.EntityFramework.StrongName:1"
       ],
       "graphify_stdout_head": [
         "Node: Microsoft.NET.Sdk",
@@ -517,23 +562,34 @@
         "  Degree:    1",
         "",
         "Connections (1):"
+      ],
+      "atlas_ms_samples": [
+        8.284,
+        7.927,
+        7.694,
+        7.455,
+        7.37,
+        7.514,
+        7.201,
+        7.334,
+        7.151
       ]
     },
     {
       "symbol": "Microsoft.Bcl.AsyncInterfaces",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-dotnet-dapper/atlas.db --format plain --repo repo explain Microsoft.Bcl.AsyncInterfaces",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4188/api/v1/symbols/Microsoft.Bcl.AsyncInterfaces/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Microsoft.Bcl.AsyncInterfaces",
-      "atlas_tokens": 14,
+      "atlas_tokens": 2,
       "graphify_tokens": 75,
-      "atlas_ms": 13.182,
+      "atlas_ms": 7.337,
       "graphify_ms": 119.961,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Microsoft.Bcl.AsyncInterfaces p@Dapper.StrongName:21 df4"
+        "Microsoft.Bcl.AsyncInterfaces p@Dapper.StrongName:21"
       ],
       "graphify_stdout_head": [
         "Node: Microsoft.Bcl.AsyncInterfaces",
@@ -544,23 +600,34 @@
         "  Degree:    1",
         "",
         "Connections (1):"
+      ],
+      "atlas_ms_samples": [
+        7.481,
+        7.395,
+        7.285,
+        7.474,
+        7.097,
+        7.465,
+        7.337,
+        7.291,
+        7.064
       ]
     },
     {
       "symbol": "Dapper.ProviderTools",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-dotnet-dapper/atlas.db --format plain --repo repo explain Dapper.ProviderTools",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4188/api/v1/symbols/Dapper.ProviderTools/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Dapper.ProviderTools",
-      "atlas_tokens": 12,
+      "atlas_tokens": 2,
       "graphify_tokens": 62,
-      "atlas_ms": 13.238,
+      "atlas_ms": 7.171,
       "graphify_ms": 119.179,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Dapper.ProviderTools p@Dapper.ProviderTools:1 df3"
+        "Dapper.ProviderTools p@Dapper.ProviderTools:1"
       ],
       "graphify_stdout_head": [
         "Node: Dapper.ProviderTools",
@@ -571,23 +638,34 @@
         "  Degree:    1",
         "",
         "Connections (1):"
+      ],
+      "atlas_ms_samples": [
+        6.956,
+        7.171,
+        7.196,
+        7.243,
+        7.259,
+        7.031,
+        7.471,
+        7.066,
+        6.953
       ]
     },
     {
       "symbol": "net8.0",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-dotnet-dapper/atlas.db --format plain --repo repo explain net8.0",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4188/api/v1/symbols/net8.0/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain net8.0",
-      "atlas_tokens": 9,
+      "atlas_tokens": 2,
       "graphify_tokens": 72,
-      "atlas_ms": 13.411,
+      "atlas_ms": 7.376,
       "graphify_ms": 121.641,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "net8.0 t@Dapper.ProviderTools:8 df6"
+        "net8.0 t@Dapper.ProviderTools:8"
       ],
       "graphify_stdout_head": [
         "Node: net8.0",
@@ -598,7 +676,24 @@
         "  Degree:    1",
         "",
         "Connections (1):"
+      ],
+      "atlas_ms_samples": [
+        7.311,
+        7.376,
+        7.029,
+        7.341,
+        7.141,
+        7.511,
+        8.387,
+        7.711,
+        7.731
       ]
     }
-  ]
+  ],
+  "atlas_cli": {
+    "version": "v0.1.26-4-gd882e08",
+    "commit": "d882e08",
+    "date": "2026-06-30T07:15:57Z",
+    "measurement_note": "DotNet query rows refreshed from nine-sample medians against atlas serve format=plain using curl; graphify rows retained as the saved comparison baseline."
+  }
 }

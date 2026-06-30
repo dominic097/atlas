@@ -1,6 +1,6 @@
 # Atlas 10x Gap Report
 
-Generated: 2026-06-30T06:56:05.045Z
+Generated: 2026-06-30T07:18:35.929Z
 
 Token and latency are ratio targets. Coverage is a native-definition coverage ratio, so the honest accuracy target is >1.0 native coverage exceed, not a fabricated 10x accuracy multiplier.
 
@@ -10,9 +10,9 @@ Token and latency are ratio targets. Coverage is a native-definition coverage ra
 - Coverage parity languages still to move into exceed: 29
 - Coverage exceed languages: 7
 - Comparable live languages: 33
-- Token >=10x comparable: 20
-- Latency >=10x comparable: 2
-- Token+latency >=10x comparable: 2
+- Token >=10x comparable: 21
+- Latency >=10x comparable: 3
+- Token+latency >=10x comparable: 3
 
 ## Biggest Latency Gaps
 
@@ -37,7 +37,6 @@ Token and latency are ratio targets. Coverage is a native-definition coverage ra
 |---|--:|--:|--:|---|
 | sql | 5.33 | 1.88x | 6.23 | coverage_at_parity, token_ratio_below_10x, latency_ratio_below_10x |
 | blade | 6.1 | 1.64x | 6.74 | coverage_at_parity, token_ratio_below_10x, latency_ratio_below_10x |
-| dotnet | 6.15 | 1.63x | 8.89 | coverage_at_parity, token_ratio_below_10x, latency_ratio_below_10x |
 | cuda | 6.67 | 1.5x | 5.96 | coverage_at_parity, token_ratio_below_10x, latency_ratio_below_10x |
 | powershell | 6.68 | 1.5x | 6.37 | coverage_at_parity, token_ratio_below_10x, latency_ratio_below_10x |
 | razor | 7.88 | 1.27x | 7.15 | coverage_at_parity, token_ratio_below_10x, latency_ratio_below_10x |

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T06:56:05.045Z",
+  "generatedAt": "2026-06-30T07:18:35.929Z",
   "source": "data/benchmark-data.json",
   "targetRatio": 10,
   "metricNote": "Token and latency are ratio targets. Coverage is a native-definition coverage ratio, so the honest accuracy target is >1.0 native coverage exceed, not a fabricated 10x accuracy multiplier.",
@@ -9,9 +9,9 @@
     "parityLanguages": 29,
     "coverageExceedLanguages": 7,
     "comparableLanguages": 33,
-    "token10xComparable": 20,
-    "latency10xComparable": 2,
-    "performance10xComparable": 2
+    "token10xComparable": 21,
+    "latency10xComparable": 3,
+    "performance10xComparable": 3
   },
   "parityLanguages": [
     "apex",
@@ -207,14 +207,12 @@
       "coverageRatio": 1,
       "coverageExceedsNative": false,
       "equivalentRows": 6,
-      "tokenRatio": 6.15,
-      "latencyRatio": 8.89,
-      "tokenGapTo10x": 1.63,
-      "latencyGapTo10x": 1.12,
+      "tokenRatio": 34.33,
+      "latencyRatio": 15.9,
+      "tokenGapTo10x": 1,
+      "latencyGapTo10x": 1,
       "blockers": [
-        "coverage_at_parity",
-        "token_ratio_below_10x",
-        "latency_ratio_below_10x"
+        "coverage_at_parity"
       ]
     },
     {
@@ -904,24 +902,6 @@
       "latencyRatio": 6.74,
       "tokenGapTo10x": 1.64,
       "latencyGapTo10x": 1.48,
-      "blockers": [
-        "coverage_at_parity",
-        "token_ratio_below_10x",
-        "latency_ratio_below_10x"
-      ]
-    },
-    {
-      "language": "dotnet",
-      "repo": "https://github.com/DapperLib/Dapper",
-      "commit": "72a54c475f75e18cb93cba0809d00a5e6e49efd9",
-      "artifact": "data/raw/LIVE_DOTNET_BENCHMARK.json",
-      "coverageRatio": 1,
-      "coverageExceedsNative": false,
-      "equivalentRows": 6,
-      "tokenRatio": 6.15,
-      "latencyRatio": 8.89,
-      "tokenGapTo10x": 1.63,
-      "latencyGapTo10x": 1.12,
       "blockers": [
         "coverage_at_parity",
         "token_ratio_below_10x",
