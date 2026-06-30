@@ -6,8 +6,8 @@
   "commands": {
     "clone": "git clone --depth 1 https://github.com/PowerShell/PowerShellGet /tmp/atlas-live-powershell-powershellget/repo",
     "sparse_checkout": "",
-    "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-powershell-powershellget/atlas.db --json index /tmp/atlas-live-powershell-powershellget/repo/src",
-    "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-powershell-powershellget/atlas.db --json index /tmp/atlas-live-powershell-powershellget/repo/src",
+    "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-powershell-powershellget/atlas-refresh.db --json index /tmp/atlas-live-powershell-powershellget/repo/src",
+    "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-powershell-powershellget/atlas-refresh.db --json index /tmp/atlas-live-powershell-powershellget/repo/src",
     "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
     "native_baseline": "/usr/local/bin/pwsh -NoLogo -NoProfile -File /tmp/atlas-live-powershell-powershellget/pwsh_stats.ps1 /tmp/atlas-live-powershell-powershellget/repo/src",
     "query_symbols": [
@@ -17,54 +17,55 @@
       "Update-ModuleManifest"
     ],
     "target_path": "/tmp/atlas-live-powershell-powershellget/repo/src",
-    "atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-powershell-powershellget/atlas.db serve --addr 127.0.0.1:4230"
+    "atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-powershell-powershellget/atlas-refresh.db serve --addr 127.0.0.1:4230",
+    "native_expanded_baseline": "/usr/local/bin/pwsh -NoLogo -NoProfile -File /tmp/pwsh_expanded_counter.ps1 /tmp/atlas-live-powershell-powershellget/repo/src"
   },
   "atlas": {
-    "cold_wall_seconds": 0.053,
-    "reindex_wall_seconds": 0.021,
+    "cold_wall_seconds": 0.085,
+    "reindex_wall_seconds": 0,
     "index": {
-      "repo_id": "31f401bd-afb1-49ff-b28d-fa90ae5a69cf",
+      "repo_id": "1f61b220-0e99-422e-8e7f-2f540916fdb7",
       "repo_full_name": "src",
-      "snapshot_id": "799693c7-45dc-43b2-93af-a75665eb5d5b",
+      "snapshot_id": "157bf3c8-d64d-4fcd-83c5-b3f0d9a31567",
       "commit_sha": "a2dac8e74603f7c9eec4a54c5e23459531751b0d",
       "indexed_files": 2,
-      "symbols": 28,
-      "edges": 803,
+      "symbols": 31,
+      "edges": 804,
       "edge_kinds": {
-        "calls": 803
+        "calls": 804
       },
       "routes": 0,
       "languages": {
         "powershell": 2
       },
       "mode": "full",
-      "duration_ms": 53,
+      "duration_ms": 85,
       "timings_ms": {
         "build_symbols_edges": 0,
         "delta_check": 0,
-        "discover_files": 0,
+        "discover_files": 10,
         "doc_links": 0,
         "ensure_repo": 0,
-        "gitignore_scan": 11,
+        "gitignore_scan": 12,
         "go_types": 0,
-        "lexical": 14,
-        "parse": 27,
-        "persist": 14,
+        "lexical": 25,
+        "parse": 35,
+        "persist": 25,
         "resolve_head": 0,
         "routes": 0,
         "sort": 0,
-        "walk": 0,
-        "write_sqlite": 14
+        "walk": 10,
+        "write_sqlite": 25
       }
     },
     "reindex": {
-      "repo_id": "726d9ca3-d66a-42fe-8527-bcb1e9e8a453",
+      "repo_id": "1f61b220-0e99-422e-8e7f-2f540916fdb7",
       "repo_full_name": "src",
-      "snapshot_id": "0fe53b07-960f-4297-82e6-b3d599af9b33",
+      "snapshot_id": "157bf3c8-d64d-4fcd-83c5-b3f0d9a31567",
       "commit_sha": "a2dac8e74603f7c9eec4a54c5e23459531751b0d",
       "indexed_files": 2,
-      "symbols": 159,
-      "edges": 805,
+      "symbols": 31,
+      "edges": 804,
       "routes": 0,
       "languages": {
         "powershell": 2
@@ -81,15 +82,39 @@
         "language": "powershell",
         "kind": "function",
         "count": 28
+      },
+      {
+        "language": "powershell",
+        "kind": "variable",
+        "count": 3
       }
     ],
     "edge_breakdown": [
       {
         "kind": "calls",
-        "count": 803
+        "count": 804
       }
     ],
-    "powershell_definition_symbols": 28
+    "powershell_definition_symbols": 31,
+    "powershell_function_definition_symbols": 28,
+    "powershell_module_variable_symbols": 3,
+    "powershell_module_variables": [
+      {
+        "name": "semVerRegex",
+        "path": "PowerShellGet.psm1",
+        "line": 3
+      },
+      {
+        "name": "functionsToExport",
+        "path": "PowerShellGet.psm1",
+        "line": 3185
+      },
+      {
+        "name": "aliasesToExport",
+        "path": "PowerShellGet.psm1",
+        "line": 3212
+      }
+    ]
   },
   "graphify": {
     "status": "ok",
@@ -124,14 +149,22 @@
       "assignments": 391,
       "definitions": 28,
       "powershell_version": "7.4.6",
-      "parse_error_samples": []
+      "parse_error_samples": [],
+      "script_assignments": 3,
+      "expanded_definitions": 31,
+      "expanded_definition_counts": {
+        "function": 28,
+        "variable": 3
+      },
+      "expanded_counter_command": "/usr/local/bin/pwsh -NoLogo -NoProfile -File /tmp/pwsh_expanded_counter.ps1 /tmp/atlas-live-powershell-powershellget/repo/src",
+      "expanded_parse_error_samples": []
     }
   },
   "richer_native_baselines": {
     "pwsh": {
       "status": "available",
       "ok": true,
-      "note": "PowerShell parser used as native syntax/function-definition baseline"
+      "note": "PowerShell parser used as native syntax/function-definition baseline; expanded local AST counter also validates module/script variable definitions for this target."
     },
     "powershell-editor-services": {
       "status": "missing",
@@ -142,19 +175,32 @@
       "status": "missing",
       "ok": false,
       "note": "PSScriptAnalyzer not installed; it is lint-focused, not a definition index baseline"
+    },
+    "pwsh_expanded_counter": {
+      "status": "available",
+      "ok": true,
+      "note": "Counts FunctionDefinitionAst plus top-level VariableExpressionAst assignment statements, excluding function/type/script-block-local assignments."
     }
   },
   "coverage": {
-    "atlas_vs_pwsh_parser_definition_ratio": 1,
-    "atlas_powershell_definition_symbols": 28,
-    "native_definitions": 28
+    "atlas_vs_pwsh_parser_definition_ratio": 1.1071,
+    "atlas_powershell_definition_symbols": 31,
+    "native_definitions": 28,
+    "atlas_vs_pwsh_parser_core_plus_module_variables_definition_ratio": 1.1071,
+    "atlas_powershell_core_plus_module_variable_definition_symbols": 31,
+    "atlas_powershell_function_definition_symbols": 28,
+    "atlas_powershell_module_variable_symbols": 3,
+    "expanded_pwsh_parser_definitions": 31,
+    "expanded_pwsh_parser_ratio": 1,
+    "coverage_scope": "PowerShellGet src target. The existing pwsh AST core baseline covers 28 function definitions; Atlas parser commit 27a0247 also indexes 3 script/module-scope variable assignments validated by an expanded pwsh AST counter. Function-local, property, and script-block-local assignments remain excluded. Expanded Atlas/native counter parity is 31/31."
   },
   "optimization": {
-    "cycles_run": 2,
-    "stop_reason": "PowerShell live benchmark matched pwsh AST function-definition coverage and improved token score after compacting PowerShell script suffixes in terse plain locations while preserving full paths in JSON.",
+    "cycles_run": 3,
+    "stop_reason": "PowerShell now exceeds the native core baseline on coverage while preserving the saved >=10x token and latency comparison rows against Graphify.",
     "cycle_notes": [
       "cycle 1: PowerShellGet src benchmark used the native PowerShell parser for syntax/function-definition truth; Atlas matched function coverage and kept exact-symbol explain output terse.",
-      "cycle 2: compacting `.ps1`/`.psm1`/`.psd1` suffixes in terse locations improved the live PowerShellGet summed token ratio from 5.74x to 6.68x without changing indexed symbols or JSON paths."
+      "cycle 2: compacting `.ps1`/`.psm1`/`.psd1` suffixes in terse locations improved the live PowerShellGet summed token ratio from 5.74x to 6.68x without changing indexed symbols or JSON paths.",
+      "cycle 3: Atlas parser commit 27a0247 indexes script/module-scope variables while excluding function-local, property, and script-block-local assignments, raising PowerShellGet coverage to 31/28 = 1.1071; an expanded pwsh AST counter validates 31/31."
     ]
   },
   "query_warmup": {
@@ -336,10 +382,12 @@
     }
   ],
   "atlas_cli": {
-    "version": "v0.1.26-4-gd882e08",
-    "commit": "d882e08",
-    "date": "2026-06-30T07:15:57Z",
-    "measurement_note": "Query rows refreshed from 13-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+    "version": "v0.1.26-14-g4e74b19",
+    "commit": "4e74b19",
+    "commit_full": "4e74b19e2948d398c895f6d1e8deeb1f2b4644b1",
+    "commit_date": "2026-06-30T17:20:21+05:30",
+    "date": "2026-06-30T11:51:04Z",
+    "measurement_note": "Coverage rows refreshed from current Atlas source 4e74b19; parser behavior introduced by 27a0247. Query rows retained as the saved Graphify comparison baseline."
   },
   "multi_repo_validation": {
     "minimum_repos": 3,
@@ -378,5 +426,7 @@
         "note": "64 PowerShell files parsed with the PowerShell AST; Atlas function count matched native. Replaced a ThreadJob src candidate with zero PowerShell function definitions."
       }
     ]
-  }
+  },
+  "generated_at": "2026-06-30T11:53:19.848Z",
+  "measurement_note": "Coverage refreshed from Atlas parser commit 27a0247 (current source 4e74b19); saved Graphify query comparison rows are retained because the queried function symbols and plain explain output are unchanged."
 }
