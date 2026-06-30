@@ -353,7 +353,7 @@
     }
   },
   "coverage": {
-    "atlas_vs_tree_sitter_objc_definition_ratio": 1.0,
+    "atlas_vs_tree_sitter_objc_definition_ratio": 1.0021,
     "atlas_objc_definition_symbols": 973,
     "native_definitions": 971
   },

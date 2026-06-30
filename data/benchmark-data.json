@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T08:25:13.811Z",
+  "generatedAt": "2026-06-30T08:33:28.684Z",
   "sourceLabel": "Atlas benchmark JSON artifacts from bench/",
   "sourceArtifacts": [
     {
@@ -182,8 +182,8 @@
       "name": "LIVE_OBJC_BENCHMARK.json",
       "source": "bench/LIVE_OBJC_BENCHMARK.json",
       "path": "data/raw/LIVE_OBJC_BENCHMARK.json",
-      "bytes": 17589,
-      "sha256": "19e0059b9e3e8b01749b3f9f11a3e89c9d5691a0c53738d3c89ab9ae45f19ab7"
+      "bytes": 17592,
+      "sha256": "a7ff47391ef5c7781b4c287b7c7b4a7e223d194c3324123a607cf8a949630647"
     },
     {
       "name": "LIVE_PASCAL_BENCHMARK.json",
@@ -224,8 +224,8 @@
       "name": "LIVE_RUST_BENCHMARK.json",
       "source": "bench/LIVE_RUST_BENCHMARK.json",
       "path": "data/raw/LIVE_RUST_BENCHMARK.json",
-      "bytes": 14030,
-      "sha256": "89368681f64ab943e32ecc6f771b601ef4250e34af499e840baf69d3ee4051dc"
+      "bytes": 14033,
+      "sha256": "7cb933bb9fb9a2ac6906482c30b0f48d34aa0432fcf19db9baf8b1c0bae5098d"
     },
     {
       "name": "LIVE_R_BENCHMARK.json",
@@ -238,8 +238,8 @@
       "name": "LIVE_SCALA_BENCHMARK.json",
       "source": "bench/LIVE_SCALA_BENCHMARK.json",
       "path": "data/raw/LIVE_SCALA_BENCHMARK.json",
-      "bytes": 11795,
-      "sha256": "067a61058c7e2a700a9179e2c2f2cc2ed256ba4496fe7982ffc173b83bc3769f"
+      "bytes": 11798,
+      "sha256": "f7456b0c1b9389e4c937541a9fb3a27e566e204f05722e776f429cb0c2c9a349"
     },
     {
       "name": "LIVE_SQL_BENCHMARK.json",
@@ -287,8 +287,8 @@
       "name": "LIVE_ZIG_BENCHMARK.json",
       "source": "bench/LIVE_ZIG_BENCHMARK.json",
       "path": "data/raw/LIVE_ZIG_BENCHMARK.json",
-      "bytes": 16258,
-      "sha256": "61a035909074b8cc30dd74d07d1c0ffaa0331f2dbac3fda2ebca8fb07c61cee7"
+      "bytes": 16261,
+      "sha256": "3a61f988930095717929d3f56caf97f95127fb47316a7a132a3322f86347ffc8"
     }
   ],
   "provenance": {
@@ -628,14 +628,14 @@
       "token10xComparable": 33,
       "latency10xComparable": 33,
       "tenXComparable": 33,
-      "strict10x": 7,
-      "coverageParityLanguages": 29,
-      "coverageExceedLanguages": 7,
+      "strict10x": 11,
+      "coverageParityLanguages": 25,
+      "coverageExceedLanguages": 11,
       "coverageBelowLanguages": 0,
-      "parityComparable": 26,
-      "parityToken10x": 26,
-      "parityLatency10x": 26,
-      "parityTenX": 26,
+      "parityComparable": 22,
+      "parityToken10x": 22,
+      "parityLatency10x": 22,
+      "parityTenX": 22,
       "detectorOnlyArtifacts": 3
     },
     "coverage": {
@@ -5638,7 +5638,7 @@
         }
       },
       "coverage": {
-        "ratio": 1,
+        "ratio": 1.0021,
         "ratioKey": "atlas_vs_tree_sitter_objc_definition_ratio",
         "atlasDefinitions": 973,
         "nativeDefinitions": 971,
@@ -5722,14 +5722,12 @@
         "targetRatio": 10,
         "comparable": true,
         "coverageParity": true,
-        "coverageExceedsNative": false,
+        "coverageExceedsNative": true,
         "token10x": true,
         "latency10x": true,
         "performance10x": true,
-        "strict10x": false,
-        "blockers": [
-          "coverage_at_parity"
-        ],
+        "strict10x": true,
+        "blockers": [],
         "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
       }
     },
@@ -6894,7 +6892,7 @@
         }
       },
       "coverage": {
-        "ratio": 1,
+        "ratio": 1.0017,
         "ratioKey": "atlas_vs_rust_analyzer_definition_ratio",
         "atlasDefinitions": 1153,
         "nativeDefinitions": 1151,
@@ -6969,14 +6967,12 @@
         "targetRatio": 10,
         "comparable": true,
         "coverageParity": true,
-        "coverageExceedsNative": false,
+        "coverageExceedsNative": true,
         "token10x": true,
         "latency10x": true,
         "performance10x": true,
-        "strict10x": false,
-        "blockers": [
-          "coverage_at_parity"
-        ],
+        "strict10x": true,
+        "blockers": [],
         "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
       }
     },
@@ -7054,7 +7050,7 @@
         }
       },
       "coverage": {
-        "ratio": 1,
+        "ratio": 1.0023,
         "ratioKey": "atlas_vs_tree_sitter_scala_definition_ratio",
         "atlasDefinitions": 7858,
         "nativeDefinitions": 7840,
@@ -7138,14 +7134,12 @@
         "targetRatio": 10,
         "comparable": true,
         "coverageParity": true,
-        "coverageExceedsNative": false,
+        "coverageExceedsNative": true,
         "token10x": true,
         "latency10x": true,
         "performance10x": true,
-        "strict10x": false,
-        "blockers": [
-          "coverage_at_parity"
-        ],
+        "strict10x": true,
+        "blockers": [],
         "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
       }
     },
@@ -8224,7 +8218,7 @@
         }
       },
       "coverage": {
-        "ratio": 1,
+        "ratio": 1.0028,
         "ratioKey": "atlas_vs_tree_sitter_zig_definition_ratio",
         "atlasDefinitions": 5294,
         "nativeDefinitions": 5279,
@@ -8308,14 +8302,12 @@
         "targetRatio": 10,
         "comparable": true,
         "coverageParity": true,
-        "coverageExceedsNative": false,
+        "coverageExceedsNative": true,
         "token10x": true,
         "latency10x": true,
         "performance10x": true,
-        "strict10x": false,
-        "blockers": [
-          "coverage_at_parity"
-        ],
+        "strict10x": true,
+        "blockers": [],
         "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
       }
     }

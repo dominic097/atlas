@@ -295,7 +295,7 @@
     }
   },
   "coverage": {
-    "atlas_vs_rust_analyzer_definition_ratio": 1.0,
+    "atlas_vs_rust_analyzer_definition_ratio": 1.0017,
     "atlas_rust_definition_symbols": 1153,
     "native_definitions": 1151,
     "coverage_scope": "16 sampled files from rust-analyzer"

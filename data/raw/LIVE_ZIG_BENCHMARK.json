@@ -325,7 +325,7 @@
     }
   },
   "coverage": {
-    "atlas_vs_tree_sitter_zig_definition_ratio": 1.0,
+    "atlas_vs_tree_sitter_zig_definition_ratio": 1.0028,
     "atlas_zig_definition_symbols": 5294,
     "native_definitions": 5279
   },
