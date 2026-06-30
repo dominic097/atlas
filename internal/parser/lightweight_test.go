@@ -292,6 +292,42 @@ fn r#async(mut stderr: process::ChildStderr) -> StderrReader {
 	}
 }
 
+func TestParseSQLExtendedDDLDefinitions(t *testing.T) {
+	res, err := Parse("repo", "org/repo", "schema.sql", "", []byte(`
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+CREATE SCHEMA IF NOT EXISTS hdb_views;
+CREATE TEMP TABLE scratch_ids (id text);
+CREATE UNIQUE INDEX IF NOT EXISTS hdb_cron_events_unique_scheduled
+  ON hdb_catalog.hdb_cron_events (scheduled_time);
+CREATE INDEX ON hdb_catalog.event_log (trigger_id);
+CREATE MATERIALIZED VIEW hdb_catalog.event_stats AS SELECT 1;
+CREATE TYPE hdb_catalog.event_kind AS ENUM ('insert', 'update');
+CREATE SEQUENCE hdb_catalog.event_seq;
+`))
+	if err != nil {
+		t.Fatalf("Parse sql: %v", err)
+	}
+	want := map[string]string{
+		"pgcrypto":                             "extension",
+		"hdb_views":                            "schema",
+		"scratch_ids":                          "table",
+		"hdb_cron_events_unique_scheduled":     "index",
+		"hdb_catalog.event_log.trigger_id_idx": "index",
+		"hdb_catalog.event_stats":              "materialized_view",
+		"hdb_catalog.event_kind":               "type",
+		"hdb_catalog.event_seq":                "sequence",
+	}
+	for name, kind := range want {
+		sym := findSymbol(res.Symbols, name)
+		if sym == nil {
+			t.Fatalf("missing SQL %s %q; symbols=%+v", kind, name, res.Symbols)
+		}
+		if sym.Kind != kind {
+			t.Fatalf("%s kind = %q, want %q", name, sym.Kind, kind)
+		}
+	}
+}
+
 func TestParsePowerShellNativeDefinitions(t *testing.T) {
 	res, err := Parse("repo", "org/repo", "scripts/install.ps1", "", []byte(`
 using module './lib/common.psm1'
@@ -579,6 +615,41 @@ func TestParseRazorDefinitions(t *testing.T) {
 		if !containsString(res.Imports, wantImport) {
 			t.Fatalf("imports = %#v, want %q", res.Imports, wantImport)
 		}
+	}
+}
+
+func TestParseSQLNativeDefinitions(t *testing.T) {
+	res, err := Parse("repo", "org/repo", "migrations/43_to_42.sql", "", []byte(`
+CREATE TABLE hdb_catalog.event_log (
+  id uuid PRIMARY KEY
+);
+CREATE VIEW hdb_catalog.hdb_function_agg AS SELECT 1;
+CREATE FUNCTION hdb_catalog.notify() RETURNS trigger AS $$ BEGIN RETURN NEW; END; $$ LANGUAGE plpgsql;
+CREATE TRIGGER hdb_schema_update_event_notifier AFTER INSERT ON hdb_catalog.event_log EXECUTE PROCEDURE hdb_catalog.notify();
+CREATE INDEX event_log_trigger_name_idx ON hdb_catalog.event_log (trigger_name);
+CREATE UNIQUE INDEX IF NOT EXISTS hdb_cron_events_unique_scheduled ON hdb_catalog.hdb_cron_events (trigger_name);
+CREATE INDEX CONCURRENTLY event_log_created_at_idx ON hdb_catalog.event_log (created_at);
+CREATE INDEX ON hdb_catalog.event_log (delivered);
+`))
+	if err != nil {
+		t.Fatalf("Parse: %v", err)
+	}
+	for name, kind := range map[string]string{
+		"hdb_catalog.event_log":               "table",
+		"hdb_catalog.hdb_function_agg":        "view",
+		"hdb_catalog.notify":                  "function",
+		"hdb_schema_update_event_notifier":    "trigger",
+		"event_log_trigger_name_idx":          "index",
+		"hdb_cron_events_unique_scheduled":    "index",
+		"event_log_created_at_idx":            "index",
+		"hdb_catalog.event_log.delivered_idx": "index",
+	} {
+		if symbols := symbolsNamedKind(res.Symbols, name, kind); len(symbols) != 1 {
+			t.Fatalf("%s %s symbols = %+v, want exactly one definition", name, kind, symbols)
+		}
+	}
+	if symbols := symbolsNamedKind(res.Symbols, "ON", "index"); len(symbols) != 0 {
+		t.Fatalf("anonymous index emitted symbol %+v, want none", symbols)
 	}
 }
 

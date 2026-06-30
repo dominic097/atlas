@@ -45,32 +45,97 @@ func sqlDefinitionFromTokens(tokens []sqlToken, start int) (kind, name string, o
 	if i >= len(tokens) {
 		return "", "", false
 	}
-	switch strings.ToUpper(tokens[i].text) {
-	case "TABLE":
-		kind = "table"
-	case "VIEW":
-		kind = "view"
-	case "FUNCTION":
-		kind = "function"
-	case "PROCEDURE":
-		kind = "procedure"
-	case "TRIGGER":
-		kind = "trigger"
-	default:
-		return "", "", false
+	if strings.EqualFold(tokens[i].text, "TEMP") || strings.EqualFold(tokens[i].text, "TEMPORARY") || strings.EqualFold(tokens[i].text, "UNLOGGED") {
+		i++
+		if i >= len(tokens) {
+			return "", "", false
+		}
 	}
-	i++
+	if strings.EqualFold(tokens[i].text, "UNIQUE") {
+		i++
+		if i >= len(tokens) {
+			return "", "", false
+		}
+	}
+	if strings.EqualFold(tokens[i].text, "MATERIALIZED") {
+		if i+1 >= len(tokens) || !strings.EqualFold(tokens[i+1].text, "VIEW") {
+			return "", "", false
+		}
+		kind = "materialized_view"
+		i += 2
+	} else {
+		switch strings.ToUpper(tokens[i].text) {
+		case "TABLE":
+			kind = "table"
+		case "VIEW":
+			kind = "view"
+		case "FUNCTION":
+			kind = "function"
+		case "PROCEDURE":
+			kind = "procedure"
+		case "TRIGGER":
+			kind = "trigger"
+		case "INDEX":
+			kind = "index"
+		case "SEQUENCE":
+			kind = "sequence"
+		case "SCHEMA":
+			kind = "schema"
+		case "EXTENSION":
+			kind = "extension"
+		case "DOMAIN":
+			kind = "domain"
+		case "TYPE":
+			kind = "type"
+		case "POLICY":
+			kind = "policy"
+		default:
+			return "", "", false
+		}
+		i++
+	}
+	if kind == "index" && i < len(tokens) && strings.EqualFold(tokens[i].text, "CONCURRENTLY") {
+		i++
+	}
 	if i+2 < len(tokens) && strings.EqualFold(tokens[i].text, "IF") && strings.EqualFold(tokens[i+1].text, "NOT") && strings.EqualFold(tokens[i+2].text, "EXISTS") {
 		i += 3
 	}
 	if i >= len(tokens) {
 		return "", "", false
 	}
-	name = sqlTrimDDLName(tokens[i].text)
+	if kind == "index" && strings.EqualFold(tokens[i].text, "ON") {
+		name = sqlSyntheticIndexName(tokens, i)
+	} else {
+		name = sqlTrimDDLName(tokens[i].text)
+	}
 	if !sqlValidDDLName(name) {
 		return "", "", false
 	}
 	return kind, name, true
+}
+
+func sqlSyntheticIndexName(tokens []sqlToken, on int) string {
+	if on+1 >= len(tokens) {
+		return ""
+	}
+	table := sqlTrimDDLName(tokens[on+1].text)
+	if !sqlValidDDLName(table) {
+		return ""
+	}
+	firstPart := ""
+	for i := on + 2; i < len(tokens); i++ {
+		if tokens[i].text == ";" || strings.EqualFold(tokens[i].text, "WHERE") {
+			break
+		}
+		if tokens[i].text == "(" && i+1 < len(tokens) {
+			firstPart = sqlTrimDDLName(tokens[i+1].text)
+			break
+		}
+	}
+	if firstPart == "" || !sqlValidDDLName(firstPart) {
+		return table + ".index"
+	}
+	return table + "." + firstPart + "_idx"
 }
 
 func sqlDDLTokens(text string) []sqlToken {
