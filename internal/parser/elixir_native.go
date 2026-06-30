@@ -89,6 +89,12 @@ func elixirDefinitionDraft(call *tree_sitter.Node, content []byte) (symbolDraft,
 	case "defguard", "defguardp":
 		kind = "guard"
 		name = elixirCallableName(args)
+	case "defstruct":
+		kind = "struct"
+		name = elixirEnclosingModuleName(call, content)
+	case "defexception":
+		kind = "exception"
+		name = elixirEnclosingModuleName(call, content)
 	default:
 		return symbolDraft{}, false
 	}
@@ -147,6 +153,18 @@ func elixirModuleName(args string) string {
 func elixirCallableName(args string) string {
 	if match := elixirCallableNameRE.FindStringSubmatch(args); len(match) == 2 {
 		return match[1]
+	}
+	return ""
+}
+
+func elixirEnclosingModuleName(node *tree_sitter.Node, content []byte) string {
+	for cur := node.Parent(); cur != nil; cur = cur.Parent() {
+		if cur.Kind() != "call" || elixirCallHead(cur, content) != "defmodule" {
+			continue
+		}
+		if name := elixirModuleName(strings.TrimSpace(elixirArgumentsText(cur, content))); name != "" {
+			return name
+		}
 	}
 	return ""
 }

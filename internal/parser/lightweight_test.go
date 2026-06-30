@@ -838,6 +838,8 @@ defmodule Phoenix.Router do
   defdelegate reload!(endpoint, opts), to: Phoenix.CodeReloader.Server
   defguard is_ready(term) when is_atom(term)
   defguardp has_private(term) when is_binary(term)
+  defstruct [:id, :plug]
+  defexception [:message]
   def +(left, right), do: left + right
   def socket(path, module, opts \\ []) do
     {path, module, opts}
@@ -880,6 +882,17 @@ end
 		}
 		if sym.Kind != kind {
 			t.Fatalf("%s kind = %q, want %q", name, sym.Kind, kind)
+		}
+	}
+	for _, item := range []struct {
+		name string
+		kind string
+	}{
+		{"Phoenix.Router", "struct"},
+		{"Phoenix.Router", "exception"},
+	} {
+		if symbols := symbolsNamedKind(res.Symbols, item.name, item.kind); len(symbols) != 1 {
+			t.Fatalf("%s %s symbols = %+v, want exactly one definition", item.name, item.kind, symbols)
 		}
 	}
 	if !containsString(res.Imports, "Plug.Router") {
