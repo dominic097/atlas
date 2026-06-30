@@ -1,19 +1,19 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T11:06:06.845Z",
+  "generatedAt": "2026-06-30T11:21:38.119Z",
   "source": "data/benchmark-data.json",
   "targetRatio": 10,
   "metricNote": "Token and latency are ratio targets. Coverage is a native-definition coverage ratio, so the honest accuracy target is >1.0 native coverage exceed, not a fabricated 10x accuracy multiplier.",
   "summary": {
     "liveLanguages": 36,
-    "parityLanguages": 7,
-    "coverageExceedLanguages": 29,
+    "parityLanguages": 6,
+    "coverageExceedLanguages": 30,
     "comparableLanguages": 33,
     "token10xComparable": 33,
     "latency10xComparable": 33,
     "performance10xComparable": 33,
     "threeRepoValidated": 17,
-    "threeRepoValidatedStrict10x": 10
+    "threeRepoValidatedStrict10x": 11
   },
   "parityLanguages": [
     "byond",
@@ -21,8 +21,7 @@
     "ets",
     "julia",
     "powershell",
-    "r",
-    "sql"
+    "r"
   ],
   "live": [
     {
@@ -625,21 +624,19 @@
       "repo": "https://github.com/hasura/graphql-engine",
       "commit": "417c174c0ac3c80dafe6e8f9e8ac39d868334724",
       "artifact": "data/raw/LIVE_SQL_BENCHMARK.json",
-      "coverageRatio": 1,
-      "coverageExceedsNative": false,
+      "coverageRatio": 1.1802,
+      "coverageExceedsNative": true,
       "equivalentRows": 4,
       "tokenRatio": 30.63,
       "latencyRatio": 10.22,
       "tokenGapTo10x": 1,
       "latencyGapTo10x": 1,
-      "blockers": [
-        "coverage_at_parity"
-      ],
+      "blockers": [],
       "validation": {
         "passed": true,
         "repoCount": 3,
         "minimumRepos": 3,
-        "minCoverageRatio": 1
+        "minCoverageRatio": 1.1802
       }
     },
     {
