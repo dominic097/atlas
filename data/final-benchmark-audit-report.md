@@ -1,6 +1,6 @@
 # Atlas Final Benchmark Audit
 
-Generated: 2026-06-30T18:23:19.120Z
+Generated: 2026-06-30T18:29:48.059Z
 
 Final pass over Atlas benchmark artifacts: core matrix against Graphify plus native SCIP/LSP tools, live language artifacts against Graphify plus language-specific native/proxy baselines, and public three-repo validation metadata.
 
@@ -17,8 +17,11 @@ Final pass over Atlas benchmark artifacts: core matrix against Graphify plus nat
 - Validation repo rows: 105
 - Atlas replay-ready validation rows: 105
 - Graphify replay-ready validation rows: 105
+- Native/proxy command candidate validation rows: 105
 - Native/proxy command-ready validation rows: 0
 - Full remeasurement-ready artifacts: 0
+- Native command candidates with placeholders: 81
+- Native command candidates with ephemeral helper paths: 63
 - Precision evidence harness: present
 - Precision sampled name/location artifacts: 32
 - Precision kind-count-only artifacts: 4
@@ -49,54 +52,54 @@ Low-risk live languages: astro, csharp, fortran, groovy, julia, kotlin, lua, obj
 
 The validation remeasurement manifest audits replay readiness for public validation rows. It proves pinned Atlas and Graphify replay commands can be reconstructed, but it does not execute native/proxy counters unless executable per-repo native commands are present in the artifacts.
 
-Manifest: data/validation-remeasurement-manifest.md, generated 2026-06-30T18:23:19.046Z.
-Repo rows: 105; Atlas replay-ready: 105; Graphify replay-ready: 105; native/proxy command-ready: 0.
-Full remeasurement-ready artifacts: 0; proxy or detector-only code artifacts: 14.
+Manifest: data/validation-remeasurement-manifest.md, generated 2026-06-30T18:29:47.974Z.
+Repo rows: 105; Atlas replay-ready: 105; Graphify replay-ready: 105; native/proxy command candidates: 105; native/proxy command-ready: 0.
+Full remeasurement-ready artifacts: 0; candidates with placeholders: 81; candidates with ephemeral helper paths: 63; proxy or detector-only code artifacts: 14.
 
-| Language | Tool class | Risk | Repos | Atlas replay | Graphify replay | Native ready | Blockers |
-|---|---|---|--:|--:|--:|--:|---|
-| apex | source-counter-proxy | medium | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
-| astro | parser-library-baseline | low | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded |
-| bash | syntax-checker-proxy | medium | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
-| blade | source-counter-proxy | medium | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
-| byond | source-counter-proxy | medium | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
-| csharp | compiler-or-lsp-baseline | low | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded |
-| cuda | source-counter-proxy | medium | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
-| dart | tree-sitter-baseline | low | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded |
-| delphi | source-counter-proxy | medium | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
-| dotnet | scope-proxy | medium | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
-| ejs | graphify-detector-only-proxy | high | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, graphify_detector_only_or_weak_proxy_truth, native_or_proxy_remeasurement_command_not_recorded |
-| elixir | scope-proxy | medium | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
-| ets | graphify-detector-only-proxy | high | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, graphify_detector_only_or_weak_proxy_truth, native_or_proxy_remeasurement_command_not_recorded |
-| fortran | tree-sitter-baseline | low | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded |
-| groovy | tree-sitter-baseline | low | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded |
-| json | structured-format | structured | 0 | 0 | 0 | 0 | no_public_repo_validation_rows, structured_format_outside_code_parser_gate |
-| julia | tree-sitter-baseline | low | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded |
-| kotlin | tree-sitter-baseline | low | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded |
-| lua | parser-library-baseline | low | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded |
-| markdown | structured-format | structured | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded, structured_format_outside_code_parser_gate |
-| objc | tree-sitter-baseline | low | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded |
-| pascal | source-counter-proxy | medium | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
-| php | parser-library-baseline | low | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded |
-| powershell | parser-library-baseline | low | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded |
-| razor | source-counter-proxy | medium | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
-| ruby | parser-library-baseline | low | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded |
-| rust | compiler-or-lsp-baseline | low | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded |
-| r | graphify-detector-only-proxy | high | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, graphify_detector_only_or_weak_proxy_truth, native_or_proxy_remeasurement_command_not_recorded |
-| scala | tree-sitter-baseline | low | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded |
-| sql | parser-library-baseline | low | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded |
-| svelte | parser-library-baseline | low | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded |
-| swift | compiler-or-lsp-baseline | low | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded |
-| terraform | parser-library-baseline | low | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded |
-| verilog | scope-proxy | medium | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
-| vue | parser-library-baseline | low | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded |
-| zig | tree-sitter-baseline | low | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded |
+| Language | Tool class | Risk | Repos | Atlas replay | Graphify replay | Native candidates | Native ready | Blockers |
+|---|---|---|--:|--:|--:|--:|--:|---|
+| apex | source-counter-proxy | medium | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
+| astro | parser-library-baseline | low | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded |
+| bash | syntax-checker-proxy | medium | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_command_uses_unexpanded_file_list, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
+| blade | source-counter-proxy | medium | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
+| byond | source-counter-proxy | medium | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
+| csharp | compiler-or-lsp-baseline | low | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded |
+| cuda | source-counter-proxy | medium | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
+| dart | tree-sitter-baseline | low | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded |
+| delphi | source-counter-proxy | medium | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
+| dotnet | scope-proxy | medium | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
+| ejs | graphify-detector-only-proxy | high | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, graphify_detector_only_or_weak_proxy_truth, native_command_contains_placeholder, native_or_proxy_remeasurement_command_not_recorded |
+| elixir | scope-proxy | medium | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
+| ets | graphify-detector-only-proxy | high | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, graphify_detector_only_or_weak_proxy_truth, native_command_contains_placeholder, native_or_proxy_remeasurement_command_not_recorded |
+| fortran | tree-sitter-baseline | low | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded |
+| groovy | tree-sitter-baseline | low | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded |
+| json | structured-format | structured | 0 | 0 | 0 | 0 | 0 | no_public_repo_validation_rows, structured_format_outside_code_parser_gate |
+| julia | tree-sitter-baseline | low | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded |
+| kotlin | tree-sitter-baseline | low | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded |
+| lua | parser-library-baseline | low | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded |
+| markdown | structured-format | structured | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded, structured_format_outside_code_parser_gate |
+| objc | tree-sitter-baseline | low | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded |
+| pascal | source-counter-proxy | medium | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
+| php | parser-library-baseline | low | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded |
+| powershell | parser-library-baseline | low | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded |
+| razor | source-counter-proxy | medium | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
+| ruby | parser-library-baseline | low | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded |
+| rust | compiler-or-lsp-baseline | low | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_command_uses_unexpanded_file_list, native_or_proxy_remeasurement_command_not_recorded |
+| r | graphify-detector-only-proxy | high | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, graphify_detector_only_or_weak_proxy_truth, native_command_contains_placeholder, native_or_proxy_remeasurement_command_not_recorded |
+| scala | tree-sitter-baseline | low | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded |
+| sql | parser-library-baseline | low | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded |
+| svelte | parser-library-baseline | low | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded |
+| swift | compiler-or-lsp-baseline | low | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded |
+| terraform | parser-library-baseline | low | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded |
+| verilog | scope-proxy | medium | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
+| vue | parser-library-baseline | low | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded |
+| zig | tree-sitter-baseline | low | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded |
 
 ### Precision Evidence
 
 The precision manifest is an artifact-level audit of what the raw benchmark JSON can prove today: sampled query rows with matching symbol names and locations, native-vs-Atlas kind-count maps, or count-only gaps. It is not a full 99% precision oracle.
 
-Manifest: data/precision-evidence-manifest.md, generated 2026-06-30T18:23:18.548Z.
+Manifest: data/precision-evidence-manifest.md, generated 2026-06-30T18:29:47.488Z.
 Sampled name/location artifacts: 32; kind-count-only artifacts: 4; count-only artifacts: 0.
 Matched sampled query rows: 161/199; validation kind-map rows: 81.
 Artifacts with native metric kind maps: 27.
@@ -112,7 +115,7 @@ Artifacts with native metric kind maps: 27.
 
 The call-edge manifest audits what raw artifacts can prove today: receiver-typed call counts for the core matrix and call-count evidence for live artifacts. It does not prove receiver-type precision for live converted languages.
 
-Manifest: data/call-edge-evidence-manifest.md, generated 2026-06-30T18:23:18.713Z.
+Manifest: data/call-edge-evidence-manifest.md, generated 2026-06-30T18:29:47.654Z.
 Core receiver-typed calls: 5016/21254; live Atlas calls: 258529.
 Live receiver-typed artifacts: 0/36; live artifacts with call counts: 36/36.
 
@@ -159,7 +162,7 @@ Live receiver-typed artifacts: 0/36; live artifacts with call counts: 36/36.
 
 The Graphify support manifest separates deterministic extractor support from detector-only extension detection and sampled query rows with no Graphify equivalent.
 
-Manifest: data/graphify-support-manifest.md, generated 2026-06-30T18:23:18.881Z.
+Manifest: data/graphify-support-manifest.md, generated 2026-06-30T18:29:47.809Z.
 Deterministic discovery rows: 39; detector-only extensions: 3.
 Live deterministic artifacts: 33; live detector-only artifacts: 3; sampled Graphify-equivalent rows: 199/224.
 
@@ -217,7 +220,7 @@ Detector-only extensions:
 - The UI previously carried a hard-coded native tool manifest; this final pass renders tool status/version from provenance data so missing tools are no longer shown as healthy.
 - scip-java now resolves through the pinned bench/tools/scip-java-coursier launcher; Java is reported with both SCIP and JDTLS baselines present.
 - The committed public-repo validation harness regenerates data/public-repo-validation-manifest.* from raw live artifacts and fails when a code language lacks passing three-repo evidence.
-- The committed validation remeasurement readiness harness regenerates data/validation-remeasurement-manifest.* and separates Atlas/Graphify replay-ready validation rows from native/proxy rows that still lack executable per-repo commands.
+- The committed validation remeasurement readiness harness regenerates data/validation-remeasurement-manifest.* and separates Atlas/Graphify replay-ready validation rows, generated native/proxy command candidates, and native/proxy rows that still lack executable per-repo commands.
 - The committed precision-evidence harness regenerates data/precision-evidence-manifest.* from raw live artifacts and separates sampled symbol/location evidence from weaker kind-count-only rows.
 - The committed call-edge evidence harness regenerates data/call-edge-evidence-manifest.* from raw artifacts and separates core receiver-typed call evidence from live call-count-only rows.
 - The committed Graphify support harness regenerates data/graphify-support-manifest.* and separates deterministic extractor rows from detector-only extension support.
@@ -232,7 +235,7 @@ No hidden synthetic-row finding: No published benchmark row in the final dataset
 
 ## Improvement Todos
 
-- P1: Implement execution mode for validation remeasurement: the readiness manifest proves pinned Atlas/Graphify replay rows, but native/proxy counters still need executable per-repo commands and persisted output sets.
+- P1: Implement execution mode for validation remeasurement: the readiness manifest proves pinned Atlas/Graphify replay rows and native/proxy command candidates, but placeholder templates, ephemeral helper paths, and persisted output sets still need to be replaced with executable committed commands.
 - P1: Replace the source-counter, proxy, detector-only, and structured/project denominators listed in the weak-truth table with fuller compiler, LSP, tree-sitter, or parser-library denominators where available.
 - P1: Close precision gaps by persisting full native and Atlas symbol name/kind/location sets for every validation repo; the current harness proves only sampled query name/location rows plus kind-count maps where raw artifacts expose them.
 - P1: Extend receiver-type measurement into live converted tree-sitter artifacts; the current call-edge harness proves live call counts but receiver typing is only present in the core matrix artifacts.

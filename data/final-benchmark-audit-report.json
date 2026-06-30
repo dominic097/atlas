@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-30T18:23:19.120Z",
-  "benchmarkGeneratedAt": "2026-06-30T18:23:19.120Z",
+  "generatedAt": "2026-06-30T18:29:48.059Z",
+  "benchmarkGeneratedAt": "2026-06-30T18:29:48.059Z",
   "scope": "Final pass over Atlas benchmark artifacts: core matrix against Graphify plus native SCIP/LSP tools, live language artifacts against Graphify plus language-specific native/proxy baselines, and public three-repo validation metadata.",
   "summary": {
     "coreLanguages": 7,
@@ -19,8 +19,11 @@
     "validationRemeasurementRepoRows": 105,
     "validationRemeasurementAtlasReplayReadyRows": 105,
     "validationRemeasurementGraphifyReplayReadyRows": 105,
+    "validationRemeasurementNativeCandidateRows": 105,
     "validationRemeasurementNativeReadyRows": 0,
     "validationRemeasurementFullReadyArtifacts": 0,
+    "validationRemeasurementNativePlaceholderRows": 81,
+    "validationRemeasurementNativeEphemeralHelperRows": 63,
     "validationRemeasurementProxyOrDetectorArtifacts": 14,
     "precisionEvidenceHarness": true,
     "precisionNameLocationArtifacts": 32,
@@ -518,7 +521,7 @@
     "validationRemeasurement": {
       "statement": "The validation remeasurement manifest audits replay readiness for public validation rows. It proves pinned Atlas and Graphify replay commands can be reconstructed, but it does not execute native/proxy counters unless executable per-repo native commands are present in the artifacts.",
       "manifest": {
-        "generatedAt": "2026-06-30T18:23:19.046Z",
+        "generatedAt": "2026-06-30T18:29:47.974Z",
         "summary": {
           "artifacts": 36,
           "codeArtifacts": 34,
@@ -529,9 +532,12 @@
           "pinnedRepoRows": 105,
           "atlasReplayReadyRows": 105,
           "graphifyReplayReadyRows": 105,
+          "nativeRemeasurementCandidateRows": 105,
           "nativeRemeasurementReadyRows": 0,
           "fullRemeasurementReadyRows": 0,
           "fullRemeasurementReadyArtifacts": 0,
+          "nativeCandidatePlaceholderRows": 81,
+          "nativeCandidateEphemeralHelperRows": 63,
           "proxyOrDetectorCodeArtifacts": 14,
           "warnings": 35,
           "errors": 0,
@@ -545,9 +551,11 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_contains_placeholder",
               "native_or_proxy_remeasurement_command_not_recorded",
               "proxy_denominator_not_full_semantic_truth"
             ]
@@ -559,9 +567,11 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_uses_ephemeral_helper_path",
               "native_or_proxy_remeasurement_command_not_recorded"
             ]
           },
@@ -572,9 +582,12 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_contains_placeholder",
+              "native_command_uses_unexpanded_file_list",
               "native_or_proxy_remeasurement_command_not_recorded",
               "proxy_denominator_not_full_semantic_truth"
             ]
@@ -586,9 +599,11 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_contains_placeholder",
               "native_or_proxy_remeasurement_command_not_recorded",
               "proxy_denominator_not_full_semantic_truth"
             ]
@@ -600,9 +615,11 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_contains_placeholder",
               "native_or_proxy_remeasurement_command_not_recorded",
               "proxy_denominator_not_full_semantic_truth"
             ]
@@ -614,6 +631,7 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
@@ -627,9 +645,11 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_contains_placeholder",
               "native_or_proxy_remeasurement_command_not_recorded",
               "proxy_denominator_not_full_semantic_truth"
             ]
@@ -641,9 +661,12 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_contains_placeholder",
+              "native_command_uses_ephemeral_helper_path",
               "native_or_proxy_remeasurement_command_not_recorded"
             ]
           },
@@ -654,9 +677,11 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_contains_placeholder",
               "native_or_proxy_remeasurement_command_not_recorded",
               "proxy_denominator_not_full_semantic_truth"
             ]
@@ -668,9 +693,11 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_contains_placeholder",
               "native_or_proxy_remeasurement_command_not_recorded",
               "proxy_denominator_not_full_semantic_truth"
             ]
@@ -682,10 +709,12 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
               "graphify_detector_only_or_weak_proxy_truth",
+              "native_command_contains_placeholder",
               "native_or_proxy_remeasurement_command_not_recorded"
             ]
           },
@@ -696,9 +725,12 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_contains_placeholder",
+              "native_command_uses_ephemeral_helper_path",
               "native_or_proxy_remeasurement_command_not_recorded",
               "proxy_denominator_not_full_semantic_truth"
             ]
@@ -710,10 +742,12 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
               "graphify_detector_only_or_weak_proxy_truth",
+              "native_command_contains_placeholder",
               "native_or_proxy_remeasurement_command_not_recorded"
             ]
           },
@@ -724,9 +758,12 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_contains_placeholder",
+              "native_command_uses_ephemeral_helper_path",
               "native_or_proxy_remeasurement_command_not_recorded"
             ]
           },
@@ -737,9 +774,12 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_contains_placeholder",
+              "native_command_uses_ephemeral_helper_path",
               "native_or_proxy_remeasurement_command_not_recorded"
             ]
           },
@@ -750,6 +790,7 @@
             "repoCount": 0,
             "atlasReplayReadyRows": 0,
             "graphifyReplayReadyRows": 0,
+            "nativeRemeasurementCandidateRows": 0,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "no_public_repo_validation_rows",
@@ -763,9 +804,12 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_contains_placeholder",
+              "native_command_uses_ephemeral_helper_path",
               "native_or_proxy_remeasurement_command_not_recorded"
             ]
           },
@@ -776,9 +820,12 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_contains_placeholder",
+              "native_command_uses_ephemeral_helper_path",
               "native_or_proxy_remeasurement_command_not_recorded"
             ]
           },
@@ -789,9 +836,12 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_contains_placeholder",
+              "native_command_uses_ephemeral_helper_path",
               "native_or_proxy_remeasurement_command_not_recorded"
             ]
           },
@@ -802,9 +852,12 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_contains_placeholder",
+              "native_command_uses_ephemeral_helper_path",
               "native_or_proxy_remeasurement_command_not_recorded",
               "structured_format_outside_code_parser_gate"
             ]
@@ -816,9 +869,12 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_contains_placeholder",
+              "native_command_uses_ephemeral_helper_path",
               "native_or_proxy_remeasurement_command_not_recorded"
             ]
           },
@@ -829,9 +885,11 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_contains_placeholder",
               "native_or_proxy_remeasurement_command_not_recorded",
               "proxy_denominator_not_full_semantic_truth"
             ]
@@ -843,9 +901,11 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_uses_ephemeral_helper_path",
               "native_or_proxy_remeasurement_command_not_recorded"
             ]
           },
@@ -856,9 +916,11 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_uses_ephemeral_helper_path",
               "native_or_proxy_remeasurement_command_not_recorded"
             ]
           },
@@ -869,9 +931,11 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_contains_placeholder",
               "native_or_proxy_remeasurement_command_not_recorded",
               "proxy_denominator_not_full_semantic_truth"
             ]
@@ -883,9 +947,11 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_uses_ephemeral_helper_path",
               "native_or_proxy_remeasurement_command_not_recorded"
             ]
           },
@@ -896,9 +962,12 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_contains_placeholder",
+              "native_command_uses_unexpanded_file_list",
               "native_or_proxy_remeasurement_command_not_recorded"
             ]
           },
@@ -909,10 +978,12 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
               "graphify_detector_only_or_weak_proxy_truth",
+              "native_command_contains_placeholder",
               "native_or_proxy_remeasurement_command_not_recorded"
             ]
           },
@@ -923,9 +994,12 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_contains_placeholder",
+              "native_command_uses_ephemeral_helper_path",
               "native_or_proxy_remeasurement_command_not_recorded"
             ]
           },
@@ -936,9 +1010,12 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_contains_placeholder",
+              "native_command_uses_ephemeral_helper_path",
               "native_or_proxy_remeasurement_command_not_recorded"
             ]
           },
@@ -949,9 +1026,11 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_uses_ephemeral_helper_path",
               "native_or_proxy_remeasurement_command_not_recorded"
             ]
           },
@@ -962,9 +1041,11 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_uses_ephemeral_helper_path",
               "native_or_proxy_remeasurement_command_not_recorded"
             ]
           },
@@ -975,9 +1056,12 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_contains_placeholder",
+              "native_command_uses_ephemeral_helper_path",
               "native_or_proxy_remeasurement_command_not_recorded"
             ]
           },
@@ -988,9 +1072,12 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_contains_placeholder",
+              "native_command_uses_ephemeral_helper_path",
               "native_or_proxy_remeasurement_command_not_recorded",
               "proxy_denominator_not_full_semantic_truth"
             ]
@@ -1002,9 +1089,11 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_uses_ephemeral_helper_path",
               "native_or_proxy_remeasurement_command_not_recorded"
             ]
           },
@@ -1015,9 +1104,12 @@
             "repoCount": 3,
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
+            "nativeRemeasurementCandidateRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
+              "native_command_contains_placeholder",
+              "native_command_uses_ephemeral_helper_path",
               "native_or_proxy_remeasurement_command_not_recorded"
             ]
           }
@@ -1027,7 +1119,7 @@
     "precisionEvidence": {
       "statement": "The precision manifest is an artifact-level audit of what the raw benchmark JSON can prove today: sampled query rows with matching symbol names and locations, native-vs-Atlas kind-count maps, or count-only gaps. It is not a full 99% precision oracle.",
       "manifest": {
-        "generatedAt": "2026-06-30T18:23:18.548Z",
+        "generatedAt": "2026-06-30T18:29:47.488Z",
         "summary": {
           "artifacts": 36,
           "sampledNameLocationArtifacts": 32,
@@ -1140,7 +1232,7 @@
     "callEdgeEvidence": {
       "statement": "The call-edge manifest audits what raw artifacts can prove today: receiver-typed call counts for the core matrix and call-count evidence for live artifacts. It does not prove receiver-type precision for live converted languages.",
       "manifest": {
-        "generatedAt": "2026-06-30T18:23:18.713Z",
+        "generatedAt": "2026-06-30T18:29:47.654Z",
         "summary": {
           "coreLanguages": 7,
           "coreReceiverTypedLanguages": 7,
@@ -1449,7 +1541,7 @@
     "graphifySupport": {
       "statement": "The Graphify support manifest separates deterministic extractor support from detector-only extension detection and sampled query rows with no Graphify equivalent.",
       "manifest": {
-        "generatedAt": "2026-06-30T18:23:18.881Z",
+        "generatedAt": "2026-06-30T18:29:47.809Z",
         "summary": {
           "graphifyVersion": "graphifyy 0.8.49",
           "dispatchCount": 89,
@@ -1648,7 +1740,7 @@
       "The UI previously carried a hard-coded native tool manifest; this final pass renders tool status/version from provenance data so missing tools are no longer shown as healthy.",
       "scip-java now resolves through the pinned bench/tools/scip-java-coursier launcher; Java is reported with both SCIP and JDTLS baselines present.",
       "The committed public-repo validation harness regenerates data/public-repo-validation-manifest.* from raw live artifacts and fails when a code language lacks passing three-repo evidence.",
-      "The committed validation remeasurement readiness harness regenerates data/validation-remeasurement-manifest.* and separates Atlas/Graphify replay-ready validation rows from native/proxy rows that still lack executable per-repo commands.",
+      "The committed validation remeasurement readiness harness regenerates data/validation-remeasurement-manifest.* and separates Atlas/Graphify replay-ready validation rows, generated native/proxy command candidates, and native/proxy rows that still lack executable per-repo commands.",
       "The committed precision-evidence harness regenerates data/precision-evidence-manifest.* from raw live artifacts and separates sampled symbol/location evidence from weaker kind-count-only rows.",
       "The committed call-edge evidence harness regenerates data/call-edge-evidence-manifest.* from raw artifacts and separates core receiver-typed call evidence from live call-count-only rows.",
       "The committed Graphify support harness regenerates data/graphify-support-manifest.* and separates deterministic extractor rows from detector-only extension support.",
@@ -1667,7 +1759,7 @@
   "improvementTodos": [
     {
       "priority": "P1",
-      "item": "Implement execution mode for validation remeasurement: the readiness manifest proves pinned Atlas/Graphify replay rows, but native/proxy counters still need executable per-repo commands and persisted output sets."
+      "item": "Implement execution mode for validation remeasurement: the readiness manifest proves pinned Atlas/Graphify replay rows and native/proxy command candidates, but placeholder templates, ephemeral helper paths, and persisted output sets still need to be replaced with executable committed commands."
     },
     {
       "priority": "P1",

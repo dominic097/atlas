@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T18:23:19.046Z",
+  "generatedAt": "2026-06-30T18:29:47.974Z",
   "source": "data/raw/LIVE_*_BENCHMARK.json",
   "harness": "scripts/validation-remeasurement-harness.mjs",
   "summary": {
@@ -13,9 +13,12 @@
     "pinnedRepoRows": 105,
     "atlasReplayReadyRows": 105,
     "graphifyReplayReadyRows": 105,
+    "nativeRemeasurementCandidateRows": 105,
     "nativeRemeasurementReadyRows": 0,
     "fullRemeasurementReadyRows": 0,
     "fullRemeasurementReadyArtifacts": 0,
+    "nativeCandidatePlaceholderRows": 81,
+    "nativeCandidateEphemeralHelperRows": 63,
     "proxyOrDetectorCodeArtifacts": 14,
     "warnings": 35,
     "errors": 0,
@@ -76,9 +79,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 3,
+      "nativeCandidateEphemeralHelperRows": 0,
       "minCoverageRatio": 1.0607,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -86,6 +92,7 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_contains_placeholder",
         "native_or_proxy_remeasurement_command_not_recorded",
         "proxy_denominator_not_full_semantic_truth"
       ],
@@ -103,10 +110,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -118,6 +127,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/apex/01-aquivalabs__my-org-butler/graphify-out",
             "(cd work/apex/01-aquivalabs__my-org-butler && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "python3 <apex source counter> work/apex/01-aquivalabs__my-org-butler"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -134,10 +149,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -149,6 +166,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/apex/02-cirruspath__stripeforce/graphify-out",
             "(cd work/apex/02-cirruspath__stripeforce && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "python3 <apex source counter> work/apex/02-cirruspath__stripeforce"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -165,10 +188,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -180,6 +205,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/apex/03-codefriar__promise/graphify-out",
             "(cd work/apex/03-codefriar__promise && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "python3 <apex source counter> work/apex/03-codefriar__promise"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -201,9 +232,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 0,
+      "nativeCandidateEphemeralHelperRows": 3,
       "minCoverageRatio": 1,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -211,6 +245,7 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_uses_ephemeral_helper_path",
         "native_or_proxy_remeasurement_command_not_recorded"
       ],
       "repos": [
@@ -227,10 +262,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -241,6 +278,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/astro/01-cssninjaStudio__krypton/graphify-out",
             "(cd work/astro/01-cssninjaStudio__krypton && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/opt/homebrew/bin/node /tmp/atlas-live-astro-blog-tutorial/astro-compiler/astro_stats.js work/astro/01-cssninjaStudio__krypton"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -257,10 +300,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -271,6 +316,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/astro/02-natemoo-re__astro-remote/graphify-out",
             "(cd work/astro/02-natemoo-re__astro-remote && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/opt/homebrew/bin/node /tmp/atlas-live-astro-blog-tutorial/astro-compiler/astro_stats.js work/astro/02-natemoo-re__astro-remote"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -287,10 +338,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -301,6 +354,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/astro/03-MaeWolff__astro-portfolio-template/graphify-out",
             "(cd work/astro/03-MaeWolff__astro-portfolio-template && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/opt/homebrew/bin/node /tmp/atlas-live-astro-blog-tutorial/astro-compiler/astro_stats.js work/astro/03-MaeWolff__astro-portfolio-template"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -322,9 +381,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 3,
+      "nativeCandidateEphemeralHelperRows": 0,
       "minCoverageRatio": 1,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -332,6 +394,8 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_contains_placeholder",
+        "native_command_uses_unexpanded_file_list",
         "native_or_proxy_remeasurement_command_not_recorded",
         "proxy_denominator_not_full_semantic_truth"
       ],
@@ -349,10 +413,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_unexpanded_file_list",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -364,6 +431,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/bash/01-nvm-sh__nvm/graphify-out",
             "(cd work/bash/01-nvm-sh__nvm && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/bin/bash -n plus source function counter <5 shell files>"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_unexpanded_file_list"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -380,10 +454,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_unexpanded_file_list",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -395,6 +472,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/bash/02-rbenv__rbenv/graphify-out",
             "(cd work/bash/02-rbenv__rbenv && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/bin/bash -n plus source function counter <5 shell files>"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_unexpanded_file_list"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -411,10 +495,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_unexpanded_file_list",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -426,6 +513,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/bash/03-pyenv__pyenv/graphify-out",
             "(cd work/bash/03-pyenv__pyenv && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/bin/bash -n plus source function counter <5 shell files>"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_unexpanded_file_list"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -447,9 +541,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 3,
+      "nativeCandidateEphemeralHelperRows": 0,
       "minCoverageRatio": 1.0121,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -457,6 +554,7 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_contains_placeholder",
         "native_or_proxy_remeasurement_command_not_recorded",
         "proxy_denominator_not_full_semantic_truth"
       ],
@@ -474,10 +572,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -489,6 +589,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/blade/01-BookStackApp__BookStack/resources/views/graphify-out",
             "(cd work/blade/01-BookStackApp__BookStack/resources/views && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "python3 <blade directive counter> work/blade/01-BookStackApp__BookStack/resources/views"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -505,10 +611,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -520,6 +628,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/blade/02-coollabsio__coolify/resources/views/graphify-out",
             "(cd work/blade/02-coollabsio__coolify/resources/views && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "python3 <blade directive counter> work/blade/02-coollabsio__coolify/resources/views"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -536,10 +650,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -551,6 +667,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/blade/03-koel__koel/resources/views/graphify-out",
             "(cd work/blade/03-koel__koel/resources/views && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "python3 <blade directive counter> work/blade/03-koel__koel/resources/views"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -572,9 +694,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 3,
+      "nativeCandidateEphemeralHelperRows": 0,
       "minCoverageRatio": 1,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -582,6 +707,7 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_contains_placeholder",
         "native_or_proxy_remeasurement_command_not_recorded",
         "proxy_denominator_not_full_semantic_truth"
       ],
@@ -599,10 +725,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -614,6 +742,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/byond/01-tgstation__tgstation/code/modules/mob/graphify-out",
             "(cd work/byond/01-tgstation__tgstation/code/modules/mob && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "python3 <byond source counter> work/byond/01-tgstation__tgstation/code/modules/mob"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -630,10 +764,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -645,6 +781,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/byond/02-goonstation__goonstation/code/modules/speech/graphify-out",
             "(cd work/byond/02-goonstation__goonstation/code/modules/speech && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "python3 <byond source counter> work/byond/02-goonstation__goonstation/code/modules/speech"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -661,10 +803,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -676,6 +820,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/byond/03-ParadiseSS13__Paradise/code/modules/mob/graphify-out",
             "(cd work/byond/03-ParadiseSS13__Paradise/code/modules/mob && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "python3 <byond source counter> work/byond/03-ParadiseSS13__Paradise/code/modules/mob"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -697,9 +847,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 0,
+      "nativeCandidateEphemeralHelperRows": 0,
       "minCoverageRatio": 1.2411,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -723,6 +876,7 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -738,6 +892,10 @@
             "rm -rf work/csharp/01-Ceiridge__Chrome-Developer-Mode-Extension-Warning-Patcher/graphify-out",
             "(cd work/csharp/01-Ceiridge__Chrome-Developer-Mode-Extension-Warning-Patcher && uv tool run --from graphifyy graphify update .)"
           ],
+          "nativeRemeasurementCandidateCommands": [
+            "/opt/homebrew/bin/dotnet run --no-build -- work/csharp/01-Ceiridge__Chrome-Developer-Mode-Extension-Warning-Patcher (Roslyn syntax tree counter)"
+          ],
+          "nativeRemeasurementCandidateBlockers": [],
           "nativeRemeasurementCommands": []
         },
         {
@@ -753,6 +911,7 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -768,6 +927,10 @@
             "rm -rf work/csharp/02-Viladoman__StructLayout/graphify-out",
             "(cd work/csharp/02-Viladoman__StructLayout && uv tool run --from graphifyy graphify update .)"
           ],
+          "nativeRemeasurementCandidateCommands": [
+            "/opt/homebrew/bin/dotnet run --no-build -- work/csharp/02-Viladoman__StructLayout (Roslyn syntax tree counter)"
+          ],
+          "nativeRemeasurementCandidateBlockers": [],
           "nativeRemeasurementCommands": []
         },
         {
@@ -783,6 +946,7 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -798,6 +962,10 @@
             "rm -rf work/csharp/03-b2developer__MonopolyNEAT/graphify-out",
             "(cd work/csharp/03-b2developer__MonopolyNEAT && uv tool run --from graphifyy graphify update .)"
           ],
+          "nativeRemeasurementCandidateCommands": [
+            "/opt/homebrew/bin/dotnet run --no-build -- work/csharp/03-b2developer__MonopolyNEAT (Roslyn syntax tree counter)"
+          ],
+          "nativeRemeasurementCandidateBlockers": [],
           "nativeRemeasurementCommands": []
         }
       ]
@@ -818,9 +986,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 3,
+      "nativeCandidateEphemeralHelperRows": 0,
       "minCoverageRatio": 2.5753,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -828,6 +999,7 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_contains_placeholder",
         "native_or_proxy_remeasurement_command_not_recorded",
         "proxy_denominator_not_full_semantic_truth"
       ],
@@ -845,10 +1017,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -860,6 +1034,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/cuda/01-MegviiRobot__MegBA/graphify-out",
             "(cd work/cuda/01-MegviiRobot__MegBA && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "python3 <cuda source counter> work/cuda/01-MegviiRobot__MegBA"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -876,10 +1056,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -891,6 +1073,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/cuda/02-dnouri__cuda-convnet/graphify-out",
             "(cd work/cuda/02-dnouri__cuda-convnet && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "python3 <cuda source counter> work/cuda/02-dnouri__cuda-convnet"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -907,10 +1095,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -922,6 +1112,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/cuda/03-ashawkey__diff-gaussian-rasterization/graphify-out",
             "(cd work/cuda/03-ashawkey__diff-gaussian-rasterization && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "python3 <cuda source counter> work/cuda/03-ashawkey__diff-gaussian-rasterization"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -943,9 +1139,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 3,
+      "nativeCandidateEphemeralHelperRows": 3,
       "minCoverageRatio": 1.3222,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -953,6 +1152,8 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_contains_placeholder",
+        "native_command_uses_ephemeral_helper_path",
         "native_or_proxy_remeasurement_command_not_recorded"
       ],
       "repos": [
@@ -969,10 +1170,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -983,6 +1187,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/dart/01-dart-lang__http/pkgs/http/lib/graphify-out",
             "(cd work/dart/01-dart-lang__http/pkgs/http/lib && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-dart-http/tree-sitter-dart-venv/bin/python -c <tree-sitter-dart definition counter> work/dart/01-dart-lang__http/pkgs/http/lib"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -999,10 +1210,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -1013,6 +1227,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/dart/02-dart-lang__path/lib/graphify-out",
             "(cd work/dart/02-dart-lang__path/lib && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-dart-http/tree-sitter-dart-venv/bin/python -c <tree-sitter-dart definition counter> work/dart/02-dart-lang__path/lib"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -1029,10 +1250,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -1043,6 +1267,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/dart/03-dart-lang__args/lib/graphify-out",
             "(cd work/dart/03-dart-lang__args/lib && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-dart-http/tree-sitter-dart-venv/bin/python -c <tree-sitter-dart definition counter> work/dart/03-dart-lang__args/lib"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -1064,9 +1295,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 3,
+      "nativeCandidateEphemeralHelperRows": 0,
       "minCoverageRatio": 1,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -1074,6 +1308,7 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_contains_placeholder",
         "native_or_proxy_remeasurement_command_not_recorded",
         "proxy_denominator_not_full_semantic_truth"
       ],
@@ -1091,10 +1326,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -1106,6 +1343,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/delphi/01-fpc__Lazarus/ide/graphify-out",
             "(cd work/delphi/01-fpc__Lazarus/ide && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "python3 <delphi/lazarus source counter> work/delphi/01-fpc__Lazarus/ide"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -1122,10 +1365,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -1137,6 +1382,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/delphi/02-transmission-remote-gui__transgui/graphify-out",
             "(cd work/delphi/02-transmission-remote-gui__transgui && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "python3 <delphi/lazarus source counter> work/delphi/02-transmission-remote-gui__transgui"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -1153,10 +1404,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -1168,6 +1421,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/delphi/03-castle-engine__castle-engine/tools/graphify-out",
             "(cd work/delphi/03-castle-engine__castle-engine/tools && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "python3 <delphi/lazarus source counter> work/delphi/03-castle-engine__castle-engine/tools"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -1189,9 +1448,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 3,
+      "nativeCandidateEphemeralHelperRows": 0,
       "minCoverageRatio": 1,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -1199,6 +1461,7 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_contains_placeholder",
         "native_or_proxy_remeasurement_command_not_recorded",
         "proxy_denominator_not_full_semantic_truth"
       ],
@@ -1216,10 +1479,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -1231,6 +1496,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/dotnet/01-Far0n__xgbfi/graphify-out",
             "(cd work/dotnet/01-Far0n__xgbfi && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/opt/homebrew/bin/python3 -c <dotnet project counter> work/dotnet/01-Far0n__xgbfi"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -1247,10 +1518,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -1262,6 +1535,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/dotnet/02-Viladoman__StructLayout/graphify-out",
             "(cd work/dotnet/02-Viladoman__StructLayout && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/opt/homebrew/bin/python3 -c <dotnet project counter> work/dotnet/02-Viladoman__StructLayout"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -1278,10 +1557,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -1293,6 +1574,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/dotnet/03-b2developer__MonopolyNEAT/graphify-out",
             "(cd work/dotnet/03-b2developer__MonopolyNEAT && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/opt/homebrew/bin/python3 -c <dotnet project counter> work/dotnet/03-b2developer__MonopolyNEAT"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -1314,9 +1601,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 3,
+      "nativeCandidateEphemeralHelperRows": 0,
       "minCoverageRatio": 1,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -1325,6 +1615,7 @@
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
         "graphify_detector_only_or_weak_proxy_truth",
+        "native_command_contains_placeholder",
         "native_or_proxy_remeasurement_command_not_recorded"
       ],
       "repos": [
@@ -1341,10 +1632,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "graphify_detector_only_or_weak_proxy_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -1356,6 +1649,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/ejs/01-aws-samples__eb-node-express-sample/graphify-out",
             "(cd work/ejs/01-aws-samples__eb-node-express-sample && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "python3 <ejs template counter> work/ejs/01-aws-samples__eb-node-express-sample"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -1372,10 +1671,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "graphify_detector_only_or_weak_proxy_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -1387,6 +1688,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/ejs/02-ActiveCampaign__PactMaker/graphify-out",
             "(cd work/ejs/02-ActiveCampaign__PactMaker && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "python3 <ejs template counter> work/ejs/02-ActiveCampaign__PactMaker"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -1403,10 +1710,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "graphify_detector_only_or_weak_proxy_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -1418,6 +1727,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/ejs/03-codemistic__HacktoberFest/graphify-out",
             "(cd work/ejs/03-codemistic__HacktoberFest && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "python3 <ejs template counter> work/ejs/03-codemistic__HacktoberFest"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -1439,9 +1754,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 3,
+      "nativeCandidateEphemeralHelperRows": 3,
       "minCoverageRatio": 1,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -1449,6 +1767,8 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_contains_placeholder",
+        "native_command_uses_ephemeral_helper_path",
         "native_or_proxy_remeasurement_command_not_recorded",
         "proxy_denominator_not_full_semantic_truth"
       ],
@@ -1466,10 +1786,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -1481,6 +1804,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/elixir/01-phoenixframework__phoenix/lib/graphify-out",
             "(cd work/elixir/01-phoenixframework__phoenix/lib && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-elixir-phoenix/tree-sitter-elixir-venv/bin/python -c <tree-sitter-elixir definition counter> work/elixir/01-phoenixframework__phoenix/lib"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -1497,10 +1827,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -1512,6 +1845,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/elixir/02-elixir-plug__plug/lib/graphify-out",
             "(cd work/elixir/02-elixir-plug__plug/lib && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-elixir-phoenix/tree-sitter-elixir-venv/bin/python -c <tree-sitter-elixir definition counter> work/elixir/02-elixir-plug__plug/lib"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -1528,10 +1868,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -1543,6 +1886,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/elixir/03-elixir-ecto__ecto/lib/graphify-out",
             "(cd work/elixir/03-elixir-ecto__ecto/lib && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-elixir-phoenix/tree-sitter-elixir-venv/bin/python -c <tree-sitter-elixir definition counter> work/elixir/03-elixir-ecto__ecto/lib"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -1564,9 +1914,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 3,
+      "nativeCandidateEphemeralHelperRows": 0,
       "minCoverageRatio": 1.0229,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -1575,6 +1928,7 @@
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
         "graphify_detector_only_or_weak_proxy_truth",
+        "native_command_contains_placeholder",
         "native_or_proxy_remeasurement_command_not_recorded"
       ],
       "repos": [
@@ -1591,10 +1945,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "graphify_detector_only_or_weak_proxy_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -1606,6 +1962,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/ets/01-openharmony__applications_app_samples/code/ArkTS1.2/TabsSample/entry/src/main/ets/graphify-out",
             "(cd work/ets/01-openharmony__applications_app_samples/code/ArkTS1.2/TabsSample/entry/src/main/ets && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "python3 <ets source counter> work/ets/01-openharmony__applications_app_samples/code/ArkTS1.2/TabsSample/entry/src/main/ets"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -1622,10 +1984,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "graphify_detector_only_or_weak_proxy_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -1637,6 +2001,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/ets/02-openharmony__codelabs/Ability/PagesRouter/entry/src/main/ets/graphify-out",
             "(cd work/ets/02-openharmony__codelabs/Ability/PagesRouter/entry/src/main/ets && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "python3 <ets source counter> work/ets/02-openharmony__codelabs/Ability/PagesRouter/entry/src/main/ets"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -1653,10 +2023,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "graphify_detector_only_or_weak_proxy_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -1668,6 +2040,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/ets/03-openharmony__applications_filepicker/entry/src/main/ets/graphify-out",
             "(cd work/ets/03-openharmony__applications_filepicker/entry/src/main/ets && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "python3 <ets source counter> work/ets/03-openharmony__applications_filepicker/entry/src/main/ets"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -1689,9 +2067,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 3,
+      "nativeCandidateEphemeralHelperRows": 3,
       "minCoverageRatio": 1,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -1699,6 +2080,8 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_contains_placeholder",
+        "native_command_uses_ephemeral_helper_path",
         "native_or_proxy_remeasurement_command_not_recorded"
       ],
       "repos": [
@@ -1715,10 +2098,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -1729,6 +2115,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/fortran/01-fortran-lang__stdlib/src/graphify-out",
             "(cd work/fortran/01-fortran-lang__stdlib/src && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-fortran-stdlib/tree-sitter-fortran-venv/bin/python -c <tree-sitter-fortran definition counter> /tmp/atlas-live-fortran-stdlib/repo/src"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -1745,10 +2138,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -1759,6 +2155,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/fortran/02-fortran-lang__fpm/src/graphify-out",
             "(cd work/fortran/02-fortran-lang__fpm/src && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-fortran-stdlib/tree-sitter-fortran-venv/bin/python -c <tree-sitter-fortran definition counter> /tmp/atlas-live-fortran-stdlib/repo/src"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -1775,10 +2178,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -1789,6 +2195,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/fortran/03-jacobwilliams__json-fortran/src/graphify-out",
             "(cd work/fortran/03-jacobwilliams__json-fortran/src && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-fortran-stdlib/tree-sitter-fortran-venv/bin/python -c <tree-sitter-fortran definition counter> /tmp/atlas-live-fortran-stdlib/repo/src"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -1810,9 +2223,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 3,
+      "nativeCandidateEphemeralHelperRows": 3,
       "minCoverageRatio": 1.0857,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -1820,6 +2236,8 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_contains_placeholder",
+        "native_command_uses_ephemeral_helper_path",
         "native_or_proxy_remeasurement_command_not_recorded"
       ],
       "repos": [
@@ -1836,10 +2254,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -1850,6 +2271,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/groovy/01-jvoegele__gradle-android-plugin/graphify-out",
             "(cd work/groovy/01-jvoegele__gradle-android-plugin && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-groovy-nextflow/tree-sitter-groovy-venv/bin/python -c <tree-sitter-groovy definition counter> work/groovy/01-jvoegele__gradle-android-plugin"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -1866,10 +2294,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -1880,6 +2311,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/groovy/02-allegro__json-avro-converter/graphify-out",
             "(cd work/groovy/02-allegro__json-avro-converter && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-groovy-nextflow/tree-sitter-groovy-venv/bin/python -c <tree-sitter-groovy definition counter> work/groovy/02-allegro__json-avro-converter"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -1896,10 +2334,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -1910,6 +2351,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/groovy/03-jaredsburrows__gradle-license-plugin/graphify-out",
             "(cd work/groovy/03-jaredsburrows__gradle-license-plugin && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-groovy-nextflow/tree-sitter-groovy-venv/bin/python -c <tree-sitter-groovy definition counter> work/groovy/03-jaredsburrows__gradle-license-plugin"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -1931,9 +2379,12 @@
       "pinnedRows": 0,
       "atlasReplayReadyRows": 0,
       "graphifyReplayReadyRows": 0,
+      "nativeRemeasurementCandidateRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 0,
+      "nativeCandidateEphemeralHelperRows": 0,
       "minCoverageRatio": null,
       "warnings": [],
       "errors": [],
@@ -1959,9 +2410,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 3,
+      "nativeCandidateEphemeralHelperRows": 3,
       "minCoverageRatio": 1.0037,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -1969,6 +2423,8 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_contains_placeholder",
+        "native_command_uses_ephemeral_helper_path",
         "native_or_proxy_remeasurement_command_not_recorded"
       ],
       "repos": [
@@ -1985,10 +2441,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -1999,6 +2458,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/julia/01-JuliaIO__JSON.jl/src/graphify-out",
             "(cd work/julia/01-JuliaIO__JSON.jl/src && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-julia-json/tree-sitter-julia-venv/bin/python -c <tree-sitter-julia definition counter> work/julia/01-JuliaIO__JSON.jl/src"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -2015,10 +2481,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -2029,6 +2498,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/julia/02-JuliaData__DataFrames.jl/src/graphify-out",
             "(cd work/julia/02-JuliaData__DataFrames.jl/src && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-julia-json/tree-sitter-julia-venv/bin/python -c <tree-sitter-julia definition counter> work/julia/02-JuliaData__DataFrames.jl/src"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -2045,10 +2521,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -2059,6 +2538,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/julia/03-JuliaStats__StatsBase.jl/src/graphify-out",
             "(cd work/julia/03-JuliaStats__StatsBase.jl/src && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-julia-json/tree-sitter-julia-venv/bin/python -c <tree-sitter-julia definition counter> work/julia/03-JuliaStats__StatsBase.jl/src"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -2080,9 +2566,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 3,
+      "nativeCandidateEphemeralHelperRows": 3,
       "minCoverageRatio": 1.3429,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -2090,6 +2579,8 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_contains_placeholder",
+        "native_command_uses_ephemeral_helper_path",
         "native_or_proxy_remeasurement_command_not_recorded"
       ],
       "repos": [
@@ -2106,10 +2597,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -2120,6 +2614,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/kotlin/01-gothinkster__kotlin-spring-realworld-example-app/graphify-out",
             "(cd work/kotlin/01-gothinkster__kotlin-spring-realworld-example-app && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-kotlin-okhttp/tree-sitter-kotlin-venv/bin/python -c <tree-sitter-kotlin definition counter> work/kotlin/01-gothinkster__kotlin-spring-realworld-example-app"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -2136,10 +2637,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -2150,6 +2654,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/kotlin/02-VKCOM__vk-android-sdk/graphify-out",
             "(cd work/kotlin/02-VKCOM__vk-android-sdk && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-kotlin-okhttp/tree-sitter-kotlin-venv/bin/python -c <tree-sitter-kotlin definition counter> work/kotlin/02-VKCOM__vk-android-sdk"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -2166,10 +2677,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -2180,6 +2694,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/kotlin/03-husaynhakeem__android-face-detector/graphify-out",
             "(cd work/kotlin/03-husaynhakeem__android-face-detector && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-kotlin-okhttp/tree-sitter-kotlin-venv/bin/python -c <tree-sitter-kotlin definition counter> work/kotlin/03-husaynhakeem__android-face-detector"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -2201,9 +2722,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 3,
+      "nativeCandidateEphemeralHelperRows": 3,
       "minCoverageRatio": 1,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -2211,6 +2735,8 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_contains_placeholder",
+        "native_command_uses_ephemeral_helper_path",
         "native_or_proxy_remeasurement_command_not_recorded"
       ],
       "repos": [
@@ -2227,10 +2753,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -2241,6 +2770,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/lua/01-pandoc-scholar__pandoc-scholar/graphify-out",
             "(cd work/lua/01-pandoc-scholar__pandoc-scholar && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-lua-lazy/luaparser-venv/bin/python -c <luaparser definition counter> work/lua/01-pandoc-scholar__pandoc-scholar"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -2257,10 +2793,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -2271,6 +2810,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/lua/02-Kaixhin__Autoencoders/graphify-out",
             "(cd work/lua/02-Kaixhin__Autoencoders && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-lua-lazy/luaparser-venv/bin/python -c <luaparser definition counter> work/lua/02-Kaixhin__Autoencoders"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -2287,10 +2833,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -2301,6 +2850,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/lua/03-sunjon__Shade.nvim/graphify-out",
             "(cd work/lua/03-sunjon__Shade.nvim && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-lua-lazy/luaparser-venv/bin/python -c <luaparser definition counter> work/lua/03-sunjon__Shade.nvim"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -2322,9 +2878,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 3,
+      "nativeCandidateEphemeralHelperRows": 3,
       "minCoverageRatio": 1,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -2332,6 +2891,8 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_contains_placeholder",
+        "native_command_uses_ephemeral_helper_path",
         "native_or_proxy_remeasurement_command_not_recorded",
         "structured_format_outside_code_parser_gate"
       ],
@@ -2349,10 +2910,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -2363,6 +2927,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/markdown/01-rust-lang__mdBook/guide/src/graphify-out",
             "(cd work/markdown/01-rust-lang__mdBook/guide/src && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-markdown-mdbook/markdown-it-venv/bin/python -c <markdown-it-py heading counter> work/markdown/01-rust-lang__mdBook/guide/src"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -2379,10 +2950,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -2393,6 +2967,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/markdown/02-vitejs__vite/docs/graphify-out",
             "(cd work/markdown/02-vitejs__vite/docs && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-markdown-mdbook/markdown-it-venv/bin/python -c <markdown-it-py heading counter> work/markdown/02-vitejs__vite/docs"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -2409,10 +2990,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -2423,6 +3007,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/markdown/03-pnpm__pnpm.io/docs/graphify-out",
             "(cd work/markdown/03-pnpm__pnpm.io/docs && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-markdown-mdbook/markdown-it-venv/bin/python -c <markdown-it-py heading counter> work/markdown/03-pnpm__pnpm.io/docs"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -2444,9 +3035,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 3,
+      "nativeCandidateEphemeralHelperRows": 3,
       "minCoverageRatio": 1,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -2454,6 +3048,8 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_contains_placeholder",
+        "native_command_uses_ephemeral_helper_path",
         "native_or_proxy_remeasurement_command_not_recorded"
       ],
       "repos": [
@@ -2470,10 +3066,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -2484,6 +3083,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/objc/01-thetron__StringScore/graphify-out",
             "(cd work/objc/01-thetron__StringScore && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-objc-sdwebimage/tree-sitter-objc-venv/bin/python -c <tree-sitter-objc definition counter> work/objc/01-thetron__StringScore"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -2500,10 +3106,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -2514,6 +3123,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/objc/02-rs__SafariTabSwitching/graphify-out",
             "(cd work/objc/02-rs__SafariTabSwitching && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-objc-sdwebimage/tree-sitter-objc-venv/bin/python -c <tree-sitter-objc definition counter> work/objc/02-rs__SafariTabSwitching"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -2530,10 +3146,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -2544,6 +3163,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/objc/03-iosphere__ISHPullUp/graphify-out",
             "(cd work/objc/03-iosphere__ISHPullUp && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-objc-sdwebimage/tree-sitter-objc-venv/bin/python -c <tree-sitter-objc definition counter> work/objc/03-iosphere__ISHPullUp"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -2565,9 +3191,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 3,
+      "nativeCandidateEphemeralHelperRows": 0,
       "minCoverageRatio": 1.21,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -2575,6 +3204,7 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_contains_placeholder",
         "native_or_proxy_remeasurement_command_not_recorded",
         "proxy_denominator_not_full_semantic_truth"
       ],
@@ -2592,10 +3222,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -2607,6 +3239,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/pascal/01-remobjects__pascalscript/Source/graphify-out",
             "(cd work/pascal/01-remobjects__pascalscript/Source && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/opt/homebrew/bin/python3 -c <pascal declaration counter> work/pascal/01-remobjects__pascalscript/Source"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -2623,10 +3261,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -2638,6 +3278,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/pascal/02-fpc__Lazarus/lcl/graphify-out",
             "(cd work/pascal/02-fpc__Lazarus/lcl && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/opt/homebrew/bin/python3 -c <pascal declaration counter> work/pascal/02-fpc__Lazarus/lcl"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -2654,10 +3300,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -2669,6 +3317,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/pascal/03-transmission-remote-gui__transgui/graphify-out",
             "(cd work/pascal/03-transmission-remote-gui__transgui && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/opt/homebrew/bin/python3 -c <pascal declaration counter> work/pascal/03-transmission-remote-gui__transgui"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -2690,9 +3344,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 0,
+      "nativeCandidateEphemeralHelperRows": 3,
       "minCoverageRatio": 1,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -2700,6 +3357,7 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_uses_ephemeral_helper_path",
         "native_or_proxy_remeasurement_command_not_recorded"
       ],
       "repos": [
@@ -2716,10 +3374,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -2730,6 +3390,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/php/01-slimphp__Slim/graphify-out",
             "(cd work/php/01-slimphp__Slim && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "php /tmp/atlas-php-3repo-1782814733/php_token_counter.php work/php/01-slimphp__Slim"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -2746,10 +3412,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -2760,6 +3428,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/php/02-symfony__console/graphify-out",
             "(cd work/php/02-symfony__console && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "php /tmp/atlas-php-3repo-1782814733/php_token_counter.php work/php/02-symfony__console"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -2776,10 +3450,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -2790,6 +3466,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/php/03-composer__composer/src/graphify-out",
             "(cd work/php/03-composer__composer/src && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "php /tmp/atlas-php-3repo-1782814733/php_token_counter.php work/php/03-composer__composer/src"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -2811,9 +3493,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 0,
+      "nativeCandidateEphemeralHelperRows": 3,
       "minCoverageRatio": 1,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -2821,6 +3506,7 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_uses_ephemeral_helper_path",
         "native_or_proxy_remeasurement_command_not_recorded"
       ],
       "repos": [
@@ -2837,10 +3523,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -2851,6 +3539,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/powershell/01-PowerShell__PowerShellGet/src/graphify-out",
             "(cd work/powershell/01-PowerShell__PowerShellGet/src && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/usr/local/bin/pwsh -NoLogo -NoProfile -File /tmp/atlas-live-powershell-powershellget/pwsh_stats.ps1 work/powershell/01-PowerShell__PowerShellGet/src"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -2867,10 +3561,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -2881,6 +3577,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/powershell/02-PowerShell__SecretManagement/ExtensionModules/graphify-out",
             "(cd work/powershell/02-PowerShell__SecretManagement/ExtensionModules && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/usr/local/bin/pwsh -NoLogo -NoProfile -File /tmp/atlas-live-powershell-powershellget/pwsh_stats.ps1 work/powershell/02-PowerShell__SecretManagement/ExtensionModules"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -2897,10 +3599,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -2911,6 +3615,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/powershell/03-PowerShell__PSResourceGet/test/graphify-out",
             "(cd work/powershell/03-PowerShell__PSResourceGet/test && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/usr/local/bin/pwsh -NoLogo -NoProfile -File /tmp/atlas-live-powershell-powershellget/pwsh_stats.ps1 work/powershell/03-PowerShell__PSResourceGet/test"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -2932,9 +3642,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 3,
+      "nativeCandidateEphemeralHelperRows": 0,
       "minCoverageRatio": 1,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -2942,6 +3655,7 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_contains_placeholder",
         "native_or_proxy_remeasurement_command_not_recorded",
         "proxy_denominator_not_full_semantic_truth"
       ],
@@ -2959,10 +3673,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -2974,6 +3690,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/razor/01-soundaranbu__Razor.Templating.Core/graphify-out",
             "(cd work/razor/01-soundaranbu__Razor.Templating.Core && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "python3 <razor directive counter> work/razor/01-soundaranbu__Razor.Templating.Core"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -2990,10 +3712,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -3005,6 +3729,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/razor/02-mikoskinen__Blazor.Animate/graphify-out",
             "(cd work/razor/02-mikoskinen__Blazor.Animate && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "python3 <razor directive counter> work/razor/02-mikoskinen__Blazor.Animate"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -3021,10 +3751,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -3036,6 +3768,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/razor/03-mryderie__aspnet-core-htmx-example/graphify-out",
             "(cd work/razor/03-mryderie__aspnet-core-htmx-example && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "python3 <razor directive counter> work/razor/03-mryderie__aspnet-core-htmx-example"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -3057,9 +3795,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 0,
+      "nativeCandidateEphemeralHelperRows": 3,
       "minCoverageRatio": 1,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -3067,6 +3808,7 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_uses_ephemeral_helper_path",
         "native_or_proxy_remeasurement_command_not_recorded"
       ],
       "repos": [
@@ -3083,10 +3825,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -3097,6 +3841,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/ruby/01-tpope__hookup/graphify-out",
             "(cd work/ruby/01-tpope__hookup && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/usr/bin/ruby /tmp/atlas-live-ruby-sinatra/ripper_stats.rb work/ruby/01-tpope__hookup"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -3113,10 +3863,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -3127,6 +3879,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/ruby/02-mailgun__mailgun-ruby/graphify-out",
             "(cd work/ruby/02-mailgun__mailgun-ruby && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/usr/bin/ruby /tmp/atlas-live-ruby-sinatra/ripper_stats.rb work/ruby/02-mailgun__mailgun-ruby"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -3143,10 +3901,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -3157,6 +3917,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/ruby/03-BerlinVagrant__vagrant-dns/graphify-out",
             "(cd work/ruby/03-BerlinVagrant__vagrant-dns && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/usr/bin/ruby /tmp/atlas-live-ruby-sinatra/ripper_stats.rb work/ruby/03-BerlinVagrant__vagrant-dns"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -3178,9 +3944,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 3,
+      "nativeCandidateEphemeralHelperRows": 0,
       "minCoverageRatio": 1.4076,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -3188,6 +3957,8 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_contains_placeholder",
+        "native_command_uses_unexpanded_file_list",
         "native_or_proxy_remeasurement_command_not_recorded"
       ],
       "repos": [
@@ -3204,10 +3975,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_unexpanded_file_list",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -3218,6 +3992,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/rust/01-Taaitaaiger__jlrs/graphify-out",
             "(cd work/rust/01-Taaitaaiger__jlrs && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/opt/homebrew/bin/rust-analyzer documentSymbol <16 Rust files>"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_unexpanded_file_list"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -3234,10 +4015,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_unexpanded_file_list",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -3248,6 +4032,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/rust/02-rust-windowing__softbuffer/graphify-out",
             "(cd work/rust/02-rust-windowing__softbuffer && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/opt/homebrew/bin/rust-analyzer documentSymbol <16 Rust files>"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_unexpanded_file_list"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -3264,10 +4055,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_unexpanded_file_list",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -3278,6 +4072,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/rust/03-rapidfuzz__strsim-rs/graphify-out",
             "(cd work/rust/03-rapidfuzz__strsim-rs && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/opt/homebrew/bin/rust-analyzer documentSymbol <16 Rust files>"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_unexpanded_file_list"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -3299,9 +4100,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 3,
+      "nativeCandidateEphemeralHelperRows": 0,
       "minCoverageRatio": 1.6067,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -3310,6 +4114,7 @@
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
         "graphify_detector_only_or_weak_proxy_truth",
+        "native_command_contains_placeholder",
         "native_or_proxy_remeasurement_command_not_recorded"
       ],
       "repos": [
@@ -3326,10 +4131,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "graphify_detector_only_or_weak_proxy_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -3341,6 +4148,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/r/01-tidyverse__ggplot2/R/graphify-out",
             "(cd work/r/01-tidyverse__ggplot2/R && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "python3 <R source counter> work/r/01-tidyverse__ggplot2/R"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -3357,10 +4170,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "graphify_detector_only_or_weak_proxy_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -3372,6 +4187,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/r/02-r-lib__cli/R/graphify-out",
             "(cd work/r/02-r-lib__cli/R && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "python3 <R source counter> work/r/02-r-lib__cli/R"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -3388,10 +4209,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
             "graphify_detector_only_or_weak_proxy_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -3403,6 +4226,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/r/03-tidyverse__dplyr/R/graphify-out",
             "(cd work/r/03-tidyverse__dplyr/R && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "python3 <R source counter> work/r/03-tidyverse__dplyr/R"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -3424,9 +4253,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 3,
+      "nativeCandidateEphemeralHelperRows": 3,
       "minCoverageRatio": 1.4184,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -3434,6 +4266,8 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_contains_placeholder",
+        "native_command_uses_ephemeral_helper_path",
         "native_or_proxy_remeasurement_command_not_recorded"
       ],
       "repos": [
@@ -3450,10 +4284,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -3464,6 +4301,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/scala/01-spirom__LearningSpark/graphify-out",
             "(cd work/scala/01-spirom__LearningSpark && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-scala-cats/tree-sitter-scala-venv/bin/python -c <tree-sitter-scala definition counter> work/scala/01-spirom__LearningSpark"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -3480,10 +4324,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -3494,6 +4341,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/scala/02-Eliah-Lakhin__papa-carlo/graphify-out",
             "(cd work/scala/02-Eliah-Lakhin__papa-carlo && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-scala-cats/tree-sitter-scala-venv/bin/python -c <tree-sitter-scala definition counter> work/scala/02-Eliah-Lakhin__papa-carlo"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -3510,10 +4364,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -3524,6 +4381,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/scala/03-xerial__larray/graphify-out",
             "(cd work/scala/03-xerial__larray && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-scala-cats/tree-sitter-scala-venv/bin/python -c <tree-sitter-scala definition counter> work/scala/03-xerial__larray"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -3545,9 +4409,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 3,
+      "nativeCandidateEphemeralHelperRows": 3,
       "minCoverageRatio": 1.1802,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -3555,6 +4422,8 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_contains_placeholder",
+        "native_command_uses_ephemeral_helper_path",
         "native_or_proxy_remeasurement_command_not_recorded"
       ],
       "repos": [
@@ -3571,10 +4440,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -3585,6 +4457,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/sql/01-hasura__graphql-engine/server/src-rsr/migrations/graphify-out",
             "(cd work/sql/01-hasura__graphql-engine/server/src-rsr/migrations && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-sql-hasura/sqlfluff-venv/bin/sqlfluff parse --dialect postgres <82 SQL files>"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -3601,10 +4480,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -3615,6 +4497,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/sql/02-timescale__timescaledb/sql/pre_install/graphify-out",
             "(cd work/sql/02-timescale__timescaledb/sql/pre_install && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-sql-hasura/sqlfluff-venv/bin/sqlfluff parse --dialect postgres <82 SQL files>"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -3631,10 +4520,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -3645,6 +4537,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/sql/03-postgres__postgres/contrib/bloom/graphify-out",
             "(cd work/sql/03-postgres__postgres/contrib/bloom && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-sql-hasura/sqlfluff-venv/bin/sqlfluff parse --dialect postgres <82 SQL files>"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -3666,9 +4565,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 0,
+      "nativeCandidateEphemeralHelperRows": 3,
       "minCoverageRatio": 1.0476,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -3676,6 +4578,7 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_uses_ephemeral_helper_path",
         "native_or_proxy_remeasurement_command_not_recorded"
       ],
       "repos": [
@@ -3692,10 +4595,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -3706,6 +4611,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/svelte/01-orefalo__svelte-splitpanes/graphify-out",
             "(cd work/svelte/01-orefalo__svelte-splitpanes && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/opt/homebrew/bin/node /tmp/atlas-live-svelte-carbon/svelte-compiler/svelte_stats.js work/svelte/01-orefalo__svelte-splitpanes"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -3722,10 +4633,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -3736,6 +4649,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/svelte/02-agustinl__svelte-tags-input/graphify-out",
             "(cd work/svelte/02-agustinl__svelte-tags-input && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/opt/homebrew/bin/node /tmp/atlas-live-svelte-carbon/svelte-compiler/svelte_stats.js work/svelte/02-agustinl__svelte-tags-input"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -3752,10 +4671,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -3766,6 +4687,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/svelte/03-Alia5__lovelace-expander-card/graphify-out",
             "(cd work/svelte/03-Alia5__lovelace-expander-card && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/opt/homebrew/bin/node /tmp/atlas-live-svelte-carbon/svelte-compiler/svelte_stats.js work/svelte/03-Alia5__lovelace-expander-card"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -3787,9 +4714,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 0,
+      "nativeCandidateEphemeralHelperRows": 3,
       "minCoverageRatio": 1.0118,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -3797,6 +4727,7 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_uses_ephemeral_helper_path",
         "native_or_proxy_remeasurement_command_not_recorded"
       ],
       "repos": [
@@ -3813,10 +4744,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -3827,6 +4760,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/swift/01-ReSwift__ReSwift-Router/graphify-out",
             "(cd work/swift/01-ReSwift__ReSwift-Router && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/usr/bin/sourcekit-lsp --scratch-path /tmp/atlas-live-swift-argument-parser/sourcekit-scratch --default-workspace-type swiftPM"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -3843,10 +4782,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -3857,6 +4798,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/swift/02-treastrain__TRETJapanNFCReader/graphify-out",
             "(cd work/swift/02-treastrain__TRETJapanNFCReader && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/usr/bin/sourcekit-lsp --scratch-path /tmp/atlas-live-swift-argument-parser/sourcekit-scratch --default-workspace-type swiftPM"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -3873,10 +4820,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -3887,6 +4836,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/swift/03-soberman__ARSLineProgress/graphify-out",
             "(cd work/swift/03-soberman__ARSLineProgress && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/usr/bin/sourcekit-lsp --scratch-path /tmp/atlas-live-swift-argument-parser/sourcekit-scratch --default-workspace-type swiftPM"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -3908,9 +4863,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 3,
+      "nativeCandidateEphemeralHelperRows": 3,
       "minCoverageRatio": 1,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -3918,6 +4876,8 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_contains_placeholder",
+        "native_command_uses_ephemeral_helper_path",
         "native_or_proxy_remeasurement_command_not_recorded"
       ],
       "repos": [
@@ -3934,10 +4894,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -3948,6 +4911,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/terraform/01-terraform-aws-modules__terraform-aws-vpc/graphify-out",
             "(cd work/terraform/01-terraform-aws-modules__terraform-aws-vpc && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-terraform-vpc/hcl2-venv/bin/python -c <hcl2 definition counter> work/terraform/01-terraform-aws-modules__terraform-aws-vpc"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -3964,10 +4934,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -3978,6 +4951,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/terraform/02-terraform-aws-modules__terraform-aws-eks/graphify-out",
             "(cd work/terraform/02-terraform-aws-modules__terraform-aws-eks && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-terraform-vpc/hcl2-venv/bin/python -c <hcl2 definition counter> work/terraform/02-terraform-aws-modules__terraform-aws-eks"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -3994,10 +4974,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -4008,6 +4991,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/terraform/03-terraform-aws-modules__terraform-aws-security-group/graphify-out",
             "(cd work/terraform/03-terraform-aws-modules__terraform-aws-security-group && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-terraform-vpc/hcl2-venv/bin/python -c <hcl2 definition counter> work/terraform/03-terraform-aws-modules__terraform-aws-security-group"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -4029,9 +5019,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 3,
+      "nativeCandidateEphemeralHelperRows": 3,
       "minCoverageRatio": 1,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -4039,6 +5032,8 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_contains_placeholder",
+        "native_command_uses_ephemeral_helper_path",
         "native_or_proxy_remeasurement_command_not_recorded",
         "proxy_denominator_not_full_semantic_truth"
       ],
@@ -4056,10 +5051,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -4071,6 +5069,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/verilog/01-lowRISC__ibex/rtl/graphify-out",
             "(cd work/verilog/01-lowRISC__ibex/rtl && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-verilog-ibex/tree-sitter-systemverilog-venv/bin/python -c <tree-sitter-systemverilog definition counter> work/verilog/01-lowRISC__ibex/rtl"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -4087,10 +5092,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -4102,6 +5110,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/verilog/02-YosysHQ__picorv32/picosoc/graphify-out",
             "(cd work/verilog/02-YosysHQ__picorv32/picosoc && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-verilog-ibex/tree-sitter-systemverilog-venv/bin/python -c <tree-sitter-systemverilog definition counter> work/verilog/02-YosysHQ__picorv32/picosoc"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -4118,10 +5133,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -4133,6 +5151,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/verilog/03-alexforencich__verilog-ethernet/rtl/graphify-out",
             "(cd work/verilog/03-alexforencich__verilog-ethernet/rtl && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-verilog-ibex/tree-sitter-systemverilog-venv/bin/python -c <tree-sitter-systemverilog definition counter> work/verilog/03-alexforencich__verilog-ethernet/rtl"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -4154,9 +5179,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 0,
+      "nativeCandidateEphemeralHelperRows": 3,
       "minCoverageRatio": 3.4167,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -4164,6 +5192,7 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_uses_ephemeral_helper_path",
         "native_or_proxy_remeasurement_command_not_recorded"
       ],
       "repos": [
@@ -4180,10 +5209,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -4194,6 +5225,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/vue/01-LiuXin-Developer__rightHouse/graphify-out",
             "(cd work/vue/01-LiuXin-Developer__rightHouse && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/opt/homebrew/bin/node /tmp/atlas-live-vue-realworld/vue-compiler/vue_sfc_stats.js work/vue/01-LiuXin-Developer__rightHouse"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -4210,10 +5247,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -4224,6 +5263,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/vue/02-Tencent__tdesign-vue-starter/graphify-out",
             "(cd work/vue/02-Tencent__tdesign-vue-starter && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/opt/homebrew/bin/node /tmp/atlas-live-vue-realworld/vue-compiler/vue_sfc_stats.js work/vue/02-Tencent__tdesign-vue-starter"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -4240,10 +5285,12 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -4254,6 +5301,12 @@
           "graphifyReplayCommands": [
             "rm -rf work/vue/03-powerdong__Music-player/graphify-out",
             "(cd work/vue/03-powerdong__Music-player && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/opt/homebrew/bin/node /tmp/atlas-live-vue-realworld/vue-compiler/vue_sfc_stats.js work/vue/03-powerdong__Music-player"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         }
@@ -4275,9 +5328,12 @@
       "pinnedRows": 3,
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
+      "nativeRemeasurementCandidateRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
+      "nativeCandidatePlaceholderRows": 3,
+      "nativeCandidateEphemeralHelperRows": 3,
       "minCoverageRatio": 2.1118,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -4285,6 +5341,8 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_contains_placeholder",
+        "native_command_uses_ephemeral_helper_path",
         "native_or_proxy_remeasurement_command_not_recorded"
       ],
       "repos": [
@@ -4301,10 +5359,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -4315,6 +5376,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/zig/01-norma-core__gremlin.zig/graphify-out",
             "(cd work/zig/01-norma-core__gremlin.zig && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-zig-zls/tree-sitter-zig-venv/bin/python -c <tree-sitter-zig definition counter> work/zig/01-norma-core__gremlin.zig"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -4331,10 +5399,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -4345,6 +5416,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/zig/02-jamii__focus/graphify-out",
             "(cd work/zig/02-jamii__focus && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-zig-zls/tree-sitter-zig-venv/bin/python -c <tree-sitter-zig definition counter> work/zig/02-jamii__focus"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         },
@@ -4361,10 +5439,13 @@
           "pinned": true,
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
+          "nativeRemeasurementCandidateReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -4375,6 +5456,13 @@
           "graphifyReplayCommands": [
             "rm -rf work/zig/03-Validark__Accelerated-Zig-Parser/graphify-out",
             "(cd work/zig/03-Validark__Accelerated-Zig-Parser && uv tool run --from graphifyy graphify update .)"
+          ],
+          "nativeRemeasurementCandidateCommands": [
+            "/tmp/atlas-live-zig-zls/tree-sitter-zig-venv/bin/python -c <tree-sitter-zig definition counter> work/zig/03-Validark__Accelerated-Zig-Parser"
+          ],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_placeholder",
+            "native_command_uses_ephemeral_helper_path"
           ],
           "nativeRemeasurementCommands": []
         }

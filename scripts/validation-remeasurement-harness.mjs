@@ -71,6 +71,37 @@ function graphifyReplayCommands(language, repo, index) {
   ];
 }
 
+function nativeCommandTemplate(raw) {
+  return raw.commands?.native_baseline || raw.native_baseline?.command || "";
+}
+
+function nativeCommandCandidates(raw, language, repo, index) {
+  const template = nativeCommandTemplate(raw);
+  if (!template || !hasRepoIdentity(repo)) return [];
+  const target = localTargetPath(language, repo, index);
+  const sourceTargets = [
+    raw.commands?.target_path,
+    raw.commands?.target_path?.replace(/^\/private/, ""),
+    raw.commands?.target_path ? `/private${raw.commands.target_path}` : "",
+  ].filter(Boolean);
+  let command = template;
+  for (const sourceTarget of sourceTargets) {
+    command = command.split(sourceTarget).join(target);
+  }
+  return [command];
+}
+
+function nativeCommandBlockers(raw, command) {
+  const blockers = [];
+  if (!nativeCommandTemplate(raw)) blockers.push("native_command_template_missing");
+  if (/<[^>]+>/.test(command)) blockers.push("native_command_contains_placeholder");
+  if (/\/(?:private\/)?tmp\/atlas-[^ ]+/.test(command)) blockers.push("native_command_uses_ephemeral_helper_path");
+  if (/\bdocumentSymbol\s+<[^>]+>/.test(command) || /\bplus\b.*<[^>]+>/.test(command)) {
+    blockers.push("native_command_uses_unexpanded_file_list");
+  }
+  return [...new Set(blockers)];
+}
+
 function classifyNativeTool(language, nativeTool, detectorOnly) {
   const tool = String(nativeTool || "").toLowerCase();
   if (STRUCTURED_LANGUAGES.has(language)) return "structured-format";
@@ -149,10 +180,15 @@ function validateArtifact(file) {
     const pinned = hasRepoIdentity(repo);
     const atlasReady = pinned;
     const graphifyReady = pinned;
+    const nativeCandidates = nativeCommandCandidates(raw, language, repo, index);
+    const nativeCandidateReady = nativeCandidates.length > 0;
+    const nativeCandidateBlockers = nativeCandidates.flatMap((command) => nativeCommandBlockers(raw, command));
     const nativeReady = hasNativeRemeasurementCommand(repo);
     const blockers = [];
     if (!pinned) blockers.push("missing repo/commit/target_path");
     if (!nativeReady) blockers.push("native_or_proxy_remeasurement_command_not_recorded");
+    if (!nativeCandidateReady) blockers.push("native_or_proxy_remeasurement_candidate_not_generated");
+    for (const blocker of nativeCandidateBlockers) blockers.push(blocker);
     if (risk === "medium") blockers.push("proxy_denominator_not_full_semantic_truth");
     if (risk === "high") blockers.push("graphify_detector_only_or_weak_proxy_truth");
     blockers.push("full_symbol_name_kind_location_sets_not_persisted");
@@ -169,11 +205,14 @@ function validateArtifact(file) {
       pinned,
       atlasReplayReady: atlasReady,
       graphifyReplayReady: graphifyReady,
+      nativeRemeasurementCandidateReady: nativeCandidateReady,
       nativeRemeasurementReady: nativeReady,
       fullRemeasurementReady: atlasReady && graphifyReady && nativeReady,
-      blockers,
+      blockers: [...new Set(blockers)],
       atlasReplayCommands: atlasReady ? atlasReplayCommands(language, repo, index) : [],
       graphifyReplayCommands: graphifyReady ? graphifyReplayCommands(language, repo, index) : [],
+      nativeRemeasurementCandidateCommands: nativeCandidates,
+      nativeRemeasurementCandidateBlockers: [...new Set(nativeCandidateBlockers)],
       nativeRemeasurementCommands: Array.isArray(repo.native_replay_commands)
         ? repo.native_replay_commands
         : repo.native_command || repo.native_replay_command
@@ -186,8 +225,15 @@ function validateArtifact(file) {
   const pinnedRows = rows.filter((repo) => repo.pinned).length;
   const atlasReplayReadyRows = rows.filter((repo) => repo.atlasReplayReady).length;
   const graphifyReplayReadyRows = rows.filter((repo) => repo.graphifyReplayReady).length;
+  const nativeRemeasurementCandidateRows = rows.filter((repo) => repo.nativeRemeasurementCandidateReady).length;
   const nativeRemeasurementReadyRows = rows.filter((repo) => repo.nativeRemeasurementReady).length;
   const fullRemeasurementReadyRows = rows.filter((repo) => repo.fullRemeasurementReady).length;
+  const nativeCandidatePlaceholderRows = rows.filter((repo) =>
+    repo.nativeRemeasurementCandidateBlockers.includes("native_command_contains_placeholder")
+  ).length;
+  const nativeCandidateEphemeralHelperRows = rows.filter((repo) =>
+    repo.nativeRemeasurementCandidateBlockers.includes("native_command_uses_ephemeral_helper_path")
+  ).length;
   const languageBlockers = new Set(rows.flatMap((repo) => repo.blockers));
   if (status.isStructured) {
     languageBlockers.add("structured_format_outside_code_parser_gate");
@@ -221,9 +267,12 @@ function validateArtifact(file) {
     pinnedRows,
     atlasReplayReadyRows,
     graphifyReplayReadyRows,
+    nativeRemeasurementCandidateRows,
     nativeRemeasurementReadyRows,
     fullRemeasurementReadyRows,
     fullRemeasurementReady: rows.length > 0 && fullRemeasurementReadyRows === rows.length,
+    nativeCandidatePlaceholderRows,
+    nativeCandidateEphemeralHelperRows,
     minCoverageRatio: ratios.length ? round(Math.min(...ratios)) : null,
     warnings,
     errors,
@@ -252,18 +301,21 @@ function renderMarkdown(report) {
   lines.push(`- Pinned repo rows: ${report.summary.pinnedRepoRows}`);
   lines.push(`- Atlas replay-ready rows: ${report.summary.atlasReplayReadyRows}`);
   lines.push(`- Graphify replay-ready rows: ${report.summary.graphifyReplayReadyRows}`);
+  lines.push(`- Native/proxy command candidate rows: ${report.summary.nativeRemeasurementCandidateRows}`);
   lines.push(`- Native/proxy remeasurement command-ready rows: ${report.summary.nativeRemeasurementReadyRows}`);
   lines.push(`- Full remeasurement-ready artifacts: ${report.summary.fullRemeasurementReadyArtifacts}`);
+  lines.push(`- Native candidates with placeholders: ${report.summary.nativeCandidatePlaceholderRows}`);
+  lines.push(`- Native candidates with ephemeral helper paths: ${report.summary.nativeCandidateEphemeralHelperRows}`);
   lines.push(`- Proxy or detector-only code artifacts: ${report.summary.proxyOrDetectorCodeArtifacts}`);
   lines.push(`- Warnings: ${report.summary.warnings}`);
   lines.push(`- Errors: ${report.summary.errors}`);
   lines.push("");
   lines.push("## Language Readiness", "");
-  lines.push("| Language | Tool class | Risk | Validation | Repos | Atlas replay | Graphify replay | Native ready | Blockers |");
-  lines.push("|---|---|---|---|--:|--:|--:|--:|---|");
+  lines.push("| Language | Tool class | Risk | Validation | Repos | Atlas replay | Graphify replay | Native candidates | Native ready | Blockers |");
+  lines.push("|---|---|---|---|--:|--:|--:|--:|--:|---|");
   for (const item of report.languages) {
     lines.push(
-      `| ${item.language} | ${item.toolClass} | ${item.risk} | ${item.validationStatus} | ${item.repoCount}/${item.minimumRepos} | ${item.atlasReplayReadyRows} | ${item.graphifyReplayReadyRows} | ${item.nativeRemeasurementReadyRows} | ${item.blockers.join(", ") || "none"} |`
+      `| ${item.language} | ${item.toolClass} | ${item.risk} | ${item.validationStatus} | ${item.repoCount}/${item.minimumRepos} | ${item.atlasReplayReadyRows} | ${item.graphifyReplayReadyRows} | ${item.nativeRemeasurementCandidateRows} | ${item.nativeRemeasurementReadyRows} | ${item.blockers.join(", ") || "none"} |`
     );
   }
   lines.push("");
@@ -275,10 +327,21 @@ function renderMarkdown(report) {
     for (const command of first.repo.atlasReplayCommands) lines.push(command);
     for (const command of first.repo.graphifyReplayCommands) lines.push(command);
     lines.push("```", "");
+    if (first.repo.nativeRemeasurementCandidateCommands.length) {
+      lines.push("Native command candidate from language-level template:");
+      lines.push("");
+      lines.push("```sh");
+      for (const command of first.repo.nativeRemeasurementCandidateCommands) lines.push(command);
+      lines.push("```");
+      if (first.repo.nativeRemeasurementCandidateBlockers.length) {
+        lines.push(`Candidate blockers: ${first.repo.nativeRemeasurementCandidateBlockers.join(", ")}.`);
+      }
+      lines.push("");
+    }
   }
   lines.push("## Remaining Gap", "");
   lines.push(
-    "A full remeasurement pass still needs executable native/proxy counter commands per validation repo, plus persisted Atlas and native symbol name/kind/location sets. Until those are present, the benchmark proves pinned artifact evidence and replay readiness, not a complete 99% precision oracle."
+    "A full remeasurement pass still needs executable native/proxy counter commands per validation repo, committed helper scripts or tool invocations for placeholder templates, plus persisted Atlas and native symbol name/kind/location sets. Until those are present, the benchmark proves pinned artifact evidence, replay command candidates, and replay readiness, not a complete 99% precision oracle."
   );
   lines.push("");
   return `${lines.join("\n")}\n`;
@@ -311,9 +374,12 @@ function main() {
       pinnedRepoRows: languages.reduce((total, item) => total + item.pinnedRows, 0),
       atlasReplayReadyRows: languages.reduce((total, item) => total + item.atlasReplayReadyRows, 0),
       graphifyReplayReadyRows: languages.reduce((total, item) => total + item.graphifyReplayReadyRows, 0),
+      nativeRemeasurementCandidateRows: languages.reduce((total, item) => total + item.nativeRemeasurementCandidateRows, 0),
       nativeRemeasurementReadyRows: languages.reduce((total, item) => total + item.nativeRemeasurementReadyRows, 0),
       fullRemeasurementReadyRows: languages.reduce((total, item) => total + item.fullRemeasurementReadyRows, 0),
       fullRemeasurementReadyArtifacts: languages.filter((item) => item.fullRemeasurementReady).length,
+      nativeCandidatePlaceholderRows: languages.reduce((total, item) => total + item.nativeCandidatePlaceholderRows, 0),
+      nativeCandidateEphemeralHelperRows: languages.reduce((total, item) => total + item.nativeCandidateEphemeralHelperRows, 0),
       proxyOrDetectorCodeArtifacts: code.filter((item) => ["medium", "high"].includes(item.risk)).length,
       warnings: warnings.length,
       errors: errors.length,
