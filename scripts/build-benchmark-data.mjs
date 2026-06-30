@@ -550,6 +550,9 @@ function buildFinalAuditReport(dataset) {
   const callEdgeEvidence = dataset.callEdgeEvidence || null;
   const callEdgeEvidencePassed = Boolean(callEdgeEvidence?.summary?.passed);
   const callEdgeSummary = callEdgeEvidence?.summary || {};
+  const graphifySupport = dataset.graphifySupport || null;
+  const graphifySupportPassed = Boolean(graphifySupport?.summary?.passed);
+  const graphifySupportSummary = graphifySupport?.summary || {};
   const precisionRows = Array.isArray(precisionEvidence?.languages) ? precisionEvidence.languages : [];
   const precisionGaps = precisionRows
     .filter((row) => row.status !== "sampled-name-location")
@@ -622,6 +625,9 @@ function buildFinalAuditReport(dataset) {
     callEdgeEvidencePassed
       ? "The committed call-edge evidence harness regenerates data/call-edge-evidence-manifest.* from raw artifacts and separates core receiver-typed call evidence from live call-count-only rows."
       : "The call-edge evidence harness is still missing or failing; call-edge coverage remains embedded in raw artifacts only.",
+    graphifySupportPassed
+      ? "The committed Graphify support harness regenerates data/graphify-support-manifest.* and separates deterministic extractor rows from detector-only extension support."
+      : "The Graphify support harness is still missing or failing; detector-only and deterministic Graphify support remain inferred from raw discovery data.",
     "Objective-C validation can be inflated by vendored Pods if Atlas and the native counter use different dependency filters; the final validation excludes dependency folders for the validation count.",
     "CUDA host-function counters overcount the denominator for a CUDA-specific benchmark; the final validation labels and uses a CUDA-qualified __global__/__device__/__host__ function denominator.",
   ];
@@ -666,10 +672,14 @@ function buildFinalAuditReport(dataset) {
       priority: "P2",
       item: "Increase public-repo validation from 3 repos per language to a larger fixed sample for high-variance languages such as Objective-C, Razor, Apex, CUDA, and Swift.",
     },
-    {
-      priority: "P2",
-      item: "Keep Graphify no-equivalent rows as saturation evidence, but separate detector-only language support from deterministic Graphify extractor support in all headlines.",
-    },
+    ...(!graphifySupportPassed
+      ? [
+          {
+            priority: "P2",
+            item: "Keep Graphify no-equivalent rows as saturation evidence, but separate detector-only language support from deterministic Graphify extractor support in all headlines.",
+          },
+        ]
+      : []),
   ];
 
   return {
@@ -708,6 +718,14 @@ function buildFinalAuditReport(dataset) {
       callEdgeLiveArtifacts: callEdgeSummary.liveArtifacts ?? null,
       callEdgeLiveReceiverTypedArtifacts: callEdgeSummary.liveReceiverTypedArtifacts ?? null,
       callEdgeLiveAtlasCalls: callEdgeSummary.liveAtlasCalls ?? null,
+      graphifySupportHarness: graphifySupportPassed,
+      graphifyDeterministicDiscoveryRows: graphifySupportSummary.deterministicDiscoveryRows ?? null,
+      graphifyDetectorOnlyExtensions: graphifySupportSummary.detectorOnlyExtensions ?? null,
+      graphifyLiveDeterministicArtifacts: graphifySupportSummary.liveDeterministicArtifacts ?? null,
+      graphifyLiveDetectorOnlyArtifacts: graphifySupportSummary.liveDetectorOnlyArtifacts ?? null,
+      graphifyQueryRows: graphifySupportSummary.queryRows ?? null,
+      graphifyEquivalentRows: graphifySupportSummary.graphifyEquivalentRows ?? null,
+      graphifyMissingRows: graphifySupportSummary.graphifyMissingRows ?? null,
       graphifyVersion: dataset.provenance.graphify.version,
       graphifyDispatchCount: dataset.provenance.graphify.dispatchCount,
       detectorOnlyLanguages: dataset.provenance.graphify.detectorOnlyCodeExtensions,
@@ -761,6 +779,19 @@ function buildFinalAuditReport(dataset) {
             }
           : null,
       },
+      graphifySupport: {
+        statement:
+          "The Graphify support manifest separates deterministic extractor support from detector-only extension detection and sampled query rows with no Graphify equivalent.",
+        manifest: graphifySupport
+          ? {
+              generatedAt: graphifySupport.generatedAt,
+              summary: graphifySupportSummary,
+              detectorOnly: graphifySupport.detectorOnly || [],
+              liveDetectorOnly: (graphifySupport.live || []).filter((row) => row.supportType === "detector-only"),
+              liveMissingRows: (graphifySupport.live || []).filter((row) => Number(row.graphifyMissingRows) > 0),
+            }
+          : null,
+      },
     },
     stubsAndHallucinationAudit: {
       foundDuringFinalPass,
@@ -798,6 +829,12 @@ function renderFinalAuditMarkdown(report) {
   lines.push(`- Core receiver-typed calls: ${report.summary.callEdgeCoreReceiverTypedCalls ?? "n/a"}/${report.summary.callEdgeCoreAtlasCalls ?? "n/a"} (${report.summary.callEdgeCoreReceiverTypedRatio ?? "n/a"})`);
   lines.push(`- Live artifacts with Atlas call counts: ${report.summary.callEdgeLiveArtifactsWithAtlasCalls ?? "n/a"}/${report.summary.callEdgeLiveArtifacts ?? "n/a"}`);
   lines.push(`- Live artifacts with receiver-typed calls: ${report.summary.callEdgeLiveReceiverTypedArtifacts ?? "n/a"}`);
+  lines.push(`- Graphify support harness: ${report.summary.graphifySupportHarness ? "present" : "missing"}`);
+  lines.push(`- Graphify deterministic discovery rows: ${report.summary.graphifyDeterministicDiscoveryRows ?? "n/a"}`);
+  lines.push(`- Graphify detector-only extensions: ${report.summary.graphifyDetectorOnlyExtensions ?? "n/a"}`);
+  lines.push(`- Graphify live deterministic artifacts: ${report.summary.graphifyLiveDeterministicArtifacts ?? "n/a"}`);
+  lines.push(`- Graphify live detector-only artifacts: ${report.summary.graphifyLiveDetectorOnlyArtifacts ?? "n/a"}`);
+  lines.push(`- Graphify sampled equivalent rows: ${report.summary.graphifyEquivalentRows ?? "n/a"}/${report.summary.graphifyQueryRows ?? "n/a"}`);
   lines.push(`- Graphify: ${report.summary.graphifyVersion}, dispatch count ${report.summary.graphifyDispatchCount}`);
   lines.push("", "## Ground Truth Closeness", "");
   lines.push(report.groundTruthCloseness.statement, "");
@@ -847,6 +884,34 @@ function renderFinalAuditMarkdown(report) {
     for (const row of manifest.liveGaps) {
       lines.push(
         `| ${row.language} | ${row.status} | ${row.atlasCalls ?? "n/a"} | ${row.graphifyCalls ?? "n/a"} | ${row.graphifyDetectorOnly ? "yes" : "no"} | ${row.note} |`
+      );
+    }
+  } else {
+    lines.push("Manifest: missing.");
+  }
+  lines.push("");
+  lines.push("### Graphify Support", "");
+  lines.push(report.groundTruthCloseness.graphifySupport.statement, "");
+  if (report.groundTruthCloseness.graphifySupport.manifest) {
+    const manifest = report.groundTruthCloseness.graphifySupport.manifest;
+    lines.push(`Manifest: data/graphify-support-manifest.md, generated ${manifest.generatedAt}.`);
+    lines.push(
+      `Deterministic discovery rows: ${manifest.summary.deterministicDiscoveryRows}; detector-only extensions: ${manifest.summary.detectorOnlyExtensions}.`
+    );
+    lines.push(
+      `Live deterministic artifacts: ${manifest.summary.liveDeterministicArtifacts}; live detector-only artifacts: ${manifest.summary.liveDetectorOnlyArtifacts}; sampled Graphify-equivalent rows: ${manifest.summary.graphifyEquivalentRows}/${manifest.summary.queryRows}.`
+    );
+    lines.push("");
+    lines.push("Detector-only extensions:");
+    for (const row of manifest.detectorOnly) {
+      lines.push(`- ${row.extension}: ${row.language}`);
+    }
+    lines.push("");
+    lines.push("| Language | Support | Query rows | Graphify equivalent | Graphify missing | Note |");
+    lines.push("|---|---|--:|--:|--:|---|");
+    for (const row of manifest.liveMissingRows) {
+      lines.push(
+        `| ${row.language} | ${row.supportType} | ${row.totalQueryRows} | ${row.graphifyEquivalentRows} | ${row.graphifyMissingRows} | ${row.note} |`
       );
     }
   } else {
@@ -925,6 +990,8 @@ function main() {
       { name: "precision-evidence-manifest.md", path: "data/precision-evidence-manifest.md" },
       { name: "call-edge-evidence-manifest.json", path: "data/call-edge-evidence-manifest.json" },
       { name: "call-edge-evidence-manifest.md", path: "data/call-edge-evidence-manifest.md" },
+      { name: "graphify-support-manifest.json", path: "data/graphify-support-manifest.json" },
+      { name: "graphify-support-manifest.md", path: "data/graphify-support-manifest.md" },
       { name: "final-benchmark-audit-report.json", path: "data/final-benchmark-audit-report.json" },
       { name: "final-benchmark-audit-report.md", path: "data/final-benchmark-audit-report.md" },
     ],
@@ -966,6 +1033,7 @@ function main() {
     publicRepoValidation: readDataJSON("public-repo-validation-manifest.json"),
     precisionEvidence: readDataJSON("precision-evidence-manifest.json"),
     callEdgeEvidence: readDataJSON("call-edge-evidence-manifest.json"),
+    graphifySupport: readDataJSON("graphify-support-manifest.json"),
     saturation: saturationRows,
     caveats: [
       "Ratios are computed only where both Atlas and graphify returned comparable query rows.",
@@ -976,6 +1044,7 @@ function main() {
       "Atlas and graphify expose different graph models, so coverage and precision fields are shown separately.",
       "The precision evidence manifest records sampled symbol/location matches and validation kind-count maps when raw artifacts expose them; it does not claim full precision for rows that remain count-only or proxy-denominator based.",
       "The call-edge evidence manifest records core receiver-typed calls and live call counts when raw artifacts expose them; it does not claim live receiver-type coverage where no receiver metric exists.",
+      "The Graphify support manifest separates deterministic extractor support from detector-only extension support; sampled Graphify no-equivalent rows are reported separately from Atlas/native coverage.",
       "10x target fields are strict for token and latency ratios; coverage is reported as native-definition parity/exceed and is not converted into a fabricated 10x accuracy multiplier.",
     ],
   };

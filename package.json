@@ -6,6 +6,7 @@
   "scripts": {
     "build": "tailwindcss -i ./src/styles.css -o ./assets/styles.css --minify && esbuild ./src/App.jsx --bundle --format=iife --jsx=automatic --minify --outfile=./assets/app.js",
     "validate:call-edges": "node scripts/call-edge-evidence-harness.mjs",
+    "validate:graphify-support": "node scripts/graphify-support-harness.mjs",
     "validate:public-repos": "node scripts/public-repo-validation-harness.mjs",
     "validate:precision": "node scripts/precision-evidence-harness.mjs",
     "test:site": "playwright test tests/benchmark-site.spec.js --reporter=line"

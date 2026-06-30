@@ -1,6 +1,6 @@
 # Atlas Final Benchmark Audit
 
-Generated: 2026-06-30T18:02:28.855Z
+Generated: 2026-06-30T18:09:49.196Z
 
 Final pass over Atlas benchmark artifacts: core matrix against Graphify plus native SCIP/LSP tools, live language artifacts against Graphify plus language-specific native/proxy baselines, and public three-repo validation metadata.
 
@@ -25,6 +25,12 @@ Final pass over Atlas benchmark artifacts: core matrix against Graphify plus nat
 - Core receiver-typed calls: 5016/21254 (0.236)
 - Live artifacts with Atlas call counts: 36/36
 - Live artifacts with receiver-typed calls: 0
+- Graphify support harness: present
+- Graphify deterministic discovery rows: 39
+- Graphify detector-only extensions: 3
+- Graphify live deterministic artifacts: 33
+- Graphify live detector-only artifacts: 3
+- Graphify sampled equivalent rows: 199/224
 - Graphify: graphifyy 0.8.49, dispatch count 89
 
 ## Ground Truth Closeness
@@ -37,7 +43,7 @@ Low-risk live languages: astro, bash, csharp, elixir, fortran, groovy, julia, ko
 
 The precision manifest is an artifact-level audit of what the raw benchmark JSON can prove today: sampled query rows with matching symbol names and locations, native-vs-Atlas kind-count maps, or count-only gaps. It is not a full 99% precision oracle.
 
-Manifest: data/precision-evidence-manifest.md, generated 2026-06-30T18:02:28.627Z.
+Manifest: data/precision-evidence-manifest.md, generated 2026-06-30T18:09:48.810Z.
 Sampled name/location artifacts: 32; kind-count-only artifacts: 4; count-only artifacts: 0.
 Matched sampled query rows: 161/199; validation kind-map rows: 81.
 Artifacts with native metric kind maps: 27.
@@ -53,7 +59,7 @@ Artifacts with native metric kind maps: 27.
 
 The call-edge manifest audits what raw artifacts can prove today: receiver-typed call counts for the core matrix and call-count evidence for live artifacts. It does not prove receiver-type precision for live converted languages.
 
-Manifest: data/call-edge-evidence-manifest.md, generated 2026-06-30T18:02:28.785Z.
+Manifest: data/call-edge-evidence-manifest.md, generated 2026-06-30T18:09:48.967Z.
 Core receiver-typed calls: 5016/21254; live Atlas calls: 258529.
 Live receiver-typed artifacts: 0/36; live artifacts with call counts: 36/36.
 
@@ -96,6 +102,28 @@ Live receiver-typed artifacts: 0/36; live artifacts with call counts: 36/36.
 | vue | calls-only | 280 | 2 | no | Raw live artifact exposes call counts but no receiver-type metric. |
 | zig | calls-only | 11564 | 1362 | no | Raw live artifact exposes call counts but no receiver-type metric. |
 
+### Graphify Support
+
+The Graphify support manifest separates deterministic extractor support from detector-only extension detection and sampled query rows with no Graphify equivalent.
+
+Manifest: data/graphify-support-manifest.md, generated 2026-06-30T18:09:49.126Z.
+Deterministic discovery rows: 39; detector-only extensions: 3.
+Live deterministic artifacts: 33; live detector-only artifacts: 3; sampled Graphify-equivalent rows: 199/224.
+
+Detector-only extensions:
+- .ejs: ejs
+- .ets: ets
+- .r: r
+
+| Language | Support | Query rows | Graphify equivalent | Graphify missing | Note |
+|---|---|--:|--:|--:|---|
+| ejs | detector-only | 7 | 1 | 6 | Graphify detects this extension but discovery reports no deterministic _DISPATCH extractor. |
+| ets | detector-only | 13 | 5 | 8 | Graphify detects this extension but discovery reports no deterministic _DISPATCH extractor. |
+| julia | deterministic-extractor | 6 | 5 | 1 | Graphify has a deterministic extractor but some sampled query rows have no Graphify equivalent. |
+| objc | deterministic-extractor | 5 | 4 | 1 | Graphify has a deterministic extractor but some sampled query rows have no Graphify equivalent. |
+| php | deterministic-extractor | 4 | 3 | 1 | Graphify has a deterministic extractor but some sampled query rows have no Graphify equivalent. |
+| r | detector-only | 13 | 5 | 8 | Graphify detects this extension but discovery reports no deterministic _DISPATCH extractor. |
+
 ### Weak Or Proxy Truth Rows
 
 | Language | Native tool | Risk | Coverage | Min validation coverage | Reason |
@@ -135,6 +163,7 @@ Live receiver-typed artifacts: 0/36; live artifacts with call counts: 36/36.
 - The committed public-repo validation harness regenerates data/public-repo-validation-manifest.* from raw live artifacts and fails when a code language lacks passing three-repo evidence.
 - The committed precision-evidence harness regenerates data/precision-evidence-manifest.* from raw live artifacts and separates sampled symbol/location evidence from weaker kind-count-only rows.
 - The committed call-edge evidence harness regenerates data/call-edge-evidence-manifest.* from raw artifacts and separates core receiver-typed call evidence from live call-count-only rows.
+- The committed Graphify support harness regenerates data/graphify-support-manifest.* and separates deterministic extractor rows from detector-only extension support.
 - Objective-C validation can be inflated by vendored Pods if Atlas and the native counter use different dependency filters; the final validation excludes dependency folders for the validation count.
 - CUDA host-function counters overcount the denominator for a CUDA-specific benchmark; the final validation labels and uses a CUDA-qualified __global__/__device__/__host__ function denominator.
 
@@ -151,5 +180,4 @@ No hidden synthetic-row finding: No published benchmark row in the final dataset
 - P1: Close precision gaps by persisting full native and Atlas symbol name/kind/location sets for every validation repo; the current harness proves only sampled query name/location rows plus kind-count maps where raw artifacts expose them.
 - P1: Extend receiver-type measurement into live converted tree-sitter artifacts; the current call-edge harness proves live call counts but receiver typing is only present in the core matrix artifacts.
 - P2: Increase public-repo validation from 3 repos per language to a larger fixed sample for high-variance languages such as Objective-C, Razor, Apex, CUDA, and Swift.
-- P2: Keep Graphify no-equivalent rows as saturation evidence, but separate detector-only language support from deterministic Graphify extractor support in all headlines.
 

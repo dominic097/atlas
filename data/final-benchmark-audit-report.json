@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-30T18:02:28.855Z",
-  "benchmarkGeneratedAt": "2026-06-30T18:02:28.855Z",
+  "generatedAt": "2026-06-30T18:09:49.196Z",
+  "benchmarkGeneratedAt": "2026-06-30T18:09:49.196Z",
   "scope": "Final pass over Atlas benchmark artifacts: core matrix against Graphify plus native SCIP/LSP tools, live language artifacts against Graphify plus language-specific native/proxy baselines, and public three-repo validation metadata.",
   "summary": {
     "coreLanguages": 7,
@@ -33,6 +33,14 @@
     "callEdgeLiveArtifacts": 36,
     "callEdgeLiveReceiverTypedArtifacts": 0,
     "callEdgeLiveAtlasCalls": 258529,
+    "graphifySupportHarness": true,
+    "graphifyDeterministicDiscoveryRows": 39,
+    "graphifyDetectorOnlyExtensions": 3,
+    "graphifyLiveDeterministicArtifacts": 33,
+    "graphifyLiveDetectorOnlyArtifacts": 3,
+    "graphifyQueryRows": 224,
+    "graphifyEquivalentRows": 199,
+    "graphifyMissingRows": 25,
     "graphifyVersion": "graphifyy 0.8.49",
     "graphifyDispatchCount": 89,
     "detectorOnlyLanguages": [
@@ -476,7 +484,7 @@
     "precisionEvidence": {
       "statement": "The precision manifest is an artifact-level audit of what the raw benchmark JSON can prove today: sampled query rows with matching symbol names and locations, native-vs-Atlas kind-count maps, or count-only gaps. It is not a full 99% precision oracle.",
       "manifest": {
-        "generatedAt": "2026-06-30T18:02:28.627Z",
+        "generatedAt": "2026-06-30T18:09:48.810Z",
         "summary": {
           "artifacts": 36,
           "sampledNameLocationArtifacts": 32,
@@ -589,7 +597,7 @@
     "callEdgeEvidence": {
       "statement": "The call-edge manifest audits what raw artifacts can prove today: receiver-typed call counts for the core matrix and call-count evidence for live artifacts. It does not prove receiver-type precision for live converted languages.",
       "manifest": {
-        "generatedAt": "2026-06-30T18:02:28.785Z",
+        "generatedAt": "2026-06-30T18:09:48.967Z",
         "summary": {
           "coreLanguages": 7,
           "coreReceiverTypedLanguages": 7,
@@ -894,6 +902,202 @@
           }
         ]
       }
+    },
+    "graphifySupport": {
+      "statement": "The Graphify support manifest separates deterministic extractor support from detector-only extension detection and sampled query rows with no Graphify equivalent.",
+      "manifest": {
+        "generatedAt": "2026-06-30T18:09:49.126Z",
+        "summary": {
+          "graphifyVersion": "graphifyy 0.8.49",
+          "dispatchCount": 89,
+          "deterministicDiscoveryRows": 39,
+          "detectorOnlyExtensions": 3,
+          "liveArtifacts": 36,
+          "liveDeterministicArtifacts": 33,
+          "liveDetectorOnlyArtifacts": 3,
+          "queryRows": 224,
+          "graphifyEquivalentRows": 199,
+          "graphifyMissingRows": 25,
+          "passed": true
+        },
+        "detectorOnly": [
+          {
+            "extension": ".ejs",
+            "language": "ejs",
+            "extractor": "detector only, no _DISPATCH extractor",
+            "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json"
+          },
+          {
+            "extension": ".ets",
+            "language": "ets",
+            "extractor": "detector only, no _DISPATCH extractor",
+            "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json"
+          },
+          {
+            "extension": ".r",
+            "language": "r",
+            "extractor": "detector only, no _DISPATCH extractor",
+            "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json"
+          }
+        ],
+        "liveDetectorOnly": [
+          {
+            "language": "ejs",
+            "artifact": "data/raw/LIVE_EJS_BENCHMARK.json",
+            "supportType": "detector-only",
+            "graphifyExtractor": "detector only, no _DISPATCH extractor",
+            "graphifyExtensions": ".ejs",
+            "graphifyDetectorOnly": true,
+            "totalQueryRows": 7,
+            "comparableRows": 1,
+            "graphifyEquivalentRows": 1,
+            "graphifyMissingRows": 6,
+            "atlasEquivalentRows": 7,
+            "graphifyMissingRatio": 0.8571,
+            "graphifyStatus": "ok",
+            "graphifyOk": true,
+            "note": "Graphify detects this extension but discovery reports no deterministic _DISPATCH extractor."
+          },
+          {
+            "language": "ets",
+            "artifact": "data/raw/LIVE_ETS_BENCHMARK.json",
+            "supportType": "detector-only",
+            "graphifyExtractor": "detector only, no _DISPATCH extractor",
+            "graphifyExtensions": ".ets",
+            "graphifyDetectorOnly": true,
+            "totalQueryRows": 13,
+            "comparableRows": 5,
+            "graphifyEquivalentRows": 5,
+            "graphifyMissingRows": 8,
+            "atlasEquivalentRows": 13,
+            "graphifyMissingRatio": 0.6154,
+            "graphifyStatus": "ok",
+            "graphifyOk": true,
+            "note": "Graphify detects this extension but discovery reports no deterministic _DISPATCH extractor."
+          },
+          {
+            "language": "r",
+            "artifact": "data/raw/LIVE_R_BENCHMARK.json",
+            "supportType": "detector-only",
+            "graphifyExtractor": "detector only, no _DISPATCH extractor",
+            "graphifyExtensions": ".r",
+            "graphifyDetectorOnly": true,
+            "totalQueryRows": 13,
+            "comparableRows": 5,
+            "graphifyEquivalentRows": 5,
+            "graphifyMissingRows": 8,
+            "atlasEquivalentRows": 13,
+            "graphifyMissingRatio": 0.6154,
+            "graphifyStatus": "ok",
+            "graphifyOk": true,
+            "note": "Graphify detects this extension but discovery reports no deterministic _DISPATCH extractor."
+          }
+        ],
+        "liveMissingRows": [
+          {
+            "language": "ejs",
+            "artifact": "data/raw/LIVE_EJS_BENCHMARK.json",
+            "supportType": "detector-only",
+            "graphifyExtractor": "detector only, no _DISPATCH extractor",
+            "graphifyExtensions": ".ejs",
+            "graphifyDetectorOnly": true,
+            "totalQueryRows": 7,
+            "comparableRows": 1,
+            "graphifyEquivalentRows": 1,
+            "graphifyMissingRows": 6,
+            "atlasEquivalentRows": 7,
+            "graphifyMissingRatio": 0.8571,
+            "graphifyStatus": "ok",
+            "graphifyOk": true,
+            "note": "Graphify detects this extension but discovery reports no deterministic _DISPATCH extractor."
+          },
+          {
+            "language": "ets",
+            "artifact": "data/raw/LIVE_ETS_BENCHMARK.json",
+            "supportType": "detector-only",
+            "graphifyExtractor": "detector only, no _DISPATCH extractor",
+            "graphifyExtensions": ".ets",
+            "graphifyDetectorOnly": true,
+            "totalQueryRows": 13,
+            "comparableRows": 5,
+            "graphifyEquivalentRows": 5,
+            "graphifyMissingRows": 8,
+            "atlasEquivalentRows": 13,
+            "graphifyMissingRatio": 0.6154,
+            "graphifyStatus": "ok",
+            "graphifyOk": true,
+            "note": "Graphify detects this extension but discovery reports no deterministic _DISPATCH extractor."
+          },
+          {
+            "language": "julia",
+            "artifact": "data/raw/LIVE_JULIA_BENCHMARK.json",
+            "supportType": "deterministic-extractor",
+            "graphifyExtractor": "extract_julia",
+            "graphifyExtensions": ".jl",
+            "graphifyDetectorOnly": false,
+            "totalQueryRows": 6,
+            "comparableRows": 5,
+            "graphifyEquivalentRows": 5,
+            "graphifyMissingRows": 1,
+            "atlasEquivalentRows": 6,
+            "graphifyMissingRatio": 0.1667,
+            "graphifyStatus": "ok",
+            "graphifyOk": true,
+            "note": "Graphify has a deterministic extractor but some sampled query rows have no Graphify equivalent."
+          },
+          {
+            "language": "objc",
+            "artifact": "data/raw/LIVE_OBJC_BENCHMARK.json",
+            "supportType": "deterministic-extractor",
+            "graphifyExtractor": "extract_objc",
+            "graphifyExtensions": ".m .mm",
+            "graphifyDetectorOnly": false,
+            "totalQueryRows": 5,
+            "comparableRows": 4,
+            "graphifyEquivalentRows": 4,
+            "graphifyMissingRows": 1,
+            "atlasEquivalentRows": 5,
+            "graphifyMissingRatio": 0.2,
+            "graphifyStatus": "ok",
+            "graphifyOk": true,
+            "note": "Graphify has a deterministic extractor but some sampled query rows have no Graphify equivalent."
+          },
+          {
+            "language": "php",
+            "artifact": "data/raw/LIVE_PHP_BENCHMARK.json",
+            "supportType": "deterministic-extractor",
+            "graphifyExtractor": "extract_php",
+            "graphifyExtensions": ".php",
+            "graphifyDetectorOnly": false,
+            "totalQueryRows": 4,
+            "comparableRows": 3,
+            "graphifyEquivalentRows": 3,
+            "graphifyMissingRows": 1,
+            "atlasEquivalentRows": 4,
+            "graphifyMissingRatio": 0.25,
+            "graphifyStatus": "ok",
+            "graphifyOk": true,
+            "note": "Graphify has a deterministic extractor but some sampled query rows have no Graphify equivalent."
+          },
+          {
+            "language": "r",
+            "artifact": "data/raw/LIVE_R_BENCHMARK.json",
+            "supportType": "detector-only",
+            "graphifyExtractor": "detector only, no _DISPATCH extractor",
+            "graphifyExtensions": ".r",
+            "graphifyDetectorOnly": true,
+            "totalQueryRows": 13,
+            "comparableRows": 5,
+            "graphifyEquivalentRows": 5,
+            "graphifyMissingRows": 8,
+            "atlasEquivalentRows": 13,
+            "graphifyMissingRatio": 0.6154,
+            "graphifyStatus": "ok",
+            "graphifyOk": true,
+            "note": "Graphify detects this extension but discovery reports no deterministic _DISPATCH extractor."
+          }
+        ]
+      }
     }
   },
   "stubsAndHallucinationAudit": {
@@ -903,6 +1107,7 @@
       "The committed public-repo validation harness regenerates data/public-repo-validation-manifest.* from raw live artifacts and fails when a code language lacks passing three-repo evidence.",
       "The committed precision-evidence harness regenerates data/precision-evidence-manifest.* from raw live artifacts and separates sampled symbol/location evidence from weaker kind-count-only rows.",
       "The committed call-edge evidence harness regenerates data/call-edge-evidence-manifest.* from raw artifacts and separates core receiver-typed call evidence from live call-count-only rows.",
+      "The committed Graphify support harness regenerates data/graphify-support-manifest.* and separates deterministic extractor rows from detector-only extension support.",
       "Objective-C validation can be inflated by vendored Pods if Atlas and the native counter use different dependency filters; the final validation excludes dependency folders for the validation count.",
       "CUDA host-function counters overcount the denominator for a CUDA-specific benchmark; the final validation labels and uses a CUDA-qualified __global__/__device__/__host__ function denominator."
     ],
@@ -935,10 +1140,6 @@
     {
       "priority": "P2",
       "item": "Increase public-repo validation from 3 repos per language to a larger fixed sample for high-variance languages such as Objective-C, Razor, Apex, CUDA, and Swift."
-    },
-    {
-      "priority": "P2",
-      "item": "Keep Graphify no-equivalent rows as saturation evidence, but separate detector-only language support from deterministic Graphify extractor support in all headlines."
     }
   ]
 }
