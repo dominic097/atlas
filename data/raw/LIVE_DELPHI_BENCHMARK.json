@@ -431,13 +431,14 @@
     "coverage_scope": "Full Lazarus ide target; the Delphi/Lazarus source counter covers 11,308 form/package/dependency/unit definitions, while Atlas also indexes 27,540 companion Pascal definitions and 307 Makefile targets from the same ide target. Text and XML document symbols are reported separately and excluded from this code-target ratio."
   },
   "optimization": {
-    "cycles_run": 4,
-    "stop_reason": "Delphi/Lazarus live benchmark now exceeds the Delphi/Lazarus-only source counter by reporting full Lazarus ide code-target coverage: 11,308 Delphi/Lazarus definitions plus 27,540 companion Pascal definitions and 307 Makefile targets, with nine equivalent Delphi/Pascal rows above the 10x token and latency targets.",
+    "cycles_run": 5,
+    "stop_reason": "Delphi/Lazarus live benchmark exceeds the Delphi/Lazarus-only source counter by reporting full Lazarus ide code-target coverage: 11,308 Delphi/Lazarus definitions plus 27,540 companion Pascal definitions and 307 Makefile targets; three public Lazarus/Delphi repos validate exact Delphi/Lazarus parser coverage; query rows remain above 10x token and latency targets.",
     "cycle_notes": [
       "cycle 1: fpc/Lazarus IDE probe showed the generic Delphi fallback indexed only form component instance names and missed event handlers plus .lpk package/unit/dependency context exposed by graphify.",
       "cycle 2: after adding a dedicated Delphi/Lazarus parser and benchmark-owned source counter, Atlas covers form and package context on the live Lazarus IDE slice.",
       "cycle 3: expanded the query set with companion Pascal code-target rows (`TBuildManager`, `TLazPackageGraph`) from the same Lazarus ide target to verify the additional Atlas definitions are queryable.",
-      "cycle 4: refreshed the clean artifact with graphify-out excluded from Atlas indexing; Atlas indexes 39,155 Delphi/Pascal/Makefile code-target definitions versus the Delphi/Lazarus source counter's 11,308 definitions, excluding text and XML document symbols from the coverage ratio."
+      "cycle 4: refreshed the clean artifact with graphify-out excluded from Atlas indexing; Atlas indexes 39,155 Delphi/Pascal/Makefile code-target definitions versus the Delphi/Lazarus source counter's 11,308 definitions, excluding text and XML document symbols from the coverage ratio.",
+      "cycle 5: added three public Lazarus/Delphi validation targets: Lazarus ide, transmission-remote-gui/transgui, and castle-engine tools; Atlas matched the independent .lfm/.dfm/.lpk source counter on all three."
     ]
   },
   "query_warmup": {
@@ -689,5 +690,43 @@
     "commit": "21d5334",
     "date": "2026-06-30T08:50:32Z",
     "measurement_note": "Clean warm-serve measurement from 25-sample medians with graphify-out removed before Atlas indexing; Graphify was rebuilt afterward only for comparison rows. Query set includes Delphi/Lazarus form/package symbols plus companion Pascal code-target symbols from the same Lazarus ide target."
+  },
+  "multi_repo_validation": {
+    "minimum_repos": 3,
+    "status": "passed",
+    "generated_at": "2026-06-30T10:24:26Z",
+    "scope": "Delphi/Lazarus parser validation uses three public Lazarus/Delphi targets and an independent source counter for .lfm/.dfm form components/events plus .lpk package/dependency/unit metadata. Companion Pascal and Makefile target symbols are reported separately on the primary Lazarus ide target.",
+    "repos": [
+      {
+        "repo": "https://github.com/fpc/Lazarus",
+        "commit": "a37c7c35c6a271b377cd799c48586ea2689a8e0f",
+        "target_path": "/private/tmp/atlas-delphi-3repo-1782815066/lazarus-ide/repo/ide",
+        "atlas_definitions": 11308,
+        "native_definitions": 11308,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "206 .lfm/.dfm/.lpk files counted; Atlas counts {\"component\":4595,\"component_type\":4595,\"dependency\":14,\"event\":1976,\"package\":5,\"unit\":123} matched native counts {\"component\":4595,\"component_type\":4595,\"event\":1976,\"package\":5,\"dependency\":14,\"unit\":123}."
+      },
+      {
+        "repo": "https://github.com/transmission-remote-gui/transgui",
+        "commit": "da71b860d4920f7ab847a48bd8d804725ddbad7b",
+        "target_path": "/private/tmp/atlas-delphi-3repo-1782815066/transgui/repo",
+        "atlas_definitions": 1460,
+        "native_definitions": 1460,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "16 .lfm/.dfm/.lpk files counted; Atlas counts {\"component\":581,\"component_type\":581,\"dependency\":3,\"event\":259,\"package\":2,\"unit\":34} matched native counts {\"component\":581,\"component_type\":581,\"event\":259,\"package\":2,\"dependency\":3,\"unit\":34}."
+      },
+      {
+        "repo": "https://github.com/castle-engine/castle-engine",
+        "commit": "ce51df9a6a775826a017546a6f9e460443c94a5c",
+        "target_path": "/private/tmp/atlas-delphi-3repo-1782815066/castle-engine/repo/tools",
+        "atlas_definitions": 2429,
+        "native_definitions": 2429,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "26 .lfm/.dfm/.lpk files counted; Atlas counts {\"component\":969,\"component_type\":969,\"dependency\":6,\"event\":483,\"package\":1,\"unit\":1} matched native counts {\"component\":969,\"component_type\":969,\"event\":483,\"package\":1,\"dependency\":6,\"unit\":1}."
+      }
+    ]
   }
 }
