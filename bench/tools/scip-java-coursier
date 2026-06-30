@@ -1,0 +1,26 @@
+#!/usr/bin/env sh
+set -eu
+
+SCIP_JAVA_VERSION="${SCIP_JAVA_VERSION:-0.12.3}"
+SCIP_JAVA_MAIN="${SCIP_JAVA_MAIN:-com.sourcegraph.scip_java.ScipJava}"
+COURSIER_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/atlas-bench"
+COURSIER_BIN="${COURSIER_BIN:-}"
+
+if [ -z "$COURSIER_BIN" ]; then
+  if command -v cs >/dev/null 2>&1; then
+    COURSIER_BIN="$(command -v cs)"
+  elif command -v coursier >/dev/null 2>&1; then
+    COURSIER_BIN="$(command -v coursier)"
+  else
+    COURSIER_BIN="$COURSIER_CACHE_DIR/coursier"
+    if [ ! -x "$COURSIER_BIN" ]; then
+      mkdir -p "$COURSIER_CACHE_DIR"
+      tmp="$COURSIER_BIN.tmp"
+      curl -fsSL -o "$tmp" https://git.io/coursier-cli
+      chmod +x "$tmp"
+      mv "$tmp" "$COURSIER_BIN"
+    fi
+  fi
+fi
+
+exec "$COURSIER_BIN" launch "com.sourcegraph:scip-java_2.13:$SCIP_JAVA_VERSION" -M "$SCIP_JAVA_MAIN" -- "$@"
