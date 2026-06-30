@@ -85,6 +85,28 @@ func TestIndexedQueries(t *testing.T) {
 		t.Errorf("SymbolsByName: recv_type metadata missing, saw %v", recvSeen)
 	}
 
+	summaryReader, ok := d.(interface {
+		SymbolSummaryByName(context.Context, string, string) (graph.CodeSymbol, int, bool, error)
+		SymbolPathsByName(context.Context, string, string) ([]string, error)
+	})
+	if !ok {
+		t.Fatal("sqlite driver does not expose symbol summary readers")
+	}
+	first, total, found, err := summaryReader.SymbolSummaryByName(ctx, snapID, "addTask")
+	if err != nil {
+		t.Fatalf("SymbolSummaryByName: %v", err)
+	}
+	if !found || first.ID != "sym-app" || total != 2 {
+		t.Fatalf("SymbolSummaryByName = first:%+v total:%d found:%v, want sym-app/2/true", first, total, found)
+	}
+	paths, err := summaryReader.SymbolPathsByName(ctx, snapID, "addTask")
+	if err != nil {
+		t.Fatalf("SymbolPathsByName: %v", err)
+	}
+	if len(paths) != 2 || paths[0] != "app.go" || paths[1] != "engine.go" {
+		t.Fatalf("SymbolPathsByName = %v, want [app.go engine.go]", paths)
+	}
+
 	// A miss returns nothing.
 	none, err := d.SymbolsByName(ctx, snapID, "nope")
 	if err != nil {
@@ -131,6 +153,7 @@ func TestIndexedQueries(t *testing.T) {
 
 	routeReader, ok := d.(interface {
 		RoutesForSymbol(context.Context, string, string, []string) ([]graph.Route, error)
+		RouteCountForSymbol(context.Context, string, string, []string) (int, error)
 	})
 	if !ok {
 		t.Fatal("sqlite driver does not expose RoutesForSymbol")
@@ -151,6 +174,13 @@ func TestIndexedQueries(t *testing.T) {
 	}
 	if !routePaths["/tasks"] {
 		t.Errorf("RoutesForSymbol missing /tasks route: %+v", matchedRoutes)
+	}
+	routeCount, err := routeReader.RouteCountForSymbol(ctx, snapID, "addTask", []string{"engine.go"})
+	if err != nil {
+		t.Fatalf("RouteCountForSymbol: %v", err)
+	}
+	if routeCount != len(matchedRoutes) {
+		t.Fatalf("RouteCountForSymbol = %d, want %d", routeCount, len(matchedRoutes))
 	}
 
 	// CallEdgesByToRefs: index hit returns the edge with metadata; a ref not in

@@ -246,8 +246,12 @@ func terseExplain(r *engine.ExplainResult) string {
 	if calleeCount > 0 {
 		parts = append(parts, fmt.Sprintf("d%d", calleeCount))
 	}
-	if len(r.ServedRoutes) > 0 {
-		parts = append(parts, fmt.Sprintf("r%d", len(r.ServedRoutes)))
+	routeCount := len(r.ServedRoutes)
+	if r.ServedRouteCount > routeCount {
+		routeCount = r.ServedRouteCount
+	}
+	if routeCount > 0 {
+		parts = append(parts, fmt.Sprintf("r%d", routeCount))
 	}
 	if len(r.CrossRepoConsumers) > 0 {
 		parts = append(parts, fmt.Sprintf("x%d", len(r.CrossRepoConsumers)))

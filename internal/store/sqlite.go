@@ -1131,25 +1131,72 @@ func (d *sqliteDriver) SymbolsByName(ctx context.Context, snapshotID, name strin
 	return out, rows.Err()
 }
 
+func scanSymbolSummaryRow(scanner interface {
+	Scan(dest ...any) error
+}, snapshotID string) (graph.CodeSymbol, int, error) {
+	var (
+		sym   graph.CodeSymbol
+		sid   int64
+		meta  sql.NullString
+		total int
+	)
+	if err := scanner.Scan(&sym.ID, &sid, &sym.NodeID, &sym.RepoID, &sym.Path, &sym.Language,
+		&sym.Kind, &sym.Name, &sym.Signature, &sym.Doc, &sym.StartLine, &sym.EndLine, &meta, &total); err != nil {
+		return graph.CodeSymbol{}, 0, err
+	}
+	sym.SnapshotID = snapshotID
+	m, err := unmarshalJSONMap(meta.String)
+	if err != nil {
+		return graph.CodeSymbol{}, 0, err
+	}
+	sym.Metadata = m
+	return sym, total, nil
+}
+
 // SymbolSummaryByName returns the first deterministic symbol row for minimal
 // explain output, avoiding full symbol materialization when the renderer only
 // needs one compact location.
 func (d *sqliteDriver) SymbolSummaryByName(ctx context.Context, snapshotID, name string) (graph.CodeSymbol, int, bool, error) {
 	row := d.db.QueryRowContext(ctx, `
-		SELECT `+symbolCols+`
+		SELECT `+symbolCols+`, COUNT(*) OVER()
 		FROM symbols WHERE snapshot_id = (SELECT sid FROM snapshots WHERE id = ?) AND name = ?
 		ORDER BY path, start_line
 		LIMIT 1`,
 		snapshotID, name,
 	)
-	sym, err := scanSymbolRow(row, snapshotID)
+	sym, total, err := scanSymbolSummaryRow(row, snapshotID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return graph.CodeSymbol{}, 0, false, nil
 		}
 		return graph.CodeSymbol{}, 0, false, fmt.Errorf("store: symbol summary by name: %w", err)
 	}
-	return sym, 1, true, nil
+	return sym, total, true, nil
+}
+
+// SymbolPathsByName returns the distinct non-empty defining paths for name.
+func (d *sqliteDriver) SymbolPathsByName(ctx context.Context, snapshotID, name string) ([]string, error) {
+	rows, err := d.db.QueryContext(ctx, `
+		SELECT DISTINCT path
+		FROM symbols
+		WHERE snapshot_id = (SELECT sid FROM snapshots WHERE id = ?) AND name = ? AND path <> ''
+		ORDER BY path`,
+		snapshotID, name,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("store: symbol paths by name: %w", err)
+	}
+	defer rows.Close()
+
+	var paths []string
+	for rows.Next() {
+		var path string
+		if err := rows.Scan(&path); err != nil {
+			return nil, fmt.Errorf("store: scan symbol path: %w", err)
+		}
+		paths = append(paths, path)
+	}
+	return paths, rows.Err()
 }
 
 // symbolsChunk is the IN-list batch size for SymbolsByNames; same rationale as
@@ -1561,6 +1608,32 @@ func (d *sqliteDriver) RoutesForSymbol(ctx context.Context, snapshotID, symbolNa
 		out = append(out, rt)
 	}
 	return out, rows.Err()
+}
+
+// RouteCountForSymbol returns the producer-route count for a symbol/defining
+// path set without materializing route rows.
+func (d *sqliteDriver) RouteCountForSymbol(ctx context.Context, snapshotID, symbolName string, defPaths []string) (int, error) {
+	defPaths = uniqueNonEmpty(defPaths)
+	args := []any{snapshotID, symbolName}
+	handlerPredicate := ""
+	if len(defPaths) > 0 {
+		placeholders := strings.Repeat("?,", len(defPaths))
+		placeholders = placeholders[:len(placeholders)-1]
+		handlerPredicate = ` OR handler_file IN (` + placeholders + `)`
+		for _, path := range defPaths {
+			args = append(args, path)
+		}
+	}
+	var count int
+	if err := d.db.QueryRowContext(ctx, `
+		SELECT COUNT(*)
+		FROM routes
+		WHERE snapshot_id = (SELECT sid FROM snapshots WHERE id = ?)
+			AND role = 'producer'
+			AND (json_extract(metadata, '$.handler_symbol') = ?`+handlerPredicate+`)`, args...).Scan(&count); err != nil {
+		return 0, fmt.Errorf("store: route count for symbol: %w", err)
+	}
+	return count, nil
 }
 
 // ListFiles returns the indexed file rows of a snapshot (path/language/imports).

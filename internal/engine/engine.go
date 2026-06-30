@@ -484,6 +484,7 @@ type ExplainResult struct {
 	CalleeCount        int            `json:"callee_count,omitempty"`
 	Imports            []string       `json:"imports,omitempty"`
 	ServedRoutes       []ExplainRoute `json:"served_routes,omitempty"`
+	ServedRouteCount   int            `json:"served_route_count,omitempty"`
 	CrossRepoConsumers []string       `json:"cross_repo_consumers,omitempty"`
 }
 
@@ -1880,6 +1881,19 @@ func (e *localEngine) Explain(ctx context.Context, in ExplainInput) (*ExplainRes
 	if defCount > len(res.Definitions) {
 		res.DefinitionCount = defCount
 	}
+	if in.CountsOnly && snap.RouteCount > 0 {
+		if fast, ok := e.store.(interface {
+			SymbolPathsByName(context.Context, string, string) ([]string, error)
+		}); ok {
+			paths, err := fast.SymbolPathsByName(ctx, snap.ID, in.Name)
+			if err != nil {
+				return nil, fmt.Errorf("engine: explain symbol paths: %w", err)
+			}
+			for _, path := range paths {
+				defPaths[path] = true
+			}
+		}
+	}
 
 	if !in.CountsOnly {
 		// Imports of the defining file(s), via the indexed file rows. Terse/plain
@@ -1892,6 +1906,14 @@ func (e *localEngine) Explain(ctx context.Context, in ExplainInput) (*ExplainRes
 
 	servedLabels := map[string]bool{}
 	if snap.RouteCount > 0 {
+		if in.CountsOnly {
+			if count, ok, err := e.routeCountForExplain(ctx, snap.ID, in.Name, defPaths); err != nil {
+				return nil, fmt.Errorf("engine: explain routes: %w", err)
+			} else if ok {
+				res.ServedRouteCount = count
+				return res, nil
+			}
+		}
 		routes, err := e.routesForExplain(ctx, snap.ID, in.Name, defPaths, in.CountsOnly)
 		if err != nil {
 			return nil, fmt.Errorf("engine: explain routes: %w", err)
@@ -1937,6 +1959,21 @@ func (e *localEngine) Explain(ctx context.Context, in ExplainInput) (*ExplainRes
 	return res, nil
 }
 
+func (e *localEngine) routeCountForExplain(ctx context.Context, snapshotID, name string, defPaths map[string]bool) (int, bool, error) {
+	fast, ok := e.store.(interface {
+		RouteCountForSymbol(context.Context, string, string, []string) (int, error)
+	})
+	if !ok {
+		return 0, false, nil
+	}
+	paths := make([]string, 0, len(defPaths))
+	for path := range defPaths {
+		paths = append(paths, path)
+	}
+	count, err := fast.RouteCountForSymbol(ctx, snapshotID, name, paths)
+	return count, true, err
+}
+
 func (e *localEngine) routesForExplain(ctx context.Context, snapshotID, name string, defPaths map[string]bool, countsOnly bool) ([]graph.Route, error) {
 	// Producer routes served by this symbol: handler_symbol == SYMBOL OR the
 	// route's handler file is one of the definition paths. Plain/counts explain
@@ -1956,7 +1993,7 @@ func (e *localEngine) routesForExplain(ctx context.Context, snapshotID, name str
 }
 
 func (e *localEngine) explainDefs(ctx context.Context, snap *graph.Snapshot, in ExplainInput) ([]graph.CodeSymbol, int, error) {
-	if in.CountsOnly && snap.RouteCount == 0 {
+	if in.CountsOnly {
 		if fast, ok := e.store.(interface {
 			SymbolSummaryByName(context.Context, string, string) (graph.CodeSymbol, int, bool, error)
 		}); ok {

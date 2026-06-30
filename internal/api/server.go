@@ -543,8 +543,12 @@ func terseExplain(r *engine.ExplainResult) string {
 	if kind != "" || location != "" {
 		parts = append(parts, strings.TrimRight(fmt.Sprintf("%s@%s", kind, location), "@"))
 	}
-	if len(r.ServedRoutes) > 0 {
-		parts = append(parts, fmt.Sprintf("r%d", len(r.ServedRoutes)))
+	routeCount := len(r.ServedRoutes)
+	if r.ServedRouteCount > routeCount {
+		routeCount = r.ServedRouteCount
+	}
+	if routeCount > 0 {
+		parts = append(parts, fmt.Sprintf("r%d", routeCount))
 	}
 	if len(r.CrossRepoConsumers) > 0 {
 		parts = append(parts, fmt.Sprintf("x%d", len(r.CrossRepoConsumers)))
