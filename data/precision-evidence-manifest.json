@@ -1,0 +1,5611 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-06-30T17:49:06.841Z",
+  "source": "data/raw/LIVE_*_BENCHMARK.json",
+  "harness": "scripts/precision-evidence-harness.mjs",
+  "summary": {
+    "artifacts": 36,
+    "sampledNameLocationArtifacts": 31,
+    "kindCountOnlyArtifacts": 0,
+    "countOnlyArtifacts": 5,
+    "equivalentRows": 199,
+    "matchedNameLocationRows": 156,
+    "validationRows": 105,
+    "validationKindRows": 63,
+    "passed": true
+  },
+  "languages": [
+    {
+      "language": "apex",
+      "artifact": "data/raw/LIVE_APEX_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 12,
+      "matchedNameLocationRows": 12,
+      "matchedNameLocationRatio": 1,
+      "validationRows": 3,
+      "validationKindRows": 3,
+      "nativeSampleEvidence": [
+        {
+          "key": "sample_definitions",
+          "count": 30
+        }
+      ],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "SOQLRecipes",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "SOQLRecipes t@SOQLRecipes:6"
+          ],
+          "graphifyHead": [
+            "Node: SOQLRecipes",
+            "  ID:        main_default_classes_data_recipes_soqlrecipes_soqlrecipes",
+            "  Source:    main/default/classes/Data Recipes/SOQLRecipes.cls L6",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "DMLRecipes",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "DMLRecipes t@DMLRecipes:7"
+          ],
+          "graphifyHead": [
+            "Node: DMLRecipes",
+            "  ID:        main_default_classes_data_recipes_dmlrecipes_dmlrecipes",
+            "  Source:    main/default/classes/Data Recipes/DMLRecipes.cls L7",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "AccountTrigger",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "AccountTrigger g@AccountTrigger:1"
+          ],
+          "graphifyHead": [
+            "Node: AccountTrigger",
+            "  ID:        main_default_triggers_accounttrigger_accounttrigger",
+            "  Source:    main/default/triggers/AccountTrigger.trigger L1",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "Account",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "Account s@QueueableChainingRecipes:27"
+          ],
+          "graphifyHead": [
+            "Node: Account",
+            "  ID:        main_default_classes_async_apex_recipes_queueablechainingrecipes_cls_account",
+            "  Source:    main/default/classes/Async Apex Recipes/QueueableChainingRecipes.cls L27",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "insert",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "insert d@DMLRecipes:28"
+          ],
+          "graphifyHead": [
+            "Node: insert",
+            "  ID:        main_default_classes_data_recipes_dmlrecipes_cls_dml_insert",
+            "  Source:    main/default/classes/Data Recipes/DMLRecipes.cls L28",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "FormattedDocsViewer",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "FormattedDocsViewer c@formattedDocsViewer:3"
+          ],
+          "graphifyHead": [
+            "Node: FormattedDocsViewer",
+            "  ID:        main_default_lwc_formatteddocsviewer_mocks_formatteddocsviewer_formatteddocsviewer",
+            "  Source:    main/default/lwc/formattedDocsViewer/__mocks__/formattedDocsViewer.js L3",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "loadDocumentation",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "loadDocumentation f@formattedDocsViewer:46"
+          ],
+          "graphifyHead": [
+            "Node: .loadDocumentation()",
+            "  ID:        main_default_lwc_formatteddocsviewer_formatteddocsviewer_formatteddocsviewer_loaddocumentation",
+            "  Source:    main/default/lwc/formattedDocsViewer/formattedDocsViewer.js L46",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "FormattedRecipeDisplay",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "FormattedRecipeDisplay c@formattedRecipeDisplay:3"
+          ],
+          "graphifyHead": [
+            "Node: FormattedRecipeDisplay",
+            "  ID:        main_default_lwc_formattedrecipedisplay_mocks_formattedrecipedisplay_formattedrecipedisplay",
+            "  Source:    main/default/lwc/formattedRecipeDisplay/__mocks__/formattedRecipeDisplay.js L3",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "ErrorPanel",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "ErrorPanel c@errorPanel:6"
+          ],
+          "graphifyHead": [
+            "Node: ErrorPanel",
+            "  ID:        main_default_lwc_errorpanel_errorpanel_errorpanel",
+            "  Source:    main/default/lwc/errorPanel/errorPanel.js L6",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "RecipeTreeView",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "RecipeTreeView c@recipeTreeView:3"
+          ],
+          "graphifyHead": [
+            "Node: RecipeTreeView",
+            "  ID:        main_default_lwc_recipetreeview_mocks_recipetreeview_recipetreeview",
+            "  Source:    main/default/lwc/recipeTreeView/__mocks__/recipeTreeView.js L3",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "formatMarkdown",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "formatMarkdown f@formattedDocsViewer:69"
+          ],
+          "graphifyHead": [
+            "Node: .formatMarkdown()",
+            "  ID:        main_default_lwc_formatteddocsviewer_formatteddocsviewer_formatteddocsviewer_formatmarkdown",
+            "  Source:    main/default/lwc/formattedDocsViewer/formattedDocsViewer.js L69",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "RelatedCodeTabs",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "RelatedCodeTabs c@relatedCodeTabs:4"
+          ],
+          "graphifyHead": [
+            "Node: RelatedCodeTabs",
+            "  ID:        main_default_lwc_relatedcodetabs_relatedcodetabs_relatedcodetabs",
+            "  Source:    main/default/lwc/relatedCodeTabs/relatedCodeTabs.js L4",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/aquivalabs/my-org-butler",
+          "commit": "f1225426aa62d207f8efa9a434fbda9082e48b9a",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "constructor": 23,
+            "dml": 18,
+            "method": 313,
+            "sobject": 56,
+            "trigger": 1,
+            "type": 116
+          },
+          "atlasCounts": {
+            "constructor": 28,
+            "dml": 16,
+            "method": 387,
+            "sobject": 15,
+            "type": 113
+          }
+        },
+        {
+          "repo": "https://github.com/cirruspath/stripeforce",
+          "commit": "83f0b7625a9b09a571769b9b71ae1680d854187b",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "constructor": 1,
+            "dml": 6,
+            "method": 128,
+            "sobject": 8,
+            "trigger": 1,
+            "type": 38
+          },
+          "atlasCounts": {
+            "constructor": 1,
+            "dml": 6,
+            "method": 146,
+            "sobject": 2,
+            "trigger": 1,
+            "type": 38
+          }
+        },
+        {
+          "repo": "https://github.com/codefriar/promise",
+          "commit": "dbd29f856250fcffbf4b89b244aecd492807f860",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "constructor": 2,
+            "dml": 0,
+            "method": 28,
+            "sobject": 3,
+            "trigger": 0,
+            "type": 2
+          },
+          "atlasCounts": {
+            "constructor": 6,
+            "method": 27,
+            "type": 10
+          }
+        }
+      ]
+    },
+    {
+      "language": "astro",
+      "artifact": "data/raw/LIVE_ASTRO_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 6,
+      "matchedNameLocationRows": 6,
+      "matchedNameLocationRatio": 1,
+      "validationRows": 3,
+      "validationKindRows": 3,
+      "nativeSampleEvidence": [
+        {
+          "key": "sample_definitions",
+          "count": 30
+        },
+        {
+          "key": "parse_error_samples",
+          "count": 0
+        }
+      ],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "BaseLayout",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "BaseLayout c@BaseLayout.astro:1"
+          ],
+          "graphifyHead": [
+            "Node: ../../layouts/BaseLayout.astro",
+            "  ID:        layouts_baselayout",
+            "  Source:    layouts/BaseLayout.astro L1",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "BlogPost",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "BlogPost c@BlogPost.astro:1"
+          ],
+          "graphifyHead": [
+            "Node: ../../components/BlogPost.astro",
+            "  ID:        components_blogpost",
+            "  Source:    components/BlogPost.astro L1",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "ThemeIcon",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "ThemeIcon c@Header.astro:10"
+          ],
+          "graphifyHead": [
+            "Node: ThemeIcon.astro",
+            "  ID:        components_themeicon",
+            "  Source:    components/ThemeIcon.astro L1",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "Greeting",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "Greeting f@Greeting:3"
+          ],
+          "graphifyHead": [
+            "Node: Greeting()",
+            "  ID:        components_greeting_greeting",
+            "  Source:    components/Greeting.jsx L3",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "GET",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "GET f@rss.xml:3"
+          ],
+          "graphifyHead": [
+            "Node: GET()",
+            "  ID:        pages_rss_xml_get",
+            "  Source:    pages/rss.xml.js L3",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "menu",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "menu v@menu:1"
+          ],
+          "graphifyHead": [
+            "Node: menu",
+            "  ID:        scripts_menu_menu",
+            "  Source:    scripts/menu.js L1",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/cssninjaStudio/krypton",
+          "commit": "9826929fae84f21ee27dc5874be45084de953f72",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "file_component": 14,
+            "component_tag": 24,
+            "function": 0,
+            "variable": 8,
+            "class": 0,
+            "interface": 0,
+            "type": 0,
+            "enum": 0
+          },
+          "atlasCounts": {
+            "component": 38,
+            "variable": 8
+          }
+        },
+        {
+          "repo": "https://github.com/natemoo-re/astro-remote",
+          "commit": "649f9e6bd118e69d2395e5ee604156d374185b59",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "file_component": 13,
+            "component_tag": 13,
+            "function": 0,
+            "variable": 19,
+            "class": 0,
+            "interface": 2,
+            "type": 0,
+            "enum": 0
+          },
+          "atlasCounts": {
+            "component": 35,
+            "variable": 22
+          }
+        },
+        {
+          "repo": "https://github.com/MaeWolff/astro-portfolio-template",
+          "commit": "c156b7c0bade58fd8f6409aefb5e78e85686633e",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "file_component": 11,
+            "component_tag": 15,
+            "function": 1,
+            "variable": 16,
+            "class": 0,
+            "interface": 0,
+            "type": 7,
+            "enum": 0
+          },
+          "atlasCounts": {
+            "component": 29,
+            "function": 1,
+            "variable": 29
+          }
+        }
+      ]
+    },
+    {
+      "language": "bash",
+      "artifact": "data/raw/LIVE_BASH_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 4,
+      "matchedNameLocationRows": 4,
+      "matchedNameLocationRatio": 1,
+      "validationRows": 3,
+      "validationKindRows": 0,
+      "nativeSampleEvidence": [],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "nvm",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "nvm f@nvm:3155"
+          ],
+          "graphifyHead": [
+            "Node: nvm.sh",
+            "  ID:        nvm",
+            "  Source:    nvm.sh L1",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "nvm_install_binary",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "nvm_install_binary f@nvm:2331"
+          ],
+          "graphifyHead": [
+            "Node: nvm_install_binary()",
+            "  ID:        nvm_nvm_install_binary",
+            "  Source:    nvm.sh L2331",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "nvm_die_on_prefix",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "nvm_die_on_prefix f@nvm:2863"
+          ],
+          "graphifyHead": [
+            "Node: nvm_die_on_prefix()",
+            "  ID:        nvm_nvm_die_on_prefix",
+            "  Source:    nvm.sh L2863",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "nvm_get_os",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "nvm_get_os f@nvm:2129"
+          ],
+          "graphifyHead": [
+            "Node: nvm_get_os()",
+            "  ID:        nvm_nvm_get_os",
+            "  Source:    nvm.sh L2129",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/nvm-sh/nvm",
+          "commit": "a6ec73943099a86fba98bde3b04a1c60944a4549",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": null
+        },
+        {
+          "repo": "https://github.com/rbenv/rbenv",
+          "commit": "7f984a7bb5c084b0c1c532441862eed5bbeab129",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": null
+        },
+        {
+          "repo": "https://github.com/pyenv/pyenv",
+          "commit": "a27d2723d6d4cc00439faa0fd277db700add717f",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": null
+        }
+      ]
+    },
+    {
+      "language": "blade",
+      "artifact": "data/raw/LIVE_BLADE_BENCHMARK.json",
+      "status": "count-only",
+      "equivalentRows": 6,
+      "matchedNameLocationRows": 0,
+      "matchedNameLocationRatio": 0,
+      "validationRows": 3,
+      "validationKindRows": 0,
+      "nativeSampleEvidence": [
+        {
+          "key": "sample_definitions",
+          "count": 30
+        }
+      ],
+      "gap": "Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence.",
+      "queryRows": [
+        {
+          "symbol": "settings.parts.navbar",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "settings.parts.navbar i@audit:6"
+          ],
+          "graphifyHead": [
+            "Node: settings.parts.navbar",
+            "  ID:        settings_audit_blade_php_settings_parts_navbar",
+            "  Source:    settings/audit.blade.php None",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "home.parts.sidebar",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "home.parts.sidebar i@books:8"
+          ],
+          "graphifyHead": [
+            "Node: home.parts.sidebar",
+            "  ID:        home_books_blade_php_home_parts_sidebar",
+            "  Source:    home/books.blade.php None",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "entities.view-toggle",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "entities.view-toggle i@index-sidebar-section-actions:11"
+          ],
+          "graphifyHead": [
+            "Node: entities.view-toggle",
+            "  ID:        books_parts_index_sidebar_section_actions_blade_php_entities_view_toggle",
+            "  Source:    books/parts/index-sidebar-section-actions.blade.php None",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "common.dark-mode-toggle",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "common.dark-mode-toggle i@dark-mode-toggle:1"
+          ],
+          "graphifyHead": [
+            "Node: common.dark-mode-toggle",
+            "  ID:        home_books_blade_php_common_dark_mode_toggle",
+            "  Source:    home/books.blade.php None",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "form.user-select",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "form.user-select i@entity-permissions:31"
+          ],
+          "graphifyHead": [
+            "Node: form.user-select",
+            "  ID:        form_entity_permissions_blade_php_form_user_select",
+            "  Source:    form/entity-permissions.blade.php None",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "books.parts.list",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "books.parts.list i@index:4"
+          ],
+          "graphifyHead": [
+            "Node: books.parts.list",
+            "  ID:        books_index_blade_php_books_parts_list",
+            "  Source:    books/index.blade.php None",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/BookStackApp/BookStack",
+          "commit": "f7df78b91b12ff1d8e248ded7747e76203904b8e",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": {
+            "component": 11,
+            "include": 528,
+            "layout": 102,
+            "section": 130,
+            "slot": 16,
+            "template": 303
+          }
+        },
+        {
+          "repo": "https://github.com/coollabsio/coolify",
+          "commit": "e7dff30b7c998c301fd91bd169727b90c59ec291",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": {
+            "component": 2322,
+            "handler": 655,
+            "include": 2,
+            "layout": 14,
+            "section": 4,
+            "template": 324
+          }
+        },
+        {
+          "repo": "https://github.com/koel/koel",
+          "commit": "d727dec030d3b0fb349b4a4aa853adc1baae9bdd",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": {
+            "component": 2,
+            "layout": 4,
+            "section": 6,
+            "slot": 4,
+            "template": 9
+          }
+        }
+      ]
+    },
+    {
+      "language": "byond",
+      "artifact": "data/raw/LIVE_BYOND_BENCHMARK.json",
+      "status": "count-only",
+      "equivalentRows": 5,
+      "matchedNameLocationRows": 0,
+      "matchedNameLocationRatio": 0,
+      "validationRows": 3,
+      "validationKindRows": 0,
+      "nativeSampleEvidence": [
+        {
+          "key": "sample_definitions",
+          "count": 30
+        }
+      ],
+      "gap": "Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence.",
+      "queryRows": [
+        {
+          "symbol": "Say code basics",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "Say code basics s@say_readme.md:1"
+          ],
+          "graphifyHead": [
+            "Traversal: BFS depth=2 | Start: ['Say code basics'] | 5 nodes found",
+            "",
+            "NODE say_readme.md [src=say_readme.md loc=L1 community=0]",
+            "NODE RADIOS [src=say_readme.md loc=L149 community=1]"
+          ]
+        },
+        {
+          "symbol": "MIAUW'S SAY REWRITE",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "MIAUW'S SAY REWRITE s@say_readme.md:5"
+          ],
+          "graphifyHead": [
+            "Traversal: BFS depth=2 | Start: [\"MIAUW'S SAY REWRITE\", 'say_readme.md', 'Say code basics'] | 6 nodes found",
+            "",
+            "NODE say_readme.md [src=say_readme.md loc=L1 community=0]",
+            "NODE RADIOS [src=say_readme.md loc=L149 community=1]"
+          ]
+        },
+        {
+          "symbol": "PROCS & VARIABLES",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "PROCS & VARIABLES s@say_readme.md:19"
+          ],
+          "graphifyHead": [
+            "Traversal: BFS depth=2 | Start: ['PROCS & VARIABLES'] | 5 nodes found",
+            "",
+            "NODE say_readme.md [src=say_readme.md loc=L1 community=0]",
+            "NODE RADIOS [src=say_readme.md loc=L149 community=1]"
+          ]
+        },
+        {
+          "symbol": "RADIOS",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "RADIOS s@say_readme.md:149"
+          ],
+          "graphifyHead": [
+            "Traversal: BFS depth=2 | Start: ['RADIOS'] | 6 nodes found",
+            "",
+            "NODE say_readme.md [src=say_readme.md loc=L1 community=0]",
+            "NODE RADIOS [src=say_readme.md loc=L149 community=1]"
+          ]
+        },
+        {
+          "symbol": "VIRTUAL SPEAKERS:",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "VIRTUAL SPEAKERS: s@say_readme.md:165"
+          ],
+          "graphifyHead": [
+            "Traversal: BFS depth=2 | Start: ['VIRTUAL SPEAKERS:'] | 3 nodes found",
+            "",
+            "NODE say_readme.md [src=say_readme.md loc=L1 community=0]",
+            "NODE RADIOS [src=say_readme.md loc=L149 community=1]"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/tgstation/tgstation",
+          "commit": "da0d9e08a0b3e9091c287a8aa733f463322e247f",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": null
+        },
+        {
+          "repo": "https://github.com/goonstation/goonstation",
+          "commit": "54977b957b9cb26895407c527e8e643eeff1d8d0",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": null
+        },
+        {
+          "repo": "https://github.com/ParadiseSS13/Paradise",
+          "commit": "f9332f11bf0f3a3d98a0c6174630ce840d0eb44c",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": null
+        }
+      ]
+    },
+    {
+      "language": "csharp",
+      "artifact": "data/raw/LIVE_CSHARP_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 4,
+      "matchedNameLocationRows": 2,
+      "matchedNameLocationRatio": 0.5,
+      "validationRows": 3,
+      "validationKindRows": 3,
+      "nativeSampleEvidence": [],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "SqlMapper",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "SqlMapper c@SqlMapper.Async.cs:14"
+          ],
+          "graphifyHead": [
+            "Node: SqlMapper",
+            "  ID:        dapper_sqlmapper_async_sqlmapper",
+            "  Source:    Dapper/SqlMapper.Async.cs L14",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "CommandDefinition",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "CommandDefinition t@CommandDefinition.cs:12"
+          ],
+          "graphifyHead": [
+            "Node: CommandDefinition",
+            "  ID:        commanddefinition",
+            "  Source:",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "DynamicParameters",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "DynamicParameters c@DynamicParameters.CachedOutputSetters.cs:5"
+          ],
+          "graphifyHead": [
+            "Node: DynamicParameters",
+            "  ID:        dynamicparameters",
+            "  Source:",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "TypeHandlerCache",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "TypeHandlerCache c@SqlMapper.TypeHandlerCache.cs:13"
+          ],
+          "graphifyHead": [
+            "Node: TypeHandlerCache",
+            "  ID:        dapper_sqlmapper_typehandlercache_typehandlercache",
+            "  Source:    Dapper/SqlMapper.TypeHandlerCache.cs L13",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/Ceiridge/Chrome-Developer-Mode-Extension-Warning-Patcher",
+          "commit": "936977542ecfb025b784cd457fcbfd7dffbe5f5c",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "class": 31,
+            "constructor": 22,
+            "interface": 1,
+            "method": 58
+          },
+          "atlasCounts": {
+            "class": 31,
+            "constructor": 22,
+            "field": 17,
+            "interface": 1,
+            "method": 58,
+            "module": 10
+          }
+        },
+        {
+          "repo": "https://github.com/Viladoman/StructLayout",
+          "commit": "fde80869381bdcf7747628ecd3d9105bc6d39056",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "class": 54,
+            "constructor": 19,
+            "enum": 12,
+            "interface": 1,
+            "method": 250
+          },
+          "atlasCounts": {
+            "class": 54,
+            "constant": 70,
+            "constructor": 19,
+            "enum": 12,
+            "field": 112,
+            "interface": 1,
+            "method": 250,
+            "module": 27
+          }
+        },
+        {
+          "repo": "https://github.com/b2developer/MonopolyNEAT",
+          "commit": "5706282faf6a13a4a522c2e71b469737222ab4b8",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "class": 22,
+            "constructor": 18,
+            "enum": 11,
+            "method": 125
+          },
+          "atlasCounts": {
+            "class": 22,
+            "constant": 45,
+            "constructor": 18,
+            "enum": 11,
+            "method": 125,
+            "module": 13
+          }
+        }
+      ]
+    },
+    {
+      "language": "cuda",
+      "artifact": "data/raw/LIVE_CUDA_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 4,
+      "matchedNameLocationRows": 4,
+      "matchedNameLocationRatio": 1,
+      "validationRows": 3,
+      "validationKindRows": 3,
+      "nativeSampleEvidence": [
+        {
+          "key": "sample_definitions",
+          "count": 3
+        }
+      ],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "testKernel",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "testKernel f@simpleAtomicIntrinsics_kernel:38"
+          ],
+          "graphifyHead": [
+            "Node: testKernel()",
+            "  ID:        simpleatomicintrinsics_kernel_testkernel",
+            "  Source:    simpleAtomicIntrinsics_kernel.cuh L38",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "runTest",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "runTest f@simpleAtomicIntrinsics:84"
+          ],
+          "graphifyHead": [
+            "Node: runTest()",
+            "  ID:        simpleatomicintrinsics_runtest",
+            "  Source:    simpleAtomicIntrinsics.cu L84",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "main",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "main f@simpleAtomicIntrinsics:71"
+          ],
+          "graphifyHead": [
+            "Node: main()",
+            "  ID:        simpleatomicintrinsics_main",
+            "  Source:    simpleAtomicIntrinsics.cu L71",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "computeGold",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "computeGold f@simpleAtomicIntrinsics_cpu:45"
+          ],
+          "graphifyHead": [
+            "Node: computeGold()",
+            "  ID:        simpleatomicintrinsics_cpu_computegold",
+            "  Source:    simpleAtomicIntrinsics_cpu.cpp L45",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/MegviiRobot/MegBA",
+          "commit": "bd86dc05c0a345ac5d43e77c353cbe0583e6f128",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "cuda_qualified_function": 73
+          },
+          "atlasCounts": {
+            "function": 103,
+            "method": 85
+          }
+        },
+        {
+          "repo": "https://github.com/dnouri/cuda-convnet",
+          "commit": "e4ac0c1f374a15cfe3944bd6d732c3822cc2b96b",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "cuda_qualified_function": 57
+          },
+          "atlasCounts": {
+            "constructor": 79,
+            "function": 137,
+            "method": 724
+          }
+        },
+        {
+          "repo": "https://github.com/ashawkey/diff-gaussian-rasterization",
+          "commit": "8829d14f814fccdaf840b7b0f3021a616583c0a1",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "cuda_qualified_function": 4
+          },
+          "atlasCounts": {
+            "function": 8,
+            "method": 20
+          }
+        }
+      ]
+    },
+    {
+      "language": "dart",
+      "artifact": "data/raw/LIVE_DART_BENCHMARK.json",
+      "status": "count-only",
+      "equivalentRows": 6,
+      "matchedNameLocationRows": 0,
+      "matchedNameLocationRatio": 0,
+      "validationRows": 3,
+      "validationKindRows": 0,
+      "nativeSampleEvidence": [
+        {
+          "key": "parse_error_samples",
+          "count": 0
+        }
+      ],
+      "gap": "Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence.",
+      "queryRows": [
+        {
+          "symbol": "Client",
+          "atlasHasName": true,
+          "graphifyHasName": false,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "Client t@client:36"
+          ],
+          "graphifyHead": [
+            "Node: client",
+            "  ID:        http_client",
+            "  Source:    http.dart None",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "BaseClient",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "BaseClient t@base_client:20"
+          ],
+          "graphifyHead": [
+            "Node: BaseClient",
+            "  ID:        src_base_client_baseclient",
+            "  Source:    src/base_client.dart None",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "Request",
+          "atlasHasName": true,
+          "graphifyHasName": false,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "Request t@request:16"
+          ],
+          "graphifyHead": [
+            "Node: request",
+            "  ID:        src_base_response_request",
+            "  Source:    src/base_response.dart None",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "Response",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "Response t@response:16"
+          ],
+          "graphifyHead": [
+            "Node: Response",
+            "  ID:        src_response_response",
+            "  Source:    src/response.dart None",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "send",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "send f@retry:113"
+          ],
+          "graphifyHead": [
+            "Node: send",
+            "  ID:        retry_send",
+            "  Source:    retry.dart None",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "RetryClient",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "RetryClient t@retry:17"
+          ],
+          "graphifyHead": [
+            "Node: RetryClient",
+            "  ID:        retry_retryclient",
+            "  Source:    retry.dart None",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/dart-lang/http",
+          "commit": "5d94ef52582867e077bf41c3fa20fb8b1d1d834e",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": null
+        },
+        {
+          "repo": "https://github.com/dart-lang/path",
+          "commit": "7e3d5d87220133ad9cc99f82e85a826011a62859",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": null
+        },
+        {
+          "repo": "https://github.com/dart-lang/args",
+          "commit": "7a2dfb528768f0a2e5680f711dbfb948f1d6c255",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": null
+        }
+      ]
+    },
+    {
+      "language": "delphi",
+      "artifact": "data/raw/LIVE_DELPHI_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 9,
+      "matchedNameLocationRows": 9,
+      "matchedNameLocationRatio": 1,
+      "validationRows": 3,
+      "validationKindRows": 3,
+      "nativeSampleEvidence": [
+        {
+          "key": "sample_definitions",
+          "count": 30
+        }
+      ],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "AboutForm",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "AboutForm c@aboutfrm:1"
+          ],
+          "graphifyHead": [
+            "Node: AboutFormCreate()",
+            "  ID:        aboutfrm_aboutformcreate",
+            "  Source:    aboutfrm.lfm L18",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "FormClose",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "FormClose f@aboutfrm:17"
+          ],
+          "graphifyHead": [
+            "Node: FormClose()",
+            "  ID:        aboutfrm_formclose",
+            "  Source:    aboutfrm.lfm L17",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "Notebook",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "Notebook c@aboutfrm:20"
+          ],
+          "graphifyHead": [
+            "Node: NotebookPageChanged()",
+            "  ID:        aboutfrm_notebookpagechanged",
+            "  Source:    aboutfrm.lfm L29",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "TPageControl",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "TPageControl c@aboutfrm:20"
+          ],
+          "graphifyHead": [
+            "Node: TPageControl",
+            "  ID:        aboutfrm_tpagecontrol",
+            "  Source:    aboutfrm.lfm L20",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "IdeProject",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "IdeProject d@idedebugger:357"
+          ],
+          "graphifyHead": [
+            "Node: IdeProject",
+            "  ID:        ideproject",
+            "  Source:    packages/idedebugger/idedebugger.lpk L1",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "BuildManager",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "BuildManager d@buildmanager:28"
+          ],
+          "graphifyHead": [
+            "Node: BuildManager",
+            "  ID:        packages_ideproject_buildmanager_buildmanager",
+            "  Source:    packages/ideproject/buildmanager.pas L28",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "IdePackager",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "IdePackager p@idepackager:5"
+          ],
+          "graphifyHead": [
+            "Node: IdePackager",
+            "  ID:        packages_idepackager_idepackager_lpk_packages_idepackager_idepackager_idepackager",
+            "  Source:    packages/idepackager/idepackager.lpk L1",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "TBuildManager",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "TBuildManager t@buildmanager:63"
+          ],
+          "graphifyHead": [
+            "Node: TBuildManager",
+            "  ID:        idebuildmanager_pas_packages_ideproject_buildmanager_tbuildmanager",
+            "  Source:    idebuildmanager.pas L49",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "TLazPackageGraph",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "TLazPackageGraph t@packagesystem:158"
+          ],
+          "graphifyHead": [
+            "Node: TLazPackageGraph",
+            "  ID:        packages_idepackager_packagesystem_tlazpackagegraph",
+            "  Source:    packages/idepackager/packagesystem.pas L158",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/fpc/Lazarus",
+          "commit": "a37c7c35c6a271b377cd799c48586ea2689a8e0f",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "component": 4595,
+            "component_type": 4595,
+            "event": 1976,
+            "package": 5,
+            "dependency": 14,
+            "unit": 123
+          },
+          "atlasCounts": {
+            "component": 4595,
+            "component_type": 4595,
+            "dependency": 14,
+            "event": 1976,
+            "package": 5,
+            "unit": 123
+          }
+        },
+        {
+          "repo": "https://github.com/transmission-remote-gui/transgui",
+          "commit": "da71b860d4920f7ab847a48bd8d804725ddbad7b",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "component": 581,
+            "component_type": 581,
+            "event": 259,
+            "package": 2,
+            "dependency": 3,
+            "unit": 34
+          },
+          "atlasCounts": {
+            "component": 581,
+            "component_type": 581,
+            "dependency": 3,
+            "event": 259,
+            "package": 2,
+            "unit": 34
+          }
+        },
+        {
+          "repo": "https://github.com/castle-engine/castle-engine",
+          "commit": "ce51df9a6a775826a017546a6f9e460443c94a5c",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "component": 969,
+            "component_type": 969,
+            "event": 483,
+            "package": 1,
+            "dependency": 6,
+            "unit": 1
+          },
+          "atlasCounts": {
+            "component": 969,
+            "component_type": 969,
+            "dependency": 6,
+            "event": 483,
+            "package": 1,
+            "unit": 1
+          }
+        }
+      ]
+    },
+    {
+      "language": "dotnet",
+      "artifact": "data/raw/LIVE_DOTNET_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 10,
+      "matchedNameLocationRows": 7,
+      "matchedNameLocationRatio": 0.7,
+      "validationRows": 3,
+      "validationKindRows": 3,
+      "nativeSampleEvidence": [
+        {
+          "key": "sample_definitions",
+          "count": 30
+        },
+        {
+          "key": "parse_error_samples",
+          "count": 0
+        }
+      ],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "Dapper",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "Dapper p@Dapper.EntityFramework:13"
+          ],
+          "graphifyHead": [
+            "Node: Dapper",
+            "  ID:        dapper_rainbow_database_async_dapper",
+            "  Source:    Dapper.Rainbow/Database.Async.cs L8",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "Dapper.Tests",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "Dapper.Tests p@Dapper:36"
+          ],
+          "graphifyHead": [
+            "Node: Dapper.Tests",
+            "  ID:        tests_dapper_tests_asynctests_dapper_tests",
+            "  Source:    tests/Dapper.Tests/AsyncTests.cs L12",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "Microsoft.NET.Sdk",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "Microsoft.NET.Sdk s@Dapper.EntityFramework.StrongName:1"
+          ],
+          "graphifyHead": [
+            "Node: Microsoft.NET.Sdk",
+            "  ID:        dapper_entityframework_strongname_dapper_entityframework_strongname_csproj_sdk_microsoft_net_sdk",
+            "  Source:    Dapper.EntityFramework.StrongName/Dapper.EntityFramework.StrongName.csproj None",
+            "  Type:      concept"
+          ]
+        },
+        {
+          "symbol": "Microsoft.Bcl.AsyncInterfaces",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "Microsoft.Bcl.AsyncInterfaces p@Dapper.StrongName:21"
+          ],
+          "graphifyHead": [
+            "Node: Microsoft.Bcl.AsyncInterfaces",
+            "  ID:        dapper_strongname_dapper_strongname_csproj_nuget_microsoft_bcl_asyncinterfaces",
+            "  Source:    Dapper.StrongName/Dapper.StrongName.csproj None",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "Dapper.ProviderTools",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "Dapper.ProviderTools p@Dapper.ProviderTools:1"
+          ],
+          "graphifyHead": [
+            "Node: Dapper.ProviderTools",
+            "  ID:        dapper_providertools_bulkcopy_dapper_providertools",
+            "  Source:    Dapper.ProviderTools/BulkCopy.cs L11",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "net8.0",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "net8.0 t@Dapper.ProviderTools:8"
+          ],
+          "graphifyHead": [
+            "Node: net8.0",
+            "  ID:        dapper_providertools_dapper_providertools_csproj_framework_net8_0",
+            "  Source:    Dapper.ProviderTools/Dapper.ProviderTools.csproj None",
+            "  Type:      concept"
+          ]
+        },
+        {
+          "symbol": "SqlMapper",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "SqlMapper c@SqlMapper.Async.cs:14"
+          ],
+          "graphifyHead": [
+            "Node: SqlMapper",
+            "  ID:        dapper_sqlmapper_async_sqlmapper",
+            "  Source:    Dapper/SqlMapper.Async.cs L14",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "CommandDefinition",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "CommandDefinition t@CommandDefinition.cs:12"
+          ],
+          "graphifyHead": [
+            "Node: CommandDefinition",
+            "  ID:        dapper_commanddefinition_commanddefinition",
+            "  Source:    Dapper/CommandDefinition.cs L12",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "GridReader",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "GridReader c@SqlMapper.GridReader.Async.cs:12"
+          ],
+          "graphifyHead": [
+            "Node: GridReader",
+            "  ID:        dapper_sqlmapper_gridreader_async_gridreader",
+            "  Source:    Dapper/SqlMapper.GridReader.Async.cs L12",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "DefaultTypeMap",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "DefaultTypeMap c@DefaultTypeMap.cs:11"
+          ],
+          "graphifyHead": [
+            "Node: DefaultTypeMap",
+            "  ID:        dapper_defaulttypemap_defaulttypemap",
+            "  Source:    Dapper/DefaultTypeMap.cs L11",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/Far0n/xgbfi",
+          "commit": "f779f7c7042557bac2289e2f40ea7e9475dc8473",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "package": 0,
+            "project": 2,
+            "project_reference": 0,
+            "sdk": 0,
+            "target_framework": 0
+          },
+          "atlasCounts": {
+            "project": 2
+          }
+        },
+        {
+          "repo": "https://github.com/Viladoman/StructLayout",
+          "commit": "fde80869381bdcf7747628ecd3d9105bc6d39056",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "package": 5,
+            "project": 8,
+            "project_reference": 0,
+            "sdk": 0,
+            "target_framework": 0
+          },
+          "atlasCounts": {
+            "package": 5,
+            "project": 8
+          }
+        },
+        {
+          "repo": "https://github.com/b2developer/MonopolyNEAT",
+          "commit": "5706282faf6a13a4a522c2e71b469737222ab4b8",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "package": 0,
+            "project": 2,
+            "project_reference": 0,
+            "sdk": 1,
+            "target_framework": 1
+          },
+          "atlasCounts": {
+            "project": 2,
+            "sdk": 1,
+            "target_framework": 1
+          }
+        }
+      ]
+    },
+    {
+      "language": "ejs",
+      "artifact": "data/raw/LIVE_EJS_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 1,
+      "matchedNameLocationRows": 1,
+      "matchedNameLocationRatio": 1,
+      "validationRows": 3,
+      "validationKindRows": 3,
+      "nativeSampleEvidence": [
+        {
+          "key": "sample_definitions",
+          "count": 30
+        }
+      ],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "index",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "index i@index:1 r1"
+          ],
+          "graphifyHead": [
+            "Node: index()",
+            "  ID:        main_index_index",
+            "  Source:    mvc/controllers/main/index.js L3",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/aws-samples/eb-node-express-sample",
+          "commit": "093dd30cf3897df8f9c3c3800a3cfbfe02a5777a",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "template": 1,
+            "include": 0,
+            "function": 0,
+            "variable": 0
+          },
+          "atlasCounts": {
+            "template": 1
+          }
+        },
+        {
+          "repo": "https://github.com/ActiveCampaign/PactMaker",
+          "commit": "0a4d52295df7a4c3056280b7e8687987684ee1c5",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "template": 8,
+            "include": 6,
+            "function": 0,
+            "variable": 0
+          },
+          "atlasCounts": {
+            "include": 6,
+            "template": 8
+          }
+        },
+        {
+          "repo": "https://github.com/codemistic/HacktoberFest",
+          "commit": "371100e1508ed228cce50b6c51b61beda0c1ad3e",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "template": 1,
+            "include": 0,
+            "function": 0,
+            "variable": 1
+          },
+          "atlasCounts": {
+            "template": 1,
+            "variable": 1
+          }
+        }
+      ]
+    },
+    {
+      "language": "elixir",
+      "artifact": "data/raw/LIVE_ELIXIR_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 5,
+      "matchedNameLocationRows": 5,
+      "matchedNameLocationRatio": 1,
+      "validationRows": 3,
+      "validationKindRows": 3,
+      "nativeSampleEvidence": [
+        {
+          "key": "parse_error_samples",
+          "count": 0
+        }
+      ],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "Phoenix.Router",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "Phoenix.Router p@router:1"
+          ],
+          "graphifyHead": [
+            "Node: Phoenix.Router",
+            "  ID:        phoenix_router_phoenix_router",
+            "  Source:    phoenix/router.ex L1",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "Phoenix.Endpoint",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "Phoenix.Endpoint p@endpoint:1"
+          ],
+          "graphifyHead": [
+            "Node: Phoenix.Endpoint",
+            "  ID:        phoenix_endpoint_phoenix_endpoint",
+            "  Source:    phoenix/endpoint.ex L1",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "Phoenix.Controller",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "Phoenix.Controller p@controller:1"
+          ],
+          "graphifyHead": [
+            "Node: Phoenix.Controller",
+            "  ID:        phoenix_controller_phoenix_controller",
+            "  Source:    phoenix/controller.ex L1",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "path",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "path f@endpoint:592"
+          ],
+          "graphifyHead": [
+            "Node: paths()",
+            "  ID:        mix_tasks_phx_gen_channel_mix_tasks_phx_gen_channel_paths",
+            "  Source:    mix/tasks/phx.gen.channel.ex L118",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "socket",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "socket f@server:66"
+          ],
+          "graphifyHead": [
+            "Node: socket()",
+            "  ID:        phoenix_channel_server_phoenix_channel_server_socket",
+            "  Source:    phoenix/channel/server.ex L66",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/phoenixframework/phoenix",
+          "commit": "909725968776c2601bbea7827fd5b76e4992cc70",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "module": 83,
+            "protocol": 1,
+            "implementation": 9,
+            "function": 1470,
+            "macro": 67,
+            "delegate": 12,
+            "guard": 0
+          },
+          "atlasCounts": {
+            "delegate": 12,
+            "function": 1470,
+            "implementation": 9,
+            "macro": 67,
+            "module": 83,
+            "protocol": 1
+          }
+        },
+        {
+          "repo": "https://github.com/elixir-plug/plug",
+          "commit": "82cbff630373c61696b246bd383f16da1ecc945b",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "module": 58,
+            "protocol": 1,
+            "implementation": 2,
+            "function": 825,
+            "macro": 21,
+            "delegate": 1,
+            "guard": 1
+          },
+          "atlasCounts": {
+            "delegate": 1,
+            "function": 825,
+            "guard": 1,
+            "implementation": 2,
+            "macro": 21,
+            "module": 58,
+            "protocol": 1
+          }
+        },
+        {
+          "repo": "https://github.com/elixir-ecto/ecto",
+          "commit": "c4bb74a1140b341ef6667da288f535ee5620796a",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "module": 86,
+            "protocol": 1,
+            "implementation": 10,
+            "function": 2576,
+            "macro": 50,
+            "delegate": 1,
+            "guard": 1
+          },
+          "atlasCounts": {
+            "delegate": 1,
+            "function": 2576,
+            "guard": 1,
+            "implementation": 10,
+            "macro": 50,
+            "module": 86,
+            "protocol": 1
+          }
+        }
+      ]
+    },
+    {
+      "language": "ets",
+      "artifact": "data/raw/LIVE_ETS_BENCHMARK.json",
+      "status": "count-only",
+      "equivalentRows": 5,
+      "matchedNameLocationRows": 0,
+      "matchedNameLocationRatio": 0,
+      "validationRows": 3,
+      "validationKindRows": 0,
+      "nativeSampleEvidence": [
+        {
+          "key": "sample_definitions",
+          "count": 30
+        }
+      ],
+      "gap": "Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence.",
+      "queryRows": [
+        {
+          "symbol": "App Samples<a name=\"EN-US_TOPIC_0000001115464207\"></a>",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "App Samples<a name=\"EN-US_TOPIC_0000001115464207\"></a> s@README.md:1"
+          ],
+          "graphifyHead": [
+            "Traversal: BFS depth=2 | Start: ['App Samples<a name=\"EN-US_TOPIC_0000001115464207\"></a>'] | 6 nodes found"
+          ]
+        },
+        {
+          "symbol": "Introduction<a name=\"section1470103520301\"></a>",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "Introduction<a name=\"section1470103520301\"></a> s@README.md:8"
+          ],
+          "graphifyHead": [
+            "Traversal: BFS depth=2 | Start: ['Introduction<a name=\"section1470103520301\"></a>'] | 6 nodes found"
+          ]
+        },
+        {
+          "symbol": "Content <a name=\"sectionMenu\"></a>",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "Content <a name=\"sectionMenu\"></a> s@README.md:12"
+          ],
+          "graphifyHead": [
+            "Traversal: BFS depth=2 | Start: ['Content <a name=\"sectionMenu\"></a>'] | 6 nodes found"
+          ]
+        },
+        {
+          "symbol": "Usage<a name=\"section17988202503116\"></a>",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "Usage<a name=\"section17988202503116\"></a> s@README.md:83"
+          ],
+          "graphifyHead": [
+            "Traversal: BFS depth=2 | Start: ['Usage<a name=\"section17988202503116\"></a>'] | 6 nodes found"
+          ]
+        },
+        {
+          "symbol": "主页Tabs嵌套场景",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "主页Tabs嵌套场景 s@README.md:1"
+          ],
+          "graphifyHead": [
+            "Traversal: BFS depth=2 | Start: ['主页Tabs嵌套场景'] | 10 nodes found"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/openharmony/applications_app_samples",
+          "commit": "a826ab0e75fe51d028c1c5af58188e908736b53b",
+          "hasKindCountEvidence": false,
+          "nativeCounts": {
+            "type": 20,
+            "function": 0,
+            "method": 69,
+            "constructor": 4,
+            "variable": 60
+          },
+          "atlasCounts": null
+        },
+        {
+          "repo": "https://github.com/openharmony/codelabs",
+          "commit": "eadb14174aa2c4e9a4d8622b50fd16748de57a9e",
+          "hasKindCountEvidence": false,
+          "nativeCounts": {
+            "type": 3,
+            "function": 0,
+            "method": 10,
+            "constructor": 1,
+            "variable": 22
+          },
+          "atlasCounts": null
+        },
+        {
+          "repo": "https://github.com/openharmony/applications_filepicker",
+          "commit": "5438caec93de79e5c7395887771d2e7a304bd861",
+          "hasKindCountEvidence": false,
+          "nativeCounts": {
+            "type": 48,
+            "function": 47,
+            "method": 206,
+            "constructor": 9,
+            "variable": 565
+          },
+          "atlasCounts": null
+        }
+      ]
+    },
+    {
+      "language": "fortran",
+      "artifact": "data/raw/LIVE_FORTRAN_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 6,
+      "matchedNameLocationRows": 6,
+      "matchedNameLocationRatio": 1,
+      "validationRows": 3,
+      "validationKindRows": 0,
+      "nativeSampleEvidence": [
+        {
+          "key": "parse_error_samples",
+          "count": 0
+        }
+      ],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "stdlib_array",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "stdlib_array p@stdlib_array:6"
+          ],
+          "graphifyHead": [
+            "Node: stdlib_array",
+            "  ID:        array_stdlib_array_stdlib_array",
+            "  Source:    array/stdlib_array.f90 L6",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "stdlib_datetime",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "stdlib_datetime p@stdlib_datetime:1"
+          ],
+          "graphifyHead": [
+            "Node: stdlib_datetime",
+            "  ID:        datetime_stdlib_datetime_stdlib_datetime",
+            "  Source:    datetime/stdlib_datetime.f90 L1",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "datetime_type",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "datetime_type t@stdlib_datetime:21"
+          ],
+          "graphifyHead": [
+            "Node: datetime_type",
+            "  ID:        datetime_stdlib_datetime_datetime_type",
+            "  Source:    datetime/stdlib_datetime.f90 L21",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "hashmap_type",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "hashmap_type t@stdlib_hashmaps:76"
+          ],
+          "graphifyHead": [
+            "Node: hashmap_type",
+            "  ID:        hashmaps_stdlib_hashmaps_hashmap_type",
+            "  Source:    hashmaps/stdlib_hashmaps.f90 L76",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "loading",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "loading f@stdlib_hashmaps:229"
+          ],
+          "graphifyHead": [
+            "Node: loading()",
+            "  ID:        hashmaps_stdlib_hashmaps_loading",
+            "  Source:    hashmaps/stdlib_hashmaps.f90 L229",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "free_chaining_map",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "free_chaining_map f@stdlib_hashmap_chaining:222"
+          ],
+          "graphifyHead": [
+            "Node: free_chaining_map()",
+            "  ID:        hashmaps_stdlib_hashmap_chaining_free_chaining_map",
+            "  Source:    hashmaps/stdlib_hashmap_chaining.f90 L222",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/fortran-lang/stdlib",
+          "commit": "4c8521d5658455a576946cca3bfe2bd8ede36e24",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": {
+            "function": 335,
+            "module": 11,
+            "type": 18
+          }
+        },
+        {
+          "repo": "https://github.com/fortran-lang/fpm",
+          "commit": "eaffbb36086abdb16c0d052961a3e7240cb22b0a",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": {
+            "function": 670,
+            "module": 56,
+            "type": 51
+          }
+        },
+        {
+          "repo": "https://github.com/jacobwilliams/json-fortran",
+          "commit": "d9ed2e4ee53745f4ed98d7536e17bee5198aa3b0",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": {
+            "function": 414,
+            "module": 6,
+            "type": 8
+          }
+        }
+      ]
+    },
+    {
+      "language": "groovy",
+      "artifact": "data/raw/LIVE_GROOVY_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 5,
+      "matchedNameLocationRows": 5,
+      "matchedNameLocationRatio": 1,
+      "validationRows": 3,
+      "validationKindRows": 3,
+      "nativeSampleEvidence": [
+        {
+          "key": "parse_error_samples",
+          "count": 8
+        }
+      ],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "SysEnv",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "SysEnv c@SysEnv:29"
+          ],
+          "graphifyHead": [
+            "Node: SysEnv",
+            "  ID:        nextflow_sysenv_sysenv",
+            "  Source:    nextflow/SysEnv.groovy L28",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "Const",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "Const c@Const:26"
+          ],
+          "graphifyHead": [
+            "Node: Const.groovy",
+            "  ID:        nextflow_const",
+            "  Source:    nextflow/Const.groovy L1",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "Duration",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "Duration c@Duration:39"
+          ],
+          "graphifyHead": [
+            "Node: Duration.groovy",
+            "  ID:        util_duration",
+            "  Source:    nextflow/util/Duration.groovy L1",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "getVersion",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "getVersion f@BuildInfo:49"
+          ],
+          "graphifyHead": [
+            "Node: getVersion()",
+            "  ID:        nextflow_buildinfo_getversion",
+            "  Source:    nextflow/BuildInfo.groovy L49",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "format",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "format f@Bolts:82"
+          ],
+          "graphifyHead": [
+            "Node: .format()",
+            "  ID:        extension_bolts_bolts_format",
+            "  Source:    nextflow/extension/Bolts.groovy L87",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/jvoegele/gradle-android-plugin",
+          "commit": "2063680c8d2a777aa1311b1865d299c8aa65d5be",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "class": 30,
+            "function": 2,
+            "interface": 1,
+            "method": 91
+          },
+          "atlasCounts": {
+            "class": 44,
+            "interface": 1,
+            "method": 146,
+            "task": 4
+          }
+        },
+        {
+          "repo": "https://github.com/allegro/json-avro-converter",
+          "commit": "ad871e8a497003a90da1ff523b18d96e4afbf5c7",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "class": 11,
+            "method": 24
+          },
+          "atlasCounts": {
+            "class": 16,
+            "method": 22
+          }
+        },
+        {
+          "repo": "https://github.com/jaredsburrows/gradle-license-plugin",
+          "commit": "062bcdcdbc88325f62b3d5e92cf0a1ed57af37a7",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "class": 3,
+            "method": 7
+          },
+          "atlasCounts": {
+            "class": 9,
+            "method": 8,
+            "task": 1
+          }
+        }
+      ]
+    },
+    {
+      "language": "json",
+      "artifact": "data/raw/LIVE_JSON_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 12,
+      "matchedNameLocationRows": 12,
+      "matchedNameLocationRatio": 1,
+      "validationRows": 0,
+      "validationKindRows": 0,
+      "nativeSampleEvidence": [
+        {
+          "key": "sample_keys",
+          "count": 20
+        },
+        {
+          "key": "parse_error_samples",
+          "count": 0
+        }
+      ],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "scripts",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "scripts k@package.json:31"
+          ],
+          "graphifyHead": [
+            "Node: scripts",
+            "  ID:        package_scripts",
+            "  Source:    package.json L31",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "dependencies",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "dependencies k@package.json:40"
+          ],
+          "graphifyHead": [
+            "Node: dependencies",
+            "  ID:        package_dependencies",
+            "  Source:    package.json L40",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "devDependencies",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "devDependencies k@package.json:46"
+          ],
+          "graphifyHead": [
+            "Node: devDependencies",
+            "  ID:        package_devdependencies",
+            "  Source:    package.json L46",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "publishConfig",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "publishConfig k@package.json:28"
+          ],
+          "graphifyHead": [
+            "Node: publishConfig",
+            "  ID:        package_publishconfig",
+            "  Source:    package.json L28",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "ConfigGenerator",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "ConfigGenerator c@config-generator:108"
+          ],
+          "graphifyHead": [
+            "Node: ConfigGenerator",
+            "  ID:        lib_config_generator_configgenerator",
+            "  Source:    lib/config-generator.js L108",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "calc",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "calc f@config-generator:164"
+          ],
+          "graphifyHead": [
+            "Node: .calc()",
+            "  ID:        lib_config_generator_configgenerator_calc",
+            "  Source:    lib/config-generator.js L164",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "boldArgs",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "boldArgs f@logging:21"
+          ],
+          "graphifyHead": [
+            "Node: boldArgs()",
+            "  ID:        lib_utils_logging_boldargs",
+            "  Source:    lib/utils/logging.js L21",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "findPackageJson",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "findPackageJson f@npm-utils:26"
+          ],
+          "graphifyHead": [
+            "Node: findPackageJson()",
+            "  ID:        lib_utils_npm_utils_findpackagejson",
+            "  Source:    lib/utils/npm-utils.js L26",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "parsePackageName",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "parsePackageName f@npm-utils:80"
+          ],
+          "graphifyHead": [
+            "Node: parsePackageName()",
+            "  ID:        lib_utils_npm_utils_parsepackagename",
+            "  Source:    lib/utils/npm-utils.js L80",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "fetchPeerDependencies",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "fetchPeerDependencies f@npm-utils:98"
+          ],
+          "graphifyHead": [
+            "Node: fetchPeerDependencies()",
+            "  ID:        lib_utils_npm_utils_fetchpeerdependencies",
+            "  Source:    lib/utils/npm-utils.js L98",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "installSyncSaveDev",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "installSyncSaveDev f@npm-utils:52"
+          ],
+          "graphifyHead": [
+            "Node: installSyncSaveDev()",
+            "  ID:        lib_utils_npm_utils_installsyncsavedev",
+            "  Source:    lib/utils/npm-utils.js L52",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "defineInMemoryFs",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "defineInMemoryFs f@in-memory-fs:26"
+          ],
+          "graphifyHead": [
+            "Node: defineInMemoryFs()",
+            "  ID:        tests_utils_in_memory_fs_defineinmemoryfs",
+            "  Source:    tests/_utils/in-memory-fs.js L26",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": []
+    },
+    {
+      "language": "julia",
+      "artifact": "data/raw/LIVE_JULIA_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 5,
+      "matchedNameLocationRows": 4,
+      "matchedNameLocationRatio": 0.8,
+      "validationRows": 3,
+      "validationKindRows": 0,
+      "nativeSampleEvidence": [
+        {
+          "key": "parse_error_samples",
+          "count": 1
+        }
+      ],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "JSON",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "JSON p@JSON:1"
+          ],
+          "graphifyHead": [
+            "Node: JSON.jl",
+            "  ID:        json",
+            "  Source:    JSON.jl L1",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "JSONText",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "JSONText t@JSON:84"
+          ],
+          "graphifyHead": [
+            "Node: JSONText",
+            "  ID:        json_jsontext",
+            "  Source:    JSON.jl L84",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "Object",
+          "atlasHasName": true,
+          "graphifyHasName": false,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "Object t@object:17"
+          ],
+          "graphifyHead": [
+            "Node: object.jl",
+            "  ID:        object",
+            "  Source:    object.jl L1",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "parse",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "parse f@parse:148"
+          ],
+          "graphifyHead": [
+            "Node: parse.jl",
+            "  ID:        parse",
+            "  Source:    parse.jl L1",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "json",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "json f@write:430"
+          ],
+          "graphifyHead": [
+            "Node: JSON.jl",
+            "  ID:        json",
+            "  Source:    JSON.jl L1",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/JuliaIO/JSON.jl",
+          "commit": "e5ef310dece16746843753e4c3b44e868b917b64",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": null
+        },
+        {
+          "repo": "https://github.com/JuliaData/DataFrames.jl",
+          "commit": "3924697ea6c02ac186a95b298a4e06b52e881b53",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": null
+        },
+        {
+          "repo": "https://github.com/JuliaStats/StatsBase.jl",
+          "commit": "b8d458aee0fbfb20d386ae2986f30260361675a3",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": null
+        }
+      ]
+    },
+    {
+      "language": "kotlin",
+      "artifact": "data/raw/LIVE_KOTLIN_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 5,
+      "matchedNameLocationRows": 3,
+      "matchedNameLocationRatio": 0.6,
+      "validationRows": 3,
+      "validationKindRows": 3,
+      "nativeSampleEvidence": [
+        {
+          "key": "parse_error_samples",
+          "count": 2
+        }
+      ],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "OkHttpClient",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "OkHttpClient t@OkHttpClient:132"
+          ],
+          "graphifyHead": [
+            "Node: OkHttpClient",
+            "  ID:        okhttp3_okhttpclient_okhttpclient",
+            "  Source:    okhttp3/OkHttpClient.kt L132",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "Request",
+          "atlasHasName": true,
+          "graphifyHasName": false,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "Request t@Request:34"
+          ],
+          "graphifyHead": [
+            "Node: .request()",
+            "  ID:        okhttp3_call_call_request",
+            "  Source:    okhttp3/Call.kt L28",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "Response",
+          "atlasHasName": true,
+          "graphifyHasName": false,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "Response t@Response:41"
+          ],
+          "graphifyHead": [
+            "Node: .response()",
+            "  ID:        okhttp3_cache_entry_response",
+            "  Source:    okhttp3/Cache.kt L687",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "HttpUrl",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "HttpUrl t@HttpUrl:294"
+          ],
+          "graphifyHead": [
+            "Node: HttpUrl",
+            "  ID:        okhttp3_httpurl_httpurl",
+            "  Source:    okhttp3/HttpUrl.kt L294",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "Headers",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "Headers t@Headers:65"
+          ],
+          "graphifyHead": [
+            "Node: Headers",
+            "  ID:        okhttp3_headers_headers",
+            "  Source:    okhttp3/Headers.kt L65",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/gothinkster/kotlin-spring-realworld-example-app",
+          "commit": "848c29e3abfe1bd72001cc7d7a3227aebec96e9b",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "function": 77,
+            "type": 44,
+            "variable": 19
+          },
+          "atlasCounts": {
+            "function": 77,
+            "type": 44,
+            "variable": 67
+          }
+        },
+        {
+          "repo": "https://github.com/VKCOM/vk-android-sdk",
+          "commit": "a0da7abf54acac8910fae43f0a189cc163cb9694",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "function": 1233,
+            "type": 2677,
+            "variable": 1694
+          },
+          "atlasCounts": {
+            "constant": 4104,
+            "function": 1233,
+            "type": 2677,
+            "variable": 2136
+          }
+        },
+        {
+          "repo": "https://github.com/husaynhakeem/android-face-detector",
+          "commit": "a8162ac724d1a439b9e2040c33cd2a1e69ae657a",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "function": 21,
+            "type": 7,
+            "variable": 16
+          },
+          "atlasCounts": {
+            "constant": 2,
+            "function": 21,
+            "type": 7,
+            "variable": 37
+          }
+        }
+      ]
+    },
+    {
+      "language": "lua",
+      "artifact": "data/raw/LIVE_LUA_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 4,
+      "matchedNameLocationRows": 4,
+      "matchedNameLocationRatio": 1,
+      "validationRows": 3,
+      "validationKindRows": 3,
+      "nativeSampleEvidence": [
+        {
+          "key": "parse_error_samples",
+          "count": 0
+        }
+      ],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "Loader.load",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "Loader.load f@cache:231"
+          ],
+          "graphifyHead": [
+            "Node: Loader.load()",
+            "  ID:        core_cache_loader_load",
+            "  Source:    lua/lazy/core/cache.lua L231",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "Async.new",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "Async.new f@async:27"
+          ],
+          "graphifyHead": [
+            "Node: Async.new()",
+            "  ID:        lazy_async_async_new",
+            "  Source:    lua/lazy/async.lua L27",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "M.add",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "M.add f@async:192"
+          ],
+          "graphifyHead": [
+            "Node: M.add()",
+            "  ID:        lazy_async_m_add",
+            "  Source:    lua/lazy/async.lua L192",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "M.reload",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "M.reload f@loader:250"
+          ],
+          "graphifyHead": [
+            "Node: M.reload()",
+            "  ID:        core_loader_m_reload",
+            "  Source:    lua/lazy/core/loader.lua L250",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/pandoc-scholar/pandoc-scholar",
+          "commit": "40870982b42a9928c6cde4638b0e80a0bc894546",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "function": 51,
+            "local_function": 109,
+            "assigned_function": 9
+          },
+          "atlasCounts": {
+            "function": 169
+          }
+        },
+        {
+          "repo": "https://github.com/Kaixhin/Autoencoders",
+          "commit": "21fcbd01024699180fc068665d831a04f306d354",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "function": 0,
+            "local_function": 0,
+            "assigned_function": 2
+          },
+          "atlasCounts": {
+            "function": 33
+          }
+        },
+        {
+          "repo": "https://github.com/sunjon/Shade.nvim",
+          "commit": "4286b5abc47d62d0c9ffb22a4f388b7bf2ac2461",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "function": 0,
+            "local_function": 13,
+            "assigned_function": 10
+          },
+          "atlasCounts": {
+            "function": 23
+          }
+        }
+      ]
+    },
+    {
+      "language": "markdown",
+      "artifact": "data/raw/LIVE_MARKDOWN_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 6,
+      "matchedNameLocationRows": 6,
+      "matchedNameLocationRatio": 1,
+      "validationRows": 3,
+      "validationKindRows": 0,
+      "nativeSampleEvidence": [
+        {
+          "key": "sample_headings",
+          "count": 20
+        },
+        {
+          "key": "parse_error_samples",
+          "count": 0
+        }
+      ],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "Installation",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "Installation s@installation.md:1"
+          ],
+          "graphifyHead": [
+            "Node: Installation",
+            "  ID:        guide_installation_installation",
+            "  Source:    guide/installation.md L1",
+            "  Type:      document"
+          ]
+        },
+        {
+          "symbol": "Creating a book",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "Creating a book s@creating.md:1"
+          ],
+          "graphifyHead": [
+            "Node: Creating a book",
+            "  ID:        guide_creating_creating_a_book",
+            "  Source:    guide/creating.md L1",
+            "  Type:      document"
+          ]
+        },
+        {
+          "symbol": "mdBook-specific features",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "mdBook-specific features s@mdbook.md:1"
+          ],
+          "graphifyHead": [
+            "Node: mdBook-specific features",
+            "  ID:        format_mdbook_mdbook_specific_features",
+            "  Source:    format/mdbook.md L1",
+            "  Type:      document"
+          ]
+        },
+        {
+          "symbol": "Configuring Renderers",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "Configuring Renderers s@renderers.md:1"
+          ],
+          "graphifyHead": [
+            "Node: Configuring Renderers",
+            "  ID:        format_configuration_renderers_configuring_renderers",
+            "  Source:    format/configuration/renderers.md L1",
+            "  Type:      document"
+          ]
+        },
+        {
+          "symbol": "count_words",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "count_words f@main:40"
+          ],
+          "graphifyHead": [
+            "Node: count_words()",
+            "  ID:        for_developers_mdbook_wordcount_src_main_count_words",
+            "  Source:    for_developers/mdbook-wordcount/src/main.rs L40",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "WordcountConfig",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "WordcountConfig c@main:46"
+          ],
+          "graphifyHead": [
+            "Node: WordcountConfig",
+            "  ID:        for_developers_mdbook_wordcount_src_main_wordcountconfig",
+            "  Source:    for_developers/mdbook-wordcount/src/main.rs L46",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/rust-lang/mdBook",
+          "commit": "cb49cc5523e609a731f27dea1af4395a504815a5",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": null
+        },
+        {
+          "repo": "https://github.com/vitejs/vite",
+          "commit": "8f925e2e496f4d313d860acb53880245b07ce6f7",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": null
+        },
+        {
+          "repo": "https://github.com/pnpm/pnpm.io",
+          "commit": "aa7acf218a3a80aacdb5a23e5752f6585aa1dcdb",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": null
+        }
+      ]
+    },
+    {
+      "language": "objc",
+      "artifact": "data/raw/LIVE_OBJC_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 4,
+      "matchedNameLocationRows": 3,
+      "matchedNameLocationRatio": 0.75,
+      "validationRows": 3,
+      "validationKindRows": 3,
+      "nativeSampleEvidence": [
+        {
+          "key": "parse_error_samples",
+          "count": 5
+        }
+      ],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "SDImageCache",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "SDImageCache t@SDImageCache:69"
+          ],
+          "graphifyHead": [
+            "Node: SDImageCache",
+            "  ID:        core_sdimagecache_sdimagecache",
+            "  Source:    Core/SDImageCache.m L69",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "SDWebImageManager",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "SDWebImageManager c@SDWebImageManager:48"
+          ],
+          "graphifyHead": [
+            "Node: SDWebImageManager",
+            "  ID:        core_sdwebimagemanager_sdwebimagemanager",
+            "  Source:    Core/SDWebImageManager.m L30",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "sharedImageCache",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "sharedImageCache f@SDImageCache:85"
+          ],
+          "graphifyHead": [
+            "Node: -sharedImageCache",
+            "  ID:        core_sdimagecache_sdimagecache_sharedimagecache",
+            "  Source:    Core/SDImageCache.m L85",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "objectForKey:",
+          "atlasHasName": true,
+          "graphifyHasName": false,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "objectForKey: f@SDMemoryCache:97"
+          ],
+          "graphifyHead": [
+            "Node: -objectForKey",
+            "  ID:        core_sdmemorycache_sdmemorycache_objectforkey",
+            "  Source:    Core/SDMemoryCache.m L97",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/thetron/StringScore",
+          "commit": "0a6151c63d859e1a6a788b1a6cdfd5debfffe109",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "function": 0,
+            "method": 3,
+            "type": 1
+          },
+          "atlasCounts": {
+            "method": 3,
+            "type": 1
+          }
+        },
+        {
+          "repo": "https://github.com/rs/SafariTabSwitching",
+          "commit": "a5b8ab9c4232fd99e15c672fd60b84acdfab5f9b",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "function": 0,
+            "method": 5,
+            "type": 3
+          },
+          "atlasCounts": {
+            "method": 5,
+            "type": 3
+          }
+        },
+        {
+          "repo": "https://github.com/iosphere/ISHPullUp",
+          "commit": "13539b8938e697b1f9a2a47a6a8f86d40f2e5068",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "function": 0,
+            "method": 89,
+            "type": 12
+          },
+          "atlasCounts": {
+            "method": 89,
+            "type": 12
+          }
+        }
+      ]
+    },
+    {
+      "language": "pascal",
+      "artifact": "data/raw/LIVE_PASCAL_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 11,
+      "matchedNameLocationRows": 11,
+      "matchedNameLocationRatio": 1,
+      "validationRows": 3,
+      "validationKindRows": 0,
+      "nativeSampleEvidence": [
+        {
+          "key": "sample_definitions",
+          "count": 30
+        }
+      ],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "TPSPascalCompiler",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "TPSPascalCompiler t@uPSCompiler:15"
+          ],
+          "graphifyHead": [
+            "Node: TPSPascalCompiler",
+            "  ID:        upscompiler_tpspascalcompiler",
+            "  Source:    uPSCompiler.pas L929",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "TPSRuntimeClassImporter",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "TPSRuntimeClassImporter t@uPSRuntime:1050"
+          ],
+          "graphifyHead": [
+            "Node: TPSRuntimeClassImporter",
+            "  ID:        upsruntime_tpsruntimeclassimporter",
+            "  Source:    uPSRuntime.pas L1050",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "TPSInternalProcedure",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "TPSInternalProcedure t@uPSCompiler:550"
+          ],
+          "graphifyHead": [
+            "Node: TPSInternalProcedure",
+            "  ID:        upscompiler_tpsinternalprocedure",
+            "  Source:    uPSCompiler.pas L550",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "RegisterClassLibraryRuntime",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "RegisterClassLibraryRuntime f@uPSRuntime:1073"
+          ],
+          "graphifyHead": [
+            "Node: RegisterClassLibraryRuntime()",
+            "  ID:        upsruntime_registerclasslibraryruntime",
+            "  Source:    uPSRuntime.pas L11989",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "PascalScriptFCL",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "PascalScriptFCL p@PascalScriptFCL:4"
+          ],
+          "graphifyHead": [
+            "Node: PascalScriptFCL",
+            "  ID:        pascalscriptfcl_pascalscriptfcl",
+            "  Source:    PascalScriptFCL.lpk L1",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "PascalScriptLCL",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "PascalScriptLCL p@PascalScriptLCL:4"
+          ],
+          "graphifyHead": [
+            "Node: PascalScriptLCL.lpk",
+            "  ID:        pascalscriptlcl",
+            "  Source:    PascalScriptLCL.lpk L1",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "uPSRuntime",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "uPSRuntime d@PascalScriptFCL:57"
+          ],
+          "graphifyHead": [
+            "Node: uPSRuntime",
+            "  ID:        pascalscriptfcl_lpk_upsruntime",
+            "  Source:    PascalScriptFCL.lpk L1",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "uPSCompiler",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "uPSCompiler d@PascalScriptFCL:89"
+          ],
+          "graphifyHead": [
+            "Node: uPSCompiler",
+            "  ID:        pascalscriptfcl_lpk_upscompiler",
+            "  Source:    PascalScriptFCL.lpk L1",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "uPSComponent",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "uPSComponent d@PascalScriptFCL:93"
+          ],
+          "graphifyHead": [
+            "Node: uPSComponent",
+            "  ID:        pascalscriptfcl_lpk_upscomponent",
+            "  Source:    PascalScriptFCL.lpk L1",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "LCL",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "LCL d@PascalScriptLCL:131"
+          ],
+          "graphifyHead": [
+            "Node: LCL",
+            "  ID:        lcl",
+            "  Source:    PascalScriptLCL.lpk L1",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "PascalScript_Core_Reg",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "PascalScript_Core_Reg d@PascalScriptLCL:62"
+          ],
+          "graphifyHead": [
+            "Node: PascalScript_Core_Reg",
+            "  ID:        pascalscriptlcl_lpk_pascalscript_core_reg",
+            "  Source:    PascalScriptLCL.lpk L1",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/remobjects/pascalscript",
+          "commit": "2c826cd803a3c0417354fa37b2417f21993ce4ac",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": {
+            "function": 6072,
+            "type": 274,
+            "unit": 85
+          }
+        },
+        {
+          "repo": "https://github.com/fpc/Lazarus",
+          "commit": "e1cc57bb27e48541ffe4bf66c78a8dddfc4f6630",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": {
+            "function": 92656,
+            "type": 4997,
+            "unit": 609
+          }
+        },
+        {
+          "repo": "https://github.com/transmission-remote-gui/transgui",
+          "commit": "da71b860d4920f7ab847a48bd8d804725ddbad7b",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": {
+            "function": 5290,
+            "type": 181,
+            "unit": 69
+          }
+        }
+      ]
+    },
+    {
+      "language": "php",
+      "artifact": "data/raw/LIVE_PHP_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 3,
+      "matchedNameLocationRows": 3,
+      "matchedNameLocationRatio": 1,
+      "validationRows": 3,
+      "validationKindRows": 0,
+      "nativeSampleEvidence": [],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "handle",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "handle f@App:207"
+          ],
+          "graphifyHead": [
+            "Node: .handle()",
+            "  ID:        slim_app_app_handle",
+            "  Source:    Slim/App.php L207",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "process",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "process f@BodyParsingMiddleware:55"
+          ],
+          "graphifyHead": [
+            "Node: .process()",
+            "  ID:        slim_middleware_bodyparsingmiddleware_bodyparsingmiddleware_process",
+            "  Source:    Slim/Middleware/BodyParsingMiddleware.php L55",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "getResponseFactory",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "getResponseFactory f@Psr17Factory:35"
+          ],
+          "graphifyHead": [
+            "Node: .getResponseFactory()",
+            "  ID:        slim_factory_psr17_psr17factory_psr17factory_getresponsefactory",
+            "  Source:    Slim/Factory/Psr17/Psr17Factory.php L35",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/slimphp/Slim",
+          "commit": "0da7dd2fc66956730b6633f6a056b35e59126583",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": {
+            "class": 106,
+            "field": 222,
+            "function": 742,
+            "interface": 18,
+            "module": 124
+          }
+        },
+        {
+          "repo": "https://github.com/symfony/console",
+          "commit": "b711a8ab808b6c074c6b8caef70d0fd8d6b6d07d",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": {
+            "class": 355,
+            "constant": 25,
+            "enum": 9,
+            "field": 401,
+            "function": 2724,
+            "interface": 24,
+            "module": 300
+          }
+        },
+        {
+          "repo": "https://github.com/composer/composer",
+          "commit": "8c3eba87d24bbdcdaaf8f5c42391de20fd8ed6b1",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": {
+            "class": 275,
+            "field": 958,
+            "function": 2623,
+            "interface": 32,
+            "module": 307
+          }
+        }
+      ]
+    },
+    {
+      "language": "powershell",
+      "artifact": "data/raw/LIVE_POWERSHELL_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 4,
+      "matchedNameLocationRows": 4,
+      "matchedNameLocationRatio": 1,
+      "validationRows": 3,
+      "validationKindRows": 0,
+      "nativeSampleEvidence": [
+        {
+          "key": "parse_error_samples",
+          "count": 0
+        }
+      ],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "Find-Module",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "Find-Module f@PowerShellGet:410"
+          ],
+          "graphifyHead": [
+            "Node: Find-Module()",
+            "  ID:        powershellget_find_module",
+            "  Source:    PowerShellGet.psm1 L410",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "Install-Module",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "Install-Module f@PowerShellGet:1037"
+          ],
+          "graphifyHead": [
+            "Node: Install-Module()",
+            "  ID:        powershellget_install_module",
+            "  Source:    PowerShellGet.psm1 L1037",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "Register-PSRepository",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "Register-PSRepository f@PowerShellGet:1716"
+          ],
+          "graphifyHead": [
+            "Node: Register-PSRepository()",
+            "  ID:        powershellget_register_psrepository",
+            "  Source:    PowerShellGet.psm1 L1716",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "Update-ModuleManifest",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "Update-ModuleManifest f@PowerShellGet:2882"
+          ],
+          "graphifyHead": [
+            "Node: Update-ModuleManifest()",
+            "  ID:        powershellget_update_modulemanifest",
+            "  Source:    PowerShellGet.psm1 L2882",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/PowerShell/PowerShellGet",
+          "commit": "a2dac8e74603f7c9eec4a54c5e23459531751b0d",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": null
+        },
+        {
+          "repo": "https://github.com/PowerShell/SecretManagement",
+          "commit": "e24cc88e87d02cabbbf0fbaf76e4e287e927dbed",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": null
+        },
+        {
+          "repo": "https://github.com/PowerShell/PSResourceGet",
+          "commit": "6ecc668473baf37aa3cb84cc54dce7434364d121",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": null
+        }
+      ]
+    },
+    {
+      "language": "razor",
+      "artifact": "data/raw/LIVE_RAZOR_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 6,
+      "matchedNameLocationRows": 6,
+      "matchedNameLocationRatio": 1,
+      "validationRows": 3,
+      "validationKindRows": 3,
+      "nativeSampleEvidence": [
+        {
+          "key": "sample_definitions",
+          "count": 30
+        }
+      ],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "EditForm",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "EditForm c@Create:12"
+          ],
+          "graphifyHead": [
+            "Node: EditForm",
+            "  ID:        blazoradmin_pages_catalogitempage_create_razor_editform",
+            "  Source:    BlazorAdmin/Pages/CatalogItemPage/Create.razor L12",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "CreateClick",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "CreateClick f@Create:125"
+          ],
+          "graphifyHead": [
+            "Node: CreateClick",
+            "  ID:        blazoradmin_pages_catalogitempage_create_createclick",
+            "  Source:    BlazorAdmin/Pages/CatalogItemPage/Create.razor L125",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "ConfirmEmailModel",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "ConfirmEmailModel m@ConfirmEmail:2"
+          ],
+          "graphifyHead": [
+            "Node: ConfirmEmailModel",
+            "  ID:        confirmemailmodel",
+            "  Source:    Web/Areas/Identity/Pages/Account/ConfirmEmail.cshtml L2",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "CatalogItem",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "CatalogItem c@CatalogItem.cs:7"
+          ],
+          "graphifyHead": [
+            "Node: CatalogItem",
+            "  ID:        applicationcore_entities_catalogitem_catalogitem",
+            "  Source:    ApplicationCore/Entities/CatalogItem.cs L7",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "BasketService",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "BasketService c@BasketService.cs:11"
+          ],
+          "graphifyHead": [
+            "Node: BasketService",
+            "  ID:        applicationcore_services_basketservice_basketservice",
+            "  Source:    ApplicationCore/Services/BasketService.cs L11",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "BlazorComponent",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "BlazorComponent c@BlazorComponent.cs:5"
+          ],
+          "graphifyHead": [
+            "Node: BlazorComponent",
+            "  ID:        blazoradmin_helpers_blazorcomponent_blazorcomponent",
+            "  Source:    BlazorAdmin/Helpers/BlazorComponent.cs L5",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/soundaranbu/Razor.Templating.Core",
+          "commit": "5f984ab8c652bdb32effb5d8f179c9ef5332f4c6",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "base": 0,
+            "component": 0,
+            "import": 3,
+            "method": 0,
+            "model": 0,
+            "route": 0,
+            "service": 1,
+            "view": 28
+          },
+          "atlasCounts": {
+            "import": 3,
+            "service": 1,
+            "view": 28
+          }
+        },
+        {
+          "repo": "https://github.com/mikoskinen/Blazor.Animate",
+          "commit": "b21038311e3142f347c2d88d2ada0d44fca222e4",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "base": 0,
+            "component": 66,
+            "import": 20,
+            "method": 22,
+            "model": 0,
+            "route": 2,
+            "service": 1,
+            "view": 25
+          },
+          "atlasCounts": {
+            "component": 89,
+            "import": 19,
+            "method": 26,
+            "route": 2,
+            "service": 1,
+            "view": 1
+          }
+        },
+        {
+          "repo": "https://github.com/mryderie/aspnet-core-htmx-example",
+          "commit": "becc566a0f2b3268878b2f888e47c9ae85c31914",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "base": 0,
+            "component": 3,
+            "import": 1,
+            "method": 0,
+            "model": 6,
+            "route": 0,
+            "service": 0,
+            "view": 23
+          },
+          "atlasCounts": {
+            "component": 3,
+            "import": 1,
+            "model": 6,
+            "view": 23
+          }
+        }
+      ]
+    },
+    {
+      "language": "ruby",
+      "artifact": "data/raw/LIVE_RUBY_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 4,
+      "matchedNameLocationRows": 4,
+      "matchedNameLocationRatio": 1,
+      "validationRows": 3,
+      "validationKindRows": 3,
+      "nativeSampleEvidence": [],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "initialize",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "initialize f@base:98"
+          ],
+          "graphifyHead": [
+            "Node: .initialize()",
+            "  ID:        sinatra_base_acceptentry_initialize",
+            "  Source:    lib/sinatra/base.rb L98",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "call",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "call f@base:226"
+          ],
+          "graphifyHead": [
+            "Node: .call()",
+            "  ID:        sinatra_base_extendedrack_call",
+            "  Source:    lib/sinatra/base.rb L226",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "route",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "route f@base:1776"
+          ],
+          "graphifyHead": [
+            "Node: .route!()",
+            "  ID:        sinatra_base_base_route",
+            "  Source:    lib/sinatra/base.rb L1064",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "settings",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "settings f@base:1017"
+          ],
+          "graphifyHead": [
+            "Node: .settings()",
+            "  ID:        sinatra_base_base_settings",
+            "  Source:    lib/sinatra/base.rb L1017",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/tpope/hookup",
+          "commit": "3bca3fef5177de45bbdaa6caee063dd252ae9050",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "class": 4,
+            "singleton_method": 1,
+            "method": 23
+          },
+          "atlasCounts": {
+            "class": 4,
+            "method": 24
+          }
+        },
+        {
+          "repo": "https://github.com/mailgun/mailgun-ruby",
+          "commit": "bb69b98a8bc34bfd44713bbecebd17319d0d4697",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "method": 236,
+            "module": 33,
+            "class": 35,
+            "singleton_method": 7
+          },
+          "atlasCounts": {
+            "class": 35,
+            "method": 257,
+            "module": 33
+          }
+        },
+        {
+          "repo": "https://github.com/BerlinVagrant/vagrant-dns",
+          "commit": "57dee3fc45c40fb286c218f667435eae84666905",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "module": 24,
+            "class": 13,
+            "singleton_method": 7,
+            "method": 72
+          },
+          "atlasCounts": {
+            "class": 13,
+            "method": 79,
+            "module": 24
+          }
+        }
+      ]
+    },
+    {
+      "language": "rust",
+      "artifact": "data/raw/LIVE_RUST_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 4,
+      "matchedNameLocationRows": 4,
+      "matchedNameLocationRatio": 1,
+      "validationRows": 3,
+      "validationKindRows": 3,
+      "nativeSampleEvidence": [
+        {
+          "key": "sample_paths",
+          "count": 16
+        }
+      ],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "HiArgs",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "HiArgs c@hiargs:36"
+          ],
+          "graphifyHead": [
+            "Node: HiArgs",
+            "  ID:        flags_hiargs_hiargs",
+            "  Source:    crates/core/flags/hiargs.rs L36",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "LowArgs",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "LowArgs c@lowargs:33"
+          ],
+          "graphifyHead": [
+            "Node: LowArgs",
+            "  ID:        flags_lowargs_lowargs",
+            "  Source:    crates/core/flags/lowargs.rs L33",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "PatternMatcher",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "PatternMatcher c@search:193"
+          ],
+          "graphifyHead": [
+            "Node: PatternMatcher",
+            "  ID:        core_search_patternmatcher",
+            "  Source:    crates/core/search.rs L193",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "WalkBuilder",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "WalkBuilder c@walk:483"
+          ],
+          "graphifyHead": [
+            "Node: WalkBuilder",
+            "  ID:        src_walk_walkbuilder",
+            "  Source:    crates/ignore/src/walk.rs L483",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/Taaitaaiger/jlrs",
+          "commit": "2297a23438ade895605619bd658510c67a239102",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "Function": 1994,
+            "Module": 388,
+            "Struct": 452,
+            "Const": 96,
+            "TypeAlias": 505,
+            "Method": 1291,
+            "Static": 149,
+            "Enum": 45,
+            "Trait": 106,
+            "Macro": 55
+          },
+          "atlasCounts": {
+            "class": 966,
+            "constant": 96,
+            "function": 2964,
+            "interface": 106,
+            "macro": 55,
+            "method": 2577,
+            "module": 388
+          }
+        },
+        {
+          "repo": "https://github.com/rust-windowing/softbuffer",
+          "commit": "840683cfce68a04d20cfb75b2976d009d3ba77d8",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "Module": 41,
+            "Function": 119,
+            "Struct": 58,
+            "Method": 209,
+            "TypeAlias": 24,
+            "Enum": 10,
+            "Trait": 5,
+            "Const": 7,
+            "Macro": 1,
+            "Static": 1
+          },
+          "atlasCounts": {
+            "class": 89,
+            "constant": 7,
+            "function": 313,
+            "interface": 5,
+            "macro": 1,
+            "method": 259,
+            "module": 41
+          }
+        },
+        {
+          "repo": "https://github.com/rapidfuzz/strsim-rs",
+          "commit": "dacc84c0dc61eff0ee0ff66962bcf2e17018ad26",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "Macro": 2,
+            "Function": 127,
+            "Enum": 1,
+            "Method": 9,
+            "TypeAlias": 3,
+            "Struct": 5,
+            "Module": 1
+          },
+          "atlasCounts": {
+            "class": 9,
+            "function": 136,
+            "macro": 2,
+            "method": 101,
+            "module": 1
+          }
+        }
+      ]
+    },
+    {
+      "language": "r",
+      "artifact": "data/raw/LIVE_R_BENCHMARK.json",
+      "status": "count-only",
+      "equivalentRows": 5,
+      "matchedNameLocationRows": 0,
+      "matchedNameLocationRatio": 0,
+      "validationRows": 3,
+      "validationKindRows": 0,
+      "nativeSampleEvidence": [
+        {
+          "key": "sample_definitions",
+          "count": 30
+        }
+      ],
+      "gap": "Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence.",
+      "queryRows": [
+        {
+          "symbol": "Contributing to ggplot2 development",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "Contributing to ggplot2 development s@CONTRIBUTING.md:1"
+          ],
+          "graphifyHead": [
+            "Traversal: BFS depth=2 | Start: ['Contributing to ggplot2 development', 'CONTRIBUTING.md', 'ggplot2 (development version)'] | 37 nodes found"
+          ]
+        },
+        {
+          "symbol": "Issues",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "Issues s@CONTRIBUTING.md:12"
+          ],
+          "graphifyHead": [
+            "Traversal: BFS depth=2 | Start: ['Issues'] | 4 nodes found"
+          ]
+        },
+        {
+          "symbol": "Pull requests",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "Pull requests s@CONTRIBUTING.md:50"
+          ],
+          "graphifyHead": [
+            "Traversal: BFS depth=2 | Start: ['Pull requests'] | 4 nodes found"
+          ]
+        },
+        {
+          "symbol": "ggplot2 (development version)",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "ggplot2 (development version) s@NEWS.md:1"
+          ],
+          "graphifyHead": [
+            "Traversal: BFS depth=2 | Start: ['ggplot2 (development version)'] | 30 nodes found"
+          ]
+        },
+        {
+          "symbol": "ggplot2 4.0.0",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "ggplot2 4.0.0 s@NEWS.md:115"
+          ],
+          "graphifyHead": [
+            "Traversal: BFS depth=2 | Start: ['ggplot2 4.0.0'] | 38 nodes found"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/tidyverse/ggplot2",
+          "commit": "6870419aa6e106c3580c45c81d5b688cb31758bd",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": null
+        },
+        {
+          "repo": "https://github.com/r-lib/cli",
+          "commit": "86bdefe1eb23399499b40884f7fab84194283bc1",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": null
+        },
+        {
+          "repo": "https://github.com/tidyverse/dplyr",
+          "commit": "d5e94e7fa8fd4a5f79c1a707d1842216bb4c691f",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": null
+        }
+      ]
+    },
+    {
+      "language": "scala",
+      "artifact": "data/raw/LIVE_SCALA_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 5,
+      "matchedNameLocationRows": 1,
+      "matchedNameLocationRatio": 0.2,
+      "validationRows": 3,
+      "validationKindRows": 3,
+      "nativeSampleEvidence": [
+        {
+          "key": "parse_error_samples",
+          "count": 2
+        }
+      ],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "Functor",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "Functor t@Functor:31 df2"
+          ],
+          "graphifyHead": [
+            "Node: Functor",
+            "  ID:        functor",
+            "  Source:",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "Applicative",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "Applicative t@Applicative:39 df2 d7"
+          ],
+          "graphifyHead": [
+            "Node: Applicative",
+            "  ID:        applicative",
+            "  Source:",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "Monad",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "Monad t@Monad:33 df2 c1"
+          ],
+          "graphifyHead": [
+            "Node: Monad",
+            "  ID:        monad",
+            "  Source:",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "Traverse",
+          "atlasHasName": true,
+          "graphifyHasName": false,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "Traverse t@Traverse:40 df2 d5"
+          ],
+          "graphifyHead": [
+            "Node: traverse()",
+            "  ID:        cats_composed_traverse",
+            "  Source:    cats/Composed.scala L134",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "Eval",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "Eval t@Eval:58 df2"
+          ],
+          "graphifyHead": [
+            "Node: Eval",
+            "  ID:        cats_eval_eval",
+            "  Source:    cats/Eval.scala L58",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/spirom/LearningSpark",
+          "commit": "8498a592e2bf6bbce8fc29dc6d7a0850a38a72f5",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "function": 201,
+            "type": 135,
+            "variable": 34
+          },
+          "atlasCounts": {
+            "function": 201,
+            "type": 138,
+            "variable": 542
+          }
+        },
+        {
+          "repo": "https://github.com/Eliah-Lakhin/papa-carlo",
+          "commit": "d65c3e63dfd1d3b9721fbfa4297f475829423c96",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "function": 298,
+            "type": 85,
+            "variable": 181
+          },
+          "atlasCounts": {
+            "function": 306,
+            "type": 85,
+            "variable": 409
+          }
+        },
+        {
+          "repo": "https://github.com/xerial/larray",
+          "commit": "400d23241f5050dc06f724b4fee7a485b1688bf9",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "function": 577,
+            "type": 102,
+            "variable": 72
+          },
+          "atlasCounts": {
+            "function": 596,
+            "type": 105,
+            "variable": 536
+          }
+        }
+      ]
+    },
+    {
+      "language": "sql",
+      "artifact": "data/raw/LIVE_SQL_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 4,
+      "matchedNameLocationRows": 4,
+      "matchedNameLocationRatio": 1,
+      "validationRows": 3,
+      "validationKindRows": 0,
+      "nativeSampleEvidence": [
+        {
+          "key": "parse_error_samples",
+          "count": 0
+        }
+      ],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "hdb_catalog.event_triggers",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "hdb_catalog.event_triggers t@1_to_2:4"
+          ],
+          "graphifyHead": [
+            "Node: hdb_catalog.event_triggers",
+            "  ID:        11_to_12_hdb_catalog_event_triggers",
+            "  Source:    11_to_12.sql L1",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "hdb_catalog.hdb_metadata",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "hdb_catalog.hdb_metadata t@42_to_43:48"
+          ],
+          "graphifyHead": [
+            "Node: hdb_catalog.hdb_metadata",
+            "  ID:        42_to_43_hdb_catalog_hdb_metadata",
+            "  Source:    42_to_43.sql L48",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "hdb_catalog.hdb_schema_update_event_notifier",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "hdb_catalog.hdb_schema_update_event_notifier f@10_to_11:7"
+          ],
+          "graphifyHead": [
+            "Node: hdb_catalog.hdb_schema_update_event_notifier()",
+            "  ID:        10_to_11_hdb_catalog_hdb_schema_update_event_notifier",
+            "  Source:    10_to_11.sql L7",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "hdb_catalog.hdb_function_agg",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "hdb_catalog.hdb_function_agg w@12_to_13:1"
+          ],
+          "graphifyHead": [
+            "Node: hdb_catalog.hdb_function_agg",
+            "  ID:        12_to_13_hdb_catalog_hdb_function_agg",
+            "  Source:    12_to_13.sql L1",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/hasura/graphql-engine",
+          "commit": "417c174c0ac3c80dafe6e8f9e8ac39d868334724",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": null
+        },
+        {
+          "repo": "https://github.com/timescale/timescaledb",
+          "commit": "edcd867121c5260db2bf2afe9d9924928192004e",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": null
+        },
+        {
+          "repo": "https://github.com/postgres/postgres",
+          "commit": "8c579bdc366dbca4fe9432a01408216133628c52",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": null
+        }
+      ]
+    },
+    {
+      "language": "svelte",
+      "artifact": "data/raw/LIVE_SVELTE_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 5,
+      "matchedNameLocationRows": 5,
+      "matchedNameLocationRatio": 1,
+      "validationRows": 3,
+      "validationKindRows": 3,
+      "nativeSampleEvidence": [
+        {
+          "key": "parse_error_samples",
+          "count": 0
+        }
+      ],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "setChar",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "setChar f@PinCodeInput.svelte:210"
+          ],
+          "graphifyHead": [
+            "Node: setChar()",
+            "  ID:        pincodeinput_pincodeinput_setchar",
+            "  Source:    PinCodeInput/PinCodeInput.svelte L210",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "focusInput",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "focusInput f@PinCodeInput.svelte:218"
+          ],
+          "graphifyHead": [
+            "Node: focusInput()",
+            "  ID:        pincodeinput_pincodeinput_focusinput",
+            "  Source:    PinCodeInput/PinCodeInput.svelte L218",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "handleInput",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "handleInput f@PinCodeInput.svelte:231"
+          ],
+          "graphifyHead": [
+            "Node: handleInput()",
+            "  ID:        pincodeinput_pincodeinput_handleinput",
+            "  Source:    PinCodeInput/PinCodeInput.svelte L231",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "handleKeydown",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "handleKeydown f@PinCodeInput.svelte:250"
+          ],
+          "graphifyHead": [
+            "Node: handleKeydown()",
+            "  ID:        pincodeinput_pincodeinput_handlekeydown",
+            "  Source:    PinCodeInput/PinCodeInput.svelte L250",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "handleOutsideClick",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "handleOutsideClick f@ComboBox.svelte:594"
+          ],
+          "graphifyHead": [
+            "Node: handleOutsideClick()",
+            "  ID:        combobox_combobox_handleoutsideclick",
+            "  Source:    ComboBox/ComboBox.svelte L594",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/orefalo/svelte-splitpanes",
+          "commit": "7425e6a25cd53b87cf91d829c272e74b2b0546d9",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "function": 8,
+            "variable": 91,
+            "class": 0,
+            "interface": 2,
+            "type": 0,
+            "enum": 0
+          },
+          "atlasCounts": {
+            "function": 198
+          }
+        },
+        {
+          "repo": "https://github.com/agustinl/svelte-tags-input",
+          "commit": "5c8e7ff10deab4858a36da8bf71ab5942da5a390",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "function": 13,
+            "variable": 15,
+            "class": 0,
+            "interface": 0,
+            "type": 0,
+            "enum": 0
+          },
+          "atlasCounts": {
+            "function": 39
+          }
+        },
+        {
+          "repo": "https://github.com/Alia5/lovelace-expander-card",
+          "commit": "0899ce63fc6d3b0361e25932025df29abda31654",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "function": 0,
+            "variable": 21,
+            "class": 0,
+            "interface": 0,
+            "type": 0,
+            "enum": 0
+          },
+          "atlasCounts": {
+            "function": 22
+          }
+        }
+      ]
+    },
+    {
+      "language": "swift",
+      "artifact": "data/raw/LIVE_SWIFT_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 4,
+      "matchedNameLocationRows": 2,
+      "matchedNameLocationRatio": 0.5,
+      "validationRows": 3,
+      "validationKindRows": 3,
+      "nativeSampleEvidence": [
+        {
+          "key": "sample_paths",
+          "count": 16
+        }
+      ],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "ArgumentParser",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": false,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "ArgumentParser"
+          ],
+          "graphifyHead": [
+            "Node: ArgumentParser",
+            "  ID:        argumentparser",
+            "  Source:    Tools/generate-manual/GenerateManual.swift L12",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "parse",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "parse f@ParsableArguments:89"
+          ],
+          "graphifyHead": [
+            "Node: .parse()",
+            "  ID:        parsable_types_parsablearguments_parsablearguments_parse",
+            "  Source:    Sources/ArgumentParser/Parsable Types/ParsableArguments.swift L89",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "run",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "run f@Color:23"
+          ],
+          "graphifyHead": [
+            "Node: .run()",
+            "  ID:        color_color_color_run",
+            "  Source:    Examples/color/Color.swift L23",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "help",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": false,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "help v@Flag:455"
+          ],
+          "graphifyHead": [
+            "Node: Help",
+            "  ID:        help",
+            "  Source:",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/ReSwift/ReSwift-Router",
+          "commit": "a915f67704ca5a0cf439723f7c4f7c26ef7809ba",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "class": 9,
+            "enum": 1,
+            "extension": 2,
+            "function": 29,
+            "protocol": 2,
+            "struct": 7,
+            "typealias": 4,
+            "variable": 115
+          },
+          "atlasCounts": {
+            "constant": 3,
+            "function": 36,
+            "type": 29,
+            "variable": 103
+          }
+        },
+        {
+          "repo": "https://github.com/treastrain/TRETJapanNFCReader",
+          "commit": "03470a515c0b06d762de39e6d80f9a07ed502cae",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "class": 22,
+            "enum": 25,
+            "extension": 16,
+            "function": 193,
+            "protocol": 5,
+            "struct": 32,
+            "typealias": 4,
+            "variable": 653
+          },
+          "atlasCounts": {
+            "constant": 125,
+            "function": 403,
+            "type": 196,
+            "variable": 950
+          }
+        },
+        {
+          "repo": "https://github.com/soberman/ARSLineProgress",
+          "commit": "c97c55a5228ac58acf388dd882e800fdb7c2930f",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "class": 10,
+            "enum": 3,
+            "extension": 5,
+            "function": 61,
+            "protocol": 1,
+            "struct": 0,
+            "typealias": 1,
+            "variable": 144
+          },
+          "atlasCounts": {
+            "constant": 7,
+            "function": 68,
+            "type": 21,
+            "variable": 140
+          }
+        }
+      ]
+    },
+    {
+      "language": "terraform",
+      "artifact": "data/raw/LIVE_TERRAFORM_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 4,
+      "matchedNameLocationRows": 4,
+      "matchedNameLocationRatio": 1,
+      "validationRows": 3,
+      "validationKindRows": 0,
+      "nativeSampleEvidence": [],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "aws_vpc.this",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "aws_vpc.this r@main:28"
+          ],
+          "graphifyHead": [
+            "Node: aws_vpc.this",
+            "  ID:        repo_aws_vpc_this",
+            "  Source:    main.tf L28",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "aws_subnet.public",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "aws_subnet.public r@main:145"
+          ],
+          "graphifyHead": [
+            "Node: aws_subnet.public",
+            "  ID:        repo_aws_subnet_public",
+            "  Source:    main.tf L145",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "aws_route_table.public",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "aws_route_table.public r@main:176"
+          ],
+          "graphifyHead": [
+            "Node: aws_route_table.public",
+            "  ID:        repo_aws_route_table_public",
+            "  Source:    main.tf L176",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "aws_nat_gateway.this",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "aws_nat_gateway.this r@main:1228"
+          ],
+          "graphifyHead": [
+            "Node: aws_nat_gateway.this",
+            "  ID:        repo_aws_nat_gateway_this",
+            "  Source:    main.tf L1228",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/terraform-aws-modules/terraform-aws-vpc",
+          "commit": "3ffbd46fb1c7733e1b34d8666893280454e27436",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": {
+            "data": 26,
+            "module": 27,
+            "output": 1298,
+            "resource": 96,
+            "variable": 291
+          }
+        },
+        {
+          "repo": "https://github.com/terraform-aws-modules/terraform-aws-eks",
+          "commit": "d4669ca8eb109a37f6c19ab8fb9487ab7521a9ba",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": {
+            "data": 70,
+            "module": 84,
+            "output": 302,
+            "resource": 134,
+            "variable": 570
+          }
+        },
+        {
+          "repo": "https://github.com/terraform-aws-modules/terraform-aws-security-group",
+          "commit": "58d8e895915f5573767081142d063b7caf7a2b47",
+          "hasKindCountEvidence": false,
+          "nativeCounts": null,
+          "atlasCounts": {
+            "data": 1,
+            "module": 114,
+            "output": 339,
+            "resource": 12,
+            "variable": 1076
+          }
+        }
+      ]
+    },
+    {
+      "language": "verilog",
+      "artifact": "data/raw/LIVE_VERILOG_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 6,
+      "matchedNameLocationRows": 6,
+      "matchedNameLocationRatio": 1,
+      "validationRows": 3,
+      "validationKindRows": 3,
+      "nativeSampleEvidence": [
+        {
+          "key": "parse_error_samples",
+          "count": 8
+        }
+      ],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "ibex_core",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "ibex_core p@ibex_core:16"
+          ],
+          "graphifyHead": [
+            "Node: ibex_core.f",
+            "  ID:        ibex_core_f_ibex_core",
+            "  Source:    ibex_core.f L1",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "ibex_top",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "ibex_top p@ibex_top:15"
+          ],
+          "graphifyHead": [
+            "Node: ibex_top",
+            "  ID:        ibex_top_ibex_top",
+            "  Source:    ibex_top.sv L15",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "ibex_pkg",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "ibex_pkg p@ibex_pkg:9"
+          ],
+          "graphifyHead": [
+            "Node: ibex_pkg",
+            "  ID:        ibex_alu_sv_ibex_pkg",
+            "  Source:    ibex_alu.sv L34",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "ibex_alu",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "ibex_alu p@ibex_alu:9"
+          ],
+          "graphifyHead": [
+            "Node: ibex_alu",
+            "  ID:        ibex_alu_ibex_alu",
+            "  Source:    ibex_alu.sv L9",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "cm_stack_adj_base",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "cm_stack_adj_base f@ibex_compressed_decoder:42"
+          ],
+          "graphifyHead": [
+            "Node: cm_stack_adj_base()",
+            "  ID:        ibex_compressed_decoder_ibex_compressed_decoder_cm_stack_adj_base",
+            "  Source:    ibex_compressed_decoder.sv L42",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "decode_i_insn",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "decode_i_insn f@ibex_tracer:463"
+          ],
+          "graphifyHead": [
+            "Node: decode_i_insn()",
+            "  ID:        ibex_tracer_ibex_tracer_decode_i_insn",
+            "  Source:    ibex_tracer.sv L463",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/lowRISC/ibex",
+          "commit": "022f084096baed0a9b5ebdf697ed2965f13e8ed8",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "module": 28,
+            "interface": 0,
+            "package": 2,
+            "class": 0,
+            "function": 63,
+            "task": 0,
+            "program": 0,
+            "checker": 0
+          },
+          "atlasCounts": {
+            "function": 63,
+            "module": 28,
+            "package": 2
+          }
+        },
+        {
+          "repo": "https://github.com/YosysHQ/picorv32",
+          "commit": "87c89acc18994c8cf9a2311e871818e87d304568",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "module": 13,
+            "interface": 0,
+            "package": 0,
+            "class": 0,
+            "function": 0,
+            "task": 11,
+            "program": 0,
+            "checker": 0
+          },
+          "atlasCounts": {
+            "module": 13,
+            "task": 11
+          }
+        },
+        {
+          "repo": "https://github.com/alexforencich/verilog-ethernet",
+          "commit": "77320a9471d19c7dd383914bc049e02d9f4f1ffb",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "module": 98,
+            "interface": 0,
+            "package": 0,
+            "class": 0,
+            "function": 16,
+            "task": 0,
+            "program": 0,
+            "checker": 0
+          },
+          "atlasCounts": {
+            "function": 16,
+            "module": 98
+          }
+        }
+      ]
+    },
+    {
+      "language": "vue",
+      "artifact": "data/raw/LIVE_VUE_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 5,
+      "matchedNameLocationRows": 5,
+      "matchedNameLocationRatio": 1,
+      "validationRows": 3,
+      "validationKindRows": 3,
+      "nativeSampleEvidence": [
+        {
+          "key": "parse_error_samples",
+          "count": 0
+        }
+      ],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "emitPage",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "emitPage f@ArticleList:96"
+          ],
+          "graphifyHead": [
+            "Node: emitPage()",
+            "  ID:        components_articlelist_emitpage",
+            "  Source:    components/ArticleList.vue L96",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "changePage",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "changePage f@VPagination:36"
+          ],
+          "graphifyHead": [
+            "Node: changePage()",
+            "  ID:        components_vpagination_changepage",
+            "  Source:    components/VPagination.vue L36",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "useAuthStore",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "useAuthStore v@auth:6"
+          ],
+          "graphifyHead": [
+            "Node: useAuthStore",
+            "  ID:        store_auth_useauthstore",
+            "  Source:    store/auth.js L6",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "useHomeStore",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "useHomeStore v@home:4"
+          ],
+          "graphifyHead": [
+            "Node: useHomeStore",
+            "  ID:        store_home_usehomestore",
+            "  Source:    store/home.js L4",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "pinia",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "pinia v@index:5"
+          ],
+          "graphifyHead": [
+            "Node: pinia",
+            "  ID:        store_index_pinia",
+            "  Source:    store/index.js L5",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/LiuXin-Developer/rightHouse",
+          "commit": "5d003ae3a5f5f12534cdf617ac11be86d3d9ca54",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "function": 2,
+            "variable": 209,
+            "class": 0,
+            "interface": 0,
+            "type": 0,
+            "enum": 0
+          },
+          "atlasCounts": {
+            "function": 969
+          }
+        },
+        {
+          "repo": "https://github.com/Tencent/tdesign-vue-starter",
+          "commit": "61bb51b304e018a4243489bcb48c28750f8aa535",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "function": 0,
+            "variable": 24,
+            "class": 0,
+            "interface": 0,
+            "type": 0,
+            "enum": 0
+          },
+          "atlasCounts": {
+            "function": 82
+          }
+        },
+        {
+          "repo": "https://github.com/powerdong/Music-player",
+          "commit": "c505e40c41a3c3b6040988df4d122e845f01e8cb",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "function": 0,
+            "variable": 6,
+            "class": 0,
+            "interface": 0,
+            "type": 0,
+            "enum": 0
+          },
+          "atlasCounts": {
+            "function": 294
+          }
+        }
+      ]
+    },
+    {
+      "language": "zig",
+      "artifact": "data/raw/LIVE_ZIG_BENCHMARK.json",
+      "status": "sampled-name-location",
+      "equivalentRows": 5,
+      "matchedNameLocationRows": 4,
+      "matchedNameLocationRatio": 0.8,
+      "validationRows": 3,
+      "validationKindRows": 3,
+      "nativeSampleEvidence": [
+        {
+          "key": "parse_error_samples",
+          "count": 1
+        }
+      ],
+      "gap": "",
+      "queryRows": [
+        {
+          "symbol": "Server",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "Server v@Server:6"
+          ],
+          "graphifyHead": [
+            "Node: Server.zig",
+            "  ID:        server",
+            "  Source:    Server.zig L1",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "DocumentStore",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "DocumentStore v@DocumentStore:18"
+          ],
+          "graphifyHead": [
+            "Node: DocumentStore.zig",
+            "  ID:        documentstore",
+            "  Source:    DocumentStore.zig L1",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "Analyser",
+          "atlasHasName": true,
+          "graphifyHasName": false,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": false,
+          "atlasHead": [
+            "Analyser v@Server:16"
+          ],
+          "graphifyHead": [
+            "Node: InternPool.zig",
+            "  ID:        analyser_internpool",
+            "  Source:    analyser/InternPool.zig L1",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "Config",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "Config t@DocumentStore:39"
+          ],
+          "graphifyHead": [
+            "Node: Config.zig",
+            "  ID:        config",
+            "  Source:    Config.zig L1",
+            "  Type:      code"
+          ]
+        },
+        {
+          "symbol": "main",
+          "atlasHasName": true,
+          "graphifyHasName": true,
+          "atlasHasLocation": true,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
+          "atlasHead": [
+            "main f@build_runner:47"
+          ],
+          "graphifyHead": [
+            "Node: main()",
+            "  ID:        build_runner_build_runner_main",
+            "  Source:    build_runner/build_runner.zig L47",
+            "  Type:      code"
+          ]
+        }
+      ],
+      "validationKindEvidence": [
+        {
+          "repo": "https://github.com/norma-core/gremlin.zig",
+          "commit": "fa7fab721fa403b8d2b7957e0c59dbe232fde9fc",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "constant": 401,
+            "function": 474,
+            "type": 71
+          },
+          "atlasCounts": {
+            "constant": 1786,
+            "function": 474,
+            "type": 71
+          }
+        },
+        {
+          "repo": "https://github.com/jamii/focus",
+          "commit": "4aee7dda8bea2cbcb766a8eb78711d42fcd62761",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "constant": 349,
+            "function": 340,
+            "type": 80
+          },
+          "atlasCounts": {
+            "constant": 1215,
+            "function": 340,
+            "type": 69
+          }
+        },
+        {
+          "repo": "https://github.com/Validark/Accelerated-Zig-Parser",
+          "commit": "8782a1924573641dc1f4a146afd530bf47838987",
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "constant": 39,
+            "function": 159,
+            "type": 2
+          },
+          "atlasCounts": {
+            "constant": 761,
+            "function": 159,
+            "type": 21
+          }
+        }
+      ]
+    }
+  ]
+}

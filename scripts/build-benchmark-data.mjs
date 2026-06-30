@@ -544,6 +544,23 @@ function buildFinalAuditReport(dataset) {
   const pendingCode = liveCodeRows.filter((row) => !row.multiRepoValidation?.passed).map((row) => row.language);
   const publicValidation = dataset.publicRepoValidation || null;
   const publicValidationPassed = Boolean(publicValidation?.summary?.passed);
+  const precisionEvidence = dataset.precisionEvidence || null;
+  const precisionEvidencePassed = Boolean(precisionEvidence?.summary?.passed);
+  const precisionSummary = precisionEvidence?.summary || {};
+  const precisionRows = Array.isArray(precisionEvidence?.languages) ? precisionEvidence.languages : [];
+  const precisionGaps = precisionRows
+    .filter((row) => row.status !== "sampled-name-location")
+    .map((row) => ({
+      language: row.language,
+      status: row.status,
+      matchedNameLocationRows: row.matchedNameLocationRows,
+      equivalentRows: row.equivalentRows,
+      validationKindRows: row.validationKindRows,
+      validationRows: row.validationRows,
+      gap: row.gap || "",
+    }))
+    .sort((a, b) => String(a.language).localeCompare(String(b.language)));
+  const precisionGapLanguages = new Set(precisionGaps.map((row) => row.language));
   const missingCoreTools = (dataset.provenance.tools.core || [])
     .filter((tool) => tool.ok === false || tool.status === "missing")
     .map((tool) => ({
@@ -595,6 +612,9 @@ function buildFinalAuditReport(dataset) {
     publicValidationPassed
       ? "The committed public-repo validation harness regenerates data/public-repo-validation-manifest.* from raw live artifacts and fails when a code language lacks passing three-repo evidence."
       : "The public-repo validation harness is still missing or failing; multi-repo validation remains raw-artifact evidence only.",
+    precisionEvidencePassed
+      ? "The committed precision-evidence harness regenerates data/precision-evidence-manifest.* from raw live artifacts and separates sampled symbol/location evidence from weaker kind-count-only rows."
+      : "The precision-evidence harness is still missing or failing; precision remains described only by coverage and validation notes.",
     "Objective-C validation can be inflated by vendored Pods if Atlas and the native counter use different dependency filters; the final validation excludes dependency folders for the validation count.",
     "CUDA host-function counters overcount the denominator for a CUDA-specific benchmark; the final validation labels and uses a CUDA-qualified __global__/__device__/__host__ function denominator.",
   ];
@@ -625,7 +645,9 @@ function buildFinalAuditReport(dataset) {
     },
     {
       priority: "P1",
-      item: "Add precision checks that compare symbol names/kinds/locations, not only Atlas/native definition-count coverage ratios.",
+      item: precisionEvidencePassed
+        ? "Close precision gaps by persisting full native and Atlas symbol name/kind/location sets for every validation repo; the current harness proves only sampled query name/location rows plus kind-count maps where raw artifacts expose them."
+        : "Add precision checks that compare symbol names/kinds/locations, not only Atlas/native definition-count coverage ratios.",
     },
     {
       priority: "P1",
@@ -659,6 +681,13 @@ function buildFinalAuditReport(dataset) {
       pendingCodeLanguages: pendingCode,
       publicRepoValidationHarness: publicValidationPassed,
       publicRepoValidationWarnings: publicValidation?.summary?.warnings ?? null,
+      precisionEvidenceHarness: precisionEvidencePassed,
+      precisionNameLocationArtifacts: precisionSummary.sampledNameLocationArtifacts ?? null,
+      precisionKindCountOnlyArtifacts: precisionSummary.kindCountOnlyArtifacts ?? null,
+      precisionCountOnlyArtifacts: precisionSummary.countOnlyArtifacts ?? null,
+      precisionMatchedNameLocationRows: precisionSummary.matchedNameLocationRows ?? null,
+      precisionEquivalentRows: precisionSummary.equivalentRows ?? null,
+      precisionValidationKindRows: precisionSummary.validationKindRows ?? null,
       graphifyVersion: dataset.provenance.graphify.version,
       graphifyDispatchCount: dataset.provenance.graphify.dispatchCount,
       detectorOnlyLanguages: dataset.provenance.graphify.detectorOnlyCodeExtensions,
@@ -667,7 +696,7 @@ function buildFinalAuditReport(dataset) {
       statement:
         "Coverage ratios prove Atlas produced at least as many definitions as the selected independent denominator for that scoped benchmark. They do not by themselves prove precision, complete call-edge recall, or semantic equivalence across all repos.",
       lowRiskLiveLanguages: dataset.liveBenchmarks
-        .filter((row) => classifyTruthRisk(row) === "low")
+        .filter((row) => classifyTruthRisk(row) === "low" && !precisionGapLanguages.has(row.language))
         .map((row) => row.language)
         .sort(),
       weakOrProxyTruthRows: weakTruthRows,
@@ -681,6 +710,17 @@ function buildFinalAuditReport(dataset) {
         latencyRatio: row.querySummary.latencyRatio,
       })),
       nearParityValidationRows: nearMisses,
+      precisionEvidence: {
+        statement:
+          "The precision manifest is an artifact-level audit of what the raw benchmark JSON can prove today: sampled query rows with matching symbol names and locations, native-vs-Atlas kind-count maps, or count-only gaps. It is not a full 99% precision oracle.",
+        manifest: precisionEvidence
+          ? {
+              generatedAt: precisionEvidence.generatedAt,
+              summary: precisionSummary,
+              gaps: precisionGaps,
+            }
+          : null,
+      },
     },
     stubsAndHallucinationAudit: {
       foundDuringFinalPass,
@@ -706,10 +746,41 @@ function renderFinalAuditMarkdown(report) {
   lines.push(`- Strict 10x live artifacts: ${report.summary.strict10x}/${report.summary.strict10xArtifacts}`);
   lines.push(`- Three-repo validated live artifacts: ${report.summary.threeRepoValidated}`);
   lines.push(`- Pending code languages: ${report.summary.pendingCodeLanguages.length ? report.summary.pendingCodeLanguages.join(", ") : "none"}`);
+  lines.push(`- Precision evidence harness: ${report.summary.precisionEvidenceHarness ? "present" : "missing"}`);
+  lines.push(`- Precision sampled name/location artifacts: ${report.summary.precisionNameLocationArtifacts ?? "n/a"}`);
+  lines.push(`- Precision kind-count-only artifacts: ${report.summary.precisionKindCountOnlyArtifacts ?? "n/a"}`);
+  lines.push(`- Precision count-only artifacts: ${report.summary.precisionCountOnlyArtifacts ?? "n/a"}`);
+  lines.push(`- Precision sampled query rows with name+location: ${report.summary.precisionMatchedNameLocationRows ?? "n/a"}/${report.summary.precisionEquivalentRows ?? "n/a"}`);
+  lines.push(`- Precision validation rows with kind maps: ${report.summary.precisionValidationKindRows ?? "n/a"}`);
   lines.push(`- Graphify: ${report.summary.graphifyVersion}, dispatch count ${report.summary.graphifyDispatchCount}`);
   lines.push("", "## Ground Truth Closeness", "");
   lines.push(report.groundTruthCloseness.statement, "");
   lines.push(`Low-risk live languages: ${report.groundTruthCloseness.lowRiskLiveLanguages.join(", ") || "none"}.`, "");
+  lines.push("### Precision Evidence", "");
+  lines.push(report.groundTruthCloseness.precisionEvidence.statement, "");
+  if (report.groundTruthCloseness.precisionEvidence.manifest) {
+    const manifest = report.groundTruthCloseness.precisionEvidence.manifest;
+    lines.push(
+      `Manifest: data/precision-evidence-manifest.md, generated ${manifest.generatedAt}.`
+    );
+    lines.push(
+      `Sampled name/location artifacts: ${manifest.summary.sampledNameLocationArtifacts}; kind-count-only artifacts: ${manifest.summary.kindCountOnlyArtifacts}; count-only artifacts: ${manifest.summary.countOnlyArtifacts}.`
+    );
+    lines.push(
+      `Matched sampled query rows: ${manifest.summary.matchedNameLocationRows}/${manifest.summary.equivalentRows}; validation kind-map rows: ${manifest.summary.validationKindRows}.`
+    );
+    lines.push("");
+    lines.push("| Language | Status | Query name+location | Validation kind rows | Gap |");
+    lines.push("|---|---|--:|--:|---|");
+    for (const row of manifest.gaps) {
+      lines.push(
+        `| ${row.language} | ${row.status} | ${row.matchedNameLocationRows}/${row.equivalentRows} | ${row.validationKindRows}/${row.validationRows} | ${row.gap || "none"} |`
+      );
+    }
+  } else {
+    lines.push("Manifest: missing.");
+  }
+  lines.push("");
   lines.push("### Weak Or Proxy Truth Rows", "");
   lines.push("| Language | Native tool | Risk | Coverage | Min validation coverage | Reason |");
   lines.push("|---|---|---|--:|--:|---|");
@@ -778,6 +849,8 @@ function main() {
       { name: "tenx-gap-report.md", path: "data/tenx-gap-report.md" },
       { name: "public-repo-validation-manifest.json", path: "data/public-repo-validation-manifest.json" },
       { name: "public-repo-validation-manifest.md", path: "data/public-repo-validation-manifest.md" },
+      { name: "precision-evidence-manifest.json", path: "data/precision-evidence-manifest.json" },
+      { name: "precision-evidence-manifest.md", path: "data/precision-evidence-manifest.md" },
       { name: "final-benchmark-audit-report.json", path: "data/final-benchmark-audit-report.json" },
       { name: "final-benchmark-audit-report.md", path: "data/final-benchmark-audit-report.md" },
     ],
@@ -817,6 +890,7 @@ function main() {
     liveBenchmarks,
     coverageAudit,
     publicRepoValidation: readDataJSON("public-repo-validation-manifest.json"),
+    precisionEvidence: readDataJSON("precision-evidence-manifest.json"),
     saturation: saturationRows,
     caveats: [
       "Ratios are computed only where both Atlas and graphify returned comparable query rows.",
@@ -825,6 +899,7 @@ function main() {
         : "The final pass has no live language with zero graphify-equivalent query rows; historical saturation rows are superseded by the refreshed live artifacts.",
       "Timings are one-machine benchmark snapshots, not production guarantees.",
       "Atlas and graphify expose different graph models, so coverage and precision fields are shown separately.",
+      "The precision evidence manifest records sampled symbol/location matches and validation kind-count maps when raw artifacts expose them; it does not claim full precision for rows that remain count-only or proxy-denominator based.",
       "10x target fields are strict for token and latency ratios; coverage is reported as native-definition parity/exceed and is not converted into a fabricated 10x accuracy multiplier.",
     ],
   };

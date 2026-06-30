@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-30T17:37:40.737Z",
-  "benchmarkGeneratedAt": "2026-06-30T17:37:40.737Z",
+  "generatedAt": "2026-06-30T17:49:06.910Z",
+  "benchmarkGeneratedAt": "2026-06-30T17:49:06.910Z",
   "scope": "Final pass over Atlas benchmark artifacts: core matrix against Graphify plus native SCIP/LSP tools, live language artifacts against Graphify plus language-specific native/proxy baselines, and public three-repo validation metadata.",
   "summary": {
     "coreLanguages": 7,
@@ -15,6 +15,13 @@
     "pendingCodeLanguages": [],
     "publicRepoValidationHarness": true,
     "publicRepoValidationWarnings": 34,
+    "precisionEvidenceHarness": true,
+    "precisionNameLocationArtifacts": 31,
+    "precisionKindCountOnlyArtifacts": 0,
+    "precisionCountOnlyArtifacts": 5,
+    "precisionMatchedNameLocationRows": 156,
+    "precisionEquivalentRows": 199,
+    "precisionValidationKindRows": 63,
     "graphifyVersion": "graphifyy 0.8.49",
     "graphifyDispatchCount": 89,
     "detectorOnlyLanguages": [
@@ -29,7 +36,6 @@
       "astro",
       "bash",
       "csharp",
-      "dart",
       "elixir",
       "fortran",
       "groovy",
@@ -455,13 +461,78 @@
         "atlasDefinitions": 364,
         "nativeDefinitions": 364
       }
-    ]
+    ],
+    "precisionEvidence": {
+      "statement": "The precision manifest is an artifact-level audit of what the raw benchmark JSON can prove today: sampled query rows with matching symbol names and locations, native-vs-Atlas kind-count maps, or count-only gaps. It is not a full 99% precision oracle.",
+      "manifest": {
+        "generatedAt": "2026-06-30T17:49:06.841Z",
+        "summary": {
+          "artifacts": 36,
+          "sampledNameLocationArtifacts": 31,
+          "kindCountOnlyArtifacts": 0,
+          "countOnlyArtifacts": 5,
+          "equivalentRows": 199,
+          "matchedNameLocationRows": 156,
+          "validationRows": 105,
+          "validationKindRows": 63,
+          "passed": true
+        },
+        "gaps": [
+          {
+            "language": "blade",
+            "status": "count-only",
+            "matchedNameLocationRows": 0,
+            "equivalentRows": 6,
+            "validationKindRows": 0,
+            "validationRows": 3,
+            "gap": "Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence."
+          },
+          {
+            "language": "byond",
+            "status": "count-only",
+            "matchedNameLocationRows": 0,
+            "equivalentRows": 5,
+            "validationKindRows": 0,
+            "validationRows": 3,
+            "gap": "Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence."
+          },
+          {
+            "language": "dart",
+            "status": "count-only",
+            "matchedNameLocationRows": 0,
+            "equivalentRows": 6,
+            "validationKindRows": 0,
+            "validationRows": 3,
+            "gap": "Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence."
+          },
+          {
+            "language": "ets",
+            "status": "count-only",
+            "matchedNameLocationRows": 0,
+            "equivalentRows": 5,
+            "validationKindRows": 0,
+            "validationRows": 3,
+            "gap": "Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence."
+          },
+          {
+            "language": "r",
+            "status": "count-only",
+            "matchedNameLocationRows": 0,
+            "equivalentRows": 5,
+            "validationKindRows": 0,
+            "validationRows": 3,
+            "gap": "Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence."
+          }
+        ]
+      }
+    }
   },
   "stubsAndHallucinationAudit": {
     "foundDuringFinalPass": [
       "The UI previously carried a hard-coded native tool manifest; this final pass renders tool status/version from provenance data so missing tools are no longer shown as healthy.",
       "scip-java now resolves through the pinned bench/tools/scip-java-coursier launcher; Java is reported with both SCIP and JDTLS baselines present.",
       "The committed public-repo validation harness regenerates data/public-repo-validation-manifest.* from raw live artifacts and fails when a code language lacks passing three-repo evidence.",
+      "The committed precision-evidence harness regenerates data/precision-evidence-manifest.* from raw live artifacts and separates sampled symbol/location evidence from weaker kind-count-only rows.",
       "Objective-C validation can be inflated by vendored Pods if Atlas and the native counter use different dependency filters; the final validation excludes dependency folders for the validation count.",
       "CUDA host-function counters overcount the denominator for a CUDA-specific benchmark; the final validation labels and uses a CUDA-qualified __global__/__device__/__host__ function denominator."
     ],
@@ -485,7 +556,7 @@
     },
     {
       "priority": "P1",
-      "item": "Add precision checks that compare symbol names/kinds/locations, not only Atlas/native definition-count coverage ratios."
+      "item": "Close precision gaps by persisting full native and Atlas symbol name/kind/location sets for every validation repo; the current harness proves only sampled query name/location rows plus kind-count maps where raw artifacts expose them."
     },
     {
       "priority": "P1",

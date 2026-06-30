@@ -1,6 +1,6 @@
 # Atlas Final Benchmark Audit
 
-Generated: 2026-06-30T17:37:40.737Z
+Generated: 2026-06-30T17:49:06.910Z
 
 Final pass over Atlas benchmark artifacts: core matrix against Graphify plus native SCIP/LSP tools, live language artifacts against Graphify plus language-specific native/proxy baselines, and public three-repo validation metadata.
 
@@ -13,13 +13,35 @@ Final pass over Atlas benchmark artifacts: core matrix against Graphify plus nat
 - Strict 10x live artifacts: 36/36
 - Three-repo validated live artifacts: 35
 - Pending code languages: none
+- Precision evidence harness: present
+- Precision sampled name/location artifacts: 31
+- Precision kind-count-only artifacts: 0
+- Precision count-only artifacts: 5
+- Precision sampled query rows with name+location: 156/199
+- Precision validation rows with kind maps: 63
 - Graphify: graphifyy 0.8.49, dispatch count 89
 
 ## Ground Truth Closeness
 
 Coverage ratios prove Atlas produced at least as many definitions as the selected independent denominator for that scoped benchmark. They do not by themselves prove precision, complete call-edge recall, or semantic equivalence across all repos.
 
-Low-risk live languages: astro, bash, csharp, dart, elixir, fortran, groovy, julia, kotlin, lua, objc, php, powershell, ruby, rust, scala, sql, svelte, swift, terraform, verilog, vue, zig.
+Low-risk live languages: astro, bash, csharp, elixir, fortran, groovy, julia, kotlin, lua, objc, php, powershell, ruby, rust, scala, sql, svelte, swift, terraform, verilog, vue, zig.
+
+### Precision Evidence
+
+The precision manifest is an artifact-level audit of what the raw benchmark JSON can prove today: sampled query rows with matching symbol names and locations, native-vs-Atlas kind-count maps, or count-only gaps. It is not a full 99% precision oracle.
+
+Manifest: data/precision-evidence-manifest.md, generated 2026-06-30T17:49:06.841Z.
+Sampled name/location artifacts: 31; kind-count-only artifacts: 0; count-only artifacts: 5.
+Matched sampled query rows: 156/199; validation kind-map rows: 63.
+
+| Language | Status | Query name+location | Validation kind rows | Gap |
+|---|---|--:|--:|---|
+| blade | count-only | 0/6 | 0/3 | Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence. |
+| byond | count-only | 0/5 | 0/3 | Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence. |
+| dart | count-only | 0/6 | 0/3 | Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence. |
+| ets | count-only | 0/5 | 0/3 | Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence. |
+| r | count-only | 0/5 | 0/3 | Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence. |
 
 ### Weak Or Proxy Truth Rows
 
@@ -58,6 +80,7 @@ Low-risk live languages: astro, bash, csharp, dart, elixir, fortran, groovy, jul
 - The UI previously carried a hard-coded native tool manifest; this final pass renders tool status/version from provenance data so missing tools are no longer shown as healthy.
 - scip-java now resolves through the pinned bench/tools/scip-java-coursier launcher; Java is reported with both SCIP and JDTLS baselines present.
 - The committed public-repo validation harness regenerates data/public-repo-validation-manifest.* from raw live artifacts and fails when a code language lacks passing three-repo evidence.
+- The committed precision-evidence harness regenerates data/precision-evidence-manifest.* from raw live artifacts and separates sampled symbol/location evidence from weaker kind-count-only rows.
 - Objective-C validation can be inflated by vendored Pods if Atlas and the native counter use different dependency filters; the final validation excludes dependency folders for the validation count.
 - CUDA host-function counters overcount the denominator for a CUDA-specific benchmark; the final validation labels and uses a CUDA-qualified __global__/__device__/__host__ function denominator.
 
@@ -71,7 +94,7 @@ No hidden synthetic-row finding: No published benchmark row in the final dataset
 
 - P1: Promote the committed public-repo validation manifest harness from artifact verification to full remeasurement for every native/proxy counter.
 - P1: Replace source-counter proxies for Apex, CUDA, Razor, BYOND, Blade, EJS, ETS, R, and structured/project surfaces with fuller compiler, LSP, tree-sitter, or parser-library denominators where available.
-- P1: Add precision checks that compare symbol names/kinds/locations, not only Atlas/native definition-count coverage ratios.
+- P1: Close precision gaps by persisting full native and Atlas symbol name/kind/location sets for every validation repo; the current harness proves only sampled query name/location rows plus kind-count maps where raw artifacts expose them.
 - P1: Extend call-edge and receiver-type measurement for converted tree-sitter languages beyond definition coverage.
 - P2: Increase public-repo validation from 3 repos per language to a larger fixed sample for high-variance languages such as Objective-C, Razor, Apex, CUDA, and Swift.
 - P2: Keep Graphify no-equivalent rows as saturation evidence, but separate detector-only language support from deterministic Graphify extractor support in all headlines.
