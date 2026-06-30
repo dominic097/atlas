@@ -1852,6 +1852,9 @@ export function openDetail(id: string): void {
 			t.Fatalf("missing ETS %s %q; symbols=%+v", kind, name, ets.Symbols)
 		}
 	}
+	if len(symbolsNamedKind(ets.Symbols, "Index", "component")) == 0 {
+		t.Fatalf("missing ETS component %q; symbols=%+v", "Index", ets.Symbols)
+	}
 	if findSymbol(ets.Symbols, "Column") != nil {
 		t.Fatalf("ArkUI component call Column should not be indexed as a method; symbols=%+v", ets.Symbols)
 	}

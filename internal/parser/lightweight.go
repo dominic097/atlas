@@ -468,6 +468,14 @@ func parseETSRegex(path string, content []byte) ([]symbolDraft, []string) {
 
 	ident := `([A-Za-z_][A-Za-z0-9_]*)`
 	addMatches("type", "ets_type", regexp.MustCompile(`(?m)^\s*(?:@[A-Za-z_][A-Za-z0-9_]*(?:\([^)\r\n]*\))?\s*)*(?:export\s+)?(?:abstract\s+)?(?:class|struct|interface|enum|namespace)\s+`+ident))
+	componentRe := regexp.MustCompile(`(?m)^\s*(?:@[A-Za-z_][A-Za-z0-9_]*(?:\([^)\r\n]*\))?\s*)+(?:export\s+)?struct\s+` + ident)
+	for _, match := range componentRe.FindAllStringSubmatchIndex(text, -1) {
+		header := text[match[0]:match[1]]
+		if !strings.Contains(header, "@Component") && !strings.Contains(header, "@Entry") {
+			continue
+		}
+		add("component", regexFirstCapture(text, match), match[0], "ets_component")
+	}
 	addMatches("function", "ets_function", regexp.MustCompile(`(?m)^\s*(?:export\s+)?(?:async\s+)?function\s+`+ident+`\s*\(`))
 	addMatches("variable", "ets_decorated_variable", regexp.MustCompile(`(?m)^\s*(?:@[A-Za-z_][A-Za-z0-9_]*(?:\([^)\r\n]*\))?\s*)+`+ident+`\s*[:=]`))
 	addMatches("variable", "ets_field", regexp.MustCompile(`(?m)^\s*(?:(?:public|private|protected|static|readonly)\s+)+`+ident+`\s*[:=]`))
