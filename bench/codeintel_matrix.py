@@ -202,6 +202,13 @@ def discover_graphify_binary() -> str:
     return found or GRAPHIFY_DISCOVERY_FALLBACK["binary"]
 
 
+def repo_tool(name: str, fallback: str) -> str:
+    path = Path(__file__).resolve().parent / "tools" / name
+    if path.exists():
+        return str(path)
+    return fallback
+
+
 def graphify_python_for(binary: str) -> str | None:
     path = Path(binary).expanduser()
     if path.exists():
@@ -2955,7 +2962,7 @@ def main() -> None:
     parser.add_argument("--scip-go", default=os.environ.get("SCIP_GO_BIN", "scip-go"))
     parser.add_argument("--scip-python", default=os.environ.get("SCIP_PYTHON_BIN", "scip-python"))
     parser.add_argument("--scip-typescript", default=os.environ.get("SCIP_TYPESCRIPT_BIN", "scip-typescript"))
-    parser.add_argument("--scip-java", default=os.environ.get("SCIP_JAVA_BIN", "scip-java"))
+    parser.add_argument("--scip-java", default=os.environ.get("SCIP_JAVA_BIN", repo_tool("scip-java-coursier", "scip-java")))
     parser.add_argument("--gopls", default=os.environ.get("GOPLS_BIN", "gopls"))
     parser.add_argument("--pyright", default=os.environ.get("PYRIGHT_BIN", "pyright"))
     parser.add_argument("--tsc", default=os.environ.get("TSC_BIN", "tsc"))

@@ -64,9 +64,9 @@ CGO_ENABLED=1 go build -o /tmp/atlas ./cmd/atlas
 go install github.com/scip-code/scip-go/cmd/scip-go@latest
 npm install -g @sourcegraph/scip-python pyright
 npm install -g @sourcegraph/scip-typescript typescript
-# scip-java can be a downloaded release binary or a coursier launch command.
-# The harness accepts commands with args, e.g.
-#   --scip-java "./coursier launch com.sourcegraph:scip-java_2.13:0.12.3 --"
+# scip-java is launched through the pinned Coursier wrapper in bench/tools by
+# default. Override SCIP_JAVA_BIN or --scip-java to use a local release binary.
+#   bench/tools/scip-java-coursier --version
 # JDTLS is a real LSP benchmark adapter; eclipse.jdt.ls currently requires Java 21+.
 # clangd is used as the C/C++ LSP baseline.
 
