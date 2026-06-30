@@ -49,6 +49,7 @@ func parseDartNative(content []byte) ([]symbolDraft, bool) {
 		if n == nil {
 			return
 		}
+		drafts = append(drafts, dartVariableDefinitionDrafts(n, content)...)
 		if draft, ok := dartDefinitionDraft(n, content); ok {
 			drafts = append(drafts, draft)
 		}
@@ -96,6 +97,102 @@ func dartDefinitionDraft(n *tree_sitter.Node, content []byte) (symbolDraft, bool
 		endLine:   int(n.EndPosition().Row) + 1,
 		metadata:  graph.JSONBMap{"source": "tree_sitter_dart"},
 	}, true
+}
+
+func dartVariableDefinitionDrafts(n *tree_sitter.Node, content []byte) []symbolDraft {
+	if n == nil || !dartVariableDefinitionScope(n) {
+		return nil
+	}
+	switch n.Kind() {
+	case "initialized_variable_definition":
+		return dartVariableDraftsFromNames(n, dartInitializedVariableNames(n, content), content)
+	case "initialized_identifier_list":
+		return dartVariableDraftsFromNames(dartVariableSignatureNode(n), dartInitializedIdentifierListNames(n, content), content)
+	case "static_final_declaration":
+		return dartVariableDraftsFromNames(n, []string{dartFirstDirectIdentifierKind(n, content, "identifier")}, content)
+	default:
+		return nil
+	}
+}
+
+func dartVariableDefinitionScope(n *tree_sitter.Node) bool {
+	for cur := n.Parent(); cur != nil; cur = cur.Parent() {
+		switch cur.Kind() {
+		case "local_variable_declaration", "function_body", "block":
+			return false
+		case "program", "class_body", "mixin_body", "extension_body":
+			return true
+		}
+	}
+	return false
+}
+
+func dartVariableDraftsFromNames(n *tree_sitter.Node, names []string, content []byte) []symbolDraft {
+	var drafts []symbolDraft
+	seen := map[string]bool{}
+	for _, name := range names {
+		name = strings.TrimSpace(name)
+		if name == "" || seen[name] {
+			continue
+		}
+		seen[name] = true
+		drafts = append(drafts, symbolDraft{
+			name:      name,
+			kind:      "variable",
+			signature: tagsFirstLine(n, content),
+			startLine: int(n.StartPosition().Row) + 1,
+			endLine:   int(n.EndPosition().Row) + 1,
+			metadata:  graph.JSONBMap{"source": "tree_sitter_dart"},
+		})
+	}
+	return drafts
+}
+
+func dartVariableSignatureNode(n *tree_sitter.Node) *tree_sitter.Node {
+	if n == nil {
+		return nil
+	}
+	if parent := n.Parent(); parent != nil {
+		switch parent.Kind() {
+		case "declaration", "initialized_variable_definition":
+			return parent
+		}
+	}
+	return n
+}
+
+func dartInitializedVariableNames(n *tree_sitter.Node, content []byte) []string {
+	var names []string
+	if name := n.ChildByFieldName("name"); name != nil {
+		names = append(names, nodeText(name, content))
+	}
+	for i := uint(0); i < n.ChildCount(); i++ {
+		child := n.Child(i)
+		if child == nil {
+			continue
+		}
+		switch child.Kind() {
+		case "initialized_identifier":
+			names = append(names, dartFirstDirectIdentifierKind(child, content, "identifier"))
+		case "initialized_identifier_list":
+			names = append(names, dartInitializedIdentifierListNames(child, content)...)
+		}
+	}
+	return names
+}
+
+func dartInitializedIdentifierListNames(n *tree_sitter.Node, content []byte) []string {
+	var names []string
+	if n == nil {
+		return names
+	}
+	for i := uint(0); i < n.ChildCount(); i++ {
+		item := n.Child(i)
+		if item != nil && item.Kind() == "initialized_identifier" {
+			names = append(names, dartFirstDirectIdentifierKind(item, content, "identifier"))
+		}
+	}
+	return names
 }
 
 func dartFirstDirectIdentifier(n *tree_sitter.Node, content []byte) string {

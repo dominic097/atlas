@@ -1154,7 +1154,10 @@ export 'src/request.dart';
 
 abstract class BaseClient {
   Future<Response> get(Uri url);
-  Future<StreamedResponse> send(BaseRequest request) async => StreamedResponse();
+  Future<StreamedResponse> send(BaseRequest request) async {
+    final localOnly = true;
+    return StreamedResponse();
+  }
   String get name => 'client';
   set contentLength(int? value) {
     throw UnsupportedError('read only');
@@ -1163,6 +1166,8 @@ abstract class BaseClient {
 
 abstract mixin class Abortable implements BaseRequest {}
 final class RetryClient extends BaseClient {
+  final BaseClient _inner;
+  static const maxAttempts = 3;
   RetryClient(this._inner);
   RetryClient.withDelays(this._inner);
   factory RetryClient.fromClient(BaseClient inner) =>
@@ -1179,6 +1184,8 @@ class _ClientSocketException extends ClientException {
 
 class Response {}
 Future<Response> makeResponse() => Response();
+const defaultPort = 80;
+var sharedClient = Object();
 
 typedef ClientFactory = Future<Response> Function(BaseRequest request);
 extension HeadersWithSplitValues on BaseResponse {
@@ -1206,6 +1213,11 @@ enum Method { get, post }
 		"makeResponse":           "function",
 		"ClientFactory":          "typedef",
 		"splitValues":            "getter",
+		"_inner":                 "variable",
+		"_when":                  "variable",
+		"maxAttempts":            "variable",
+		"defaultPort":            "variable",
+		"sharedClient":           "variable",
 	} {
 		sym := findSymbol(res.Symbols, name)
 		if sym == nil {
@@ -1224,7 +1236,7 @@ enum Method { get, post }
 	if constructors := symbolsNamedKind(res.Symbols, "RetryClient", "constructor"); len(constructors) != 1 {
 		t.Fatalf("RetryClient constructors = %+v, want only the declaration, not the arrow-body call", constructors)
 	}
-	for _, fake := range []string{"Function", "ArgumentError", "Duration", "UnsupportedError"} {
+	for _, fake := range []string{"Function", "ArgumentError", "Duration", "UnsupportedError", "localOnly"} {
 		if sym := findSymbol(res.Symbols, fake); sym != nil {
 			t.Fatalf("unexpected Dart false-positive symbol %q: %+v", fake, sym)
 		}
