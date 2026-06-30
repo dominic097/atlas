@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-30T17:55:47.373Z",
-  "benchmarkGeneratedAt": "2026-06-30T17:55:47.373Z",
+  "generatedAt": "2026-06-30T18:02:28.855Z",
+  "benchmarkGeneratedAt": "2026-06-30T18:02:28.855Z",
   "scope": "Final pass over Atlas benchmark artifacts: core matrix against Graphify plus native SCIP/LSP tools, live language artifacts against Graphify plus language-specific native/proxy baselines, and public three-repo validation metadata.",
   "summary": {
     "coreLanguages": 7,
@@ -23,6 +23,16 @@
     "precisionEquivalentRows": 199,
     "precisionValidationKindRows": 81,
     "precisionNativeMetricKindArtifacts": 27,
+    "callEdgeEvidenceHarness": true,
+    "callEdgeCoreReceiverTypedLanguages": 7,
+    "callEdgeCoreLanguages": 7,
+    "callEdgeCoreAtlasCalls": 21254,
+    "callEdgeCoreReceiverTypedCalls": 5016,
+    "callEdgeCoreReceiverTypedRatio": 0.236,
+    "callEdgeLiveArtifactsWithAtlasCalls": 36,
+    "callEdgeLiveArtifacts": 36,
+    "callEdgeLiveReceiverTypedArtifacts": 0,
+    "callEdgeLiveAtlasCalls": 258529,
     "graphifyVersion": "graphifyy 0.8.49",
     "graphifyDispatchCount": 89,
     "detectorOnlyLanguages": [
@@ -466,7 +476,7 @@
     "precisionEvidence": {
       "statement": "The precision manifest is an artifact-level audit of what the raw benchmark JSON can prove today: sampled query rows with matching symbol names and locations, native-vs-Atlas kind-count maps, or count-only gaps. It is not a full 99% precision oracle.",
       "manifest": {
-        "generatedAt": "2026-06-30T17:55:47.300Z",
+        "generatedAt": "2026-06-30T18:02:28.627Z",
         "summary": {
           "artifacts": 36,
           "sampledNameLocationArtifacts": 32,
@@ -575,6 +585,315 @@
           }
         ]
       }
+    },
+    "callEdgeEvidence": {
+      "statement": "The call-edge manifest audits what raw artifacts can prove today: receiver-typed call counts for the core matrix and call-count evidence for live artifacts. It does not prove receiver-type precision for live converted languages.",
+      "manifest": {
+        "generatedAt": "2026-06-30T18:02:28.785Z",
+        "summary": {
+          "coreLanguages": 7,
+          "coreReceiverTypedLanguages": 7,
+          "coreAtlasCalls": 21254,
+          "coreAtlasReceiverTypedCalls": 5016,
+          "coreAtlasReceiverTypedRatio": 0.236,
+          "liveArtifacts": 36,
+          "liveArtifactsWithAtlasCalls": 36,
+          "liveReceiverTypedArtifacts": 0,
+          "liveAtlasCalls": 258529,
+          "liveGraphifyCalls": 23248,
+          "passed": true
+        },
+        "liveGaps": [
+          {
+            "language": "apex",
+            "status": "calls-only",
+            "atlasCalls": 5006,
+            "graphifyCalls": 44,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "astro",
+            "status": "calls-only",
+            "atlasCalls": 50,
+            "graphifyCalls": 0,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "bash",
+            "status": "calls-only",
+            "atlasCalls": 102,
+            "graphifyCalls": 292,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "blade",
+            "status": "calls-only",
+            "atlasCalls": 4062,
+            "graphifyCalls": 0,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "byond",
+            "status": "calls-only",
+            "atlasCalls": 39076,
+            "graphifyCalls": 0,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "csharp",
+            "status": "calls-only",
+            "atlasCalls": 8113,
+            "graphifyCalls": 690,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "cuda",
+            "status": "calls-only",
+            "atlasCalls": 52,
+            "graphifyCalls": 2,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "dart",
+            "status": "calls-only",
+            "atlasCalls": 417,
+            "graphifyCalls": 0,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "delphi",
+            "status": "calls-only",
+            "atlasCalls": 65729,
+            "graphifyCalls": 10195,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "dotnet",
+            "status": "calls-only",
+            "atlasCalls": 8113,
+            "graphifyCalls": 693,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "ejs",
+            "status": "calls-only",
+            "atlasCalls": 669,
+            "graphifyCalls": 1,
+            "graphifyDetectorOnly": true,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "elixir",
+            "status": "calls-only",
+            "atlasCalls": 4783,
+            "graphifyCalls": null,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "ets",
+            "status": "calls-only",
+            "atlasCalls": 704,
+            "graphifyCalls": 0,
+            "graphifyDetectorOnly": true,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "fortran",
+            "status": "calls-only",
+            "atlasCalls": 4470,
+            "graphifyCalls": 58,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "groovy",
+            "status": "calls-only",
+            "atlasCalls": 3131,
+            "graphifyCalls": 358,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "json",
+            "status": "calls-only",
+            "atlasCalls": 359,
+            "graphifyCalls": 22,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "julia",
+            "status": "calls-only",
+            "atlasCalls": 1038,
+            "graphifyCalls": 70,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "kotlin",
+            "status": "calls-only",
+            "atlasCalls": 6285,
+            "graphifyCalls": 1096,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "lua",
+            "status": "calls-only",
+            "atlasCalls": 3347,
+            "graphifyCalls": 226,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "markdown",
+            "status": "calls-only",
+            "atlasCalls": 19,
+            "graphifyCalls": 1,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "objc",
+            "status": "calls-only",
+            "atlasCalls": 1828,
+            "graphifyCalls": 0,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "pascal",
+            "status": "calls-only",
+            "atlasCalls": 20943,
+            "graphifyCalls": 2187,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "php",
+            "status": "calls-only",
+            "atlasCalls": 5713,
+            "graphifyCalls": 169,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "powershell",
+            "status": "calls-only",
+            "atlasCalls": 804,
+            "graphifyCalls": 14,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "razor",
+            "status": "calls-only",
+            "atlasCalls": 2327,
+            "graphifyCalls": 103,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "ruby",
+            "status": "calls-only",
+            "atlasCalls": 3305,
+            "graphifyCalls": 737,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "rust",
+            "status": "calls-only",
+            "atlasCalls": 15805,
+            "graphifyCalls": 2657,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "r",
+            "status": "calls-only",
+            "atlasCalls": 16377,
+            "graphifyCalls": 0,
+            "graphifyDetectorOnly": true,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "scala",
+            "status": "calls-only",
+            "atlasCalls": 9157,
+            "graphifyCalls": 1161,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "sql",
+            "status": "calls-only",
+            "atlasCalls": 825,
+            "graphifyCalls": 0,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "svelte",
+            "status": "calls-only",
+            "atlasCalls": 3118,
+            "graphifyCalls": 114,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "swift",
+            "status": "calls-only",
+            "atlasCalls": 7224,
+            "graphifyCalls": 994,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "terraform",
+            "status": "calls-only",
+            "atlasCalls": 1078,
+            "graphifyCalls": 0,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "verilog",
+            "status": "calls-only",
+            "atlasCalls": 2656,
+            "graphifyCalls": null,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "vue",
+            "status": "calls-only",
+            "atlasCalls": 280,
+            "graphifyCalls": 2,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          },
+          {
+            "language": "zig",
+            "status": "calls-only",
+            "atlasCalls": 11564,
+            "graphifyCalls": 1362,
+            "graphifyDetectorOnly": false,
+            "note": "Raw live artifact exposes call counts but no receiver-type metric."
+          }
+        ]
+      }
     }
   },
   "stubsAndHallucinationAudit": {
@@ -583,6 +902,7 @@
       "scip-java now resolves through the pinned bench/tools/scip-java-coursier launcher; Java is reported with both SCIP and JDTLS baselines present.",
       "The committed public-repo validation harness regenerates data/public-repo-validation-manifest.* from raw live artifacts and fails when a code language lacks passing three-repo evidence.",
       "The committed precision-evidence harness regenerates data/precision-evidence-manifest.* from raw live artifacts and separates sampled symbol/location evidence from weaker kind-count-only rows.",
+      "The committed call-edge evidence harness regenerates data/call-edge-evidence-manifest.* from raw artifacts and separates core receiver-typed call evidence from live call-count-only rows.",
       "Objective-C validation can be inflated by vendored Pods if Atlas and the native counter use different dependency filters; the final validation excludes dependency folders for the validation count.",
       "CUDA host-function counters overcount the denominator for a CUDA-specific benchmark; the final validation labels and uses a CUDA-qualified __global__/__device__/__host__ function denominator."
     ],
@@ -610,7 +930,7 @@
     },
     {
       "priority": "P1",
-      "item": "Extend call-edge and receiver-type measurement for converted tree-sitter languages beyond definition coverage."
+      "item": "Extend receiver-type measurement into live converted tree-sitter artifacts; the current call-edge harness proves live call counts but receiver typing is only present in the core matrix artifacts."
     },
     {
       "priority": "P2",

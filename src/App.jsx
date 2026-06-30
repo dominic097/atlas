@@ -512,6 +512,9 @@ function HeroReadout({ data }) {
             <a href="data/precision-evidence-manifest.md" download data-source-artifact className="btn btn-ghost focusring" style={{ textDecoration: "none" }}>
               Precision evidence <Download className="h-4 w-4" aria-hidden />
             </a>
+            <a href="data/call-edge-evidence-manifest.md" download data-source-artifact className="btn btn-ghost focusring" style={{ textDecoration: "none" }}>
+              Call-edge evidence <Download className="h-4 w-4" aria-hidden />
+            </a>
           </div>
         </div>
 
@@ -1619,6 +1622,9 @@ function Install() {
             <SourceLink href="data/precision-evidence-manifest.md" download>
               <Download className="h-3 w-3" aria-hidden /> precision evidence
             </SourceLink>
+            <SourceLink href="data/call-edge-evidence-manifest.md" download>
+              <Download className="h-3 w-3" aria-hidden /> call-edge evidence
+            </SourceLink>
           </div>
         </div>
         <div className="mt-4">
@@ -1630,6 +1636,7 @@ function Install() {
               "curl -LO https://aziron-ai.github.io/atlas/data/final-benchmark-audit-report.md",
               "curl -LO https://aziron-ai.github.io/atlas/data/public-repo-validation-manifest.md",
               "curl -LO https://aziron-ai.github.io/atlas/data/precision-evidence-manifest.md",
+              "curl -LO https://aziron-ai.github.io/atlas/data/call-edge-evidence-manifest.md",
             ]}
           />
         </div>
@@ -1696,6 +1703,9 @@ function Evidence({ data }) {
         </a>
         <a href="data/precision-evidence-manifest.md" download data-source-artifact data-testid="download-link" className="btn btn-ghost focusring" style={{ textDecoration: "none" }}>
           <Download className="h-4 w-4" aria-hidden /> precision evidence
+        </a>
+        <a href="data/call-edge-evidence-manifest.md" download data-source-artifact data-testid="download-link" className="btn btn-ghost focusring" style={{ textDecoration: "none" }}>
+          <Download className="h-4 w-4" aria-hidden /> call-edge evidence
         </a>
       </div>
 

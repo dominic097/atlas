@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T17:55:47.373Z",
+  "generatedAt": "2026-06-30T18:02:28.855Z",
   "sourceLabel": "Atlas benchmark JSON artifacts from bench/",
   "sourceArtifacts": [
     {
@@ -319,6 +319,14 @@
     {
       "name": "precision-evidence-manifest.md",
       "path": "data/precision-evidence-manifest.md"
+    },
+    {
+      "name": "call-edge-evidence-manifest.json",
+      "path": "data/call-edge-evidence-manifest.json"
+    },
+    {
+      "name": "call-edge-evidence-manifest.md",
+      "path": "data/call-edge-evidence-manifest.md"
     },
     {
       "name": "final-benchmark-audit-report.json",
@@ -10831,7 +10839,7 @@
   ],
   "publicRepoValidation": {
     "schemaVersion": 1,
-    "generatedAt": "2026-06-30T17:55:47.137Z",
+    "generatedAt": "2026-06-30T18:02:28.470Z",
     "source": "data/raw/LIVE_*_BENCHMARK.json",
     "harness": "scripts/public-repo-validation-harness.mjs",
     "summary": {
@@ -13952,7 +13960,7 @@
   },
   "precisionEvidence": {
     "schemaVersion": 1,
-    "generatedAt": "2026-06-30T17:55:47.300Z",
+    "generatedAt": "2026-06-30T18:02:28.627Z",
     "source": "data/raw/LIVE_*_BENCHMARK.json",
     "harness": "scripts/precision-evidence-harness.mjs",
     "summary": {
@@ -20067,6 +20075,611 @@
       }
     ]
   },
+  "callEdgeEvidence": {
+    "schemaVersion": 1,
+    "generatedAt": "2026-06-30T18:02:28.785Z",
+    "source": "data/raw/MATRIX_REPORT.json and data/raw/LIVE_*_BENCHMARK.json",
+    "harness": "scripts/call-edge-evidence-harness.mjs",
+    "summary": {
+      "coreLanguages": 7,
+      "coreReceiverTypedLanguages": 7,
+      "coreAtlasCalls": 21254,
+      "coreAtlasReceiverTypedCalls": 5016,
+      "coreAtlasReceiverTypedRatio": 0.236,
+      "liveArtifacts": 36,
+      "liveArtifactsWithAtlasCalls": 36,
+      "liveReceiverTypedArtifacts": 0,
+      "liveAtlasCalls": 258529,
+      "liveGraphifyCalls": 23248,
+      "passed": true
+    },
+    "core": [
+      {
+        "language": "go",
+        "artifact": "data/raw/MATRIX_REPORT.json",
+        "status": "receiver-typed",
+        "atlasCalls": 2102,
+        "atlasInternalCalls": 1143,
+        "atlasReceiverTypedCalls": 632,
+        "atlasReceiverTypedRatio": 0.3007,
+        "atlasCallSources": {
+          "go_ast": 2102
+        },
+        "atlasEdges": 2948,
+        "graphifyCalls": 333,
+        "graphifyExtractedCalls": 198,
+        "graphifyExtractedPct": 59.5
+      },
+      {
+        "language": "python",
+        "artifact": "data/raw/MATRIX_REPORT.json",
+        "status": "receiver-typed",
+        "atlasCalls": 961,
+        "atlasInternalCalls": 371,
+        "atlasReceiverTypedCalls": 73,
+        "atlasReceiverTypedRatio": 0.076,
+        "atlasCallSources": {
+          "python_ts": 961
+        },
+        "atlasEdges": 1371,
+        "graphifyCalls": 229,
+        "graphifyExtractedCalls": 221,
+        "graphifyExtractedPct": 96.5
+      },
+      {
+        "language": "javascript",
+        "artifact": "data/raw/MATRIX_REPORT.json",
+        "status": "receiver-typed",
+        "atlasCalls": 435,
+        "atlasInternalCalls": 231,
+        "atlasReceiverTypedCalls": 0,
+        "atlasReceiverTypedRatio": 0,
+        "atlasCallSources": {
+          "javascript_ts": 435
+        },
+        "atlasEdges": 486,
+        "graphifyCalls": 3,
+        "graphifyExtractedCalls": 3,
+        "graphifyExtractedPct": 100
+      },
+      {
+        "language": "typescript",
+        "artifact": "data/raw/MATRIX_REPORT.json",
+        "status": "receiver-typed",
+        "atlasCalls": 197,
+        "atlasInternalCalls": 81,
+        "atlasReceiverTypedCalls": 8,
+        "atlasReceiverTypedRatio": 0.0406,
+        "atlasCallSources": {
+          "javascript_ts": 197
+        },
+        "atlasEdges": 224,
+        "graphifyCalls": 6,
+        "graphifyExtractedCalls": 6,
+        "graphifyExtractedPct": 100
+      },
+      {
+        "language": "java",
+        "artifact": "data/raw/MATRIX_REPORT.json",
+        "status": "receiver-typed",
+        "atlasCalls": 3105,
+        "atlasInternalCalls": 2403,
+        "atlasReceiverTypedCalls": 2326,
+        "atlasReceiverTypedRatio": 0.7491,
+        "atlasCallSources": {
+          "java_ts": 3105
+        },
+        "atlasEdges": 3782,
+        "graphifyCalls": 927,
+        "graphifyExtractedCalls": 599,
+        "graphifyExtractedPct": 64.6
+      },
+      {
+        "language": "c",
+        "artifact": "data/raw/MATRIX_REPORT.json",
+        "status": "receiver-typed",
+        "atlasCalls": 4973,
+        "atlasInternalCalls": 1975,
+        "atlasReceiverTypedCalls": 18,
+        "atlasReceiverTypedRatio": 0.0036,
+        "atlasCallSources": {
+          "cpp_ts": 4275,
+          "call_pattern": 556,
+          "python_ts": 142
+        },
+        "atlasEdges": 5373,
+        "graphifyCalls": 1018,
+        "graphifyExtractedCalls": 492,
+        "graphifyExtractedPct": 48.3
+      },
+      {
+        "language": "cpp",
+        "artifact": "data/raw/MATRIX_REPORT.json",
+        "status": "receiver-typed",
+        "atlasCalls": 9481,
+        "atlasInternalCalls": 6217,
+        "atlasReceiverTypedCalls": 1959,
+        "atlasReceiverTypedRatio": 0.2066,
+        "atlasCallSources": {
+          "cpp_ts": 9481
+        },
+        "atlasEdges": 10255,
+        "graphifyCalls": 1195,
+        "graphifyExtractedCalls": 1027,
+        "graphifyExtractedPct": 85.9
+      }
+    ],
+    "live": [
+      {
+        "language": "apex",
+        "artifact": "data/raw/LIVE_APEX_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 5006,
+        "atlasEdges": 5045,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 44,
+        "graphifyEdges": 3836,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "astro",
+        "artifact": "data/raw/LIVE_ASTRO_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 50,
+        "atlasEdges": 68,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 0,
+        "graphifyEdges": 30,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "bash",
+        "artifact": "data/raw/LIVE_BASH_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 102,
+        "atlasEdges": 103,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 292,
+        "graphifyEdges": 729,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "blade",
+        "artifact": "data/raw/LIVE_BLADE_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 4062,
+        "atlasEdges": 4587,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 0,
+        "graphifyEdges": 421,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "byond",
+        "artifact": "data/raw/LIVE_BYOND_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 39076,
+        "atlasEdges": 39076,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 0,
+        "graphifyEdges": 5,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "csharp",
+        "artifact": "data/raw/LIVE_CSHARP_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 8113,
+        "atlasEdges": 8180,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 690,
+        "graphifyEdges": 5135,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "cuda",
+        "artifact": "data/raw/LIVE_CUDA_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 52,
+        "atlasEdges": 63,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 2,
+        "graphifyEdges": 18,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "dart",
+        "artifact": "data/raw/LIVE_DART_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 417,
+        "atlasEdges": 543,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 0,
+        "graphifyEdges": 424,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "delphi",
+        "artifact": "data/raw/LIVE_DELPHI_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 65729,
+        "atlasEdges": 73199,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 10195,
+        "graphifyEdges": 29702,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "dotnet",
+        "artifact": "data/raw/LIVE_DOTNET_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 8113,
+        "atlasEdges": 8180,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 693,
+        "graphifyEdges": 5258,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "ejs",
+        "artifact": "data/raw/LIVE_EJS_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": true,
+        "atlasCalls": 669,
+        "atlasEdges": 767,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 1,
+        "graphifyEdges": 54,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "elixir",
+        "artifact": "data/raw/LIVE_ELIXIR_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 4783,
+        "atlasEdges": 4897,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": null,
+        "graphifyEdges": 1876,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "ets",
+        "artifact": "data/raw/LIVE_ETS_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": true,
+        "atlasCalls": 704,
+        "atlasEdges": 757,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 0,
+        "graphifyEdges": 0,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "fortran",
+        "artifact": "data/raw/LIVE_FORTRAN_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 4470,
+        "atlasEdges": 4527,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 58,
+        "graphifyEdges": 815,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "groovy",
+        "artifact": "data/raw/LIVE_GROOVY_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 3131,
+        "atlasEdges": 3733,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 358,
+        "graphifyEdges": 1227,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "json",
+        "artifact": "data/raw/LIVE_JSON_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 359,
+        "atlasEdges": 409,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 22,
+        "graphifyEdges": 220,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "julia",
+        "artifact": "data/raw/LIVE_JULIA_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 1038,
+        "atlasEdges": 1048,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 70,
+        "graphifyEdges": 179,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "kotlin",
+        "artifact": "data/raw/LIVE_KOTLIN_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 6285,
+        "atlasEdges": 7504,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 1096,
+        "graphifyEdges": 5202,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "lua",
+        "artifact": "data/raw/LIVE_LUA_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 3347,
+        "atlasEdges": 3543,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 226,
+        "graphifyEdges": 1288,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "markdown",
+        "artifact": "data/raw/LIVE_MARKDOWN_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 19,
+        "atlasEdges": 27,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 1,
+        "graphifyEdges": 249,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "objc",
+        "artifact": "data/raw/LIVE_OBJC_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 1828,
+        "atlasEdges": 2118,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 0,
+        "graphifyEdges": 1009,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "pascal",
+        "artifact": "data/raw/LIVE_PASCAL_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 20943,
+        "atlasEdges": 21339,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 2187,
+        "graphifyEdges": 7437,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "php",
+        "artifact": "data/raw/LIVE_PHP_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 5713,
+        "atlasEdges": 6537,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 169,
+        "graphifyEdges": 2206,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "powershell",
+        "artifact": "data/raw/LIVE_POWERSHELL_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 804,
+        "atlasEdges": 804,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 14,
+        "graphifyEdges": 43,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "razor",
+        "artifact": "data/raw/LIVE_RAZOR_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 2327,
+        "atlasEdges": 2436,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 103,
+        "graphifyEdges": 1536,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "ruby",
+        "artifact": "data/raw/LIVE_RUBY_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 3305,
+        "atlasEdges": 3525,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 737,
+        "graphifyEdges": 1869,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "rust",
+        "artifact": "data/raw/LIVE_RUST_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 15805,
+        "atlasEdges": 16722,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 2657,
+        "graphifyEdges": 9148,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "r",
+        "artifact": "data/raw/LIVE_R_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": true,
+        "atlasCalls": 16377,
+        "atlasEdges": 16377,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 0,
+        "graphifyEdges": 0,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "scala",
+        "artifact": "data/raw/LIVE_SCALA_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 9157,
+        "atlasEdges": 9436,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 1161,
+        "graphifyEdges": 18787,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "sql",
+        "artifact": "data/raw/LIVE_SQL_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 825,
+        "atlasEdges": 825,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 0,
+        "graphifyEdges": 194,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "svelte",
+        "artifact": "data/raw/LIVE_SVELTE_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 3118,
+        "atlasEdges": 4051,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 114,
+        "graphifyEdges": 1521,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "swift",
+        "artifact": "data/raw/LIVE_SWIFT_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 7224,
+        "atlasEdges": 7430,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 994,
+        "graphifyEdges": 6444,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "terraform",
+        "artifact": "data/raw/LIVE_TERRAFORM_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 1078,
+        "atlasEdges": 1078,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 0,
+        "graphifyEdges": 4736,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "verilog",
+        "artifact": "data/raw/LIVE_VERILOG_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 2656,
+        "atlasEdges": 2669,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": null,
+        "graphifyEdges": 139,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "vue",
+        "artifact": "data/raw/LIVE_VUE_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 280,
+        "atlasEdges": 389,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 2,
+        "graphifyEdges": 207,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      },
+      {
+        "language": "zig",
+        "artifact": "data/raw/LIVE_ZIG_BENCHMARK.json",
+        "status": "calls-only",
+        "graphifyDetectorOnly": false,
+        "atlasCalls": 11564,
+        "atlasEdges": 11846,
+        "atlasReceiverTypedCalls": null,
+        "atlasReceiverTypedRatio": null,
+        "graphifyCalls": 1362,
+        "graphifyEdges": 2536,
+        "note": "Raw live artifact exposes call counts but no receiver-type metric."
+      }
+    ]
+  },
   "saturation": [],
   "caveats": [
     "Ratios are computed only where both Atlas and graphify returned comparable query rows.",
@@ -20074,6 +20687,7 @@
     "Timings are one-machine benchmark snapshots, not production guarantees.",
     "Atlas and graphify expose different graph models, so coverage and precision fields are shown separately.",
     "The precision evidence manifest records sampled symbol/location matches and validation kind-count maps when raw artifacts expose them; it does not claim full precision for rows that remain count-only or proxy-denominator based.",
+    "The call-edge evidence manifest records core receiver-typed calls and live call counts when raw artifacts expose them; it does not claim live receiver-type coverage where no receiver metric exists.",
     "10x target fields are strict for token and latency ratios; coverage is reported as native-definition parity/exceed and is not converted into a fabricated 10x accuracy multiplier."
   ],
   "finalAudit": {
@@ -20100,6 +20714,16 @@
       "precisionEquivalentRows": 199,
       "precisionValidationKindRows": 81,
       "precisionNativeMetricKindArtifacts": 27,
+      "callEdgeEvidenceHarness": true,
+      "callEdgeCoreReceiverTypedLanguages": 7,
+      "callEdgeCoreLanguages": 7,
+      "callEdgeCoreAtlasCalls": 21254,
+      "callEdgeCoreReceiverTypedCalls": 5016,
+      "callEdgeCoreReceiverTypedRatio": 0.236,
+      "callEdgeLiveArtifactsWithAtlasCalls": 36,
+      "callEdgeLiveArtifacts": 36,
+      "callEdgeLiveReceiverTypedArtifacts": 0,
+      "callEdgeLiveAtlasCalls": 258529,
       "graphifyVersion": "graphifyy 0.8.49",
       "graphifyDispatchCount": 89,
       "detectorOnlyLanguages": [

@@ -547,6 +547,9 @@ function buildFinalAuditReport(dataset) {
   const precisionEvidence = dataset.precisionEvidence || null;
   const precisionEvidencePassed = Boolean(precisionEvidence?.summary?.passed);
   const precisionSummary = precisionEvidence?.summary || {};
+  const callEdgeEvidence = dataset.callEdgeEvidence || null;
+  const callEdgeEvidencePassed = Boolean(callEdgeEvidence?.summary?.passed);
+  const callEdgeSummary = callEdgeEvidence?.summary || {};
   const precisionRows = Array.isArray(precisionEvidence?.languages) ? precisionEvidence.languages : [];
   const precisionGaps = precisionRows
     .filter((row) => row.status !== "sampled-name-location")
@@ -616,6 +619,9 @@ function buildFinalAuditReport(dataset) {
     precisionEvidencePassed
       ? "The committed precision-evidence harness regenerates data/precision-evidence-manifest.* from raw live artifacts and separates sampled symbol/location evidence from weaker kind-count-only rows."
       : "The precision-evidence harness is still missing or failing; precision remains described only by coverage and validation notes.",
+    callEdgeEvidencePassed
+      ? "The committed call-edge evidence harness regenerates data/call-edge-evidence-manifest.* from raw artifacts and separates core receiver-typed call evidence from live call-count-only rows."
+      : "The call-edge evidence harness is still missing or failing; call-edge coverage remains embedded in raw artifacts only.",
     "Objective-C validation can be inflated by vendored Pods if Atlas and the native counter use different dependency filters; the final validation excludes dependency folders for the validation count.",
     "CUDA host-function counters overcount the denominator for a CUDA-specific benchmark; the final validation labels and uses a CUDA-qualified __global__/__device__/__host__ function denominator.",
   ];
@@ -652,7 +658,9 @@ function buildFinalAuditReport(dataset) {
     },
     {
       priority: "P1",
-      item: "Extend call-edge and receiver-type measurement for converted tree-sitter languages beyond definition coverage.",
+      item: callEdgeEvidencePassed
+        ? "Extend receiver-type measurement into live converted tree-sitter artifacts; the current call-edge harness proves live call counts but receiver typing is only present in the core matrix artifacts."
+        : "Extend call-edge and receiver-type measurement for converted tree-sitter languages beyond definition coverage.",
     },
     {
       priority: "P2",
@@ -690,6 +698,16 @@ function buildFinalAuditReport(dataset) {
       precisionEquivalentRows: precisionSummary.equivalentRows ?? null,
       precisionValidationKindRows: precisionSummary.validationKindRows ?? null,
       precisionNativeMetricKindArtifacts: precisionSummary.nativeMetricKindArtifacts ?? null,
+      callEdgeEvidenceHarness: callEdgeEvidencePassed,
+      callEdgeCoreReceiverTypedLanguages: callEdgeSummary.coreReceiverTypedLanguages ?? null,
+      callEdgeCoreLanguages: callEdgeSummary.coreLanguages ?? null,
+      callEdgeCoreAtlasCalls: callEdgeSummary.coreAtlasCalls ?? null,
+      callEdgeCoreReceiverTypedCalls: callEdgeSummary.coreAtlasReceiverTypedCalls ?? null,
+      callEdgeCoreReceiverTypedRatio: callEdgeSummary.coreAtlasReceiverTypedRatio ?? null,
+      callEdgeLiveArtifactsWithAtlasCalls: callEdgeSummary.liveArtifactsWithAtlasCalls ?? null,
+      callEdgeLiveArtifacts: callEdgeSummary.liveArtifacts ?? null,
+      callEdgeLiveReceiverTypedArtifacts: callEdgeSummary.liveReceiverTypedArtifacts ?? null,
+      callEdgeLiveAtlasCalls: callEdgeSummary.liveAtlasCalls ?? null,
       graphifyVersion: dataset.provenance.graphify.version,
       graphifyDispatchCount: dataset.provenance.graphify.dispatchCount,
       detectorOnlyLanguages: dataset.provenance.graphify.detectorOnlyCodeExtensions,
@@ -720,6 +738,26 @@ function buildFinalAuditReport(dataset) {
               generatedAt: precisionEvidence.generatedAt,
               summary: precisionSummary,
               gaps: precisionGaps,
+            }
+          : null,
+      },
+      callEdgeEvidence: {
+        statement:
+          "The call-edge manifest audits what raw artifacts can prove today: receiver-typed call counts for the core matrix and call-count evidence for live artifacts. It does not prove receiver-type precision for live converted languages.",
+        manifest: callEdgeEvidence
+          ? {
+              generatedAt: callEdgeEvidence.generatedAt,
+              summary: callEdgeSummary,
+              liveGaps: (callEdgeEvidence.live || [])
+                .filter((row) => row.status !== "receiver-typed")
+                .map((row) => ({
+                  language: row.language,
+                  status: row.status,
+                  atlasCalls: row.atlasCalls,
+                  graphifyCalls: row.graphifyCalls,
+                  graphifyDetectorOnly: row.graphifyDetectorOnly,
+                  note: row.note,
+                })),
             }
           : null,
       },
@@ -755,6 +793,11 @@ function renderFinalAuditMarkdown(report) {
   lines.push(`- Precision sampled query rows with name+location: ${report.summary.precisionMatchedNameLocationRows ?? "n/a"}/${report.summary.precisionEquivalentRows ?? "n/a"}`);
   lines.push(`- Precision validation rows with kind maps: ${report.summary.precisionValidationKindRows ?? "n/a"}`);
   lines.push(`- Precision artifacts with native metric kind maps: ${report.summary.precisionNativeMetricKindArtifacts ?? "n/a"}`);
+  lines.push(`- Call-edge evidence harness: ${report.summary.callEdgeEvidenceHarness ? "present" : "missing"}`);
+  lines.push(`- Core receiver-typed call languages: ${report.summary.callEdgeCoreReceiverTypedLanguages ?? "n/a"}/${report.summary.callEdgeCoreLanguages ?? "n/a"}`);
+  lines.push(`- Core receiver-typed calls: ${report.summary.callEdgeCoreReceiverTypedCalls ?? "n/a"}/${report.summary.callEdgeCoreAtlasCalls ?? "n/a"} (${report.summary.callEdgeCoreReceiverTypedRatio ?? "n/a"})`);
+  lines.push(`- Live artifacts with Atlas call counts: ${report.summary.callEdgeLiveArtifactsWithAtlasCalls ?? "n/a"}/${report.summary.callEdgeLiveArtifacts ?? "n/a"}`);
+  lines.push(`- Live artifacts with receiver-typed calls: ${report.summary.callEdgeLiveReceiverTypedArtifacts ?? "n/a"}`);
   lines.push(`- Graphify: ${report.summary.graphifyVersion}, dispatch count ${report.summary.graphifyDispatchCount}`);
   lines.push("", "## Ground Truth Closeness", "");
   lines.push(report.groundTruthCloseness.statement, "");
@@ -781,6 +824,29 @@ function renderFinalAuditMarkdown(report) {
         row.nativeMetricKindEvidence?.hasDefinitionCounts || row.nativeMetricKindEvidence?.hasExpandedDefinitionCounts;
       lines.push(
         `| ${row.language} | ${row.status} | ${row.matchedNameLocationRows}/${row.equivalentRows} | ${row.validationKindRows}/${row.validationRows} | ${hasNativeMetricKindMap ? "yes" : "no"} | ${row.gap || "none"} |`
+      );
+    }
+  } else {
+    lines.push("Manifest: missing.");
+  }
+  lines.push("");
+  lines.push("### Call Edge Evidence", "");
+  lines.push(report.groundTruthCloseness.callEdgeEvidence.statement, "");
+  if (report.groundTruthCloseness.callEdgeEvidence.manifest) {
+    const manifest = report.groundTruthCloseness.callEdgeEvidence.manifest;
+    lines.push(`Manifest: data/call-edge-evidence-manifest.md, generated ${manifest.generatedAt}.`);
+    lines.push(
+      `Core receiver-typed calls: ${manifest.summary.coreAtlasReceiverTypedCalls}/${manifest.summary.coreAtlasCalls}; live Atlas calls: ${manifest.summary.liveAtlasCalls}.`
+    );
+    lines.push(
+      `Live receiver-typed artifacts: ${manifest.summary.liveReceiverTypedArtifacts}/${manifest.summary.liveArtifacts}; live artifacts with call counts: ${manifest.summary.liveArtifactsWithAtlasCalls}/${manifest.summary.liveArtifacts}.`
+    );
+    lines.push("");
+    lines.push("| Language | Status | Atlas calls | Graphify calls | Detector-only Graphify | Note |");
+    lines.push("|---|---|--:|--:|---|---|");
+    for (const row of manifest.liveGaps) {
+      lines.push(
+        `| ${row.language} | ${row.status} | ${row.atlasCalls ?? "n/a"} | ${row.graphifyCalls ?? "n/a"} | ${row.graphifyDetectorOnly ? "yes" : "no"} | ${row.note} |`
       );
     }
   } else {
@@ -857,6 +923,8 @@ function main() {
       { name: "public-repo-validation-manifest.md", path: "data/public-repo-validation-manifest.md" },
       { name: "precision-evidence-manifest.json", path: "data/precision-evidence-manifest.json" },
       { name: "precision-evidence-manifest.md", path: "data/precision-evidence-manifest.md" },
+      { name: "call-edge-evidence-manifest.json", path: "data/call-edge-evidence-manifest.json" },
+      { name: "call-edge-evidence-manifest.md", path: "data/call-edge-evidence-manifest.md" },
       { name: "final-benchmark-audit-report.json", path: "data/final-benchmark-audit-report.json" },
       { name: "final-benchmark-audit-report.md", path: "data/final-benchmark-audit-report.md" },
     ],
@@ -897,6 +965,7 @@ function main() {
     coverageAudit,
     publicRepoValidation: readDataJSON("public-repo-validation-manifest.json"),
     precisionEvidence: readDataJSON("precision-evidence-manifest.json"),
+    callEdgeEvidence: readDataJSON("call-edge-evidence-manifest.json"),
     saturation: saturationRows,
     caveats: [
       "Ratios are computed only where both Atlas and graphify returned comparable query rows.",
@@ -906,6 +975,7 @@ function main() {
       "Timings are one-machine benchmark snapshots, not production guarantees.",
       "Atlas and graphify expose different graph models, so coverage and precision fields are shown separately.",
       "The precision evidence manifest records sampled symbol/location matches and validation kind-count maps when raw artifacts expose them; it does not claim full precision for rows that remain count-only or proxy-denominator based.",
+      "The call-edge evidence manifest records core receiver-typed calls and live call counts when raw artifacts expose them; it does not claim live receiver-type coverage where no receiver metric exists.",
       "10x target fields are strict for token and latency ratios; coverage is reported as native-definition parity/exceed and is not converted into a fabricated 10x accuracy multiplier.",
     ],
   };

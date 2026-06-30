@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T17:55:47.300Z",
+  "generatedAt": "2026-06-30T18:02:28.627Z",
   "source": "data/raw/LIVE_*_BENCHMARK.json",
   "harness": "scripts/precision-evidence-harness.mjs",
   "summary": {
