@@ -632,7 +632,7 @@ function buildFinalAuditReport(dataset) {
       ? "The committed public-repo validation harness regenerates data/public-repo-validation-manifest.* from raw live artifacts and fails when a code language lacks passing three-repo evidence."
       : "The public-repo validation harness is still missing or failing; multi-repo validation remains raw-artifact evidence only.",
     validationRemeasurementPassed
-      ? "The committed validation remeasurement readiness harness regenerates data/validation-remeasurement-manifest.* and separates Atlas/Graphify replay-ready validation rows, generated native/proxy command candidates, and native/proxy rows that still lack executable per-repo commands."
+      ? "The committed validation remeasurement readiness harness regenerates data/validation-remeasurement-manifest.* and separates Atlas/Graphify replay-ready validation rows, generated native/proxy command candidates, candidate-executable rows, and native/proxy rows that still lack executable per-repo commands."
       : "The validation remeasurement readiness harness is still missing or failing; replay readiness remains inferred from the public-repo validation manifest.",
     precisionEvidencePassed
       ? "The committed precision-evidence harness regenerates data/precision-evidence-manifest.* from raw live artifacts and separates sampled symbol/location evidence from weaker kind-count-only rows."
@@ -666,7 +666,7 @@ function buildFinalAuditReport(dataset) {
     {
       priority: "P1",
       item: validationRemeasurementPassed
-        ? "Implement execution mode for validation remeasurement: the readiness manifest proves pinned Atlas/Graphify replay rows and native/proxy command candidates, but placeholder templates, ephemeral helper paths, and persisted output sets still need to be replaced with executable committed commands."
+        ? "Implement execution mode for validation remeasurement: the readiness manifest proves pinned Atlas/Graphify replay rows, native/proxy command candidates, and candidate-executable rows for committed helpers, but placeholder templates, remaining ephemeral helper paths, and persisted output sets still need to be replaced with executable committed commands."
         : "Promote the committed public-repo validation manifest harness from artifact verification to full remeasurement for every native/proxy counter.",
     },
     {
@@ -722,6 +722,7 @@ function buildFinalAuditReport(dataset) {
       validationRemeasurementAtlasReplayReadyRows: validationRemeasurementSummary.atlasReplayReadyRows ?? null,
       validationRemeasurementGraphifyReplayReadyRows: validationRemeasurementSummary.graphifyReplayReadyRows ?? null,
       validationRemeasurementNativeCandidateRows: validationRemeasurementSummary.nativeRemeasurementCandidateRows ?? null,
+      validationRemeasurementNativeCandidateExecutableRows: validationRemeasurementSummary.nativeRemeasurementCandidateExecutableRows ?? null,
       validationRemeasurementNativeReadyRows: validationRemeasurementSummary.nativeRemeasurementReadyRows ?? null,
       validationRemeasurementFullReadyArtifacts: validationRemeasurementSummary.fullRemeasurementReadyArtifacts ?? null,
       validationRemeasurementNativePlaceholderRows: validationRemeasurementSummary.nativeCandidatePlaceholderRows ?? null,
@@ -792,6 +793,7 @@ function buildFinalAuditReport(dataset) {
                   atlasReplayReadyRows: row.atlasReplayReadyRows,
                   graphifyReplayReadyRows: row.graphifyReplayReadyRows,
                   nativeRemeasurementCandidateRows: row.nativeRemeasurementCandidateRows,
+                  nativeRemeasurementCandidateExecutableRows: row.nativeRemeasurementCandidateExecutableRows,
                   nativeRemeasurementReadyRows: row.nativeRemeasurementReadyRows,
                   blockers: row.blockers || [],
                 })),
@@ -872,6 +874,7 @@ function renderFinalAuditMarkdown(report) {
   lines.push(`- Atlas replay-ready validation rows: ${report.summary.validationRemeasurementAtlasReplayReadyRows ?? "n/a"}`);
   lines.push(`- Graphify replay-ready validation rows: ${report.summary.validationRemeasurementGraphifyReplayReadyRows ?? "n/a"}`);
   lines.push(`- Native/proxy command candidate validation rows: ${report.summary.validationRemeasurementNativeCandidateRows ?? "n/a"}`);
+  lines.push(`- Native/proxy candidate executable validation rows: ${report.summary.validationRemeasurementNativeCandidateExecutableRows ?? "n/a"}`);
   lines.push(`- Native/proxy command-ready validation rows: ${report.summary.validationRemeasurementNativeReadyRows ?? "n/a"}`);
   lines.push(`- Full remeasurement-ready artifacts: ${report.summary.validationRemeasurementFullReadyArtifacts ?? "n/a"}`);
   lines.push(`- Native command candidates with placeholders: ${report.summary.validationRemeasurementNativePlaceholderRows ?? "n/a"}`);
@@ -904,17 +907,17 @@ function renderFinalAuditMarkdown(report) {
     const manifest = report.groundTruthCloseness.validationRemeasurement.manifest;
     lines.push(`Manifest: data/validation-remeasurement-manifest.md, generated ${manifest.generatedAt}.`);
     lines.push(
-      `Repo rows: ${manifest.summary.repoRows}; Atlas replay-ready: ${manifest.summary.atlasReplayReadyRows}; Graphify replay-ready: ${manifest.summary.graphifyReplayReadyRows}; native/proxy command candidates: ${manifest.summary.nativeRemeasurementCandidateRows}; native/proxy command-ready: ${manifest.summary.nativeRemeasurementReadyRows}.`
+      `Repo rows: ${manifest.summary.repoRows}; Atlas replay-ready: ${manifest.summary.atlasReplayReadyRows}; Graphify replay-ready: ${manifest.summary.graphifyReplayReadyRows}; native/proxy command candidates: ${manifest.summary.nativeRemeasurementCandidateRows}; candidate-executable: ${manifest.summary.nativeRemeasurementCandidateExecutableRows}; native/proxy command-ready: ${manifest.summary.nativeRemeasurementReadyRows}.`
     );
     lines.push(
       `Full remeasurement-ready artifacts: ${manifest.summary.fullRemeasurementReadyArtifacts}; candidates with placeholders: ${manifest.summary.nativeCandidatePlaceholderRows}; candidates with ephemeral helper paths: ${manifest.summary.nativeCandidateEphemeralHelperRows}; proxy or detector-only code artifacts: ${manifest.summary.proxyOrDetectorCodeArtifacts}.`
     );
     lines.push("");
-    lines.push("| Language | Tool class | Risk | Repos | Atlas replay | Graphify replay | Native candidates | Native ready | Blockers |");
-    lines.push("|---|---|---|--:|--:|--:|--:|--:|---|");
+    lines.push("| Language | Tool class | Risk | Repos | Atlas replay | Graphify replay | Native candidates | Candidate executable | Native ready | Blockers |");
+    lines.push("|---|---|---|--:|--:|--:|--:|--:|--:|---|");
     for (const row of manifest.blockers) {
       lines.push(
-        `| ${row.language} | ${row.toolClass} | ${row.risk} | ${row.repoCount} | ${row.atlasReplayReadyRows} | ${row.graphifyReplayReadyRows} | ${row.nativeRemeasurementCandidateRows} | ${row.nativeRemeasurementReadyRows} | ${row.blockers.join(", ") || "none"} |`
+        `| ${row.language} | ${row.toolClass} | ${row.risk} | ${row.repoCount} | ${row.atlasReplayReadyRows} | ${row.graphifyReplayReadyRows} | ${row.nativeRemeasurementCandidateRows} | ${row.nativeRemeasurementCandidateExecutableRows} | ${row.nativeRemeasurementReadyRows} | ${row.blockers.join(", ") || "none"} |`
       );
     }
   } else {
@@ -1127,7 +1130,7 @@ function main() {
         : "The final pass has no live language with zero graphify-equivalent query rows; historical saturation rows are superseded by the refreshed live artifacts.",
       "Timings are one-machine benchmark snapshots, not production guarantees.",
       "Atlas and graphify expose different graph models, so coverage and precision fields are shown separately.",
-      "The validation remeasurement manifest records replay readiness and generated native/proxy command candidates; it does not claim full native/proxy remeasurement unless executable per-repo native commands and output sets are present.",
+      "The validation remeasurement manifest records replay readiness, generated native/proxy command candidates, and candidate-executable rows for committed helpers; it does not claim full native/proxy remeasurement unless executable per-repo native commands and output sets are present.",
       "The precision evidence manifest records sampled symbol/location matches and validation kind-count maps when raw artifacts expose them; it does not claim full precision for rows that remain count-only or proxy-denominator based.",
       "The call-edge evidence manifest records core receiver-typed calls and live call counts when raw artifacts expose them; it does not claim live receiver-type coverage where no receiver metric exists.",
       "The Graphify support manifest separates deterministic extractor support from detector-only extension support; sampled Graphify no-equivalent rows are reported separately from Atlas/native coverage.",

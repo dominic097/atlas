@@ -75,6 +75,26 @@ function nativeCommandTemplate(raw) {
   return raw.commands?.native_baseline || raw.native_baseline?.command || "";
 }
 
+function rewriteCommittedHelperPath(command) {
+  return command
+    .replace(
+      "/tmp/atlas-live-powershell-powershellget/pwsh_stats.ps1",
+      "scripts/native-baselines/pwsh_stats.ps1"
+    )
+    .replace(
+      "/private/tmp/atlas-live-powershell-powershellget/pwsh_stats.ps1",
+      "scripts/native-baselines/pwsh_stats.ps1"
+    )
+    .replace(
+      "/tmp/atlas-live-svelte-carbon/svelte-compiler/svelte_stats.js",
+      "scripts/native-baselines/svelte_stats.js"
+    )
+    .replace(
+      "/private/tmp/atlas-live-svelte-carbon/svelte-compiler/svelte_stats.js",
+      "scripts/native-baselines/svelte_stats.js"
+    );
+}
+
 function nativeCommandCandidates(raw, language, repo, index) {
   const template = nativeCommandTemplate(raw);
   if (!template || !hasRepoIdentity(repo)) return [];
@@ -88,7 +108,7 @@ function nativeCommandCandidates(raw, language, repo, index) {
   for (const sourceTarget of sourceTargets) {
     command = command.split(sourceTarget).join(target);
   }
-  return [command];
+  return [rewriteCommittedHelperPath(command)];
 }
 
 function nativeCommandBlockers(raw, command) {
@@ -96,6 +116,7 @@ function nativeCommandBlockers(raw, command) {
   if (!nativeCommandTemplate(raw)) blockers.push("native_command_template_missing");
   if (/<[^>]+>/.test(command)) blockers.push("native_command_contains_placeholder");
   if (/\/(?:private\/)?tmp\/atlas-[^ ]+/.test(command)) blockers.push("native_command_uses_ephemeral_helper_path");
+  if (/\s\([^)]*\)\s*$/.test(command)) blockers.push("native_command_contains_inline_note");
   if (/\bdocumentSymbol\s+<[^>]+>/.test(command) || /\bplus\b.*<[^>]+>/.test(command)) {
     blockers.push("native_command_uses_unexpanded_file_list");
   }
@@ -183,6 +204,7 @@ function validateArtifact(file) {
     const nativeCandidates = nativeCommandCandidates(raw, language, repo, index);
     const nativeCandidateReady = nativeCandidates.length > 0;
     const nativeCandidateBlockers = nativeCandidates.flatMap((command) => nativeCommandBlockers(raw, command));
+    const nativeCandidateExecutableReady = nativeCandidateReady && nativeCandidateBlockers.length === 0;
     const nativeReady = hasNativeRemeasurementCommand(repo);
     const blockers = [];
     if (!pinned) blockers.push("missing repo/commit/target_path");
@@ -206,6 +228,7 @@ function validateArtifact(file) {
       atlasReplayReady: atlasReady,
       graphifyReplayReady: graphifyReady,
       nativeRemeasurementCandidateReady: nativeCandidateReady,
+      nativeRemeasurementCandidateExecutableReady: nativeCandidateExecutableReady,
       nativeRemeasurementReady: nativeReady,
       fullRemeasurementReady: atlasReady && graphifyReady && nativeReady,
       blockers: [...new Set(blockers)],
@@ -226,6 +249,7 @@ function validateArtifact(file) {
   const atlasReplayReadyRows = rows.filter((repo) => repo.atlasReplayReady).length;
   const graphifyReplayReadyRows = rows.filter((repo) => repo.graphifyReplayReady).length;
   const nativeRemeasurementCandidateRows = rows.filter((repo) => repo.nativeRemeasurementCandidateReady).length;
+  const nativeRemeasurementCandidateExecutableRows = rows.filter((repo) => repo.nativeRemeasurementCandidateExecutableReady).length;
   const nativeRemeasurementReadyRows = rows.filter((repo) => repo.nativeRemeasurementReady).length;
   const fullRemeasurementReadyRows = rows.filter((repo) => repo.fullRemeasurementReady).length;
   const nativeCandidatePlaceholderRows = rows.filter((repo) =>
@@ -268,6 +292,7 @@ function validateArtifact(file) {
     atlasReplayReadyRows,
     graphifyReplayReadyRows,
     nativeRemeasurementCandidateRows,
+    nativeRemeasurementCandidateExecutableRows,
     nativeRemeasurementReadyRows,
     fullRemeasurementReadyRows,
     fullRemeasurementReady: rows.length > 0 && fullRemeasurementReadyRows === rows.length,
@@ -302,6 +327,7 @@ function renderMarkdown(report) {
   lines.push(`- Atlas replay-ready rows: ${report.summary.atlasReplayReadyRows}`);
   lines.push(`- Graphify replay-ready rows: ${report.summary.graphifyReplayReadyRows}`);
   lines.push(`- Native/proxy command candidate rows: ${report.summary.nativeRemeasurementCandidateRows}`);
+  lines.push(`- Native/proxy candidate executable rows: ${report.summary.nativeRemeasurementCandidateExecutableRows}`);
   lines.push(`- Native/proxy remeasurement command-ready rows: ${report.summary.nativeRemeasurementReadyRows}`);
   lines.push(`- Full remeasurement-ready artifacts: ${report.summary.fullRemeasurementReadyArtifacts}`);
   lines.push(`- Native candidates with placeholders: ${report.summary.nativeCandidatePlaceholderRows}`);
@@ -311,11 +337,11 @@ function renderMarkdown(report) {
   lines.push(`- Errors: ${report.summary.errors}`);
   lines.push("");
   lines.push("## Language Readiness", "");
-  lines.push("| Language | Tool class | Risk | Validation | Repos | Atlas replay | Graphify replay | Native candidates | Native ready | Blockers |");
-  lines.push("|---|---|---|---|--:|--:|--:|--:|--:|---|");
+  lines.push("| Language | Tool class | Risk | Validation | Repos | Atlas replay | Graphify replay | Native candidates | Candidate executable | Native ready | Blockers |");
+  lines.push("|---|---|---|---|--:|--:|--:|--:|--:|--:|---|");
   for (const item of report.languages) {
     lines.push(
-      `| ${item.language} | ${item.toolClass} | ${item.risk} | ${item.validationStatus} | ${item.repoCount}/${item.minimumRepos} | ${item.atlasReplayReadyRows} | ${item.graphifyReplayReadyRows} | ${item.nativeRemeasurementCandidateRows} | ${item.nativeRemeasurementReadyRows} | ${item.blockers.join(", ") || "none"} |`
+      `| ${item.language} | ${item.toolClass} | ${item.risk} | ${item.validationStatus} | ${item.repoCount}/${item.minimumRepos} | ${item.atlasReplayReadyRows} | ${item.graphifyReplayReadyRows} | ${item.nativeRemeasurementCandidateRows} | ${item.nativeRemeasurementCandidateExecutableRows} | ${item.nativeRemeasurementReadyRows} | ${item.blockers.join(", ") || "none"} |`
     );
   }
   lines.push("");
@@ -375,6 +401,7 @@ function main() {
       atlasReplayReadyRows: languages.reduce((total, item) => total + item.atlasReplayReadyRows, 0),
       graphifyReplayReadyRows: languages.reduce((total, item) => total + item.graphifyReplayReadyRows, 0),
       nativeRemeasurementCandidateRows: languages.reduce((total, item) => total + item.nativeRemeasurementCandidateRows, 0),
+      nativeRemeasurementCandidateExecutableRows: languages.reduce((total, item) => total + item.nativeRemeasurementCandidateExecutableRows, 0),
       nativeRemeasurementReadyRows: languages.reduce((total, item) => total + item.nativeRemeasurementReadyRows, 0),
       fullRemeasurementReadyRows: languages.reduce((total, item) => total + item.fullRemeasurementReadyRows, 0),
       fullRemeasurementReadyArtifacts: languages.filter((item) => item.fullRemeasurementReady).length,

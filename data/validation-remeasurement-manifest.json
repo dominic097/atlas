@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T18:29:47.974Z",
+  "generatedAt": "2026-06-30T18:36:39.960Z",
   "source": "data/raw/LIVE_*_BENCHMARK.json",
   "harness": "scripts/validation-remeasurement-harness.mjs",
   "summary": {
@@ -14,11 +14,12 @@
     "atlasReplayReadyRows": 105,
     "graphifyReplayReadyRows": 105,
     "nativeRemeasurementCandidateRows": 105,
+    "nativeRemeasurementCandidateExecutableRows": 6,
     "nativeRemeasurementReadyRows": 0,
     "fullRemeasurementReadyRows": 0,
     "fullRemeasurementReadyArtifacts": 0,
     "nativeCandidatePlaceholderRows": 81,
-    "nativeCandidateEphemeralHelperRows": 63,
+    "nativeCandidateEphemeralHelperRows": 57,
     "proxyOrDetectorCodeArtifacts": 14,
     "warnings": 35,
     "errors": 0,
@@ -80,6 +81,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -111,6 +113,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -150,6 +153,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -189,6 +193,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -233,6 +238,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -263,6 +269,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -301,6 +308,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -339,6 +347,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -382,6 +391,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -414,6 +424,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -455,6 +466,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -496,6 +508,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -542,6 +555,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -573,6 +587,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -612,6 +627,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -651,6 +667,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -695,6 +712,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -726,6 +744,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -765,6 +784,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -804,6 +824,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -848,6 +869,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -860,6 +882,7 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
+        "native_command_contains_inline_note",
         "native_or_proxy_remeasurement_command_not_recorded"
       ],
       "repos": [
@@ -877,10 +900,12 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_inline_note",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -895,7 +920,9 @@
           "nativeRemeasurementCandidateCommands": [
             "/opt/homebrew/bin/dotnet run --no-build -- work/csharp/01-Ceiridge__Chrome-Developer-Mode-Extension-Warning-Patcher (Roslyn syntax tree counter)"
           ],
-          "nativeRemeasurementCandidateBlockers": [],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_inline_note"
+          ],
           "nativeRemeasurementCommands": []
         },
         {
@@ -912,10 +939,12 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_inline_note",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -930,7 +959,9 @@
           "nativeRemeasurementCandidateCommands": [
             "/opt/homebrew/bin/dotnet run --no-build -- work/csharp/02-Viladoman__StructLayout (Roslyn syntax tree counter)"
           ],
-          "nativeRemeasurementCandidateBlockers": [],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_inline_note"
+          ],
           "nativeRemeasurementCommands": []
         },
         {
@@ -947,10 +978,12 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
+            "native_command_contains_inline_note",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -965,7 +998,9 @@
           "nativeRemeasurementCandidateCommands": [
             "/opt/homebrew/bin/dotnet run --no-build -- work/csharp/03-b2developer__MonopolyNEAT (Roslyn syntax tree counter)"
           ],
-          "nativeRemeasurementCandidateBlockers": [],
+          "nativeRemeasurementCandidateBlockers": [
+            "native_command_contains_inline_note"
+          ],
           "nativeRemeasurementCommands": []
         }
       ]
@@ -987,6 +1022,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -1018,6 +1054,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -1057,6 +1094,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -1096,6 +1134,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -1140,6 +1179,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -1171,6 +1211,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -1211,6 +1252,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -1251,6 +1293,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -1296,6 +1339,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -1327,6 +1371,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -1366,6 +1411,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -1405,6 +1451,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -1449,6 +1496,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -1480,6 +1528,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -1519,6 +1568,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -1558,6 +1608,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -1602,6 +1653,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -1633,6 +1685,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -1672,6 +1725,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -1711,6 +1765,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -1755,6 +1810,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -1787,6 +1843,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -1828,6 +1885,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -1869,6 +1927,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -1915,6 +1974,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -1946,6 +2006,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -1985,6 +2046,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -2024,6 +2086,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -2068,6 +2131,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -2099,6 +2163,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -2139,6 +2204,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -2179,6 +2245,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -2224,6 +2291,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -2255,6 +2323,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -2295,6 +2364,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -2335,6 +2405,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -2380,6 +2451,7 @@
       "atlasReplayReadyRows": 0,
       "graphifyReplayReadyRows": 0,
       "nativeRemeasurementCandidateRows": 0,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -2411,6 +2483,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -2442,6 +2515,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -2482,6 +2556,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -2522,6 +2597,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -2567,6 +2643,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -2598,6 +2675,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -2638,6 +2716,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -2678,6 +2757,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -2723,6 +2803,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -2754,6 +2835,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -2794,6 +2876,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -2834,6 +2917,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -2879,6 +2963,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -2911,6 +2996,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -2951,6 +3037,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -2991,6 +3078,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -3036,6 +3124,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -3067,6 +3156,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -3107,6 +3197,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -3147,6 +3238,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -3192,6 +3284,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -3223,6 +3316,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -3262,6 +3356,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -3301,6 +3396,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -3345,6 +3441,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -3375,6 +3472,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -3413,6 +3511,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -3451,6 +3550,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -3494,11 +3594,12 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
       "nativeCandidatePlaceholderRows": 0,
-      "nativeCandidateEphemeralHelperRows": 3,
+      "nativeCandidateEphemeralHelperRows": 0,
       "minCoverageRatio": 1,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -3506,7 +3607,6 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
-        "native_command_uses_ephemeral_helper_path",
         "native_or_proxy_remeasurement_command_not_recorded"
       ],
       "repos": [
@@ -3524,11 +3624,11 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
-            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -3541,11 +3641,9 @@
             "(cd work/powershell/01-PowerShell__PowerShellGet/src && uv tool run --from graphifyy graphify update .)"
           ],
           "nativeRemeasurementCandidateCommands": [
-            "/usr/local/bin/pwsh -NoLogo -NoProfile -File /tmp/atlas-live-powershell-powershellget/pwsh_stats.ps1 work/powershell/01-PowerShell__PowerShellGet/src"
+            "/usr/local/bin/pwsh -NoLogo -NoProfile -File scripts/native-baselines/pwsh_stats.ps1 work/powershell/01-PowerShell__PowerShellGet/src"
           ],
-          "nativeRemeasurementCandidateBlockers": [
-            "native_command_uses_ephemeral_helper_path"
-          ],
+          "nativeRemeasurementCandidateBlockers": [],
           "nativeRemeasurementCommands": []
         },
         {
@@ -3562,11 +3660,11 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
-            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -3579,11 +3677,9 @@
             "(cd work/powershell/02-PowerShell__SecretManagement/ExtensionModules && uv tool run --from graphifyy graphify update .)"
           ],
           "nativeRemeasurementCandidateCommands": [
-            "/usr/local/bin/pwsh -NoLogo -NoProfile -File /tmp/atlas-live-powershell-powershellget/pwsh_stats.ps1 work/powershell/02-PowerShell__SecretManagement/ExtensionModules"
+            "/usr/local/bin/pwsh -NoLogo -NoProfile -File scripts/native-baselines/pwsh_stats.ps1 work/powershell/02-PowerShell__SecretManagement/ExtensionModules"
           ],
-          "nativeRemeasurementCandidateBlockers": [
-            "native_command_uses_ephemeral_helper_path"
-          ],
+          "nativeRemeasurementCandidateBlockers": [],
           "nativeRemeasurementCommands": []
         },
         {
@@ -3600,11 +3696,11 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
-            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -3617,11 +3713,9 @@
             "(cd work/powershell/03-PowerShell__PSResourceGet/test && uv tool run --from graphifyy graphify update .)"
           ],
           "nativeRemeasurementCandidateCommands": [
-            "/usr/local/bin/pwsh -NoLogo -NoProfile -File /tmp/atlas-live-powershell-powershellget/pwsh_stats.ps1 work/powershell/03-PowerShell__PSResourceGet/test"
+            "/usr/local/bin/pwsh -NoLogo -NoProfile -File scripts/native-baselines/pwsh_stats.ps1 work/powershell/03-PowerShell__PSResourceGet/test"
           ],
-          "nativeRemeasurementCandidateBlockers": [
-            "native_command_uses_ephemeral_helper_path"
-          ],
+          "nativeRemeasurementCandidateBlockers": [],
           "nativeRemeasurementCommands": []
         }
       ]
@@ -3643,6 +3737,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -3674,6 +3769,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -3713,6 +3809,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -3752,6 +3849,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -3796,6 +3894,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -3826,6 +3925,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -3864,6 +3964,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -3902,6 +4003,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -3945,6 +4047,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -3976,6 +4079,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -4016,6 +4120,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -4056,6 +4161,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -4101,6 +4207,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -4132,6 +4239,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -4171,6 +4279,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -4210,6 +4319,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -4254,6 +4364,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -4285,6 +4396,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -4325,6 +4437,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -4365,6 +4478,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -4410,6 +4524,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -4441,6 +4556,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -4481,6 +4597,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -4521,6 +4638,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -4566,11 +4684,12 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
       "nativeCandidatePlaceholderRows": 0,
-      "nativeCandidateEphemeralHelperRows": 3,
+      "nativeCandidateEphemeralHelperRows": 0,
       "minCoverageRatio": 1.0476,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -4578,7 +4697,6 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
-        "native_command_uses_ephemeral_helper_path",
         "native_or_proxy_remeasurement_command_not_recorded"
       ],
       "repos": [
@@ -4596,11 +4714,11 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
-            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -4613,11 +4731,9 @@
             "(cd work/svelte/01-orefalo__svelte-splitpanes && uv tool run --from graphifyy graphify update .)"
           ],
           "nativeRemeasurementCandidateCommands": [
-            "/opt/homebrew/bin/node /tmp/atlas-live-svelte-carbon/svelte-compiler/svelte_stats.js work/svelte/01-orefalo__svelte-splitpanes"
+            "/opt/homebrew/bin/node scripts/native-baselines/svelte_stats.js work/svelte/01-orefalo__svelte-splitpanes"
           ],
-          "nativeRemeasurementCandidateBlockers": [
-            "native_command_uses_ephemeral_helper_path"
-          ],
+          "nativeRemeasurementCandidateBlockers": [],
           "nativeRemeasurementCommands": []
         },
         {
@@ -4634,11 +4750,11 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
-            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -4651,11 +4767,9 @@
             "(cd work/svelte/02-agustinl__svelte-tags-input && uv tool run --from graphifyy graphify update .)"
           ],
           "nativeRemeasurementCandidateCommands": [
-            "/opt/homebrew/bin/node /tmp/atlas-live-svelte-carbon/svelte-compiler/svelte_stats.js work/svelte/02-agustinl__svelte-tags-input"
+            "/opt/homebrew/bin/node scripts/native-baselines/svelte_stats.js work/svelte/02-agustinl__svelte-tags-input"
           ],
-          "nativeRemeasurementCandidateBlockers": [
-            "native_command_uses_ephemeral_helper_path"
-          ],
+          "nativeRemeasurementCandidateBlockers": [],
           "nativeRemeasurementCommands": []
         },
         {
@@ -4672,11 +4786,11 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
-            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -4689,11 +4803,9 @@
             "(cd work/svelte/03-Alia5__lovelace-expander-card && uv tool run --from graphifyy graphify update .)"
           ],
           "nativeRemeasurementCandidateCommands": [
-            "/opt/homebrew/bin/node /tmp/atlas-live-svelte-carbon/svelte-compiler/svelte_stats.js work/svelte/03-Alia5__lovelace-expander-card"
+            "/opt/homebrew/bin/node scripts/native-baselines/svelte_stats.js work/svelte/03-Alia5__lovelace-expander-card"
           ],
-          "nativeRemeasurementCandidateBlockers": [
-            "native_command_uses_ephemeral_helper_path"
-          ],
+          "nativeRemeasurementCandidateBlockers": [],
           "nativeRemeasurementCommands": []
         }
       ]
@@ -4715,6 +4827,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -4745,6 +4858,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -4783,6 +4897,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -4821,6 +4936,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -4864,6 +4980,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -4895,6 +5012,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -4935,6 +5053,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -4975,6 +5094,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -5020,6 +5140,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -5052,6 +5173,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -5093,6 +5215,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -5134,6 +5257,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -5180,6 +5304,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -5210,6 +5335,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -5248,6 +5374,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -5286,6 +5413,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -5329,6 +5457,7 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
+      "nativeRemeasurementCandidateExecutableRows": 0,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
@@ -5360,6 +5489,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -5400,6 +5530,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
@@ -5440,6 +5571,7 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
+          "nativeRemeasurementCandidateExecutableReady": false,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [

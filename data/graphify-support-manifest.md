@@ -1,6 +1,6 @@
 # Graphify Support Manifest
 
-Generated: 2026-06-30T18:29:47.809Z
+Generated: 2026-06-30T18:36:39.794Z
 
 This manifest separates Graphify deterministic extractor support from detector-only extension support and records sampled query rows with or without a Graphify equivalent.
 
