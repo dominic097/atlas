@@ -41,6 +41,9 @@ func parsePowerShellNative(content []byte) ([]symbolDraft, []string, bool) {
 		if n == nil {
 			return
 		}
+		if draft, ok := powerShellVariableDefinitionDraft(n, content); ok {
+			drafts = append(drafts, draft)
+		}
 		if draft, ok := powerShellDefinitionDraft(n, content); ok {
 			drafts = append(drafts, draft)
 		}
@@ -80,6 +83,75 @@ func powerShellDefinitionDraft(n *tree_sitter.Node, content []byte) (symbolDraft
 		endLine:   int(n.EndPosition().Row) + 1,
 		metadata:  graph.JSONBMap{"source": "tree_sitter_powershell"},
 	}, true
+}
+
+func powerShellVariableDefinitionDraft(n *tree_sitter.Node, content []byte) (symbolDraft, bool) {
+	if n == nil || n.Kind() != "assignment_expression" || powerShellInsideDefinitionBody(n) {
+		return symbolDraft{}, false
+	}
+	name := powerShellVariableAssignmentName(n, content)
+	if name == "" {
+		return symbolDraft{}, false
+	}
+	return symbolDraft{
+		name:      name,
+		kind:      "variable",
+		signature: tagsFirstLine(n, content),
+		startLine: int(n.StartPosition().Row) + 1,
+		endLine:   int(n.EndPosition().Row) + 1,
+		metadata:  graph.JSONBMap{"source": "tree_sitter_powershell"},
+	}, true
+}
+
+func powerShellInsideDefinitionBody(n *tree_sitter.Node) bool {
+	for cur := n.Parent(); cur != nil; cur = cur.Parent() {
+		switch cur.Kind() {
+		case "function_statement", "class_statement", "class_method_definition", "script_block":
+			return true
+		}
+	}
+	return false
+}
+
+func powerShellVariableAssignmentName(n *tree_sitter.Node, content []byte) string {
+	if n == nil || n.ChildCount() == 0 {
+		return ""
+	}
+	left := n.Child(0)
+	if left == nil || left.Kind() != "left_assignment_expression" {
+		return ""
+	}
+	lhs := strings.TrimSpace(nodeText(left, content))
+	if strings.ContainsAny(lhs, ".,[") {
+		return ""
+	}
+	return powerShellNormalizeVariableName(lhs)
+}
+
+func powerShellNormalizeVariableName(name string) string {
+	name = strings.TrimSpace(name)
+	if !strings.HasPrefix(name, "$") {
+		return ""
+	}
+	name = strings.TrimPrefix(name, "$")
+	if strings.HasPrefix(name, "{") && strings.HasSuffix(name, "}") {
+		name = strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(name, "{"), "}"))
+	}
+	if before, after, ok := strings.Cut(name, ":"); ok {
+		switch strings.ToLower(before) {
+		case "global", "local", "private", "script":
+			name = after
+		default:
+			return ""
+		}
+	}
+	name = strings.TrimSpace(name)
+	switch strings.ToLower(name) {
+	case "", "_", "args", "false", "input", "null", "psitem", "this", "true":
+		return ""
+	default:
+		return name
+	}
 }
 
 func powerShellFirstChildText(n *tree_sitter.Node, content []byte, kinds ...string) string {

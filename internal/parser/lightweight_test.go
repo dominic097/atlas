@@ -332,8 +332,10 @@ func TestParsePowerShellNativeDefinitions(t *testing.T) {
 	res, err := Parse("repo", "org/repo", "scripts/install.ps1", "", []byte(`
 using module './lib/common.psm1'
 Import-Module -Name Pester
+$moduleSetting = 'enabled'
 
 function Invoke-Install {
+  $localOnly = $true
   Invoke-Verify
 }
 
@@ -359,6 +361,7 @@ class Installer {
 		"Start-Install":  "function",
 		"Installer":      "class",
 		"Run":            "method",
+		"moduleSetting":  "variable",
 	}
 	for name, kind := range want {
 		if len(symbolsNamedKind(res.Symbols, name, kind)) == 0 {
@@ -367,6 +370,9 @@ class Installer {
 	}
 	if findSymbol(res.Symbols, "Ignored-Install") != nil {
 		t.Fatalf("commented PowerShell function was indexed: %+v", res.Symbols)
+	}
+	if findSymbol(res.Symbols, "localOnly") != nil {
+		t.Fatalf("function-local PowerShell assignment was indexed: %+v", res.Symbols)
 	}
 	for _, wantImport := range []string{"./lib/common.psm1", "Pester"} {
 		if !containsString(res.Imports, wantImport) {
