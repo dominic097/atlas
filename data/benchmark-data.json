@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T07:49:15.252Z",
+  "generatedAt": "2026-06-30T08:25:13.811Z",
   "sourceLabel": "Atlas benchmark JSON artifacts from bench/",
   "sourceArtifacts": [
     {
@@ -112,8 +112,8 @@
       "name": "LIVE_EJS_BENCHMARK.json",
       "source": "bench/LIVE_EJS_BENCHMARK.json",
       "path": "data/raw/LIVE_EJS_BENCHMARK.json",
-      "bytes": 15460,
-      "sha256": "ff4e39bb25589673bb6fb67c6516237ec49d7d78067f82865819e70777cc6914"
+      "bytes": 19127,
+      "sha256": "c434b659bb308ace1c58b4490f7e6241051963999621403816f25165cd54e843"
     },
     {
       "name": "LIVE_ELIXIR_BENCHMARK.json",
@@ -625,17 +625,17 @@
       "saturatedNoComparable": 3,
       "fiveXComparable": 33,
       "targetRatio": 10,
-      "token10xComparable": 32,
-      "latency10xComparable": 32,
-      "tenXComparable": 32,
+      "token10xComparable": 33,
+      "latency10xComparable": 33,
+      "tenXComparable": 33,
       "strict10x": 7,
       "coverageParityLanguages": 29,
       "coverageExceedLanguages": 7,
       "coverageBelowLanguages": 0,
       "parityComparable": 26,
-      "parityToken10x": 25,
-      "parityLatency10x": 25,
-      "parityTenX": 25,
+      "parityToken10x": 26,
+      "parityLatency10x": 26,
+      "parityTenX": 26,
       "detectorOnlyArtifacts": 3
     },
     "coverage": {
@@ -3728,15 +3728,15 @@
       "source": "bench/LIVE_EJS_BENCHMARK.json",
       "detectorOnly": true,
       "atlas": {
-        "coldSeconds": 0.097,
-        "reindexSeconds": 0.021,
+        "coldSeconds": 2.369,
+        "reindexSeconds": 0.289,
         "index": {
-          "repo_id": "d256fecf-f324-4cbe-ad37-4b2bb5fc10a7",
+          "repo_id": "fdd0810c-47e2-4415-bd22-801802c3f8b1",
           "repo_full_name": "examples",
-          "snapshot_id": "8a08683c-256e-4943-ae20-9c0afed0ec70",
+          "snapshot_id": "b1f1a33c-d3b5-4345-9c9c-c0745f6d4b6c",
           "commit_sha": "18e5985b8a9d5e8423db0a9121f22bdaecd5b120",
           "indexed_files": 77,
-          "symbols": 251,
+          "symbols": 280,
           "edges": 767,
           "edge_kinds": {
             "calls": 669,
@@ -3752,18 +3752,23 @@
             "text": 4
           },
           "mode": "full",
-          "duration_ms": 59,
+          "duration_ms": 72,
           "timings_ms": {
+            "build_symbols_edges": 0,
             "delta_check": 0,
-            "ensure_repo": 1,
+            "discover_files": 1,
+            "doc_links": 0,
+            "ensure_repo": 0,
+            "gitignore_scan": 25,
             "go_types": 0,
-            "lexical": 16,
-            "parse": 16,
-            "persist": 19,
+            "lexical": 29,
+            "parse": 14,
+            "persist": 29,
             "resolve_head": 0,
             "routes": 0,
             "sort": 0,
-            "walk": 5
+            "walk": 1,
+            "write_sqlite": 29
           }
         }
       },
@@ -3818,80 +3823,80 @@
         "equivalentRows": 1,
         "atlasMissing": 0,
         "graphifyMissing": 6,
-        "atlasTokens": 6,
+        "atlasTokens": 3,
         "graphifyTokens": 48,
-        "atlasMs": 12.325,
+        "atlasMs": 0.512,
         "graphifyMs": 76.349,
-        "tokenRatio": 8,
-        "latencyRatio": 6.19,
+        "tokenRatio": 16,
+        "latencyRatio": 149.12,
         "targetRatio": 10,
         "pass5x": true,
-        "token10x": false,
-        "latency10x": false,
-        "pass10x": false,
-        "tokenGapTo10x": 1.25,
-        "latencyGapTo10x": 1.61
+        "token10x": true,
+        "latency10x": true,
+        "pass10x": true,
+        "tokenGapTo10x": 1,
+        "latencyGapTo10x": 1
       },
       "queries": [
         {
           "symbol": "login",
-          "atlasTokens": 5,
+          "atlasTokens": 2,
           "graphifyTokens": 8,
-          "atlasMs": 12.05,
+          "atlasMs": 0.534,
           "graphifyMs": 76.097,
           "atlasMissing": false,
           "graphifyMissing": true
         },
         {
           "symbol": "index",
-          "atlasTokens": 6,
+          "atlasTokens": 3,
           "graphifyTokens": 48,
-          "atlasMs": 12.325,
+          "atlasMs": 0.512,
           "graphifyMs": 76.349,
           "atlasMissing": false,
           "graphifyMissing": false
         },
         {
           "symbol": "header",
-          "atlasTokens": 6,
+          "atlasTokens": 2,
           "graphifyTokens": 8,
-          "atlasMs": 12.215,
+          "atlasMs": 0.558,
           "graphifyMs": 75.49,
           "atlasMissing": false,
           "graphifyMissing": true
         },
         {
           "symbol": "footer",
-          "atlasTokens": 5,
+          "atlasTokens": 2,
           "graphifyTokens": 8,
-          "atlasMs": 12.131,
+          "atlasMs": 0.503,
           "graphifyMs": 75.008,
           "atlasMissing": false,
           "graphifyMissing": true
         },
         {
           "symbol": "../header",
-          "atlasTokens": 7,
+          "atlasTokens": 2,
           "graphifyTokens": 9,
-          "atlasMs": 11.775,
+          "atlasMs": 0.492,
           "graphifyMs": 75.232,
           "atlasMissing": false,
           "graphifyMissing": true
         },
         {
           "symbol": "../footer",
-          "atlasTokens": 7,
+          "atlasTokens": 2,
           "graphifyTokens": 9,
-          "atlasMs": 12.129,
+          "atlasMs": 0.554,
           "graphifyMs": 74.627,
           "atlasMissing": false,
           "graphifyMissing": true
         },
         {
           "symbol": "error_header",
-          "atlasTokens": 7,
+          "atlasTokens": 2,
           "graphifyTokens": 9,
-          "atlasMs": 11.802,
+          "atlasMs": 0.529,
           "graphifyMs": 77.753,
           "atlasMissing": false,
           "graphifyMissing": true
@@ -3902,14 +3907,12 @@
         "comparable": true,
         "coverageParity": true,
         "coverageExceedsNative": false,
-        "token10x": false,
-        "latency10x": false,
-        "performance10x": false,
+        "token10x": true,
+        "latency10x": true,
+        "performance10x": true,
         "strict10x": false,
         "blockers": [
-          "coverage_at_parity",
-          "token_ratio_below_10x",
-          "latency_ratio_below_10x"
+          "coverage_at_parity"
         ],
         "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
       }

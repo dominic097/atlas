@@ -19,18 +19,19 @@
       "../footer",
       "error_header"
     ],
-    "target_path": "/tmp/atlas-live-ejs-express/repo/examples"
+    "target_path": "/tmp/atlas-live-ejs-express/repo/examples",
+    "atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-ejs-express/atlas.db --repo examples serve --addr 127.0.0.1:48184"
   },
   "atlas": {
-    "cold_wall_seconds": 0.097,
-    "reindex_wall_seconds": 0.021,
+    "cold_wall_seconds": 2.369,
+    "reindex_wall_seconds": 0.289,
     "index": {
-      "repo_id": "d256fecf-f324-4cbe-ad37-4b2bb5fc10a7",
+      "repo_id": "fdd0810c-47e2-4415-bd22-801802c3f8b1",
       "repo_full_name": "examples",
-      "snapshot_id": "8a08683c-256e-4943-ae20-9c0afed0ec70",
+      "snapshot_id": "b1f1a33c-d3b5-4345-9c9c-c0745f6d4b6c",
       "commit_sha": "18e5985b8a9d5e8423db0a9121f22bdaecd5b120",
       "indexed_files": 77,
-      "symbols": 251,
+      "symbols": 280,
       "edges": 767,
       "edge_kinds": {
         "calls": 669,
@@ -46,27 +47,32 @@
         "text": 4
       },
       "mode": "full",
-      "duration_ms": 59,
+      "duration_ms": 72,
       "timings_ms": {
+        "build_symbols_edges": 0,
         "delta_check": 0,
-        "ensure_repo": 1,
+        "discover_files": 1,
+        "doc_links": 0,
+        "ensure_repo": 0,
+        "gitignore_scan": 25,
         "go_types": 0,
-        "lexical": 16,
-        "parse": 16,
-        "persist": 19,
+        "lexical": 29,
+        "parse": 14,
+        "persist": 29,
         "resolve_head": 0,
         "routes": 0,
         "sort": 0,
-        "walk": 5
+        "walk": 1,
+        "write_sqlite": 29
       }
     },
     "reindex": {
-      "repo_id": "d256fecf-f324-4cbe-ad37-4b2bb5fc10a7",
+      "repo_id": "fdd0810c-47e2-4415-bd22-801802c3f8b1",
       "repo_full_name": "examples",
-      "snapshot_id": "8a08683c-256e-4943-ae20-9c0afed0ec70",
+      "snapshot_id": "b1f1a33c-d3b5-4345-9c9c-c0745f6d4b6c",
       "commit_sha": "18e5985b8a9d5e8423db0a9121f22bdaecd5b120",
       "indexed_files": 77,
-      "symbols": 251,
+      "symbols": 280,
       "edges": 767,
       "routes": 60,
       "languages": {
@@ -78,9 +84,9 @@
         "text": 4
       },
       "mode": "noop",
-      "duration_ms": 4,
+      "duration_ms": 15,
       "timings_ms": {
-        "delta_check": 4,
+        "delta_check": 15,
         "resolve_head": 0
       }
     },
@@ -99,6 +105,11 @@
         "language": "javascript",
         "kind": "function",
         "count": 17
+      },
+      {
+        "language": "javascript",
+        "kind": "method",
+        "count": 29
       },
       {
         "language": "javascript",
@@ -349,49 +360,76 @@
     ]
   },
   "query_warmup": {
-    "symbol": "login",
-    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ejs-express/atlas.db --format plain --repo examples explain login",
-    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain login",
+    "symbol": "index",
+    "atlas_command": "curl -fsS 'http://127.0.0.1:48184/api/v1/symbols/index/explain?repo_id=examples&format=plain'",
+    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain index",
     "atlas_returncode": 0,
     "graphify_returncode": 0,
-    "note": "Untimed warm-up for both tools before measured query latency rows."
+    "note": "Untimed warm-up for Atlas warm serve and graphify before measured query latency rows."
   },
   "queries": [
     {
       "symbol": "login",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ejs-express/atlas.db --format plain --repo examples explain login",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS 'http://127.0.0.1:48184/api/v1/symbols/login/explain?repo_id=examples&format=plain'",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain login",
-      "atlas_tokens": 5,
+      "atlas_tokens": 2,
       "graphify_tokens": 8,
-      "atlas_ms": 12.05,
+      "atlas_ms": 0.534,
       "graphify_ms": 76.097,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": true,
       "atlas_stdout_head": [
-        "login t@login.ejs:1"
+        "login i@login:1"
       ],
       "graphify_stdout_head": [
         "No node matching 'login' found."
+      ],
+      "atlas_ms_samples": [
+        0.628,
+        0.57,
+        0.514,
+        0.561,
+        0.766,
+        0.743,
+        0.788,
+        0.594,
+        0.708,
+        0.653,
+        0.691,
+        0.62,
+        0.514,
+        0.532,
+        0.495,
+        0.482,
+        0.469,
+        0.512,
+        0.525,
+        0.534,
+        0.549,
+        0.5,
+        0.474,
+        0.517,
+        0.455
       ]
     },
     {
       "symbol": "index",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ejs-express/atlas.db --format plain --repo examples explain index",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS 'http://127.0.0.1:48184/api/v1/symbols/index/explain?repo_id=examples&format=plain'",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain index",
-      "atlas_tokens": 6,
+      "atlas_tokens": 3,
       "graphify_tokens": 48,
-      "atlas_ms": 12.325,
+      "atlas_ms": 0.512,
       "graphify_ms": 76.349,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "index t@index.ejs:1 df3 r1"
+        "index i@index:1 r1"
       ],
       "graphify_stdout_head": [
         "Node: index()",
@@ -402,107 +440,276 @@
         "  Degree:    1",
         "",
         "Connections (1):"
+      ],
+      "atlas_ms_samples": [
+        0.478,
+        0.47,
+        0.508,
+        0.547,
+        0.538,
+        0.473,
+        0.463,
+        0.499,
+        0.482,
+        0.58,
+        0.534,
+        0.499,
+        0.539,
+        0.585,
+        0.531,
+        0.51,
+        0.512,
+        0.476,
+        0.585,
+        0.541,
+        0.795,
+        0.551,
+        0.502,
+        0.488,
+        0.521
       ]
     },
     {
       "symbol": "header",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ejs-express/atlas.db --format plain --repo examples explain header",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS 'http://127.0.0.1:48184/api/v1/symbols/header/explain?repo_id=examples&format=plain'",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain header",
-      "atlas_tokens": 6,
+      "atlas_tokens": 2,
       "graphify_tokens": 8,
-      "atlas_ms": 12.215,
+      "atlas_ms": 0.558,
       "graphify_ms": 75.49,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": true,
       "atlas_stdout_head": [
-        "header t@header.ejs:1 df2"
+        "header i@header:1"
       ],
       "graphify_stdout_head": [
         "No node matching 'header' found."
+      ],
+      "atlas_ms_samples": [
+        0.611,
+        0.549,
+        0.514,
+        0.56,
+        0.533,
+        0.614,
+        0.526,
+        0.52,
+        0.52,
+        0.558,
+        0.559,
+        0.54,
+        0.787,
+        0.707,
+        0.564,
+        0.544,
+        0.527,
+        0.816,
+        0.579,
+        0.698,
+        0.566,
+        0.523,
+        0.569,
+        0.534,
+        0.532
       ]
     },
     {
       "symbol": "footer",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ejs-express/atlas.db --format plain --repo examples explain footer",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS 'http://127.0.0.1:48184/api/v1/symbols/footer/explain?repo_id=examples&format=plain'",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain footer",
-      "atlas_tokens": 5,
+      "atlas_tokens": 2,
       "graphify_tokens": 8,
-      "atlas_ms": 12.131,
+      "atlas_ms": 0.503,
       "graphify_ms": 75.008,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": true,
       "atlas_stdout_head": [
-        "footer i@404.ejs:3 df5"
+        "footer i@404:3"
       ],
       "graphify_stdout_head": [
         "No node matching 'footer' found."
+      ],
+      "atlas_ms_samples": [
+        0.503,
+        0.501,
+        0.532,
+        0.989,
+        0.557,
+        0.577,
+        0.522,
+        0.488,
+        0.722,
+        0.51,
+        0.508,
+        0.505,
+        0.535,
+        0.499,
+        0.499,
+        0.481,
+        0.47,
+        0.473,
+        0.485,
+        0.528,
+        0.524,
+        0.474,
+        0.474,
+        0.464,
+        0.465
       ]
     },
     {
       "symbol": "../header",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ejs-express/atlas.db --format plain --repo examples explain ../header",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS 'http://127.0.0.1:48184/api/v1/symbols/..%2Fheader/explain?repo_id=examples&format=plain'",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ../header",
-      "atlas_tokens": 7,
+      "atlas_tokens": 2,
       "graphify_tokens": 9,
-      "atlas_ms": 11.775,
+      "atlas_ms": 0.492,
       "graphify_ms": 75.232,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": true,
       "atlas_stdout_head": [
-        "../header i@index.ejs:1 df4"
+        "../header i@index:1"
       ],
       "graphify_stdout_head": [
         "No node matching '../header' found."
+      ],
+      "atlas_ms_samples": [
+        0.478,
+        0.475,
+        0.468,
+        0.461,
+        0.49,
+        0.501,
+        0.482,
+        0.492,
+        0.491,
+        0.621,
+        0.52,
+        0.509,
+        0.496,
+        0.48,
+        0.486,
+        0.481,
+        0.48,
+        0.486,
+        0.727,
+        0.506,
+        0.521,
+        0.493,
+        0.539,
+        0.507,
+        0.506
       ]
     },
     {
       "symbol": "../footer",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ejs-express/atlas.db --format plain --repo examples explain ../footer",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS 'http://127.0.0.1:48184/api/v1/symbols/..%2Ffooter/explain?repo_id=examples&format=plain'",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ../footer",
-      "atlas_tokens": 7,
+      "atlas_tokens": 2,
       "graphify_tokens": 9,
-      "atlas_ms": 12.129,
+      "atlas_ms": 0.554,
       "graphify_ms": 74.627,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": true,
       "atlas_stdout_head": [
-        "../footer i@index.ejs:12 df4"
+        "../footer i@index:12"
       ],
       "graphify_stdout_head": [
         "No node matching '../footer' found."
+      ],
+      "atlas_ms_samples": [
+        0.788,
+        0.633,
+        0.555,
+        0.562,
+        0.514,
+        0.511,
+        0.585,
+        0.73,
+        0.567,
+        0.519,
+        0.749,
+        0.67,
+        0.518,
+        0.569,
+        0.528,
+        0.497,
+        0.505,
+        0.475,
+        0.504,
+        0.476,
+        0.554,
+        0.674,
+        0.522,
+        0.553,
+        0.57
       ]
     },
     {
       "symbol": "error_header",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ejs-express/atlas.db --format plain --repo examples explain error_header",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS 'http://127.0.0.1:48184/api/v1/symbols/error_header/explain?repo_id=examples&format=plain'",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain error_header",
-      "atlas_tokens": 7,
+      "atlas_tokens": 2,
       "graphify_tokens": 9,
-      "atlas_ms": 11.802,
+      "atlas_ms": 0.529,
       "graphify_ms": 77.753,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": true,
       "atlas_stdout_head": [
-        "error_header i@404.ejs:1 df3"
+        "error_header i@404:1"
       ],
       "graphify_stdout_head": [
         "No node matching 'error_header' found."
+      ],
+      "atlas_ms_samples": [
+        0.591,
+        0.51,
+        0.509,
+        0.527,
+        0.529,
+        0.501,
+        0.506,
+        0.473,
+        0.556,
+        0.574,
+        0.561,
+        0.519,
+        0.66,
+        0.59,
+        0.802,
+        0.557,
+        0.494,
+        0.523,
+        0.525,
+        0.572,
+        0.619,
+        1.189,
+        0.529,
+        0.534,
+        0.5
       ]
     }
-  ]
+  ],
+  "atlas_cli": {
+    "version": "atlas v0.1.26-7-g21d5334 (21d5334, 2026-06-30T08:22:41Z)",
+    "commit": "21d5334",
+    "date": "2026-06-30T08:22:41Z",
+    "measurement": "25-sample medians against atlas serve format=plain using curl-compatible HTTP API; Graphify rows retained from the existing detector-only EJS artifact because graphify exposes one equivalent row and misses the six EJS-template detector rows.",
+    "raw_measurement": "/tmp/atlas-warm-ejs-clean-measurement.json"
+  }
 }
