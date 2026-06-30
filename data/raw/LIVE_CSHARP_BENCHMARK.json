@@ -16,22 +16,23 @@
       "DynamicParameters",
       "TypeHandlerCache"
     ],
-    "target_path": "/tmp/atlas-live-csharp-dapper/repo"
+    "target_path": "/tmp/atlas-live-csharp-dapper/repo",
+    "atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-csharp-dapper/atlas.db serve --addr 127.0.0.1:4340"
   },
   "atlas": {
-    "cold_wall_seconds": 0.644,
+    "cold_wall_seconds": 0.323,
     "reindex_wall_seconds": 0.037,
     "index": {
-      "repo_id": "6e12b187-a5d8-42f1-97c2-4adafd68b2e2",
+      "repo_id": "fc2c075f-b6d8-45f1-a9a4-d6206463c1cb",
       "repo_full_name": "repo",
-      "snapshot_id": "356c7529-29e6-4021-b329-5a152e7354de",
+      "snapshot_id": "a4c2fb57-6b65-46c2-9d7c-2052b0d294a9",
       "commit_sha": "72a54c475f75e18cb93cba0809d00a5e6e49efd9",
-      "indexed_files": 207,
-      "symbols": 3673,
-      "edges": 8243,
+      "indexed_files": 210,
+      "symbols": 3152,
+      "edges": 8180,
       "edge_kinds": {
-        "calls": 7570,
-        "imports": 673
+        "calls": 8113,
+        "imports": 67
       },
       "routes": 0,
       "languages": {
@@ -39,6 +40,7 @@
         "config": 1,
         "csharp": 157,
         "dotnet": 12,
+        "image": 3,
         "json": 4,
         "markdown": 8,
         "powershell": 1,
@@ -47,18 +49,23 @@
         "yaml": 6
       },
       "mode": "full",
-      "duration_ms": 606,
+      "duration_ms": 323,
       "timings_ms": {
+        "build_symbols_edges": 2,
         "delta_check": 0,
+        "discover_files": 1,
+        "doc_links": 0,
         "ensure_repo": 0,
+        "gitignore_scan": 11,
         "go_types": 0,
-        "lexical": 334,
-        "parse": 134,
-        "persist": 132,
+        "lexical": 197,
+        "parse": 110,
+        "persist": 197,
         "resolve_head": 0,
         "routes": 0,
-        "sort": 2,
-        "walk": 1
+        "sort": 1,
+        "walk": 1,
+        "write_sqlite": 197
       }
     },
     "reindex": {
@@ -89,123 +96,212 @@
         "resolve_head": 0
       }
     },
-    "symbol_breakdown": [
-      {
-        "language": "batch",
-        "kind": "document",
-        "count": 1
+    "symbol_breakdown": {
+      "repo_id": "fc2c075f-b6d8-45f1-a9a4-d6206463c1cb",
+      "repo_full_name": "repo",
+      "tier": "local",
+      "storage_driver": "sqlite",
+      "latest": {
+        "snapshot_id": "a4c2fb57-6b65-46c2-9d7c-2052b0d294a9",
+        "commit_sha": "72a54c475f75e18cb93cba0809d00a5e6e49efd9",
+        "created_at": "2026-06-30T07:48:55Z",
+        "files": 210,
+        "symbols": 3152,
+        "edges": 8180,
+        "routes": 0,
+        "mode": "full",
+        "duration_ms": 323,
+        "timings_ms": {
+          "build_symbols_edges": 2,
+          "delta_check": 0,
+          "discover_files": 1,
+          "doc_links": 0,
+          "ensure_repo": 0,
+          "gitignore_scan": 11,
+          "go_types": 0,
+          "lexical": 197,
+          "parse": 110,
+          "persist": 197,
+          "resolve_head": 0,
+          "routes": 0,
+          "sort": 1,
+          "walk": 1,
+          "write_sqlite": 197
+        }
       },
-      {
-        "language": "config",
-        "kind": "document",
-        "count": 1
+      "graph": {
+        "files": 172,
+        "symbols": 3033,
+        "edges": 8411,
+        "raw_symbols": 3033,
+        "raw_edges": 8180,
+        "communities": 1434,
+        "isolated_nodes": 1323,
+        "edge_kinds": [
+          {
+            "key": "calls",
+            "count": 8113
+          },
+          {
+            "key": "imports",
+            "count": 67
+          }
+        ],
+        "languages": [
+          {
+            "key": "csharp",
+            "count": 2897
+          },
+          {
+            "key": "dotnet",
+            "count": 132
+          },
+          {
+            "key": "image",
+            "count": 3
+          },
+          {
+            "key": "batch",
+            "count": 1
+          }
+        ]
       },
-      {
-        "language": "csharp",
-        "kind": "class",
-        "count": 421
+      "coverage_facts": 0,
+      "history": [
+        {
+          "snapshot_id": "a4c2fb57-6b65-46c2-9d7c-2052b0d294a9",
+          "commit_sha": "72a54c475f75e18cb93cba0809d00a5e6e49efd9",
+          "created_at": "2026-06-30T07:48:55Z",
+          "files": 210,
+          "symbols": 3152,
+          "edges": 8180,
+          "routes": 0,
+          "mode": "full",
+          "duration_ms": 323,
+          "timings_ms": {
+            "build_symbols_edges": 2,
+            "delta_check": 0,
+            "discover_files": 1,
+            "doc_links": 0,
+            "ensure_repo": 0,
+            "gitignore_scan": 11,
+            "go_types": 0,
+            "lexical": 197,
+            "parse": 110,
+            "persist": 197,
+            "resolve_head": 0,
+            "routes": 0,
+            "sort": 1,
+            "walk": 1,
+            "write_sqlite": 197
+          }
+        }
+      ],
+      "history_returned": 1
+    },
+    "edge_breakdown": {
+      "repo_id": "fc2c075f-b6d8-45f1-a9a4-d6206463c1cb",
+      "repo_full_name": "repo",
+      "tier": "local",
+      "storage_driver": "sqlite",
+      "latest": {
+        "snapshot_id": "a4c2fb57-6b65-46c2-9d7c-2052b0d294a9",
+        "commit_sha": "72a54c475f75e18cb93cba0809d00a5e6e49efd9",
+        "created_at": "2026-06-30T07:48:55Z",
+        "files": 210,
+        "symbols": 3152,
+        "edges": 8180,
+        "routes": 0,
+        "mode": "full",
+        "duration_ms": 323,
+        "timings_ms": {
+          "build_symbols_edges": 2,
+          "delta_check": 0,
+          "discover_files": 1,
+          "doc_links": 0,
+          "ensure_repo": 0,
+          "gitignore_scan": 11,
+          "go_types": 0,
+          "lexical": 197,
+          "parse": 110,
+          "persist": 197,
+          "resolve_head": 0,
+          "routes": 0,
+          "sort": 1,
+          "walk": 1,
+          "write_sqlite": 197
+        }
       },
-      {
-        "language": "csharp",
-        "kind": "enum",
-        "count": 22
+      "graph": {
+        "files": 172,
+        "symbols": 3033,
+        "edges": 8411,
+        "raw_symbols": 3033,
+        "raw_edges": 8180,
+        "communities": 1434,
+        "isolated_nodes": 1323,
+        "edge_kinds": [
+          {
+            "key": "calls",
+            "count": 8113
+          },
+          {
+            "key": "imports",
+            "count": 67
+          }
+        ],
+        "languages": [
+          {
+            "key": "csharp",
+            "count": 2897
+          },
+          {
+            "key": "dotnet",
+            "count": 132
+          },
+          {
+            "key": "image",
+            "count": 3
+          },
+          {
+            "key": "batch",
+            "count": 1
+          }
+        ]
       },
-      {
-        "language": "csharp",
-        "kind": "interface",
-        "count": 9
-      },
-      {
-        "language": "csharp",
-        "kind": "method",
-        "count": 2950
-      },
-      {
-        "language": "csharp",
-        "kind": "record",
-        "count": 2
-      },
-      {
-        "language": "csharp",
-        "kind": "struct",
-        "count": 15
-      },
-      {
-        "language": "dotnet",
-        "kind": "package",
-        "count": 64
-      },
-      {
-        "language": "dotnet",
-        "kind": "project",
-        "count": 21
-      },
-      {
-        "language": "dotnet",
-        "kind": "project_reference",
-        "count": 11
-      },
-      {
-        "language": "dotnet",
-        "kind": "sdk",
-        "count": 11
-      },
-      {
-        "language": "dotnet",
-        "kind": "target_framework",
-        "count": 25
-      },
-      {
-        "language": "json",
-        "kind": "document",
-        "count": 1
-      },
-      {
-        "language": "json",
-        "kind": "key",
-        "count": 13
-      },
-      {
-        "language": "markdown",
-        "kind": "document",
-        "count": 2
-      },
-      {
-        "language": "markdown",
-        "kind": "section",
-        "count": 79
-      },
-      {
-        "language": "powershell",
-        "kind": "variable",
-        "count": 2
-      },
-      {
-        "language": "text",
-        "kind": "document",
-        "count": 15
-      },
-      {
-        "language": "xml",
-        "kind": "document",
-        "count": 2
-      },
-      {
-        "language": "yaml",
-        "kind": "document",
-        "count": 6
-      }
-    ],
-    "edge_breakdown": [
-      {
-        "kind": "calls",
-        "count": 7570
-      },
-      {
-        "kind": "imports",
-        "count": 673
-      }
-    ],
+      "coverage_facts": 0,
+      "history": [
+        {
+          "snapshot_id": "a4c2fb57-6b65-46c2-9d7c-2052b0d294a9",
+          "commit_sha": "72a54c475f75e18cb93cba0809d00a5e6e49efd9",
+          "created_at": "2026-06-30T07:48:55Z",
+          "files": 210,
+          "symbols": 3152,
+          "edges": 8180,
+          "routes": 0,
+          "mode": "full",
+          "duration_ms": 323,
+          "timings_ms": {
+            "build_symbols_edges": 2,
+            "delta_check": 0,
+            "discover_files": 1,
+            "doc_links": 0,
+            "ensure_repo": 0,
+            "gitignore_scan": 11,
+            "go_types": 0,
+            "lexical": 197,
+            "parse": 110,
+            "persist": 197,
+            "resolve_head": 0,
+            "routes": 0,
+            "sort": 1,
+            "walk": 1,
+            "write_sqlite": 197
+          }
+        }
+      ],
+      "history_returned": 1
+    },
     "csharp_definition_symbols": 3419
   },
   "graphify": {
@@ -297,28 +393,28 @@
   },
   "query_warmup": {
     "symbol": "SqlMapper",
-    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-csharp-dapper/atlas.db --format plain --repo repo explain SqlMapper",
+    "atlas_command": "curl -fsS http://127.0.0.1:4340/api/v1/symbols/SqlMapper/explain?repo_id=repo&format=plain",
     "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain SqlMapper",
     "atlas_returncode": 0,
     "graphify_returncode": 0,
-    "note": "Untimed warm-up for both tools before measured query latency rows."
+    "note": "Untimed warm-up for Atlas warm serve and graphify before measured query latency rows."
   },
   "queries": [
     {
       "symbol": "SqlMapper",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-csharp-dapper/atlas.db --format plain --repo repo explain SqlMapper",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4340/api/v1/symbols/SqlMapper/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain SqlMapper",
-      "atlas_tokens": 10,
+      "atlas_tokens": 2,
       "graphify_tokens": 296,
-      "atlas_ms": 14.84,
+      "atlas_ms": 7.065,
       "graphify_ms": 120.399,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "SqlMapper c@SqlMapper.Async.cs:14 df28 d1"
+        "SqlMapper c@SqlMapper.Async.cs:14"
       ],
       "graphify_stdout_head": [
         "Node: SqlMapper",
@@ -329,23 +425,38 @@
         "  Degree:    21",
         "",
         "Connections (21):"
+      ],
+      "atlas_ms_samples": [
+        7.703,
+        6.808,
+        6.981,
+        6.703,
+        7.976,
+        7.73,
+        7.065,
+        7.446,
+        6.961,
+        7.114,
+        7.307,
+        7.017,
+        6.763
       ]
     },
     {
       "symbol": "CommandDefinition",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-csharp-dapper/atlas.db --format plain --repo repo explain CommandDefinition",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4340/api/v1/symbols/CommandDefinition/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain CommandDefinition",
-      "atlas_tokens": 13,
+      "atlas_tokens": 2,
       "graphify_tokens": 293,
-      "atlas_ms": 18.041,
+      "atlas_ms": 7.025,
       "graphify_ms": 114.687,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "CommandDefinition t@CommandDefinition.cs:12 df9 c46"
+        "CommandDefinition t@CommandDefinition.cs:12"
       ],
       "graphify_stdout_head": [
         "Node: CommandDefinition",
@@ -356,23 +467,38 @@
         "  Degree:    37",
         "",
         "Connections (37):"
+      ],
+      "atlas_ms_samples": [
+        6.877,
+        7.533,
+        6.77,
+        7.325,
+        6.765,
+        7.08,
+        7.18,
+        7.255,
+        6.956,
+        6.6,
+        7.421,
+        6.899,
+        7.025
       ]
     },
     {
       "symbol": "DynamicParameters",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-csharp-dapper/atlas.db --format plain --repo repo explain DynamicParameters",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4340/api/v1/symbols/DynamicParameters/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain DynamicParameters",
-      "atlas_tokens": 18,
+      "atlas_tokens": 2,
       "graphify_tokens": 69,
-      "atlas_ms": 17.532,
+      "atlas_ms": 7.097,
       "graphify_ms": 115.266,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "DynamicParameters c@DynamicParameters.CachedOutputSetters.cs:5 df5 c42 d1"
+        "DynamicParameters c@DynamicParameters.CachedOutputSetters.cs:5"
       ],
       "graphify_stdout_head": [
         "Node: DynamicParameters",
@@ -383,16 +509,31 @@
         "  Degree:    3",
         "",
         "Connections (3):"
+      ],
+      "atlas_ms_samples": [
+        7.51,
+        7.098,
+        7.208,
+        6.582,
+        7.232,
+        6.826,
+        7.097,
+        7.364,
+        7.087,
+        7.087,
+        6.445,
+        7.118,
+        6.992
       ]
     },
     {
       "symbol": "TypeHandlerCache",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-csharp-dapper/atlas.db --format plain --repo repo explain TypeHandlerCache",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4340/api/v1/symbols/TypeHandlerCache/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain TypeHandlerCache",
-      "atlas_tokens": 13,
+      "atlas_tokens": 2,
       "graphify_tokens": 106,
-      "atlas_ms": 13.714,
+      "atlas_ms": 7.597,
       "graphify_ms": 115.341,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
@@ -410,7 +551,28 @@
         "  Degree:    5",
         "",
         "Connections (5):"
+      ],
+      "atlas_ms_samples": [
+        7.235,
+        6.685,
+        7.393,
+        12.027,
+        8.133,
+        8.304,
+        7.822,
+        7.462,
+        7.728,
+        7.607,
+        7.597,
+        7.424,
+        6.559
       ]
     }
-  ]
+  ],
+  "atlas_cli": {
+    "version": "v0.1.26-4-gd882e08",
+    "commit": "d882e08",
+    "date": "2026-06-30T07:15:57Z",
+    "measurement_note": "Query rows refreshed from 13-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+  }
 }

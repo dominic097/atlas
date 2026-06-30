@@ -17,41 +17,50 @@
       "getVersion",
       "format"
     ],
-    "target_path": "/tmp/atlas-live-groovy-nextflow/repo/modules/nf-commons/src/main"
+    "target_path": "/tmp/atlas-live-groovy-nextflow/repo/modules/nf-commons/src/main",
+    "atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-groovy-nextflow/atlas.db serve --addr 127.0.0.1:4292"
   },
   "atlas": {
-    "cold_wall_seconds": 0.287,
+    "cold_wall_seconds": 0.897,
     "reindex_wall_seconds": 0.023,
     "index": {
-      "repo_id": "193c04a8-f450-4272-b78b-f33fed978452",
+      "repo_id": "2d060b70-cbce-47e5-83d3-60b187526f7c",
       "repo_full_name": "main",
-      "snapshot_id": "96712eb9-5bee-4a98-a4b4-aba10fdb37e7",
+      "snapshot_id": "6368f490-f562-4c27-8031-8c847abdc9af",
       "commit_sha": "83d452a51796aca34f136f796383185d703c349c",
-      "indexed_files": 100,
-      "symbols": 1049,
-      "edges": 3712,
+      "indexed_files": 206,
+      "symbols": 3989,
+      "edges": 3733,
       "edge_kinds": {
-        "calls": 3110,
+        "calls": 3131,
         "imports": 602
       },
       "routes": 0,
       "languages": {
         "groovy": 88,
-        "java": 12
+        "html": 1,
+        "java": 12,
+        "json": 104,
+        "markdown": 1
       },
       "mode": "full",
-      "duration_ms": 257,
+      "duration_ms": 897,
       "timings_ms": {
+        "build_symbols_edges": 1,
         "delta_check": 0,
+        "discover_files": 2,
+        "doc_links": 0,
         "ensure_repo": 0,
+        "gitignore_scan": 12,
         "go_types": 0,
-        "lexical": 108,
-        "parse": 88,
-        "persist": 47,
+        "lexical": 766,
+        "parse": 113,
+        "persist": 766,
         "resolve_head": 0,
         "routes": 0,
-        "sort": 1,
-        "walk": 11
+        "sort": 0,
+        "walk": 2,
+        "write_sqlite": 766
       }
     },
     "reindex": {
@@ -74,73 +83,196 @@
         "resolve_head": 0
       }
     },
-    "symbol_breakdown": [
-      {
-        "language": "groovy",
-        "kind": "class",
-        "count": 77
+    "symbol_breakdown": {
+      "repo_id": "2d060b70-cbce-47e5-83d3-60b187526f7c",
+      "repo_full_name": "main",
+      "tier": "local",
+      "storage_driver": "sqlite",
+      "latest": {
+        "snapshot_id": "6368f490-f562-4c27-8031-8c847abdc9af",
+        "commit_sha": "83d452a51796aca34f136f796383185d703c349c",
+        "created_at": "2026-06-30T07:45:19Z",
+        "files": 206,
+        "symbols": 3989,
+        "edges": 3733,
+        "routes": 0,
+        "mode": "full",
+        "duration_ms": 897,
+        "timings_ms": {
+          "build_symbols_edges": 1,
+          "delta_check": 0,
+          "discover_files": 2,
+          "doc_links": 0,
+          "ensure_repo": 0,
+          "gitignore_scan": 12,
+          "go_types": 0,
+          "lexical": 766,
+          "parse": 113,
+          "persist": 766,
+          "resolve_head": 0,
+          "routes": 0,
+          "sort": 0,
+          "walk": 2,
+          "write_sqlite": 766
+        }
       },
-      {
-        "language": "groovy",
-        "kind": "enum",
-        "count": 2
+      "graph": {
+        "files": 98,
+        "symbols": 1075,
+        "edges": 2515,
+        "raw_symbols": 1075,
+        "raw_edges": 3733,
+        "communities": 391,
+        "isolated_nodes": 315,
+        "edge_kinds": [
+          {
+            "key": "calls",
+            "count": 3131
+          },
+          {
+            "key": "imports",
+            "count": 602
+          }
+        ],
+        "languages": [
+          {
+            "key": "groovy",
+            "count": 837
+          },
+          {
+            "key": "java",
+            "count": 238
+          }
+        ]
       },
-      {
-        "language": "groovy",
-        "kind": "interface",
-        "count": 11
+      "coverage_facts": 0,
+      "history": [
+        {
+          "snapshot_id": "6368f490-f562-4c27-8031-8c847abdc9af",
+          "commit_sha": "83d452a51796aca34f136f796383185d703c349c",
+          "created_at": "2026-06-30T07:45:19Z",
+          "files": 206,
+          "symbols": 3989,
+          "edges": 3733,
+          "routes": 0,
+          "mode": "full",
+          "duration_ms": 897,
+          "timings_ms": {
+            "build_symbols_edges": 1,
+            "delta_check": 0,
+            "discover_files": 2,
+            "doc_links": 0,
+            "ensure_repo": 0,
+            "gitignore_scan": 12,
+            "go_types": 0,
+            "lexical": 766,
+            "parse": 113,
+            "persist": 766,
+            "resolve_head": 0,
+            "routes": 0,
+            "sort": 0,
+            "walk": 2,
+            "write_sqlite": 766
+          }
+        }
+      ],
+      "history_returned": 1
+    },
+    "edge_breakdown": {
+      "repo_id": "2d060b70-cbce-47e5-83d3-60b187526f7c",
+      "repo_full_name": "main",
+      "tier": "local",
+      "storage_driver": "sqlite",
+      "latest": {
+        "snapshot_id": "6368f490-f562-4c27-8031-8c847abdc9af",
+        "commit_sha": "83d452a51796aca34f136f796383185d703c349c",
+        "created_at": "2026-06-30T07:45:19Z",
+        "files": 206,
+        "symbols": 3989,
+        "edges": 3733,
+        "routes": 0,
+        "mode": "full",
+        "duration_ms": 897,
+        "timings_ms": {
+          "build_symbols_edges": 1,
+          "delta_check": 0,
+          "discover_files": 2,
+          "doc_links": 0,
+          "ensure_repo": 0,
+          "gitignore_scan": 12,
+          "go_types": 0,
+          "lexical": 766,
+          "parse": 113,
+          "persist": 766,
+          "resolve_head": 0,
+          "routes": 0,
+          "sort": 0,
+          "walk": 2,
+          "write_sqlite": 766
+        }
       },
-      {
-        "language": "groovy",
-        "kind": "method",
-        "count": 746
+      "graph": {
+        "files": 98,
+        "symbols": 1075,
+        "edges": 2515,
+        "raw_symbols": 1075,
+        "raw_edges": 3733,
+        "communities": 391,
+        "isolated_nodes": 315,
+        "edge_kinds": [
+          {
+            "key": "calls",
+            "count": 3131
+          },
+          {
+            "key": "imports",
+            "count": 602
+          }
+        ],
+        "languages": [
+          {
+            "key": "groovy",
+            "count": 837
+          },
+          {
+            "key": "java",
+            "count": 238
+          }
+        ]
       },
-      {
-        "language": "java",
-        "kind": "class",
-        "count": 12
-      },
-      {
-        "language": "java",
-        "kind": "constructor",
-        "count": 31
-      },
-      {
-        "language": "java",
-        "kind": "enum",
-        "count": 1
-      },
-      {
-        "language": "java",
-        "kind": "enum_constant",
-        "count": 4
-      },
-      {
-        "language": "java",
-        "kind": "field",
-        "count": 48
-      },
-      {
-        "language": "java",
-        "kind": "method",
-        "count": 109
-      },
-      {
-        "language": "java",
-        "kind": "type_parameter",
-        "count": 8
-      }
-    ],
-    "edge_breakdown": [
-      {
-        "kind": "calls",
-        "count": 3110
-      },
-      {
-        "kind": "imports",
-        "count": 602
-      }
-    ],
+      "coverage_facts": 0,
+      "history": [
+        {
+          "snapshot_id": "6368f490-f562-4c27-8031-8c847abdc9af",
+          "commit_sha": "83d452a51796aca34f136f796383185d703c349c",
+          "created_at": "2026-06-30T07:45:19Z",
+          "files": 206,
+          "symbols": 3989,
+          "edges": 3733,
+          "routes": 0,
+          "mode": "full",
+          "duration_ms": 897,
+          "timings_ms": {
+            "build_symbols_edges": 1,
+            "delta_check": 0,
+            "discover_files": 2,
+            "doc_links": 0,
+            "ensure_repo": 0,
+            "gitignore_scan": 12,
+            "go_types": 0,
+            "lexical": 766,
+            "parse": 113,
+            "persist": 766,
+            "resolve_head": 0,
+            "routes": 0,
+            "sort": 0,
+            "walk": 2,
+            "write_sqlite": 766
+          }
+        }
+      ],
+      "history_returned": 1
+    },
     "groovy_definition_symbols": 836
   },
   "graphify": {
@@ -255,28 +387,28 @@
   },
   "query_warmup": {
     "symbol": "SysEnv",
-    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-groovy-nextflow/atlas.db --format plain --repo main explain SysEnv",
+    "atlas_command": "curl -fsS http://127.0.0.1:4292/api/v1/symbols/SysEnv/explain?repo_id=main&format=plain",
     "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain SysEnv",
     "atlas_returncode": 0,
     "graphify_returncode": 0,
-    "note": "Untimed warm-up for both tools before measured query latency rows."
+    "note": "Untimed warm-up for Atlas warm serve and graphify before measured query latency rows."
   },
   "queries": [
     {
       "symbol": "SysEnv",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-groovy-nextflow/atlas.db --format plain --repo main explain SysEnv",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4292/api/v1/symbols/SysEnv/explain?repo_id=main&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain SysEnv",
-      "atlas_tokens": 7,
+      "atlas_tokens": 2,
       "graphify_tokens": 125,
-      "atlas_ms": 12.605,
+      "atlas_ms": 8.034,
       "graphify_ms": 86.908,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "SysEnv c@SysEnv.groovy:21 d1"
+        "SysEnv c@SysEnv:29"
       ],
       "graphify_stdout_head": [
         "Node: SysEnv",
@@ -287,23 +419,34 @@
         "  Degree:    9",
         "",
         "Connections (9):"
+      ],
+      "atlas_ms_samples": [
+        13.555,
+        9.809,
+        9.279,
+        9.176,
+        8.034,
+        7.995,
+        7.521,
+        7.779,
+        7.512
       ]
     },
     {
       "symbol": "Const",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-groovy-nextflow/atlas.db --format plain --repo main explain Const",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4292/api/v1/symbols/Const/explain?repo_id=main&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Const",
-      "atlas_tokens": 6,
+      "atlas_tokens": 2,
       "graphify_tokens": 77,
-      "atlas_ms": 12.385,
+      "atlas_ms": 7.323,
       "graphify_ms": 88.607,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Const c@Const.groovy:21 d1"
+        "Const c@Const:26"
       ],
       "graphify_stdout_head": [
         "Node: Const.groovy",
@@ -314,23 +457,34 @@
         "  Degree:    4",
         "",
         "Connections (4):"
+      ],
+      "atlas_ms_samples": [
+        7.328,
+        7.821,
+        7.323,
+        7.286,
+        6.53,
+        6.996,
+        6.931,
+        7.402,
+        7.93
       ]
     },
     {
       "symbol": "Duration",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-groovy-nextflow/atlas.db --format plain --repo main explain Duration",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4292/api/v1/symbols/Duration/explain?repo_id=main&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Duration",
-      "atlas_tokens": 10,
+      "atlas_tokens": 2,
       "graphify_tokens": 36,
-      "atlas_ms": 12.422,
+      "atlas_ms": 7.085,
       "graphify_ms": 86.62,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Duration c@Duration.groovy:31 df5 c8 d5"
+        "Duration c@Duration:39"
       ],
       "graphify_stdout_head": [
         "Node: Duration.groovy",
@@ -339,23 +493,34 @@
         "  Type:      code",
         "  Community: 63",
         "  Degree:    0"
+      ],
+      "atlas_ms_samples": [
+        6.991,
+        7.479,
+        6.65,
+        7.262,
+        7.085,
+        6.882,
+        7.793,
+        6.94,
+        7.32
       ]
     },
     {
       "symbol": "getVersion",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-groovy-nextflow/atlas.db --format plain --repo main explain getVersion",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4292/api/v1/symbols/getVersion/explain?repo_id=main&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain getVersion",
-      "atlas_tokens": 9,
+      "atlas_tokens": 2,
       "graphify_tokens": 64,
-      "atlas_ms": 12.34,
+      "atlas_ms": 6.908,
       "graphify_ms": 83.422,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "getVersion m@BuildInfo.groovy:48 d1"
+        "getVersion f@BuildInfo:49"
       ],
       "graphify_stdout_head": [
         "Node: getVersion()",
@@ -366,23 +531,34 @@
         "  Degree:    2",
         "",
         "Connections (2):"
+      ],
+      "atlas_ms_samples": [
+        6.578,
+        7.687,
+        6.935,
+        6.897,
+        7.404,
+        6.617,
+        6.908,
+        6.835,
+        7.445
       ]
     },
     {
       "symbol": "format",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-groovy-nextflow/atlas.db --format plain --repo main explain format",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4292/api/v1/symbols/format/explain?repo_id=main&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain format",
-      "atlas_tokens": 8,
+      "atlas_tokens": 2,
       "graphify_tokens": 97,
-      "atlas_ms": 13.739,
+      "atlas_ms": 7.204,
       "graphify_ms": 85.268,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "format m@Bolts.groovy:73 df4 c4 d2"
+        "format f@Bolts:82"
       ],
       "graphify_stdout_head": [
         "Node: .format()",
@@ -393,7 +569,24 @@
         "  Degree:    5",
         "",
         "Connections (5):"
+      ],
+      "atlas_ms_samples": [
+        7.28,
+        7.315,
+        7.409,
+        6.499,
+        7.204,
+        6.668,
+        7.61,
+        7.181,
+        6.604
       ]
     }
-  ]
+  ],
+  "atlas_cli": {
+    "version": "v0.1.26-4-gd882e08",
+    "commit": "d882e08",
+    "date": "2026-06-30T07:15:57Z",
+    "measurement_note": "Query rows refreshed from nine-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+  }
 }

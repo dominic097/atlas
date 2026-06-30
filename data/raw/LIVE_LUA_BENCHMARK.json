@@ -16,46 +16,53 @@
       "M.add",
       "M.reload"
     ],
-    "target_path": "/tmp/atlas-live-lua-lazy/repo"
+    "target_path": "/tmp/atlas-live-lua-lazy/repo",
+    "atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-lua-lazy/atlas.db serve --addr 127.0.0.1:4253"
   },
   "atlas": {
-    "cold_wall_seconds": 0.774,
+    "cold_wall_seconds": 0.706,
     "reindex_wall_seconds": 0.024,
     "index": {
-      "repo_id": "836622d8-f053-44d7-b518-ffe072e840d2",
+      "repo_id": "f6bc7792-8159-4fd1-bbe9-cb07f1fc27a8",
       "repo_full_name": "repo",
-      "snapshot_id": "6ce58546-9b79-4691-b302-7c3344ea4e4d",
+      "snapshot_id": "32b8879e-e3fb-4f0a-9ad5-9da608a60cbe",
       "commit_sha": "306a05526ada86a7b30af95c5cc81ffba93fef97",
-      "indexed_files": 90,
-      "symbols": 5221,
-      "edges": 3929,
+      "indexed_files": 168,
+      "symbols": 3441,
+      "edges": 3543,
       "edge_kinds": {
-        "calls": 3733,
+        "calls": 3347,
         "imports": 196
       },
       "routes": 0,
       "languages": {
         "config": 1,
-        "json": 3,
+        "html": 1,
+        "json": 79,
         "lua": 65,
-        "markdown": 4,
+        "markdown": 5,
         "text": 1,
         "toml": 2,
         "yaml": 14
       },
       "mode": "full",
-      "duration_ms": 726,
+      "duration_ms": 706,
       "timings_ms": {
+        "build_symbols_edges": 1,
         "delta_check": 0,
+        "discover_files": 2,
+        "doc_links": 0,
         "ensure_repo": 0,
+        "gitignore_scan": 13,
         "go_types": 0,
-        "lexical": 472,
-        "parse": 142,
-        "persist": 108,
+        "lexical": 545,
+        "parse": 143,
+        "persist": 545,
         "resolve_head": 0,
         "routes": 0,
-        "sort": 1,
-        "walk": 0
+        "sort": 0,
+        "walk": 2,
+        "write_sqlite": 545
       }
     },
     "reindex": {
@@ -83,63 +90,188 @@
         "resolve_head": 0
       }
     },
-    "symbol_breakdown": [
-      {
-        "language": "config",
-        "kind": "document",
-        "count": 1
+    "symbol_breakdown": {
+      "repo_id": "f6bc7792-8159-4fd1-bbe9-cb07f1fc27a8",
+      "repo_full_name": "repo",
+      "tier": "local",
+      "storage_driver": "sqlite",
+      "latest": {
+        "snapshot_id": "32b8879e-e3fb-4f0a-9ad5-9da608a60cbe",
+        "commit_sha": "306a05526ada86a7b30af95c5cc81ffba93fef97",
+        "created_at": "2026-06-30T07:41:37Z",
+        "files": 168,
+        "symbols": 3441,
+        "edges": 3543,
+        "routes": 0,
+        "mode": "full",
+        "duration_ms": 706,
+        "timings_ms": {
+          "build_symbols_edges": 1,
+          "delta_check": 0,
+          "discover_files": 2,
+          "doc_links": 0,
+          "ensure_repo": 0,
+          "gitignore_scan": 13,
+          "go_types": 0,
+          "lexical": 545,
+          "parse": 143,
+          "persist": 545,
+          "resolve_head": 0,
+          "routes": 0,
+          "sort": 0,
+          "walk": 2,
+          "write_sqlite": 545
+        }
       },
-      {
-        "language": "json",
-        "kind": "key",
-        "count": 13
+      "graph": {
+        "files": 53,
+        "symbols": 444,
+        "edges": 154,
+        "raw_symbols": 444,
+        "raw_edges": 3543,
+        "communities": 350,
+        "isolated_nodes": 315,
+        "edge_kinds": [
+          {
+            "key": "calls",
+            "count": 3347
+          },
+          {
+            "key": "imports",
+            "count": 196
+          }
+        ],
+        "languages": [
+          {
+            "key": "lua",
+            "count": 444
+          }
+        ]
       },
-      {
-        "language": "lua",
-        "kind": "document",
-        "count": 1
+      "coverage_facts": 0,
+      "history": [
+        {
+          "snapshot_id": "32b8879e-e3fb-4f0a-9ad5-9da608a60cbe",
+          "commit_sha": "306a05526ada86a7b30af95c5cc81ffba93fef97",
+          "created_at": "2026-06-30T07:41:37Z",
+          "files": 168,
+          "symbols": 3441,
+          "edges": 3543,
+          "routes": 0,
+          "mode": "full",
+          "duration_ms": 706,
+          "timings_ms": {
+            "build_symbols_edges": 1,
+            "delta_check": 0,
+            "discover_files": 2,
+            "doc_links": 0,
+            "ensure_repo": 0,
+            "gitignore_scan": 13,
+            "go_types": 0,
+            "lexical": 545,
+            "parse": 143,
+            "persist": 545,
+            "resolve_head": 0,
+            "routes": 0,
+            "sort": 0,
+            "walk": 2,
+            "write_sqlite": 545
+          }
+        }
+      ],
+      "history_returned": 1
+    },
+    "edge_breakdown": {
+      "repo_id": "f6bc7792-8159-4fd1-bbe9-cb07f1fc27a8",
+      "repo_full_name": "repo",
+      "tier": "local",
+      "storage_driver": "sqlite",
+      "latest": {
+        "snapshot_id": "32b8879e-e3fb-4f0a-9ad5-9da608a60cbe",
+        "commit_sha": "306a05526ada86a7b30af95c5cc81ffba93fef97",
+        "created_at": "2026-06-30T07:41:37Z",
+        "files": 168,
+        "symbols": 3441,
+        "edges": 3543,
+        "routes": 0,
+        "mode": "full",
+        "duration_ms": 706,
+        "timings_ms": {
+          "build_symbols_edges": 1,
+          "delta_check": 0,
+          "discover_files": 2,
+          "doc_links": 0,
+          "ensure_repo": 0,
+          "gitignore_scan": 13,
+          "go_types": 0,
+          "lexical": 545,
+          "parse": 143,
+          "persist": 545,
+          "resolve_head": 0,
+          "routes": 0,
+          "sort": 0,
+          "walk": 2,
+          "write_sqlite": 545
+        }
       },
-      {
-        "language": "lua",
-        "kind": "function",
-        "count": 551
+      "graph": {
+        "files": 53,
+        "symbols": 444,
+        "edges": 154,
+        "raw_symbols": 444,
+        "raw_edges": 3543,
+        "communities": 350,
+        "isolated_nodes": 315,
+        "edge_kinds": [
+          {
+            "key": "calls",
+            "count": 3347
+          },
+          {
+            "key": "imports",
+            "count": 196
+          }
+        ],
+        "languages": [
+          {
+            "key": "lua",
+            "count": 444
+          }
+        ]
       },
-      {
-        "language": "lua",
-        "kind": "variable",
-        "count": 4112
-      },
-      {
-        "language": "markdown",
-        "kind": "section",
-        "count": 526
-      },
-      {
-        "language": "text",
-        "kind": "document",
-        "count": 1
-      },
-      {
-        "language": "toml",
-        "kind": "document",
-        "count": 2
-      },
-      {
-        "language": "yaml",
-        "kind": "document",
-        "count": 14
-      }
-    ],
-    "edge_breakdown": [
-      {
-        "kind": "calls",
-        "count": 3733
-      },
-      {
-        "kind": "imports",
-        "count": 196
-      }
-    ],
+      "coverage_facts": 0,
+      "history": [
+        {
+          "snapshot_id": "32b8879e-e3fb-4f0a-9ad5-9da608a60cbe",
+          "commit_sha": "306a05526ada86a7b30af95c5cc81ffba93fef97",
+          "created_at": "2026-06-30T07:41:37Z",
+          "files": 168,
+          "symbols": 3441,
+          "edges": 3543,
+          "routes": 0,
+          "mode": "full",
+          "duration_ms": 706,
+          "timings_ms": {
+            "build_symbols_edges": 1,
+            "delta_check": 0,
+            "discover_files": 2,
+            "doc_links": 0,
+            "ensure_repo": 0,
+            "gitignore_scan": 13,
+            "go_types": 0,
+            "lexical": 545,
+            "parse": 143,
+            "persist": 545,
+            "resolve_head": 0,
+            "routes": 0,
+            "sort": 0,
+            "walk": 2,
+            "write_sqlite": 545
+          }
+        }
+      ],
+      "history_returned": 1
+    },
     "lua_definition_symbols": 551
   },
   "graphify": {
@@ -217,28 +349,28 @@
   },
   "query_warmup": {
     "symbol": "Loader.load",
-    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-lua-lazy/atlas.db --format plain --repo repo explain Loader.load",
+    "atlas_command": "curl -fsS http://127.0.0.1:4253/api/v1/symbols/Loader.load/explain?repo_id=repo&format=plain",
     "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Loader.load",
     "atlas_returncode": 0,
     "graphify_returncode": 0,
-    "note": "Untimed warm-up for both tools before measured query latency rows."
+    "note": "Untimed warm-up for Atlas warm serve and graphify before measured query latency rows."
   },
   "queries": [
     {
       "symbol": "Loader.load",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-lua-lazy/atlas.db --format plain --repo repo explain Loader.load",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4253/api/v1/symbols/Loader.load/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Loader.load",
-      "atlas_tokens": 6,
+      "atlas_tokens": 2,
       "graphify_tokens": 146,
-      "atlas_ms": 15.397,
+      "atlas_ms": 8.052,
       "graphify_ms": 92.38,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Loader.load f@cache:231 d1"
+        "Loader.load f@cache:231"
       ],
       "graphify_stdout_head": [
         "Node: Loader.load()",
@@ -249,16 +381,27 @@
         "  Degree:    11",
         "",
         "Connections (11):"
+      ],
+      "atlas_ms_samples": [
+        11.897,
+        9.86,
+        8.866,
+        8.015,
+        8.183,
+        8.052,
+        7.489,
+        7.398,
+        7.383
       ]
     },
     {
       "symbol": "Async.new",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-lua-lazy/atlas.db --format plain --repo repo explain Async.new",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4253/api/v1/symbols/Async.new/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Async.new",
-      "atlas_tokens": 5,
+      "atlas_tokens": 2,
       "graphify_tokens": 58,
-      "atlas_ms": 14.284,
+      "atlas_ms": 7.367,
       "graphify_ms": 91.845,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
@@ -276,23 +419,34 @@
         "  Degree:    2",
         "",
         "Connections (2):"
+      ],
+      "atlas_ms_samples": [
+        6.957,
+        7.659,
+        6.87,
+        7.483,
+        6.821,
+        7.1,
+        7.367,
+        7.691,
+        8.002
       ]
     },
     {
       "symbol": "M.add",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-lua-lazy/atlas.db --format plain --repo repo explain M.add",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4253/api/v1/symbols/M.add/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain M.add",
-      "atlas_tokens": 5,
+      "atlas_tokens": 2,
       "graphify_tokens": 65,
-      "atlas_ms": 14.198,
+      "atlas_ms": 7.163,
       "graphify_ms": 88.806,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "M.add f@async:192 d1"
+        "M.add f@async:192"
       ],
       "graphify_stdout_head": [
         "Node: M.add()",
@@ -303,23 +457,34 @@
         "  Degree:    3",
         "",
         "Connections (3):"
+      ],
+      "atlas_ms_samples": [
+        6.961,
+        7.341,
+        7.003,
+        7.691,
+        7.108,
+        7.163,
+        7.344,
+        6.803,
+        7.657
       ]
     },
     {
       "symbol": "M.reload",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-lua-lazy/atlas.db --format plain --repo repo explain M.reload",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4253/api/v1/symbols/M.reload/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain M.reload",
-      "atlas_tokens": 7,
+      "atlas_tokens": 2,
       "graphify_tokens": 78,
-      "atlas_ms": 14.381,
+      "atlas_ms": 7.279,
       "graphify_ms": 89.223,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "M.reload f@loader:250 df2 d3"
+        "M.reload f@loader:250"
       ],
       "graphify_stdout_head": [
         "Node: M.reload()",
@@ -330,7 +495,24 @@
         "  Degree:    4",
         "",
         "Connections (4):"
+      ],
+      "atlas_ms_samples": [
+        6.758,
+        7.279,
+        6.779,
+        7.079,
+        7.375,
+        7.43,
+        7.528,
+        6.78,
+        7.436
       ]
     }
-  ]
+  ],
+  "atlas_cli": {
+    "version": "v0.1.26-4-gd882e08",
+    "commit": "d882e08",
+    "date": "2026-06-30T07:15:57Z",
+    "measurement_note": "Query rows refreshed from nine-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+  }
 }

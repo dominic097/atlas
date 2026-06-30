@@ -16,45 +16,52 @@
       "route",
       "settings"
     ],
-    "target_path": "/tmp/atlas-live-ruby-sinatra/repo"
+    "target_path": "/tmp/atlas-live-ruby-sinatra/repo",
+    "atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-ruby-sinatra/atlas.db serve --addr 127.0.0.1:4341"
   },
   "atlas": {
-    "cold_wall_seconds": 0.272,
+    "cold_wall_seconds": 0.187,
     "reindex_wall_seconds": 0.025,
     "index": {
-      "repo_id": "54898536-c05d-4609-9a9a-0763c6fd4b10",
+      "repo_id": "c01ebebb-aa9b-4d25-86ba-e99eba82a859",
       "repo_full_name": "repo",
-      "snapshot_id": "01a3fc0f-1ed5-4640-9e4e-f819bb20a859",
+      "snapshot_id": "74a6b95a-8849-4b5a-b836-f6665f48471f",
       "commit_sha": "5236d3459b8b9015e5ce21ddd0c6beb0db4081d4",
-      "indexed_files": 178,
-      "symbols": 1450,
-      "edges": 3970,
+      "indexed_files": 180,
+      "symbols": 1476,
+      "edges": 3525,
       "edge_kinds": {
-        "calls": 3750,
+        "calls": 3305,
         "imports": 220
       },
       "routes": 0,
       "languages": {
         "config": 3,
         "css": 4,
+        "image": 2,
         "markdown": 12,
         "ruby": 147,
         "text": 2,
         "yaml": 10
       },
       "mode": "full",
-      "duration_ms": 235,
+      "duration_ms": 187,
       "timings_ms": {
+        "build_symbols_edges": 0,
         "delta_check": 0,
+        "discover_files": 1,
+        "doc_links": 0,
         "ensure_repo": 0,
+        "gitignore_scan": 11,
         "go_types": 0,
-        "lexical": 136,
-        "parse": 35,
-        "persist": 60,
+        "lexical": 105,
+        "parse": 67,
+        "persist": 105,
         "resolve_head": 0,
         "routes": 0,
-        "sort": 1,
-        "walk": 1
+        "sort": 0,
+        "walk": 1,
+        "write_sqlite": 105
       }
     },
     "reindex": {
@@ -81,53 +88,196 @@
         "resolve_head": 0
       }
     },
-    "symbol_breakdown": [
-      {
-        "language": "config",
-        "kind": "document",
-        "count": 3
+    "symbol_breakdown": {
+      "repo_id": "c01ebebb-aa9b-4d25-86ba-e99eba82a859",
+      "repo_full_name": "repo",
+      "tier": "local",
+      "storage_driver": "sqlite",
+      "latest": {
+        "snapshot_id": "74a6b95a-8849-4b5a-b836-f6665f48471f",
+        "commit_sha": "5236d3459b8b9015e5ce21ddd0c6beb0db4081d4",
+        "created_at": "2026-06-30T07:48:56Z",
+        "files": 180,
+        "symbols": 1476,
+        "edges": 3525,
+        "routes": 0,
+        "mode": "full",
+        "duration_ms": 187,
+        "timings_ms": {
+          "build_symbols_edges": 0,
+          "delta_check": 0,
+          "discover_files": 1,
+          "doc_links": 0,
+          "ensure_repo": 0,
+          "gitignore_scan": 11,
+          "go_types": 0,
+          "lexical": 105,
+          "parse": 67,
+          "persist": 105,
+          "resolve_head": 0,
+          "routes": 0,
+          "sort": 0,
+          "walk": 1,
+          "write_sqlite": 105
+        }
       },
-      {
-        "language": "markdown",
-        "kind": "section",
-        "count": 228
+      "graph": {
+        "files": 113,
+        "symbols": 1203,
+        "edges": 1148,
+        "raw_symbols": 1203,
+        "raw_edges": 3484,
+        "communities": 756,
+        "isolated_nodes": 654,
+        "edge_kinds": [
+          {
+            "key": "calls",
+            "count": 3277
+          },
+          {
+            "key": "imports",
+            "count": 207
+          }
+        ],
+        "languages": [
+          {
+            "key": "ruby",
+            "count": 1201
+          },
+          {
+            "key": "image",
+            "count": 2
+          }
+        ]
       },
-      {
-        "language": "ruby",
-        "kind": "class",
-        "count": 269
+      "coverage_facts": 0,
+      "history": [
+        {
+          "snapshot_id": "74a6b95a-8849-4b5a-b836-f6665f48471f",
+          "commit_sha": "5236d3459b8b9015e5ce21ddd0c6beb0db4081d4",
+          "created_at": "2026-06-30T07:48:56Z",
+          "files": 180,
+          "symbols": 1476,
+          "edges": 3525,
+          "routes": 0,
+          "mode": "full",
+          "duration_ms": 187,
+          "timings_ms": {
+            "build_symbols_edges": 0,
+            "delta_check": 0,
+            "discover_files": 1,
+            "doc_links": 0,
+            "ensure_repo": 0,
+            "gitignore_scan": 11,
+            "go_types": 0,
+            "lexical": 105,
+            "parse": 67,
+            "persist": 105,
+            "resolve_head": 0,
+            "routes": 0,
+            "sort": 0,
+            "walk": 1,
+            "write_sqlite": 105
+          }
+        }
+      ],
+      "history_returned": 1
+    },
+    "edge_breakdown": {
+      "repo_id": "c01ebebb-aa9b-4d25-86ba-e99eba82a859",
+      "repo_full_name": "repo",
+      "tier": "local",
+      "storage_driver": "sqlite",
+      "latest": {
+        "snapshot_id": "74a6b95a-8849-4b5a-b836-f6665f48471f",
+        "commit_sha": "5236d3459b8b9015e5ce21ddd0c6beb0db4081d4",
+        "created_at": "2026-06-30T07:48:56Z",
+        "files": 180,
+        "symbols": 1476,
+        "edges": 3525,
+        "routes": 0,
+        "mode": "full",
+        "duration_ms": 187,
+        "timings_ms": {
+          "build_symbols_edges": 0,
+          "delta_check": 0,
+          "discover_files": 1,
+          "doc_links": 0,
+          "ensure_repo": 0,
+          "gitignore_scan": 11,
+          "go_types": 0,
+          "lexical": 105,
+          "parse": 67,
+          "persist": 105,
+          "resolve_head": 0,
+          "routes": 0,
+          "sort": 0,
+          "walk": 1,
+          "write_sqlite": 105
+        }
       },
-      {
-        "language": "ruby",
-        "kind": "document",
-        "count": 34
+      "graph": {
+        "files": 113,
+        "symbols": 1203,
+        "edges": 1148,
+        "raw_symbols": 1203,
+        "raw_edges": 3484,
+        "communities": 756,
+        "isolated_nodes": 654,
+        "edge_kinds": [
+          {
+            "key": "calls",
+            "count": 3277
+          },
+          {
+            "key": "imports",
+            "count": 207
+          }
+        ],
+        "languages": [
+          {
+            "key": "ruby",
+            "count": 1201
+          },
+          {
+            "key": "image",
+            "count": 2
+          }
+        ]
       },
-      {
-        "language": "ruby",
-        "kind": "method",
-        "count": 904
-      },
-      {
-        "language": "text",
-        "kind": "document",
-        "count": 2
-      },
-      {
-        "language": "yaml",
-        "kind": "document",
-        "count": 10
-      }
-    ],
-    "edge_breakdown": [
-      {
-        "kind": "calls",
-        "count": 3750
-      },
-      {
-        "kind": "imports",
-        "count": 220
-      }
-    ],
+      "coverage_facts": 0,
+      "history": [
+        {
+          "snapshot_id": "74a6b95a-8849-4b5a-b836-f6665f48471f",
+          "commit_sha": "5236d3459b8b9015e5ce21ddd0c6beb0db4081d4",
+          "created_at": "2026-06-30T07:48:56Z",
+          "files": 180,
+          "symbols": 1476,
+          "edges": 3525,
+          "routes": 0,
+          "mode": "full",
+          "duration_ms": 187,
+          "timings_ms": {
+            "build_symbols_edges": 0,
+            "delta_check": 0,
+            "discover_files": 1,
+            "doc_links": 0,
+            "ensure_repo": 0,
+            "gitignore_scan": 11,
+            "go_types": 0,
+            "lexical": 105,
+            "parse": 67,
+            "persist": 105,
+            "resolve_head": 0,
+            "routes": 0,
+            "sort": 0,
+            "walk": 1,
+            "write_sqlite": 105
+          }
+        }
+      ],
+      "history_returned": 1
+    },
     "ruby_definition_symbols": 1173
   },
   "graphify": {
@@ -196,28 +346,28 @@
   },
   "query_warmup": {
     "symbol": "initialize",
-    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ruby-sinatra/atlas.db --format plain --repo repo explain initialize",
+    "atlas_command": "curl -fsS http://127.0.0.1:4341/api/v1/symbols/initialize/explain?repo_id=repo&format=plain",
     "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain initialize",
     "atlas_returncode": 0,
     "graphify_returncode": 0,
-    "note": "Untimed warm-up for both tools before measured query latency rows."
+    "note": "Untimed warm-up for Atlas warm serve and graphify before measured query latency rows."
   },
   "queries": [
     {
       "symbol": "initialize",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ruby-sinatra/atlas.db --format plain --repo repo explain initialize",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4341/api/v1/symbols/initialize/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain initialize",
-      "atlas_tokens": 8,
+      "atlas_tokens": 2,
       "graphify_tokens": 61,
-      "atlas_ms": 13.7,
+      "atlas_ms": 7.672,
       "graphify_ms": 90.373,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "initialize m@base:97 df27 c1 d3"
+        "initialize f@base:98"
       ],
       "graphify_stdout_head": [
         "Node: .initialize()",
@@ -228,23 +378,38 @@
         "  Degree:    2",
         "",
         "Connections (2):"
+      ],
+      "atlas_ms_samples": [
+        12.082,
+        9.414,
+        8.9,
+        8.988,
+        8.153,
+        7.643,
+        7.671,
+        7.672,
+        7.211,
+        7.523,
+        6.964,
+        7.782,
+        6.648
       ]
     },
     {
       "symbol": "call",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ruby-sinatra/atlas.db --format plain --repo repo explain call",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4341/api/v1/symbols/call/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain call",
-      "atlas_tokens": 7,
+      "atlas_tokens": 2,
       "graphify_tokens": 89,
-      "atlas_ms": 14.037,
+      "atlas_ms": 7.001,
       "graphify_ms": 108.646,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "call m@base:226 df33 c15 d13"
+        "call f@base:226"
       ],
       "graphify_stdout_head": [
         "Node: .call()",
@@ -255,23 +420,38 @@
         "  Degree:    5",
         "",
         "Connections (5):"
+      ],
+      "atlas_ms_samples": [
+        7.001,
+        7.14,
+        6.693,
+        7.054,
+        6.572,
+        7.439,
+        7.004,
+        6.97,
+        8.052,
+        6.996,
+        7.239,
+        6.589,
+        6.919
       ]
     },
     {
       "symbol": "route",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ruby-sinatra/atlas.db --format plain --repo repo explain route",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4341/api/v1/symbols/route/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain route",
-      "atlas_tokens": 7,
+      "atlas_tokens": 2,
       "graphify_tokens": 96,
-      "atlas_ms": 13.28,
+      "atlas_ms": 6.955,
       "graphify_ms": 94.267,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "route m@base:1775 df2 c2 d1"
+        "route f@base:1776"
       ],
       "graphify_stdout_head": [
         "Node: .route!()",
@@ -282,23 +462,38 @@
         "  Degree:    6",
         "",
         "Connections (6):"
+      ],
+      "atlas_ms_samples": [
+        7.099,
+        6.777,
+        7.304,
+        6.538,
+        7.237,
+        6.818,
+        6.955,
+        7.165,
+        6.935,
+        7.22,
+        6.441,
+        7.335,
+        6.74
       ]
     },
     {
       "symbol": "settings",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ruby-sinatra/atlas.db --format plain --repo repo explain settings",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4341/api/v1/symbols/settings/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain settings",
-      "atlas_tokens": 6,
+      "atlas_tokens": 2,
       "graphify_tokens": 58,
-      "atlas_ms": 13.291,
+      "atlas_ms": 7.058,
       "graphify_ms": 93.757,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "settings m@base:1017 df6"
+        "settings f@base:1017"
       ],
       "graphify_stdout_head": [
         "Node: .settings()",
@@ -309,7 +504,28 @@
         "  Degree:    2",
         "",
         "Connections (2):"
+      ],
+      "atlas_ms_samples": [
+        7.101,
+        7.561,
+        7.071,
+        7.623,
+        6.501,
+        7.347,
+        6.579,
+        7.017,
+        7.454,
+        7.002,
+        7.058,
+        6.443,
+        6.887
       ]
     }
-  ]
+  ],
+  "atlas_cli": {
+    "version": "v0.1.26-4-gd882e08",
+    "commit": "d882e08",
+    "date": "2026-06-30T07:15:57Z",
+    "measurement_note": "Query rows refreshed from 13-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+  }
 }

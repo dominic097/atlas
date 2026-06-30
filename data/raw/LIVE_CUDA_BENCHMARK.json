@@ -15,18 +15,19 @@
       "runTest",
       "main"
     ],
-    "target_path": "/tmp/atlas-live-cuda-samples/repo/cpp/0_Introduction/simpleAtomicIntrinsics"
+    "target_path": "/tmp/atlas-live-cuda-samples/repo/cpp/0_Introduction/simpleAtomicIntrinsics",
+    "atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-cuda-samples/atlas.db serve --addr 127.0.0.1:4310"
   },
   "atlas": {
-    "cold_wall_seconds": 0.073,
+    "cold_wall_seconds": 0.035,
     "reindex_wall_seconds": 0.023,
     "index": {
-      "repo_id": "d6b8e736-16f5-4250-9df0-f9770bab93ee",
+      "repo_id": "79b3fc7c-3fde-4278-9fda-d6d0d3ca16db",
       "repo_full_name": "simpleAtomicIntrinsics",
-      "snapshot_id": "d9da1e4c-6fab-4959-9450-c2258d502fd1",
+      "snapshot_id": "f09df204-0723-4a3f-94ae-31e6ecac4d95",
       "commit_sha": "b7c5481c556c3fe98db060207ecaa41a4b9a9abc",
-      "indexed_files": 7,
-      "symbols": 26,
+      "indexed_files": 5,
+      "symbols": 15,
       "edges": 63,
       "edge_kinds": {
         "calls": 52,
@@ -35,23 +36,27 @@
       "routes": 0,
       "languages": {
         "cpp": 3,
-        "json": 2,
         "markdown": 1,
         "text": 1
       },
       "mode": "full",
-      "duration_ms": 38,
+      "duration_ms": 35,
       "timings_ms": {
+        "build_symbols_edges": 0,
         "delta_check": 0,
-        "ensure_repo": 2,
+        "discover_files": 0,
+        "doc_links": 0,
+        "ensure_repo": 0,
+        "gitignore_scan": 12,
         "go_types": 0,
-        "lexical": 19,
-        "parse": 13,
-        "persist": 2,
+        "lexical": 17,
+        "parse": 6,
+        "persist": 17,
         "resolve_head": 0,
         "routes": 0,
         "sort": 0,
-        "walk": 0
+        "walk": 0,
+        "write_sqlite": 17
       }
     },
     "reindex": {
@@ -76,38 +81,188 @@
         "resolve_head": 0
       }
     },
-    "symbol_breakdown": [
-      {
-        "language": "cpp",
-        "kind": "function",
-        "count": 4
+    "symbol_breakdown": {
+      "repo_id": "79b3fc7c-3fde-4278-9fda-d6d0d3ca16db",
+      "repo_full_name": "simpleAtomicIntrinsics",
+      "tier": "local",
+      "storage_driver": "sqlite",
+      "latest": {
+        "snapshot_id": "f09df204-0723-4a3f-94ae-31e6ecac4d95",
+        "commit_sha": "b7c5481c556c3fe98db060207ecaa41a4b9a9abc",
+        "created_at": "2026-06-30T07:42:58Z",
+        "files": 5,
+        "symbols": 15,
+        "edges": 63,
+        "routes": 0,
+        "mode": "full",
+        "duration_ms": 35,
+        "timings_ms": {
+          "build_symbols_edges": 0,
+          "delta_check": 0,
+          "discover_files": 0,
+          "doc_links": 0,
+          "ensure_repo": 0,
+          "gitignore_scan": 12,
+          "go_types": 0,
+          "lexical": 17,
+          "parse": 6,
+          "persist": 17,
+          "resolve_head": 0,
+          "routes": 0,
+          "sort": 0,
+          "walk": 0,
+          "write_sqlite": 17
+        }
       },
-      {
-        "language": "json",
-        "kind": "key",
-        "count": 11
+      "graph": {
+        "files": 3,
+        "symbols": 4,
+        "edges": 2,
+        "raw_symbols": 4,
+        "raw_edges": 63,
+        "communities": 2,
+        "isolated_nodes": 1,
+        "edge_kinds": [
+          {
+            "key": "calls",
+            "count": 52
+          },
+          {
+            "key": "imports",
+            "count": 11
+          }
+        ],
+        "languages": [
+          {
+            "key": "cpp",
+            "count": 4
+          }
+        ]
       },
-      {
-        "language": "markdown",
-        "kind": "section",
-        "count": 10
+      "coverage_facts": 0,
+      "history": [
+        {
+          "snapshot_id": "f09df204-0723-4a3f-94ae-31e6ecac4d95",
+          "commit_sha": "b7c5481c556c3fe98db060207ecaa41a4b9a9abc",
+          "created_at": "2026-06-30T07:42:58Z",
+          "files": 5,
+          "symbols": 15,
+          "edges": 63,
+          "routes": 0,
+          "mode": "full",
+          "duration_ms": 35,
+          "timings_ms": {
+            "build_symbols_edges": 0,
+            "delta_check": 0,
+            "discover_files": 0,
+            "doc_links": 0,
+            "ensure_repo": 0,
+            "gitignore_scan": 12,
+            "go_types": 0,
+            "lexical": 17,
+            "parse": 6,
+            "persist": 17,
+            "resolve_head": 0,
+            "routes": 0,
+            "sort": 0,
+            "walk": 0,
+            "write_sqlite": 17
+          }
+        }
+      ],
+      "history_returned": 1
+    },
+    "edge_breakdown": {
+      "repo_id": "79b3fc7c-3fde-4278-9fda-d6d0d3ca16db",
+      "repo_full_name": "simpleAtomicIntrinsics",
+      "tier": "local",
+      "storage_driver": "sqlite",
+      "latest": {
+        "snapshot_id": "f09df204-0723-4a3f-94ae-31e6ecac4d95",
+        "commit_sha": "b7c5481c556c3fe98db060207ecaa41a4b9a9abc",
+        "created_at": "2026-06-30T07:42:58Z",
+        "files": 5,
+        "symbols": 15,
+        "edges": 63,
+        "routes": 0,
+        "mode": "full",
+        "duration_ms": 35,
+        "timings_ms": {
+          "build_symbols_edges": 0,
+          "delta_check": 0,
+          "discover_files": 0,
+          "doc_links": 0,
+          "ensure_repo": 0,
+          "gitignore_scan": 12,
+          "go_types": 0,
+          "lexical": 17,
+          "parse": 6,
+          "persist": 17,
+          "resolve_head": 0,
+          "routes": 0,
+          "sort": 0,
+          "walk": 0,
+          "write_sqlite": 17
+        }
       },
-      {
-        "language": "text",
-        "kind": "document",
-        "count": 1
-      }
-    ],
-    "edge_breakdown": [
-      {
-        "kind": "calls",
-        "count": 52
+      "graph": {
+        "files": 3,
+        "symbols": 4,
+        "edges": 2,
+        "raw_symbols": 4,
+        "raw_edges": 63,
+        "communities": 2,
+        "isolated_nodes": 1,
+        "edge_kinds": [
+          {
+            "key": "calls",
+            "count": 52
+          },
+          {
+            "key": "imports",
+            "count": 11
+          }
+        ],
+        "languages": [
+          {
+            "key": "cpp",
+            "count": 4
+          }
+        ]
       },
-      {
-        "kind": "imports",
-        "count": 11
-      }
-    ],
+      "coverage_facts": 0,
+      "history": [
+        {
+          "snapshot_id": "f09df204-0723-4a3f-94ae-31e6ecac4d95",
+          "commit_sha": "b7c5481c556c3fe98db060207ecaa41a4b9a9abc",
+          "created_at": "2026-06-30T07:42:58Z",
+          "files": 5,
+          "symbols": 15,
+          "edges": 63,
+          "routes": 0,
+          "mode": "full",
+          "duration_ms": 35,
+          "timings_ms": {
+            "build_symbols_edges": 0,
+            "delta_check": 0,
+            "discover_files": 0,
+            "doc_links": 0,
+            "ensure_repo": 0,
+            "gitignore_scan": 12,
+            "go_types": 0,
+            "lexical": 17,
+            "parse": 6,
+            "persist": 17,
+            "resolve_head": 0,
+            "routes": 0,
+            "sort": 0,
+            "walk": 0,
+            "write_sqlite": 17
+          }
+        }
+      ],
+      "history_returned": 1
+    },
     "cuda_definition_symbols": 3
   },
   "graphify": {
@@ -192,21 +347,21 @@
   },
   "query_warmup": {
     "symbol": "testKernel",
-    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-cuda-samples/atlas.db --format plain --repo simpleAtomicIntrinsics explain testKernel",
+    "atlas_command": "curl -fsS http://127.0.0.1:4310/api/v1/symbols/testKernel/explain?repo_id=simpleAtomicIntrinsics&format=plain",
     "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain testKernel",
     "atlas_returncode": 0,
     "graphify_returncode": 0,
-    "note": "Untimed warm-up for both tools before measured query latency rows."
+    "note": "Untimed warm-up for Atlas warm serve and graphify before measured query latency rows."
   },
   "queries": [
     {
       "symbol": "testKernel",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-cuda-samples/atlas.db --format plain --repo simpleAtomicIntrinsics explain testKernel",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4310/api/v1/symbols/testKernel/explain?repo_id=simpleAtomicIntrinsics&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain testKernel",
-      "atlas_tokens": 11,
+      "atlas_tokens": 2,
       "graphify_tokens": 73,
-      "atlas_ms": 12.634,
+      "atlas_ms": 7.629,
       "graphify_ms": 78.659,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
@@ -224,23 +379,38 @@
         "  Degree:    2",
         "",
         "Connections (2):"
+      ],
+      "atlas_ms_samples": [
+        11.24,
+        9.781,
+        9.876,
+        8.677,
+        7.574,
+        7.56,
+        7.629,
+        7.467,
+        7.651,
+        7.155,
+        7.18,
+        8.077,
+        6.727
       ]
     },
     {
       "symbol": "runTest",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-cuda-samples/atlas.db --format plain --repo simpleAtomicIntrinsics explain runTest",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4310/api/v1/symbols/runTest/explain?repo_id=simpleAtomicIntrinsics&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain runTest",
-      "atlas_tokens": 10,
+      "atlas_tokens": 2,
       "graphify_tokens": 64,
-      "atlas_ms": 13.256,
+      "atlas_ms": 7.174,
       "graphify_ms": 76.893,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "runTest f@simpleAtomicIntrinsics:84 c1 d1"
+        "runTest f@simpleAtomicIntrinsics:84"
       ],
       "graphify_stdout_head": [
         "Node: runTest()",
@@ -251,23 +421,38 @@
         "  Degree:    2",
         "",
         "Connections (2):"
+      ],
+      "atlas_ms_samples": [
+        7.308,
+        6.525,
+        7.547,
+        7.174,
+        7.232,
+        7.48,
+        6.739,
+        7.06,
+        6.953,
+        7.688,
+        6.819,
+        7.281,
+        7.047
       ]
     },
     {
       "symbol": "main",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-cuda-samples/atlas.db --format plain --repo simpleAtomicIntrinsics explain main",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4310/api/v1/symbols/main/explain?repo_id=simpleAtomicIntrinsics&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain main",
-      "atlas_tokens": 9,
+      "atlas_tokens": 2,
       "graphify_tokens": 63,
-      "atlas_ms": 12.683,
+      "atlas_ms": 7.072,
       "graphify_ms": 74.508,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "main f@simpleAtomicIntrinsics:71 d1"
+        "main f@simpleAtomicIntrinsics:71"
       ],
       "graphify_stdout_head": [
         "Node: main()",
@@ -278,7 +463,28 @@
         "  Degree:    2",
         "",
         "Connections (2):"
+      ],
+      "atlas_ms_samples": [
+        6.378,
+        7.202,
+        6.788,
+        7.14,
+        7.134,
+        6.99,
+        7.749,
+        6.704,
+        7.129,
+        6.858,
+        6.665,
+        7.072,
+        7.188
       ]
     }
-  ]
+  ],
+  "atlas_cli": {
+    "version": "v0.1.26-4-gd882e08",
+    "commit": "d882e08",
+    "date": "2026-06-30T07:15:57Z",
+    "measurement_note": "Query rows refreshed from 13-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+  }
 }

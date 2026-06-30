@@ -18,15 +18,16 @@
       "mdBook-specific features",
       "Configuring Renderers"
     ],
-    "target_path": "/tmp/atlas-live-markdown-mdbook/repo/guide/src"
+    "target_path": "/tmp/atlas-live-markdown-mdbook/repo/guide/src",
+    "atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-markdown-mdbook/atlas.db serve --addr 127.0.0.1:4291"
   },
   "atlas": {
-    "cold_wall_seconds": 0.079,
+    "cold_wall_seconds": 0.042,
     "reindex_wall_seconds": 0.034,
     "index": {
-      "repo_id": "c9aee73a-17e3-4d79-8d6c-5d6a8422188d",
+      "repo_id": "f4506439-d467-478f-8fc7-1d8f33eb51f3",
       "repo_full_name": "src",
-      "snapshot_id": "d42c1197-6bd9-4283-a1e8-460919c85224",
+      "snapshot_id": "6bf8a84f-2b78-4d2e-be84-b4e804237c8c",
       "commit_sha": "cb49cc5523e609a731f27dea1af4395a504815a5",
       "indexed_files": 38,
       "symbols": 161,
@@ -42,18 +43,23 @@
         "toml": 1
       },
       "mode": "full",
-      "duration_ms": 54,
+      "duration_ms": 42,
       "timings_ms": {
+        "build_symbols_edges": 0,
         "delta_check": 0,
+        "discover_files": 0,
+        "doc_links": 0,
         "ensure_repo": 0,
+        "gitignore_scan": 10,
         "go_types": 0,
-        "lexical": 34,
-        "parse": 15,
-        "persist": 3,
+        "lexical": 20,
+        "parse": 9,
+        "persist": 20,
         "resolve_head": 0,
         "routes": 0,
         "sort": 0,
-        "walk": 0
+        "walk": 0,
+        "write_sqlite": 20
       }
     },
     "reindex": {
@@ -77,38 +83,188 @@
         "resolve_head": 0
       }
     },
-    "symbol_breakdown": [
-      {
-        "language": "markdown",
-        "kind": "section",
-        "count": 156
+    "symbol_breakdown": {
+      "repo_id": "f4506439-d467-478f-8fc7-1d8f33eb51f3",
+      "repo_full_name": "src",
+      "tier": "local",
+      "storage_driver": "sqlite",
+      "latest": {
+        "snapshot_id": "6bf8a84f-2b78-4d2e-be84-b4e804237c8c",
+        "commit_sha": "cb49cc5523e609a731f27dea1af4395a504815a5",
+        "created_at": "2026-06-30T07:45:18Z",
+        "files": 38,
+        "symbols": 161,
+        "edges": 27,
+        "routes": 0,
+        "mode": "full",
+        "duration_ms": 42,
+        "timings_ms": {
+          "build_symbols_edges": 0,
+          "delta_check": 0,
+          "discover_files": 0,
+          "doc_links": 0,
+          "ensure_repo": 0,
+          "gitignore_scan": 10,
+          "go_types": 0,
+          "lexical": 20,
+          "parse": 9,
+          "persist": 20,
+          "resolve_head": 0,
+          "routes": 0,
+          "sort": 0,
+          "walk": 0,
+          "write_sqlite": 20
+        }
       },
-      {
-        "language": "rust",
-        "kind": "function",
-        "count": 3
+      "graph": {
+        "files": 2,
+        "symbols": 4,
+        "edges": 1,
+        "raw_symbols": 4,
+        "raw_edges": 27,
+        "communities": 3,
+        "isolated_nodes": 2,
+        "edge_kinds": [
+          {
+            "key": "calls",
+            "count": 19
+          },
+          {
+            "key": "imports",
+            "count": 8
+          }
+        ],
+        "languages": [
+          {
+            "key": "rust",
+            "count": 4
+          }
+        ]
       },
-      {
-        "language": "rust",
-        "kind": "type",
-        "count": 1
+      "coverage_facts": 0,
+      "history": [
+        {
+          "snapshot_id": "6bf8a84f-2b78-4d2e-be84-b4e804237c8c",
+          "commit_sha": "cb49cc5523e609a731f27dea1af4395a504815a5",
+          "created_at": "2026-06-30T07:45:18Z",
+          "files": 38,
+          "symbols": 161,
+          "edges": 27,
+          "routes": 0,
+          "mode": "full",
+          "duration_ms": 42,
+          "timings_ms": {
+            "build_symbols_edges": 0,
+            "delta_check": 0,
+            "discover_files": 0,
+            "doc_links": 0,
+            "ensure_repo": 0,
+            "gitignore_scan": 10,
+            "go_types": 0,
+            "lexical": 20,
+            "parse": 9,
+            "persist": 20,
+            "resolve_head": 0,
+            "routes": 0,
+            "sort": 0,
+            "walk": 0,
+            "write_sqlite": 20
+          }
+        }
+      ],
+      "history_returned": 1
+    },
+    "edge_breakdown": {
+      "repo_id": "f4506439-d467-478f-8fc7-1d8f33eb51f3",
+      "repo_full_name": "src",
+      "tier": "local",
+      "storage_driver": "sqlite",
+      "latest": {
+        "snapshot_id": "6bf8a84f-2b78-4d2e-be84-b4e804237c8c",
+        "commit_sha": "cb49cc5523e609a731f27dea1af4395a504815a5",
+        "created_at": "2026-06-30T07:45:18Z",
+        "files": 38,
+        "symbols": 161,
+        "edges": 27,
+        "routes": 0,
+        "mode": "full",
+        "duration_ms": 42,
+        "timings_ms": {
+          "build_symbols_edges": 0,
+          "delta_check": 0,
+          "discover_files": 0,
+          "doc_links": 0,
+          "ensure_repo": 0,
+          "gitignore_scan": 10,
+          "go_types": 0,
+          "lexical": 20,
+          "parse": 9,
+          "persist": 20,
+          "resolve_head": 0,
+          "routes": 0,
+          "sort": 0,
+          "walk": 0,
+          "write_sqlite": 20
+        }
       },
-      {
-        "language": "toml",
-        "kind": "document",
-        "count": 1
-      }
-    ],
-    "edge_breakdown": [
-      {
-        "kind": "calls",
-        "count": 19
+      "graph": {
+        "files": 2,
+        "symbols": 4,
+        "edges": 1,
+        "raw_symbols": 4,
+        "raw_edges": 27,
+        "communities": 3,
+        "isolated_nodes": 2,
+        "edge_kinds": [
+          {
+            "key": "calls",
+            "count": 19
+          },
+          {
+            "key": "imports",
+            "count": 8
+          }
+        ],
+        "languages": [
+          {
+            "key": "rust",
+            "count": 4
+          }
+        ]
       },
-      {
-        "kind": "imports",
-        "count": 8
-      }
-    ],
+      "coverage_facts": 0,
+      "history": [
+        {
+          "snapshot_id": "6bf8a84f-2b78-4d2e-be84-b4e804237c8c",
+          "commit_sha": "cb49cc5523e609a731f27dea1af4395a504815a5",
+          "created_at": "2026-06-30T07:45:18Z",
+          "files": 38,
+          "symbols": 161,
+          "edges": 27,
+          "routes": 0,
+          "mode": "full",
+          "duration_ms": 42,
+          "timings_ms": {
+            "build_symbols_edges": 0,
+            "delta_check": 0,
+            "discover_files": 0,
+            "doc_links": 0,
+            "ensure_repo": 0,
+            "gitignore_scan": 10,
+            "go_types": 0,
+            "lexical": 20,
+            "parse": 9,
+            "persist": 20,
+            "resolve_head": 0,
+            "routes": 0,
+            "sort": 0,
+            "walk": 0,
+            "write_sqlite": 20
+          }
+        }
+      ],
+      "history_returned": 1
+    },
     "markdown_definition_symbols": 156
   },
   "graphify": {
@@ -281,21 +437,21 @@
   },
   "query_warmup": {
     "symbol": "Installation",
-    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-markdown-mdbook/atlas.db --format plain --repo src explain Installation",
+    "atlas_command": "curl -fsS http://127.0.0.1:4291/api/v1/symbols/Installation/explain?repo_id=src&format=plain",
     "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Installation",
     "atlas_returncode": 0,
     "graphify_returncode": 0,
-    "note": "Untimed warm-up for both tools before measured query latency rows."
+    "note": "Untimed warm-up for Atlas warm serve and graphify before measured query latency rows."
   },
   "queries": [
     {
       "symbol": "Installation",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-markdown-mdbook/atlas.db --format plain --repo src explain Installation",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4291/api/v1/symbols/Installation/explain?repo_id=src&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Installation",
-      "atlas_tokens": 8,
+      "atlas_tokens": 2,
       "graphify_tokens": 95,
-      "atlas_ms": 11.915,
+      "atlas_ms": 8.034,
       "graphify_ms": 78.396,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
@@ -313,16 +469,27 @@
         "  Degree:    4",
         "",
         "Connections (4):"
+      ],
+      "atlas_ms_samples": [
+        12.367,
+        9.843,
+        8.581,
+        8.774,
+        7.786,
+        8.034,
+        7.553,
+        7.476,
+        7.457
       ]
     },
     {
       "symbol": "Creating a book",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-markdown-mdbook/atlas.db --format plain --repo src explain Creating a book",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4291/api/v1/symbols/Creating%20a%20book/explain?repo_id=src&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Creating a book",
-      "atlas_tokens": 8,
+      "atlas_tokens": 4,
       "graphify_tokens": 88,
-      "atlas_ms": 11.739,
+      "atlas_ms": 7.021,
       "graphify_ms": 76.825,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
@@ -340,16 +507,27 @@
         "  Degree:    4",
         "",
         "Connections (4):"
+      ],
+      "atlas_ms_samples": [
+        7.438,
+        7.134,
+        6.315,
+        7.021,
+        6.923,
+        7.182,
+        7.518,
+        6.835,
+        7.02
       ]
     },
     {
       "symbol": "The build command",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-markdown-mdbook/atlas.db --format plain --repo src explain The build command",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4291/api/v1/symbols/The%20build%20command/explain?repo_id=src&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain The build command",
-      "atlas_tokens": 7,
+      "atlas_tokens": 4,
       "graphify_tokens": 83,
-      "atlas_ms": 12.123,
+      "atlas_ms": 6.665,
       "graphify_ms": 77.995,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
@@ -367,16 +545,27 @@
         "  Degree:    4",
         "",
         "Connections (4):"
+      ],
+      "atlas_ms_samples": [
+        6.443,
+        6.878,
+        6.968,
+        6.623,
+        7.315,
+        6.485,
+        7.345,
+        6.665,
+        6.606
       ]
     },
     {
       "symbol": "Running `mdbook` in continuous integration",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-markdown-mdbook/atlas.db --format plain --repo src explain Running `mdbook` in continuous integration",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4291/api/v1/symbols/Running%20%60mdbook%60%20in%20continuous%20integration/explain?repo_id=src&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Running `mdbook` in continuous integration",
-      "atlas_tokens": 18,
+      "atlas_tokens": 6,
       "graphify_tokens": 105,
-      "atlas_ms": 11.824,
+      "atlas_ms": 7.138,
       "graphify_ms": 75.329,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
@@ -394,16 +583,27 @@
         "  Degree:    4",
         "",
         "Connections (4):"
+      ],
+      "atlas_ms_samples": [
+        7.874,
+        6.722,
+        7.138,
+        6.656,
+        7.255,
+        7.153,
+        6.961,
+        7.579,
+        6.617
       ]
     },
     {
       "symbol": "mdBook-specific features",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-markdown-mdbook/atlas.db --format plain --repo src explain mdBook-specific features",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4291/api/v1/symbols/mdBook-specific%20features/explain?repo_id=src&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain mdBook-specific features",
-      "atlas_tokens": 9,
+      "atlas_tokens": 3,
       "graphify_tokens": 140,
-      "atlas_ms": 11.798,
+      "atlas_ms": 7.064,
       "graphify_ms": 75.959,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
@@ -421,16 +621,27 @@
         "  Degree:    7",
         "",
         "Connections (7):"
+      ],
+      "atlas_ms_samples": [
+        7.288,
+        6.514,
+        7.312,
+        7.064,
+        7.242,
+        7.238,
+        6.602,
+        6.828,
+        6.735
       ]
     },
     {
       "symbol": "Configuring Renderers",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-markdown-mdbook/atlas.db --format plain --repo src explain Configuring Renderers",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4291/api/v1/symbols/Configuring%20Renderers/explain?repo_id=src&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Configuring Renderers",
-      "atlas_tokens": 9,
+      "atlas_tokens": 3,
       "graphify_tokens": 97,
-      "atlas_ms": 12.256,
+      "atlas_ms": 6.891,
       "graphify_ms": 94.648,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
@@ -448,7 +659,24 @@
         "  Degree:    4",
         "",
         "Connections (4):"
+      ],
+      "atlas_ms_samples": [
+        6.816,
+        7.516,
+        6.448,
+        6.891,
+        6.681,
+        7.231,
+        7.032,
+        6.749,
+        7.132
       ]
     }
-  ]
+  ],
+  "atlas_cli": {
+    "version": "v0.1.26-4-gd882e08",
+    "commit": "d882e08",
+    "date": "2026-06-30T07:15:57Z",
+    "measurement_note": "Query rows refreshed from nine-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+  }
 }

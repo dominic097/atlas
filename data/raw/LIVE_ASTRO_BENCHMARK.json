@@ -18,43 +18,51 @@
       "ThemeIcon",
       "Social"
     ],
-    "target_path": "/tmp/atlas-live-astro-blog-tutorial/repo/src"
+    "target_path": "/tmp/atlas-live-astro-blog-tutorial/repo/src",
+    "atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-astro-blog-tutorial/atlas.db serve --addr 127.0.0.1:4313"
   },
   "atlas": {
-    "cold_wall_seconds": 0.065,
+    "cold_wall_seconds": 0.076,
     "reindex_wall_seconds": 0.034,
     "index": {
-      "repo_id": "677f093a-4f44-42b6-99a1-08f708b21641",
+      "repo_id": "872061f8-0269-4a6c-a8a3-c9ceb917b77b",
       "repo_full_name": "src",
-      "snapshot_id": "6a6315dc-d7dc-4154-a800-b39a8b431cc5",
+      "snapshot_id": "ea31341d-d524-487d-9408-ae4af9995c7b",
       "commit_sha": "0859a3ea85f35325c0a292f9b3131824ef95ee38",
-      "indexed_files": 22,
-      "symbols": 68,
-      "edges": 69,
+      "indexed_files": 46,
+      "symbols": 520,
+      "edges": 68,
       "edge_kinds": {
         "calls": 50,
-        "imports": 19
+        "imports": 18
       },
       "routes": 0,
       "languages": {
         "astro": 14,
         "css": 1,
+        "html": 1,
         "javascript": 3,
-        "markdown": 4
+        "json": 22,
+        "markdown": 5
       },
       "mode": "full",
-      "duration_ms": 39,
+      "duration_ms": 76,
       "timings_ms": {
+        "build_symbols_edges": 0,
         "delta_check": 0,
+        "discover_files": 1,
+        "doc_links": 0,
         "ensure_repo": 0,
+        "gitignore_scan": 12,
         "go_types": 0,
-        "lexical": 23,
-        "parse": 14,
-        "persist": 1,
+        "lexical": 46,
+        "parse": 15,
+        "persist": 46,
         "resolve_head": 0,
         "routes": 0,
         "sort": 0,
-        "walk": 0
+        "walk": 1,
+        "write_sqlite": 46
       }
     },
     "reindex": {
@@ -79,53 +87,196 @@
         "resolve_head": 0
       }
     },
-    "symbol_breakdown": [
-      {
-        "language": "astro",
-        "kind": "component",
-        "count": 31
+    "symbol_breakdown": {
+      "repo_id": "872061f8-0269-4a6c-a8a3-c9ceb917b77b",
+      "repo_full_name": "src",
+      "tier": "local",
+      "storage_driver": "sqlite",
+      "latest": {
+        "snapshot_id": "ea31341d-d524-487d-9408-ae4af9995c7b",
+        "commit_sha": "0859a3ea85f35325c0a292f9b3131824ef95ee38",
+        "created_at": "2026-06-30T07:42:59Z",
+        "files": 46,
+        "symbols": 520,
+        "edges": 68,
+        "routes": 0,
+        "mode": "full",
+        "duration_ms": 76,
+        "timings_ms": {
+          "build_symbols_edges": 0,
+          "delta_check": 0,
+          "discover_files": 1,
+          "doc_links": 0,
+          "ensure_repo": 0,
+          "gitignore_scan": 12,
+          "go_types": 0,
+          "lexical": 46,
+          "parse": 15,
+          "persist": 46,
+          "resolve_head": 0,
+          "routes": 0,
+          "sort": 0,
+          "walk": 1,
+          "write_sqlite": 46
+        }
       },
-      {
-        "language": "astro",
-        "kind": "function",
-        "count": 1
+      "graph": {
+        "files": 17,
+        "symbols": 63,
+        "edges": 1,
+        "raw_symbols": 63,
+        "raw_edges": 68,
+        "communities": 62,
+        "isolated_nodes": 61,
+        "edge_kinds": [
+          {
+            "key": "calls",
+            "count": 50
+          },
+          {
+            "key": "imports",
+            "count": 18
+          }
+        ],
+        "languages": [
+          {
+            "key": "astro",
+            "count": 58
+          },
+          {
+            "key": "javascript",
+            "count": 5
+          }
+        ]
       },
-      {
-        "language": "astro",
-        "kind": "variable",
-        "count": 26
+      "coverage_facts": 0,
+      "history": [
+        {
+          "snapshot_id": "ea31341d-d524-487d-9408-ae4af9995c7b",
+          "commit_sha": "0859a3ea85f35325c0a292f9b3131824ef95ee38",
+          "created_at": "2026-06-30T07:42:59Z",
+          "files": 46,
+          "symbols": 520,
+          "edges": 68,
+          "routes": 0,
+          "mode": "full",
+          "duration_ms": 76,
+          "timings_ms": {
+            "build_symbols_edges": 0,
+            "delta_check": 0,
+            "discover_files": 1,
+            "doc_links": 0,
+            "ensure_repo": 0,
+            "gitignore_scan": 12,
+            "go_types": 0,
+            "lexical": 46,
+            "parse": 15,
+            "persist": 46,
+            "resolve_head": 0,
+            "routes": 0,
+            "sort": 0,
+            "walk": 1,
+            "write_sqlite": 46
+          }
+        }
+      ],
+      "history_returned": 1
+    },
+    "edge_breakdown": {
+      "repo_id": "872061f8-0269-4a6c-a8a3-c9ceb917b77b",
+      "repo_full_name": "src",
+      "tier": "local",
+      "storage_driver": "sqlite",
+      "latest": {
+        "snapshot_id": "ea31341d-d524-487d-9408-ae4af9995c7b",
+        "commit_sha": "0859a3ea85f35325c0a292f9b3131824ef95ee38",
+        "created_at": "2026-06-30T07:42:59Z",
+        "files": 46,
+        "symbols": 520,
+        "edges": 68,
+        "routes": 0,
+        "mode": "full",
+        "duration_ms": 76,
+        "timings_ms": {
+          "build_symbols_edges": 0,
+          "delta_check": 0,
+          "discover_files": 1,
+          "doc_links": 0,
+          "ensure_repo": 0,
+          "gitignore_scan": 12,
+          "go_types": 0,
+          "lexical": 46,
+          "parse": 15,
+          "persist": 46,
+          "resolve_head": 0,
+          "routes": 0,
+          "sort": 0,
+          "walk": 1,
+          "write_sqlite": 46
+        }
       },
-      {
-        "language": "javascript",
-        "kind": "constant",
-        "count": 2
+      "graph": {
+        "files": 17,
+        "symbols": 63,
+        "edges": 1,
+        "raw_symbols": 63,
+        "raw_edges": 68,
+        "communities": 62,
+        "isolated_nodes": 61,
+        "edge_kinds": [
+          {
+            "key": "calls",
+            "count": 50
+          },
+          {
+            "key": "imports",
+            "count": 18
+          }
+        ],
+        "languages": [
+          {
+            "key": "astro",
+            "count": 58
+          },
+          {
+            "key": "javascript",
+            "count": 5
+          }
+        ]
       },
-      {
-        "language": "javascript",
-        "kind": "function",
-        "count": 3
-      },
-      {
-        "language": "markdown",
-        "kind": "document",
-        "count": 3
-      },
-      {
-        "language": "markdown",
-        "kind": "section",
-        "count": 2
-      }
-    ],
-    "edge_breakdown": [
-      {
-        "kind": "calls",
-        "count": 50
-      },
-      {
-        "kind": "imports",
-        "count": 19
-      }
-    ],
+      "coverage_facts": 0,
+      "history": [
+        {
+          "snapshot_id": "ea31341d-d524-487d-9408-ae4af9995c7b",
+          "commit_sha": "0859a3ea85f35325c0a292f9b3131824ef95ee38",
+          "created_at": "2026-06-30T07:42:59Z",
+          "files": 46,
+          "symbols": 520,
+          "edges": 68,
+          "routes": 0,
+          "mode": "full",
+          "duration_ms": 76,
+          "timings_ms": {
+            "build_symbols_edges": 0,
+            "delta_check": 0,
+            "discover_files": 1,
+            "doc_links": 0,
+            "ensure_repo": 0,
+            "gitignore_scan": 12,
+            "go_types": 0,
+            "lexical": 46,
+            "parse": 15,
+            "persist": 46,
+            "resolve_head": 0,
+            "routes": 0,
+            "sort": 0,
+            "walk": 1,
+            "write_sqlite": 46
+          }
+        }
+      ],
+      "history_returned": 1
+    },
     "astro_definition_symbols": 58
   },
   "graphify": {
@@ -350,28 +501,28 @@
   },
   "query_warmup": {
     "symbol": "BaseLayout",
-    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-astro-blog-tutorial/atlas.db --format plain --repo src explain BaseLayout",
+    "atlas_command": "curl -fsS http://127.0.0.1:4313/api/v1/symbols/BaseLayout/explain?repo_id=src&format=plain",
     "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain BaseLayout",
     "atlas_returncode": 0,
     "graphify_returncode": 0,
-    "note": "Untimed warm-up for both tools before measured query latency rows."
+    "note": "Untimed warm-up for Atlas warm serve and graphify before measured query latency rows."
   },
   "queries": [
     {
       "symbol": "BaseLayout",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-astro-blog-tutorial/atlas.db --format plain --repo src explain BaseLayout",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4313/api/v1/symbols/BaseLayout/explain?repo_id=src&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain BaseLayout",
-      "atlas_tokens": 9,
+      "atlas_tokens": 2,
       "graphify_tokens": 171,
-      "atlas_ms": 12.712,
+      "atlas_ms": 7.711,
       "graphify_ms": 77.182,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "BaseLayout c@BaseLayout.astro:1 df7"
+        "BaseLayout c@BaseLayout.astro:1"
       ],
       "graphify_stdout_head": [
         "Node: ../../layouts/BaseLayout.astro",
@@ -382,23 +533,38 @@
         "  Degree:    10",
         "",
         "Connections (10):"
+      ],
+      "atlas_ms_samples": [
+        11.733,
+        9.796,
+        8.793,
+        7.949,
+        7.711,
+        7.855,
+        7.009,
+        7.767,
+        7.16,
+        7.317,
+        6.628,
+        7.627,
+        7.087
       ]
     },
     {
       "symbol": "BlogPost",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-astro-blog-tutorial/atlas.db --format plain --repo src explain BlogPost",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4313/api/v1/symbols/BlogPost/explain?repo_id=src&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain BlogPost",
-      "atlas_tokens": 8,
+      "atlas_tokens": 2,
       "graphify_tokens": 67,
-      "atlas_ms": 12.384,
+      "atlas_ms": 7.325,
       "graphify_ms": 77.095,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "BlogPost c@BlogPost.astro:1 df3"
+        "BlogPost c@BlogPost.astro:1"
       ],
       "graphify_stdout_head": [
         "Node: ../../components/BlogPost.astro",
@@ -409,43 +575,73 @@
         "  Degree:    2",
         "",
         "Connections (2):"
+      ],
+      "atlas_ms_samples": [
+        7.526,
+        7.588,
+        7.069,
+        7.367,
+        6.642,
+        7.353,
+        6.835,
+        7.327,
+        7.477,
+        6.627,
+        7.325,
+        6.643,
+        7.225
       ]
     },
     {
       "symbol": "pageTitle",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-astro-blog-tutorial/atlas.db --format plain --repo src explain pageTitle",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4313/api/v1/symbols/pageTitle/explain?repo_id=src&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain pageTitle",
-      "atlas_tokens": 8,
+      "atlas_tokens": 2,
       "graphify_tokens": 9,
-      "atlas_ms": 11.686,
+      "atlas_ms": 7.062,
       "graphify_ms": 75.617,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": true,
       "atlas_stdout_head": [
-        "pageTitle v@BaseLayout.astro:5 df5"
+        "pageTitle v@BaseLayout.astro:5"
       ],
       "graphify_stdout_head": [
         "No node matching 'pageTitle' found."
+      ],
+      "atlas_ms_samples": [
+        7.382,
+        7.127,
+        7.062,
+        6.515,
+        6.948,
+        6.662,
+        7.318,
+        7.037,
+        7.206,
+        7.898,
+        6.75,
+        7.112,
+        6.576
       ]
     },
     {
       "symbol": "getStaticPaths",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-astro-blog-tutorial/atlas.db --format plain --repo src explain getStaticPaths",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4313/api/v1/symbols/getStaticPaths/explain?repo_id=src&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain getStaticPaths",
-      "atlas_tokens": 7,
+      "atlas_tokens": 2,
       "graphify_tokens": 51,
-      "atlas_ms": 11.897,
+      "atlas_ms": 6.958,
       "graphify_ms": 75.751,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "getStaticPaths f@[tag].astro:4"
+        "getStaticPaths f@[tag].astro:5"
       ],
       "graphify_stdout_head": [
         "Node: getStaticPaths()",
@@ -456,23 +652,38 @@
         "  Degree:    1",
         "",
         "Connections (1):"
+      ],
+      "atlas_ms_samples": [
+        7.034,
+        6.785,
+        6.958,
+        7.29,
+        7.131,
+        6.978,
+        6.94,
+        6.933,
+        7.122,
+        6.679,
+        7.172,
+        6.752,
+        6.915
       ]
     },
     {
       "symbol": "ThemeIcon",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-astro-blog-tutorial/atlas.db --format plain --repo src explain ThemeIcon",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4313/api/v1/symbols/ThemeIcon/explain?repo_id=src&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ThemeIcon",
-      "atlas_tokens": 8,
+      "atlas_tokens": 2,
       "graphify_tokens": 68,
-      "atlas_ms": 12.253,
+      "atlas_ms": 7.104,
       "graphify_ms": 77.217,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "ThemeIcon c@Header.astro:10 df2"
+        "ThemeIcon c@Header.astro:10"
       ],
       "graphify_stdout_head": [
         "Node: ThemeIcon.astro",
@@ -483,23 +694,38 @@
         "  Degree:    2",
         "",
         "Connections (2):"
+      ],
+      "atlas_ms_samples": [
+        6.984,
+        7.154,
+        7.316,
+        6.576,
+        7.109,
+        7.028,
+        7.212,
+        6.944,
+        7.104,
+        7.067,
+        6.791,
+        7.688,
+        7.33
       ]
     },
     {
       "symbol": "Social",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-astro-blog-tutorial/atlas.db --format plain --repo src explain Social",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4313/api/v1/symbols/Social/explain?repo_id=src&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Social",
-      "atlas_tokens": 7,
+      "atlas_tokens": 2,
       "graphify_tokens": 54,
-      "atlas_ms": 12.015,
+      "atlas_ms": 7.224,
       "graphify_ms": 76.11,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Social c@Footer.astro:14 df4"
+        "Social c@Footer.astro:14"
       ],
       "graphify_stdout_head": [
         "Node: Social.astro",
@@ -510,7 +736,28 @@
         "  Degree:    1",
         "",
         "Connections (1):"
+      ],
+      "atlas_ms_samples": [
+        7.662,
+        6.889,
+        6.927,
+        7.954,
+        8.445,
+        7.991,
+        6.978,
+        7.206,
+        6.815,
+        7.464,
+        6.991,
+        7.224,
+        7.469
       ]
     }
-  ]
+  ],
+  "atlas_cli": {
+    "version": "v0.1.26-4-gd882e08",
+    "commit": "d882e08",
+    "date": "2026-06-30T07:15:57Z",
+    "measurement_note": "Query rows refreshed from 13-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+  }
 }

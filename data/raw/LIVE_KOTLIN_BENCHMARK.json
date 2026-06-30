@@ -17,40 +17,48 @@
       "HttpUrl",
       "Headers"
     ],
-    "target_path": "/tmp/atlas-live-kotlin-okhttp/repo/okhttp/src/commonJvmAndroid/kotlin"
+    "target_path": "/tmp/atlas-live-kotlin-okhttp/repo/okhttp/src/commonJvmAndroid/kotlin",
+    "atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-kotlin-okhttp/atlas.db serve --addr 127.0.0.1:4293"
   },
   "atlas": {
-    "cold_wall_seconds": 0.596,
+    "cold_wall_seconds": 1.636,
     "reindex_wall_seconds": 0.024,
     "index": {
-      "repo_id": "0e9aa060-e6ba-42d6-bd25-13124ae891c0",
+      "repo_id": "907cc614-89ca-4aa8-b2ab-c70d550b32a2",
       "repo_full_name": "kotlin",
-      "snapshot_id": "14d6d251-99ae-4978-b6df-7b097cdce7bf",
+      "snapshot_id": "122d4796-a15f-42c2-a249-9306be634afb",
       "commit_sha": "0cadfa2997513d20bf88ca530c963a1266f17af9",
-      "indexed_files": 138,
-      "symbols": 3912,
-      "edges": 7554,
+      "indexed_files": 279,
+      "symbols": 7848,
+      "edges": 7504,
       "edge_kinds": {
-        "calls": 6335,
+        "calls": 6285,
         "imports": 1219
       },
       "routes": 0,
       "languages": {
-        "kotlin": 138
+        "json": 140,
+        "kotlin": 138,
+        "markdown": 1
       },
       "mode": "full",
-      "duration_ms": 565,
+      "duration_ms": 1636,
       "timings_ms": {
+        "build_symbols_edges": 2,
         "delta_check": 0,
-        "ensure_repo": 1,
+        "discover_files": 3,
+        "doc_links": 0,
+        "ensure_repo": 0,
+        "gitignore_scan": 12,
         "go_types": 0,
-        "lexical": 365,
-        "parse": 47,
-        "persist": 141,
+        "lexical": 1530,
+        "parse": 86,
+        "persist": 1530,
         "resolve_head": 0,
         "routes": 0,
-        "sort": 2,
-        "walk": 7
+        "sort": 1,
+        "walk": 3,
+        "write_sqlite": 1530
       }
     },
     "reindex": {
@@ -72,33 +80,188 @@
         "resolve_head": 0
       }
     },
-    "symbol_breakdown": [
-      {
-        "language": "kotlin",
-        "kind": "function",
-        "count": 1554
+    "symbol_breakdown": {
+      "repo_id": "907cc614-89ca-4aa8-b2ab-c70d550b32a2",
+      "repo_full_name": "kotlin",
+      "tier": "local",
+      "storage_driver": "sqlite",
+      "latest": {
+        "snapshot_id": "122d4796-a15f-42c2-a249-9306be634afb",
+        "commit_sha": "0cadfa2997513d20bf88ca530c963a1266f17af9",
+        "created_at": "2026-06-30T07:45:21Z",
+        "files": 279,
+        "symbols": 7848,
+        "edges": 7504,
+        "routes": 0,
+        "mode": "full",
+        "duration_ms": 1636,
+        "timings_ms": {
+          "build_symbols_edges": 2,
+          "delta_check": 0,
+          "discover_files": 3,
+          "doc_links": 0,
+          "ensure_repo": 0,
+          "gitignore_scan": 12,
+          "go_types": 0,
+          "lexical": 1530,
+          "parse": 86,
+          "persist": 1530,
+          "resolve_head": 0,
+          "routes": 0,
+          "sort": 1,
+          "walk": 3,
+          "write_sqlite": 1530
+        }
       },
-      {
-        "language": "kotlin",
-        "kind": "type",
-        "count": 172
+      "graph": {
+        "files": 138,
+        "symbols": 3901,
+        "edges": 9035,
+        "raw_symbols": 3901,
+        "raw_edges": 7504,
+        "communities": 1589,
+        "isolated_nodes": 1275,
+        "edge_kinds": [
+          {
+            "key": "calls",
+            "count": 6285
+          },
+          {
+            "key": "imports",
+            "count": 1219
+          }
+        ],
+        "languages": [
+          {
+            "key": "kotlin",
+            "count": 3901
+          }
+        ]
       },
-      {
-        "language": "kotlin",
-        "kind": "variable",
-        "count": 2186
-      }
-    ],
-    "edge_breakdown": [
-      {
-        "kind": "calls",
-        "count": 6335
+      "coverage_facts": 0,
+      "history": [
+        {
+          "snapshot_id": "122d4796-a15f-42c2-a249-9306be634afb",
+          "commit_sha": "0cadfa2997513d20bf88ca530c963a1266f17af9",
+          "created_at": "2026-06-30T07:45:21Z",
+          "files": 279,
+          "symbols": 7848,
+          "edges": 7504,
+          "routes": 0,
+          "mode": "full",
+          "duration_ms": 1636,
+          "timings_ms": {
+            "build_symbols_edges": 2,
+            "delta_check": 0,
+            "discover_files": 3,
+            "doc_links": 0,
+            "ensure_repo": 0,
+            "gitignore_scan": 12,
+            "go_types": 0,
+            "lexical": 1530,
+            "parse": 86,
+            "persist": 1530,
+            "resolve_head": 0,
+            "routes": 0,
+            "sort": 1,
+            "walk": 3,
+            "write_sqlite": 1530
+          }
+        }
+      ],
+      "history_returned": 1
+    },
+    "edge_breakdown": {
+      "repo_id": "907cc614-89ca-4aa8-b2ab-c70d550b32a2",
+      "repo_full_name": "kotlin",
+      "tier": "local",
+      "storage_driver": "sqlite",
+      "latest": {
+        "snapshot_id": "122d4796-a15f-42c2-a249-9306be634afb",
+        "commit_sha": "0cadfa2997513d20bf88ca530c963a1266f17af9",
+        "created_at": "2026-06-30T07:45:21Z",
+        "files": 279,
+        "symbols": 7848,
+        "edges": 7504,
+        "routes": 0,
+        "mode": "full",
+        "duration_ms": 1636,
+        "timings_ms": {
+          "build_symbols_edges": 2,
+          "delta_check": 0,
+          "discover_files": 3,
+          "doc_links": 0,
+          "ensure_repo": 0,
+          "gitignore_scan": 12,
+          "go_types": 0,
+          "lexical": 1530,
+          "parse": 86,
+          "persist": 1530,
+          "resolve_head": 0,
+          "routes": 0,
+          "sort": 1,
+          "walk": 3,
+          "write_sqlite": 1530
+        }
       },
-      {
-        "kind": "imports",
-        "count": 1219
-      }
-    ],
+      "graph": {
+        "files": 138,
+        "symbols": 3901,
+        "edges": 9035,
+        "raw_symbols": 3901,
+        "raw_edges": 7504,
+        "communities": 1589,
+        "isolated_nodes": 1275,
+        "edge_kinds": [
+          {
+            "key": "calls",
+            "count": 6285
+          },
+          {
+            "key": "imports",
+            "count": 1219
+          }
+        ],
+        "languages": [
+          {
+            "key": "kotlin",
+            "count": 3901
+          }
+        ]
+      },
+      "coverage_facts": 0,
+      "history": [
+        {
+          "snapshot_id": "122d4796-a15f-42c2-a249-9306be634afb",
+          "commit_sha": "0cadfa2997513d20bf88ca530c963a1266f17af9",
+          "created_at": "2026-06-30T07:45:21Z",
+          "files": 279,
+          "symbols": 7848,
+          "edges": 7504,
+          "routes": 0,
+          "mode": "full",
+          "duration_ms": 1636,
+          "timings_ms": {
+            "build_symbols_edges": 2,
+            "delta_check": 0,
+            "discover_files": 3,
+            "doc_links": 0,
+            "ensure_repo": 0,
+            "gitignore_scan": 12,
+            "go_types": 0,
+            "lexical": 1530,
+            "parse": 86,
+            "persist": 1530,
+            "resolve_head": 0,
+            "routes": 0,
+            "sort": 1,
+            "walk": 3,
+            "write_sqlite": 1530
+          }
+        }
+      ],
+      "history_returned": 1
+    },
     "kotlin_definition_symbols": 3912
   },
   "graphify": {
@@ -184,28 +347,28 @@
   },
   "query_warmup": {
     "symbol": "OkHttpClient",
-    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-kotlin-okhttp/atlas.db --format plain --repo kotlin explain OkHttpClient",
+    "atlas_command": "curl -fsS http://127.0.0.1:4293/api/v1/symbols/OkHttpClient/explain?repo_id=kotlin&format=plain",
     "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain OkHttpClient",
     "atlas_returncode": 0,
     "graphify_returncode": 0,
-    "note": "Untimed warm-up for both tools before measured query latency rows."
+    "note": "Untimed warm-up for Atlas warm serve and graphify before measured query latency rows."
   },
   "queries": [
     {
       "symbol": "OkHttpClient",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-kotlin-okhttp/atlas.db --format plain --repo kotlin explain OkHttpClient",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4293/api/v1/symbols/OkHttpClient/explain?repo_id=kotlin&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain OkHttpClient",
-      "atlas_tokens": 8,
+      "atlas_tokens": 2,
       "graphify_tokens": 255,
-      "atlas_ms": 15.313,
+      "atlas_ms": 10.362,
       "graphify_ms": 104.149,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "OkHttpClient t@OkHttpClient:132 c1"
+        "OkHttpClient t@OkHttpClient:132"
       ],
       "graphify_stdout_head": [
         "Node: OkHttpClient",
@@ -216,23 +379,34 @@
         "  Degree:    62",
         "",
         "Connections (62):"
+      ],
+      "atlas_ms_samples": [
+        12.427,
+        11.884,
+        11.046,
+        10.944,
+        10.362,
+        9.341,
+        9.97,
+        8.219,
+        7.807
       ]
     },
     {
       "symbol": "Request",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-kotlin-okhttp/atlas.db --format plain --repo kotlin explain Request",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4293/api/v1/symbols/Request/explain?repo_id=kotlin&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Request",
-      "atlas_tokens": 6,
+      "atlas_tokens": 2,
       "graphify_tokens": 56,
-      "atlas_ms": 14.589,
+      "atlas_ms": 7.469,
       "graphify_ms": 103.731,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Request t@Request:34 c3"
+        "Request t@Request:34"
       ],
       "graphify_stdout_head": [
         "Node: .request()",
@@ -243,23 +417,34 @@
         "  Degree:    2",
         "",
         "Connections (2):"
+      ],
+      "atlas_ms_samples": [
+        7.895,
+        7.735,
+        7.469,
+        7.506,
+        8.202,
+        7.046,
+        6.943,
+        7.367,
+        7.362
       ]
     },
     {
       "symbol": "Response",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-kotlin-okhttp/atlas.db --format plain --repo kotlin explain Response",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4293/api/v1/symbols/Response/explain?repo_id=kotlin&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Response",
-      "atlas_tokens": 6,
+      "atlas_tokens": 2,
       "graphify_tokens": 97,
-      "atlas_ms": 15.899,
+      "atlas_ms": 7.091,
       "graphify_ms": 105.045,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Response t@Response:41 c1"
+        "Response t@Response:41"
       ],
       "graphify_stdout_head": [
         "Node: .response()",
@@ -270,23 +455,34 @@
         "  Degree:    6",
         "",
         "Connections (6):"
+      ],
+      "atlas_ms_samples": [
+        7.048,
+        6.908,
+        7.561,
+        7.091,
+        7.438,
+        6.733,
+        7.43,
+        6.885,
+        7.196
       ]
     },
     {
       "symbol": "HttpUrl",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-kotlin-okhttp/atlas.db --format plain --repo kotlin explain HttpUrl",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4293/api/v1/symbols/HttpUrl/explain?repo_id=kotlin&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain HttpUrl",
-      "atlas_tokens": 7,
+      "atlas_tokens": 2,
       "graphify_tokens": 239,
-      "atlas_ms": 15.467,
+      "atlas_ms": 7.102,
       "graphify_ms": 102.528,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "HttpUrl t@HttpUrl:294 c1 d5"
+        "HttpUrl t@HttpUrl:294"
       ],
       "graphify_stdout_head": [
         "Node: HttpUrl",
@@ -297,23 +493,34 @@
         "  Degree:    80",
         "",
         "Connections (80):"
+      ],
+      "atlas_ms_samples": [
+        7.267,
+        6.625,
+        7.294,
+        6.675,
+        7.047,
+        7.102,
+        7.331,
+        7.674,
+        6.707
       ]
     },
     {
       "symbol": "Headers",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-kotlin-okhttp/atlas.db --format plain --repo kotlin explain Headers",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4293/api/v1/symbols/Headers/explain?repo_id=kotlin&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Headers",
-      "atlas_tokens": 6,
+      "atlas_tokens": 2,
       "graphify_tokens": 246,
-      "atlas_ms": 14.824,
+      "atlas_ms": 7.302,
       "graphify_ms": 103.337,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Headers t@Headers:66 c3"
+        "Headers t@Headers:65"
       ],
       "graphify_stdout_head": [
         "Node: Headers",
@@ -324,7 +531,24 @@
         "  Degree:    68",
         "",
         "Connections (68):"
+      ],
+      "atlas_ms_samples": [
+        7.164,
+        7.302,
+        7.717,
+        7.071,
+        7.239,
+        7.466,
+        7.472,
+        7.796,
+        6.804
       ]
     }
-  ]
+  ],
+  "atlas_cli": {
+    "version": "v0.1.26-4-gd882e08",
+    "commit": "d882e08",
+    "date": "2026-06-30T07:15:57Z",
+    "measurement_note": "Query rows refreshed from nine-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+  }
 }

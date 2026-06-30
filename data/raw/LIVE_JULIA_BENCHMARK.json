@@ -18,40 +18,49 @@
       "json",
       "LazyValue"
     ],
-    "target_path": "/tmp/atlas-live-julia-json/repo/src"
+    "target_path": "/tmp/atlas-live-julia-json/repo/src",
+    "atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-julia-json/atlas.db serve --addr 127.0.0.1:4314"
   },
   "atlas": {
-    "cold_wall_seconds": 0.146,
+    "cold_wall_seconds": 0.114,
     "reindex_wall_seconds": 0.024,
     "index": {
-      "repo_id": "db5fb19b-b77f-467f-80fd-4f7a88255e0c",
+      "repo_id": "b7f8da4c-2a61-44ee-99e5-8c7362924478",
       "repo_full_name": "src",
-      "snapshot_id": "fcf5a61f-e3b2-4c9e-aecd-d19fdc3c02ae",
+      "snapshot_id": "5c2f31d2-3dda-455d-8c26-f7832d7326b9",
       "commit_sha": "e5ef310dece16746843753e4c3b44e868b917b64",
-      "indexed_files": 6,
-      "symbols": 310,
-      "edges": 1047,
+      "indexed_files": 18,
+      "symbols": 481,
+      "edges": 1049,
       "edge_kinds": {
         "calls": 1039,
-        "imports": 8
+        "imports": 10
       },
       "routes": 0,
       "languages": {
-        "julia": 6
+        "html": 1,
+        "json": 10,
+        "julia": 6,
+        "markdown": 1
       },
       "mode": "full",
-      "duration_ms": 102,
+      "duration_ms": 114,
       "timings_ms": {
+        "build_symbols_edges": 0,
         "delta_check": 0,
-        "ensure_repo": 2,
+        "discover_files": 0,
+        "doc_links": 0,
+        "ensure_repo": 0,
+        "gitignore_scan": 19,
         "go_types": 0,
-        "lexical": 47,
-        "parse": 35,
-        "persist": 16,
+        "lexical": 65,
+        "parse": 27,
+        "persist": 65,
         "resolve_head": 0,
         "routes": 0,
         "sort": 0,
-        "walk": 0
+        "walk": 0,
+        "write_sqlite": 65
       }
     },
     "reindex": {
@@ -73,43 +82,188 @@
         "resolve_head": 0
       }
     },
-    "symbol_breakdown": [
-      {
-        "language": "julia",
-        "kind": "constant",
-        "count": 26
+    "symbol_breakdown": {
+      "repo_id": "b7f8da4c-2a61-44ee-99e5-8c7362924478",
+      "repo_full_name": "src",
+      "tier": "local",
+      "storage_driver": "sqlite",
+      "latest": {
+        "snapshot_id": "5c2f31d2-3dda-455d-8c26-f7832d7326b9",
+        "commit_sha": "e5ef310dece16746843753e4c3b44e868b917b64",
+        "created_at": "2026-06-30T07:41:34Z",
+        "files": 18,
+        "symbols": 481,
+        "edges": 1049,
+        "routes": 0,
+        "mode": "full",
+        "duration_ms": 114,
+        "timings_ms": {
+          "build_symbols_edges": 0,
+          "delta_check": 0,
+          "discover_files": 0,
+          "doc_links": 0,
+          "ensure_repo": 0,
+          "gitignore_scan": 19,
+          "go_types": 0,
+          "lexical": 65,
+          "parse": 27,
+          "persist": 65,
+          "resolve_head": 0,
+          "routes": 0,
+          "sort": 0,
+          "walk": 0,
+          "write_sqlite": 65
+        }
       },
-      {
-        "language": "julia",
-        "kind": "function",
-        "count": 255
+      "graph": {
+        "files": 6,
+        "symbols": 310,
+        "edges": 459,
+        "raw_symbols": 310,
+        "raw_edges": 1049,
+        "communities": 115,
+        "isolated_nodes": 89,
+        "edge_kinds": [
+          {
+            "key": "calls",
+            "count": 1039
+          },
+          {
+            "key": "imports",
+            "count": 10
+          }
+        ],
+        "languages": [
+          {
+            "key": "julia",
+            "count": 310
+          }
+        ]
       },
-      {
-        "language": "julia",
-        "kind": "macro",
-        "count": 6
+      "coverage_facts": 0,
+      "history": [
+        {
+          "snapshot_id": "5c2f31d2-3dda-455d-8c26-f7832d7326b9",
+          "commit_sha": "e5ef310dece16746843753e4c3b44e868b917b64",
+          "created_at": "2026-06-30T07:41:34Z",
+          "files": 18,
+          "symbols": 481,
+          "edges": 1049,
+          "routes": 0,
+          "mode": "full",
+          "duration_ms": 114,
+          "timings_ms": {
+            "build_symbols_edges": 0,
+            "delta_check": 0,
+            "discover_files": 0,
+            "doc_links": 0,
+            "ensure_repo": 0,
+            "gitignore_scan": 19,
+            "go_types": 0,
+            "lexical": 65,
+            "parse": 27,
+            "persist": 65,
+            "resolve_head": 0,
+            "routes": 0,
+            "sort": 0,
+            "walk": 0,
+            "write_sqlite": 65
+          }
+        }
+      ],
+      "history_returned": 1
+    },
+    "edge_breakdown": {
+      "repo_id": "b7f8da4c-2a61-44ee-99e5-8c7362924478",
+      "repo_full_name": "src",
+      "tier": "local",
+      "storage_driver": "sqlite",
+      "latest": {
+        "snapshot_id": "5c2f31d2-3dda-455d-8c26-f7832d7326b9",
+        "commit_sha": "e5ef310dece16746843753e4c3b44e868b917b64",
+        "created_at": "2026-06-30T07:41:34Z",
+        "files": 18,
+        "symbols": 481,
+        "edges": 1049,
+        "routes": 0,
+        "mode": "full",
+        "duration_ms": 114,
+        "timings_ms": {
+          "build_symbols_edges": 0,
+          "delta_check": 0,
+          "discover_files": 0,
+          "doc_links": 0,
+          "ensure_repo": 0,
+          "gitignore_scan": 19,
+          "go_types": 0,
+          "lexical": 65,
+          "parse": 27,
+          "persist": 65,
+          "resolve_head": 0,
+          "routes": 0,
+          "sort": 0,
+          "walk": 0,
+          "write_sqlite": 65
+        }
       },
-      {
-        "language": "julia",
-        "kind": "module",
-        "count": 2
+      "graph": {
+        "files": 6,
+        "symbols": 310,
+        "edges": 459,
+        "raw_symbols": 310,
+        "raw_edges": 1049,
+        "communities": 115,
+        "isolated_nodes": 89,
+        "edge_kinds": [
+          {
+            "key": "calls",
+            "count": 1039
+          },
+          {
+            "key": "imports",
+            "count": 10
+          }
+        ],
+        "languages": [
+          {
+            "key": "julia",
+            "count": 310
+          }
+        ]
       },
-      {
-        "language": "julia",
-        "kind": "type",
-        "count": 21
-      }
-    ],
-    "edge_breakdown": [
-      {
-        "kind": "calls",
-        "count": 1039
-      },
-      {
-        "kind": "imports",
-        "count": 8
-      }
-    ],
+      "coverage_facts": 0,
+      "history": [
+        {
+          "snapshot_id": "5c2f31d2-3dda-455d-8c26-f7832d7326b9",
+          "commit_sha": "e5ef310dece16746843753e4c3b44e868b917b64",
+          "created_at": "2026-06-30T07:41:34Z",
+          "files": 18,
+          "symbols": 481,
+          "edges": 1049,
+          "routes": 0,
+          "mode": "full",
+          "duration_ms": 114,
+          "timings_ms": {
+            "build_symbols_edges": 0,
+            "delta_check": 0,
+            "discover_files": 0,
+            "doc_links": 0,
+            "ensure_repo": 0,
+            "gitignore_scan": 19,
+            "go_types": 0,
+            "lexical": 65,
+            "parse": 27,
+            "persist": 65,
+            "resolve_head": 0,
+            "routes": 0,
+            "sort": 0,
+            "walk": 0,
+            "write_sqlite": 65
+          }
+        }
+      ],
+      "history_returned": 1
+    },
     "julia_definition_symbols": 310
   },
   "graphify": {
@@ -186,28 +340,28 @@
   },
   "query_warmup": {
     "symbol": "JSON",
-    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-julia-json/atlas.db --format plain --repo src explain JSON",
+    "atlas_command": "curl -fsS http://127.0.0.1:4314/api/v1/symbols/JSON/explain?repo_id=src&format=plain",
     "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain JSON",
     "atlas_returncode": 0,
     "graphify_returncode": 0,
-    "note": "Untimed warm-up for both tools before measured query latency rows."
+    "note": "Untimed warm-up for Atlas warm serve and graphify before measured query latency rows."
   },
   "queries": [
     {
       "symbol": "JSON",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-julia-json/atlas.db --format plain --repo src explain JSON",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4314/api/v1/symbols/JSON/explain?repo_id=src&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain JSON",
-      "atlas_tokens": 3,
+      "atlas_tokens": 2,
       "graphify_tokens": 38,
-      "atlas_ms": 11.642,
+      "atlas_ms": 7.528,
       "graphify_ms": 74.514,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "JSON m@JSON:1"
+        "JSON p@JSON:1"
       ],
       "graphify_stdout_head": [
         "Node: JSON.jl",
@@ -218,23 +372,38 @@
         "  Degree:    1",
         "",
         "Connections (1):"
+      ],
+      "atlas_ms_samples": [
+        12.061,
+        10.002,
+        8.974,
+        8.805,
+        7.822,
+        7.528,
+        7.378,
+        7.637,
+        7.514,
+        7.091,
+        7.225,
+        7.158,
+        7.114
       ]
     },
     {
       "symbol": "JSONText",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-julia-json/atlas.db --format plain --repo src explain JSONText",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4314/api/v1/symbols/JSONText/explain?repo_id=src&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain JSONText",
-      "atlas_tokens": 6,
+      "atlas_tokens": 2,
       "graphify_tokens": 51,
-      "atlas_ms": 12.032,
+      "atlas_ms": 7.022,
       "graphify_ms": 73.121,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "JSONText t@JSON:84 c3 d1"
+        "JSONText t@JSON:84"
       ],
       "graphify_stdout_head": [
         "Node: JSONText",
@@ -245,23 +414,38 @@
         "  Degree:    2",
         "",
         "Connections (2):"
+      ],
+      "atlas_ms_samples": [
+        7.453,
+        6.889,
+        7.17,
+        7.261,
+        7.092,
+        6.519,
+        6.994,
+        6.792,
+        7.006,
+        7.542,
+        6.456,
+        7.022,
+        7.358
       ]
     },
     {
       "symbol": "Object",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-julia-json/atlas.db --format plain --repo src explain Object",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4314/api/v1/symbols/Object/explain?repo_id=src&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Object",
-      "atlas_tokens": 7,
+      "atlas_tokens": 2,
       "graphify_tokens": 75,
-      "atlas_ms": 11.988,
+      "atlas_ms": 7.055,
       "graphify_ms": 72.949,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Object t@object:17 df11 c1 d1"
+        "Object t@object:17"
       ],
       "graphify_stdout_head": [
         "Node: object.jl",
@@ -272,23 +456,38 @@
         "  Degree:    5",
         "",
         "Connections (5):"
+      ],
+      "atlas_ms_samples": [
+        7.335,
+        6.808,
+        6.762,
+        7.125,
+        6.835,
+        7.055,
+        6.735,
+        7.51,
+        7.146,
+        6.985,
+        8.194,
+        6.423,
+        7.314
       ]
     },
     {
       "symbol": "parse",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-julia-json/atlas.db --format plain --repo src explain parse",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4314/api/v1/symbols/parse/explain?repo_id=src&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain parse",
-      "atlas_tokens": 7,
+      "atlas_tokens": 2,
       "graphify_tokens": 167,
-      "atlas_ms": 11.946,
+      "atlas_ms": 7.081,
       "graphify_ms": 73.814,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "parse f@parse:148 df4 c7 d3"
+        "parse f@parse:148"
       ],
       "graphify_stdout_head": [
         "Node: parse.jl",
@@ -299,23 +498,38 @@
         "  Degree:    13",
         "",
         "Connections (13):"
+      ],
+      "atlas_ms_samples": [
+        7.25,
+        7.677,
+        6.909,
+        7.152,
+        7.081,
+        6.844,
+        7.419,
+        7.279,
+        7.037,
+        7.044,
+        6.831,
+        7.112,
+        6.551
       ]
     },
     {
       "symbol": "json",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-julia-json/atlas.db --format plain --repo src explain json",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4314/api/v1/symbols/json/explain?repo_id=src&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain json",
-      "atlas_tokens": 6,
+      "atlas_tokens": 2,
       "graphify_tokens": 38,
-      "atlas_ms": 12.487,
+      "atlas_ms": 7.211,
       "graphify_ms": 72.815,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "json f@write:430 df4 c3 d6"
+        "json f@write:430"
       ],
       "graphify_stdout_head": [
         "Node: JSON.jl",
@@ -326,27 +540,63 @@
         "  Degree:    1",
         "",
         "Connections (1):"
+      ],
+      "atlas_ms_samples": [
+        7.897,
+        6.824,
+        7.55,
+        6.798,
+        6.787,
+        7.716,
+        6.379,
+        7.051,
+        6.761,
+        7.211,
+        7.512,
+        7.336,
+        7.525
       ]
     },
     {
       "symbol": "LazyValue",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-julia-json/atlas.db --format plain --repo src explain LazyValue",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4314/api/v1/symbols/LazyValue/explain?repo_id=src&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain LazyValue",
-      "atlas_tokens": 6,
+      "atlas_tokens": 2,
       "graphify_tokens": 9,
-      "atlas_ms": 11.453,
+      "atlas_ms": 7.122,
       "graphify_ms": 72.092,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": true,
       "atlas_stdout_head": [
-        "LazyValue t@lazy:134 c4"
+        "LazyValue t@lazy:134"
       ],
       "graphify_stdout_head": [
         "No node matching 'LazyValue' found."
+      ],
+      "atlas_ms_samples": [
+        6.632,
+        7.211,
+        6.784,
+        7.122,
+        7.567,
+        7.379,
+        7.39,
+        6.31,
+        6.952,
+        6.838,
+        7.217,
+        7.066,
+        7.598
       ]
     }
-  ]
+  ],
+  "atlas_cli": {
+    "version": "v0.1.26-4-gd882e08",
+    "commit": "d882e08",
+    "date": "2026-06-30T07:15:57Z",
+    "measurement_note": "Query rows refreshed from 13-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+  }
 }
