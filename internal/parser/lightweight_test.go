@@ -1633,6 +1633,12 @@ func TestParseDotnetProjectFiles(t *testing.T) {
 	if findSymbol(csproj.Symbols, "Commented.Package") != nil {
 		t.Fatal("commented PackageReference should not be indexed")
 	}
+	for _, s := range csproj.Symbols {
+		source, _ := s.Metadata["source"].(string)
+		if !strings.HasPrefix(source, "dotnet_project_xml") {
+			t.Fatalf("csproj symbol %q source = %q, want dotnet_project_xml", s.Name, source)
+		}
+	}
 
 	slnx, err := Parse("repo", "org/repo", "Dapper.slnx", "", []byte(`<Solution>
   <Project Path="Dapper/Dapper.csproj" />
@@ -1649,6 +1655,9 @@ func TestParseDotnetProjectFiles(t *testing.T) {
 		if sym.Kind != "project" {
 			t.Fatalf("%s kind = %q, want project", name, sym.Kind)
 		}
+		if source, _ := sym.Metadata["source"].(string); source != "dotnet_solution_xml" {
+			t.Fatalf("%s source = %q, want dotnet_solution_xml", name, source)
+		}
 	}
 
 	sln, err := Parse("repo", "org/repo", "Dapper.sln", "", []byte(`Project("{GUID}") = "Dapper", "Dapper\Dapper.csproj", "{PROJECT-GUID}"
@@ -1659,6 +1668,8 @@ EndProject
 	}
 	if sym := findSymbol(sln.Symbols, "Dapper"); sym == nil || sym.Kind != "project" {
 		t.Fatalf("missing sln project Dapper; symbols=%+v", sln.Symbols)
+	} else if source, _ := sym.Metadata["source"].(string); source != "dotnet_solution" {
+		t.Fatalf("sln project source = %q, want dotnet_solution", source)
 	}
 }
 
