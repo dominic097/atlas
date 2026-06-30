@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T03:54:00.126Z",
+  "generatedAt": "2026-06-30T04:33:42.394Z",
   "sourceLabel": "Atlas benchmark JSON artifacts from bench/",
   "sourceArtifacts": [
     {
       "name": "MATRIX_REPORT.json",
       "source": "bench/MATRIX_REPORT.json",
       "path": "data/raw/MATRIX_REPORT.json",
-      "bytes": 47640,
-      "sha256": "11828a2fbcaa7a8c89ec0306fe8b66a76df983df6201bfaf01719876d81b029a"
+      "bytes": 47507,
+      "sha256": "e725a187efd16f64267fa6c7f1bfec0e3322f5f2e6b9b4322b75c35fa0023430"
     },
     {
       "name": "SATURATION_REPORT.json",
@@ -28,15 +28,15 @@
       "name": "MATRIX_TOOL_VERSIONS.json",
       "source": "bench/MATRIX_TOOL_VERSIONS.json",
       "path": "data/raw/MATRIX_TOOL_VERSIONS.json",
-      "bytes": 42336,
-      "sha256": "c61935fbd3cf8f7edda66f0bda9e1fdc16faeaf66bd2ad401bb436b46bb930e0"
+      "bytes": 8293,
+      "sha256": "210869d01d21a3b13671822818d0e30ad120b7a4bdb96c46c1d3165a77ed5437"
     },
     {
       "name": "GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "path": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
-      "bytes": 17588,
-      "sha256": "3199ba355b23492114d26531712dfce648fb4a37ffc3a83d6b97a8ab2cc750c2"
+      "bytes": 17563,
+      "sha256": "59bcc274f76567408f396170d4276ac79af020a92efc40391fbb78cd680b4ad6"
     },
     {
       "name": "LIVE_APEX_BENCHMARK.json",
@@ -292,7 +292,7 @@
     }
   ],
   "provenance": {
-    "toolManifestGeneratedAt": "2026-06-30T03:48:59.000Z",
+    "toolManifestGeneratedAt": "2026-06-30T04:25:06.000Z",
     "saturationGeneratedAt": "2026-06-29T08:44:30.000Z",
     "platform": {
       "system": "Darwin",
@@ -313,17 +313,17 @@
     },
     "tools": {
       "coreCount": 21,
-      "liveBenchmarkCount": 36,
+      "liveBenchmarkCount": 0,
       "core": [
         {
           "tool": "atlas",
           "status": "ok",
           "ok": true,
-          "command": "bin/atlas version",
-          "version": "atlas v0.1.25-2-gdebb8b2 (debb8b2, 2026-06-30T03:42:25Z)",
+          "command": "/tmp/atlas_now version",
+          "version": "atlas dev (none, unknown)",
           "stdout": [],
           "stderr": [
-            "atlas v0.1.25-2-gdebb8b2 (debb8b2, 2026-06-30T03:42:25Z)"
+            "atlas dev (none, unknown)"
           ],
           "exit_code": 0,
           "seconds": 0.013
@@ -339,22 +339,22 @@
           ],
           "stderr": [],
           "exit_code": 0,
-          "seconds": 0.038,
+          "seconds": 0.039,
           "discovered_version": "graphifyy 0.8.49",
-          "binary": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify"
+          "binary": "/Users/damirdarasu/.local/bin/graphify"
         },
         {
           "tool": "go",
           "status": "ok",
           "ok": true,
           "command": "/usr/local/go/bin/go version",
-          "version": "go version go1.25.0 darwin/arm64",
+          "version": "go version go1.24.3 darwin/arm64",
           "stdout": [
-            "go version go1.25.0 darwin/arm64"
+            "go version go1.24.3 darwin/arm64"
           ],
           "stderr": [],
           "exit_code": 0,
-          "seconds": 0.063
+          "seconds": 0.028
         },
         {
           "tool": "python",
@@ -367,13 +367,13 @@
           ],
           "stderr": [],
           "exit_code": 0,
-          "seconds": 0.012
+          "seconds": 0.011
         },
         {
           "tool": "java",
           "status": "ok",
           "ok": true,
-          "command": "/usr/bin/java -version",
+          "command": "/opt/homebrew/opt/openjdk@17/bin/java -version",
           "version": "openjdk version \"17.0.18\" 2026-01-20",
           "stdout": [],
           "stderr": [
@@ -382,7 +382,7 @@
             "OpenJDK 64-Bit Server VM Homebrew (build 17.0.18+0, mixed mode, sharing)"
           ],
           "exit_code": 0,
-          "seconds": 0.09
+          "seconds": 0.682
         },
         {
           "tool": "maven",
@@ -393,13 +393,13 @@
           "stdout": [
             "Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)",
             "Maven home: /opt/homebrew/Cellar/maven/3.9.16/libexec",
-            "Java version: 17.0.18, vendor: Homebrew, runtime: /opt/homebrew/Cellar/openjdk@17/17.0.18/libexec/openjdk.jdk/Contents/Home",
+            "Java version: 25.0.2, vendor: Homebrew, runtime: /opt/homebrew/Cellar/openjdk/25.0.2/libexec/openjdk.jdk/Contents/Home",
             "Default locale: en_US, platform encoding: UTF-8",
             "OS name: \"mac os x\", version: \"26.5.1\", arch: \"aarch64\", family: \"mac\""
           ],
           "stderr": [],
           "exit_code": 0,
-          "seconds": 0.487
+          "seconds": 0.623
         },
         {
           "tool": "scip-go",
@@ -412,7 +412,7 @@
           ],
           "stderr": [],
           "exit_code": 0,
-          "seconds": 0.11
+          "seconds": 0.07
         },
         {
           "tool": "scip-python",
@@ -425,20 +425,20 @@
           ],
           "stderr": [],
           "exit_code": 0,
-          "seconds": 0.17
+          "seconds": 0.124
         },
         {
           "tool": "scip-typescript",
           "status": "ok",
           "ok": true,
-          "command": "/opt/homebrew/bin/npx --yes -p @sourcegraph/scip-typescript scip-typescript --version",
+          "command": "/Users/damirdarasu/.nvm/versions/node/v23.10.0/bin/npx --yes -p @sourcegraph/scip-typescript scip-typescript --version",
           "version": "0.4.0",
           "stdout": [
             "0.4.0"
           ],
           "stderr": [],
           "exit_code": 0,
-          "seconds": 0.878
+          "seconds": 0.707
         },
         {
           "tool": "scip-java",
@@ -461,7 +461,7 @@
           ],
           "stderr": [],
           "exit_code": 0,
-          "seconds": 0.095
+          "seconds": 0.104
         },
         {
           "tool": "pyright",
@@ -474,20 +474,20 @@
           ],
           "stderr": [],
           "exit_code": 0,
-          "seconds": 0.163
+          "seconds": 0.093
         },
         {
           "tool": "tsc",
           "status": "ok",
           "ok": true,
-          "command": "/opt/homebrew/bin/npx --yes -p typescript tsc --version",
-          "version": "Version 5.9.3",
+          "command": "/Users/damirdarasu/.nvm/versions/node/v23.10.0/bin/npx --yes -p typescript tsc --version",
+          "version": "Version 6.0.3",
           "stdout": [
-            "Version 5.9.3"
+            "Version 6.0.3"
           ],
           "stderr": [],
           "exit_code": 0,
-          "seconds": 0.331
+          "seconds": 0.412
         },
         {
           "tool": "jdtls",
@@ -539,7 +539,7 @@
           ],
           "stderr": [],
           "exit_code": 0,
-          "seconds": 0.196
+          "seconds": 0.207
         },
         {
           "tool": "ruby",
@@ -552,7 +552,7 @@
           ],
           "stderr": [],
           "exit_code": 0,
-          "seconds": 0.011
+          "seconds": 0.014
         },
         {
           "tool": "php",
@@ -569,7 +569,7 @@
           ],
           "stderr": [],
           "exit_code": 0,
-          "seconds": 0.111
+          "seconds": 0.265
         },
         {
           "tool": "pwsh",
@@ -582,7 +582,7 @@
           ],
           "stderr": [],
           "exit_code": 0,
-          "seconds": 0.401
+          "seconds": 0.444
         },
         {
           "tool": "sourcekit-lsp",
@@ -598,958 +598,12 @@
             "swift-driver version: 1.127.15"
           ],
           "exit_code": 0,
-          "seconds": 0.096,
+          "seconds": 0.399,
           "binary": "/usr/bin/sourcekit-lsp",
           "note": "sourcekit-lsp has no version flag in this toolchain; Swift toolchain version is recorded as the closest reproducible native version."
         }
       ],
-      "liveBenchmarkTools": [
-        {
-          "artifact": "bench/LIVE_APEX_BENCHMARK.json",
-          "language": "apex",
-          "native_tool": "apex-source-counter",
-          "native_status": "ok",
-          "native_command": "python3 <apex source counter> /tmp/atlas-live-apex-recipes/repo/force-app",
-          "metric_versions": {},
-          "richer_native_baselines": {
-            "apex-source-counter": {
-              "status": "ok",
-              "ok": true,
-              "note": "benchmark-owned Apex source counter used as the scriptable parser coverage proxy"
-            },
-            "sf": {
-              "status": "missing",
-              "ok": false,
-              "note": "Salesforce CLI not installed; source-only Apex parser proxy used for this benchmark"
-            },
-            "sfdx": {
-              "status": "missing",
-              "ok": false,
-              "note": "sfdx CLI not installed"
-            },
-            "apex-language-server": {
-              "status": "missing",
-              "ok": false,
-              "note": "Apex language server is not installed; source counter coverage proxy used for this benchmark"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_ASTRO_BENCHMARK.json",
-          "language": "astro",
-          "native_tool": "astro-compiler",
-          "native_status": "ok",
-          "native_command": "/opt/homebrew/bin/node /tmp/atlas-live-astro-blog-tutorial/astro-compiler/astro_stats.js /tmp/atlas-live-astro-blog-tutorial/repo/src",
-          "metric_versions": {
-            "compiler_version": "4.0.0"
-          },
-          "richer_native_baselines": {
-            "astro": {
-              "status": "missing",
-              "ok": false,
-              "note": "astro CLI not installed; @astrojs/compiler used as the scriptable source parser baseline"
-            },
-            "astro-language-server": {
-              "status": "missing",
-              "ok": false,
-              "note": "Astro language server is not installed; @astrojs/compiler parse coverage used for this benchmark"
-            },
-            "@astrojs/compiler": {
-              "status": "ok",
-              "ok": true,
-              "note": "compiler parse plus frontmatter definition coverage proxy"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_BASH_BENCHMARK.json",
-          "language": "bash",
-          "native_tool": "bash-n",
-          "native_status": "ok",
-          "native_command": "/bin/bash -n <5 shell files>",
-          "metric_versions": {
-            "bash_version": "GNU bash, version 3.2.57(1)-release (arm64-apple-darwin25)"
-          },
-          "richer_native_baselines": {
-            "shellcheck": {
-              "status": "missing",
-              "ok": false,
-              "note": "shellcheck not installed; /bin/bash -n plus function counting used as the native baseline"
-            },
-            "shfmt": {
-              "status": "missing",
-              "ok": false,
-              "note": "shfmt not installed"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_BLADE_BENCHMARK.json",
-          "language": "blade",
-          "native_tool": "blade-directive-counter",
-          "native_status": "ok",
-          "native_command": "python3 <blade directive counter> /tmp/atlas-live-blade-bookstack/repo/resources/views",
-          "metric_versions": {},
-          "richer_native_baselines": {
-            "blade-directive-counter": {
-              "status": "ok",
-              "ok": true,
-              "note": "benchmark-owned Blade directive counter used as the scriptable source parser proxy"
-            },
-            "laravel": {
-              "status": "missing",
-              "ok": false,
-              "note": "Laravel application runtime is not installed for this source-only benchmark"
-            },
-            "blade-language-server": {
-              "status": "missing",
-              "ok": false,
-              "note": "Blade language server is not installed; directive coverage proxy used for this benchmark"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_BYOND_BENCHMARK.json",
-          "language": "byond",
-          "native_tool": "byond-source-counter",
-          "native_status": "ok",
-          "native_command": "python3 <byond source counter> /tmp/atlas-live-byond-tgstation/repo/code/modules/mob",
-          "metric_versions": {},
-          "richer_native_baselines": {
-            "byond-source-counter": {
-              "status": "ok",
-              "ok": true,
-              "note": "benchmark-owned BYOND source counter used as the scriptable parser coverage proxy"
-            },
-            "dreamchecker": {
-              "status": "missing",
-              "ok": false,
-              "note": "dreamchecker not installed; source-only BYOND parser proxy used for this benchmark"
-            },
-            "dm-langserver": {
-              "status": "missing",
-              "ok": false,
-              "note": "BYOND/DM language server is not installed; source counter coverage proxy used for this benchmark"
-            },
-            "tree-sitter-dm": {
-              "status": "missing",
-              "ok": false,
-              "note": "graphify's richer DM extractor requires optional tree_sitter_dm, which is not installed in the graphify tool environment on this machine"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_CSHARP_BENCHMARK.json",
-          "language": "csharp",
-          "native_tool": "roslyn",
-          "native_status": "ok",
-          "native_command": "/opt/homebrew/bin/dotnet run --no-build -- /tmp/atlas-live-csharp-dapper/repo (Roslyn syntax tree counter)",
-          "metric_versions": {
-            "roslyn_version": "5.6.0.0",
-            "tool_versions": {
-              "dotnet": "10.0.301"
-            }
-          },
-          "richer_native_baselines": {
-            "csharp-source-counter": {
-              "status": "ok",
-              "ok": true,
-              "note": "deterministic C# source counter used as the scriptable parser coverage proxy"
-            },
-            "dotnet": {
-              "status": "available",
-              "ok": true,
-              "note": "dotnet is available and the Roslyn syntax-tree counter is used when it can be built"
-            },
-            "csc": {
-              "status": "missing",
-              "ok": false,
-              "note": "csc not installed"
-            },
-            "omnisharp": {
-              "status": "missing",
-              "ok": false,
-              "note": "OmniSharp not installed"
-            },
-            "csharp-ls": {
-              "status": "missing",
-              "ok": false,
-              "note": "csharp-ls not installed"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_CUDA_BENCHMARK.json",
-          "language": "cuda",
-          "native_tool": "cuda-source-counter",
-          "native_status": "ok",
-          "native_command": "python3 <cuda source counter> /tmp/atlas-live-cuda-samples/repo/cpp/0_Introduction/simpleAtomicIntrinsics",
-          "metric_versions": {},
-          "richer_native_baselines": {
-            "cuda-source-counter": {
-              "status": "ok",
-              "ok": true,
-              "note": "benchmark-owned CUDA .cu/.cuh function counter used as the extension-dispatch coverage proxy"
-            },
-            "nvcc": {
-              "status": "missing",
-              "ok": false,
-              "note": "nvcc not installed; source-only parser proxy used for this benchmark"
-            },
-            "clangd": {
-              "status": "available",
-              "ok": true,
-              "note": "clangd is available, but this benchmark uses source-only CUDA extension coverage to avoid compile database coupling"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_DART_BENCHMARK.json",
-          "language": "dart",
-          "native_tool": "tree-sitter-dart",
-          "native_status": "ok",
-          "native_command": "/tmp/atlas-live-dart-http/tree-sitter-dart-venv/bin/python -c <tree-sitter-dart definition counter> /tmp/atlas-live-dart-http/repo/pkgs/http/lib",
-          "metric_versions": {
-            "tree_sitter_version": "0.25.2",
-            "tree_sitter_dart_version": "0.1.0"
-          },
-          "richer_native_baselines": {
-            "dart": {
-              "status": "missing",
-              "ok": false,
-              "note": "dart SDK not installed; tree-sitter-dart parser used as the isolated definition baseline"
-            },
-            "flutter": {
-              "status": "missing",
-              "ok": false,
-              "note": "flutter not installed"
-            },
-            "dart_language_server": {
-              "status": "missing",
-              "ok": false,
-              "note": "dart_language_server not installed"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_DELPHI_BENCHMARK.json",
-          "language": "delphi",
-          "native_tool": "delphi-lazarus-source-counter",
-          "native_status": "ok",
-          "native_command": "python3 <delphi/lazarus source counter> /tmp/atlas-live-delphi-lazarus/repo/ide",
-          "metric_versions": {},
-          "richer_native_baselines": {
-            "delphi-lazarus-source-counter": {
-              "status": "ok",
-              "ok": true,
-              "note": "benchmark-owned Delphi/Lazarus form and package counter used as the scriptable parser coverage proxy"
-            },
-            "fpc": {
-              "status": "missing",
-              "ok": false,
-              "note": "Free Pascal compiler not installed; source-only form/package parser proxy used for this benchmark"
-            },
-            "lazbuild": {
-              "status": "missing",
-              "ok": false,
-              "note": "lazbuild not installed; source-only form/package parser proxy used for this benchmark"
-            },
-            "pasls": {
-              "status": "missing",
-              "ok": false,
-              "note": "Pascal language server not installed"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_DOTNET_BENCHMARK.json",
-          "language": "dotnet",
-          "native_tool": "python-dotnet-project",
-          "native_status": "ok",
-          "native_command": "/opt/homebrew/bin/python3 -c <dotnet project counter> /tmp/atlas-live-dotnet-dapper/repo",
-          "metric_versions": {},
-          "richer_native_baselines": {
-            "dotnet": {
-              "status": "available",
-              "ok": true,
-              "note": "dotnet is available but this harness avoids restore/build coupling"
-            },
-            "msbuild": {
-              "status": "missing",
-              "ok": false,
-              "note": "msbuild not installed"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_EJS_BENCHMARK.json",
-          "language": "ejs",
-          "native_tool": "ejs-template-counter",
-          "native_status": "ok",
-          "native_command": "python3 <ejs template counter> /tmp/atlas-live-ejs-express/repo/examples",
-          "metric_versions": {},
-          "richer_native_baselines": {
-            "ejs-template-counter": {
-              "status": "ok",
-              "ok": true,
-              "note": "benchmark-owned EJS template/include counter used as the scriptable parser coverage proxy"
-            },
-            "ejs": {
-              "status": "missing",
-              "ok": false,
-              "note": "EJS CLI not installed; source-only template parser proxy used for this benchmark"
-            },
-            "ejs-language-server": {
-              "status": "missing",
-              "ok": false,
-              "note": "EJS language server is not installed; source counter coverage proxy used for this graphify detector-only benchmark"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_ELIXIR_BENCHMARK.json",
-          "language": "elixir",
-          "native_tool": "tree-sitter-elixir",
-          "native_status": "ok",
-          "native_command": "/tmp/atlas-live-elixir-phoenix/tree-sitter-elixir-venv/bin/python -c <tree-sitter-elixir definition counter> /tmp/atlas-live-elixir-phoenix/repo/lib",
-          "metric_versions": {
-            "tree_sitter_version": "0.25.2",
-            "tree_sitter_elixir_version": "0.3.5"
-          },
-          "richer_native_baselines": {
-            "elixir": {
-              "status": "missing",
-              "ok": false,
-              "note": "elixir CLI not installed; tree-sitter-elixir parser used as the isolated definition baseline"
-            },
-            "mix": {
-              "status": "missing",
-              "ok": false,
-              "note": "mix not installed"
-            },
-            "lexical": {
-              "status": "missing",
-              "ok": false,
-              "note": "Lexical language server not installed"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_ETS_BENCHMARK.json",
-          "language": "ets",
-          "native_tool": "ets-source-counter",
-          "native_status": "ok",
-          "native_command": "python3 <ets source counter> /tmp/atlas-live-ets-openharmony-tabs/repo/code/ArkTS1.2/TabsSample/entry/src/main/ets",
-          "metric_versions": {},
-          "richer_native_baselines": {
-            "ets-source-counter": {
-              "status": "ok",
-              "ok": true,
-              "note": "benchmark-owned ArkTS/ETS declaration counter used as the scriptable parser coverage proxy"
-            },
-            "arkts": {
-              "status": "missing",
-              "ok": false,
-              "note": "ArkTS compiler CLI not installed; source-only parser proxy used for this benchmark"
-            },
-            "hvigor": {
-              "status": "missing",
-              "ok": false,
-              "note": "hvigor not installed; OpenHarmony build execution is avoided for this source-only benchmark"
-            },
-            "ohpm": {
-              "status": "missing",
-              "ok": false,
-              "note": "ohpm not installed"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_FORTRAN_BENCHMARK.json",
-          "language": "fortran",
-          "native_tool": "tree-sitter-fortran",
-          "native_status": "ok",
-          "native_command": "/tmp/atlas-live-fortran-stdlib/tree-sitter-fortran-venv/bin/python -c <tree-sitter-fortran definition counter> /tmp/atlas-live-fortran-stdlib/repo/src",
-          "metric_versions": {
-            "tree_sitter_version": "0.25.2",
-            "tree_sitter_fortran_version": "0.6.0"
-          },
-          "richer_native_baselines": {
-            "gfortran": {
-              "status": "missing",
-              "ok": false,
-              "note": "gfortran not installed; tree-sitter-fortran parser used as the isolated definition baseline"
-            },
-            "fortls": {
-              "status": "missing",
-              "ok": false,
-              "note": "fortls language server not installed"
-            },
-            "fpm": {
-              "status": "missing",
-              "ok": false,
-              "note": "fpm not installed; source parser baseline used instead of dependency/build execution"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_GROOVY_BENCHMARK.json",
-          "language": "groovy",
-          "native_tool": "tree-sitter-groovy",
-          "native_status": "partial",
-          "native_command": "/tmp/atlas-live-groovy-nextflow/tree-sitter-groovy-venv/bin/python -c <tree-sitter-groovy definition counter> /tmp/atlas-live-groovy-nextflow/repo/modules/nf-commons/src/main",
-          "metric_versions": {
-            "tree_sitter_version": "0.25.2",
-            "tree_sitter_groovy_version": "0.1.2"
-          },
-          "richer_native_baselines": {
-            "groovy": {
-              "status": "missing",
-              "ok": false,
-              "note": "groovy CLI not installed; tree-sitter-groovy parser used as the isolated definition baseline"
-            },
-            "gradle": {
-              "status": "missing",
-              "ok": false,
-              "note": "gradle not installed; source parser baseline used instead of dependency/build execution"
-            },
-            "groovy-language-server": {
-              "status": "missing",
-              "ok": false,
-              "note": "Groovy language server is not installed; tree-sitter-groovy parse coverage used for this benchmark"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_JSON_BENCHMARK.json",
-          "language": "json",
-          "native_tool": "python-json",
-          "native_status": "ok",
-          "native_command": "/opt/homebrew/bin/python3 -c <python-json key counter> /tmp/atlas-live-json-eslint-create-config/repo",
-          "metric_versions": {},
-          "richer_native_baselines": {
-            "python-json": {
-              "status": "ok",
-              "ok": true,
-              "note": "Python stdlib JSON parser used as the isolated object-key coverage baseline"
-            },
-            "ajv": {
-              "status": "missing",
-              "ok": false,
-              "note": "ajv not installed; schema validation is not a definition index baseline"
-            },
-            "jq": {
-              "status": "available",
-              "ok": true,
-              "note": "jq is available for queries but not used as a definition coverage baseline"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_JULIA_BENCHMARK.json",
-          "language": "julia",
-          "native_tool": "tree-sitter-julia",
-          "native_status": "partial",
-          "native_command": "/tmp/atlas-live-julia-json/tree-sitter-julia-venv/bin/python -c <tree-sitter-julia definition counter> /tmp/atlas-live-julia-json/repo/src",
-          "metric_versions": {
-            "tree_sitter_version": "0.25.2",
-            "tree_sitter_julia_version": "0.23.1"
-          },
-          "richer_native_baselines": {
-            "julia": {
-              "status": "missing",
-              "ok": false,
-              "note": "julia CLI not installed; tree-sitter-julia parser used as the isolated definition baseline"
-            },
-            "LanguageServer.jl": {
-              "status": "missing_adapter",
-              "ok": false,
-              "note": "LanguageServer.jl is not wired into this harness; tree-sitter-julia source parse coverage is used for this benchmark"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_KOTLIN_BENCHMARK.json",
-          "language": "kotlin",
-          "native_tool": "tree-sitter-kotlin",
-          "native_status": "partial",
-          "native_command": "/tmp/atlas-live-kotlin-okhttp/tree-sitter-kotlin-venv/bin/python -c <tree-sitter-kotlin definition counter> /tmp/atlas-live-kotlin-okhttp/repo/okhttp/src/commonJvmAndroid/kotlin",
-          "metric_versions": {
-            "tree_sitter_version": "0.25.2",
-            "tree_sitter_kotlin_version": "1.1.0"
-          },
-          "richer_native_baselines": {
-            "kotlinc": {
-              "status": "missing",
-              "ok": false,
-              "note": "kotlinc not installed; tree-sitter-kotlin parser used as the isolated definition baseline"
-            },
-            "kotlin-language-server": {
-              "status": "missing",
-              "ok": false,
-              "note": "kotlin-language-server not installed"
-            },
-            "ktlint": {
-              "status": "missing",
-              "ok": false,
-              "note": "ktlint not installed"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_LUA_BENCHMARK.json",
-          "language": "lua",
-          "native_tool": "luaparser",
-          "native_status": "ok",
-          "native_command": "/tmp/atlas-live-lua-lazy/luaparser-venv/bin/python -c <luaparser definition counter> /tmp/atlas-live-lua-lazy/repo",
-          "metric_versions": {
-            "luaparser_version": "4.0.1"
-          },
-          "richer_native_baselines": {
-            "lua": {
-              "status": "missing",
-              "ok": false,
-              "note": "lua interpreter not installed"
-            },
-            "luac": {
-              "status": "missing",
-              "ok": false,
-              "note": "luac not installed"
-            },
-            "luacheck": {
-              "status": "missing",
-              "ok": false,
-              "note": "luacheck not installed"
-            },
-            "stylua": {
-              "status": "missing",
-              "ok": false,
-              "note": "stylua not installed"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_MARKDOWN_BENCHMARK.json",
-          "language": "markdown",
-          "native_tool": "markdown-it-py",
-          "native_status": "ok",
-          "native_command": "/tmp/atlas-live-markdown-mdbook/markdown-it-venv/bin/python -c <markdown-it-py heading counter> /tmp/atlas-live-markdown-mdbook/repo/guide/src",
-          "metric_versions": {
-            "markdown_it_py_version": "4.0.0"
-          },
-          "richer_native_baselines": {
-            "markdown-it-py": {
-              "status": "ok",
-              "ok": true,
-              "note": "CommonMark heading parser used as the isolated Markdown section baseline"
-            },
-            "markdownlint": {
-              "status": "missing",
-              "ok": false,
-              "note": "markdownlint not installed; it is lint-focused, not a definition index baseline"
-            },
-            "remark": {
-              "status": "missing",
-              "ok": false,
-              "note": "remark CLI not installed; markdown-it-py used as the scriptable parser baseline"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_OBJC_BENCHMARK.json",
-          "language": "objc",
-          "native_tool": "tree-sitter-objc",
-          "native_status": "partial",
-          "native_command": "/tmp/atlas-live-objc-sdwebimage/tree-sitter-objc-venv/bin/python -c <tree-sitter-objc definition counter> /tmp/atlas-live-objc-sdwebimage/repo/SDWebImage",
-          "metric_versions": {
-            "tree_sitter_version": "0.25.2",
-            "tree_sitter_objc_version": "3.0.2"
-          },
-          "richer_native_baselines": {
-            "clang": {
-              "status": "available",
-              "ok": true,
-              "note": "clang is available for syntax/build checks; tree-sitter-objc is used for source-only definition coverage"
-            },
-            "sourcekit-lsp": {
-              "status": "available",
-              "ok": true,
-              "note": "sourcekit-lsp is available but Objective-C documentSymbol coverage is not wired into this harness; tree-sitter-objc used instead"
-            },
-            "clangd": {
-              "status": "missing_adapter",
-              "ok": false,
-              "note": "clangd adapter not implemented for Objective-C in this harness yet"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_PASCAL_BENCHMARK.json",
-          "language": "pascal",
-          "native_tool": "pascal-regex-counter",
-          "native_status": "ok",
-          "native_command": "/opt/homebrew/bin/python3 -c <pascal declaration counter> /tmp/atlas-live-pascal-pascalscript/repo/Source",
-          "metric_versions": {},
-          "richer_native_baselines": {
-            "fpc": {
-              "status": "missing",
-              "ok": false,
-              "note": "Free Pascal compiler not installed; declaration counter used as source-only coverage proxy"
-            },
-            "pasls": {
-              "status": "missing",
-              "ok": false,
-              "note": "Pascal language server not installed"
-            },
-            "tree-sitter-delphi": {
-              "status": "unusable",
-              "ok": false,
-              "note": "tree-sitter-delphi 0.1.0 installs as delphi_tree_sitter but cannot load its tree-sitter library in this environment"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_PHP_BENCHMARK.json",
-          "language": "php",
-          "native_tool": "php-tokenizer",
-          "native_status": "ok",
-          "native_command": "/opt/homebrew/bin/php /tmp/atlas-live-php-slim/php_token_stats.php /tmp/atlas-live-php-slim/repo",
-          "metric_versions": {
-            "php_version": "8.4.14"
-          },
-          "richer_native_baselines": {
-            "intelephense": {
-              "status": "missing",
-              "ok": false,
-              "note": "intelephense not installed"
-            },
-            "phpstan": {
-              "status": "missing",
-              "ok": false,
-              "note": "phpstan not installed"
-            },
-            "psalm": {
-              "status": "missing",
-              "ok": false,
-              "note": "psalm not installed"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_POWERSHELL_BENCHMARK.json",
-          "language": "powershell",
-          "native_tool": "pwsh-parser",
-          "native_status": "ok",
-          "native_command": "/usr/local/bin/pwsh -NoLogo -NoProfile -File /tmp/atlas-live-powershell-powershellget/pwsh_stats.ps1 /tmp/atlas-live-powershell-powershellget/repo/src",
-          "metric_versions": {
-            "powershell_version": "7.4.6"
-          },
-          "richer_native_baselines": {
-            "pwsh": {
-              "status": "available",
-              "ok": true,
-              "note": "PowerShell parser used as native syntax/function-definition baseline"
-            },
-            "powershell-editor-services": {
-              "status": "missing",
-              "ok": false,
-              "note": "PowerShellEditorServices LSP is not installed; pwsh AST parser used for this benchmark"
-            },
-            "psscriptanalyzer": {
-              "status": "missing",
-              "ok": false,
-              "note": "PSScriptAnalyzer not installed; it is lint-focused, not a definition index baseline"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_RAZOR_BENCHMARK.json",
-          "language": "razor",
-          "native_tool": "razor-directive-counter",
-          "native_status": "ok",
-          "native_command": "python3 <razor directive counter> /tmp/atlas-live-razor-eshoponweb/repo/src",
-          "metric_versions": {},
-          "richer_native_baselines": {
-            "razor-directive-counter": {
-              "status": "ok",
-              "ok": true,
-              "note": "benchmark-owned Razor directive/component counter used as the scriptable source parser proxy"
-            },
-            "dotnet": {
-              "status": "available",
-              "ok": true,
-              "note": "dotnet is available but this harness avoids restore/build coupling"
-            },
-            "razor-language-server": {
-              "status": "missing",
-              "ok": false,
-              "note": "Razor language server is not installed; directive/component coverage proxy used for this benchmark"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_RUBY_BENCHMARK.json",
-          "language": "ruby",
-          "native_tool": "ruby-ripper",
-          "native_status": "ok",
-          "native_command": "/usr/bin/ruby /tmp/atlas-live-ruby-sinatra/ripper_stats.rb /tmp/atlas-live-ruby-sinatra/repo",
-          "metric_versions": {
-            "ruby_version": "2.6.10"
-          },
-          "richer_native_baselines": {
-            "solargraph": {
-              "status": "missing",
-              "ok": false,
-              "note": "solargraph not installed"
-            },
-            "ruby-lsp": {
-              "status": "missing",
-              "ok": false,
-              "note": "ruby-lsp not installed"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_RUST_BENCHMARK.json",
-          "language": "rust",
-          "native_tool": "rust-analyzer",
-          "native_status": "ok",
-          "native_command": "/opt/homebrew/bin/rust-analyzer documentSymbol <16 Rust files>",
-          "metric_versions": {
-            "tool_versions": {
-              "rust-analyzer": "rust-analyzer 0.0.0 (69ccffdb5b 2026-06-21)",
-              "cargo": "cargo 1.96.0 (30a34c682 2026-05-25) (Homebrew)",
-              "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25) (Homebrew)"
-            }
-          },
-          "richer_native_baselines": {
-            "rust-source-counter": {
-              "status": "ok",
-              "ok": true,
-              "note": "deterministic Rust source counter used as the scriptable parser coverage proxy"
-            },
-            "rust-analyzer": {
-              "status": "missing_adapter",
-              "ok": false,
-              "note": "rust-analyzer adapter not implemented in this harness yet"
-            },
-            "cargo": {
-              "status": "available",
-              "ok": true,
-              "note": "cargo is available but not a code-intelligence definition baseline by itself"
-            },
-            "rustc": {
-              "status": "available",
-              "ok": true,
-              "note": "rustc is available but not a code-intelligence definition baseline by itself"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_R_BENCHMARK.json",
-          "language": "r",
-          "native_tool": "r-source-counter",
-          "native_status": "ok",
-          "native_command": "python3 <R source counter> /tmp/atlas-live-r-ggplot2/repo/R",
-          "metric_versions": {},
-          "richer_native_baselines": {
-            "r-source-counter": {
-              "status": "ok",
-              "ok": true,
-              "note": "benchmark-owned R function/type/variable counter used as the scriptable parser coverage proxy"
-            },
-            "Rscript": {
-              "status": "missing",
-              "ok": false,
-              "note": "Rscript not installed; source-only parser proxy used for this benchmark"
-            },
-            "languageserver": {
-              "status": "missing_adapter",
-              "ok": false,
-              "note": "R languageserver is not installed or wired into this harness; source counter coverage proxy used for this graphify detector-only benchmark"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_SCALA_BENCHMARK.json",
-          "language": "scala",
-          "native_tool": "tree-sitter-scala",
-          "native_status": "partial",
-          "native_command": "/tmp/atlas-live-scala-cats/tree-sitter-scala-venv/bin/python -c <tree-sitter-scala definition counter> /tmp/atlas-live-scala-cats/repo/core/src/main/scala",
-          "metric_versions": {
-            "tree_sitter_version": "0.25.2",
-            "tree_sitter_scala_version": "0.26.0"
-          },
-          "richer_native_baselines": {
-            "metals": {
-              "status": "missing",
-              "ok": false,
-              "note": "Metals not installed"
-            },
-            "scalac": {
-              "status": "missing",
-              "ok": false,
-              "note": "scalac not installed; tree-sitter-scala parser used as the isolated definition baseline"
-            },
-            "scala-cli": {
-              "status": "missing",
-              "ok": false,
-              "note": "scala-cli not installed"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_SQL_BENCHMARK.json",
-          "language": "sql",
-          "native_tool": "sqlfluff",
-          "native_status": "ok",
-          "native_command": "/tmp/atlas-live-sql-hasura/sqlfluff-venv/bin/sqlfluff parse --dialect postgres <82 SQL files>",
-          "metric_versions": {
-            "sqlfluff_version": "sqlfluff, version 3.5.0"
-          },
-          "richer_native_baselines": {
-            "psql": {
-              "status": "unavailable",
-              "ok": false,
-              "note": "psql is installed but requires a live PostgreSQL database; sqlfluff parser used as the scriptable native baseline"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_SVELTE_BENCHMARK.json",
-          "language": "svelte",
-          "native_tool": "svelte-compiler",
-          "native_status": "ok",
-          "native_command": "/opt/homebrew/bin/node /tmp/atlas-live-svelte-carbon/svelte-compiler/svelte_stats.js /tmp/atlas-live-svelte-carbon/repo/src",
-          "metric_versions": {
-            "compiler_version": "5.56.4"
-          },
-          "richer_native_baselines": {
-            "svelte-check": {
-              "status": "missing",
-              "ok": false,
-              "note": "svelte-check not installed; Svelte compiler parser used as the scriptable SFC baseline"
-            },
-            "svelte-language-server": {
-              "status": "missing",
-              "ok": false,
-              "note": "Svelte language server is not installed; Svelte compiler parse coverage used for this benchmark"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_SWIFT_BENCHMARK.json",
-          "language": "swift",
-          "native_tool": "sourcekit-lsp",
-          "native_status": "ok",
-          "native_command": "/usr/bin/sourcekit-lsp --scratch-path /tmp/atlas-live-swift-argument-parser/sourcekit-scratch --default-workspace-type swiftPM",
-          "metric_versions": {
-            "swift_version": "Apple Swift version 6.2.4 (swiftlang-6.2.4.1.4 clang-1700.6.4.2)"
-          },
-          "richer_native_baselines": {
-            "sourcekit-lsp": {
-              "status": "ok",
-              "ok": true,
-              "note": ""
-            },
-            "swift-syntax": {
-              "status": "missing",
-              "ok": false,
-              "note": "swift-syntax CLI not installed; SourceKit-LSP documentSymbol used as the native baseline"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_TERRAFORM_BENCHMARK.json",
-          "language": "terraform",
-          "native_tool": "python-hcl2",
-          "native_status": "ok",
-          "native_command": "/tmp/atlas-live-terraform-vpc/hcl2-venv/bin/python -c <hcl2 definition counter> /tmp/atlas-live-terraform-vpc/repo",
-          "metric_versions": {
-            "python_hcl2_version": "8.1.2"
-          },
-          "richer_native_baselines": {
-            "terraform": {
-              "status": "missing",
-              "ok": false,
-              "note": "terraform CLI not installed; python-hcl2 parser used as the scriptable native baseline"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_VERILOG_BENCHMARK.json",
-          "language": "verilog",
-          "native_tool": "tree-sitter-systemverilog",
-          "native_status": "partial",
-          "native_command": "/tmp/atlas-live-verilog-ibex/tree-sitter-systemverilog-venv/bin/python -c <tree-sitter-systemverilog definition counter> /tmp/atlas-live-verilog-ibex/repo/rtl",
-          "metric_versions": {
-            "tree_sitter_version": "0.25.2",
-            "tree_sitter_systemverilog_version": "0.3.1"
-          },
-          "richer_native_baselines": {
-            "verilator": {
-              "status": "missing",
-              "ok": false,
-              "note": "verilator not installed; tree-sitter-systemverilog parser used as the isolated definition baseline"
-            },
-            "slang": {
-              "status": "missing",
-              "ok": false,
-              "note": "slang not installed"
-            },
-            "svlint": {
-              "status": "missing",
-              "ok": false,
-              "note": "svlint not installed"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_VUE_BENCHMARK.json",
-          "language": "vue",
-          "native_tool": "vue-compiler-sfc",
-          "native_status": "ok",
-          "native_command": "/opt/homebrew/bin/node /tmp/atlas-live-vue-realworld/vue-compiler/vue_sfc_stats.js /tmp/atlas-live-vue-realworld/repo/src",
-          "metric_versions": {
-            "compiler_version": "3.5.22"
-          },
-          "richer_native_baselines": {
-            "vue-tsc": {
-              "status": "missing",
-              "ok": false,
-              "note": "vue-tsc not installed; @vue/compiler-sfc used as the scriptable SFC parser baseline"
-            },
-            "volar": {
-              "status": "missing",
-              "ok": false,
-              "note": "Volar language server is not installed; compiler-sfc parse coverage used for this benchmark"
-            }
-          }
-        },
-        {
-          "artifact": "bench/LIVE_ZIG_BENCHMARK.json",
-          "language": "zig",
-          "native_tool": "tree-sitter-zig",
-          "native_status": "partial",
-          "native_command": "/tmp/atlas-live-zig-zls/tree-sitter-zig-venv/bin/python -c <tree-sitter-zig definition counter> /tmp/atlas-live-zig-zls/repo/src",
-          "metric_versions": {
-            "tree_sitter_version": "0.25.2",
-            "tree_sitter_zig_version": "1.1.2"
-          },
-          "richer_native_baselines": {
-            "zig": {
-              "status": "missing",
-              "ok": false,
-              "note": "zig CLI not installed; tree-sitter-zig parser used as the isolated definition baseline"
-            },
-            "zls": {
-              "status": "missing",
-              "ok": false,
-              "note": "zls language server not installed"
-            }
-          }
-        }
-      ]
+      "liveBenchmarkTools": []
     }
   },
   "summary": {
@@ -1558,8 +612,8 @@
       "queryRows": 25,
       "equivalentRows": 23,
       "graphifyMissingRows": 2,
-      "tokenRatio": 16.38,
-      "latencyRatio": 6.48
+      "tokenRatio": 16.39,
+      "latencyRatio": 6.32
     },
     "live": {
       "artifacts": 36,
@@ -1589,7 +643,7 @@
       "atlas": {
         "status": "ok",
         "ok": true,
-        "seconds": 0.029,
+        "seconds": 0.035,
         "metrics": {
           "files": 57,
           "symbols": 679,
@@ -1607,34 +661,34 @@
             "markdown": 4,
             "yaml": 3
           },
-          "duration_ms": 4,
+          "duration_ms": 2,
           "timings_ms": {
-            "delta_check": 4,
+            "delta_check": 2,
             "resolve_head": 0
           },
           "mode": "noop",
-          "cold_seconds": 0.582,
-          "cold_duration_ms": 471,
+          "cold_seconds": 4.131,
+          "cold_duration_ms": 537,
           "cold_timings_ms": {
-            "build_symbols_edges": 344,
+            "build_symbols_edges": 440,
             "delta_check": 0,
-            "discover_files": 1,
+            "discover_files": 0,
             "doc_links": 0,
             "ensure_repo": 0,
-            "gitignore_scan": 17,
-            "go_types": 344,
+            "gitignore_scan": 12,
+            "go_types": 440,
             "lexical": 69,
-            "parse": 36,
+            "parse": 14,
             "persist": 69,
             "resolve_head": 0,
             "routes": 0,
             "sort": 0,
-            "walk": 1,
+            "walk": 0,
             "write_sqlite": 69
           },
-          "full_seconds": 0.582,
+          "full_seconds": 4.131,
           "cold_mode": "full",
-          "delta_seconds": 0.029,
+          "delta_seconds": 0.035,
           "delta_mode": "noop",
           "calls": 2102,
           "internal_calls": 1143,
@@ -1647,15 +701,15 @@
       "graphify": {
         "status": "ok",
         "ok": true,
-        "seconds": 0.773,
+        "seconds": 0.82,
         "metrics": {
           "nodes": 711,
           "links": 1244,
           "calls": 333,
           "extracted_calls": 198,
           "extracted_pct": 59.5,
-          "full_seconds": 0.773,
-          "delta_seconds": 0.321,
+          "full_seconds": 0.82,
+          "delta_seconds": 0.305,
           "supports_incremental": true
         }
       },
@@ -1664,7 +718,7 @@
           "name": "scip-go",
           "status": "ok",
           "ok": true,
-          "seconds": 0.275,
+          "seconds": 0.518,
           "metrics": {
             "documents": 47,
             "total_documents": 47,
@@ -1688,25 +742,25 @@
               "UnspecifiedKind": 2,
               "Variable": 1570
             },
-            "index_bytes": 991412
+            "index_bytes": 991395
           }
         },
         {
           "name": "gopls",
           "status": "ok",
           "ok": true,
-          "seconds": 0.399,
+          "seconds": 0.542,
           "metrics": {
             "gopls_version": "v0.22.0",
             "go_version": "go1.26.4",
-            "initial_workspace_load_ms": 245.989,
+            "initial_workspace_load_ms": 278.302,
             "dir_files": 87,
             "dir_go_files": 47,
             "workspace_packages": 12,
             "workspace_compiled_go_files": 57,
             "all_packages": 207,
             "diagnostics": 0,
-            "heap_alloc_bytes": 188008640
+            "heap_alloc_bytes": 194023168
           }
         }
       ],
@@ -1718,10 +772,10 @@
         "graphifyMissing": 0,
         "atlasTokens": 28,
         "graphifyTokens": 398,
-        "atlasMs": 58.533,
-        "graphifyMs": 385.332,
+        "atlasMs": 60.836,
+        "graphifyMs": 378.563,
         "tokenRatio": 14.21,
-        "latencyRatio": 6.58,
+        "latencyRatio": 6.22,
         "pass5x": true
       },
       "queries": [
@@ -1729,8 +783,8 @@
           "symbol": "log",
           "atlasTokens": 5,
           "graphifyTokens": 105,
-          "atlasMs": 14.441,
-          "graphifyMs": 97.668,
+          "atlasMs": 15.495,
+          "graphifyMs": 92.534,
           "atlasMissing": false,
           "graphifyMissing": false
         },
@@ -1738,8 +792,8 @@
           "symbol": "newEntry",
           "atlasTokens": 7,
           "graphifyTokens": 62,
-          "atlasMs": 14.61,
-          "graphifyMs": 94.695,
+          "atlasMs": 14.941,
+          "graphifyMs": 91.937,
           "atlasMissing": false,
           "graphifyMissing": false
         },
@@ -1747,8 +801,8 @@
           "symbol": "releaseEntry",
           "atlasTokens": 8,
           "graphifyTokens": 175,
-          "atlasMs": 14.393,
-          "graphifyMs": 96.152,
+          "atlasMs": 14.739,
+          "graphifyMs": 97.511,
           "atlasMissing": false,
           "graphifyMissing": false
         },
@@ -1756,8 +810,8 @@
           "symbol": "Fire",
           "atlasTokens": 8,
           "graphifyTokens": 56,
-          "atlasMs": 15.089,
-          "graphifyMs": 96.817,
+          "atlasMs": 15.661,
+          "graphifyMs": 96.581,
           "atlasMissing": false,
           "graphifyMissing": false
         }
@@ -1772,7 +826,7 @@
       "atlas": {
         "status": "ok",
         "ok": true,
-        "seconds": 0.024,
+        "seconds": 0.032,
         "metrics": {
           "files": 19,
           "symbols": 517,
@@ -1784,34 +838,34 @@
           "languages": {
             "python": 19
           },
-          "duration_ms": 1,
+          "duration_ms": 0,
           "timings_ms": {
             "delta_check": 0,
             "resolve_head": 0
           },
           "mode": "noop",
-          "cold_seconds": 0.144,
-          "cold_duration_ms": 99,
+          "cold_seconds": 0.173,
+          "cold_duration_ms": 94,
           "cold_timings_ms": {
             "build_symbols_edges": 0,
             "delta_check": 0,
             "discover_files": 0,
             "doc_links": 0,
-            "ensure_repo": 1,
-            "gitignore_scan": 14,
+            "ensure_repo": 0,
+            "gitignore_scan": 12,
             "go_types": 0,
-            "lexical": 59,
-            "parse": 22,
-            "persist": 59,
+            "lexical": 61,
+            "parse": 19,
+            "persist": 61,
             "resolve_head": 0,
             "routes": 0,
             "sort": 0,
             "walk": 0,
-            "write_sqlite": 59
+            "write_sqlite": 61
           },
-          "full_seconds": 0.144,
+          "full_seconds": 0.173,
           "cold_mode": "full",
-          "delta_seconds": 0.024,
+          "delta_seconds": 0.032,
           "delta_mode": "noop",
           "calls": 961,
           "internal_calls": 371,
@@ -1832,7 +886,7 @@
           "extracted_calls": 221,
           "extracted_pct": 96.5,
           "full_seconds": 0.671,
-          "delta_seconds": 0.312,
+          "delta_seconds": 0.3,
           "supports_incremental": true
         }
       },
@@ -1841,7 +895,7 @@
           "name": "scip-python",
           "status": "ok",
           "ok": true,
-          "seconds": 2.425,
+          "seconds": 2.748,
           "metrics": {
             "documents": 19,
             "total_documents": 19,
@@ -1855,7 +909,7 @@
             "kinds": {
               "UnspecifiedKind": 1518
             },
-            "index_bytes": 971903,
+            "index_bytes": 971895,
             "scope": "repo-root"
           }
         },
@@ -1863,7 +917,7 @@
           "name": "pyright",
           "status": "ok",
           "ok": true,
-          "seconds": 0.884,
+          "seconds": 0.964,
           "metrics": {
             "pyright_version": "1.1.411",
             "diagnostics": 12,
@@ -1881,7 +935,7 @@
             "error_count": 12,
             "warning_count": 0,
             "information_count": 0,
-            "time_in_sec": 0.665,
+            "time_in_sec": 0.7,
             "exit_code": 1
           }
         }
@@ -1904,10 +958,10 @@
         "graphifyMissing": 0,
         "atlasTokens": 21,
         "graphifyTokens": 389,
-        "atlasMs": 45.552,
-        "graphifyMs": 299.605,
+        "atlasMs": 47.435,
+        "graphifyMs": 297.577,
         "tokenRatio": 18.52,
-        "latencyRatio": 6.58,
+        "latencyRatio": 6.27,
         "pass5x": true
       },
       "queries": [
@@ -1915,8 +969,8 @@
           "symbol": "get",
           "atlasTokens": 6,
           "graphifyTokens": 142,
-          "atlasMs": 15.36,
-          "graphifyMs": 99.002,
+          "atlasMs": 15.839,
+          "graphifyMs": 98.813,
           "atlasMissing": false,
           "graphifyMissing": false
         },
@@ -1924,8 +978,8 @@
           "symbol": "request",
           "atlasTokens": 6,
           "graphifyTokens": 185,
-          "atlasMs": 15.026,
-          "graphifyMs": 102.1,
+          "atlasMs": 15.787,
+          "graphifyMs": 100.485,
           "atlasMissing": false,
           "graphifyMissing": false
         },
@@ -1933,8 +987,8 @@
           "symbol": "__init__",
           "atlasTokens": 9,
           "graphifyTokens": 62,
-          "atlasMs": 15.166,
-          "graphifyMs": 98.503,
+          "atlasMs": 15.809,
+          "graphifyMs": 98.279,
           "atlasMissing": false,
           "graphifyMissing": false
         }
@@ -1949,47 +1003,46 @@
       "atlas": {
         "status": "ok",
         "ok": true,
-        "seconds": 0.025,
+        "seconds": 0.021,
         "metrics": {
-          "files": 7,
-          "symbols": 314,
+          "files": 6,
+          "symbols": 312,
           "edges": 486,
           "edge_kinds": {
             "calls": 435,
             "imports": 51
           },
           "languages": {
-            "javascript": 6,
-            "json": 1
+            "javascript": 6
           },
-          "duration_ms": 1,
+          "duration_ms": 0,
           "timings_ms": {
             "delta_check": 0,
             "resolve_head": 0
           },
           "mode": "noop",
-          "cold_seconds": 0.089,
-          "cold_duration_ms": 53,
+          "cold_seconds": 0.14,
+          "cold_duration_ms": 54,
           "cold_timings_ms": {
             "build_symbols_edges": 0,
             "delta_check": 0,
             "discover_files": 0,
             "doc_links": 0,
             "ensure_repo": 0,
-            "gitignore_scan": 15,
+            "gitignore_scan": 12,
             "go_types": 0,
-            "lexical": 21,
-            "parse": 15,
-            "persist": 21,
+            "lexical": 26,
+            "parse": 14,
+            "persist": 26,
             "resolve_head": 0,
             "routes": 0,
             "sort": 0,
             "walk": 0,
-            "write_sqlite": 21
+            "write_sqlite": 26
           },
-          "full_seconds": 0.089,
+          "full_seconds": 0.14,
           "cold_mode": "full",
-          "delta_seconds": 0.025,
+          "delta_seconds": 0.021,
           "delta_mode": "noop",
           "calls": 435,
           "internal_calls": 231,
@@ -2002,15 +1055,15 @@
       "graphify": {
         "status": "ok",
         "ok": true,
-        "seconds": 0.166,
+        "seconds": 0.169,
         "metrics": {
           "nodes": 31,
           "links": 39,
           "calls": 3,
           "extracted_calls": 3,
           "extracted_pct": 100,
-          "full_seconds": 0.166,
-          "delta_seconds": 0.157,
+          "full_seconds": 0.169,
+          "delta_seconds": 0.147,
           "supports_incremental": true
         }
       },
@@ -2019,7 +1072,7 @@
           "name": "scip-typescript",
           "status": "ok",
           "ok": true,
-          "seconds": 1.634,
+          "seconds": 1.886,
           "metrics": {
             "documents": 6,
             "total_documents": 6,
@@ -2033,7 +1086,7 @@
             "kinds": {
               "UnspecifiedKind": 398
             },
-            "index_bytes": 106350,
+            "index_bytes": 106342,
             "scope": "lib"
           }
         },
@@ -2041,7 +1094,7 @@
           "name": "tsserver",
           "status": "ok",
           "ok": true,
-          "seconds": 0.74,
+          "seconds": 0.701,
           "metrics": {
             "diagnostics": 257,
             "diagnostics_by_code": {
@@ -2076,14 +1129,14 @@
             "symbols": 32443,
             "types": 1417,
             "instantiations": 578,
-            "memory_kb": 82358,
+            "memory_kb": 71271,
             "iioo_read_sec": 0.01,
             "iioo_write_sec": 0,
             "parse_time_sec": 0.09,
-            "bind_time_sec": 0.03,
+            "bind_time_sec": 0.04,
             "check_time_sec": 0.1,
             "emit_time_sec": 0,
-            "total_time_sec": 0.23
+            "total_time_sec": 0.24
           }
         }
       ],
@@ -2095,10 +1148,10 @@
         "graphifyMissing": 1,
         "atlasTokens": 20,
         "graphifyTokens": 140,
-        "atlasMs": 44.775,
-        "graphifyMs": 262.562,
+        "atlasMs": 44.331,
+        "graphifyMs": 247.995,
         "tokenRatio": 7,
-        "latencyRatio": 5.86,
+        "latencyRatio": 5.59,
         "pass5x": true
       },
       "queries": [
@@ -2106,8 +1159,8 @@
           "symbol": "get",
           "atlasTokens": 6,
           "graphifyTokens": 47,
-          "atlasMs": 15.219,
-          "graphifyMs": 87.773,
+          "atlasMs": 15.077,
+          "graphifyMs": 81.988,
           "atlasMissing": false,
           "graphifyMissing": false
         },
@@ -2115,8 +1168,8 @@
           "symbol": "sendFile",
           "atlasTokens": 7,
           "graphifyTokens": 46,
-          "atlasMs": 14.895,
-          "graphifyMs": 86.905,
+          "atlasMs": 14.542,
+          "graphifyMs": 83.054,
           "atlasMissing": false,
           "graphifyMissing": false
         },
@@ -2124,8 +1177,8 @@
           "symbol": "defineGetter",
           "atlasTokens": 7,
           "graphifyTokens": 47,
-          "atlasMs": 14.661,
-          "graphifyMs": 87.884,
+          "atlasMs": 14.712,
+          "graphifyMs": 82.953,
           "atlasMissing": false,
           "graphifyMissing": false
         },
@@ -2133,8 +1186,8 @@
           "symbol": "format",
           "atlasTokens": 7,
           "graphifyTokens": 8,
-          "atlasMs": 14.732,
-          "graphifyMs": 86.786,
+          "atlasMs": 14.86,
+          "graphifyMs": 80.985,
           "atlasMissing": false,
           "graphifyMissing": true
         }
@@ -2149,17 +1202,16 @@
       "atlas": {
         "status": "ok",
         "ok": true,
-        "seconds": 0.033,
+        "seconds": 0.028,
         "metrics": {
-          "files": 17,
-          "symbols": 227,
+          "files": 16,
+          "symbols": 226,
           "edges": 224,
           "edge_kinds": {
             "calls": 197,
             "imports": 27
           },
           "languages": {
-            "json": 1,
             "typescript": 16
           },
           "duration_ms": 0,
@@ -2168,28 +1220,28 @@
             "resolve_head": 0
           },
           "mode": "noop",
-          "cold_seconds": 0.1,
-          "cold_duration_ms": 57,
+          "cold_seconds": 0.15,
+          "cold_duration_ms": 49,
           "cold_timings_ms": {
             "build_symbols_edges": 0,
             "delta_check": 0,
             "discover_files": 0,
             "doc_links": 0,
             "ensure_repo": 0,
-            "gitignore_scan": 14,
+            "gitignore_scan": 12,
             "go_types": 0,
-            "lexical": 26,
-            "parse": 15,
-            "persist": 26,
+            "lexical": 25,
+            "parse": 11,
+            "persist": 25,
             "resolve_head": 0,
             "routes": 0,
             "sort": 0,
             "walk": 0,
-            "write_sqlite": 26
+            "write_sqlite": 25
           },
-          "full_seconds": 0.1,
+          "full_seconds": 0.15,
           "cold_mode": "full",
-          "delta_seconds": 0.033,
+          "delta_seconds": 0.028,
           "delta_mode": "noop",
           "calls": 197,
           "internal_calls": 81,
@@ -2202,15 +1254,15 @@
       "graphify": {
         "status": "ok",
         "ok": true,
-        "seconds": 0.198,
+        "seconds": 0.197,
         "metrics": {
           "nodes": 112,
           "links": 171,
           "calls": 6,
           "extracted_calls": 6,
           "extracted_pct": 100,
-          "full_seconds": 0.198,
-          "delta_seconds": 0.176,
+          "full_seconds": 0.197,
+          "delta_seconds": 0.168,
           "supports_incremental": true
         }
       },
@@ -2219,7 +1271,7 @@
           "name": "scip-typescript",
           "status": "ok",
           "ok": true,
-          "seconds": 0.771,
+          "seconds": 0.762,
           "metrics": {
             "documents": 16,
             "total_documents": 16,
@@ -2233,7 +1285,7 @@
             "kinds": {
               "UnspecifiedKind": 792
             },
-            "index_bytes": 176999,
+            "index_bytes": 176991,
             "scope": "src"
           }
         },
@@ -2241,7 +1293,7 @@
           "name": "tsserver",
           "status": "ok",
           "ok": true,
-          "seconds": 0.558,
+          "seconds": 0.67,
           "metrics": {
             "diagnostics": 1,
             "diagnostics_by_code": {
@@ -2255,7 +1307,7 @@
             "symbols": 40624,
             "types": 85,
             "instantiations": 0,
-            "memory_kb": 72410,
+            "memory_kb": 75312,
             "iioo_read_sec": 0.01,
             "iioo_write_sec": 0,
             "parse_time_sec": 0.12,
@@ -2274,10 +1326,10 @@
         "graphifyMissing": 1,
         "atlasTokens": 19,
         "graphifyTokens": 217,
-        "atlasMs": 42.68,
-        "graphifyMs": 264.415,
+        "atlasMs": 43.281,
+        "graphifyMs": 248.938,
         "tokenRatio": 11.42,
-        "latencyRatio": 6.2,
+        "latencyRatio": 5.75,
         "pass5x": true
       },
       "queries": [
@@ -2285,8 +1337,8 @@
           "symbol": "DevtoolsImpl",
           "atlasTokens": 7,
           "graphifyTokens": 53,
-          "atlasMs": 14.174,
-          "graphifyMs": 87.895,
+          "atlasMs": 14.475,
+          "graphifyMs": 83.222,
           "atlasMissing": false,
           "graphifyMissing": false
         },
@@ -2294,8 +1346,8 @@
           "symbol": "hydrate",
           "atlasTokens": 7,
           "graphifyTokens": 8,
-          "atlasMs": 14.984,
-          "graphifyMs": 87.782,
+          "atlasMs": 14.752,
+          "graphifyMs": 82.214,
           "atlasMissing": false,
           "graphifyMissing": true
         },
@@ -2303,8 +1355,8 @@
           "symbol": "shallow",
           "atlasTokens": 6,
           "graphifyTokens": 75,
-          "atlasMs": 14.398,
-          "graphifyMs": 87.887,
+          "atlasMs": 14.35,
+          "graphifyMs": 83.072,
           "atlasMissing": false,
           "graphifyMissing": false
         },
@@ -2312,8 +1364,8 @@
           "symbol": "CreateStore",
           "atlasTokens": 6,
           "graphifyTokens": 89,
-          "atlasMs": 14.108,
-          "graphifyMs": 88.633,
+          "atlasMs": 14.456,
+          "graphifyMs": 82.644,
           "atlasMissing": false,
           "graphifyMissing": false
         }
@@ -2328,7 +1380,7 @@
       "atlas": {
         "status": "ok",
         "ok": true,
-        "seconds": 0.039,
+        "seconds": 0.047,
         "metrics": {
           "files": 86,
           "symbols": 1558,
@@ -2340,34 +1392,34 @@
           "languages": {
             "java": 86
           },
-          "duration_ms": 15,
+          "duration_ms": 9,
           "timings_ms": {
-            "delta_check": 15,
+            "delta_check": 9,
             "resolve_head": 0
           },
           "mode": "noop",
-          "cold_seconds": 0.281,
-          "cold_duration_ms": 208,
+          "cold_seconds": 0.433,
+          "cold_duration_ms": 291,
           "cold_timings_ms": {
             "build_symbols_edges": 1,
             "delta_check": 0,
             "discover_files": 0,
             "doc_links": 0,
             "ensure_repo": 0,
-            "gitignore_scan": 14,
+            "gitignore_scan": 13,
             "go_types": 0,
-            "lexical": 142,
-            "parse": 49,
-            "persist": 142,
+            "lexical": 228,
+            "parse": 48,
+            "persist": 228,
             "resolve_head": 0,
             "routes": 0,
             "sort": 0,
             "walk": 0,
-            "write_sqlite": 142
+            "write_sqlite": 228
           },
-          "full_seconds": 0.281,
+          "full_seconds": 0.433,
           "cold_mode": "full",
-          "delta_seconds": 0.039,
+          "delta_seconds": 0.047,
           "delta_mode": "noop",
           "calls": 3105,
           "internal_calls": 2403,
@@ -2380,15 +1432,15 @@
       "graphify": {
         "status": "ok",
         "ok": true,
-        "seconds": 0.998,
+        "seconds": 1.03,
         "metrics": {
           "nodes": 1016,
           "links": 3668,
           "calls": 927,
           "extracted_calls": 599,
           "extracted_pct": 64.6,
-          "full_seconds": 0.998,
-          "delta_seconds": 0.625,
+          "full_seconds": 1.03,
+          "delta_seconds": 0.887,
           "supports_incremental": true
         }
       },
@@ -2404,20 +1456,20 @@
           "name": "jdtls",
           "status": "ok",
           "ok": true,
-          "seconds": 2.128,
+          "seconds": 9.447,
           "metrics": {
             "build_root": "gson",
             "sample_files": 5,
             "document_symbol_files": 5,
             "document_symbols": 54,
             "workspace_symbols_query_gson": 11,
-            "diagnostic_files": 71,
-            "diagnostics": 425,
+            "diagnostic_files": 5,
+            "diagnostics": 0,
             "initialized": true,
             "java_home": "/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home",
             "stderr_tail": [
               "WARNING: Using incubator modules: jdk.incubator.vector",
-              "Jun 30, 2026 9:18:36 AM org.apache.aries.spifly.BaseActivator log",
+              "Jun 30, 2026 9:54:32 AM org.apache.aries.spifly.BaseActivator log",
               "INFO: Registered provider ch.qos.logback.classic.spi.LogbackServiceProvider of service org.slf4j.spi.SLF4JServiceProvider in bundle ch.qos.logback.classic"
             ]
           }
@@ -2430,11 +1482,11 @@
         "atlasMissing": 0,
         "graphifyMissing": 0,
         "atlasTokens": 14,
-        "graphifyTokens": 213,
-        "atlasMs": 39.665,
-        "graphifyMs": 215.363,
-        "tokenRatio": 15.21,
-        "latencyRatio": 5.43,
+        "graphifyTokens": 214,
+        "atlasMs": 47.453,
+        "graphifyMs": 263.843,
+        "tokenRatio": 15.29,
+        "latencyRatio": 5.56,
         "pass5x": true
       },
       "queries": [
@@ -2442,17 +1494,17 @@
           "symbol": "write",
           "atlasTokens": 7,
           "graphifyTokens": 112,
-          "atlasMs": 20.011,
-          "graphifyMs": 106.164,
+          "atlasMs": 19.355,
+          "graphifyMs": 105.314,
           "atlasMissing": false,
           "graphifyMissing": false
         },
         {
           "symbol": "read",
           "atlasTokens": 7,
-          "graphifyTokens": 101,
-          "atlasMs": 19.654,
-          "graphifyMs": 109.199,
+          "graphifyTokens": 102,
+          "atlasMs": 28.098,
+          "graphifyMs": 158.529,
           "atlasMissing": false,
           "graphifyMissing": false
         }
@@ -2467,7 +1519,7 @@
       "atlas": {
         "status": "ok",
         "ok": true,
-        "seconds": 0.035,
+        "seconds": 0.033,
         "metrics": {
           "files": 178,
           "symbols": 1790,
@@ -2489,34 +1541,34 @@
             "text": 9,
             "yaml": 23
           },
-          "duration_ms": 15,
+          "duration_ms": 13,
           "timings_ms": {
-            "delta_check": 14,
+            "delta_check": 13,
             "resolve_head": 0
           },
           "mode": "noop",
-          "cold_seconds": 0.362,
-          "cold_duration_ms": 325,
+          "cold_seconds": 0.57,
+          "cold_duration_ms": 434,
           "cold_timings_ms": {
-            "build_symbols_edges": 1,
+            "build_symbols_edges": 2,
             "delta_check": 0,
             "discover_files": 2,
-            "doc_links": 0,
+            "doc_links": 1,
             "ensure_repo": 0,
-            "gitignore_scan": 16,
+            "gitignore_scan": 22,
             "go_types": 0,
-            "lexical": 169,
-            "parse": 132,
-            "persist": 169,
+            "lexical": 252,
+            "parse": 153,
+            "persist": 252,
             "resolve_head": 0,
             "routes": 0,
             "sort": 0,
             "walk": 2,
-            "write_sqlite": 169
+            "write_sqlite": 252
           },
-          "full_seconds": 0.362,
+          "full_seconds": 0.57,
           "cold_mode": "full",
-          "delta_seconds": 0.035,
+          "delta_seconds": 0.033,
           "delta_mode": "noop",
           "calls": 4973,
           "internal_calls": 1975,
@@ -2531,15 +1583,15 @@
       "graphify": {
         "status": "ok",
         "ok": true,
-        "seconds": 1.018,
+        "seconds": 0.967,
         "metrics": {
           "nodes": 971,
           "links": 2148,
           "calls": 1018,
           "extracted_calls": 492,
           "extracted_pct": 48.3,
-          "full_seconds": 1.018,
-          "delta_seconds": 0.527,
+          "full_seconds": 0.967,
+          "delta_seconds": 0.521,
           "supports_incremental": true
         }
       },
@@ -2548,7 +1600,7 @@
           "name": "clangd",
           "status": "ok",
           "ok": true,
-          "seconds": 0.089,
+          "seconds": 0.17,
           "metrics": {
             "sample_files": 8,
             "document_symbol_files": 8,
@@ -2557,11 +1609,11 @@
             "diagnostics": 2,
             "initialized": true,
             "stderr_tail": [
-              "I[09:18:43.429] --> reply:textDocument/documentSymbol(16) 53 ms",
-              "I[09:18:43.433] --> textDocument/publishDiagnostics",
-              "I[09:18:43.434] --> reply:textDocument/documentSymbol(11) 58 ms",
-              "I[09:18:43.439] --> textDocument/publishDiagnostics",
-              "I[09:18:43.441] --> reply:textDocument/documentSymbol(10) 66 ms"
+              "I[09:54:49.341] --> reply:textDocument/documentSymbol(11) 93 ms",
+              "I[09:54:49.341] --> textDocument/publishDiagnostics",
+              "I[09:54:49.342] --> reply:textDocument/documentSymbol(16) 93 ms",
+              "I[09:54:49.350] --> textDocument/publishDiagnostics",
+              "I[09:54:49.352] --> reply:textDocument/documentSymbol(10) 103 ms"
             ]
           }
         }
@@ -2574,10 +1626,10 @@
         "graphifyMissing": 0,
         "atlasTokens": 42,
         "graphifyTokens": 1206,
-        "atlasMs": 62.022,
-        "graphifyMs": 422.048,
+        "atlasMs": 58.627,
+        "graphifyMs": 405.374,
         "tokenRatio": 28.71,
-        "latencyRatio": 6.8,
+        "latencyRatio": 6.91,
         "pass5x": true
       },
       "queries": [
@@ -2585,8 +1637,8 @@
           "symbol": "cJSON_Delete",
           "atlasTokens": 8,
           "graphifyTokens": 284,
-          "atlasMs": 16.276,
-          "graphifyMs": 104.449,
+          "atlasMs": 15.317,
+          "graphifyMs": 104.62,
           "atlasMissing": false,
           "graphifyMissing": false
         },
@@ -2594,8 +1646,8 @@
           "symbol": "cjson_functions_should_not_crash_with_null_pointers",
           "atlasTokens": 18,
           "graphifyTokens": 288,
-          "atlasMs": 15.409,
-          "graphifyMs": 106.376,
+          "atlasMs": 14.801,
+          "graphifyMs": 100.548,
           "atlasMissing": false,
           "graphifyMissing": false
         },
@@ -2603,8 +1655,8 @@
           "symbol": "cJSON_CreateObject",
           "atlasTokens": 9,
           "graphifyTokens": 332,
-          "atlasMs": 14.929,
-          "graphifyMs": 105.989,
+          "atlasMs": 14.141,
+          "graphifyMs": 101.236,
           "atlasMissing": false,
           "graphifyMissing": false
         },
@@ -2612,8 +1664,8 @@
           "symbol": "UnityPrint",
           "atlasTokens": 7,
           "graphifyTokens": 302,
-          "atlasMs": 15.408,
-          "graphifyMs": 105.234,
+          "atlasMs": 14.368,
+          "graphifyMs": 98.97,
           "atlasMissing": false,
           "graphifyMissing": false
         }
@@ -2628,7 +1680,7 @@
       "atlas": {
         "status": "ok",
         "ok": true,
-        "seconds": 0.048,
+        "seconds": 0.033,
         "metrics": {
           "files": 144,
           "symbols": 2088,
@@ -2646,34 +1698,34 @@
             "text": 1,
             "yaml": 1
           },
-          "duration_ms": 10,
+          "duration_ms": 6,
           "timings_ms": {
-            "delta_check": 10,
+            "delta_check": 6,
             "resolve_head": 0
           },
           "mode": "noop",
-          "cold_seconds": 0.391,
-          "cold_duration_ms": 353,
+          "cold_seconds": 0.376,
+          "cold_duration_ms": 318,
           "cold_timings_ms": {
-            "build_symbols_edges": 2,
+            "build_symbols_edges": 3,
             "delta_check": 0,
             "discover_files": 0,
-            "doc_links": 0,
-            "ensure_repo": 0,
-            "gitignore_scan": 14,
+            "doc_links": 1,
+            "ensure_repo": 1,
+            "gitignore_scan": 12,
             "go_types": 0,
-            "lexical": 252,
-            "parse": 82,
-            "persist": 252,
+            "lexical": 210,
+            "parse": 89,
+            "persist": 210,
             "resolve_head": 0,
             "routes": 0,
             "sort": 2,
             "walk": 0,
-            "write_sqlite": 252
+            "write_sqlite": 210
           },
-          "full_seconds": 0.391,
+          "full_seconds": 0.376,
           "cold_mode": "full",
-          "delta_seconds": 0.048,
+          "delta_seconds": 0.033,
           "delta_mode": "noop",
           "calls": 9481,
           "internal_calls": 6217,
@@ -2686,15 +1738,15 @@
       "graphify": {
         "status": "ok",
         "ok": true,
-        "seconds": 1.427,
+        "seconds": 1.328,
         "metrics": {
           "nodes": 2206,
           "links": 4995,
           "calls": 1195,
           "extracted_calls": 1027,
           "extracted_pct": 85.9,
-          "full_seconds": 1.427,
-          "delta_seconds": 0.859,
+          "full_seconds": 1.328,
+          "delta_seconds": 0.847,
           "supports_incremental": true
         }
       },
@@ -2703,7 +1755,7 @@
           "name": "clangd",
           "status": "ok",
           "ok": true,
-          "seconds": 0.262,
+          "seconds": 0.247,
           "metrics": {
             "sample_files": 8,
             "document_symbol_files": 8,
@@ -2712,11 +1764,11 @@
             "diagnostics": 167,
             "initialized": true,
             "stderr_tail": [
-              "E[09:18:49.034] IncludeCleaner: Failed to get an entry for resolved path : No such file or directory",
-              "E[09:18:49.034] IncludeCleaner: Failed to get an entry for resolved path : No such file or directory",
-              "E[09:18:49.034] IncludeCleaner: Failed to get an entry for resolved path : No such file or directory",
-              "I[09:18:49.035] --> textDocument/publishDiagnostics",
-              "I[09:18:49.035] --> reply:textDocument/documentSymbol(11) 240 ms"
+              "E[09:54:55.788] IncludeCleaner: Failed to get an entry for resolved path : No such file or directory",
+              "E[09:54:55.788] IncludeCleaner: Failed to get an entry for resolved path : No such file or directory",
+              "E[09:54:55.788] IncludeCleaner: Failed to get an entry for resolved path : No such file or directory",
+              "I[09:54:55.789] --> textDocument/publishDiagnostics",
+              "I[09:54:55.789] --> reply:textDocument/documentSymbol(11) 228 ms"
             ]
           }
         }
@@ -2729,10 +1781,10 @@
         "graphifyMissing": 0,
         "atlasTokens": 32,
         "graphifyTokens": 320,
-        "atlasMs": 66.747,
-        "graphifyMs": 483.635,
+        "atlasMs": 65.192,
+        "graphifyMs": 478.781,
         "tokenRatio": 10,
-        "latencyRatio": 7.25,
+        "latencyRatio": 7.34,
         "pass5x": true
       },
       "queries": [
@@ -2740,8 +1792,8 @@
           "symbol": "RandomString",
           "atlasTokens": 9,
           "graphifyTokens": 76,
-          "atlasMs": 16.05,
-          "graphifyMs": 116.458,
+          "atlasMs": 15.367,
+          "graphifyMs": 117.937,
           "atlasMissing": false,
           "graphifyMissing": false
         },
@@ -2749,8 +1801,8 @@
           "symbol": "MemEnvTest",
           "atlasTokens": 8,
           "graphifyTokens": 100,
-          "atlasMs": 14.534,
-          "graphifyMs": 124.416,
+          "atlasMs": 13.775,
+          "graphifyMs": 115.471,
           "atlasMissing": false,
           "graphifyMissing": false
         },
@@ -2758,8 +1810,8 @@
           "symbol": "Size",
           "atlasTokens": 9,
           "graphifyTokens": 72,
-          "atlasMs": 15.425,
-          "graphifyMs": 120.011,
+          "atlasMs": 14.657,
+          "graphifyMs": 126.574,
           "atlasMissing": false,
           "graphifyMissing": false
         },
@@ -2767,8 +1819,8 @@
           "symbol": "size",
           "atlasTokens": 6,
           "graphifyTokens": 72,
-          "atlasMs": 20.738,
-          "graphifyMs": 122.75,
+          "atlasMs": 21.393,
+          "graphifyMs": 118.799,
           "atlasMissing": false,
           "graphifyMissing": false
         }
