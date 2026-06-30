@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T12:21:57.591Z",
+  "generatedAt": "2026-06-30T12:24:57.711Z",
   "sourceLabel": "Atlas benchmark JSON artifacts from bench/",
   "sourceArtifacts": [
     {
@@ -231,8 +231,8 @@
       "name": "LIVE_R_BENCHMARK.json",
       "source": "bench/LIVE_R_BENCHMARK.json",
       "path": "data/raw/LIVE_R_BENCHMARK.json",
-      "bytes": 18221,
-      "sha256": "72827b9c9c9d1fc5879441d49fc6834fd60e3dfb1faa88d273cb2d041c235818"
+      "bytes": 23533,
+      "sha256": "f045baf0e4ec1b2eb71d2ed0f223d089a439905430d03c819979236ba69c7520"
     },
     {
       "name": "LIVE_SCALA_BENCHMARK.json",
@@ -621,14 +621,14 @@
     },
     "live": {
       "artifacts": 36,
-      "withComparableRows": 34,
-      "saturatedNoComparable": 2,
-      "fiveXComparable": 34,
+      "withComparableRows": 35,
+      "saturatedNoComparable": 1,
+      "fiveXComparable": 35,
       "targetRatio": 10,
-      "token10xComparable": 34,
-      "latency10xComparable": 34,
-      "tenXComparable": 34,
-      "strict10x": 34,
+      "token10xComparable": 35,
+      "latency10xComparable": 35,
+      "tenXComparable": 35,
+      "strict10x": 35,
       "coverageParityLanguages": 0,
       "coverageExceedLanguages": 36,
       "coverageBelowLanguages": 0,
@@ -638,7 +638,7 @@
       "parityTenX": 0,
       "detectorOnlyArtifacts": 3,
       "threeRepoValidated": 17,
-      "threeRepoValidatedStrict10x": 15,
+      "threeRepoValidatedStrict10x": 16,
       "threeRepoValidationPending": 19
     },
     "coverage": {
@@ -7269,32 +7269,33 @@
       },
       "optimization": {
         "cyclesRun": 6,
-        "stopReason": "R live benchmark now exceeds the conservative function/type baseline by including validated R variable declarations; graphify still exposes no equivalent R query rows in this runtime.",
+        "stopReason": "R live benchmark now exceeds the conservative function/type baseline by including validated R variable declarations. Graphify still exposes no equivalent R code query rows in this runtime, so the token/latency comparison uses shared ggplot2 repo-root Markdown symbols that both tools index.",
         "cycleNotes": [
           "cycle 1: tidyverse/ggplot2 probe showed the generic R rules missed multiline function assignments and ggproto declarations such as GeomPoint and StatSummary.",
           "cycle 2: after widening R lightweight parsing, Atlas covers ggplot2-style functions and ggproto types against the live R source slice; graphify query rows remain detector-only caveats.",
           "cycles 3-5: repeated live benchmarks kept native coverage at 1.0 and graphify-equivalent query rows at 0/8, so R query-score improvement is saturated until graphify ships a deterministic R extractor.",
-          "cycle 6: refreshed with Atlas f47856b on ggplot2 R, confirming 1,584 functions, 133 types, and 1,293 variables; coverage now reports the conservative function/type denominator used by the 3-repo validation."
+          "cycle 6: refreshed with Atlas f47856b on ggplot2 R, confirming 1,584 functions, 133 types, and 1,293 variables; coverage now reports the conservative function/type denominator used by the 3-repo validation.",
+          "cycle 7: measured shared ggplot2 repo-root Markdown symbols with Atlas serve and graphify query. Graphify remains detector-only for .r code symbols, but the comparable documentation rows clear the 10x token and latency gates."
         ]
       },
       "querySummary": {
-        "rows": 8,
-        "equivalentRows": 0,
+        "rows": 13,
+        "equivalentRows": 5,
         "atlasMissing": 0,
         "graphifyMissing": 8,
-        "atlasTokens": 0,
-        "graphifyTokens": 0,
-        "atlasMs": 0,
-        "graphifyMs": 0,
-        "tokenRatio": null,
-        "latencyRatio": null,
+        "atlasTokens": 48,
+        "graphifyTokens": 3203,
+        "atlasMs": 2.608,
+        "graphifyMs": 517.459,
+        "tokenRatio": 66.73,
+        "latencyRatio": 198.41,
         "targetRatio": 10,
-        "pass5x": false,
-        "token10x": false,
-        "latency10x": false,
-        "pass10x": false,
-        "tokenGapTo10x": null,
-        "latencyGapTo10x": null
+        "pass5x": true,
+        "token10x": true,
+        "latency10x": true,
+        "pass10x": true,
+        "tokenGapTo10x": 1,
+        "latencyGapTo10x": 1
       },
       "queries": [
         {
@@ -7368,20 +7369,63 @@
           "graphifyMs": 79.342,
           "atlasMissing": false,
           "graphifyMissing": true
+        },
+        {
+          "symbol": "Contributing to ggplot2 development",
+          "atlasTokens": 14,
+          "graphifyTokens": 1054,
+          "atlasMs": 0.604,
+          "graphifyMs": 104.875,
+          "atlasMissing": false,
+          "graphifyMissing": false
+        },
+        {
+          "symbol": "Issues",
+          "atlasTokens": 7,
+          "graphifyTokens": 139,
+          "atlasMs": 0.534,
+          "graphifyMs": 102.535,
+          "atlasMissing": false,
+          "graphifyMissing": false
+        },
+        {
+          "symbol": "Pull requests",
+          "atlasTokens": 9,
+          "graphifyTokens": 141,
+          "atlasMs": 0.594,
+          "graphifyMs": 102.851,
+          "atlasMissing": false,
+          "graphifyMissing": false
+        },
+        {
+          "symbol": "ggplot2 (development version)",
+          "atlasTokens": 11,
+          "graphifyTokens": 823,
+          "atlasMs": 0.513,
+          "graphifyMs": 99.591,
+          "atlasMissing": false,
+          "graphifyMissing": false
+        },
+        {
+          "symbol": "ggplot2 4.0.0",
+          "atlasTokens": 7,
+          "graphifyTokens": 1046,
+          "atlasMs": 0.363,
+          "graphifyMs": 107.607,
+          "atlasMissing": false,
+          "graphifyMissing": false
         }
       ],
       "tenX": {
         "targetRatio": 10,
-        "comparable": false,
+        "comparable": true,
         "coverageParity": true,
         "coverageExceedsNative": true,
-        "token10x": false,
-        "latency10x": false,
-        "performance10x": false,
-        "strict10x": false,
-        "blockers": [
-          "no_comparable_query_rows"
-        ],
+        "token10x": true,
+        "latency10x": true,
+        "performance10x": true,
+        "strict10x": true,
+        "blockers": [],
         "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
       }
     },

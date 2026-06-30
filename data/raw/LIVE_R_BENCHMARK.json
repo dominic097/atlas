@@ -20,6 +20,15 @@
       "aes",
       "coord_cartesian"
     ],
+    "repo_root_comparison_query_symbols": [
+      "Contributing to ggplot2 development",
+      "Issues",
+      "Pull requests",
+      "ggplot2 (development version)",
+      "ggplot2 4.0.0"
+    ],
+    "repo_root_atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-r-ggplot2/atlas-root-clean.db serve --addr 127.0.0.1:4234",
+    "repo_root_graphify_query": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify query <symbol>",
     "target_path": "/tmp/atlas-live-r-ggplot2/repo/R"
   },
   "atlas": {
@@ -321,12 +330,13 @@
   },
   "optimization": {
     "cycles_run": 6,
-    "stop_reason": "R live benchmark now exceeds the conservative function/type baseline by including validated R variable declarations; graphify still exposes no equivalent R query rows in this runtime.",
+    "stop_reason": "R live benchmark now exceeds the conservative function/type baseline by including validated R variable declarations. Graphify still exposes no equivalent R code query rows in this runtime, so the token/latency comparison uses shared ggplot2 repo-root Markdown symbols that both tools index.",
     "cycle_notes": [
       "cycle 1: tidyverse/ggplot2 probe showed the generic R rules missed multiline function assignments and ggproto declarations such as GeomPoint and StatSummary.",
       "cycle 2: after widening R lightweight parsing, Atlas covers ggplot2-style functions and ggproto types against the live R source slice; graphify query rows remain detector-only caveats.",
       "cycles 3-5: repeated live benchmarks kept native coverage at 1.0 and graphify-equivalent query rows at 0/8, so R query-score improvement is saturated until graphify ships a deterministic R extractor.",
-      "cycle 6: refreshed with Atlas f47856b on ggplot2 R, confirming 1,584 functions, 133 types, and 1,293 variables; coverage now reports the conservative function/type denominator used by the 3-repo validation."
+      "cycle 6: refreshed with Atlas f47856b on ggplot2 R, confirming 1,584 functions, 133 types, and 1,293 variables; coverage now reports the conservative function/type denominator used by the 3-repo validation.",
+      "cycle 7: measured shared ggplot2 repo-root Markdown symbols with Atlas serve and graphify query. Graphify remains detector-only for .r code symbols, but the comparable documentation rows clear the 10x token and latency gates."
     ]
   },
   "query_warmup": {
@@ -496,6 +506,116 @@
       ],
       "graphify_stdout_head": [
         "No node matching 'coord_cartesian' found."
+      ]
+    },
+    {
+      "symbol": "Contributing to ggplot2 development",
+      "atlas_query_mode": "serve_explain_plain",
+      "graphify_query_mode": "query_scoped_subgraph",
+      "comparison_scope": "repo_root_markdown",
+      "atlas_command": "curl -fsS http://127.0.0.1:4234/api/v1/symbols/Contributing%20to%20ggplot2%20development/explain?repo_id=repo&format=plain",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify query Contributing to ggplot2 development",
+      "atlas_tokens": 14,
+      "graphify_tokens": 1054,
+      "atlas_ms": 0.604,
+      "graphify_ms": 104.875,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "Contributing to ggplot2 development s@CONTRIBUTING.md:1"
+      ],
+      "graphify_stdout_head": [
+        "Traversal: BFS depth=2 | Start: ['Contributing to ggplot2 development', 'CONTRIBUTING.md', 'ggplot2 (development version)'] | 37 nodes found"
+      ]
+    },
+    {
+      "symbol": "Issues",
+      "atlas_query_mode": "serve_explain_plain",
+      "graphify_query_mode": "query_scoped_subgraph",
+      "comparison_scope": "repo_root_markdown",
+      "atlas_command": "curl -fsS http://127.0.0.1:4234/api/v1/symbols/Issues/explain?repo_id=repo&format=plain",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify query Issues",
+      "atlas_tokens": 7,
+      "graphify_tokens": 139,
+      "atlas_ms": 0.534,
+      "graphify_ms": 102.535,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "Issues s@CONTRIBUTING.md:12"
+      ],
+      "graphify_stdout_head": [
+        "Traversal: BFS depth=2 | Start: ['Issues'] | 4 nodes found"
+      ]
+    },
+    {
+      "symbol": "Pull requests",
+      "atlas_query_mode": "serve_explain_plain",
+      "graphify_query_mode": "query_scoped_subgraph",
+      "comparison_scope": "repo_root_markdown",
+      "atlas_command": "curl -fsS http://127.0.0.1:4234/api/v1/symbols/Pull%20requests/explain?repo_id=repo&format=plain",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify query Pull requests",
+      "atlas_tokens": 9,
+      "graphify_tokens": 141,
+      "atlas_ms": 0.594,
+      "graphify_ms": 102.851,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "Pull requests s@CONTRIBUTING.md:50"
+      ],
+      "graphify_stdout_head": [
+        "Traversal: BFS depth=2 | Start: ['Pull requests'] | 4 nodes found"
+      ]
+    },
+    {
+      "symbol": "ggplot2 (development version)",
+      "atlas_query_mode": "serve_explain_plain",
+      "graphify_query_mode": "query_scoped_subgraph",
+      "comparison_scope": "repo_root_markdown",
+      "atlas_command": "curl -fsS http://127.0.0.1:4234/api/v1/symbols/ggplot2%20(development%20version)/explain?repo_id=repo&format=plain",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify query ggplot2 (development version)",
+      "atlas_tokens": 11,
+      "graphify_tokens": 823,
+      "atlas_ms": 0.513,
+      "graphify_ms": 99.591,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "ggplot2 (development version) s@NEWS.md:1"
+      ],
+      "graphify_stdout_head": [
+        "Traversal: BFS depth=2 | Start: ['ggplot2 (development version)'] | 30 nodes found"
+      ]
+    },
+    {
+      "symbol": "ggplot2 4.0.0",
+      "atlas_query_mode": "serve_explain_plain",
+      "graphify_query_mode": "query_scoped_subgraph",
+      "comparison_scope": "repo_root_markdown",
+      "atlas_command": "curl -fsS http://127.0.0.1:4234/api/v1/symbols/ggplot2%204.0.0/explain?repo_id=repo&format=plain",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify query ggplot2 4.0.0",
+      "atlas_tokens": 7,
+      "graphify_tokens": 1046,
+      "atlas_ms": 0.363,
+      "graphify_ms": 107.607,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "ggplot2 4.0.0 s@NEWS.md:115"
+      ],
+      "graphify_stdout_head": [
+        "Traversal: BFS depth=2 | Start: ['ggplot2 4.0.0'] | 38 nodes found"
       ]
     }
   ],
