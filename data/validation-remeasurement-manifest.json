@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T19:01:50.442Z",
+  "generatedAt": "2026-06-30T19:12:26.990Z",
   "source": "data/raw/LIVE_*_BENCHMARK.json",
   "harness": "scripts/validation-remeasurement-harness.mjs",
   "summary": {
@@ -14,12 +14,12 @@
     "atlasReplayReadyRows": 105,
     "graphifyReplayReadyRows": 105,
     "nativeRemeasurementCandidateRows": 105,
-    "nativeRemeasurementCandidateExecutableRows": 15,
+    "nativeRemeasurementCandidateExecutableRows": 18,
     "nativeRemeasurementReadyRows": 0,
     "fullRemeasurementReadyRows": 0,
     "fullRemeasurementReadyArtifacts": 0,
-    "nativeCandidatePlaceholderRows": 72,
-    "nativeCandidateEphemeralHelperRows": 57,
+    "nativeCandidatePlaceholderRows": 69,
+    "nativeCandidateEphemeralHelperRows": 54,
     "proxyOrDetectorCodeArtifacts": 14,
     "warnings": 35,
     "errors": 0,
@@ -2783,12 +2783,12 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
-      "nativeRemeasurementCandidateExecutableRows": 0,
+      "nativeRemeasurementCandidateExecutableRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
-      "nativeCandidatePlaceholderRows": 3,
-      "nativeCandidateEphemeralHelperRows": 3,
+      "nativeCandidatePlaceholderRows": 0,
+      "nativeCandidateEphemeralHelperRows": 0,
       "minCoverageRatio": 1,
       "warnings": [
         "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -2796,8 +2796,6 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
-        "native_command_contains_placeholder",
-        "native_command_uses_ephemeral_helper_path",
         "native_or_proxy_remeasurement_command_not_recorded"
       ],
       "repos": [
@@ -2815,13 +2813,11 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
-          "nativeRemeasurementCandidateExecutableReady": false,
+          "nativeRemeasurementCandidateExecutableReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
-            "native_command_contains_placeholder",
-            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -2834,12 +2830,9 @@
             "(cd work/lua/01-pandoc-scholar__pandoc-scholar && uv tool run --from graphifyy graphify update .)"
           ],
           "nativeRemeasurementCandidateCommands": [
-            "/tmp/atlas-live-lua-lazy/luaparser-venv/bin/python -c <luaparser definition counter> work/lua/01-pandoc-scholar__pandoc-scholar"
+            "uv run --with luaparser==4.0.1 python scripts/native-baselines/lua_luaparser_stats.py work/lua/01-pandoc-scholar__pandoc-scholar"
           ],
-          "nativeRemeasurementCandidateBlockers": [
-            "native_command_contains_placeholder",
-            "native_command_uses_ephemeral_helper_path"
-          ],
+          "nativeRemeasurementCandidateBlockers": [],
           "nativeRemeasurementCommands": []
         },
         {
@@ -2856,13 +2849,11 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
-          "nativeRemeasurementCandidateExecutableReady": false,
+          "nativeRemeasurementCandidateExecutableReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
-            "native_command_contains_placeholder",
-            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -2875,12 +2866,9 @@
             "(cd work/lua/02-Kaixhin__Autoencoders && uv tool run --from graphifyy graphify update .)"
           ],
           "nativeRemeasurementCandidateCommands": [
-            "/tmp/atlas-live-lua-lazy/luaparser-venv/bin/python -c <luaparser definition counter> work/lua/02-Kaixhin__Autoencoders"
+            "uv run --with luaparser==4.0.1 python scripts/native-baselines/lua_luaparser_stats.py work/lua/02-Kaixhin__Autoencoders"
           ],
-          "nativeRemeasurementCandidateBlockers": [
-            "native_command_contains_placeholder",
-            "native_command_uses_ephemeral_helper_path"
-          ],
+          "nativeRemeasurementCandidateBlockers": [],
           "nativeRemeasurementCommands": []
         },
         {
@@ -2897,13 +2885,11 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
-          "nativeRemeasurementCandidateExecutableReady": false,
+          "nativeRemeasurementCandidateExecutableReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
-            "native_command_contains_placeholder",
-            "native_command_uses_ephemeral_helper_path",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
           "atlasReplayCommands": [
@@ -2916,12 +2902,9 @@
             "(cd work/lua/03-sunjon__Shade.nvim && uv tool run --from graphifyy graphify update .)"
           ],
           "nativeRemeasurementCandidateCommands": [
-            "/tmp/atlas-live-lua-lazy/luaparser-venv/bin/python -c <luaparser definition counter> work/lua/03-sunjon__Shade.nvim"
+            "uv run --with luaparser==4.0.1 python scripts/native-baselines/lua_luaparser_stats.py work/lua/03-sunjon__Shade.nvim"
           ],
-          "nativeRemeasurementCandidateBlockers": [
-            "native_command_contains_placeholder",
-            "native_command_uses_ephemeral_helper_path"
-          ],
+          "nativeRemeasurementCandidateBlockers": [],
           "nativeRemeasurementCommands": []
         }
       ]

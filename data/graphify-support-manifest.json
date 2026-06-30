@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T18:50:05.795Z",
+  "generatedAt": "2026-06-30T19:12:26.794Z",
   "source": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json and data/raw/LIVE_*_BENCHMARK.json",
   "harness": "scripts/graphify-support-harness.mjs",
   "summary": {

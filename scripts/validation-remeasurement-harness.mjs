@@ -94,6 +94,14 @@ function rewriteCommittedHelperPath(command) {
       "python3 scripts/native-baselines/razor_stats.py"
     )
     .replace(
+      "/tmp/atlas-live-lua-lazy/luaparser-venv/bin/python -c <luaparser definition counter>",
+      "uv run --with luaparser==4.0.1 python scripts/native-baselines/lua_luaparser_stats.py"
+    )
+    .replace(
+      "/private/tmp/atlas-live-lua-lazy/luaparser-venv/bin/python -c <luaparser definition counter>",
+      "uv run --with luaparser==4.0.1 python scripts/native-baselines/lua_luaparser_stats.py"
+    )
+    .replace(
       "/tmp/atlas-live-powershell-powershellget/pwsh_stats.ps1",
       "scripts/native-baselines/pwsh_stats.ps1"
     )

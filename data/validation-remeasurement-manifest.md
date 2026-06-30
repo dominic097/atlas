@@ -1,6 +1,6 @@
 # Validation Remeasurement Readiness Manifest
 
-Generated: 2026-06-30T19:01:50.442Z
+Generated: 2026-06-30T19:12:26.990Z
 
 This manifest is regenerated from committed `data/raw/LIVE_*_BENCHMARK.json` artifacts by `scripts/validation-remeasurement-harness.mjs`.
 It is a readiness audit, not a full remeasurement run: Atlas and Graphify replay commands are generated from pinned repo/commit/target rows, while native/proxy counters are marked ready only when the validation row stores an executable native replay command.
@@ -16,11 +16,11 @@ It is a readiness audit, not a full remeasurement run: Atlas and Graphify replay
 - Atlas replay-ready rows: 105
 - Graphify replay-ready rows: 105
 - Native/proxy command candidate rows: 105
-- Native/proxy candidate executable rows: 15
+- Native/proxy candidate executable rows: 18
 - Native/proxy remeasurement command-ready rows: 0
 - Full remeasurement-ready artifacts: 0
-- Native candidates with placeholders: 72
-- Native candidates with ephemeral helper paths: 57
+- Native candidates with placeholders: 69
+- Native candidates with ephemeral helper paths: 54
 - Proxy or detector-only code artifacts: 14
 - Warnings: 35
 - Errors: 0
@@ -47,7 +47,7 @@ It is a readiness audit, not a full remeasurement run: Atlas and Graphify replay
 | json | structured-format | structured | structured-no-validation | 0/3 | 0 | 0 | 0 | 0 | 0 | no_public_repo_validation_rows, structured_format_outside_code_parser_gate |
 | julia | tree-sitter-baseline | low | passed | 3/3 | 3 | 3 | 3 | 0 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded |
 | kotlin | tree-sitter-baseline | low | passed | 3/3 | 3 | 3 | 3 | 0 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded |
-| lua | parser-library-baseline | low | passed | 3/3 | 3 | 3 | 3 | 0 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded |
+| lua | parser-library-baseline | low | passed | 3/3 | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded |
 | markdown | structured-format | structured | passed | 3/3 | 3 | 3 | 3 | 0 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded, structured_format_outside_code_parser_gate |
 | objc | tree-sitter-baseline | low | passed | 3/3 | 3 | 3 | 3 | 0 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded |
 | pascal | source-counter-proxy | medium | passed | 3/3 | 3 | 3 | 3 | 0 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |

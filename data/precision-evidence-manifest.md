@@ -1,6 +1,6 @@
 # Precision Evidence Manifest
 
-Generated: 2026-06-30T18:50:05.707Z
+Generated: 2026-06-30T19:12:26.319Z
 
 This manifest checks the precision evidence already present in raw live benchmark artifacts. It does not fabricate full precision; rows are marked `sampled-name-location`, `kind-count-only`, or `count-only` from observable artifact fields.
 

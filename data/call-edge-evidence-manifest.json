@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T18:50:05.800Z",
+  "generatedAt": "2026-06-30T19:12:26.530Z",
   "source": "data/raw/MATRIX_REPORT.json and data/raw/LIVE_*_BENCHMARK.json",
   "harness": "scripts/call-edge-evidence-harness.mjs",
   "summary": {
