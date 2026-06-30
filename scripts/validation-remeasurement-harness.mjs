@@ -102,6 +102,14 @@ function rewriteCommittedHelperPath(command) {
       "uv run --with luaparser==4.0.1 python scripts/native-baselines/lua_luaparser_stats.py"
     )
     .replace(
+      "/tmp/atlas-php-3repo-1782814733/php_token_counter.php",
+      "scripts/native-baselines/php_token_stats.php"
+    )
+    .replace(
+      "/private/tmp/atlas-php-3repo-1782814733/php_token_counter.php",
+      "scripts/native-baselines/php_token_stats.php"
+    )
+    .replace(
       "/tmp/atlas-live-powershell-powershellget/pwsh_stats.ps1",
       "scripts/native-baselines/pwsh_stats.ps1"
     )

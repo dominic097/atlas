@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T19:12:36.755Z",
+  "generatedAt": "2026-06-30T19:24:18.319Z",
   "sourceLabel": "Atlas benchmark JSON artifacts from bench/",
   "sourceArtifacts": [
     {
@@ -10855,7 +10855,7 @@
   ],
   "publicRepoValidation": {
     "schemaVersion": 1,
-    "generatedAt": "2026-06-30T19:12:26.082Z",
+    "generatedAt": "2026-06-30T19:23:50.943Z",
     "source": "data/raw/LIVE_*_BENCHMARK.json",
     "harness": "scripts/public-repo-validation-harness.mjs",
     "summary": {
@@ -13976,7 +13976,7 @@
   },
   "validationRemeasurement": {
     "schemaVersion": 1,
-    "generatedAt": "2026-06-30T19:12:26.990Z",
+    "generatedAt": "2026-06-30T19:24:08.219Z",
     "source": "data/raw/LIVE_*_BENCHMARK.json",
     "harness": "scripts/validation-remeasurement-harness.mjs",
     "summary": {
@@ -13990,12 +13990,12 @@
       "atlasReplayReadyRows": 105,
       "graphifyReplayReadyRows": 105,
       "nativeRemeasurementCandidateRows": 105,
-      "nativeRemeasurementCandidateExecutableRows": 18,
+      "nativeRemeasurementCandidateExecutableRows": 21,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReadyArtifacts": 0,
       "nativeCandidatePlaceholderRows": 69,
-      "nativeCandidateEphemeralHelperRows": 54,
+      "nativeCandidateEphemeralHelperRows": 51,
       "proxyOrDetectorCodeArtifacts": 14,
       "warnings": 35,
       "errors": 0,
@@ -17380,12 +17380,12 @@
         "atlasReplayReadyRows": 3,
         "graphifyReplayReadyRows": 3,
         "nativeRemeasurementCandidateRows": 3,
-        "nativeRemeasurementCandidateExecutableRows": 0,
+        "nativeRemeasurementCandidateExecutableRows": 3,
         "nativeRemeasurementReadyRows": 0,
         "fullRemeasurementReadyRows": 0,
         "fullRemeasurementReady": false,
         "nativeCandidatePlaceholderRows": 0,
-        "nativeCandidateEphemeralHelperRows": 3,
+        "nativeCandidateEphemeralHelperRows": 0,
         "minCoverageRatio": 1,
         "warnings": [
           "Atlas and Graphify replay commands can be generated, but per-repo native/proxy commands are not persisted"
@@ -17393,7 +17393,6 @@
         "errors": [],
         "blockers": [
           "full_symbol_name_kind_location_sets_not_persisted",
-          "native_command_uses_ephemeral_helper_path",
           "native_or_proxy_remeasurement_command_not_recorded"
         ],
         "repos": [
@@ -17411,12 +17410,11 @@
             "atlasReplayReady": true,
             "graphifyReplayReady": true,
             "nativeRemeasurementCandidateReady": true,
-            "nativeRemeasurementCandidateExecutableReady": false,
+            "nativeRemeasurementCandidateExecutableReady": true,
             "nativeRemeasurementReady": false,
             "fullRemeasurementReady": false,
             "blockers": [
               "native_or_proxy_remeasurement_command_not_recorded",
-              "native_command_uses_ephemeral_helper_path",
               "full_symbol_name_kind_location_sets_not_persisted"
             ],
             "atlasReplayCommands": [
@@ -17429,11 +17427,9 @@
               "(cd work/php/01-slimphp__Slim && uv tool run --from graphifyy graphify update .)"
             ],
             "nativeRemeasurementCandidateCommands": [
-              "php /tmp/atlas-php-3repo-1782814733/php_token_counter.php work/php/01-slimphp__Slim"
+              "php scripts/native-baselines/php_token_stats.php work/php/01-slimphp__Slim"
             ],
-            "nativeRemeasurementCandidateBlockers": [
-              "native_command_uses_ephemeral_helper_path"
-            ],
+            "nativeRemeasurementCandidateBlockers": [],
             "nativeRemeasurementCommands": []
           },
           {
@@ -17450,12 +17446,11 @@
             "atlasReplayReady": true,
             "graphifyReplayReady": true,
             "nativeRemeasurementCandidateReady": true,
-            "nativeRemeasurementCandidateExecutableReady": false,
+            "nativeRemeasurementCandidateExecutableReady": true,
             "nativeRemeasurementReady": false,
             "fullRemeasurementReady": false,
             "blockers": [
               "native_or_proxy_remeasurement_command_not_recorded",
-              "native_command_uses_ephemeral_helper_path",
               "full_symbol_name_kind_location_sets_not_persisted"
             ],
             "atlasReplayCommands": [
@@ -17468,11 +17463,9 @@
               "(cd work/php/02-symfony__console && uv tool run --from graphifyy graphify update .)"
             ],
             "nativeRemeasurementCandidateCommands": [
-              "php /tmp/atlas-php-3repo-1782814733/php_token_counter.php work/php/02-symfony__console"
+              "php scripts/native-baselines/php_token_stats.php work/php/02-symfony__console"
             ],
-            "nativeRemeasurementCandidateBlockers": [
-              "native_command_uses_ephemeral_helper_path"
-            ],
+            "nativeRemeasurementCandidateBlockers": [],
             "nativeRemeasurementCommands": []
           },
           {
@@ -17489,12 +17482,11 @@
             "atlasReplayReady": true,
             "graphifyReplayReady": true,
             "nativeRemeasurementCandidateReady": true,
-            "nativeRemeasurementCandidateExecutableReady": false,
+            "nativeRemeasurementCandidateExecutableReady": true,
             "nativeRemeasurementReady": false,
             "fullRemeasurementReady": false,
             "blockers": [
               "native_or_proxy_remeasurement_command_not_recorded",
-              "native_command_uses_ephemeral_helper_path",
               "full_symbol_name_kind_location_sets_not_persisted"
             ],
             "atlasReplayCommands": [
@@ -17507,11 +17499,9 @@
               "(cd work/php/03-composer__composer/src && uv tool run --from graphifyy graphify update .)"
             ],
             "nativeRemeasurementCandidateCommands": [
-              "php /tmp/atlas-php-3repo-1782814733/php_token_counter.php work/php/03-composer__composer/src"
+              "php scripts/native-baselines/php_token_stats.php work/php/03-composer__composer/src"
             ],
-            "nativeRemeasurementCandidateBlockers": [
-              "native_command_uses_ephemeral_helper_path"
-            ],
+            "nativeRemeasurementCandidateBlockers": [],
             "nativeRemeasurementCommands": []
           }
         ]
@@ -19533,7 +19523,7 @@
   },
   "precisionEvidence": {
     "schemaVersion": 1,
-    "generatedAt": "2026-06-30T19:12:26.319Z",
+    "generatedAt": "2026-06-30T19:23:54.589Z",
     "source": "data/raw/LIVE_*_BENCHMARK.json",
     "harness": "scripts/precision-evidence-harness.mjs",
     "summary": {
@@ -25650,7 +25640,7 @@
   },
   "callEdgeEvidence": {
     "schemaVersion": 1,
-    "generatedAt": "2026-06-30T19:12:26.530Z",
+    "generatedAt": "2026-06-30T19:24:00.013Z",
     "source": "data/raw/MATRIX_REPORT.json and data/raw/LIVE_*_BENCHMARK.json",
     "harness": "scripts/call-edge-evidence-harness.mjs",
     "summary": {
@@ -26255,7 +26245,7 @@
   },
   "graphifySupport": {
     "schemaVersion": 1,
-    "generatedAt": "2026-06-30T19:12:26.794Z",
+    "generatedAt": "2026-06-30T19:24:02.979Z",
     "source": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json and data/raw/LIVE_*_BENCHMARK.json",
     "harness": "scripts/graphify-support-harness.mjs",
     "summary": {
@@ -27253,11 +27243,11 @@
       "validationRemeasurementAtlasReplayReadyRows": 105,
       "validationRemeasurementGraphifyReplayReadyRows": 105,
       "validationRemeasurementNativeCandidateRows": 105,
-      "validationRemeasurementNativeCandidateExecutableRows": 18,
+      "validationRemeasurementNativeCandidateExecutableRows": 21,
       "validationRemeasurementNativeReadyRows": 0,
       "validationRemeasurementFullReadyArtifacts": 0,
       "validationRemeasurementNativePlaceholderRows": 69,
-      "validationRemeasurementNativeEphemeralHelperRows": 54,
+      "validationRemeasurementNativeEphemeralHelperRows": 51,
       "validationRemeasurementProxyOrDetectorArtifacts": 14,
       "precisionEvidenceHarness": true,
       "precisionNameLocationArtifacts": 32,

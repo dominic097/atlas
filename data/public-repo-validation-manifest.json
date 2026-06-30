@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T19:12:26.082Z",
+  "generatedAt": "2026-06-30T19:23:50.943Z",
   "source": "data/raw/LIVE_*_BENCHMARK.json",
   "harness": "scripts/public-repo-validation-harness.mjs",
   "summary": {

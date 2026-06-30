@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-30T19:12:36.755Z",
-  "benchmarkGeneratedAt": "2026-06-30T19:12:36.755Z",
+  "generatedAt": "2026-06-30T19:24:18.319Z",
+  "benchmarkGeneratedAt": "2026-06-30T19:24:18.319Z",
   "scope": "Final pass over Atlas benchmark artifacts: core matrix against Graphify plus native SCIP/LSP tools, live language artifacts against Graphify plus language-specific native/proxy baselines, and public three-repo validation metadata.",
   "summary": {
     "coreLanguages": 7,
@@ -20,11 +20,11 @@
     "validationRemeasurementAtlasReplayReadyRows": 105,
     "validationRemeasurementGraphifyReplayReadyRows": 105,
     "validationRemeasurementNativeCandidateRows": 105,
-    "validationRemeasurementNativeCandidateExecutableRows": 18,
+    "validationRemeasurementNativeCandidateExecutableRows": 21,
     "validationRemeasurementNativeReadyRows": 0,
     "validationRemeasurementFullReadyArtifacts": 0,
     "validationRemeasurementNativePlaceholderRows": 69,
-    "validationRemeasurementNativeEphemeralHelperRows": 54,
+    "validationRemeasurementNativeEphemeralHelperRows": 51,
     "validationRemeasurementProxyOrDetectorArtifacts": 14,
     "precisionEvidenceHarness": true,
     "precisionNameLocationArtifacts": 32,
@@ -522,7 +522,7 @@
     "validationRemeasurement": {
       "statement": "The validation remeasurement manifest audits replay readiness for public validation rows. It proves pinned Atlas and Graphify replay commands can be reconstructed, but it does not execute native/proxy counters unless executable per-repo native commands are present in the artifacts.",
       "manifest": {
-        "generatedAt": "2026-06-30T19:12:26.990Z",
+        "generatedAt": "2026-06-30T19:24:08.219Z",
         "summary": {
           "artifacts": 36,
           "codeArtifacts": 34,
@@ -534,12 +534,12 @@
           "atlasReplayReadyRows": 105,
           "graphifyReplayReadyRows": 105,
           "nativeRemeasurementCandidateRows": 105,
-          "nativeRemeasurementCandidateExecutableRows": 18,
+          "nativeRemeasurementCandidateExecutableRows": 21,
           "nativeRemeasurementReadyRows": 0,
           "fullRemeasurementReadyRows": 0,
           "fullRemeasurementReadyArtifacts": 0,
           "nativeCandidatePlaceholderRows": 69,
-          "nativeCandidateEphemeralHelperRows": 54,
+          "nativeCandidateEphemeralHelperRows": 51,
           "proxyOrDetectorCodeArtifacts": 14,
           "warnings": 35,
           "errors": 0,
@@ -923,11 +923,10 @@
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
             "nativeRemeasurementCandidateRows": 3,
-            "nativeRemeasurementCandidateExecutableRows": 0,
+            "nativeRemeasurementCandidateExecutableRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
-              "native_command_uses_ephemeral_helper_path",
               "native_or_proxy_remeasurement_command_not_recorded"
             ]
           },
@@ -1151,7 +1150,7 @@
     "precisionEvidence": {
       "statement": "The precision manifest is an artifact-level audit of what the raw benchmark JSON can prove today: sampled query rows with matching symbol names and locations, native-vs-Atlas kind-count maps, or count-only gaps. It is not a full 99% precision oracle.",
       "manifest": {
-        "generatedAt": "2026-06-30T19:12:26.319Z",
+        "generatedAt": "2026-06-30T19:23:54.589Z",
         "summary": {
           "artifacts": 36,
           "sampledNameLocationArtifacts": 32,
@@ -1264,7 +1263,7 @@
     "callEdgeEvidence": {
       "statement": "The call-edge manifest audits what raw artifacts can prove today: receiver-typed call counts for the core matrix and call-count evidence for live artifacts. It does not prove receiver-type precision for live converted languages.",
       "manifest": {
-        "generatedAt": "2026-06-30T19:12:26.530Z",
+        "generatedAt": "2026-06-30T19:24:00.013Z",
         "summary": {
           "coreLanguages": 7,
           "coreReceiverTypedLanguages": 7,
@@ -1573,7 +1572,7 @@
     "graphifySupport": {
       "statement": "The Graphify support manifest separates deterministic extractor support from detector-only extension detection and sampled query rows with no Graphify equivalent.",
       "manifest": {
-        "generatedAt": "2026-06-30T19:12:26.794Z",
+        "generatedAt": "2026-06-30T19:24:02.979Z",
         "summary": {
           "graphifyVersion": "graphifyy 0.8.49",
           "dispatchCount": 89,

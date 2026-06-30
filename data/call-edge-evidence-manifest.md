@@ -1,6 +1,6 @@
 # Call Edge Evidence Manifest
 
-Generated: 2026-06-30T19:12:26.530Z
+Generated: 2026-06-30T19:24:00.013Z
 
 This manifest audits call-edge and receiver-type evidence already present in committed raw benchmark artifacts. It separates receiver-typed core rows from live rows that currently expose only call counts.
 
