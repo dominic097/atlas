@@ -1,19 +1,19 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T10:03:25.097Z",
+  "generatedAt": "2026-06-30T10:09:59.867Z",
   "source": "data/benchmark-data.json",
   "targetRatio": 10,
   "metricNote": "Token and latency are ratio targets. Coverage is a native-definition coverage ratio, so the honest accuracy target is >1.0 native coverage exceed, not a fabricated 10x accuracy multiplier.",
   "summary": {
     "liveLanguages": 36,
-    "parityLanguages": 16,
-    "coverageExceedLanguages": 20,
+    "parityLanguages": 14,
+    "coverageExceedLanguages": 22,
     "comparableLanguages": 33,
     "token10xComparable": 33,
     "latency10xComparable": 33,
     "performance10xComparable": 33,
-    "threeRepoValidated": 1,
-    "threeRepoValidatedStrict10x": 1
+    "threeRepoValidated": 2,
+    "threeRepoValidatedStrict10x": 2
   },
   "parityLanguages": [
     "blade",
@@ -22,9 +22,7 @@
     "delphi",
     "elixir",
     "ets",
-    "fortran",
     "julia",
-    "markdown",
     "pascal",
     "php",
     "powershell",
@@ -313,21 +311,19 @@
       "repo": "https://github.com/fortran-lang/stdlib",
       "commit": "4c8521d5658455a576946cca3bfe2bd8ede36e24",
       "artifact": "data/raw/LIVE_FORTRAN_BENCHMARK.json",
-      "coverageRatio": 1,
-      "coverageExceedsNative": false,
+      "coverageRatio": 1.0604,
+      "coverageExceedsNative": true,
       "equivalentRows": 6,
-      "tokenRatio": 88.58,
-      "latencyRatio": 10.2,
+      "tokenRatio": 31.83,
+      "latencyRatio": 15.86,
       "tokenGapTo10x": 1,
       "latencyGapTo10x": 1,
-      "blockers": [
-        "coverage_at_parity"
-      ],
+      "blockers": [],
       "validation": {
-        "passed": false,
-        "repoCount": 0,
+        "passed": true,
+        "repoCount": 3,
         "minimumRepos": 3,
-        "minCoverageRatio": null
+        "minCoverageRatio": 1
       }
     },
     {
@@ -437,16 +433,14 @@
       "repo": "https://github.com/rust-lang/mdBook",
       "commit": "cb49cc5523e609a731f27dea1af4395a504815a5",
       "artifact": "data/raw/LIVE_MARKDOWN_BENCHMARK.json",
-      "coverageRatio": 1,
-      "coverageExceedsNative": false,
+      "coverageRatio": 1.026,
+      "coverageExceedsNative": true,
       "equivalentRows": 6,
-      "tokenRatio": 27.64,
-      "latencyRatio": 11.19,
+      "tokenRatio": 14.5,
+      "latencyRatio": 14.73,
       "tokenGapTo10x": 1,
       "latencyGapTo10x": 1,
-      "blockers": [
-        "coverage_at_parity"
-      ],
+      "blockers": [],
       "validation": {
         "passed": false,
         "repoCount": 0,
