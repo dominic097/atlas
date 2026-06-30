@@ -1,0 +1,1773 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Atlas Recall — Automation Library</title>
+<style>
+  /* ============================== THEME TOKENS ============================== */
+  :root {
+    --bg: #0a0c10;
+    --surface: #0f1217;
+    --surface2: #13171e;
+    --border: #1e242d;
+    --text: #e7ebf0;
+    --muted: #8b95a4;
+    --accent: #6366f1;
+    --accent2: #a78bfa;
+    --success: #34d399;
+    --warn: #fbbf24;
+    --danger: #fb7185;
+    --grid: #1a2029;
+
+    --c0: #6366f1; --c1: #a78bfa; --c2: #34d399; --c3: #60a5fa; --c4: #fbbf24; --c5: #fb7185;
+
+    --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-pill: 999px;
+    --sh-sm: 0 1px 2px rgba(0,0,0,.2);
+    --sh-md: 0 12px 30px -16px rgba(0,0,0,.6);
+    --sh-lg: 0 22px 70px -26px rgba(0,0,0,.55);
+    --sh-glow: 0 0 0 1px rgba(99,102,241,.22), 0 22px 70px -26px rgba(99,102,241,.4);
+
+    --font: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    --fs-display: 34px; --fs-h1: 26px; --fs-h2: 20px; --fs-h3: 16px;
+    --fs-body: 13px; --fs-small: 12px; --fs-micro: 11px;
+
+    --accent-soft: rgba(99,102,241,.14);
+    --accent-soft2: rgba(167,139,250,.14);
+    --success-soft: rgba(52,211,153,.13);
+    --warn-soft: rgba(251,191,36,.14);
+    --danger-soft: rgba(251,113,133,.14);
+  }
+  [data-theme="light"] {
+    --bg: #f7f8fa;
+    --surface: #ffffff;
+    --surface2: #f1f3f7;
+    --border: #e4e8ef;
+    --text: #1c2433;
+    --muted: #6b7385;
+    --accent: #4f46e5;
+    --accent2: #6d4bd6;
+    --success: #16a34a;
+    --warn: #d97706;
+    --danger: #dc2626;
+    --grid: #e9edf3;
+
+    --c0: #4f46e5; --c1: #6d4bd6; --c2: #16a34a; --c3: #2563eb; --c4: #d97706; --c5: #dc2626;
+
+    --sh-md: 0 12px 30px -18px rgba(20,30,60,.25);
+    --sh-lg: 0 22px 70px -30px rgba(20,30,60,.25);
+    --sh-glow: 0 0 0 1px rgba(79,70,229,.18), 0 22px 60px -30px rgba(79,70,229,.32);
+
+    --accent-soft: rgba(79,70,229,.10);
+    --accent-soft2: rgba(109,75,214,.10);
+    --success-soft: rgba(22,163,74,.10);
+    --warn-soft: rgba(217,119,6,.12);
+    --danger-soft: rgba(220,38,38,.10);
+  }
+
+  /* ============================== RESET / BASE ============================== */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: var(--fs-body);
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    transition: background .25s ease, color .25s ease;
+  }
+  ::selection { background: var(--accent-soft); }
+  a { color: inherit; }
+  button { font-family: inherit; cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: var(--r-sm); }
+
+  .mono { font-family: var(--mono); }
+  .muted { color: var(--muted); }
+  .nowrap { white-space: nowrap; }
+
+  /* scrollbars */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; border: 2px solid transparent; background-clip: padding-box; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--muted); background-clip: padding-box; }
+  ::-webkit-scrollbar-track { background: transparent; }
+
+  /* ============================== APP SHELL ============================== */
+  .app { display: flex; min-height: 100vh; }
+
+  /* Sidebar */
+  .sidebar {
+    width: 232px; flex: 0 0 232px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    position: sticky; top: 0; height: 100vh;
+  }
+  .brand { display: flex; align-items: center; gap: 11px; padding: 18px 18px 16px; }
+  .brand-mark {
+    width: 34px; height: 34px; border-radius: 9px; flex: 0 0 34px;
+    background: linear-gradient(140deg, var(--accent), var(--accent2));
+    display: grid; place-items: center; color: #fff;
+    box-shadow: var(--sh-glow);
+  }
+  .brand-mark svg { width: 19px; height: 19px; }
+  .brand-name { font-size: 15px; font-weight: 700; letter-spacing: -.2px; }
+  .brand-sub { font-size: var(--fs-micro); color: var(--muted); margin-top: 1px; display: flex; align-items: center; gap: 5px; }
+  .live-dot { width: 6px; height: 6px; border-radius: 99px; background: var(--success); box-shadow: 0 0 0 0 var(--success); animation: pulse 2.4s infinite; }
+  @keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(52,211,153,.5);} 70%{box-shadow:0 0 0 6px rgba(52,211,153,0);} 100%{box-shadow:0 0 0 0 rgba(52,211,153,0);} }
+
+  .nav { padding: 8px 10px; display: flex; flex-direction: column; gap: 2px; }
+  .nav-label { font-size: var(--fs-micro); font-weight: 600; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); padding: 14px 10px 6px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px; border-radius: var(--r-sm);
+    color: var(--muted); border: none; background: transparent; width: 100%; text-align: left;
+    font-size: var(--fs-body); font-weight: 500;
+    transition: background .14s, color .14s;
+  }
+  .nav-item svg { width: 16px; height: 16px; flex: 0 0 16px; }
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active { background: var(--accent-soft); color: var(--text); }
+  .nav-item.active svg { color: var(--accent); }
+  .nav-item .nav-count {
+    margin-left: auto; font-size: var(--fs-micro); font-weight: 600;
+    background: var(--surface2); color: var(--muted);
+    padding: 1px 7px; border-radius: var(--r-pill); min-width: 22px; text-align: center;
+  }
+  .nav-item.active .nav-count { background: rgba(99,102,241,.2); color: var(--accent); }
+  .nav-item.has-alert .nav-count { background: var(--warn-soft); color: var(--warn); }
+
+  .sidebar-footer { margin-top: auto; padding: 14px; border-top: 1px solid var(--border); }
+  .save-card {
+    background: linear-gradient(150deg, var(--accent-soft), var(--accent-soft2));
+    border: 1px solid var(--border); border-radius: var(--r-md);
+    padding: 12px 13px;
+  }
+  .save-card .lbl { font-size: var(--fs-micro); color: var(--muted); text-transform: uppercase; letter-spacing: .6px; font-weight: 600; }
+  .save-card .val { font-size: 20px; font-weight: 800; letter-spacing: -.5px; margin-top: 3px; }
+  .save-card .sub { font-size: var(--fs-micro); color: var(--success); margin-top: 2px; display: flex; align-items: center; gap: 4px; }
+  .save-card .sub svg { width: 12px; height: 12px; }
+
+  /* Main */
+  .main { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
+
+  .topbar {
+    display: flex; align-items: center; gap: 16px;
+    padding: 16px 28px;
+    border-bottom: 1px solid var(--border);
+    background: color-mix(in srgb, var(--bg) 78%, transparent);
+    backdrop-filter: blur(10px);
+    position: sticky; top: 0; z-index: 40;
+  }
+  .topbar h1 { font-size: var(--fs-h2); font-weight: 700; letter-spacing: -.3px; margin: 0; }
+  .topbar .crumb { font-size: var(--fs-small); color: var(--muted); margin-top: 2px; }
+  .topbar-spacer { flex: 1; }
+
+  .global-search {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r-pill); padding: 7px 14px; min-width: 260px;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .global-search:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .global-search svg { width: 15px; height: 15px; color: var(--muted); flex: 0 0 15px; }
+  .global-search input { background: transparent; border: none; color: var(--text); font-size: var(--fs-body); width: 100%; outline: none; }
+  .global-search input::placeholder { color: var(--muted); }
+  .global-search kbd {
+    font-family: var(--mono); font-size: 10px; color: var(--muted);
+    border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; background: var(--surface2);
+  }
+
+  .icon-btn {
+    display: grid; place-items: center; width: 34px; height: 34px;
+    border-radius: var(--r-sm); border: 1px solid var(--border);
+    background: var(--surface); color: var(--muted);
+    transition: color .15s, border-color .15s, background .15s;
+  }
+  .icon-btn:hover { color: var(--text); border-color: var(--muted); }
+  .icon-btn svg { width: 17px; height: 17px; }
+
+  .avatar {
+    width: 34px; height: 34px; border-radius: var(--r-pill);
+    background: linear-gradient(140deg, var(--accent2), var(--accent));
+    color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 12px;
+  }
+
+  .content { padding: 22px 28px 60px; }
+
+  /* ============================== KPI STRIP ============================== */
+  .kpi-strip {
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 20px;
+  }
+  .kpi {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md);
+    padding: 13px 15px; position: relative; overflow: hidden;
+  }
+  .kpi .kicon { position: absolute; top: 12px; right: 12px; color: var(--muted); opacity: .55; }
+  .kpi .kicon svg { width: 16px; height: 16px; }
+  .kpi .klabel { font-size: var(--fs-micro); color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+  .kpi .kval { font-size: 23px; font-weight: 800; letter-spacing: -.6px; margin-top: 6px; line-height: 1.05; }
+  .kpi .kval .unit { font-size: 13px; font-weight: 600; color: var(--muted); margin-left: 2px; }
+  .kpi .kdelta { font-size: var(--fs-micro); margin-top: 5px; display: flex; align-items: center; gap: 4px; }
+  .kpi .kdelta svg { width: 12px; height: 12px; }
+  .kdelta.up { color: var(--success); }
+  .kdelta.down { color: var(--danger); }
+  .kdelta.flat { color: var(--muted); }
+  .kpi .spark { margin-top: 8px; height: 26px; width: 100%; }
+
+  /* ============================== TOOLBAR / FILTERS ============================== */
+  .lib-toolbar {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 18px;
+  }
+  .lib-search {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r-md); padding: 8px 12px; flex: 1 1 280px; max-width: 420px;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .lib-search:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .lib-search svg { width: 16px; height: 16px; color: var(--muted); flex: 0 0 16px; }
+  .lib-search input { background: transparent; border: none; color: var(--text); width: 100%; outline: none; font-size: var(--fs-body); }
+  .lib-search input::placeholder { color: var(--muted); }
+
+  .filter-group { display: flex; align-items: center; gap: 6px; }
+  .filter-group .fg-label { font-size: var(--fs-micro); color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; margin-right: 2px; }
+  .chip {
+    border: 1px solid var(--border); background: var(--surface); color: var(--muted);
+    border-radius: var(--r-pill); padding: 5px 12px; font-size: var(--fs-small); font-weight: 500;
+    transition: all .14s; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .chip:hover { color: var(--text); border-color: var(--muted); }
+  .chip.active { background: var(--accent-soft); color: var(--accent); border-color: transparent; font-weight: 600; }
+  .chip .dot { width: 7px; height: 7px; border-radius: 99px; }
+
+  .select {
+    appearance: none; background: var(--surface); border: 1px solid var(--border);
+    color: var(--text); border-radius: var(--r-md); padding: 8px 30px 8px 12px; font-size: var(--fs-body);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238b95a4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");
+    background-repeat: no-repeat; background-position: right 10px center;
+    transition: border-color .15s;
+  }
+  .select:hover { border-color: var(--muted); }
+
+  .toolbar-spacer { flex: 1; }
+  .view-toggle { display: flex; border: 1px solid var(--border); border-radius: var(--r-md); overflow: hidden; }
+  .view-toggle button { background: var(--surface); border: none; color: var(--muted); padding: 8px 11px; display: grid; place-items: center; }
+  .view-toggle button svg { width: 16px; height: 16px; }
+  .view-toggle button.active { background: var(--accent-soft); color: var(--accent); }
+  .view-toggle button + button { border-left: 1px solid var(--border); }
+
+  .result-count { font-size: var(--fs-small); color: var(--muted); }
+
+  /* ============================== AUTOMATION GRID ============================== */
+  .grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 14px;
+  }
+  .grid.list-mode { grid-template-columns: 1fr; }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg);
+    padding: 16px 17px 14px; position: relative; text-align: left; width: 100%;
+    transition: border-color .16s, box-shadow .16s, transform .16s;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .card:hover { border-color: var(--accent); box-shadow: var(--sh-md); transform: translateY(-1px); }
+  .card:focus-visible { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); outline: none; }
+  .card.selected { border-color: var(--accent); box-shadow: var(--sh-glow); }
+
+  .card-top { display: flex; align-items: flex-start; gap: 11px; }
+  .kind-icon {
+    width: 38px; height: 38px; flex: 0 0 38px; border-radius: 10px;
+    display: grid; place-items: center;
+    background: var(--accent-soft); color: var(--accent);
+  }
+  .kind-icon.k-script { background: var(--success-soft); color: var(--success); }
+  .kind-icon.k-workflow { background: var(--accent-soft2); color: var(--accent2); }
+  .kind-icon svg { width: 19px; height: 19px; }
+  .card-title-wrap { min-width: 0; flex: 1; }
+  .card-title { font-size: var(--fs-h3); font-weight: 700; letter-spacing: -.2px; margin: 0; line-height: 1.25; }
+  .card-slug { font-size: var(--fs-micro); color: var(--muted); margin-top: 2px; }
+  .stale-dot {
+    width: 9px; height: 9px; border-radius: 99px; flex: 0 0 9px; margin-top: 5px;
+    background: var(--success); box-shadow: 0 0 0 3px var(--success-soft);
+  }
+  .stale-dot.drift { background: var(--danger); box-shadow: 0 0 0 3px var(--danger-soft); }
+
+  .badge {
+    font-size: var(--fs-micro); font-weight: 600; padding: 2px 9px; border-radius: var(--r-pill);
+    display: inline-flex; align-items: center; gap: 5px; text-transform: capitalize; white-space: nowrap;
+  }
+  .badge .bdot { width: 6px; height: 6px; border-radius: 99px; }
+  .badge.trusted { background: var(--success-soft); color: var(--success); }
+  .badge.validating { background: var(--accent-soft); color: var(--accent); }
+  .badge.candidate { background: var(--warn-soft); color: var(--warn); }
+  .badge.stale { background: var(--danger-soft); color: var(--danger); }
+  .badge.gated { background: var(--warn-soft); color: var(--warn); }
+
+  .card-meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .meta-pill {
+    font-size: var(--fs-micro); color: var(--muted); background: var(--surface2);
+    border-radius: var(--r-sm); padding: 2px 8px; display: inline-flex; align-items: center; gap: 5px;
+  }
+  .meta-pill svg { width: 11px; height: 11px; }
+
+  .card-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+  .cstat .cs-val { font-size: 15px; font-weight: 700; letter-spacing: -.3px; }
+  .cstat .cs-lbl { font-size: var(--fs-micro); color: var(--muted); margin-top: 1px; }
+
+  .card-spark { height: 32px; width: 100%; }
+
+  .card-foot {
+    display: flex; align-items: center; gap: 8px; padding-top: 11px; border-top: 1px solid var(--border);
+  }
+  .agree-bar { flex: 1; height: 5px; border-radius: 99px; background: var(--surface2); overflow: hidden; }
+  .agree-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+  .agree-label { font-size: var(--fs-micro); color: var(--muted); white-space: nowrap; }
+  .open-hint { font-size: var(--fs-micro); color: var(--accent); display: flex; align-items: center; gap: 3px; opacity: 0; transition: opacity .15s; }
+  .open-hint svg { width: 12px; height: 12px; }
+  .card:hover .open-hint { opacity: 1; }
+
+  /* list mode tweaks */
+  .grid.list-mode .card { flex-direction: row; align-items: center; gap: 18px; padding: 14px 18px; }
+  .grid.list-mode .card-top { flex: 0 0 300px; }
+  .grid.list-mode .card-spark { display: none; }
+  .grid.list-mode .card-stats { flex: 0 0 230px; }
+  .grid.list-mode .card-meta { flex: 1; }
+  .grid.list-mode .card-foot { border: none; padding: 0; flex: 0 0 190px; }
+
+  /* ============================== CANDIDATES ============================== */
+  .cand-table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; }
+  table.cand { width: 100%; border-collapse: collapse; font-size: var(--fs-body); }
+  table.cand thead th {
+    text-align: left; font-size: var(--fs-micro); text-transform: uppercase; letter-spacing: .6px;
+    color: var(--muted); font-weight: 600; padding: 12px 16px; border-bottom: 1px solid var(--border);
+    background: var(--surface2); position: sticky; top: 0; user-select: none;
+  }
+  table.cand thead th.sortable { cursor: pointer; }
+  table.cand thead th.sortable:hover { color: var(--text); }
+  table.cand thead th .sort-ind { font-size: 9px; margin-left: 4px; opacity: .6; }
+  table.cand tbody td { padding: 13px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  table.cand tbody tr:last-child td { border-bottom: none; }
+  table.cand tbody tr { transition: background .12s; }
+  table.cand tbody tr:hover { background: var(--surface2); }
+  .cand-prompt { font-family: var(--mono); font-size: var(--fs-small); }
+  .cand-exemplar { font-size: var(--fs-micro); color: var(--muted); margin-top: 3px; }
+  .hotscore { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .hotbar { height: 5px; border-radius: 99px; background: var(--surface2); margin-top: 5px; overflow: hidden; width: 120px; }
+  .hotbar > div { height: 100%; background: linear-gradient(90deg, var(--warn), var(--danger)); border-radius: 99px; }
+  .verdict {
+    font-size: var(--fs-micro); font-weight: 600; padding: 3px 10px; border-radius: var(--r-pill);
+    display: inline-flex; align-items: center; gap: 5px; white-space: nowrap;
+  }
+  .verdict svg { width: 12px; height: 12px; }
+  .verdict.yes { background: var(--success-soft); color: var(--success); }
+  .verdict.gated { background: var(--warn-soft); color: var(--warn); }
+  .verdict.no { background: var(--danger-soft); color: var(--danger); }
+  .verdict.unknown { background: var(--surface2); color: var(--muted); }
+
+  .btn {
+    border: 1px solid var(--border); background: var(--surface); color: var(--text);
+    border-radius: var(--r-sm); padding: 7px 13px; font-size: var(--fs-small); font-weight: 600;
+    display: inline-flex; align-items: center; gap: 6px; transition: all .14s;
+  }
+  .btn:hover { border-color: var(--muted); }
+  .btn svg { width: 14px; height: 14px; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn.primary:hover { filter: brightness(1.08); }
+  .btn.success { background: var(--success); border-color: var(--success); color: #06281c; }
+  .btn.ghost { background: transparent; }
+  .btn.danger { color: var(--danger); border-color: transparent; background: var(--danger-soft); }
+  .btn.danger:hover { background: color-mix(in srgb, var(--danger-soft) 70%, var(--danger)); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn.sm { padding: 5px 10px; font-size: var(--fs-micro); }
+
+  /* ============================== SECTION HEADERS ============================== */
+  .section-head { display: flex; align-items: baseline; gap: 12px; margin: 6px 0 14px; }
+  .section-head h2 { font-size: var(--fs-h3); font-weight: 700; margin: 0; }
+  .section-head .desc { font-size: var(--fs-small); color: var(--muted); }
+
+  .pill-tabs { display: inline-flex; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); padding: 3px; gap: 2px; }
+  .pill-tabs button {
+    background: transparent; border: none; color: var(--muted); padding: 6px 14px;
+    border-radius: var(--r-sm); font-size: var(--fs-small); font-weight: 600; transition: all .14s;
+  }
+  .pill-tabs button.active { background: var(--accent-soft); color: var(--accent); }
+  .pill-tabs button:hover:not(.active) { color: var(--text); }
+  .pill-tabs .tcount { font-size: 10px; opacity: .8; margin-left: 5px; }
+
+  /* ============================== DRAWER ============================== */
+  .scrim {
+    position: fixed; inset: 0; background: rgba(4,6,10,.55); backdrop-filter: blur(2px);
+    opacity: 0; pointer-events: none; transition: opacity .22s; z-index: 60;
+  }
+  .scrim.open { opacity: 1; pointer-events: auto; }
+  .drawer {
+    position: fixed; top: 0; right: 0; height: 100vh; width: min(720px, 94vw);
+    background: var(--surface); border-left: 1px solid var(--border);
+    box-shadow: var(--sh-lg); z-index: 70;
+    transform: translateX(100%); transition: transform .28s cubic-bezier(.4,0,.2,1);
+    display: flex; flex-direction: column;
+  }
+  .drawer.open { transform: translateX(0); }
+  .drawer-head {
+    padding: 18px 22px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-start; gap: 14px;
+  }
+  .drawer-head .dh-icon { width: 44px; height: 44px; flex: 0 0 44px; border-radius: 11px; display: grid; place-items: center; }
+  .drawer-head .dh-icon svg { width: 22px; height: 22px; }
+  .drawer-title { font-size: var(--fs-h2); font-weight: 700; letter-spacing: -.3px; margin: 0; }
+  .drawer-sub { font-size: var(--fs-small); color: var(--muted); margin-top: 3px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .drawer-close { margin-left: auto; }
+  .drawer-actions { display: flex; gap: 8px; padding: 14px 22px; border-bottom: 1px solid var(--border); background: var(--surface2); flex-wrap: wrap; }
+  .drawer-body { overflow-y: auto; padding: 0 0 40px; flex: 1; }
+
+  .drawer-tabs { display: flex; gap: 2px; padding: 14px 22px 0; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--surface); z-index: 2; }
+  .drawer-tabs button {
+    background: transparent; border: none; color: var(--muted); padding: 9px 14px 12px;
+    font-size: var(--fs-body); font-weight: 600; border-bottom: 2px solid transparent; margin-bottom: -1px;
+  }
+  .drawer-tabs button.active { color: var(--text); border-bottom-color: var(--accent); }
+  .drawer-tabs button:hover:not(.active) { color: var(--text); }
+
+  .dpane { padding: 20px 22px; display: none; }
+  .dpane.active { display: block; }
+
+  /* three-pane (Cowork) */
+  .pane-block { margin-bottom: 24px; }
+  .pane-block > h3 { font-size: var(--fs-small); font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); margin: 0 0 12px; display: flex; align-items: center; gap: 7px; }
+  .pane-block > h3 svg { width: 14px; height: 14px; color: var(--accent); }
+
+  /* workflow timeline */
+  .wf-timeline { position: relative; padding-left: 4px; }
+  .wf-step { display: flex; gap: 13px; position: relative; padding-bottom: 16px; }
+  .wf-step:last-child { padding-bottom: 0; }
+  .wf-rail { display: flex; flex-direction: column; align-items: center; flex: 0 0 24px; }
+  .wf-node {
+    width: 24px; height: 24px; border-radius: 99px; display: grid; place-items: center;
+    background: var(--accent-soft); color: var(--accent); font-size: 11px; font-weight: 700; flex: 0 0 24px;
+    border: 1px solid var(--border); z-index: 1;
+  }
+  .wf-node.irreversible { background: var(--danger-soft); color: var(--danger); }
+  .wf-line { width: 2px; flex: 1; background: var(--border); margin: 2px 0; }
+  .wf-content { flex: 1; padding-bottom: 2px; }
+  .wf-name { font-size: var(--fs-body); font-weight: 600; }
+  .wf-tags { display: flex; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
+  .wf-tag { font-size: var(--fs-micro); padding: 1px 8px; border-radius: var(--r-pill); background: var(--surface2); color: var(--muted); }
+  .wf-tag.irr { background: var(--danger-soft); color: var(--danger); }
+  .wf-tag.rev { background: var(--success-soft); color: var(--success); }
+  .wf-edge { font-size: var(--fs-micro); color: var(--muted); font-family: var(--mono); margin-top: 3px; }
+
+  /* code artifact */
+  .code-card { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r-md); overflow: hidden; }
+  .code-head { display: flex; align-items: center; gap: 9px; padding: 9px 13px; border-bottom: 1px solid var(--border); }
+  .code-head svg { width: 14px; height: 14px; color: var(--accent2); }
+  .code-head .cf-name { font-family: var(--mono); font-size: var(--fs-small); }
+  .code-head .lang-pill { margin-left: auto; font-size: var(--fs-micro); color: var(--muted); background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-pill); padding: 1px 9px; text-transform: lowercase; }
+  pre.code { margin: 0; padding: 14px 16px; overflow-x: auto; font-family: var(--mono); font-size: var(--fs-small); line-height: 1.65; }
+  pre.code .ln { color: var(--muted); display: inline-block; width: 26px; user-select: none; opacity: .6; }
+  .tok-kw { color: var(--accent2); }
+  .tok-fn { color: var(--c3); }
+  .tok-str { color: var(--success); }
+  .tok-com { color: var(--muted); font-style: italic; }
+  .tok-num { color: var(--warn); }
+
+  /* context kv */
+  .kv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .kv {
+    background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 9px 12px;
+  }
+  .kv .k { font-size: var(--fs-micro); color: var(--muted); text-transform: uppercase; letter-spacing: .4px; font-weight: 600; }
+  .kv .v { font-family: var(--mono); font-size: var(--fs-small); margin-top: 3px; word-break: break-word; }
+  .findings-list { display: flex; flex-direction: column; gap: 7px; }
+  .finding {
+    display: flex; align-items: center; gap: 9px; background: var(--surface2);
+    border: 1px solid var(--border); border-radius: var(--r-sm); padding: 8px 12px; font-size: var(--fs-small);
+  }
+  .finding svg { width: 14px; height: 14px; color: var(--accent2); flex: 0 0 14px; }
+  .finding .fk { color: var(--muted); }
+  .finding .fv { margin-left: auto; font-family: var(--mono); font-weight: 600; }
+  .ref-chip { font-family: var(--mono); font-size: var(--fs-micro); color: var(--muted); background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 3px 9px; display: inline-flex; align-items: center; gap: 5px; }
+  .ref-chip svg { width: 11px; height: 11px; }
+
+  /* staleness contract */
+  .signal-row {
+    display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+    background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r-md); margin-bottom: 8px;
+  }
+  .sig-status { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; flex: 0 0 30px; }
+  .sig-status svg { width: 16px; height: 16px; }
+  .sig-status.fresh { background: var(--success-soft); color: var(--success); }
+  .sig-status.stale { background: var(--danger-soft); color: var(--danger); }
+  .sig-body { flex: 1; min-width: 0; }
+  .sig-type { font-size: var(--fs-body); font-weight: 600; text-transform: capitalize; display: flex; align-items: center; gap: 7px; }
+  .sig-strat { font-size: var(--fs-micro); color: var(--muted); border: 1px solid var(--border); border-radius: var(--r-pill); padding: 0 7px; font-family: var(--mono); }
+  .sig-detail { font-size: var(--fs-small); color: var(--muted); margin-top: 2px; }
+
+  .contract-banner {
+    display: flex; align-items: center; gap: 11px; padding: 12px 15px; border-radius: var(--r-md);
+    margin-bottom: 16px; font-size: var(--fs-small); font-weight: 500;
+  }
+  .contract-banner svg { width: 18px; height: 18px; flex: 0 0 18px; }
+  .contract-banner.ok { background: var(--success-soft); color: var(--success); }
+  .contract-banner.drift { background: var(--danger-soft); color: var(--danger); }
+
+  /* version history */
+  .ver-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .ver-item:last-child { border-bottom: none; }
+  .ver-tag { font-family: var(--mono); font-size: var(--fs-small); font-weight: 700; color: var(--accent); flex: 0 0 36px; }
+  .ver-body { flex: 1; }
+  .ver-note { font-size: var(--fs-small); }
+  .ver-time { font-size: var(--fs-micro); color: var(--muted); margin-top: 2px; }
+
+  .prov-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* ============================== APPROVALS ============================== */
+  .approval-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg);
+    padding: 16px 18px; margin-bottom: 12px; display: flex; gap: 16px; align-items: flex-start;
+  }
+  .approval-card .warn-icon { width: 40px; height: 40px; flex: 0 0 40px; border-radius: 10px; background: var(--warn-soft); color: var(--warn); display: grid; place-items: center; }
+  .approval-card .warn-icon svg { width: 20px; height: 20px; }
+  .ap-body { flex: 1; min-width: 0; }
+  .ap-title { font-size: var(--fs-h3); font-weight: 700; }
+  .ap-params { font-family: var(--mono); font-size: var(--fs-small); color: var(--accent2); margin-top: 3px; }
+  .ap-blast { font-size: var(--fs-small); color: var(--muted); margin-top: 8px; padding: 9px 12px; background: var(--surface2); border-radius: var(--r-sm); border-left: 3px solid var(--warn); }
+  .ap-meta { font-size: var(--fs-micro); color: var(--muted); margin-top: 8px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .ap-actions { display: flex; flex-direction: column; gap: 8px; flex: 0 0 auto; }
+
+  /* ============================== EVENT FEED ============================== */
+  .feed { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; }
+  .feed-row { display: flex; align-items: center; gap: 13px; padding: 11px 16px; border-bottom: 1px solid var(--border); font-size: var(--fs-small); transition: background .12s; }
+  .feed-row:last-child { border-bottom: none; }
+  .feed-row:hover { background: var(--surface2); }
+  .served-tag { font-size: var(--fs-micro); font-weight: 700; padding: 2px 8px; border-radius: var(--r-sm); flex: 0 0 auto; width: 78px; text-align: center; text-transform: uppercase; letter-spacing: .4px; }
+  .served-tag.automation { background: var(--accent-soft2); color: var(--accent2); }
+  .served-tag.exact { background: var(--success-soft); color: var(--success); }
+  .served-tag.semantic { background: var(--accent-soft); color: var(--accent); }
+  .served-tag.live { background: var(--danger-soft); color: var(--danger); }
+  .conn-badge { font-size: var(--fs-micro); color: var(--muted); border: 1px solid var(--border); border-radius: var(--r-pill); padding: 1px 8px; flex: 0 0 auto; }
+  .feed-prompt { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .feed-user { font-family: var(--mono); font-size: var(--fs-micro); color: var(--muted); flex: 0 0 auto; }
+  .feed-tokens { font-family: var(--mono); font-size: var(--fs-small); font-weight: 600; flex: 0 0 64px; text-align: right; }
+  .feed-time { font-size: var(--fs-micro); color: var(--muted); flex: 0 0 58px; text-align: right; }
+
+  /* ============================== TIER BREAKDOWN / OVERVIEW ============================== */
+  .two-col { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 18px 20px; }
+  .panel-head { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .panel-head h2 { font-size: var(--fs-h3); font-weight: 700; margin: 0; }
+  .panel-head .ph-icon { color: var(--accent); }
+  .panel-head .ph-icon svg { width: 17px; height: 17px; }
+  .panel-head .ph-sub { font-size: var(--fs-micro); color: var(--muted); margin-left: auto; }
+
+  .tier-bars { display: flex; flex-direction: column; gap: 13px; }
+  .tier { }
+  .tier-top { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+  .tier-name { font-size: var(--fs-small); font-weight: 600; }
+  .tier-pct { margin-left: auto; font-size: var(--fs-small); font-weight: 700; font-variant-numeric: tabular-nums; }
+  .tier-count { font-size: var(--fs-micro); color: var(--muted); }
+  .tier-track { height: 8px; border-radius: 99px; background: var(--surface2); overflow: hidden; }
+  .tier-track > div { height: 100%; border-radius: 99px; transition: width .6s cubic-bezier(.4,0,.2,1); }
+
+  .donut-wrap { display: flex; align-items: center; gap: 22px; }
+  .donut-legend { display: flex; flex-direction: column; gap: 9px; flex: 1; }
+  .leg-row { display: flex; align-items: center; gap: 9px; font-size: var(--fs-small); }
+  .leg-row .lg-dot { width: 9px; height: 9px; border-radius: 3px; flex: 0 0 9px; }
+  .leg-row .lg-name { color: var(--text); }
+  .leg-row .lg-val { margin-left: auto; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+  .big-chart { width: 100%; height: 220px; }
+
+  .empty {
+    text-align: center; padding: 60px 20px; color: var(--muted);
+  }
+  .empty svg { width: 40px; height: 40px; opacity: .4; margin-bottom: 12px; }
+
+  /* responsive */
+  @media (max-width: 1300px) { .kpi-strip { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 1100px) { .two-col { grid-template-columns: 1fr; } }
+  @media (max-width: 920px) {
+    .sidebar { display: none; }
+    .global-search { min-width: 0; }
+  }
+  @media (max-width: 640px) { .kpi-strip { grid-template-columns: repeat(2, 1fr); } }
+
+  .hidden { display: none !important; }
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md);
+    padding: 11px 18px; font-size: var(--fs-small); box-shadow: var(--sh-lg); z-index: 100;
+    display: flex; align-items: center; gap: 9px; opacity: 0; pointer-events: none; transition: all .25s;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast svg { width: 16px; height: 16px; color: var(--success); }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ============================== SIDEBAR ============================== -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 5-9 5-9-5 9-5z"/><path d="M3 12l9 5 9-5"/><path d="M3 17l9 5 9-5"/></svg>
+      </div>
+      <div>
+        <div class="brand-name">Atlas Recall</div>
+        <div class="brand-sub"><span class="live-dot"></span> served by <span class="mono">atlas serve</span></div>
+      </div>
+    </div>
+
+    <nav class="nav" aria-label="Primary">
+      <div class="nav-label">Observe</div>
+      <button class="nav-item" data-view="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14l4-4"/><path d="M5.5 18a9 9 0 1 1 13 0"/><path d="M12 14a1.5 1.5 0 1 0 1.5 1.5"/></svg> Overview</button>
+      <button class="nav-item active" data-view="library"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 5-9 5-9-5 9-5z"/><path d="M3 12l9 5 9-5"/><path d="M3 17l9 5 9-5"/></svg> Library <span class="nav-count" id="nav-lib-count">6</span></button>
+      <button class="nav-item has-alert" data-view="approvals"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg> Approvals <span class="nav-count" id="nav-apr-count">3</span></button>
+      <button class="nav-item" data-view="feed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> Live Feed</button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="save-card">
+        <div class="lbl">Tokens saved · all time</div>
+        <div class="val" id="side-tokens">62.77M</div>
+        <div class="sub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M21 7v6h-6"/></svg> +23.7% · ~$194.59 / mo</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============================== MAIN ============================== -->
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h1 id="page-title">Automation Library</h1>
+        <div class="crumb" id="page-crumb">Discover and manage your org's distilled automations</div>
+      </div>
+      <div class="topbar-spacer"></div>
+      <label class="global-search" aria-label="Global search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16z"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input id="globalSearch" type="text" placeholder="Search automations, prompts, repos…" />
+        <kbd>/</kbd>
+      </label>
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle color theme" title="Toggle theme">
+        <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v5l3 2"/><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+      </button>
+      <div class="avatar" title="dominic@aziro.com">DA</div>
+    </div>
+
+    <div class="content" id="content"></div>
+  </main>
+</div>
+
+<!-- ============================== DRAWER ============================== -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Automation detail"></aside>
+
+<!-- ============================== TOAST ============================== -->
+<div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span id="toastMsg"></span></div>
+
+<script>
+/* ============================================================================
+   ATLAS RECALL — OPTION B "Automation Library / Skill Store"
+   Fully self-contained. All data inline below (mirrors atlas-recall-spec.json).
+   ============================================================================ */
+
+const ICONS = {
+  gauge:"M12 14l4-4 M5.5 18a9 9 0 1 1 13 0 M12 14a1.5 1.5 0 1 0 1.5 1.5",
+  bolt:"M13 2L4 14h7l-1 8 9-12h-7l1-8z",
+  list:"M8 6h13 M8 12h13 M8 18h13 M3 6h.01 M3 12h.01 M3 18h.01",
+  clock:"M12 7v5l3 2 M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z",
+  shieldCheck:"M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z M9 12l2 2 4-4",
+  gitBranch:"M6 3v12 M18 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M18 9a9 9 0 0 1-9 9",
+  search:"M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16z M21 21l-4.3-4.3",
+  check:"M20 6L9 17l-5-5",
+  x:"M18 6L6 18 M6 6l12 12",
+  play:"M6 4l14 8-14 8V4z",
+  pin:"M12 17v5 M9 10.8V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v5.8l2 3.2H7l2-3.2z",
+  trendUp:"M3 17l6-6 4 4 8-8 M21 7v6h-6",
+  trendDown:"M3 7l6 6 4-4 8 8 M21 17v-6h-6",
+  database:"M12 8c4.4 0 8-1.3 8-3s-3.6-3-8-3-8 1.3-8 3 3.6 3 8 3z M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5 M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6",
+  activity:"M22 12h-4l-3 9L9 3l-3 9H2",
+  users:"M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M23 21v-2a4 4 0 0 0-3-3.9 M16 3.1a4 4 0 0 1 0 7.8",
+  layers:"M12 2l9 5-9 5-9-5 9-5z M3 12l9 5 9-5 M3 17l9 5 9-5",
+  terminal:"M4 17l6-6-6-6 M12 19h8",
+  fileCode:"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z M14 2v6h6 M10 13l-2 2 2 2 M14 13l2 2-2 2",
+  sparkles:"M12 3l1.8 4.6L18 9.4l-4.2 1.8L12 16l-1.8-4.8L6 9.4l4.2-1.8L12 3z M19 14l.9 2.3L22 17l-2.1.7L19 20l-.9-2.3L16 17l2.1-.7L19 14z",
+  alertTriangle:"M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z M12 9v4 M12 17h.01",
+  refresh:"M21 12a9 9 0 1 1-3-6.7L21 8 M21 3v5h-5",
+  chevronRight:"M9 6l6 6-6 6"
+};
+function svg(name, cls){
+  const d = ICONS[name] || "";
+  const paths = d.split(/\s(?=M)/).map(p=>`<path d="${p}"/>`).join("");
+  return `<svg ${cls?`class="${cls}"`:""} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${paths}</svg>`;
+}
+
+/* ---------------------------------- DATA ---------------------------------- */
+const DATA = {
+  kpis:{tokensSavedTotal:62770896,tokensSavedTrendPct:23.7,pctLlmAvoided:0.7324,hitRate:0.7324,p50ms:41,p95ms:138,trustedAutomations:3,eventsToday:1287,monthlyUsdSaved:194.59},
+  series:{
+    days:["2026-06-01","2026-06-02","2026-06-03","2026-06-04","2026-06-05","2026-06-06","2026-06-07","2026-06-08","2026-06-09","2026-06-10","2026-06-11","2026-06-12","2026-06-13","2026-06-14","2026-06-15","2026-06-16","2026-06-17","2026-06-18","2026-06-19","2026-06-20","2026-06-21","2026-06-22","2026-06-23","2026-06-24","2026-06-25","2026-06-26","2026-06-27","2026-06-28","2026-06-29","2026-06-30"],
+    tokensSaved:[715587,780020,847225,822910,891848,963557,932312,1005754,1081968,1043793,1121739,1077674,1157353,1239804,1188809,1272992,1359947,1302022,1390710,1482170,1417315,1510507,1439762,1534686,1632383,1554708,1654136,1756337,1671732,1775666],
+    hitRate:[0.38,0.431,0.412,0.463,0.444,0.495,0.476,0.457,0.508,0.489,0.54,0.521,0.572,0.553,0.534,0.586,0.567,0.618,0.599,0.65,0.631,0.612,0.663,0.644,0.695,0.676,0.727,0.708,0.689,0.74]
+  },
+  tierBreakdown:{exactCache:5120,semanticCache:3380,automationReplay:4203,liveLlm:4642},
+  clusters:[
+    {id:"clu_01",promptNorm:"who calls {symbol}",exemplar:"who calls FlowOrchestrator.dispatch?",frequency:1842,distinctUsers:23,avgTokens:14200,automatable:"yes",state:"automated",repo:"aziron-pulse",lastSeen:"2026-06-30T09:41:00Z",hotScore:2885.2},
+    {id:"clu_02",promptNorm:"explain the {x} pipeline",exemplar:"explain the signalchain pipeline",frequency:1106,distinctUsers:19,avgTokens:22800,automatable:"yes",state:"automated",repo:"aziron-pulse",lastSeen:"2026-06-30T08:55:00Z",hotScore:2088.4},
+    {id:"clu_03",promptNorm:"where are the {x} routes",exemplar:"where are the canvas routes?",frequency:734,distinctUsers:16,avgTokens:11600,automatable:"yes",state:"automated",repo:"aziron-pulse",lastSeen:"2026-06-30T07:12:00Z",hotScore:544.9},
+    {id:"clu_04",promptNorm:"deploy {service} to {env}",exemplar:"deploy pulse to prod",frequency:263,distinctUsers:14,avgTokens:9400,automatable:"gated",state:"validating",repo:"aziron-pulse",lastSeen:"2026-06-30T06:30:00Z",hotScore:129.5},
+    {id:"clu_05",promptNorm:"what is the type of {symbol}",exemplar:"what is the type of JSONBMap?",frequency:588,distinctUsers:12,avgTokens:7300,automatable:"yes",state:"candidate",repo:"aziron-mcp",lastSeen:"2026-06-30T05:48:00Z",hotScore:178.4},
+    {id:"clu_06",promptNorm:"summarize PR {number}",exemplar:"summarize PR #686",frequency:421,distinctUsers:11,avgTokens:26100,automatable:"unknown",state:"candidate",repo:"aziron-pulse",lastSeen:"2026-06-29T22:10:00Z",hotScore:400.9},
+    {id:"clu_07",promptNorm:"find unreferenced config keys",exemplar:"find unreferenced config keys",frequency:196,distinctUsers:9,avgTokens:17400,automatable:"yes",state:"candidate",repo:"aziron-ui",lastSeen:"2026-06-29T18:02:00Z",hotScore:92.1},
+    {id:"clu_08",promptNorm:"rewrite this commit message",exemplar:"rewrite this commit message nicely",frequency:510,distinctUsers:13,avgTokens:1900,automatable:"no",state:"rejected",repo:"aziron-pulse",lastSeen:"2026-06-30T04:20:00Z",hotScore:45.4},
+    {id:"clu_09",promptNorm:"pending migrations for {repo}",exemplar:"pending migrations for aziron-pulse",frequency:402,distinctUsers:10,avgTokens:8200,automatable:"yes",state:"stale",repo:"aziron-pulse",lastSeen:"2026-06-30T03:05:00Z",hotScore:104.2},
+    {id:"clu_10",promptNorm:"why is my local pulse 401ing",exemplar:"why is my local pulse 401ing on this branch?",frequency:37,distinctUsers:1,avgTokens:19500,automatable:"no",state:"not_promoted",repo:"aziron-pulse",lastSeen:"2026-06-29T11:44:00Z",hotScore:0.7}
+  ],
+  automations:[
+    {id:"auto_001",slug:"callers-of-symbol",title:"Who calls {symbol}?",kind:"code_query",state:"trusted",version:7,hits:1842,baselineTokensPerRun:14200,replayTokensPerRun:38,agreementRate:0.992,
+     params:[{name:"symbol",type:"string",required:true},{name:"repo",type:"string",required:false}],
+     workflow:{steps:[{id:"s1",name:"Resolve symbol in index",type:"lookup",reversible:true},{id:"s2",name:"Walk reverse call edges",type:"graph",reversible:true},{id:"s3",name:"Rank + format callers",type:"format",reversible:true}],edges:[{from:"s1",to:"s2",condition:"symbol_found"},{from:"s2",to:"s3",condition:"always"}]},
+     artifact:{name:"callers.atlas.js",lang:"javascript",bodyExcerpt:["export async function callersOf({ symbol, repo }) {","  const sym = await atlas.symbol(symbol, { repo });","  if (!sym) return { callers: [], note: 'symbol not indexed' };","  const edges = await atlas.callers(sym.id, { depth: 1 });","  return edges","    .map(e => ({ caller: e.from, file: e.file, line: e.line }))","    .sort((a, b) => a.file.localeCompare(b.file));","}"]},
+     context:{variables:{defaultRepo:"aziron-pulse",depth:1},findings:{avgCallers:9,topSymbol:"FlowOrchestrator.dispatch"},referenced:["internal/flow/orchestrator.go","internal/flow/dispatch.go"]},
+     staleness:{signals:[{type:"code",strategy:"fingerprint",fresh:true,detail:"graph snapshot 0723d89 matches last index"},{type:"time",strategy:"probe",fresh:true,detail:"re-probed 4m ago, TTL 60m"}],drifted:false},
+     provenance:{minedFromCluster:"clu_01",connector:"claude",author:"atlas-distiller",approvedBy:"auto-trust (agreement>=0.98, n>=500)"},requiresApproval:false,tokensSaved:26086404},
+    {id:"auto_002",slug:"explain-pipeline",title:"Explain the {pipeline} pipeline",kind:"code_query",state:"trusted",version:4,hits:1106,baselineTokensPerRun:22800,replayTokensPerRun:1420,agreementRate:0.974,
+     params:[{name:"pipeline",type:"string",required:true}],
+     workflow:{steps:[{id:"s1",name:"Locate pipeline entrypoint",type:"search",reversible:true},{id:"s2",name:"Trace forward call chain",type:"graph",reversible:true},{id:"s3",name:"Summarize stages (cached)",type:"summarize",reversible:true}],edges:[{from:"s1",to:"s2",condition:"entry_found"},{from:"s2",to:"s3",condition:"always"}]},
+     artifact:{name:"explain_pipeline.atlas.py",lang:"python",bodyExcerpt:["def explain_pipeline(pipeline: str) -> dict:","    entry = atlas.search(f'{pipeline} pipeline entry', kind='function')[0]","    chain = atlas.path(entry.id, direction='callees', max_depth=6)","    stages = [s for s in chain if s.tags and 'stage' in s.tags]","    summary = cache.get_or_compute(","        key=f'pipe::{pipeline}::{entry.snapshot}',","        fn=lambda: llm.summarize(stages),","    )","    return {'entry': entry.fqname, 'stages': stages, 'summary': summary}"]},
+     context:{variables:{maxDepth:6,stageTag:"stage"},findings:{pipelines:["signalchain","rca","pr-review"],avgStages:5},referenced:["internal/signalchain/runner.go","internal/rca/engine.go"]},
+     staleness:{signals:[{type:"code",strategy:"fingerprint",fresh:true,detail:"callee chain hash unchanged since v4"},{type:"external",strategy:"probe",fresh:true,detail:"LLM summary model claude-sonnet-4-6 pinned"}],drifted:false},
+     provenance:{minedFromCluster:"clu_02",connector:"codex",author:"atlas-distiller",approvedBy:"dominic@aziro.com"},requiresApproval:false,tokensSaved:23646280},
+    {id:"auto_003",slug:"where-are-routes",title:"Where are the {area} routes?",kind:"code_query",state:"trusted",version:3,hits:734,baselineTokensPerRun:11600,replayTokensPerRun:52,agreementRate:0.981,
+     params:[{name:"area",type:"string",required:true}],
+     workflow:{steps:[{id:"s1",name:"Query route-contract index",type:"lookup",reversible:true},{id:"s2",name:"Filter by area tag",type:"filter",reversible:true}],edges:[{from:"s1",to:"s2",condition:"always"}]},
+     artifact:{name:"routes.atlas.js",lang:"javascript",bodyExcerpt:["export async function routesFor({ area }) {","  const contracts = await atlas.routeContracts();","  return contracts","    .filter(r => r.tags.includes(area))","    .map(r => ({ method: r.method, path: r.path, handler: r.handler }));","}"]},
+     context:{variables:{framework:"go-chi"},findings:{areas:["auth","pulse","canvas","signal"],totalRoutes:214},referenced:["internal/http/router.go","internal/http/routes_pulse.go"]},
+     staleness:{signals:[{type:"config",strategy:"fingerprint",fresh:true,detail:"router.go mtime + hash match"},{type:"code",strategy:"fingerprint",fresh:true,detail:"route-contract count stable at 214"}],drifted:false},
+     provenance:{minedFromCluster:"clu_03",connector:"claude",author:"atlas-distiller",approvedBy:"auto-trust (agreement>=0.98, n>=500)"},requiresApproval:false,tokensSaved:8476232},
+    {id:"auto_004",slug:"deploy-service-to-env",title:"Deploy {service} to {env}",kind:"workflow",state:"validating",version:2,hits:88,baselineTokensPerRun:9400,replayTokensPerRun:640,agreementRate:0.946,
+     params:[{name:"service",type:"string",required:true},{name:"env",type:"enum[stg,prod]",required:true}],
+     workflow:{steps:[{id:"s1",name:"Resolve service manifest",type:"lookup",reversible:true},{id:"s2",name:"Build + push image",type:"build",reversible:true},{id:"s3",name:"kubectl apply rollout",type:"deploy",reversible:false},{id:"s4",name:"Verify health + smoke",type:"verify",reversible:true}],edges:[{from:"s1",to:"s2",condition:"manifest_found"},{from:"s2",to:"s3",condition:"image_pushed && approved"},{from:"s3",to:"s4",condition:"rollout_started"}]},
+     artifact:{name:"deploy.atlas.sh",lang:"bash",bodyExcerpt:["#!/usr/bin/env bash","set -euo pipefail","SERVICE=\"$1\"; ENV=\"$2\"","manifest=\"deploy/${ENV}/${SERVICE}.yaml\"","[ -f \"$manifest\" ] || { echo \"no manifest for $SERVICE/$ENV\"; exit 2; }","image=\"registry.aziron.io/${SERVICE}:$(git rev-parse --short HEAD)\"","docker build -t \"$image\" \"services/${SERVICE}\" && docker push \"$image\"","# GATED: requires human approval before apply","kubectl --context \"aziron-${ENV}\" apply -f \"$manifest\"","kubectl --context \"aziron-${ENV}\" rollout status deploy/\"$SERVICE\" --timeout=180s"]},
+     context:{variables:{registry:"registry.aziron.io",namespacePrefix:"pulse-runners"},findings:{services:["pulse","atlas","canvas"],avgRolloutSec:64},referenced:["deploy/stg/pulse.yaml","deploy/prod/pulse.yaml"]},
+     staleness:{signals:[{type:"config",strategy:"fingerprint",fresh:true,detail:"manifest checksums current"},{type:"external",strategy:"probe",fresh:true,detail:"cluster reachable, kube context valid"},{type:"time",strategy:"probe",fresh:true,detail:"re-probed 11m ago"}],drifted:false},
+     provenance:{minedFromCluster:"clu_04",connector:"cowork",author:"atlas-distiller",approvedBy:null},requiresApproval:true,tokensSaved:770880},
+    {id:"auto_005",slug:"find-dead-config",title:"Find unreferenced config keys",kind:"script",state:"candidate",version:1,hits:31,baselineTokensPerRun:17400,replayTokensPerRun:210,agreementRate:0.903,
+     params:[{name:"configDir",type:"string",required:false}],
+     workflow:{steps:[{id:"s1",name:"Enumerate config keys",type:"scan",reversible:true},{id:"s2",name:"Search references in code",type:"search",reversible:true},{id:"s3",name:"Report orphans",type:"format",reversible:true}],edges:[{from:"s1",to:"s2",condition:"always"},{from:"s2",to:"s3",condition:"always"}]},
+     artifact:{name:"dead_config.atlas.py",lang:"python",bodyExcerpt:["def find_dead_config(config_dir='config/'):","    keys = parse_keys(config_dir)","    orphans = []","    for k in keys:","        refs = atlas.refs(query=k, kind='string')","        if not refs:","            orphans.append(k)","    return {'scanned': len(keys), 'orphans': orphans}"]},
+     context:{variables:{configGlob:"config/**/*.yaml"},findings:{scanned:412,orphansLastRun:7},referenced:["config/pulse.yaml","config/atlas.yaml"]},
+     staleness:{signals:[{type:"code",strategy:"fingerprint",fresh:true,detail:"ref index current"},{type:"data",strategy:"probe",fresh:true,detail:"config dir hash sampled 2m ago"}],drifted:false},
+     provenance:{minedFromCluster:"clu_07",connector:"codex",author:"atlas-distiller",approvedBy:null},requiresApproval:false,tokensSaved:532890},
+    {id:"auto_006",slug:"migration-status",title:"Pending DB migrations for {repo}",kind:"script",state:"stale",version:5,hits:402,baselineTokensPerRun:8200,replayTokensPerRun:95,agreementRate:0.889,
+     params:[{name:"repo",type:"string",required:true}],
+     workflow:{steps:[{id:"s1",name:"List migration files",type:"scan",reversible:true},{id:"s2",name:"Diff vs schema_migrations",type:"compare",reversible:true}],edges:[{from:"s1",to:"s2",condition:"always"}]},
+     artifact:{name:"migrations.atlas.sh",lang:"bash",bodyExcerpt:["#!/usr/bin/env bash","set -euo pipefail","repo=\"$1\"","applied=$(psql -At -c 'select version from schema_migrations')","for f in db/migrations/*.sql; do","  v=$(basename \"$f\" | cut -d_ -f1)","  grep -qx \"$v\" <<<\"$applied\" || echo \"PENDING $f\"","done"]},
+     context:{variables:{migrationsDir:"db/migrations"},findings:{latestApplied:"086",pending:["087","088"]},referenced:["db/migrations/086_cost_usd.sql"]},
+     staleness:{signals:[{type:"data",strategy:"probe",fresh:false,detail:"schema_migrations probe failed: 2 new rows since fingerprint"},{type:"code",strategy:"fingerprint",fresh:false,detail:"migrations dir changed (087, 088 added)"},{type:"time",strategy:"probe",fresh:true,detail:"probe ran 1m ago"}],drifted:true},
+     provenance:{minedFromCluster:"clu_09",connector:"claude",author:"atlas-distiller",approvedBy:"auto-trust (agreement>=0.98, n>=500)"},requiresApproval:false,tokensSaved:3258210}
+  ],
+  approvals:[
+    {id:"apr_001",automationSlug:"deploy-service-to-env",requestedBy:"u_7af3",params:{service:"pulse",env:"prod"},blastRadius:"prod namespace pulse-runners-prod; rolling restart of 4 pods; ~64s window; reversible via rollback",requestedAt:"2026-06-30T09:12:00Z",status:"awaiting"},
+    {id:"apr_002",automationSlug:"deploy-service-to-env",requestedBy:"u_2c19",params:{service:"atlas",env:"stg"},blastRadius:"stg namespace; 1 deployment; no data migration; low risk",requestedAt:"2026-06-30T08:40:00Z",status:"awaiting"},
+    {id:"apr_003",automationSlug:"deploy-service-to-env",requestedBy:"u_91be",params:{service:"canvas",env:"prod"},blastRadius:"prod; shared canvas runtime; affects active Canvas sessions; advise drain first",requestedAt:"2026-06-30T07:58:00Z",status:"awaiting"}
+  ],
+  events:[
+    {ts:"2026-06-30T09:41:12Z",userHash:"u_7af3",connector:"claude",prompt:"who calls FlowOrchestrator.dispatch?",repo:"aziron-pulse",servedBy:"automation",tokens:38,latencyMs:44},
+    {ts:"2026-06-30T09:40:51Z",userHash:"u_2c19",connector:"codex",prompt:"explain the signalchain pipeline",repo:"aziron-pulse",servedBy:"automation",tokens:1420,latencyMs:61},
+    {ts:"2026-06-30T09:39:33Z",userHash:"u_91be",connector:"claude",prompt:"where are the canvas routes?",repo:"aziron-pulse",servedBy:"exact",tokens:12,latencyMs:9},
+    {ts:"2026-06-30T09:38:02Z",userHash:"u_5d77",connector:"cowork",prompt:"deploy pulse to prod",repo:"aziron-pulse",servedBy:"live",tokens:9400,latencyMs:2210},
+    {ts:"2026-06-30T09:36:48Z",userHash:"u_7af3",connector:"claude",prompt:"what is the type of JSONBMap?",repo:"aziron-mcp",servedBy:"semantic",tokens:240,latencyMs:33},
+    {ts:"2026-06-30T09:35:10Z",userHash:"u_a0f1",connector:"codex",prompt:"who calls RecordSignalUsage?",repo:"aziron-pulse",servedBy:"automation",tokens:41,latencyMs:47},
+    {ts:"2026-06-30T09:33:59Z",userHash:"u_2c19",connector:"claude",prompt:"summarize PR #686",repo:"aziron-pulse",servedBy:"live",tokens:26100,latencyMs:5180},
+    {ts:"2026-06-30T09:32:21Z",userHash:"u_91be",connector:"claude",prompt:"where are the auth routes?",repo:"aziron-pulse",servedBy:"exact",tokens:12,latencyMs:8},
+    {ts:"2026-06-30T09:30:44Z",userHash:"u_c4e2",connector:"codex",prompt:"explain the rca pipeline",repo:"aziron-pulse",servedBy:"semantic",tokens:1510,latencyMs:58},
+    {ts:"2026-06-30T09:29:05Z",userHash:"u_5d77",connector:"claude",prompt:"pending migrations for aziron-pulse",repo:"aziron-pulse",servedBy:"live",tokens:8200,latencyMs:1340},
+    {ts:"2026-06-30T09:27:33Z",userHash:"u_a0f1",connector:"cowork",prompt:"deploy atlas to stg",repo:"aziron-mcp",servedBy:"automation",tokens:640,latencyMs:71},
+    {ts:"2026-06-30T09:25:58Z",userHash:"u_7af3",connector:"claude",prompt:"who calls CrossRepoImpactForChangedPaths?",repo:"aziron-pulse",servedBy:"automation",tokens:39,latencyMs:43},
+    {ts:"2026-06-30T09:24:12Z",userHash:"u_91be",connector:"codex",prompt:"where are the signal routes?",repo:"aziron-pulse",servedBy:"exact",tokens:12,latencyMs:10},
+    {ts:"2026-06-30T09:22:40Z",userHash:"u_d8a3",connector:"claude",prompt:"why is my local pulse 401ing on this branch?",repo:"aziron-pulse",servedBy:"live",tokens:19500,latencyMs:3120}
+  ]
+};
+
+/* synthesized version-history (provenance flavor, derived from version count) */
+const VERSION_NOTES = {
+  callers:["Mined from cluster clu_01 (1842 hits)","Switched to reverse call-edge walk","Added repo param + dedupe","Stable sort by file path","Cache symbol resolution","Depth guard for hub symbols","Auto-trusted (agreement 0.992)"],
+  pipeline:["Mined from clu_02","Forward callee trace + stage tag filter","Cache LLM summary by snapshot key","Pinned model claude-sonnet-4-6"],
+  routes:["Mined from clu_03","Route-contract index lookup","Area-tag filter + handler map"],
+  deploy:["Mined from clu_04 (gated)","Added human-approval gate before apply"],
+  dead:["Mined from clu_07"],
+  migration:["Mined from clu_09","psql diff vs schema_migrations","Per-repo migrationsDir var","Glob fix for nested dirs","De-advertised: data signal drifted"]
+};
+
+/* ---------------------------------- HELPERS ---------------------------------- */
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const content = $("#content");
+
+function fmtNum(n){ return n.toLocaleString("en-US"); }
+function fmtCompact(n){
+  if(n>=1e9) return (n/1e9).toFixed(2).replace(/\.0+$/,"")+"B";
+  if(n>=1e6) return (n/1e6).toFixed(2).replace(/\.0+$/,"")+"M";
+  if(n>=1e3) return (n/1e3).toFixed(1).replace(/\.0$/,"")+"K";
+  return String(n);
+}
+function pct(x){ return (x*100).toFixed(1)+"%"; }
+function timeAgo(iso){
+  const d = new Date(iso); const now = new Date("2026-06-30T09:42:00Z");
+  const s = Math.floor((now - d)/1000);
+  if(s<60) return s+"s";
+  if(s<3600) return Math.floor(s/60)+"m";
+  if(s<86400) return Math.floor(s/3600)+"h";
+  return Math.floor(s/86400)+"d";
+}
+const KIND_META = {
+  code_query:{icon:"search",cls:"",label:"Code query"},
+  script:{icon:"terminal",cls:"k-script",label:"Script"},
+  workflow:{icon:"gitBranch",cls:"k-workflow",label:"Workflow"}
+};
+const STATE_LABEL = {trusted:"Trusted",validating:"Validating",candidate:"Candidate",stale:"Stale"};
+
+function sparklinePath(values, w, h, pad){
+  pad = pad || 2;
+  const min = Math.min(...values), max = Math.max(...values);
+  const range = (max - min) || 1;
+  const step = (w - pad*2) / (values.length - 1);
+  return values.map((v,i)=>{
+    const x = pad + i*step;
+    const y = h - pad - ((v - min)/range)*(h - pad*2);
+    return (i===0?"M":"L") + x.toFixed(1) + " " + y.toFixed(1);
+  }).join(" ");
+}
+function makeSparkline(values, w, h, color, fill){
+  const line = sparklinePath(values, w, h, 2);
+  const area = line + ` L ${w-2} ${h-2} L 2 ${h-2} Z`;
+  const gid = "sg"+Math.random().toString(36).slice(2,8);
+  return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" width="100%" height="${h}" aria-hidden="true">
+    ${fill?`<defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="${color}" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="${color}" stop-opacity="0"/></linearGradient></defs>
+      <path d="${area}" fill="url(#${gid})"/>`:""}
+    <path d="${line}" fill="none" stroke="${color}" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/>
+  </svg>`;
+}
+/* deterministic pseudo-spark per automation so cards look alive */
+function autoSpark(a){
+  const seed = a.hits + a.version*7;
+  const arr = [];
+  let v = 40 + (seed % 30);
+  for(let i=0;i<16;i++){
+    v += Math.sin(seed + i*1.3)*8 + ((seed*(i+3))%11) - 4;
+    if(a.state==="stale" && i>10) v -= 6;
+    arr.push(Math.max(8, v));
+  }
+  return arr;
+}
+
+/* code tokenizer (lightweight, lang-aware-ish) */
+function tintCode(line, lang){
+  let s = line.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  // comments
+  if(/^\s*#/.test(line) && (lang==="python"||lang==="bash")){
+    return `<span class="tok-com">${s}</span>`;
+  }
+  if(/^\s*\/\//.test(line)){
+    return `<span class="tok-com">${s}</span>`;
+  }
+  // strings
+  s = s.replace(/(["'])(?:(?=(\\?))\2.)*?\1/g, m=>`<span class="tok-str">${m}</span>`);
+  // keywords
+  const kws = ["export","async","function","const","let","return","await","def","for","in","if","else","not","lambda","import","from","set","echo"];
+  s = s.replace(new RegExp("\\b("+kws.join("|")+")\\b","g"), '<span class="tok-kw">$1</span>');
+  // numbers
+  s = s.replace(/\b(\d+)\b/g, '<span class="tok-num">$1</span>');
+  return s;
+}
+
+let toastTimer;
+function toast(msg){
+  $("#toastMsg").textContent = msg;
+  $("#toast").classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>$("#toast").classList.remove("show"), 2400);
+}
+
+/* ---------------------------------- STATE ---------------------------------- */
+const STATE = {
+  view:"library",
+  libTab:"library", // library | candidates
+  search:"",
+  filterState:"all",
+  filterKind:"all",
+  filterRepo:"all",
+  filterAutomatable:"all",
+  sortBy:"tokensSaved",
+  layout:"grid",
+  selected:null,
+  drawerTab:"workflow",
+  candSort:"hotScore",
+  candDir:-1,
+  pinned:new Set(["auto_001"]),
+  approvalsHandled:{}
+};
+
+/* ============================================================================
+   RENDER: ROUTER
+   ============================================================================ */
+function setView(v){
+  STATE.view = v;
+  $$(".nav-item").forEach(b=>b.classList.toggle("active", b.dataset.view===v));
+  const titles = {
+    overview:["Overview","How repeated prompts become trusted automations"],
+    library:["Automation Library","Discover and manage your org's distilled automations"],
+    approvals:["Approval Queue","Gated automations awaiting a human go-ahead"],
+    feed:["Live Event Feed","Every prompt and how Atlas served it"]
+  };
+  $("#page-title").textContent = titles[v][0];
+  $("#page-crumb").textContent = titles[v][1];
+  if(v==="overview") renderOverview();
+  else if(v==="library") renderLibrary();
+  else if(v==="approvals") renderApprovals();
+  else if(v==="feed") renderFeed();
+  window.scrollTo({top:0});
+}
+
+/* ============================================================================
+   KPI STRIP (shared on overview + library)
+   ============================================================================ */
+function kpiStripHTML(){
+  const k = DATA.kpis;
+  const tokSpark = DATA.series.tokensSaved.slice(-16);
+  const hrSpark = DATA.series.hitRate.slice(-16).map(x=>x*100);
+  const cards = [
+    {label:"Tokens saved", val:fmtCompact(k.tokensSavedTotal), unit:"", icon:"sparkles", delta:`+${k.tokensSavedTrendPct}%`, dir:"up", spark:makeSparkline(tokSpark, 200, 26, "var(--accent)", true)},
+    {label:"LLM calls avoided", val:pct(k.pctLlmAvoided), unit:"", icon:"bolt", delta:"of all requests", dir:"flat"},
+    {label:"Cache + replay hit-rate", val:pct(k.hitRate), unit:"", icon:"database", delta:"trending up", dir:"up", spark:makeSparkline(hrSpark, 200, 26, "var(--success)", true)},
+    {label:"Replay latency", val:k.p50ms, unit:"ms p50", icon:"clock", delta:`p95 ${k.p95ms}ms`, dir:"flat"},
+    {label:"Trusted automations", val:k.trustedAutomations, unit:"", icon:"shieldCheck", delta:"3 more validating", dir:"flat"},
+    {label:"Events today", val:fmtNum(k.eventsToday), unit:"", icon:"activity", delta:"~$"+k.monthlyUsdSaved+"/mo saved", dir:"up"}
+  ];
+  return `<div class="kpi-strip">${cards.map(c=>`
+    <div class="kpi">
+      <div class="kicon">${svg(c.icon)}</div>
+      <div class="klabel">${c.label}</div>
+      <div class="kval">${c.val}${c.unit?`<span class="unit">${c.unit}</span>`:""}</div>
+      <div class="kdelta ${c.dir}">${c.dir==="up"?svg("trendUp"):c.dir==="down"?svg("trendDown"):""}${c.delta}</div>
+      ${c.spark?`<div class="spark">${c.spark}</div>`:""}
+    </div>`).join("")}</div>`;
+}
+
+/* ============================================================================
+   OVERVIEW
+   ============================================================================ */
+function renderOverview(){
+  const tb = DATA.tierBreakdown;
+  const total = tb.exactCache + tb.semanticCache + tb.automationReplay + tb.liveLlm;
+  const tiers = [
+    {name:"Exact cache", count:tb.exactCache, color:"var(--c2)"},
+    {name:"Semantic cache", count:tb.semanticCache, color:"var(--c0)"},
+    {name:"Automation replay", count:tb.automationReplay, color:"var(--c1)"},
+    {name:"Live LLM", count:tb.liveLlm, color:"var(--c5)"}
+  ];
+
+  // big tokens-saved area chart
+  const days = DATA.series.days, vals = DATA.series.tokensSaved;
+  const W=760, H=200, P=8;
+  const min=0, max=Math.max(...vals)*1.08;
+  const sx = i=> P + i*((W-P*2)/(days.length-1));
+  const sy = v=> H-P - (v-min)/(max-min)*(H-P*2-18);
+  const line = vals.map((v,i)=>(i?"L":"M")+sx(i).toFixed(1)+" "+sy(v).toFixed(1)).join(" ");
+  const area = line + ` L ${sx(days.length-1)} ${H-P} L ${sx(0)} ${H-P} Z`;
+  // gridlines
+  let grid="";
+  for(let g=1;g<=3;g++){ const y=P+ (H-P*2-18)*g/4; grid+=`<line x1="${P}" x2="${W-P}" y1="${y}" y2="${y}" stroke="var(--grid)" stroke-width="1"/>`; }
+
+  content.innerHTML = `
+    ${kpiStripHTML()}
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-head">
+          <span class="ph-icon">${svg("trendUp")}</span>
+          <h2>Tokens saved · daily</h2>
+          <span class="ph-sub">Jun 1 – Jun 30, 2026</span>
+        </div>
+        <svg class="big-chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Daily tokens saved trend">
+          <defs><linearGradient id="ovg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.32"/>
+            <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
+          </linearGradient></defs>
+          ${grid}
+          <path d="${area}" fill="url(#ovg)"/>
+          <path d="${line}" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linejoin="round"/>
+          <circle cx="${sx(days.length-1)}" cy="${sy(vals[vals.length-1])}" r="4" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/>
+        </svg>
+        <div style="display:flex;justify-content:space-between;font-size:var(--fs-micro);color:var(--muted);margin-top:6px;">
+          <span>Jun 1</span><span>Jun 15</span><span>Jun 30 · ${fmtCompact(vals[vals.length-1])}</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <span class="ph-icon">${svg("layers")}</span>
+          <h2>How requests were served</h2>
+        </div>
+        <div class="donut-wrap">
+          ${donutSVG(tiers, total)}
+          <div class="donut-legend">
+            ${tiers.map(t=>`<div class="leg-row">
+              <span class="lg-dot" style="background:${t.color}"></span>
+              <span class="lg-name">${t.name}</span>
+              <span class="lg-val">${pct(t.count/total)}</span>
+            </div>`).join("")}
+          </div>
+        </div>
+        <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);font-size:var(--fs-small);color:var(--muted);">
+          <strong style="color:var(--text)">${pct((tb.exactCache+tb.semanticCache+tb.automationReplay)/total)}</strong> of ${fmtCompact(total)} requests served without a fresh LLM call.
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <span class="ph-icon">${svg("database")}</span>
+        <h2>Tier breakdown</h2>
+        <span class="ph-sub">${fmtNum(total)} requests · 30d</span>
+      </div>
+      <div class="tier-bars">
+        ${tiers.map(t=>`
+          <div class="tier">
+            <div class="tier-top">
+              <span class="lg-dot" style="width:9px;height:9px;border-radius:3px;background:${t.color}"></span>
+              <span class="tier-name">${t.name}</span>
+              <span class="tier-count">${fmtNum(t.count)}</span>
+              <span class="tier-pct">${pct(t.count/total)}</span>
+            </div>
+            <div class="tier-track"><div style="width:${(t.count/total*100).toFixed(1)}%;background:${t.color}"></div></div>
+          </div>`).join("")}
+      </div>
+    </div>
+
+    <div style="margin-top:20px" class="panel">
+      <div class="panel-head">
+        <span class="ph-icon">${svg("sparkles")}</span>
+        <h2>The headline rule</h2>
+      </div>
+      <p style="font-size:var(--fs-h3);font-weight:600;line-height:1.5;margin:0;max-width:680px;">
+        One user asking → <span style="color:var(--muted)">skip</span>. &nbsp;The whole org asking → <span style="color:var(--accent)">automate</span>.
+      </p>
+      <p class="muted" style="margin:10px 0 0;font-size:var(--fs-body);max-width:680px;">
+        Atlas clusters repeated prompts, scores them by <span class="mono">frequency × distinct-users<sup>1.5</sup> × avg-tokens</span>, and distills the hottest into reusable, Cowork-shaped automations — workflow + script artifact + mutable context.
+      </p>
+    </div>
+  `;
+}
+
+function donutSVG(tiers, total){
+  const R=52, C=64, sw=20, circ=2*Math.PI*R;
+  let off=0;
+  const segs = tiers.map(t=>{
+    const frac = t.count/total;
+    const len = frac*circ;
+    const seg = `<circle cx="${C}" cy="${C}" r="${R}" fill="none" stroke="${t.color}" stroke-width="${sw}"
+      stroke-dasharray="${len.toFixed(2)} ${(circ-len).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}"
+      transform="rotate(-90 ${C} ${C})"/>`;
+    off += len;
+    return seg;
+  }).join("");
+  return `<svg width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="Request tier donut">
+    <circle cx="${C}" cy="${C}" r="${R}" fill="none" stroke="var(--surface2)" stroke-width="${sw}"/>
+    ${segs}
+    <text x="${C}" y="${C-4}" text-anchor="middle" font-size="20" font-weight="800" fill="var(--text)">${pct((total-tiers[3].count)/total).replace('.0','')}</text>
+    <text x="${C}" y="${C+13}" text-anchor="middle" font-size="9" fill="var(--muted)">avoided LLM</text>
+  </svg>`;
+}
+
+/* ============================================================================
+   LIBRARY (cards) + CANDIDATES
+   ============================================================================ */
+function renderLibrary(){
+  const repos = Array.from(new Set(DATA.automations.map(a=>a.repoFromProvenance || clusterRepo(a)))).filter(Boolean);
+  content.innerHTML = `
+    ${kpiStripHTML()}
+    <div class="section-head" style="justify-content:space-between;display:flex;align-items:center;">
+      <div class="pill-tabs" role="tablist" aria-label="Library sections">
+        <button data-libtab="library" class="${STATE.libTab==='library'?'active':''}" role="tab">Automations <span class="tcount">${DATA.automations.length}</span></button>
+        <button data-libtab="candidates" class="${STATE.libTab==='candidates'?'active':''}" role="tab">Candidates <span class="tcount">${DATA.clusters.filter(c=>['candidate','validating','stale'].includes(c.state)).length}</span></button>
+      </div>
+      <div class="result-count" id="resultCount"></div>
+    </div>
+    <div id="libBody"></div>
+  `;
+  $$(".pill-tabs [data-libtab]").forEach(b=>b.addEventListener("click",()=>{
+    STATE.libTab=b.dataset.libtab; renderLibrary();
+  }));
+  if(STATE.libTab==="library") renderLibBody();
+  else renderCandidates();
+}
+function clusterRepo(a){
+  const c = DATA.clusters.find(c=>c.id===a.provenance.minedFromCluster);
+  return c?c.repo:"";
+}
+
+function renderLibBody(){
+  const body = $("#libBody");
+  body.innerHTML = `
+    <div class="lib-toolbar">
+      <label class="lib-search" aria-label="Filter automations">
+        ${svg("search")}
+        <input id="libSearch" type="text" placeholder="Filter by name, slug, repo…" value="${STATE.search.replace(/"/g,'&quot;')}" />
+      </label>
+      <div class="filter-group" role="group" aria-label="Filter by state">
+        <span class="fg-label">State</span>
+        ${["all","trusted","validating","candidate","stale"].map(s=>`
+          <button class="chip ${STATE.filterState===s?'active':''}" data-fstate="${s}">
+            ${s!=='all'?`<span class="dot" style="background:${stateColor(s)}"></span>`:""}${s==='all'?'All':STATE_LABEL[s]}
+          </button>`).join("")}
+      </div>
+      <select class="select" id="kindFilter" aria-label="Filter by kind">
+        <option value="all">All kinds</option>
+        <option value="code_query">Code query</option>
+        <option value="script">Script</option>
+        <option value="workflow">Workflow</option>
+      </select>
+      <select class="select" id="sortBy" aria-label="Sort by">
+        <option value="tokensSaved">Sort: Tokens saved</option>
+        <option value="hits">Sort: Hits</option>
+        <option value="agreementRate">Sort: Agreement</option>
+        <option value="version">Sort: Version</option>
+      </select>
+      <div class="toolbar-spacer"></div>
+      <div class="view-toggle" role="group" aria-label="Layout">
+        <button id="gridBtn" class="${STATE.layout==='grid'?'active':''}" aria-label="Grid view" title="Grid">${svg("layers")}</button>
+        <button id="listBtn" class="${STATE.layout==='list'?'active':''}" aria-label="List view" title="List">${svg("list")}</button>
+      </div>
+    </div>
+    <div class="grid ${STATE.layout==='list'?'list-mode':''}" id="autoGrid"></div>
+  `;
+  // wire
+  $("#libSearch").addEventListener("input", e=>{ STATE.search=e.target.value; paintCards(); });
+  $$("[data-fstate]").forEach(b=>b.addEventListener("click",()=>{
+    STATE.filterState=b.dataset.fstate;
+    $$("[data-fstate]").forEach(x=>x.classList.toggle("active",x===b));
+    paintCards();
+  }));
+  $("#kindFilter").value = STATE.filterKind;
+  $("#kindFilter").addEventListener("change", e=>{ STATE.filterKind=e.target.value; paintCards(); });
+  $("#sortBy").value = STATE.sortBy;
+  $("#sortBy").addEventListener("change", e=>{ STATE.sortBy=e.target.value; paintCards(); });
+  $("#gridBtn").addEventListener("click",()=>{ STATE.layout="grid"; renderLibBody(); });
+  $("#listBtn").addEventListener("click",()=>{ STATE.layout="list"; renderLibBody(); });
+  paintCards();
+}
+function stateColor(s){
+  return {trusted:"var(--success)",validating:"var(--accent)",candidate:"var(--warn)",stale:"var(--danger)"}[s]||"var(--muted)";
+}
+
+function filteredAutomations(){
+  const q = STATE.search.trim().toLowerCase();
+  let list = DATA.automations.filter(a=>{
+    if(STATE.filterState!=="all" && a.state!==STATE.filterState) return false;
+    if(STATE.filterKind!=="all" && a.kind!==STATE.filterKind) return false;
+    if(q){
+      const hay = (a.title+" "+a.slug+" "+a.kind+" "+clusterRepo(a)+" "+a.params.map(p=>p.name).join(" ")).toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  });
+  list.sort((a,b)=> b[STATE.sortBy]-a[STATE.sortBy]);
+  // pinned to top
+  list.sort((a,b)=> (STATE.pinned.has(b.id)?1:0)-(STATE.pinned.has(a.id)?1:0));
+  return list;
+}
+
+function paintCards(){
+  const grid = $("#autoGrid");
+  if(!grid) return;
+  const list = filteredAutomations();
+  const rc = $("#resultCount");
+  if(rc) rc.textContent = `${list.length} automation${list.length!==1?'s':''}`;
+  if(!list.length){
+    grid.innerHTML = `<div class="empty" style="grid-column:1/-1">${svg("search")}<div>No automations match these filters.</div></div>`;
+    return;
+  }
+  grid.innerHTML = list.map(a=>cardHTML(a)).join("");
+  $$(".card[data-auto]").forEach(c=>{
+    c.addEventListener("click", e=>{
+      if(e.target.closest(".pin-btn")) return;
+      openDrawer(c.dataset.auto);
+    });
+    c.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openDrawer(c.dataset.auto);} });
+  });
+  $$(".pin-btn").forEach(b=>b.addEventListener("click",e=>{
+    e.stopPropagation();
+    const id=b.dataset.pin;
+    if(STATE.pinned.has(id)){ STATE.pinned.delete(id); toast("Unpinned"); }
+    else { STATE.pinned.add(id); toast("Pinned to top"); }
+    paintCards();
+  }));
+}
+
+function cardHTML(a){
+  const km = KIND_META[a.kind];
+  const drift = a.staleness.drifted;
+  const repo = clusterRepo(a);
+  const pinned = STATE.pinned.has(a.id);
+  return `
+  <div class="card ${STATE.selected===a.id?'selected':''}" data-auto="${a.id}" tabindex="0" role="button" aria-label="Open ${a.title}">
+    <div class="card-top">
+      <div class="kind-icon ${km.cls}">${svg(km.icon)}</div>
+      <div class="card-title-wrap">
+        <div class="card-title">${a.title}</div>
+        <div class="card-slug mono">${a.slug} · v${a.version}</div>
+      </div>
+      <button class="pin-btn icon-btn" data-pin="${a.id}" style="width:28px;height:28px" aria-label="${pinned?'Unpin':'Pin'} ${a.title}" title="${pinned?'Unpin':'Pin'}">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="${pinned?'currentColor':'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:${pinned?'var(--accent)':'var(--muted)'}"><path d="M12 17v5"/><path d="M9 10.8V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v5.8l2 3.2H7l2-3.2z"/></svg>
+      </button>
+    </div>
+
+    <div class="card-meta">
+      <span class="badge ${a.state}"><span class="bdot" style="background:currentColor"></span>${STATE_LABEL[a.state]||a.state}</span>
+      ${a.requiresApproval?`<span class="badge gated">${svg("shieldCheck")} Gated</span>`:""}
+      <span class="meta-pill">${svg("gitBranch")} ${repo}</span>
+      <span class="meta-pill" title="Staleness contract">
+        <span class="stale-dot ${drift?'drift':''}" style="margin:0;box-shadow:none;width:7px;height:7px"></span>
+        ${drift?'Drifted':'Fresh'}
+      </span>
+    </div>
+
+    <div class="card-stats">
+      <div class="cstat"><div class="cs-val">${fmtNum(a.hits)}</div><div class="cs-lbl">hits</div></div>
+      <div class="cstat"><div class="cs-val">${fmtCompact(a.tokensSaved)}</div><div class="cs-lbl">tokens saved</div></div>
+      <div class="cstat"><div class="cs-val">${Math.round(a.baselineTokensPerRun/a.replayTokensPerRun)}×</div><div class="cs-lbl">cheaper / run</div></div>
+    </div>
+
+    <div class="card-spark">${makeSparkline(autoSpark(a), 280, 32, drift?"var(--danger)":"var(--accent)", true)}</div>
+
+    <div class="card-foot">
+      <div class="agree-bar" title="Agreement rate"><div class="agree-fill" style="width:${(a.agreementRate*100).toFixed(0)}%"></div></div>
+      <span class="agree-label">${pct(a.agreementRate)} agree</span>
+      <span class="open-hint">Open ${svg("chevronRight")}</span>
+    </div>
+  </div>`;
+}
+
+/* ---------------------------------- CANDIDATES ---------------------------------- */
+function renderCandidates(){
+  const body = $("#libBody");
+  body.innerHTML = `
+    <div class="lib-toolbar">
+      <label class="lib-search" aria-label="Filter candidates">
+        ${svg("search")}
+        <input id="candSearch" type="text" placeholder="Filter hot clusters…" value="${STATE.search.replace(/"/g,'&quot;')}" />
+      </label>
+      <div class="filter-group" role="group" aria-label="Filter by automatability">
+        <span class="fg-label">Verdict</span>
+        ${[["all","All"],["yes","Automatable"],["gated","Gated"],["unknown","Unknown"],["no","Not automatable"]].map(([v,l])=>`
+          <button class="chip ${STATE.filterAutomatable===v?'active':''}" data-fauto="${v}">${l}</button>`).join("")}
+      </div>
+      <div class="toolbar-spacer"></div>
+      <span class="result-count">one user asks → skip · whole org asks → automate</span>
+    </div>
+    <div class="cand-table-wrap">
+      <table class="cand" aria-label="Hot prompt candidate clusters">
+        <thead><tr>
+          <th class="sortable" data-csort="promptNorm">Prompt cluster</th>
+          <th class="sortable" data-csort="frequency">Frequency</th>
+          <th class="sortable" data-csort="distinctUsers">Distinct users</th>
+          <th class="sortable" data-csort="avgTokens">Avg tokens</th>
+          <th class="sortable" data-csort="hotScore">HotScore</th>
+          <th>Verdict</th>
+          <th></th>
+        </tr></thead>
+        <tbody id="candBody"></tbody>
+      </table>
+    </div>
+  `;
+  $("#candSearch").addEventListener("input", e=>{ STATE.search=e.target.value; paintCandidates(); });
+  $$("[data-fauto]").forEach(b=>b.addEventListener("click",()=>{
+    STATE.filterAutomatable=b.dataset.fauto;
+    $$("[data-fauto]").forEach(x=>x.classList.toggle("active",x===b));
+    paintCandidates();
+  }));
+  $$("[data-csort]").forEach(th=>th.addEventListener("click",()=>{
+    const k=th.dataset.csort;
+    if(STATE.candSort===k) STATE.candDir*=-1; else { STATE.candSort=k; STATE.candDir=-1; }
+    paintCandidates();
+  }));
+  paintCandidates();
+}
+
+const VERDICT_META = {
+  yes:{cls:"yes",icon:"check",label:"Automatable"},
+  gated:{cls:"gated",icon:"shieldCheck",label:"Gated"},
+  no:{cls:"no",icon:"x",label:"Not automatable"},
+  unknown:{cls:"unknown",icon:"alertTriangle",label:"Unknown"}
+};
+
+function paintCandidates(){
+  const tb = $("#candBody");
+  if(!tb) return;
+  const q = STATE.search.trim().toLowerCase();
+  // candidates = clusters not yet trusted/automated as a stable automation. Show validating/candidate/stale + unknowns.
+  let list = DATA.clusters.filter(c=>{
+    if(STATE.filterAutomatable!=="all" && c.automatable!==STATE.filterAutomatable) return false;
+    if(q){ const hay=(c.promptNorm+" "+c.exemplar+" "+c.repo).toLowerCase(); if(!hay.includes(q)) return false; }
+    return true;
+  });
+  const k=STATE.candSort, dir=STATE.candDir;
+  list.sort((a,b)=>{
+    let x=a[k], y=b[k];
+    if(typeof x==="string") return x.localeCompare(y)*-dir;
+    return (x-y)*dir;
+  });
+  const maxHot = Math.max(...DATA.clusters.map(c=>c.hotScore));
+  // sort indicator
+  $$("[data-csort]").forEach(th=>{
+    th.querySelector(".sort-ind")?.remove();
+    if(th.dataset.csort===k){
+      const i=document.createElement("span"); i.className="sort-ind"; i.textContent=dir<0?"▼":"▲"; th.appendChild(i);
+    }
+  });
+  if(!list.length){
+    tb.innerHTML = `<tr><td colspan="7"><div class="empty">${svg("search")}<div>No clusters match.</div></div></td></tr>`;
+    return;
+  }
+  tb.innerHTML = list.map(c=>{
+    const vm = VERDICT_META[c.automatable]||VERDICT_META.unknown;
+    const isAutomated = c.state==="automated";
+    const distillable = ["yes","gated"].includes(c.automatable) && !isAutomated;
+    return `<tr>
+      <td>
+        <div class="cand-prompt">${c.promptNorm}</div>
+        <div class="cand-exemplar">e.g. “${c.exemplar}” · ${svg("gitBranch")} ${c.repo}</div>
+      </td>
+      <td><span class="mono">${fmtNum(c.frequency)}</span></td>
+      <td><span class="meta-pill">${svg("users")} ${c.distinctUsers}</span></td>
+      <td><span class="mono">${fmtCompact(c.avgTokens)}</span></td>
+      <td>
+        <span class="hotscore">${c.hotScore.toLocaleString()}</span>
+        <div class="hotbar"><div style="width:${Math.max(3,(c.hotScore/maxHot*100)).toFixed(1)}%"></div></div>
+      </td>
+      <td><span class="verdict ${vm.cls}">${svg(vm.icon)} ${vm.label}</span></td>
+      <td style="text-align:right">
+        ${isAutomated
+          ? `<span class="badge trusted" style="background:var(--success-soft)">${svg("check")} Automated</span>`
+          : distillable
+            ? `<button class="btn primary sm" data-distill="${c.id}">${svg("sparkles")} Distill</button>`
+            : `<button class="btn ghost sm" disabled title="Not eligible">—</button>`}
+      </td>
+    </tr>`;
+  }).join("");
+  $$("[data-distill]").forEach(b=>b.addEventListener("click",()=>{
+    const c = DATA.clusters.find(x=>x.id===b.dataset.distill);
+    toast(`Distilling “${c.promptNorm}” → candidate automation`);
+    b.outerHTML = `<span class="badge validating">${svg("refresh")} Distilling…</span>`;
+  }));
+}
+
+/* ============================================================================
+   DRAWER (detail / Cowork three-pane)
+   ============================================================================ */
+function openDrawer(id){
+  const a = DATA.automations.find(x=>x.id===id);
+  if(!a) return;
+  STATE.selected = id;
+  STATE.drawerTab = "workflow";
+  $$(".card").forEach(c=>c.classList.toggle("selected", c.dataset.auto===id));
+  $("#drawer").innerHTML = drawerHTML(a);
+  wireDrawer(a);
+  $("#scrim").classList.add("open");
+  $("#drawer").classList.add("open");
+  $("#drawer").focus();
+}
+function closeDrawer(){
+  $("#scrim").classList.remove("open");
+  $("#drawer").classList.remove("open");
+  STATE.selected=null;
+  $$(".card").forEach(c=>c.classList.remove("selected"));
+}
+
+function drawerHTML(a){
+  const km = KIND_META[a.kind];
+  const drift = a.staleness.drifted;
+  const pinned = STATE.pinned.has(a.id);
+  return `
+    <div class="drawer-head">
+      <div class="dh-icon ${km.cls==='k-script'?'':''}" style="background:${km.cls==='k-script'?'var(--success-soft)':km.cls==='k-workflow'?'var(--accent-soft2)':'var(--accent-soft)'};color:${km.cls==='k-script'?'var(--success)':km.cls==='k-workflow'?'var(--accent2)':'var(--accent)'}">${svg(km.icon)}</div>
+      <div style="min-width:0">
+        <div class="drawer-title">${a.title}</div>
+        <div class="drawer-sub">
+          <span class="mono">${a.slug}</span>
+          <span class="badge ${a.state}"><span class="bdot" style="background:currentColor"></span>${STATE_LABEL[a.state]||a.state}</span>
+          <span>${km.label} · v${a.version}</span>
+          ${a.requiresApproval?`<span class="badge gated">${svg("shieldCheck")} Gated</span>`:""}
+        </div>
+      </div>
+      <button class="icon-btn drawer-close" id="drawerClose" aria-label="Close detail">${svg("x")}</button>
+    </div>
+
+    <div class="drawer-actions">
+      <button class="btn primary" id="runBtn">${svg("play")} ${a.requiresApproval?'Request run':'Replay'}</button>
+      <button class="btn" id="pinBtn">${svg("pin")} ${pinned?'Unpin':'Pin'}</button>
+      ${drift?`<button class="btn" id="recomputeBtn">${svg("refresh")} Recompute</button>`:""}
+      <div style="flex:1"></div>
+      <button class="btn danger" id="evictBtn">${svg("x")} Evict</button>
+    </div>
+
+    ${drift?`<div style="padding:14px 22px 0"><div class="contract-banner drift">${svg("alertTriangle")} Staleness contract broke — automation de-advertised pending recompute.</div></div>`:""}
+
+    <div class="drawer-tabs" role="tablist">
+      <button data-dtab="workflow" class="active" role="tab">Cowork</button>
+      <button data-dtab="staleness" role="tab">Staleness</button>
+      <button data-dtab="history" role="tab">Versions</button>
+      <button data-dtab="provenance" role="tab">Provenance</button>
+    </div>
+
+    <div class="drawer-body">
+      <div class="dpane active" data-dpane="workflow">${coworkPaneHTML(a)}</div>
+      <div class="dpane" data-dpane="staleness">${stalenessPaneHTML(a)}</div>
+      <div class="dpane" data-dpane="history">${historyPaneHTML(a)}</div>
+      <div class="dpane" data-dpane="provenance">${provenancePaneHTML(a)}</div>
+    </div>
+  `;
+}
+
+function coworkPaneHTML(a){
+  const wf = a.workflow;
+  // build edge condition lookup
+  const condTo = {};
+  wf.edges.forEach(e=>{ condTo[e.from]=e.condition; });
+  const steps = wf.steps.map((s,i)=>{
+    const irr = !s.reversible;
+    return `
+    <div class="wf-step">
+      <div class="wf-rail">
+        <div class="wf-node ${irr?'irreversible':''}">${i+1}</div>
+        ${i<wf.steps.length-1?'<div class="wf-line"></div>':''}
+      </div>
+      <div class="wf-content">
+        <div class="wf-name">${s.name}</div>
+        <div class="wf-tags">
+          <span class="wf-tag">${s.type}</span>
+          <span class="wf-tag ${irr?'irr':'rev'}">${irr?'irreversible':'reversible'}</span>
+        </div>
+        ${condTo[s.id]?`<div class="wf-edge">→ if <span style="color:var(--accent2)">${condTo[s.id]}</span></div>`:''}
+      </div>
+    </div>`;
+  }).join("");
+
+  const art = a.artifact;
+  const codeLines = art.bodyExcerpt.map((l,i)=>`<span class="ln">${i+1}</span>${tintCode(l, art.lang)}`).join("\n");
+
+  const vars = a.context.variables;
+  const kvHTML = Object.entries(vars).map(([k,v])=>`
+    <div class="kv"><div class="k">${k}</div><div class="v">${Array.isArray(v)?v.join(", "):v}</div></div>`).join("");
+
+  const findings = a.context.findings;
+  const findHTML = Object.entries(findings).map(([k,v])=>`
+    <div class="finding">${svg("sparkles")}<span class="fk">${k}</span><span class="fv">${Array.isArray(v)?v.join(", "):v}</span></div>`).join("");
+
+  const refs = a.context.referenced.map(r=>`<span class="ref-chip">${svg("fileCode")} ${r}</span>`).join(" ");
+
+  const params = a.params.map(p=>`<span class="ref-chip"><strong style="color:var(--text)">${p.name}</strong>: ${p.type}${p.required?'':' <span class="muted">(opt)</span>'}</span>`).join(" ");
+
+  return `
+    <div class="pane-block">
+      <h3>${svg("gitBranch")} Parameters</h3>
+      <div style="display:flex;gap:7px;flex-wrap:wrap">${params}</div>
+    </div>
+
+    <div class="pane-block">
+      <h3>${svg("list")} Workflow · steps (Progress)</h3>
+      <div class="wf-timeline">${steps}</div>
+    </div>
+
+    <div class="pane-block">
+      <h3>${svg("fileCode")} Script artifact (Working folder)</h3>
+      <div class="code-card">
+        <div class="code-head">${svg("terminal")}<span class="cf-name">${art.name}</span><span class="lang-pill">${art.lang}</span></div>
+        <pre class="code"><code>${codeLines}</code></pre>
+      </div>
+    </div>
+
+    <div class="pane-block">
+      <h3>${svg("database")} Context / memory (mutable)</h3>
+      <div class="kv-grid">${kvHTML}</div>
+      <div style="margin:14px 0 8px;font-size:var(--fs-micro);text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:600">Findings</div>
+      <div class="findings-list">${findHTML}</div>
+      <div style="margin:14px 0 8px;font-size:var(--fs-micro);text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:600">Referenced files</div>
+      <div style="display:flex;gap:7px;flex-wrap:wrap">${refs}</div>
+    </div>
+  `;
+}
+
+function stalenessPaneHTML(a){
+  const st = a.staleness;
+  const banner = st.drifted
+    ? `<div class="contract-banner drift">${svg("alertTriangle")} Contract broken — ${st.signals.filter(s=>!s.fresh).length} signal(s) drifted. Automation is de-advertised until recompute.</div>`
+    : `<div class="contract-banner ok">${svg("shieldCheck")} All change-metric signals fresh — automation is trusted and advertised.</div>`;
+  const rows = st.signals.map(s=>`
+    <div class="signal-row">
+      <div class="sig-status ${s.fresh?'fresh':'stale'}">${svg(s.fresh?'check':'alertTriangle')}</div>
+      <div class="sig-body">
+        <div class="sig-type">${s.type} <span class="sig-strat">${s.strategy}</span></div>
+        <div class="sig-detail">${s.detail}</div>
+      </div>
+    </div>`).join("");
+  return `${banner}
+    <div class="pane-block" style="margin-bottom:0">
+      <h3>${svg("refresh")} Change-metric signals</h3>
+      ${rows}
+    </div>
+    <p class="muted" style="font-size:var(--fs-small);margin-top:16px">
+      Atlas tracks <span class="mono">code / config / data / time / external</span> signals per automation. Each is either a stored <em>fingerprint</em> or a live <em>probe</em>. The first one that drifts breaks the contract and triggers recompute.
+    </p>`;
+}
+
+function historyPaneHTML(a){
+  const notes = (VERSION_NOTES[a.slug.split("-")[0]] || VERSION_NOTES[Object.keys(VERSION_NOTES).find(k=>a.slug.includes(k))] || []).slice(0, a.version);
+  // synth timestamps stepping back ~5 days per version
+  const base = new Date("2026-06-30T09:00:00Z");
+  const rows = [];
+  for(let v=a.version; v>=1; v--){
+    const idx = a.version - v;
+    const note = notes[v-1] || (v===a.version?"Current version":"Earlier revision");
+    const d = new Date(base - idx*4.6*86400000);
+    rows.push(`
+      <div class="ver-item">
+        <div class="ver-tag">v${v}</div>
+        <div class="ver-body">
+          <div class="ver-note">${note}${v===a.version?' <span class="badge trusted" style="margin-left:6px">current</span>':''}</div>
+          <div class="ver-time">${d.toISOString().slice(0,10)} · ${a.provenance.author}</div>
+        </div>
+      </div>`);
+  }
+  return `
+    <div class="pane-block" style="margin-bottom:18px">
+      <h3>${svg("clock")} Version history</h3>
+      ${rows.join("")}
+    </div>
+    <div class="kv-grid">
+      <div class="kv"><div class="k">Current version</div><div class="v">v${a.version}</div></div>
+      <div class="kv"><div class="k">Total replays</div><div class="v">${fmtNum(a.hits)}</div></div>
+      <div class="kv"><div class="k">Baseline / run</div><div class="v">${fmtNum(a.baselineTokensPerRun)} tok</div></div>
+      <div class="kv"><div class="k">Replay / run</div><div class="v">${fmtNum(a.replayTokensPerRun)} tok</div></div>
+    </div>`;
+}
+
+function provenancePaneHTML(a){
+  const p = a.provenance;
+  const cluster = DATA.clusters.find(c=>c.id===p.minedFromCluster);
+  return `
+    <div class="pane-block">
+      <h3>${svg("sparkles")} How this was distilled</h3>
+      <div class="prov-grid">
+        <div class="kv"><div class="k">Mined from cluster</div><div class="v">${p.minedFromCluster}</div></div>
+        <div class="kv"><div class="k">Source connector</div><div class="v">${p.connector}</div></div>
+        <div class="kv"><div class="k">Author</div><div class="v">${p.author}</div></div>
+        <div class="kv"><div class="k">Approved by</div><div class="v">${p.approvedBy || '— awaiting'}</div></div>
+      </div>
+    </div>
+    ${cluster?`
+    <div class="pane-block">
+      <h3>${svg("activity")} Originating prompt cluster</h3>
+      <div class="signal-row">
+        <div class="sig-status fresh">${svg("search")}</div>
+        <div class="sig-body">
+          <div class="sig-type" style="font-family:var(--mono);text-transform:none">${cluster.promptNorm}</div>
+          <div class="sig-detail">e.g. “${cluster.exemplar}”</div>
+        </div>
+      </div>
+      <div class="kv-grid" style="margin-top:10px">
+        <div class="kv"><div class="k">Frequency</div><div class="v">${fmtNum(cluster.frequency)}</div></div>
+        <div class="kv"><div class="k">Distinct users</div><div class="v">${cluster.distinctUsers}</div></div>
+        <div class="kv"><div class="k">HotScore</div><div class="v">${cluster.hotScore.toLocaleString()}</div></div>
+        <div class="kv"><div class="k">Last seen</div><div class="v">${timeAgo(cluster.lastSeen)} ago</div></div>
+      </div>
+    </div>`:''}
+    <div class="pane-block" style="margin-bottom:0">
+      <h3>${svg("trendUp")} Economics</h3>
+      <div class="findings-list">
+        <div class="finding">${svg("sparkles")}<span class="fk">Lifetime tokens saved</span><span class="fv">${fmtNum(a.tokensSaved)}</span></div>
+        <div class="finding">${svg("bolt")}<span class="fk">Cost reduction / run</span><span class="fv">${Math.round(a.baselineTokensPerRun/a.replayTokensPerRun)}×</span></div>
+        <div class="finding">${svg("shieldCheck")}<span class="fk">Agreement rate</span><span class="fv">${pct(a.agreementRate)}</span></div>
+      </div>
+    </div>`;
+}
+
+function wireDrawer(a){
+  $("#drawerClose").addEventListener("click", closeDrawer);
+  $$("[data-dtab]").forEach(b=>b.addEventListener("click",()=>{
+    STATE.drawerTab=b.dataset.dtab;
+    $$("[data-dtab]").forEach(x=>x.classList.toggle("active",x===b));
+    $$("[data-dpane]").forEach(p=>p.classList.toggle("active",p.dataset.dpane===b.dataset.dtab));
+  }));
+  $("#runBtn").addEventListener("click",()=>{
+    if(a.requiresApproval) toast(`Run request for ${a.slug} sent to approval queue`);
+    else toast(`Replayed ${a.slug} · ${a.replayTokensPerRun} tokens`);
+  });
+  $("#pinBtn").addEventListener("click",()=>{
+    if(STATE.pinned.has(a.id)){ STATE.pinned.delete(a.id); } else { STATE.pinned.add(a.id); }
+    toast(STATE.pinned.has(a.id)?"Pinned":"Unpinned");
+    $("#pinBtn").innerHTML = `${svg("pin")} ${STATE.pinned.has(a.id)?'Unpin':'Pin'}`;
+  });
+  const rc = $("#recomputeBtn");
+  if(rc) rc.addEventListener("click",()=>toast(`Recomputing ${a.slug}… re-probing change signals`));
+  $("#evictBtn").addEventListener("click",()=>{ toast(`Evicted ${a.slug} from registry`); closeDrawer(); });
+}
+
+/* ============================================================================
+   APPROVALS
+   ============================================================================ */
+function renderApprovals(){
+  const open = DATA.approvals.filter(ap=>!STATE.approvalsHandled[ap.id]);
+  content.innerHTML = `
+    <div class="contract-banner" style="background:var(--warn-soft);color:var(--warn);max-width:none;margin-bottom:18px">
+      ${svg("shieldCheck")} <span><strong>${open.length} gated automation${open.length!==1?'s':''}</strong> awaiting human approval. These have an irreversible side-effect (deploy) and never auto-run.</span>
+    </div>
+    <div id="apList">${open.map(approvalHTML).join("") || emptyApprovals()}</div>
+  `;
+  wireApprovals();
+}
+function emptyApprovals(){
+  return `<div class="empty">${svg("check")}<div>Approval queue is clear.</div></div>`;
+}
+function approvalHTML(ap){
+  const auto = DATA.automations.find(a=>a.slug===ap.automationSlug);
+  const isProd = ap.params.env==="prod";
+  return `
+  <div class="approval-card" data-apr="${ap.id}">
+    <div class="warn-icon">${svg("alertTriangle")}</div>
+    <div class="ap-body">
+      <div class="ap-title">${auto?auto.title.replace('{service}',ap.params.service).replace('{env}',ap.params.env):ap.automationSlug}</div>
+      <div class="ap-params">${Object.entries(ap.params).map(([k,v])=>`${k}=${v}`).join(" · ")}</div>
+      <div class="ap-blast">${svg("layers")} <strong>Blast radius:</strong> ${ap.blastRadius}</div>
+      <div class="ap-meta">
+        <span>${svg("users")} requested by <span class="mono">${ap.requestedBy}</span></span>
+        <span>${svg("clock")} ${timeAgo(ap.requestedAt)} ago</span>
+        ${isProd?`<span class="badge danger" style="background:var(--danger-soft);color:var(--danger)">production</span>`:`<span class="badge validating">staging</span>`}
+      </div>
+    </div>
+    <div class="ap-actions">
+      <button class="btn success" data-approve="${ap.id}">${svg("check")} Approve & run</button>
+      <button class="btn danger" data-reject="${ap.id}">${svg("x")} Reject</button>
+    </div>
+  </div>`;
+}
+function wireApprovals(){
+  $$("[data-approve]").forEach(b=>b.addEventListener("click",()=>{
+    STATE.approvalsHandled[b.dataset.approve]="approved";
+    const card = b.closest("[data-apr]");
+    card.style.transition="opacity .3s,transform .3s"; card.style.opacity="0"; card.style.transform="translateX(20px)";
+    toast("Approved — deploy dispatched");
+    setTimeout(()=>{ updateApprovalCount(); renderApprovals(); },320);
+  }));
+  $$("[data-reject]").forEach(b=>b.addEventListener("click",()=>{
+    STATE.approvalsHandled[b.dataset.reject]="rejected";
+    const card = b.closest("[data-apr]");
+    card.style.transition="opacity .3s,transform .3s"; card.style.opacity="0"; card.style.transform="translateX(20px)";
+    toast("Request rejected");
+    setTimeout(()=>{ updateApprovalCount(); renderApprovals(); },320);
+  }));
+}
+function updateApprovalCount(){
+  const open = DATA.approvals.filter(ap=>!STATE.approvalsHandled[ap.id]).length;
+  const el=$("#nav-apr-count"); if(el) el.textContent=open;
+}
+
+/* ============================================================================
+   LIVE FEED
+   ============================================================================ */
+const CONN_LABEL = {claude:"claude",codex:"codex",cowork:"cowork"};
+function renderFeed(){
+  content.innerHTML = `
+    <div class="lib-toolbar">
+      <label class="lib-search" aria-label="Filter events">
+        ${svg("search")}
+        <input id="feedSearch" type="text" placeholder="Filter by prompt, repo, user…" />
+      </label>
+      <div class="filter-group" role="group" aria-label="Filter by served-by tier">
+        <span class="fg-label">Served by</span>
+        ${[["all","All"],["automation","Automation"],["exact","Exact"],["semantic","Semantic"],["live","Live LLM"]].map(([v,l])=>`
+          <button class="chip ${STATE._feedFilter===v||(!STATE._feedFilter&&v==='all')?'active':''}" data-ffeed="${v}">${l}</button>`).join("")}
+      </div>
+      <div class="toolbar-spacer"></div>
+      <span class="result-count" id="feedCount"></span>
+    </div>
+    <div class="feed" id="feedList"></div>
+  `;
+  $("#feedSearch").addEventListener("input", e=>{ STATE._feedSearch=e.target.value; paintFeed(); });
+  $$("[data-ffeed]").forEach(b=>b.addEventListener("click",()=>{
+    STATE._feedFilter=b.dataset.ffeed;
+    $$("[data-ffeed]").forEach(x=>x.classList.toggle("active",x===b));
+    paintFeed();
+  }));
+  paintFeed();
+}
+function paintFeed(){
+  const list = $("#feedList"); if(!list) return;
+  const f = STATE._feedFilter||"all";
+  const q = (STATE._feedSearch||"").trim().toLowerCase();
+  const rows = DATA.events.filter(e=>{
+    if(f!=="all" && e.servedBy!==f) return false;
+    if(q){ const hay=(e.prompt+" "+e.repo+" "+e.userHash+" "+e.connector).toLowerCase(); if(!hay.includes(q)) return false; }
+    return true;
+  });
+  $("#feedCount").textContent = `${rows.length} event${rows.length!==1?'s':''}`;
+  if(!rows.length){ list.innerHTML = `<div class="empty">${svg("activity")}<div>No matching events.</div></div>`; return; }
+  list.innerHTML = rows.map(e=>`
+    <div class="feed-row">
+      <span class="served-tag ${e.servedBy}">${e.servedBy}</span>
+      <span class="conn-badge">${CONN_LABEL[e.connector]||e.connector}</span>
+      <span class="feed-prompt mono">${e.prompt}</span>
+      <span class="feed-user">${e.userHash}</span>
+      <span class="feed-tokens" style="color:${e.tokens>2000?'var(--danger)':e.tokens<100?'var(--success)':'var(--text)'}">${fmtNum(e.tokens)}</span>
+      <span class="feed-time">${timeAgo(e.ts)} ago</span>
+    </div>`).join("");
+}
+
+/* ============================================================================
+   THEME + GLOBAL WIRING
+   ============================================================================ */
+function setTheme(t){
+  document.documentElement.setAttribute("data-theme", t);
+  const sun="M12 3v2 M12 19v2 M5 5l1.4 1.4 M17.6 17.6L19 19 M3 12h2 M19 12h2 M5 19l1.4-1.4 M17.6 6.4L19 5 M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z";
+  const moon="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z";
+  const d = t==="dark" ? moon : sun;
+  $("#themeIcon").innerHTML = d.split(/\s(?=M)/).map(p=>`<path d="${p}"/>`).join("");
+  // re-render current view so SVG gradients pick up new --accent etc.
+  if(STATE.view==="overview") renderOverview();
+  else if(STATE.view==="library") renderLibrary();
+}
+
+document.addEventListener("DOMContentLoaded", ()=>{
+  // nav
+  $$(".nav-item").forEach(b=>b.addEventListener("click",()=>setView(b.dataset.view)));
+  // theme
+  $("#themeToggle").addEventListener("click",()=>{
+    const cur = document.documentElement.getAttribute("data-theme");
+    setTheme(cur==="dark"?"light":"dark");
+  });
+  // global search → jumps to library and filters
+  $("#globalSearch").addEventListener("input", e=>{
+    STATE.search = e.target.value;
+    if(STATE.view!=="library"){ STATE.libTab="library"; setView("library"); }
+    else { renderLibrary(); }
+    const inp=$("#libSearch"); if(inp){ inp.value=e.target.value; }
+  });
+  // keyboard: / focuses search, esc closes drawer
+  document.addEventListener("keydown", e=>{
+    if(e.key==="/" && document.activeElement.tagName!=="INPUT"){ e.preventDefault(); $("#globalSearch").focus(); }
+    if(e.key==="Escape"){ closeDrawer(); }
+  });
+  $("#scrim").addEventListener("click", closeDrawer);
+
+  setTheme("dark");
+  setView("library");
+});
+</script>
+</body>
+</html>

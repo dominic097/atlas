@@ -1,0 +1,1443 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Atlas Recall — Mission Control</title>
+<style>
+/* ============================================================
+   Atlas Recall — Option A "Mission Control"
+   Fully self-contained. No external network deps.
+   ============================================================ */
+:root {
+  --bg:#0a0c10; --surface:#0f1217; --surface2:#13171e; --border:#1e242d;
+  --text:#e7ebf0; --muted:#8b95a4; --accent:#6366f1; --accent2:#a78bfa;
+  --success:#34d399; --warn:#fbbf24; --danger:#fb7185; --grid:#1a2029;
+  --c0:#6366f1; --c1:#a78bfa; --c2:#34d399; --c3:#60a5fa; --c4:#fbbf24; --c5:#fb7185;
+  --r-sm:6px; --r-md:10px; --r-lg:14px; --r-pill:999px;
+  --sh-sm:0 1px 2px rgba(0,0,0,.2);
+  --sh-md:0 12px 30px -16px rgba(0,0,0,.6);
+  --sh-lg:0 22px 70px -26px rgba(0,0,0,.55);
+  --sh-glow:0 0 0 1px rgba(99,102,241,.22), 0 22px 70px -26px rgba(99,102,241,.4);
+  --font:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono:"Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+html[data-theme="light"] {
+  --bg:#f7f8fa; --surface:#ffffff; --surface2:#f1f3f7; --border:#e4e8ef;
+  --text:#1c2433; --muted:#6b7385; --accent:#4f46e5; --accent2:#6d4bd6;
+  --success:#16a34a; --warn:#d97706; --danger:#dc2626; --grid:#e9edf3;
+  --c0:#4f46e5; --c1:#6d4bd6; --c2:#16a34a; --c3:#2563eb; --c4:#d97706; --c5:#dc2626;
+  --sh-md:0 12px 30px -18px rgba(20,30,60,.22);
+  --sh-lg:0 22px 60px -30px rgba(20,30,60,.25);
+  --sh-glow:0 0 0 1px rgba(79,70,229,.18), 0 18px 50px -26px rgba(79,70,229,.3);
+}
+* { box-sizing:border-box; }
+html, body { height:100%; }
+body {
+  margin:0; background:var(--bg); color:var(--text); font-family:var(--font);
+  font-size:13px; line-height:1.45; -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale; letter-spacing:.005em;
+}
+::selection { background:color-mix(in srgb, var(--accent) 40%, transparent); }
+button { font-family:inherit; color:inherit; }
+a { color:inherit; }
+
+/* Scrollbars */
+*::-webkit-scrollbar { width:10px; height:10px; }
+*::-webkit-scrollbar-thumb { background:var(--border); border-radius:99px; border:2px solid var(--bg); }
+*::-webkit-scrollbar-thumb:hover { background:var(--muted); }
+*::-webkit-scrollbar-track { background:transparent; }
+
+/* Focus */
+:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:4px; }
+
+/* ---------- Layout shell ---------- */
+.app {
+  display:grid; grid-template-columns:228px 1fr; grid-template-rows:auto 1fr;
+  grid-template-areas:"head head" "nav main"; height:100vh; overflow:hidden;
+}
+.icon { width:16px; height:16px; flex:none; stroke:currentColor; stroke-width:1.8;
+  stroke-linecap:round; stroke-linejoin:round; fill:none; }
+.icon.sm { width:13px; height:13px; }
+.icon.lg { width:20px; height:20px; }
+
+/* ---------- Header ---------- */
+header {
+  grid-area:head; display:flex; align-items:center; gap:16px; padding:0 18px;
+  height:54px; background:linear-gradient(180deg, var(--surface), var(--bg));
+  border-bottom:1px solid var(--border); position:relative; z-index:20;
+}
+.brand { display:flex; align-items:center; gap:11px; }
+.logo {
+  width:30px; height:30px; border-radius:9px; display:grid; place-items:center;
+  background:linear-gradient(145deg, var(--accent), var(--accent2));
+  box-shadow:var(--sh-glow); color:#fff;
+}
+.logo .icon { width:18px; height:18px; stroke-width:2; }
+.brand .name { font-weight:800; font-size:15px; letter-spacing:-.01em; }
+.brand .name .recall { color:var(--accent2); }
+.served-hint {
+  display:inline-flex; align-items:center; gap:6px; font-family:var(--mono);
+  font-size:10.5px; color:var(--muted); padding:3px 9px; border:1px solid var(--border);
+  border-radius:var(--r-pill); background:var(--surface2);
+}
+.served-hint .dot { width:6px; height:6px; border-radius:50%; background:var(--success);
+  box-shadow:0 0 0 3px color-mix(in srgb, var(--success) 22%, transparent); animation:pulse 2.4s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.4;} }
+
+.head-spacer { flex:1; }
+.head-search {
+  display:flex; align-items:center; gap:8px; background:var(--surface2);
+  border:1px solid var(--border); border-radius:var(--r-pill); padding:6px 12px;
+  width:240px; transition:border-color .15s, box-shadow .15s;
+}
+.head-search:focus-within { border-color:var(--accent); box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent); }
+.head-search input { background:none; border:none; outline:none; color:var(--text);
+  font-size:12.5px; width:100%; }
+.head-search input::placeholder { color:var(--muted); }
+.head-search kbd { font-family:var(--mono); font-size:10px; color:var(--muted);
+  border:1px solid var(--border); border-radius:4px; padding:1px 5px; background:var(--bg); }
+
+.icon-btn {
+  width:34px; height:34px; border-radius:9px; border:1px solid var(--border);
+  background:var(--surface2); display:grid; place-items:center; cursor:pointer;
+  transition:background .15s, border-color .15s, transform .1s; color:var(--muted);
+}
+.icon-btn:hover { background:var(--surface); color:var(--text); border-color:var(--muted); }
+.icon-btn:active { transform:scale(.94); }
+.live-toggle { display:inline-flex; align-items:center; gap:7px; font-size:11.5px;
+  color:var(--muted); border:1px solid var(--border); background:var(--surface2);
+  border-radius:var(--r-pill); padding:6px 11px 6px 9px; cursor:pointer; }
+.live-toggle .dot { width:7px; height:7px; border-radius:50%; background:var(--success); }
+.live-toggle.paused .dot { background:var(--muted); animation:none; }
+.live-toggle .dot { animation:pulse 1.6s infinite; }
+
+/* ---------- Left nav ---------- */
+nav {
+  grid-area:nav; background:var(--surface); border-right:1px solid var(--border);
+  display:flex; flex-direction:column; padding:14px 12px; overflow-y:auto; gap:3px;
+}
+.nav-section { font-size:10px; text-transform:uppercase; letter-spacing:.09em;
+  color:var(--muted); font-weight:700; padding:14px 10px 6px; }
+.nav-item {
+  display:flex; align-items:center; gap:11px; padding:8px 11px; border-radius:9px;
+  color:var(--muted); cursor:pointer; border:1px solid transparent; font-weight:500;
+  font-size:13px; position:relative; transition:background .14s, color .14s; width:100%;
+  text-align:left; background:none;
+}
+.nav-item:hover { background:var(--surface2); color:var(--text); }
+.nav-item.active { background:color-mix(in srgb, var(--accent) 14%, transparent);
+  color:var(--text); border-color:color-mix(in srgb, var(--accent) 30%, transparent); }
+.nav-item.active::before { content:""; position:absolute; left:-12px; top:9px; bottom:9px;
+  width:3px; border-radius:3px; background:var(--accent); }
+.nav-item .icon { color:inherit; }
+.nav-item .badge {
+  margin-left:auto; font-size:10.5px; font-family:var(--mono); font-weight:700;
+  background:var(--surface2); color:var(--muted); border-radius:var(--r-pill);
+  padding:1px 7px; min-width:20px; text-align:center; border:1px solid var(--border);
+}
+.nav-item.active .badge { background:var(--accent); color:#fff; border-color:transparent; }
+.nav-item .badge.warn { background:color-mix(in srgb, var(--warn) 18%, transparent); color:var(--warn); border-color:transparent; }
+.nav-item .badge.danger { background:color-mix(in srgb, var(--danger) 18%, transparent); color:var(--danger); border-color:transparent; }
+
+.nav-foot { margin-top:auto; padding:12px 8px 2px; border-top:1px solid var(--border); }
+.nav-foot .who { display:flex; align-items:center; gap:9px; padding:6px 4px; }
+.avatar { width:28px; height:28px; border-radius:8px; background:linear-gradient(145deg,var(--accent2),var(--accent));
+  display:grid; place-items:center; color:#fff; font-weight:700; font-size:12px; }
+.nav-foot .who .meta { line-height:1.25; }
+.nav-foot .who .meta b { font-size:12px; }
+.nav-foot .who .meta span { font-size:10.5px; color:var(--muted); }
+
+/* ---------- Main ---------- */
+main { grid-area:main; overflow-y:auto; padding:18px 20px 40px; position:relative; }
+.view { display:none; animation:fade .2s ease; }
+.view.active { display:block; }
+@keyframes fade { from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;} }
+
+.view-head { display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:16px; gap:16px; flex-wrap:wrap; }
+.view-head h1 { font-size:21px; font-weight:700; margin:0; letter-spacing:-.015em; }
+.view-head .sub { color:var(--muted); font-size:12.5px; margin-top:3px; }
+.view-head .actions { display:flex; gap:8px; align-items:center; }
+
+/* ---------- KPI strip ---------- */
+.kpi-strip { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:16px; }
+.kpi {
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg);
+  padding:13px 15px; position:relative; overflow:hidden; box-shadow:var(--sh-sm);
+}
+.kpi .label { font-size:11px; color:var(--muted); display:flex; align-items:center; gap:6px; font-weight:500; }
+.kpi .label .icon { width:13px; height:13px; opacity:.8; }
+.kpi .val { font-size:25px; font-weight:800; letter-spacing:-.02em; margin-top:7px; line-height:1; font-variant-numeric:tabular-nums; }
+.kpi .val .unit { font-size:14px; font-weight:600; color:var(--muted); margin-left:2px; }
+.kpi .delta { font-size:11px; font-weight:600; margin-top:6px; display:inline-flex; align-items:center; gap:4px; }
+.kpi .delta.up { color:var(--success); }
+.kpi .delta.down { color:var(--danger); }
+.kpi .delta.flat { color:var(--muted); }
+.kpi .spark { position:absolute; right:10px; top:12px; opacity:.9; }
+.kpi.feature { background:linear-gradient(150deg, color-mix(in srgb, var(--accent) 14%, var(--surface)), var(--surface)); border-color:color-mix(in srgb, var(--accent) 30%, var(--border)); }
+
+/* ---------- Grid panels ---------- */
+.grid-2 { display:grid; grid-template-columns:1.55fr 1fr; gap:12px; margin-bottom:14px; }
+.grid-overview { display:grid; grid-template-columns:1fr 340px; gap:14px; align-items:start; }
+.card {
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg);
+  box-shadow:var(--sh-sm);
+}
+.card-head { display:flex; align-items:center; gap:10px; padding:13px 15px; border-bottom:1px solid var(--border); }
+.card-head h3 { margin:0; font-size:13.5px; font-weight:700; letter-spacing:-.01em; display:flex; align-items:center; gap:8px; }
+.card-head h3 .icon { color:var(--muted); }
+.card-head .sub { font-size:11px; color:var(--muted); }
+.card-head .spacer { flex:1; }
+.card-body { padding:14px 15px; }
+.card-body.flush { padding:0; }
+
+/* segmented control */
+.seg { display:inline-flex; background:var(--surface2); border:1px solid var(--border); border-radius:var(--r-pill); padding:2px; gap:2px; }
+.seg button { border:none; background:none; cursor:pointer; font-size:11.5px; font-weight:600; color:var(--muted);
+  padding:4px 11px; border-radius:var(--r-pill); transition:background .14s, color .14s; }
+.seg button.on { background:var(--surface); color:var(--text); box-shadow:var(--sh-sm); }
+
+.btn { display:inline-flex; align-items:center; gap:7px; font-size:12px; font-weight:600;
+  padding:7px 13px; border-radius:9px; border:1px solid var(--border); background:var(--surface2);
+  color:var(--text); cursor:pointer; transition:background .14s, border-color .14s, transform .08s; }
+.btn:hover { background:var(--surface); border-color:var(--muted); }
+.btn:active { transform:scale(.97); }
+.btn.primary { background:var(--accent); border-color:transparent; color:#fff; }
+.btn.primary:hover { background:color-mix(in srgb, var(--accent) 88%, #fff); }
+.btn.danger { background:color-mix(in srgb, var(--danger) 16%, transparent); border-color:color-mix(in srgb, var(--danger) 40%, transparent); color:var(--danger); }
+.btn.ghost { background:none; }
+.btn.sm { padding:5px 10px; font-size:11.5px; }
+
+/* ---------- Charts ---------- */
+.chart-wrap { position:relative; }
+.chart-tip { position:absolute; pointer-events:none; background:var(--surface2);
+  border:1px solid var(--border); border-radius:8px; padding:7px 10px; font-size:11px;
+  box-shadow:var(--sh-md); opacity:0; transition:opacity .1s; transform:translate(-50%,-115%); white-space:nowrap; z-index:5; }
+.chart-tip b { font-family:var(--mono); }
+.chart-legend { display:flex; gap:16px; flex-wrap:wrap; padding:0 15px 13px; }
+.leg { display:inline-flex; align-items:center; gap:6px; font-size:11.5px; color:var(--muted); }
+.leg .sw { width:10px; height:10px; border-radius:3px; }
+
+/* ---------- Tier bar ---------- */
+.tierbar { display:flex; height:30px; border-radius:8px; overflow:hidden; border:1px solid var(--border); }
+.tierbar > div { display:flex; align-items:center; justify-content:center; font-size:10.5px; font-weight:700;
+  color:#0a0c10; transition:flex-grow .3s; min-width:0; overflow:hidden; white-space:nowrap; cursor:default; }
+.tier-legend { display:grid; grid-template-columns:1fr 1fr; gap:8px 18px; margin-top:14px; }
+.tier-legend .row { display:flex; align-items:center; gap:9px; font-size:12px; }
+.tier-legend .sw { width:11px; height:11px; border-radius:3px; flex:none; }
+.tier-legend .nm { flex:1; }
+.tier-legend .vv { font-family:var(--mono); font-weight:700; }
+.tier-legend .pct { color:var(--muted); font-size:11px; font-family:var(--mono); min-width:42px; text-align:right; }
+
+/* ---------- Leaderboard table ---------- */
+.lb-toolbar { display:flex; align-items:center; gap:10px; padding:11px 15px; border-bottom:1px solid var(--border); flex-wrap:wrap; }
+.filterbox { display:flex; align-items:center; gap:7px; background:var(--surface2); border:1px solid var(--border);
+  border-radius:9px; padding:6px 10px; flex:1; min-width:170px; }
+.filterbox input { background:none; border:none; outline:none; color:var(--text); font-size:12px; width:100%; }
+.filterbox input::placeholder { color:var(--muted); }
+.chipset { display:flex; gap:6px; flex-wrap:wrap; }
+.chip { font-size:11px; font-weight:600; padding:5px 10px; border-radius:var(--r-pill);
+  border:1px solid var(--border); background:var(--surface2); color:var(--muted); cursor:pointer; transition:all .14s; }
+.chip:hover { color:var(--text); }
+.chip.on { background:color-mix(in srgb, var(--accent) 16%, transparent); color:var(--text); border-color:color-mix(in srgb, var(--accent) 36%, transparent); }
+
+table { width:100%; border-collapse:collapse; }
+thead th { text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em;
+  color:var(--muted); font-weight:700; padding:9px 14px; border-bottom:1px solid var(--border);
+  position:sticky; top:0; background:var(--surface); z-index:2; white-space:nowrap; }
+thead th.sortable { cursor:pointer; user-select:none; }
+thead th.sortable:hover { color:var(--text); }
+thead th .sort-ind { display:inline-block; width:9px; margin-left:3px; color:var(--accent); }
+thead th.num, td.num { text-align:right; font-variant-numeric:tabular-nums; }
+tbody tr { cursor:pointer; transition:background .12s; }
+tbody tr:hover { background:var(--surface2); }
+tbody tr.sel { background:color-mix(in srgb, var(--accent) 12%, transparent); }
+tbody tr.sel td:first-child { box-shadow:inset 3px 0 0 var(--accent); }
+tbody td { padding:11px 14px; border-bottom:1px solid color-mix(in srgb, var(--border) 60%, transparent); font-size:12.5px; vertical-align:middle; }
+tbody tr:last-child td { border-bottom:none; }
+.prompt-cell { display:flex; flex-direction:column; gap:2px; max-width:330px; }
+.prompt-cell .norm { font-weight:600; font-size:12.5px; }
+.prompt-cell .ex { font-size:11px; color:var(--muted); font-family:var(--mono); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.mono { font-family:var(--mono); }
+.hot { font-family:var(--mono); font-weight:700; font-size:13px; }
+.minibar { height:5px; border-radius:3px; background:var(--surface2); overflow:hidden; margin-top:5px; }
+.minibar > span { display:block; height:100%; border-radius:3px; background:linear-gradient(90deg,var(--accent),var(--accent2)); }
+
+/* badges */
+.badge2 { display:inline-flex; align-items:center; gap:5px; font-size:10.5px; font-weight:700;
+  padding:3px 9px; border-radius:var(--r-pill); border:1px solid transparent; white-space:nowrap; letter-spacing:.01em; }
+.b-yes,.b-trusted,.b-automated,.b-fresh { background:color-mix(in srgb, var(--success) 16%, transparent); color:var(--success); }
+.b-gated,.b-validating,.b-awaiting { background:color-mix(in srgb, var(--warn) 16%, transparent); color:var(--warn); }
+.b-no,.b-rejected,.b-stale,.b-drifted,.b-danger { background:color-mix(in srgb, var(--danger) 16%, transparent); color:var(--danger); }
+.b-unknown,.b-candidate,.b-not_promoted,.b-muted { background:var(--surface2); color:var(--muted); border-color:var(--border); }
+.b-accent { background:color-mix(in srgb, var(--accent) 16%, transparent); color:var(--accent2); }
+.dotmark { width:6px; height:6px; border-radius:50%; background:currentColor; }
+
+/* ---------- Right rail (detail) ---------- */
+.rail { position:sticky; top:0; display:flex; flex-direction:column; gap:12px; max-height:calc(100vh - 92px); overflow-y:auto; padding-bottom:8px; }
+.rail-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); box-shadow:var(--sh-md); overflow:hidden; }
+.rail-empty { display:grid; place-items:center; text-align:center; padding:40px 22px; color:var(--muted); }
+.rail-empty .icon { width:36px; height:36px; opacity:.4; margin-bottom:12px; }
+.rail-empty b { color:var(--text); display:block; font-size:13.5px; margin-bottom:4px; }
+.rail-hd { padding:14px 15px 12px; border-bottom:1px solid var(--border); background:linear-gradient(180deg, var(--surface2), var(--surface)); }
+.rail-hd .kicker { font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:700; }
+.rail-hd h3 { margin:6px 0 0; font-size:16px; font-weight:700; letter-spacing:-.01em; }
+.rail-hd .exline { font-family:var(--mono); font-size:11px; color:var(--muted); margin-top:6px; }
+.rail-badges { display:flex; gap:6px; flex-wrap:wrap; margin-top:11px; }
+.rail-sec { padding:13px 15px; border-bottom:1px solid var(--border); }
+.rail-sec:last-child { border-bottom:none; }
+.rail-sec h4 { margin:0 0 10px; font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); font-weight:700; display:flex; align-items:center; gap:7px; }
+.stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.stat { background:var(--surface2); border:1px solid var(--border); border-radius:9px; padding:9px 11px; }
+.stat .k { font-size:10.5px; color:var(--muted); }
+.stat .v { font-size:16px; font-weight:800; margin-top:3px; font-variant-numeric:tabular-nums; }
+.stat .v.mono { font-family:var(--mono); font-size:14px; }
+
+/* verdict block */
+.verdict { display:flex; align-items:flex-start; gap:11px; padding:12px; border-radius:11px; border:1px solid var(--border); background:var(--surface2); }
+.verdict .vico { width:34px; height:34px; border-radius:9px; display:grid; place-items:center; flex:none; }
+.verdict.yes .vico { background:color-mix(in srgb,var(--success) 18%,transparent); color:var(--success); }
+.verdict.gated .vico { background:color-mix(in srgb,var(--warn) 18%,transparent); color:var(--warn); }
+.verdict.no .vico { background:color-mix(in srgb,var(--danger) 18%,transparent); color:var(--danger); }
+.verdict.unknown .vico { background:var(--surface); color:var(--muted); }
+.verdict .vtxt b { font-size:13px; }
+.verdict .vtxt p { margin:3px 0 0; font-size:11.5px; color:var(--muted); line-height:1.45; }
+
+/* workflow steps */
+.flow { display:flex; flex-direction:column; gap:0; }
+.fstep { display:flex; gap:11px; position:relative; padding-bottom:14px; }
+.fstep:last-child { padding-bottom:0; }
+.fstep .node { width:24px; height:24px; border-radius:7px; display:grid; place-items:center; flex:none;
+  background:var(--surface2); border:1px solid var(--border); font-family:var(--mono); font-size:11px; font-weight:700; color:var(--muted); z-index:1; }
+.fstep.irrev .node { border-color:color-mix(in srgb,var(--danger) 50%,transparent); color:var(--danger); background:color-mix(in srgb,var(--danger) 12%,transparent); }
+.fstep:not(:last-child)::before { content:""; position:absolute; left:11.5px; top:24px; bottom:0; width:1.5px; background:var(--border); }
+.fstep .fbody b { font-size:12.5px; font-weight:600; }
+.fstep .fbody .meta { font-size:10.5px; color:var(--muted); margin-top:2px; display:flex; gap:7px; align-items:center; }
+
+/* artifact code */
+.artifact { background:var(--bg); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+.artifact .afh { display:flex; align-items:center; gap:8px; padding:8px 11px; border-bottom:1px solid var(--border); background:var(--surface2); font-size:11px; }
+.artifact .afh .nm { font-family:var(--mono); font-weight:700; }
+.artifact .afh .lang { margin-left:auto; font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; }
+.artifact pre { margin:0; padding:11px 13px; overflow-x:auto; font-family:var(--mono); font-size:11px; line-height:1.6; color:var(--text); }
+.artifact pre .kw { color:var(--accent2); }
+.artifact pre .st { color:var(--success); }
+.artifact pre .cm { color:var(--muted); }
+.artifact pre .fn { color:var(--c3); }
+
+/* staleness chips */
+.sig-list { display:flex; flex-direction:column; gap:8px; }
+.sig { display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:9px; border:1px solid var(--border); background:var(--surface2); }
+.sig .sdot { width:8px; height:8px; border-radius:50%; flex:none; }
+.sig.fresh .sdot { background:var(--success); box-shadow:0 0 0 3px color-mix(in srgb,var(--success) 20%,transparent); }
+.sig.stale .sdot { background:var(--danger); box-shadow:0 0 0 3px color-mix(in srgb,var(--danger) 20%,transparent); }
+.sig .sk { font-weight:700; font-size:11.5px; text-transform:capitalize; }
+.sig .sd { font-size:10.5px; color:var(--muted); margin-top:1px; }
+.sig .strat { margin-left:auto; font-family:var(--mono); font-size:9.5px; color:var(--muted); border:1px solid var(--border); border-radius:5px; padding:1px 5px; background:var(--bg); }
+
+.context-kv { display:grid; grid-template-columns:auto 1fr; gap:6px 14px; font-size:11.5px; }
+.context-kv .k { color:var(--muted); font-family:var(--mono); font-size:10.5px; }
+.context-kv .v { font-weight:600; font-family:var(--mono); word-break:break-all; }
+.reflist { display:flex; flex-direction:column; gap:5px; margin-top:9px; }
+.reflist .rf { font-family:var(--mono); font-size:10.5px; color:var(--muted); display:flex; align-items:center; gap:7px; }
+
+/* ---------- Event feed ---------- */
+.feed { display:flex; flex-direction:column; }
+.evt { display:grid; grid-template-columns:auto 1fr auto; gap:10px; align-items:center; padding:9px 14px;
+  border-bottom:1px solid color-mix(in srgb,var(--border) 55%,transparent); font-size:12px; animation:slidein .35s ease; }
+@keyframes slidein { from{opacity:0; transform:translateX(-8px);} to{opacity:1; transform:none;} }
+.evt:last-child { border-bottom:none; }
+.evt .tier-pill { width:9px; height:9px; border-radius:50%; }
+.evt .ebody { min-width:0; }
+.evt .ebody .ep { font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.evt .ebody .em { font-size:10.5px; color:var(--muted); display:flex; gap:8px; align-items:center; font-family:var(--mono); margin-top:1px; }
+.evt .eright { text-align:right; font-family:var(--mono); }
+.evt .eright .tk { font-weight:700; font-size:12px; }
+.evt .eright .lt { font-size:10px; color:var(--muted); }
+.conn { display:inline-flex; align-items:center; gap:4px; font-size:10px; padding:1px 6px; border-radius:var(--r-pill); border:1px solid var(--border); }
+.conn.claude { color:var(--c1); border-color:color-mix(in srgb,var(--c1) 40%,transparent); }
+.conn.codex { color:var(--c3); border-color:color-mix(in srgb,var(--c3) 40%,transparent); }
+.conn.cowork { color:var(--c2); border-color:color-mix(in srgb,var(--c2) 40%,transparent); }
+
+/* ---------- Automations grid ---------- */
+.auto-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(330px,1fr)); gap:12px; }
+.auto-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); padding:15px; cursor:pointer;
+  transition:border-color .15s, box-shadow .15s, transform .12s; box-shadow:var(--sh-sm); }
+.auto-card:hover { border-color:color-mix(in srgb,var(--accent) 40%,var(--border)); box-shadow:var(--sh-glow); transform:translateY(-2px); }
+.auto-card.sel { border-color:var(--accent); box-shadow:var(--sh-glow); }
+.auto-card .ach { display:flex; align-items:flex-start; gap:11px; margin-bottom:11px; }
+.auto-card .kind-ico { width:34px; height:34px; border-radius:9px; display:grid; place-items:center; flex:none;
+  background:color-mix(in srgb,var(--accent) 14%,transparent); color:var(--accent2); }
+.auto-card h3 { margin:0; font-size:14px; font-weight:700; letter-spacing:-.01em; }
+.auto-card .slug { font-family:var(--mono); font-size:10.5px; color:var(--muted); margin-top:2px; }
+.auto-card .arow { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; }
+.auto-card .ametrics { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; padding-top:11px; border-top:1px solid var(--border); }
+.auto-card .am .k { font-size:9.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.04em; }
+.auto-card .am .v { font-size:14px; font-weight:800; font-variant-numeric:tabular-nums; margin-top:2px; }
+.auto-card .savings { margin-top:11px; display:flex; align-items:center; gap:8px; font-size:11.5px; color:var(--success); font-weight:600; }
+.compress { font-family:var(--mono); font-size:10px; color:var(--muted); }
+
+/* approvals */
+.appr-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); padding:15px; box-shadow:var(--sh-sm); display:flex; flex-direction:column; gap:12px; }
+.appr-card.gated { border-left:3px solid var(--warn); }
+.appr-top { display:flex; align-items:flex-start; gap:12px; }
+.appr-top .warnico { width:36px; height:36px; border-radius:10px; flex:none; display:grid; place-items:center;
+  background:color-mix(in srgb,var(--warn) 16%,transparent); color:var(--warn); }
+.appr-top h3 { margin:0; font-size:14.5px; font-weight:700; }
+.appr-top .params { font-family:var(--mono); font-size:11px; color:var(--muted); margin-top:3px; }
+.blast { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:11px 13px; font-size:11.5px; line-height:1.5; }
+.blast .bl { display:flex; align-items:center; gap:7px; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--warn); font-weight:700; margin-bottom:5px; }
+.appr-foot { display:flex; align-items:center; gap:9px; flex-wrap:wrap; }
+.appr-foot .who { font-size:11px; color:var(--muted); margin-right:auto; font-family:var(--mono); }
+
+/* staleness view rows */
+.stale-row { display:grid; grid-template-columns:1fr auto; gap:14px; padding:15px; background:var(--surface);
+  border:1px solid var(--border); border-radius:var(--r-lg); box-shadow:var(--sh-sm); margin-bottom:12px; }
+.stale-row.drift { border-color:color-mix(in srgb,var(--danger) 40%,var(--border)); }
+.stale-row .lhs h3 { margin:0; font-size:14px; font-weight:700; }
+.stale-row .lhs .slug { font-family:var(--mono); font-size:10.5px; color:var(--muted); margin:2px 0 12px; }
+.stale-sigs { display:flex; gap:8px; flex-wrap:wrap; }
+.ssig { display:flex; align-items:center; gap:7px; padding:6px 10px; border-radius:9px; border:1px solid var(--border); background:var(--surface2); font-size:11px; }
+.ssig .sd2 { width:7px; height:7px; border-radius:50%; }
+.ssig.fresh .sd2 { background:var(--success); }
+.ssig.stale .sd2 { background:var(--danger); }
+.stale-row .rhs { display:flex; flex-direction:column; align-items:flex-end; gap:9px; min-width:150px; }
+
+.empty-note { text-align:center; color:var(--muted); padding:30px; font-size:12.5px; }
+
+.tag-repo { font-family:var(--mono); font-size:10.5px; color:var(--muted); }
+
+/* toast */
+.toast-wrap { position:fixed; bottom:18px; right:18px; display:flex; flex-direction:column; gap:8px; z-index:100; }
+.toast { background:var(--surface); border:1px solid var(--border); border-radius:11px; padding:11px 14px; box-shadow:var(--sh-lg);
+  display:flex; align-items:center; gap:10px; font-size:12.5px; animation:toastin .25s ease; max-width:330px; }
+.toast .tic { width:26px; height:26px; border-radius:7px; display:grid; place-items:center; flex:none; }
+.toast.ok .tic { background:color-mix(in srgb,var(--success) 18%,transparent); color:var(--success); }
+.toast.info .tic { background:color-mix(in srgb,var(--accent) 18%,transparent); color:var(--accent2); }
+@keyframes toastin { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:none;} }
+
+@media (max-width:1180px){
+  .kpi-strip { grid-template-columns:repeat(3,1fr); }
+  .grid-overview { grid-template-columns:1fr; }
+  .rail { position:static; max-height:none; }
+}
+@media (max-width:760px){
+  .app { grid-template-columns:1fr; grid-template-areas:"head" "main"; }
+  nav { display:none; }
+  .kpi-strip { grid-template-columns:repeat(2,1fr); }
+  .grid-2 { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- ============ HEADER ============ -->
+  <header>
+    <div class="brand">
+      <div class="logo"><svg class="icon" viewBox="0 0 24 24"><path d="M12 2l9 5-9 5-9-5 9-5z M3 12l9 5 9-5 M3 17l9 5 9-5"/></svg></div>
+      <div>
+        <div class="name">Atlas <span class="recall">Recall</span></div>
+      </div>
+    </div>
+    <div class="served-hint"><span class="dot"></span> served by <span class="mono">atlas&nbsp;serve</span></div>
+    <div class="head-spacer"></div>
+    <label class="head-search" aria-label="Global search">
+      <svg class="icon sm" viewBox="0 0 24 24"><path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16z M21 21l-4.3-4.3"/></svg>
+      <input id="globalSearch" type="search" placeholder="Search prompts, automations…" />
+      <kbd>/</kbd>
+    </label>
+    <button class="live-toggle" id="liveToggle" aria-pressed="true" title="Pause / resume live feed">
+      <span class="dot"></span><span id="liveLabel">Live</span>
+    </button>
+    <button class="icon-btn" id="themeToggle" aria-label="Toggle light / dark theme" title="Toggle theme">
+      <svg class="icon" id="themeIcon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </header>
+
+  <!-- ============ LEFT NAV ============ -->
+  <nav>
+    <div class="nav-section">Operate</div>
+    <button class="nav-item active" data-view="overview">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M12 14l4-4 M5.5 18a9 9 0 1 1 13 0 M12 14a1.5 1.5 0 1 0 1.5 1.5"/></svg>
+      Overview
+    </button>
+    <button class="nav-item" data-view="hot">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+      Hot Prompts <span class="badge">10</span>
+    </button>
+    <button class="nav-item" data-view="automations">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M12 3l1.8 4.6L18 9.4l-4.2 1.8L12 16l-1.8-4.8L6 9.4l4.2-1.8L12 3z M19 14l.9 2.3L22 17l-2.1.7L19 20l-.9-2.3L16 17l2.1-.7L19 14z"/></svg>
+      Automations <span class="badge">6</span>
+    </button>
+    <div class="nav-section">Maintain</div>
+    <button class="nav-item" data-view="staleness">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8 M21 3v5h-5"/></svg>
+      Staleness <span class="badge danger" id="staleBadge">1</span>
+    </button>
+    <button class="nav-item" data-view="approvals">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z M9 12l2 2 4-4"/></svg>
+      Approvals <span class="badge warn" id="apprBadge">3</span>
+    </button>
+    <button class="nav-item" data-view="events">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      Events <span class="badge" id="eventsBadge">1287</span>
+    </button>
+
+    <div class="nav-foot">
+      <div class="who">
+        <div class="avatar">DA</div>
+        <div class="meta"><b>Aziron Org</b><br><span>atlas-distiller · v2.3</span></div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============ MAIN ============ -->
+  <main id="main"></main>
+</div>
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+/* ============================================================
+   INLINE MOCK DATA (from atlas-recall-spec.json)
+   ============================================================ */
+const ICON = {
+  gauge:"M12 14l4-4 M5.5 18a9 9 0 1 1 13 0 M12 14a1.5 1.5 0 1 0 1.5 1.5",
+  bolt:"M13 2L4 14h7l-1 8 9-12h-7l1-8z",
+  list:"M8 6h13 M8 12h13 M8 18h13 M3 6h.01 M3 12h.01 M3 18h.01",
+  clock:"M12 7v5l3 2 M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z",
+  shieldCheck:"M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z M9 12l2 2 4-4",
+  gitBranch:"M6 3v12 M18 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M18 9a9 9 0 0 1-9 9",
+  search:"M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16z M21 21l-4.3-4.3",
+  check:"M20 6L9 17l-5-5",
+  x:"M18 6L6 18 M6 6l12 12",
+  play:"M6 4l14 8-14 8V4z",
+  pin:"M12 17v5 M9 10.8V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v5.8l2 3.2H7l2-3.2z",
+  trendUp:"M3 17l6-6 4 4 8-8 M21 7v6h-6",
+  trendDown:"M3 7l6 6 4-4 8 8 M21 17v-6h-6",
+  database:"M12 8c4.4 0 8-1.3 8-3s-3.6-3-8-3-8 1.3-8 3 3.6 3 8 3z M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5 M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6",
+  activity:"M22 12h-4l-3 9L9 3l-3 9H2",
+  users:"M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M23 21v-2a4 4 0 0 0-3-3.9 M16 3.1a4 4 0 0 1 0 7.8",
+  layers:"M12 2l9 5-9 5-9-5 9-5z M3 12l9 5 9-5 M3 17l9 5 9-5",
+  terminal:"M4 17l6-6-6-6 M12 19h8",
+  fileCode:"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z M14 2v6h6 M10 13l-2 2 2 2 M14 13l2 2-2 2",
+  sparkles:"M12 3l1.8 4.6L18 9.4l-4.2 1.8L12 16l-1.8-4.8L6 9.4l4.2-1.8L12 3z M19 14l.9 2.3L22 17l-2.1.7L19 20l-.9-2.3L16 17l2.1-.7L19 14z",
+  alertTriangle:"M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z M12 9v4 M12 17h.01",
+  refresh:"M21 12a9 9 0 1 1-3-6.7L21 8 M21 3v5h-5",
+  chevronRight:"M9 6l6 6-6 6",
+  dollar:"M12 1v22 M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
+};
+function svg(p, cls){ return `<svg class="icon ${cls||''}" viewBox="0 0 24 24">${p.split(' M').map((s,i)=>`<path d="${i===0?s:'M'+s}"/>`).join('')}</svg>`; }
+
+const DATA = {
+  kpis:{tokensSavedTotal:62770896,tokensSavedTrendPct:23.7,pctLlmAvoided:0.7324,hitRate:0.7324,p50ms:41,p95ms:138,trustedAutomations:3,eventsToday:1287,monthlyUsdSaved:194.59},
+  series:{
+    days:["2026-06-01","2026-06-02","2026-06-03","2026-06-04","2026-06-05","2026-06-06","2026-06-07","2026-06-08","2026-06-09","2026-06-10","2026-06-11","2026-06-12","2026-06-13","2026-06-14","2026-06-15","2026-06-16","2026-06-17","2026-06-18","2026-06-19","2026-06-20","2026-06-21","2026-06-22","2026-06-23","2026-06-24","2026-06-25","2026-06-26","2026-06-27","2026-06-28","2026-06-29","2026-06-30"],
+    tokensSaved:[715587,780020,847225,822910,891848,963557,932312,1005754,1081968,1043793,1121739,1077674,1157353,1239804,1188809,1272992,1359947,1302022,1390710,1482170,1417315,1510507,1439762,1534686,1632383,1554708,1654136,1756337,1671732,1775666],
+    hitRate:[0.38,0.431,0.412,0.463,0.444,0.495,0.476,0.457,0.508,0.489,0.54,0.521,0.572,0.553,0.534,0.586,0.567,0.618,0.599,0.65,0.631,0.612,0.663,0.644,0.695,0.676,0.727,0.708,0.689,0.74]
+  },
+  tierBreakdown:{exactCache:5120,semanticCache:3380,automationReplay:4203,liveLlm:4642},
+  clusters:[
+    {id:"clu_01",promptNorm:"who calls {symbol}",exemplar:"who calls FlowOrchestrator.dispatch?",frequency:1842,distinctUsers:23,avgTokens:14200,automatable:"yes",state:"automated",repo:"aziron-pulse",lastSeen:"2026-06-30T09:41:00Z",hotScore:2885.2,auto:"auto_001"},
+    {id:"clu_02",promptNorm:"explain the {x} pipeline",exemplar:"explain the signalchain pipeline",frequency:1106,distinctUsers:19,avgTokens:22800,automatable:"yes",state:"automated",repo:"aziron-pulse",lastSeen:"2026-06-30T08:55:00Z",hotScore:2088.4,auto:"auto_002"},
+    {id:"clu_03",promptNorm:"where are the {x} routes",exemplar:"where are the canvas routes?",frequency:734,distinctUsers:16,avgTokens:11600,automatable:"yes",state:"automated",repo:"aziron-pulse",lastSeen:"2026-06-30T07:12:00Z",hotScore:544.9,auto:"auto_003"},
+    {id:"clu_04",promptNorm:"deploy {service} to {env}",exemplar:"deploy pulse to prod",frequency:263,distinctUsers:14,avgTokens:9400,automatable:"gated",state:"validating",repo:"aziron-pulse",lastSeen:"2026-06-30T06:30:00Z",hotScore:129.5,auto:"auto_004"},
+    {id:"clu_05",promptNorm:"what is the type of {symbol}",exemplar:"what is the type of JSONBMap?",frequency:588,distinctUsers:12,avgTokens:7300,automatable:"yes",state:"candidate",repo:"aziron-mcp",lastSeen:"2026-06-30T05:48:00Z",hotScore:178.4,auto:null},
+    {id:"clu_06",promptNorm:"summarize PR {number}",exemplar:"summarize PR #686",frequency:421,distinctUsers:11,avgTokens:26100,automatable:"unknown",state:"candidate",repo:"aziron-pulse",lastSeen:"2026-06-29T22:10:00Z",hotScore:400.9,auto:null},
+    {id:"clu_07",promptNorm:"find unreferenced config keys",exemplar:"find unreferenced config keys",frequency:196,distinctUsers:9,avgTokens:17400,automatable:"yes",state:"candidate",repo:"aziron-ui",lastSeen:"2026-06-29T18:02:00Z",hotScore:92.1,auto:"auto_005"},
+    {id:"clu_08",promptNorm:"rewrite this commit message",exemplar:"rewrite this commit message nicely",frequency:510,distinctUsers:13,avgTokens:1900,automatable:"no",state:"rejected",repo:"aziron-pulse",lastSeen:"2026-06-30T04:20:00Z",hotScore:45.4,auto:null},
+    {id:"clu_09",promptNorm:"pending migrations for {repo}",exemplar:"pending migrations for aziron-pulse",frequency:402,distinctUsers:10,avgTokens:8200,automatable:"yes",state:"stale",repo:"aziron-pulse",lastSeen:"2026-06-30T03:05:00Z",hotScore:104.2,auto:"auto_006"},
+    {id:"clu_10",promptNorm:"why is my local pulse 401ing",exemplar:"why is my local pulse 401ing on this branch?",frequency:37,distinctUsers:1,avgTokens:19500,automatable:"no",state:"not_promoted",repo:"aziron-pulse",lastSeen:"2026-06-29T11:44:00Z",hotScore:0.7,auto:null}
+  ],
+  automations:[
+    {id:"auto_001",slug:"callers-of-symbol",title:"Who calls {symbol}?",kind:"code_query",state:"trusted",version:7,hits:1842,baselineTokensPerRun:14200,replayTokensPerRun:38,agreementRate:0.992,
+      params:[{name:"symbol",type:"string",required:true},{name:"repo",type:"string",required:false}],
+      workflow:{steps:[{id:"s1",name:"Resolve symbol in index",type:"lookup",reversible:true},{id:"s2",name:"Walk reverse call edges",type:"graph",reversible:true},{id:"s3",name:"Rank + format callers",type:"format",reversible:true}]},
+      artifact:{name:"callers.atlas.js",lang:"javascript",bodyExcerpt:["export async function callersOf({ symbol, repo }) {","  const sym = await atlas.symbol(symbol, { repo });","  if (!sym) return { callers: [], note: 'symbol not indexed' };","  const edges = await atlas.callers(sym.id, { depth: 1 });","  return edges","    .map(e => ({ caller: e.from, file: e.file, line: e.line }))","    .sort((a, b) => a.file.localeCompare(b.file));","}"]},
+      context:{variables:{defaultRepo:"aziron-pulse",depth:1},findings:{avgCallers:9,topSymbol:"FlowOrchestrator.dispatch"},referenced:["internal/flow/orchestrator.go","internal/flow/dispatch.go"]},
+      staleness:{signals:[{type:"code",strategy:"fingerprint",fresh:true,detail:"graph snapshot 0723d89 matches last index"},{type:"time",strategy:"probe",fresh:true,detail:"re-probed 4m ago, TTL 60m"}],drifted:false},
+      provenance:{minedFromCluster:"clu_01",connector:"claude",author:"atlas-distiller",approvedBy:"auto-trust (agreement>=0.98, n>=500)"},requiresApproval:false,tokensSaved:26086404},
+    {id:"auto_002",slug:"explain-pipeline",title:"Explain the {pipeline} pipeline",kind:"code_query",state:"trusted",version:4,hits:1106,baselineTokensPerRun:22800,replayTokensPerRun:1420,agreementRate:0.974,
+      params:[{name:"pipeline",type:"string",required:true}],
+      workflow:{steps:[{id:"s1",name:"Locate pipeline entrypoint",type:"search",reversible:true},{id:"s2",name:"Trace forward call chain",type:"graph",reversible:true},{id:"s3",name:"Summarize stages (cached)",type:"summarize",reversible:true}]},
+      artifact:{name:"explain_pipeline.atlas.py",lang:"python",bodyExcerpt:["def explain_pipeline(pipeline: str) -> dict:","    entry = atlas.search(f'{pipeline} pipeline entry', kind='function')[0]","    chain = atlas.path(entry.id, direction='callees', max_depth=6)","    stages = [s for s in chain if s.tags and 'stage' in s.tags]","    summary = cache.get_or_compute(","        key=f'pipe::{pipeline}::{entry.snapshot}',","        fn=lambda: llm.summarize(stages),","    )","    return {'entry': entry.fqname, 'stages': stages, 'summary': summary}"]},
+      context:{variables:{maxDepth:6,stageTag:"stage"},findings:{pipelines:["signalchain","rca","pr-review"],avgStages:5},referenced:["internal/signalchain/runner.go","internal/rca/engine.go"]},
+      staleness:{signals:[{type:"code",strategy:"fingerprint",fresh:true,detail:"callee chain hash unchanged since v4"},{type:"external",strategy:"probe",fresh:true,detail:"LLM summary model claude-sonnet-4-6 pinned"}],drifted:false},
+      provenance:{minedFromCluster:"clu_02",connector:"codex",author:"atlas-distiller",approvedBy:"dominic@aziro.com"},requiresApproval:false,tokensSaved:23646280},
+    {id:"auto_003",slug:"where-are-routes",title:"Where are the {area} routes?",kind:"code_query",state:"trusted",version:3,hits:734,baselineTokensPerRun:11600,replayTokensPerRun:52,agreementRate:0.981,
+      params:[{name:"area",type:"string",required:true}],
+      workflow:{steps:[{id:"s1",name:"Query route-contract index",type:"lookup",reversible:true},{id:"s2",name:"Filter by area tag",type:"filter",reversible:true}]},
+      artifact:{name:"routes.atlas.js",lang:"javascript",bodyExcerpt:["export async function routesFor({ area }) {","  const contracts = await atlas.routeContracts();","  return contracts","    .filter(r => r.tags.includes(area))","    .map(r => ({ method: r.method, path: r.path, handler: r.handler }));","}"]},
+      context:{variables:{framework:"go-chi"},findings:{areas:["auth","pulse","canvas","signal"],totalRoutes:214},referenced:["internal/http/router.go","internal/http/routes_pulse.go"]},
+      staleness:{signals:[{type:"config",strategy:"fingerprint",fresh:true,detail:"router.go mtime + hash match"},{type:"code",strategy:"fingerprint",fresh:true,detail:"route-contract count stable at 214"}],drifted:false},
+      provenance:{minedFromCluster:"clu_03",connector:"claude",author:"atlas-distiller",approvedBy:"auto-trust (agreement>=0.98, n>=500)"},requiresApproval:false,tokensSaved:8476232},
+    {id:"auto_004",slug:"deploy-service-to-env",title:"Deploy {service} to {env}",kind:"workflow",state:"validating",version:2,hits:88,baselineTokensPerRun:9400,replayTokensPerRun:640,agreementRate:0.946,
+      params:[{name:"service",type:"string",required:true},{name:"env",type:"enum[stg,prod]",required:true}],
+      workflow:{steps:[{id:"s1",name:"Resolve service manifest",type:"lookup",reversible:true},{id:"s2",name:"Build + push image",type:"build",reversible:true},{id:"s3",name:"kubectl apply rollout",type:"deploy",reversible:false},{id:"s4",name:"Verify health + smoke",type:"verify",reversible:true}]},
+      artifact:{name:"deploy.atlas.sh",lang:"bash",bodyExcerpt:["#!/usr/bin/env bash","set -euo pipefail","SERVICE=\"$1\"; ENV=\"$2\"","manifest=\"deploy/${ENV}/${SERVICE}.yaml\"","[ -f \"$manifest\" ] || { echo \"no manifest for $SERVICE/$ENV\"; exit 2; }","image=\"registry.aziron.io/${SERVICE}:$(git rev-parse --short HEAD)\"","docker build -t \"$image\" \"services/${SERVICE}\" && docker push \"$image\"","# GATED: requires human approval before apply","kubectl --context \"aziron-${ENV}\" apply -f \"$manifest\"","kubectl --context \"aziron-${ENV}\" rollout status deploy/\"$SERVICE\" --timeout=180s"]},
+      context:{variables:{registry:"registry.aziron.io",namespacePrefix:"pulse-runners"},findings:{services:["pulse","atlas","canvas"],avgRolloutSec:64},referenced:["deploy/stg/pulse.yaml","deploy/prod/pulse.yaml"]},
+      staleness:{signals:[{type:"config",strategy:"fingerprint",fresh:true,detail:"manifest checksums current"},{type:"external",strategy:"probe",fresh:true,detail:"cluster reachable, kube context valid"},{type:"time",strategy:"probe",fresh:true,detail:"re-probed 11m ago"}],drifted:false},
+      provenance:{minedFromCluster:"clu_04",connector:"cowork",author:"atlas-distiller",approvedBy:null},requiresApproval:true,tokensSaved:770880},
+    {id:"auto_005",slug:"find-dead-config",title:"Find unreferenced config keys",kind:"script",state:"candidate",version:1,hits:31,baselineTokensPerRun:17400,replayTokensPerRun:210,agreementRate:0.903,
+      params:[{name:"configDir",type:"string",required:false}],
+      workflow:{steps:[{id:"s1",name:"Enumerate config keys",type:"scan",reversible:true},{id:"s2",name:"Search references in code",type:"search",reversible:true},{id:"s3",name:"Report orphans",type:"format",reversible:true}]},
+      artifact:{name:"dead_config.atlas.py",lang:"python",bodyExcerpt:["def find_dead_config(config_dir='config/'):","    keys = parse_keys(config_dir)","    orphans = []","    for k in keys:","        refs = atlas.refs(query=k, kind='string')","        if not refs:","            orphans.append(k)","    return {'scanned': len(keys), 'orphans': orphans}"]},
+      context:{variables:{configGlob:"config/**/*.yaml"},findings:{scanned:412,orphansLastRun:7},referenced:["config/pulse.yaml","config/atlas.yaml"]},
+      staleness:{signals:[{type:"code",strategy:"fingerprint",fresh:true,detail:"ref index current"},{type:"data",strategy:"probe",fresh:true,detail:"config dir hash sampled 2m ago"}],drifted:false},
+      provenance:{minedFromCluster:"clu_07",connector:"codex",author:"atlas-distiller",approvedBy:null},requiresApproval:false,tokensSaved:532890},
+    {id:"auto_006",slug:"migration-status",title:"Pending DB migrations for {repo}",kind:"script",state:"stale",version:5,hits:402,baselineTokensPerRun:8200,replayTokensPerRun:95,agreementRate:0.889,
+      params:[{name:"repo",type:"string",required:true}],
+      workflow:{steps:[{id:"s1",name:"List migration files",type:"scan",reversible:true},{id:"s2",name:"Diff vs schema_migrations",type:"compare",reversible:true}]},
+      artifact:{name:"migrations.atlas.sh",lang:"bash",bodyExcerpt:["#!/usr/bin/env bash","set -euo pipefail","repo=\"$1\"","applied=$(psql -At -c 'select version from schema_migrations')","for f in db/migrations/*.sql; do","  v=$(basename \"$f\" | cut -d_ -f1)","  grep -qx \"$v\" <<<\"$applied\" || echo \"PENDING $f\"","done"]},
+      context:{variables:{migrationsDir:"db/migrations"},findings:{latestApplied:"086",pending:["087","088"]},referenced:["db/migrations/086_cost_usd.sql"]},
+      staleness:{signals:[{type:"data",strategy:"probe",fresh:false,detail:"schema_migrations probe failed: 2 new rows since fingerprint"},{type:"code",strategy:"fingerprint",fresh:false,detail:"migrations dir changed (087, 088 added)"},{type:"time",strategy:"probe",fresh:true,detail:"probe ran 1m ago"}],drifted:true},
+      provenance:{minedFromCluster:"clu_09",connector:"claude",author:"atlas-distiller",approvedBy:"auto-trust (agreement>=0.98, n>=500)"},requiresApproval:false,tokensSaved:3258210}
+  ],
+  approvals:[
+    {id:"apr_001",automationSlug:"deploy-service-to-env",requestedBy:"u_7af3",params:{service:"pulse",env:"prod"},blastRadius:"prod namespace pulse-runners-prod; rolling restart of 4 pods; ~64s window; reversible via rollback",requestedAt:"2026-06-30T09:12:00Z",status:"awaiting"},
+    {id:"apr_002",automationSlug:"deploy-service-to-env",requestedBy:"u_2c19",params:{service:"atlas",env:"stg"},blastRadius:"stg namespace; 1 deployment; no data migration; low risk",requestedAt:"2026-06-30T08:40:00Z",status:"awaiting"},
+    {id:"apr_003",automationSlug:"deploy-service-to-env",requestedBy:"u_91be",params:{service:"canvas",env:"prod"},blastRadius:"prod; shared canvas runtime; affects active Canvas sessions; advise drain first",requestedAt:"2026-06-30T07:58:00Z",status:"awaiting"}
+  ],
+  events:[
+    {ts:"2026-06-30T09:41:12Z",userHash:"u_7af3",connector:"claude",prompt:"who calls FlowOrchestrator.dispatch?",repo:"aziron-pulse",servedBy:"automation",tokens:38,latencyMs:44},
+    {ts:"2026-06-30T09:40:51Z",userHash:"u_2c19",connector:"codex",prompt:"explain the signalchain pipeline",repo:"aziron-pulse",servedBy:"automation",tokens:1420,latencyMs:61},
+    {ts:"2026-06-30T09:39:33Z",userHash:"u_91be",connector:"claude",prompt:"where are the canvas routes?",repo:"aziron-pulse",servedBy:"exact",tokens:12,latencyMs:9},
+    {ts:"2026-06-30T09:38:02Z",userHash:"u_5d77",connector:"cowork",prompt:"deploy pulse to prod",repo:"aziron-pulse",servedBy:"live",tokens:9400,latencyMs:2210},
+    {ts:"2026-06-30T09:36:48Z",userHash:"u_7af3",connector:"claude",prompt:"what is the type of JSONBMap?",repo:"aziron-mcp",servedBy:"semantic",tokens:240,latencyMs:33},
+    {ts:"2026-06-30T09:35:10Z",userHash:"u_a0f1",connector:"codex",prompt:"who calls RecordSignalUsage?",repo:"aziron-pulse",servedBy:"automation",tokens:41,latencyMs:47},
+    {ts:"2026-06-30T09:33:59Z",userHash:"u_2c19",connector:"claude",prompt:"summarize PR #686",repo:"aziron-pulse",servedBy:"live",tokens:26100,latencyMs:5180},
+    {ts:"2026-06-30T09:32:21Z",userHash:"u_91be",connector:"claude",prompt:"where are the auth routes?",repo:"aziron-pulse",servedBy:"exact",tokens:12,latencyMs:8},
+    {ts:"2026-06-30T09:30:44Z",userHash:"u_c4e2",connector:"codex",prompt:"explain the rca pipeline",repo:"aziron-pulse",servedBy:"semantic",tokens:1510,latencyMs:58},
+    {ts:"2026-06-30T09:29:05Z",userHash:"u_5d77",connector:"claude",prompt:"pending migrations for aziron-pulse",repo:"aziron-pulse",servedBy:"live",tokens:8200,latencyMs:1340},
+    {ts:"2026-06-30T09:27:33Z",userHash:"u_a0f1",connector:"cowork",prompt:"deploy atlas to stg",repo:"aziron-mcp",servedBy:"automation",tokens:640,latencyMs:71},
+    {ts:"2026-06-30T09:25:58Z",userHash:"u_7af3",connector:"claude",prompt:"who calls CrossRepoImpactForChangedPaths?",repo:"aziron-pulse",servedBy:"automation",tokens:39,latencyMs:43},
+    {ts:"2026-06-30T09:24:12Z",userHash:"u_91be",connector:"codex",prompt:"where are the signal routes?",repo:"aziron-pulse",servedBy:"exact",tokens:12,latencyMs:10},
+    {ts:"2026-06-30T09:22:40Z",userHash:"u_d8a3",connector:"claude",prompt:"why is my local pulse 401ing on this branch?",repo:"aziron-pulse",servedBy:"live",tokens:19500,latencyMs:3120}
+  ]
+};
+
+/* tier meta */
+const TIER = {
+  exact:{label:"Exact cache",color:"var(--c2)",key:"exactCache"},
+  semantic:{label:"Semantic cache",color:"var(--c3)",key:"semanticCache"},
+  automation:{label:"Automation replay",color:"var(--c0)",key:"automationReplay"},
+  live:{label:"Live LLM",color:"var(--c5)",key:"liveLlm"}
+};
+const TIERDOT = {exact:"var(--c2)",semantic:"var(--c3)",automation:"var(--c0)",live:"var(--c5)"};
+
+/* ============================================================
+   UTIL
+   ============================================================ */
+function fmt(n){ return n.toLocaleString('en-US'); }
+function fmtShort(n){
+  if(n>=1e9) return (n/1e9).toFixed(2)+'B';
+  if(n>=1e6) return (n/1e6).toFixed(2)+'M';
+  if(n>=1e3) return (n/1e3).toFixed(1)+'k';
+  return ''+n;
+}
+function pct(n){ return (n*100).toFixed(1)+'%'; }
+function timeAgo(iso){
+  const d = (Date.parse("2026-06-30T09:42:00Z") - Date.parse(iso))/1000;
+  if(d<60) return Math.max(1,Math.round(d))+'s ago';
+  if(d<3600) return Math.round(d/60)+'m ago';
+  if(d<86400) return Math.round(d/3600)+'h ago';
+  return Math.round(d/86400)+'d ago';
+}
+function clockOf(iso){ return iso.slice(11,19); }
+function esc(s){ return (s+'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function highlightCode(line, lang){
+  let h = esc(line);
+  if(/^\s*(#|\/\/)/.test(line)) return `<span class="cm">${h}</span>`;
+  h = h.replace(/(&#39;|&quot;|&#34;)(.*?)\1/g, m=>`<span class="st">${m}</span>`);
+  h = h.replace(/'[^']*'/g, m=>`<span class="st">${m}</span>`);
+  const kws = ['export','async','function','await','const','let','return','def','for','in','if','not','lambda','set','import','do','done'];
+  kws.forEach(k=>{ h = h.replace(new RegExp('\\b'+k+'\\b','g'), `<span class="kw">${k}</span>`); });
+  return h;
+}
+const KINDICO = {code_query:ICON.fileCode, script:ICON.terminal, workflow:ICON.gitBranch};
+const VERDICT = {
+  yes:{cls:"yes",ico:ICON.check,label:"Automatable",desc:"Deterministic, side-effect-free. Auto-distilled into a replayable automation."},
+  gated:{cls:"gated",ico:ICON.shieldCheck,label:"Automatable · gated",desc:"Has an irreversible side-effect (deploy). Distilled but every run needs human approval."},
+  no:{cls:"no",ico:ICON.x,label:"Not automatable",desc:"Output is subjective / single-user or low-value. Kept as live LLM."},
+  unknown:{cls:"unknown",ico:ICON.search,label:"Verdict unknown",desc:"Insufficient signal — under observation until agreement stabilizes."}
+};
+function autoBySlug(s){ return DATA.automations.find(a=>a.slug===s); }
+function autoById(id){ return DATA.automations.find(a=>a.id===id); }
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const state = {
+  view:"overview",
+  sortKey:"hotScore", sortDir:-1,
+  filter:"", verdictFilter:"all",
+  selCluster:"clu_01",
+  selAuto:null,
+  chartMetric:"tokens",
+  live:true,
+  approvals:JSON.parse(JSON.stringify(DATA.approvals)),
+  liveEvents:JSON.parse(JSON.stringify(DATA.events))
+};
+
+/* ============================================================
+   CHARTS (hand-rolled SVG)
+   ============================================================ */
+function sparkline(arr, w, h, color, fillId){
+  const min=Math.min(...arr), max=Math.max(...arr), rng=(max-min)||1;
+  const step=w/(arr.length-1);
+  const pts=arr.map((v,i)=>[i*step, h-((v-min)/rng)*(h-3)-1.5]);
+  const d=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+  const area=`M0 ${h} `+pts.map(p=>'L'+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ')+` L${w} ${h} Z`;
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" fill="none">
+    <defs><linearGradient id="${fillId}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="${color}" stop-opacity=".35"/><stop offset="1" stop-color="${color}" stop-opacity="0"/>
+    </linearGradient></defs>
+    <path d="${area}" fill="url(#${fillId})"/>
+    <path d="${d}" stroke="${color}" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
+  </svg>`;
+}
+
+function bigChart(){
+  const W=620,H=240,padL=46,padR=14,padT=14,padB=26;
+  const days=DATA.series.days;
+  const isTok = state.chartMetric==='tokens';
+  const arr = isTok?DATA.series.tokensSaved:DATA.series.hitRate;
+  const max = isTok?Math.max(...arr)*1.08 : 0.8;
+  const min = 0;
+  const iw=W-padL-padR, ih=H-padT-padB;
+  const x=i=>padL+ (i/(days.length-1))*iw;
+  const y=v=>padT+ ih-((v-min)/(max-min))*ih;
+  // grid lines
+  let grid='', labels='';
+  const ticks=isTok?5:4;
+  for(let t=0;t<=ticks;t++){
+    const val=min+(max-min)*t/ticks;
+    const yy=y(val);
+    grid+=`<line x1="${padL}" y1="${yy.toFixed(1)}" x2="${W-padR}" y2="${yy.toFixed(1)}" stroke="var(--grid)" stroke-width="1"/>`;
+    labels+=`<text x="${padL-8}" y="${(yy+3).toFixed(1)}" text-anchor="end" font-size="9.5" fill="var(--muted)" font-family="var(--mono)">${isTok?fmtShort(val):(val*100).toFixed(0)+'%'}</text>`;
+  }
+  // x labels (every 5)
+  let xlab='';
+  days.forEach((d,i)=>{ if(i%5===0||i===days.length-1){ xlab+=`<text x="${x(i).toFixed(1)}" y="${H-7}" text-anchor="middle" font-size="9" fill="var(--muted)" font-family="var(--mono)">${d.slice(5)}</text>`; }});
+  // line + area
+  const pts=arr.map((v,i)=>[x(i),y(v)]);
+  const line=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+  const area=`M${x(0).toFixed(1)} ${y(min).toFixed(1)} `+pts.map(p=>'L'+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ')+` L${x(days.length-1).toFixed(1)} ${y(min).toFixed(1)} Z`;
+  const col = isTok?'var(--c0)':'var(--c2)';
+  // dots (hover targets)
+  let dots='';
+  pts.forEach((p,i)=>{
+    const lbl = isTok? fmt(arr[i])+' tokens' : (arr[i]*100).toFixed(1)+'% hit-rate';
+    dots+=`<circle class="hpt" cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="9" fill="transparent" data-x="${p[0].toFixed(1)}" data-y="${p[1].toFixed(1)}" data-lbl="${days[i]} · ${lbl}"></circle>`;
+  });
+  const lastP=pts[pts.length-1];
+  return `<div class="chart-wrap">
+    <svg width="100%" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" id="bigChartSvg" style="display:block">
+      <defs><linearGradient id="bcg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="${col}" stop-opacity=".30"/><stop offset="1" stop-color="${col}" stop-opacity="0"/>
+      </linearGradient></defs>
+      ${grid}${labels}${xlab}
+      <path d="${area}" fill="url(#bcg)"/>
+      <path d="${line}" stroke="${col}" stroke-width="2" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="${lastP[0].toFixed(1)}" cy="${lastP[1].toFixed(1)}" r="4" fill="${col}" stroke="var(--surface)" stroke-width="2"/>
+      ${dots}
+    </svg>
+    <div class="chart-tip" id="bigTip"></div>
+  </div>`;
+}
+
+function donut(){
+  const tb=DATA.tierBreakdown;
+  const total=tb.exactCache+tb.semanticCache+tb.automationReplay+tb.liveLlm;
+  const segs=[['exact',tb.exactCache],['semantic',tb.semanticCache],['automation',tb.automationReplay],['live',tb.liveLlm]];
+  const R=54,C=2*Math.PI*R, cx=70,cy=70; let off=0; let circles='';
+  segs.forEach(([k,v])=>{
+    const frac=v/total, len=frac*C;
+    circles+=`<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${TIERDOT[k]}" stroke-width="16"
+      stroke-dasharray="${len.toFixed(2)} ${(C-len).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}" transform="rotate(-90 ${cx} ${cy})" stroke-linecap="butt"/>`;
+    off+=len;
+  });
+  const cached = ((tb.exactCache+tb.semanticCache+tb.automationReplay)/total*100).toFixed(0);
+  return `<svg width="140" height="140" viewBox="0 0 140 140">${circles}
+    <text x="70" y="64" text-anchor="middle" font-size="26" font-weight="800" fill="var(--text)" font-family="var(--mono)">${cached}%</text>
+    <text x="70" y="82" text-anchor="middle" font-size="9.5" fill="var(--muted)">not live LLM</text></svg>`;
+}
+
+/* ============================================================
+   LEADERBOARD (sortable + filter)
+   ============================================================ */
+function sortedClusters(){
+  let rows=DATA.clusters.slice();
+  if(state.filter){
+    const q=state.filter.toLowerCase();
+    rows=rows.filter(c=>c.promptNorm.toLowerCase().includes(q)||c.exemplar.toLowerCase().includes(q)||c.repo.toLowerCase().includes(q));
+  }
+  if(state.verdictFilter!=='all') rows=rows.filter(c=>c.automatable===state.verdictFilter);
+  const k=state.sortKey, dir=state.sortDir;
+  rows.sort((a,b)=> (a[k]>b[k]?1:a[k]<b[k]?-1:0)*dir);
+  return rows;
+}
+function leaderboard(){
+  const rows=sortedClusters();
+  const maxHot=Math.max(...DATA.clusters.map(c=>c.hotScore));
+  const cols=[
+    {k:'promptNorm',t:'Prompt cluster',num:false},
+    {k:'frequency',t:'Freq',num:true},
+    {k:'distinctUsers',t:'Users',num:true},
+    {k:'avgTokens',t:'Avg tok',num:true},
+    {k:'automatable',t:'Verdict',num:false},
+    {k:'hotScore',t:'HotScore',num:true}
+  ];
+  const head=cols.map(c=>{
+    const ind = state.sortKey===c.k ? `<span class="sort-ind">${state.sortDir<0?'▼':'▲'}</span>` : '';
+    return `<th class="sortable ${c.num?'num':''}" data-sort="${c.k}">${c.t}${ind}</th>`;
+  }).join('');
+  const body=rows.map(c=>{
+    const sel=c.id===state.selCluster?'sel':'';
+    const v=c.automatable;
+    return `<tr class="${sel}" data-cluster="${c.id}">
+      <td><div class="prompt-cell">
+        <span class="norm">${esc(c.promptNorm)}</span>
+        <span class="ex">${esc(c.exemplar)}</span>
+        <div class="minibar"><span style="width:${(c.hotScore/maxHot*100).toFixed(1)}%"></span></div>
+      </div></td>
+      <td class="num mono">${fmt(c.frequency)}</td>
+      <td class="num mono">${c.distinctUsers}</td>
+      <td class="num mono">${fmtShort(c.avgTokens)}</td>
+      <td><span class="badge2 b-${v}"><span class="dotmark"></span>${v}</span></td>
+      <td class="num hot">${c.hotScore.toFixed(1)}</td>
+    </tr>`;
+  }).join('');
+  return `<div class="lb-toolbar">
+      <div class="filterbox">
+        ${svg(ICON.search,'sm')}
+        <input id="lbFilter" type="search" placeholder="Filter clusters by prompt or repo…" value="${esc(state.filter)}" aria-label="Filter clusters" />
+      </div>
+      <div class="chipset" role="group" aria-label="Filter by verdict">
+        ${['all','yes','gated','no','unknown'].map(v=>`<button class="chip ${state.verdictFilter===v?'on':''}" data-verdict="${v}">${v==='all'?'All':v}</button>`).join('')}
+      </div>
+    </div>
+    <div style="overflow-x:auto">
+    <table aria-label="Hot prompt leaderboard">
+      <thead><tr>${head}</tr></thead>
+      <tbody>${body || `<tr><td colspan="6" class="empty-note">No clusters match.</td></tr>`}</tbody>
+    </table></div>`;
+}
+
+/* ============================================================
+   RIGHT RAIL detail (cluster)
+   ============================================================ */
+function railFor(clusterId){
+  const c=DATA.clusters.find(x=>x.id===clusterId);
+  if(!c) return `<div class="rail-card"><div class="rail-empty">${svg(ICON.list,'lg')}<b>Select a cluster</b>Click any row to inspect its verdict, automation and staleness.</div></div>`;
+  const V=VERDICT[c.automatable];
+  const auto = c.auto ? autoById(c.auto) : null;
+  let autoBlock='';
+  if(auto){
+    const compress=(auto.baselineTokensPerRun/auto.replayTokensPerRun).toFixed(0);
+    autoBlock=`<div class="rail-sec">
+      <h4>${svg(ICON.sparkles,'sm')} Distilled automation</h4>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:11px">
+        <div class="kind-ico" style="width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent2)">${svg(KINDICO[auto.kind],'sm')}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:700;font-size:13px">${esc(auto.title)}</div>
+          <div class="slug mono" style="font-size:10.5px;color:var(--muted)">${auto.slug} · v${auto.version}</div>
+        </div>
+        <span class="badge2 b-${auto.state}"><span class="dotmark"></span>${auto.state}</span>
+      </div>
+      <div class="stat-grid">
+        <div class="stat"><div class="k">Replay tokens</div><div class="v mono">${fmt(auto.replayTokensPerRun)}</div></div>
+        <div class="stat"><div class="k">Compression</div><div class="v mono">${compress}×</div></div>
+      </div>
+      <div class="sig-list" style="margin-top:11px">
+        ${auto.staleness.signals.map(s=>`<div class="sig ${s.fresh?'fresh':'stale'}"><span class="sdot"></span><div style="flex:1;min-width:0"><div class="sk">${s.type}</div><div class="sd">${esc(s.detail)}</div></div><span class="strat">${s.strategy}</span></div>`).join('')}
+      </div>
+      <button class="btn sm primary" style="margin-top:12px;width:100%;justify-content:center" data-open-auto="${auto.id}">${svg(ICON.chevronRight,'sm')} Open in registry</button>
+    </div>`;
+  } else if(c.automatable==='yes'||c.automatable==='gated'){
+    autoBlock=`<div class="rail-sec"><h4>${svg(ICON.sparkles,'sm')} Distillation</h4>
+      <div style="font-size:12px;color:var(--muted);line-height:1.5">Candidate — not yet distilled. Mined from <span class="mono">${c.id}</span>; awaiting agreement floor before a script is emitted.</div></div>`;
+  }
+  return `<div class="rail-card">
+    <div class="rail-hd">
+      <div class="kicker">${c.id} · ${c.repo}</div>
+      <h3>${esc(c.promptNorm)}</h3>
+      <div class="exline">e.g. “${esc(c.exemplar)}”</div>
+      <div class="rail-badges">
+        <span class="badge2 b-${c.automatable}"><span class="dotmark"></span>${c.automatable}</span>
+        <span class="badge2 b-${c.state==='automated'?'automated':c.state}"><span class="dotmark"></span>${c.state.replace('_',' ')}</span>
+        ${c.automatable==='gated'?`<span class="badge2 b-gated">${svg(ICON.shieldCheck,'sm')} needs approval</span>`:''}
+      </div>
+    </div>
+    <div class="rail-sec">
+      <h4>${svg(ICON.gauge,'sm')} Automatability verdict</h4>
+      <div class="verdict ${V.cls}">
+        <div class="vico">${svg(V.ico,'')}</div>
+        <div class="vtxt"><b>${V.label}</b><p>${V.desc}</p></div>
+      </div>
+    </div>
+    <div class="rail-sec">
+      <h4>${svg(ICON.activity,'sm')} Demand signal</h4>
+      <div class="stat-grid">
+        <div class="stat"><div class="k">Frequency (30d)</div><div class="v mono">${fmt(c.frequency)}</div></div>
+        <div class="stat"><div class="k">Distinct users</div><div class="v mono">${c.distinctUsers}</div></div>
+        <div class="stat"><div class="k">Avg tokens / ask</div><div class="v mono">${fmtShort(c.avgTokens)}</div></div>
+        <div class="stat"><div class="k">HotScore</div><div class="v mono" style="color:var(--accent2)">${c.hotScore.toFixed(1)}</div></div>
+      </div>
+      <div style="font-size:10.5px;color:var(--muted);margin-top:10px;line-height:1.5">
+        ${c.distinctUsers<=1
+          ? `<b style="color:var(--danger)">One user asking → skip.</b> Low spread, kept live.`
+          : `<b style="color:var(--success)">Whole org asking → automate.</b> ${c.distinctUsers} users · last seen ${timeAgo(c.lastSeen)}.`}
+      </div>
+    </div>
+    ${autoBlock}
+  </div>`;
+}
+
+/* ============================================================
+   VIEW: OVERVIEW
+   ============================================================ */
+function viewOverview(){
+  const k=DATA.kpis;
+  const tokSpark=sparkline(DATA.series.tokensSaved,86,30,'var(--c0)','spk1');
+  const hitSpark=sparkline(DATA.series.hitRate,86,30,'var(--c2)','spk2');
+  const tb=DATA.tierBreakdown, total=tb.exactCache+tb.semanticCache+tb.automationReplay+tb.liveLlm;
+  const tierSegs=[['exact',tb.exactCache],['semantic',tb.semanticCache],['automation',tb.automationReplay],['live',tb.liveLlm]];
+  const kpis=[
+    {feat:true,label:['gauge','Tokens saved · cumulative'],val:fmtShort(k.tokensSavedTotal),unit:'',delta:['up',`+${k.tokensSavedTrendPct}% vs prior 30d`],spark:tokSpark},
+    {label:['bolt','% LLM calls avoided'],val:pct(k.pctLlmAvoided),unit:'',delta:['up','+9.4 pts MoM'],spark:''},
+    {label:['layers','Cache + automation hit-rate'],val:pct(k.hitRate),unit:'',delta:['up','rising trend'],spark:hitSpark},
+    {label:['clock','Replay latency p95'],val:k.p95ms,unit:'ms',delta:['flat',`p50 ${k.p50ms}ms`],spark:''},
+    {label:['dollar','Est. saved · this month'],val:'$'+k.monthlyUsdSaved.toFixed(0),unit:'',delta:['up','at list LLM pricing'],spark:''}
+  ];
+  const kpiHtml=kpis.map(kp=>`
+    <div class="kpi ${kp.feat?'feature':''}">
+      <div class="label">${svg(ICON[kp.label[0]],'sm')} ${kp.label[1]}</div>
+      <div class="val">${kp.val}${kp.unit?`<span class="unit">${kp.unit}</span>`:''}</div>
+      <div class="delta ${kp.delta[0]}">${kp.delta[0]==='up'?svg(ICON.trendUp,'sm'):kp.delta[0]==='down'?svg(ICON.trendDown,'sm'):''} ${kp.delta[1]}</div>
+      ${kp.spark?`<div class="spark">${kp.spark}</div>`:''}
+    </div>`).join('');
+
+  return `
+    <div class="view-head">
+      <div>
+        <h1>Mission Control</h1>
+        <div class="sub">Atlas is distilling your org's repeated prompts into trusted automations — live.</div>
+      </div>
+      <div class="actions">
+        <button class="btn sm" id="refreshBtn">${svg(ICON.refresh,'sm')} Re-index</button>
+        <button class="btn sm primary" data-goto="approvals">${svg(ICON.shieldCheck,'sm')} ${state.approvals.length} approvals</button>
+      </div>
+    </div>
+
+    <div class="kpi-strip">${kpiHtml}</div>
+
+    <div class="grid-overview">
+      <div>
+        <!-- charts + tier -->
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-head">
+              <h3>${svg(ICON.trendUp,'sm')} 30-day trend</h3>
+              <span class="spacer"></span>
+              <div class="seg" role="group" aria-label="Chart metric">
+                <button class="${state.chartMetric==='tokens'?'on':''}" data-metric="tokens">Tokens saved</button>
+                <button class="${state.chartMetric==='hit'?'on':''}" data-metric="hit">Hit-rate</button>
+              </div>
+            </div>
+            <div class="card-body">${bigChart()}</div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>${svg(ICON.layers,'sm')} Served by</h3><span class="spacer"></span><span class="sub">${fmt(total)} reqs</span></div>
+            <div class="card-body" style="display:flex;gap:16px;align-items:center">
+              <div style="flex:none">${donut()}</div>
+              <div style="flex:1">
+                ${tierSegs.map(([key,v])=>`<div class="tier-legend" style="display:block;margin:0 0 9px"><div class="row">
+                  <span class="sw" style="background:${TIERDOT[key]}"></span>
+                  <span class="nm">${TIER[key].label}</span>
+                  <span class="pct">${(v/total*100).toFixed(0)}%</span>
+                </div></div>`).join('')}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- leaderboard -->
+        <div class="card">
+          <div class="card-head">
+            <h3>${svg(ICON.bolt,'sm')} Hot-prompt leaderboard</h3>
+            <span class="sub">one user asking = skip · whole org asking = automate</span>
+            <span class="spacer"></span>
+            <span class="badge2 b-accent">HotScore = freq × users<sup>1.5</sup> × avg-tokens</span>
+          </div>
+          <div class="card-body flush" id="lbContainer">${leaderboard()}</div>
+        </div>
+      </div>
+
+      <!-- right rail -->
+      <aside class="rail" id="rail">${railFor(state.selCluster)}
+        <div class="rail-card">
+          <div class="card-head"><h3>${svg(ICON.activity,'sm')} Live feed</h3><span class="spacer"></span>
+            <button class="btn ghost sm" data-goto="events">All ${svg(ICON.chevronRight,'sm')}</button></div>
+          <div class="feed" id="miniFeed">${miniFeed()}</div>
+        </div>
+      </aside>
+    </div>`;
+}
+
+function miniFeed(){
+  return state.liveEvents.slice(0,7).map(e=>{
+    return `<div class="evt">
+      <span class="tier-pill" style="background:${TIERDOT[e.servedBy]}" title="${TIER[e.servedBy].label}"></span>
+      <div class="ebody">
+        <div class="ep">${esc(e.prompt)}</div>
+        <div class="em"><span class="conn ${e.connector}">${e.connector}</span> ${e.userHash} · ${timeAgo(e.ts)}</div>
+      </div>
+      <div class="eright"><div class="tk">${e.tokens<100?e.tokens:fmtShort(e.tokens)}</div><div class="lt">${e.latencyMs}ms</div></div>
+    </div>`;
+  }).join('');
+}
+
+/* ============================================================
+   VIEW: HOT PROMPTS (full-width leaderboard + rail)
+   ============================================================ */
+function viewHot(){
+  return `
+    <div class="view-head">
+      <div><h1>Hot Prompts</h1><div class="sub">Clusters of repeated prompts ranked by demand across the org.</div></div>
+    </div>
+    <div class="grid-overview">
+      <div class="card">
+        <div class="card-head">
+          <h3>${svg(ICON.bolt,'sm')} Leaderboard</h3>
+          <span class="spacer"></span>
+          <span class="badge2 b-accent">HotScore = freq × users<sup>1.5</sup> × avg-tokens</span>
+        </div>
+        <div class="card-body flush" id="lbContainer">${leaderboard()}</div>
+      </div>
+      <aside class="rail" id="rail">${railFor(state.selCluster)}</aside>
+    </div>`;
+}
+
+/* ============================================================
+   VIEW: AUTOMATIONS (registry grid + detail)
+   ============================================================ */
+function autoCard(a){
+  const compress=(a.baselineTokensPerRun/a.replayTokensPerRun).toFixed(0);
+  const sel=a.id===state.selAuto?'sel':'';
+  return `<div class="auto-card ${sel}" data-auto="${a.id}" tabindex="0" role="button" aria-label="${esc(a.title)}">
+    <div class="ach">
+      <div class="kind-ico">${svg(KINDICO[a.kind],'')}</div>
+      <div style="flex:1;min-width:0"><h3>${esc(a.title)}</h3><div class="slug">${a.slug} · v${a.version}</div></div>
+    </div>
+    <div class="arow">
+      <span class="badge2 b-${a.state}"><span class="dotmark"></span>${a.state}</span>
+      <span class="badge2 b-muted">${a.kind.replace('_',' ')}</span>
+      ${a.requiresApproval?`<span class="badge2 b-gated">${svg(ICON.shieldCheck,'sm')} gated</span>`:''}
+      ${a.staleness.drifted?`<span class="badge2 b-stale">${svg(ICON.alertTriangle,'sm')} stale</span>`:''}
+    </div>
+    <div class="ametrics">
+      <div class="am"><div class="k">Hits</div><div class="v mono">${fmt(a.hits)}</div></div>
+      <div class="am"><div class="k">Agree</div><div class="v mono">${pct(a.agreementRate)}</div></div>
+      <div class="am"><div class="k">Compress</div><div class="v mono">${compress}×</div></div>
+    </div>
+    <div class="savings">${svg(ICON.sparkles,'sm')} ${fmtShort(a.tokensSaved)} tokens saved <span class="compress">· ${fmt(a.replayTokensPerRun)} tok/replay</span></div>
+  </div>`;
+}
+function viewAutomations(){
+  const cards=DATA.automations.map(autoCard).join('');
+  return `
+    <div class="view-head">
+      <div><h1>Automation Registry</h1><div class="sub">Cowork-shaped: Workflow steps + Script artifact + mutable Context — with trust state & staleness.</div></div>
+      <div class="actions">
+        <span class="badge2 b-trusted"><span class="dotmark"></span>${DATA.automations.filter(a=>a.state==='trusted').length} trusted</span>
+        <span class="badge2 b-validating"><span class="dotmark"></span>${DATA.automations.filter(a=>a.state==='validating').length} validating</span>
+        <span class="badge2 b-candidate"><span class="dotmark"></span>${DATA.automations.filter(a=>a.state==='candidate').length} candidate</span>
+        <span class="badge2 b-stale"><span class="dotmark"></span>${DATA.automations.filter(a=>a.state==='stale').length} stale</span>
+      </div>
+    </div>
+    <div class="grid-overview">
+      <div class="auto-grid">${cards}</div>
+      <aside class="rail" id="rail">${autoDetail(state.selAuto)}</aside>
+    </div>`;
+}
+function autoDetail(id){
+  const a = id?autoById(id):null;
+  if(!a) return `<div class="rail-card"><div class="rail-empty">${svg(ICON.sparkles,'lg')}<b>Select an automation</b>Inspect its workflow, script artifact, context memory & staleness signals.</div></div>`;
+  const compress=(a.baselineTokensPerRun/a.replayTokensPerRun).toFixed(0);
+  const ctx=a.context;
+  const fmtVal=v=>Array.isArray(v)?v.join(', '):(typeof v==='object'?JSON.stringify(v):v);
+  return `<div class="rail-card">
+    <div class="rail-hd">
+      <div class="kicker">${a.id} · mined from ${a.provenance.minedFromCluster}</div>
+      <h3>${esc(a.title)}</h3>
+      <div class="exline">${a.slug} · v${a.version} · ${a.kind.replace('_',' ')}</div>
+      <div class="rail-badges">
+        <span class="badge2 b-${a.state}"><span class="dotmark"></span>${a.state}</span>
+        <span class="badge2 b-muted"><span class="conn ${a.provenance.connector}">${a.provenance.connector}</span></span>
+        ${a.requiresApproval?`<span class="badge2 b-gated">${svg(ICON.shieldCheck,'sm')} gated</span>`:''}
+        ${a.staleness.drifted?`<span class="badge2 b-stale">${svg(ICON.alertTriangle,'sm')} drifted</span>`:`<span class="badge2 b-fresh">${svg(ICON.check,'sm')} fresh</span>`}
+      </div>
+    </div>
+
+    <div class="rail-sec">
+      <h4>${svg(ICON.gauge,'sm')} Impact</h4>
+      <div class="stat-grid">
+        <div class="stat"><div class="k">Tokens saved</div><div class="v mono">${fmtShort(a.tokensSaved)}</div></div>
+        <div class="stat"><div class="k">Hits</div><div class="v mono">${fmt(a.hits)}</div></div>
+        <div class="stat"><div class="k">Compression</div><div class="v mono">${compress}×</div></div>
+        <div class="stat"><div class="k">Agreement</div><div class="v mono">${pct(a.agreementRate)}</div></div>
+      </div>
+      <div style="font-size:10.5px;color:var(--muted);margin-top:9px">Baseline ${fmt(a.baselineTokensPerRun)} → replay <b style="color:var(--success)">${fmt(a.replayTokensPerRun)}</b> tokens/run · approved by ${esc(a.provenance.approvedBy||'— pending —')}</div>
+    </div>
+
+    <div class="rail-sec">
+      <h4>${svg(ICON.gitBranch,'sm')} Workflow · Progress</h4>
+      <div class="flow">
+        ${a.workflow.steps.map((s,i)=>`<div class="fstep ${s.reversible?'':'irrev'}">
+          <div class="node">${i+1}</div>
+          <div class="fbody"><b>${esc(s.name)}</b><div class="meta"><span>${s.type}</span>·<span>${s.reversible?'reversible':'⚠ irreversible'}</span></div></div>
+        </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="rail-sec">
+      <h4>${svg(ICON.fileCode,'sm')} Script artifact · Working folder</h4>
+      <div class="artifact">
+        <div class="afh">${svg(ICON.terminal,'sm')}<span class="nm">${a.artifact.name}</span><span class="lang">${a.artifact.lang}</span></div>
+        <pre>${a.artifact.bodyExcerpt.map(l=>highlightCode(l,a.artifact.lang)).join('\n')}</pre>
+      </div>
+    </div>
+
+    <div class="rail-sec">
+      <h4>${svg(ICON.database,'sm')} Context · Memory</h4>
+      <div class="context-kv">
+        ${Object.entries(ctx.variables).map(([kk,vv])=>`<span class="k">${kk}</span><span class="v">${esc(fmtVal(vv))}</span>`).join('')}
+        ${Object.entries(ctx.findings).map(([kk,vv])=>`<span class="k">${kk}</span><span class="v" style="color:var(--accent2)">${esc(fmtVal(vv))}</span>`).join('')}
+      </div>
+      <div class="reflist">${ctx.referenced.map(r=>`<div class="rf">${svg(ICON.fileCode,'sm')} ${esc(r)}</div>`).join('')}</div>
+    </div>
+
+    <div class="rail-sec">
+      <h4>${svg(ICON.refresh,'sm')} Staleness signals</h4>
+      <div class="sig-list">
+        ${a.staleness.signals.map(s=>`<div class="sig ${s.fresh?'fresh':'stale'}"><span class="sdot"></span><div style="flex:1;min-width:0"><div class="sk">${s.type} <span style="color:var(--muted);font-weight:400">· ${s.fresh?'fresh':'STALE'}</span></div><div class="sd">${esc(s.detail)}</div></div><span class="strat">${s.strategy}</span></div>`).join('')}
+      </div>
+      ${a.staleness.drifted?`<button class="btn sm" style="margin-top:11px;width:100%;justify-content:center" data-recompute="${a.id}">${svg(ICON.refresh,'sm')} De-advertise & recompute</button>`:''}
+    </div>
+
+    ${a.requiresApproval?`<div class="rail-sec">
+      <h4>${svg(ICON.shieldCheck,'sm')} Gated</h4>
+      <div class="verdict gated"><div class="vico">${svg(ICON.shieldCheck,'')}</div><div class="vtxt"><b>Human approval required</b><p>Step 3 (kubectl apply rollout) is irreversible. Each invocation lands in the approval queue.</p></div></div>
+      <button class="btn sm primary" style="margin-top:11px;width:100%;justify-content:center" data-goto="approvals">${svg(ICON.chevronRight,'sm')} View approval queue</button>
+    </div>`:''}
+  </div>`;
+}
+
+/* ============================================================
+   VIEW: STALENESS
+   ============================================================ */
+function viewStaleness(){
+  const rows=DATA.automations.map(a=>{
+    const drift=a.staleness.drifted;
+    return `<div class="stale-row ${drift?'drift':''}">
+      <div class="lhs">
+        <h3>${esc(a.title)}</h3>
+        <div class="slug">${a.slug} · v${a.version} · ${a.kind.replace('_',' ')}</div>
+        <div class="stale-sigs">
+          ${a.staleness.signals.map(s=>`<div class="ssig ${s.fresh?'fresh':'stale'}" title="${esc(s.detail)}"><span class="sd2"></span><b style="text-transform:capitalize">${s.type}</b><span style="color:var(--muted);font-family:var(--mono);font-size:9.5px">${s.strategy}</span></div>`).join('')}
+        </div>
+      </div>
+      <div class="rhs">
+        ${drift?`<span class="badge2 b-drifted">${svg(ICON.alertTriangle,'sm')} drifted — de-advertised</span>`
+               :`<span class="badge2 b-fresh">${svg(ICON.check,'sm')} fresh</span>`}
+        <div style="font-family:var(--mono);font-size:11px;color:var(--muted)">${a.staleness.signals.filter(s=>s.fresh).length}/${a.staleness.signals.length} signals fresh</div>
+        ${drift?`<button class="btn sm" data-recompute="${a.id}">${svg(ICON.refresh,'sm')} Recompute</button>`:`<button class="btn ghost sm" data-open-auto="${a.id}">Inspect ${svg(ICON.chevronRight,'sm')}</button>`}
+      </div>
+    </div>`;
+  }).join('');
+  return `
+    <div class="view-head">
+      <div><h1>Staleness</h1><div class="sub">Each automation carries change-metric signals (code/config/data/time/external). Stale → de-advertised → recompute.</div></div>
+      <div class="actions"><span class="badge2 b-stale">${DATA.automations.filter(a=>a.staleness.drifted).length} drifted</span></div>
+    </div>
+    ${rows}`;
+}
+
+/* ============================================================
+   VIEW: APPROVALS
+   ============================================================ */
+function viewApprovals(){
+  const cards=state.approvals.map(ap=>{
+    const a=autoBySlug(ap.automationSlug);
+    return `<div class="appr-card gated" id="appr-${ap.id}">
+      <div class="appr-top">
+        <div class="warnico">${svg(ICON.shieldCheck,'lg')}</div>
+        <div style="flex:1">
+          <h3>${esc(a?a.title:ap.automationSlug)}</h3>
+          <div class="params">${Object.entries(ap.params).map(([k,v])=>`${k}=<b style="color:var(--text)">${v}</b>`).join('  ·  ')}</div>
+        </div>
+        <span class="badge2 b-${ap.status==='awaiting'?'awaiting':ap.status}">${ap.status}</span>
+      </div>
+      <div class="blast">
+        <div class="bl">${svg(ICON.alertTriangle,'sm')} Blast radius</div>
+        ${esc(ap.blastRadius)}
+      </div>
+      <div class="appr-foot">
+        <span class="who">${svg(ICON.users,'sm')} requested by ${ap.requestedBy} · ${timeAgo(ap.requestedAt)}</span>
+        ${ap.status==='awaiting'?`
+          <button class="btn sm danger" data-deny="${ap.id}">${svg(ICON.x,'sm')} Deny</button>
+          <button class="btn sm primary" data-approve="${ap.id}">${svg(ICON.play,'sm')} Approve & run</button>`
+        :`<span class="badge2 b-${ap.status==='approved'?'trusted':'rejected'}">${ap.status==='approved'?svg(ICON.check,'sm'):svg(ICON.x,'sm')} ${ap.status}</span>`}
+      </div>
+    </div>`;
+  }).join('');
+  const awaiting=state.approvals.filter(a=>a.status==='awaiting').length;
+  return `
+    <div class="view-head">
+      <div><h1>Approval Queue</h1><div class="sub">Automatable-gated automations awaiting a human — the irreversible side-effect (deploy) case.</div></div>
+      <div class="actions"><span class="badge2 b-awaiting">${awaiting} awaiting</span></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:12px">${cards}</div>`;
+}
+
+/* ============================================================
+   VIEW: EVENTS
+   ============================================================ */
+function viewEvents(){
+  return `
+    <div class="view-head">
+      <div><h1>Live Event Feed</h1><div class="sub">Recent prompt → outcome events, with serving tier, connector & tokens.</div></div>
+      <div class="actions">
+        <div class="filterbox" style="width:230px;flex:none">${svg(ICON.search,'sm')}<input id="evtFilter" type="search" placeholder="Filter events…" aria-label="Filter events"/></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <h3>${svg(ICON.activity,'sm')} Events today</h3>
+        <span class="spacer"></span>
+        <div class="chart-legend" style="padding:0">
+          ${Object.entries(TIER).map(([k,t])=>`<span class="leg"><span class="sw" style="background:${TIERDOT[k]}"></span>${t.label}</span>`).join('')}
+        </div>
+      </div>
+      <div class="card-body flush"><div class="feed" id="fullFeed">${fullFeed('')}</div></div>
+    </div>`;
+}
+function fullFeed(q){
+  let evs=state.liveEvents;
+  if(q){ const s=q.toLowerCase(); evs=evs.filter(e=>e.prompt.toLowerCase().includes(s)||e.repo.toLowerCase().includes(s)||e.connector.includes(s)||e.servedBy.includes(s)); }
+  if(!evs.length) return `<div class="empty-note">No events match.</div>`;
+  return evs.map(e=>`<div class="evt" style="grid-template-columns:auto auto 1fr auto auto">
+    <span class="tier-pill" style="background:${TIERDOT[e.servedBy]}" title="${TIER[e.servedBy].label}"></span>
+    <span class="mono" style="font-size:10.5px;color:var(--muted);min-width:62px">${clockOf(e.ts)}</span>
+    <div class="ebody"><div class="ep">${esc(e.prompt)}</div>
+      <div class="em"><span class="conn ${e.connector}">${e.connector}</span> ${e.userHash} · ${e.repo} · served by <b style="color:${TIERDOT[e.servedBy]}">${e.servedBy}</b></div></div>
+    <div class="eright"><div class="tk">${fmt(e.tokens)}</div><div class="lt">tokens</div></div>
+    <div class="eright"><div class="tk">${e.latencyMs}</div><div class="lt">ms</div></div>
+  </div>`).join('');
+}
+
+/* ============================================================
+   RENDER + ROUTER
+   ============================================================ */
+const VIEWS={overview:viewOverview,hot:viewHot,automations:viewAutomations,staleness:viewStaleness,approvals:viewApprovals,events:viewEvents};
+function render(){
+  document.getElementById('main').innerHTML=VIEWS[state.view]();
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.view===state.view));
+  bindMain();
+}
+
+function setView(v){ state.view=v; if(v==='automations'&&!state.selAuto) state.selAuto='auto_001'; render(); }
+
+/* ============================================================
+   EVENT BINDING
+   ============================================================ */
+function bindMain(){
+  const main=document.getElementById('main');
+
+  // chart hover tooltip
+  const tip=document.getElementById('bigTip');
+  if(tip){
+    main.querySelectorAll('.hpt').forEach(pt=>{
+      pt.addEventListener('mouseenter',e=>{
+        const svgEl=document.getElementById('bigChartSvg');
+        const rect=svgEl.getBoundingClientRect();
+        const wrapRect=svgEl.parentElement.getBoundingClientRect();
+        const vb=620, scale=rect.width/vb;
+        tip.style.left=(parseFloat(pt.dataset.x)*scale + (rect.left-wrapRect.left))+'px';
+        tip.style.top=(parseFloat(pt.dataset.y)*(rect.height/240) + (rect.top-wrapRect.top))+'px';
+        const [d,v]=pt.dataset.lbl.split(' · ');
+        tip.innerHTML=`<b>${v}</b><br><span style="color:var(--muted)">${d}</span>`;
+        tip.style.opacity='1';
+      });
+      pt.addEventListener('mouseleave',()=>{ tip.style.opacity='0'; });
+    });
+  }
+
+  // chart metric toggle
+  main.querySelectorAll('[data-metric]').forEach(b=>b.addEventListener('click',()=>{
+    state.chartMetric=b.dataset.metric;
+    const card=b.closest('.card'); card.querySelector('.card-body').innerHTML=bigChart();
+    card.querySelectorAll('[data-metric]').forEach(x=>x.classList.toggle('on',x.dataset.metric===state.chartMetric));
+    bindMain();
+  }));
+
+  // sortable headers
+  main.querySelectorAll('th.sortable').forEach(th=>th.addEventListener('click',()=>{
+    const k=th.dataset.sort;
+    if(state.sortKey===k) state.sortDir*=-1; else { state.sortKey=k; state.sortDir = (k==='promptNorm')?1:-1; }
+    document.getElementById('lbContainer').innerHTML=leaderboard(); bindMain();
+  }));
+
+  // row select
+  main.querySelectorAll('tr[data-cluster]').forEach(tr=>tr.addEventListener('click',()=>{
+    state.selCluster=tr.dataset.cluster;
+    main.querySelectorAll('tr[data-cluster]').forEach(r=>r.classList.toggle('sel',r.dataset.cluster===state.selCluster));
+    const rail=document.getElementById('rail');
+    if(state.view==='overview'){
+      const feedCard=rail.querySelector('.rail-card:last-child');
+      rail.innerHTML=railFor(state.selCluster);
+      if(feedCard) rail.appendChild(feedCard);
+    } else { rail.innerHTML=railFor(state.selCluster); }
+    bindMain();
+  }));
+
+  // leaderboard filter
+  const lbf=document.getElementById('lbFilter');
+  if(lbf) lbf.addEventListener('input',()=>{ state.filter=lbf.value;
+    const cont=document.getElementById('lbContainer'); cont.innerHTML=leaderboard();
+    const ni=cont.querySelector('#lbFilter'); ni.focus(); ni.setSelectionRange(ni.value.length,ni.value.length);
+    bindMain();
+  });
+  // verdict chips
+  main.querySelectorAll('[data-verdict]').forEach(ch=>ch.addEventListener('click',()=>{
+    state.verdictFilter=ch.dataset.verdict;
+    document.getElementById('lbContainer').innerHTML=leaderboard(); bindMain();
+  }));
+
+  // automation cards
+  main.querySelectorAll('[data-auto]').forEach(el=>{
+    const open=()=>{ state.selAuto=el.dataset.auto;
+      main.querySelectorAll('.auto-card').forEach(c=>c.classList.toggle('sel',c.dataset.auto===state.selAuto));
+      document.getElementById('rail').innerHTML=autoDetail(state.selAuto); bindMain();
+    };
+    el.addEventListener('click',open);
+    el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); open(); }});
+  });
+
+  // open-auto (jump to registry)
+  main.querySelectorAll('[data-open-auto]').forEach(b=>b.addEventListener('click',e=>{
+    e.stopPropagation(); state.selAuto=b.dataset.openAuto; setView('automations');
+  }));
+  // goto
+  main.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.goto)));
+
+  // refresh / re-index
+  const rb=document.getElementById('refreshBtn');
+  if(rb) rb.addEventListener('click',()=>toast('ok','Re-index queued — snapshot 0723d89 → probing.'));
+
+  // recompute (staleness)
+  main.querySelectorAll('[data-recompute]').forEach(b=>b.addEventListener('click',e=>{
+    e.stopPropagation();
+    const a=autoById(b.dataset.recompute);
+    toast('info',`Recomputing “${a.title}” — de-advertised until signals re-freshen.`);
+  }));
+
+  // approvals
+  main.querySelectorAll('[data-approve]').forEach(b=>b.addEventListener('click',()=>{
+    const ap=state.approvals.find(x=>x.id===b.dataset.approve); ap.status='approved';
+    toast('ok',`Approved ${ap.params.service}→${ap.params.env}. Rollout dispatched.`); render();
+  }));
+  main.querySelectorAll('[data-deny]').forEach(b=>b.addEventListener('click',()=>{
+    const ap=state.approvals.find(x=>x.id===b.dataset.deny); ap.status='denied';
+    toast('info',`Denied ${ap.params.service}→${ap.params.env}.`); render();
+  }));
+
+  // events filter
+  const ef=document.getElementById('evtFilter');
+  if(ef) ef.addEventListener('input',()=>{ document.getElementById('fullFeed').innerHTML=fullFeed(ef.value); });
+}
+
+/* ============================================================
+   TOASTS
+   ============================================================ */
+function toast(kind,msg){
+  const w=document.getElementById('toastWrap');
+  const t=document.createElement('div'); t.className='toast '+kind;
+  t.innerHTML=`<div class="tic">${svg(kind==='ok'?ICON.check:ICON.sparkles,'sm')}</div><div>${esc(msg)}</div>`;
+  w.appendChild(t);
+  setTimeout(()=>{ t.style.transition='opacity .3s,transform .3s'; t.style.opacity='0'; t.style.transform='translateY(8px)'; setTimeout(()=>t.remove(),320); },3400);
+}
+
+/* ============================================================
+   THEME
+   ============================================================ */
+const SUN="M12 1v2 M12 21v2 M4.2 4.2l1.4 1.4 M18.4 18.4l1.4 1.4 M1 12h2 M21 12h2 M4.2 19.8l1.4-1.4 M18.4 5.6l1.4-1.4 M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z";
+const MOON="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z";
+function applyThemeIcon(){
+  const dark=document.documentElement.getAttribute('data-theme')==='dark';
+  document.getElementById('themeIcon').innerHTML=`<path d="${dark?MOON:SUN}"/>`;
+}
+document.getElementById('themeToggle').addEventListener('click',()=>{
+  const cur=document.documentElement.getAttribute('data-theme');
+  document.documentElement.setAttribute('data-theme',cur==='dark'?'light':'dark');
+  applyThemeIcon();
+  // re-render charts to pick up CSS-var colors via fresh DOM
+  render();
+});
+
+/* nav */
+document.querySelectorAll('.nav-item').forEach(n=>n.addEventListener('click',()=>setView(n.dataset.view)));
+
+/* global search → jump to hot + filter */
+const gs=document.getElementById('globalSearch');
+gs.addEventListener('input',()=>{ state.filter=gs.value; if(state.view!=='overview'&&state.view!=='hot') setView('hot'); else { const c=document.getElementById('lbContainer'); if(c){c.innerHTML=leaderboard(); bindMain();} } });
+gs.addEventListener('keydown',e=>{ if(e.key==='Enter'){ setView('hot'); }});
+document.addEventListener('keydown',e=>{ if(e.key==='/'&&document.activeElement!==gs){ e.preventDefault(); gs.focus(); }});
+
+/* live toggle */
+const lt=document.getElementById('liveToggle');
+lt.addEventListener('click',()=>{
+  state.live=!state.live;
+  lt.classList.toggle('paused',!state.live);
+  lt.setAttribute('aria-pressed',state.live);
+  document.getElementById('liveLabel').textContent=state.live?'Live':'Paused';
+});
+
+/* ============================================================
+   LIVE FEED SIMULATION
+   ============================================================ */
+const SAMPLE_PROMPTS=[
+  {prompt:"who calls FlowOrchestrator.dispatch?",repo:"aziron-pulse",connector:"claude",servedBy:"automation",tokens:38,latencyMs:44},
+  {prompt:"where are the pulse routes?",repo:"aziron-pulse",connector:"codex",servedBy:"exact",tokens:12,latencyMs:8},
+  {prompt:"explain the rca pipeline",repo:"aziron-pulse",connector:"claude",servedBy:"automation",tokens:1420,latencyMs:59},
+  {prompt:"what is the type of JSONBMap?",repo:"aziron-mcp",connector:"codex",servedBy:"semantic",tokens:240,latencyMs:35},
+  {prompt:"summarize PR #712",repo:"aziron-ui",connector:"claude",servedBy:"live",tokens:24800,latencyMs:4870},
+  {prompt:"pending migrations for aziron-pulse",repo:"aziron-pulse",connector:"claude",servedBy:"live",tokens:8200,latencyMs:1290},
+  {prompt:"who calls RecordSignalUsage?",repo:"aziron-pulse",connector:"cowork",servedBy:"automation",tokens:41,latencyMs:47},
+  {prompt:"find unreferenced config keys",repo:"aziron-ui",connector:"codex",servedBy:"automation",tokens:210,latencyMs:66}
+];
+const USERS=["u_7af3","u_2c19","u_91be","u_5d77","u_a0f1","u_c4e2","u_d8a3"];
+let simBase=Date.parse("2026-06-30T09:42:00Z");
+function pushEvent(){
+  if(!state.live) return;
+  const tmpl=SAMPLE_PROMPTS[Math.floor(Math.random()*SAMPLE_PROMPTS.length)];
+  simBase+=Math.floor(8000+Math.random()*15000);
+  const ev=Object.assign({},tmpl,{ts:new Date(simBase).toISOString().replace('.000',''),userHash:USERS[Math.floor(Math.random()*USERS.length)]});
+  state.liveEvents.unshift(ev);
+  if(state.liveEvents.length>60) state.liveEvents.pop();
+  // bump events-today badge
+  const eb=document.getElementById('eventsBadge'); if(eb){ const n=parseInt(eb.textContent.replace(/,/g,''))+1; eb.textContent=fmt(n); }
+  // update visible feeds without disturbing scroll/selection
+  const mf=document.getElementById('miniFeed'); if(mf) mf.innerHTML=miniFeed();
+  const ff=document.getElementById('fullFeed'); if(ff){ const efv=document.getElementById('evtFilter'); ff.innerHTML=fullFeed(efv?efv.value:''); }
+}
+setInterval(pushEvent,4200);
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+applyThemeIcon();
+render();
+</script>
+</body>
+</html>

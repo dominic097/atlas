@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atlas Recall — UI prototype options</title>
+<style>
+  :root{
+    --bg:#0a0c10; --surface:#0f1217; --surface2:#13171e; --border:#1e242d;
+    --text:#e7ebf0; --muted:#8b95a4; --accent:#6366f1; --accent2:#a78bfa;
+    --success:#34d399; --warn:#fbbf24; --radius:14px;
+    --font:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Menlo,'Space Mono',monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1200px 600px at 70% -10%,#141a26 0%,var(--bg) 55%);color:var(--text);font-family:var(--font);min-height:100vh;padding:48px 24px}
+  .wrap{max-width:1080px;margin:0 auto}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;letter-spacing:.2px}
+  .dot{width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:inline-block}
+  h1{font-size:34px;margin:26px 0 8px;letter-spacing:-.5px}
+  .sub{color:var(--muted);font-size:15px;max-width:640px;line-height:1.55}
+  .pill{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);border:1px solid var(--border);background:var(--surface);padding:5px 10px;border-radius:999px;font-family:var(--mono)}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:34px}
+  @media(max-width:880px){.grid{grid-template-columns:1fr}}
+  a.card{display:flex;flex-direction:column;text-decoration:none;color:inherit;background:linear-gradient(180deg,var(--surface) 0%,var(--surface2) 100%);border:1px solid var(--border);border-radius:var(--radius);padding:20px;transition:transform .15s ease,border-color .15s ease,box-shadow .15s ease}
+  a.card:hover{transform:translateY(-3px);border-color:#2c3442;box-shadow:0 12px 40px -16px rgba(99,102,241,.45)}
+  .tag{font-family:var(--mono);font-size:11px;color:var(--accent2);letter-spacing:.5px}
+  .card h2{font-size:18px;margin:10px 0 6px}
+  .card p{color:var(--muted);font-size:13.5px;line-height:1.55;margin:0 0 16px}
+  .who{margin-top:auto;font-size:12px;color:var(--muted);border-top:1px solid var(--border);padding-top:12px}
+  .who b{color:var(--text);font-weight:600}
+  .go{display:inline-flex;align-items:center;gap:6px;color:var(--accent);font-size:13px;font-weight:600;margin-top:10px}
+  .foot{margin-top:40px;color:var(--muted);font-size:12.5px;line-height:1.6;border-top:1px solid var(--border);padding-top:18px}
+  code{font-family:var(--mono);color:var(--accent2);background:var(--surface);border:1px solid var(--border);padding:1px 6px;border-radius:6px;font-size:12px}
+  .num{font-family:var(--mono);font-size:12px;color:var(--muted);border:1px solid var(--border);border-radius:7px;width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand"><span class="dot"></span> Atlas&nbsp;Recall</div>
+  <h1>Observability dashboard — 3 prototype options</h1>
+  <p class="sub">Three design directions for the dashboard that observes Atlas's self-building automation layer: how the org's repeated prompts become cached answers and distilled, reusable automations — and how many LLM tokens that saves. Pick a direction; all share one design system and one mock dataset.</p>
+  <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+    <span class="pill">self-contained · no CDN · <code>go:embed</code>-ready</span>
+    <span class="pill">served by <code>atlas serve</code></span>
+    <span class="pill">verified · 0 console errors</span>
+  </div>
+
+  <div class="grid">
+    <a class="card" href="option-a-mission-control.html">
+      <span class="tag">OPTION A</span>
+      <h2>Mission Control</h2>
+      <p>Dense, dark ops-room. KPI strip, 30-day trend, served-by donut, and the hot-prompt leaderboard as the spine with a right-rail cluster detail + live event feed.</p>
+      <div class="who">For the operator <b>watching the system</b> live.</div>
+      <span class="go">Open ›</span>
+    </a>
+    <a class="card" href="option-b-automation-library.html">
+      <span class="tag">OPTION B</span>
+      <h2>Automation Library</h2>
+      <p>Calm card/catalog (skill-store). Search &amp; filter automations as cards with sparklines; detail drawer shows the Cowork three-pane, staleness contract, versions &amp; provenance.</p>
+      <div class="who">For <b>discovering &amp; managing</b> the automation library.</div>
+      <span class="go">Open ›</span>
+    </a>
+    <a class="card" href="option-c-cowork-canvas.html">
+      <span class="tag">OPTION C</span>
+      <h2>Cowork Flow Canvas</h2>
+      <p>Cowork-native. The literal three-pane (Progress / Working folder / Context-memory), a candidate→trusted lifecycle pipeline, and an approval-queue-first layout for gated cases like deploy.</p>
+      <div class="who">For the <b>human-in-the-loop</b> trust &amp; approval workflow.</div>
+      <span class="go">Open ›</span>
+    </a>
+  </div>
+
+  <div class="foot">
+    Each option is a single self-contained <code>.html</code> file (inline CSS/JS/SVG/mock-data, no network deps) so it can be embedded in the Atlas Go binary and served offline. Plan: <code>docs/ATLAS_RECALL_PLAN.md</code>.
+  </div>
+</div>
+</body>
+</html>

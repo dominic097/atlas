@@ -1,0 +1,1596 @@
+<!--
+  Atlas Recall — Option C "Cowork Flow Canvas"
+  Observability dashboard for Atlas's self-building org automation layer.
+  FULLY SELF-CONTAINED: all CSS, JS, mock data, and SVG icons are inline.
+  No external network / CDN deps. Renders offline via file://, embeddable via //go:embed.
+  Vanilla JS only. Dark default with a working light toggle.
+-->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Atlas Recall — Cowork Flow Canvas</title>
+<style>
+  /* ============================== THEME TOKENS ============================== */
+  :root {
+    --bg: #0a0c10;
+    --surface: #0f1217;
+    --surface2: #13171e;
+    --border: #1e242d;
+    --text: #e7ebf0;
+    --muted: #8b95a4;
+    --accent: #6366f1;
+    --accent2: #a78bfa;
+    --success: #34d399;
+    --warn: #fbbf24;
+    --danger: #fb7185;
+    --grid: #1a2029;
+
+    --c0: #6366f1; --c1: #a78bfa; --c2: #34d399; --c3: #60a5fa; --c4: #fbbf24; --c5: #fb7185;
+
+    --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-pill: 999px;
+    --sh-sm: 0 1px 2px rgba(0,0,0,.2);
+    --sh-md: 0 12px 30px -16px rgba(0,0,0,.6);
+    --sh-lg: 0 22px 70px -26px rgba(0,0,0,.55);
+    --glow: 0 0 0 1px rgba(99,102,241,.22), 0 22px 70px -26px rgba(99,102,241,.4);
+
+    --font: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    --accent-soft: rgba(99,102,241,.14);
+    --accent-line: rgba(99,102,241,.35);
+    --success-soft: rgba(52,211,153,.13);
+    --warn-soft: rgba(251,191,36,.13);
+    --danger-soft: rgba(251,113,133,.13);
+  }
+  [data-theme="light"] {
+    --bg: #f7f8fa;
+    --surface: #ffffff;
+    --surface2: #f1f3f7;
+    --border: #e4e8ef;
+    --text: #1c2433;
+    --muted: #6b7385;
+    --accent: #4f46e5;
+    --accent2: #6d4bd6;
+    --success: #16a34a;
+    --warn: #d97706;
+    --danger: #dc2626;
+    --grid: #e9edf3;
+
+    --c0: #4f46e5; --c1: #6d4bd6; --c2: #16a34a; --c3: #2563eb; --c4: #d97706; --c5: #dc2626;
+
+    --sh-md: 0 12px 30px -18px rgba(20,30,55,.28);
+    --sh-lg: 0 22px 60px -28px rgba(20,30,55,.22);
+    --glow: 0 0 0 1px rgba(79,70,229,.2), 0 18px 50px -24px rgba(79,70,229,.32);
+
+    --accent-soft: rgba(79,70,229,.1);
+    --accent-line: rgba(79,70,229,.3);
+    --success-soft: rgba(22,163,74,.1);
+    --warn-soft: rgba(217,119,6,.12);
+    --danger-soft: rgba(220,38,38,.1);
+  }
+
+  /* ============================== BASE ============================== */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 13px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection { background: var(--accent-soft); }
+  button { font-family: inherit; color: inherit; cursor: pointer; }
+  svg { display: block; }
+  a { color: var(--accent); text-decoration: none; }
+
+  .mono { font-family: var(--mono); }
+  .muted { color: var(--muted); }
+  .nowrap { white-space: nowrap; }
+
+  /* scrollbars */
+  *::-webkit-scrollbar { width: 9px; height: 9px; }
+  *::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+  *::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+  *::-webkit-scrollbar-track { background: transparent; }
+
+  /* focus visibility */
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  button:focus:not(:focus-visible) { outline: none; }
+
+  /* ============================== APP SHELL ============================== */
+  .app { display: grid; grid-template-rows: auto 1fr; min-height: 100vh; }
+
+  /* Topbar */
+  .topbar {
+    display: flex; align-items: center; gap: 16px;
+    padding: 10px 18px;
+    background: linear-gradient(180deg, var(--surface) 0%, var(--bg) 130%);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 40;
+  }
+  .brand { display: flex; align-items: center; gap: 11px; min-width: 0; }
+  .brand-mark {
+    width: 32px; height: 32px; border-radius: 9px; flex: 0 0 auto;
+    display: grid; place-items: center;
+    background: radial-gradient(120% 120% at 30% 20%, var(--accent2), var(--accent));
+    box-shadow: var(--glow);
+  }
+  .brand-mark svg { stroke: #fff; }
+  .brand-name { font-size: 15px; font-weight: 700; letter-spacing: -.01em; }
+  .brand-sub { font-size: 11px; color: var(--muted); margin-top: -2px; display: flex; align-items: center; gap: 5px; }
+  .served-hint {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: var(--mono); font-size: 10.5px; color: var(--muted);
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--r-pill); padding: 2px 8px;
+  }
+  .served-dot { width: 6px; height: 6px; border-radius: 99px; background: var(--success); box-shadow: 0 0 0 3px var(--success-soft); animation: pulse 2.6s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.45} }
+
+  .topnav { display: flex; gap: 2px; margin-left: 8px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r-pill); padding: 3px; }
+  .topnav button {
+    border: none; background: transparent; color: var(--muted);
+    font-size: 12.5px; font-weight: 600; padding: 6px 13px; border-radius: var(--r-pill);
+    display: inline-flex; align-items: center; gap: 7px; transition: color .12s, background .12s;
+  }
+  .topnav button:hover { color: var(--text); }
+  .topnav button[aria-selected="true"] { color: var(--text); background: var(--surface); box-shadow: var(--sh-sm); }
+  .topnav button[aria-selected="true"] svg { stroke: var(--accent); }
+  .topnav svg { stroke: currentColor; }
+
+  .topbar-spacer { flex: 1; }
+  .topbar-right { display: flex; align-items: center; gap: 10px; }
+  .live-chip {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 11.5px; color: var(--muted);
+    background: var(--surface2); border: 1px solid var(--border);
+    padding: 5px 11px; border-radius: var(--r-pill);
+  }
+  .icon-btn {
+    width: 34px; height: 34px; border-radius: 9px;
+    border: 1px solid var(--border); background: var(--surface2);
+    display: grid; place-items: center; transition: background .12s, border-color .12s;
+  }
+  .icon-btn:hover { background: var(--surface); border-color: var(--muted); }
+  .icon-btn svg { stroke: var(--muted); }
+  .icon-btn:hover svg { stroke: var(--text); }
+
+  /* ============================== PAGES ============================== */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ---------- Overview KPI grid ---------- */
+  .wrap { padding: 18px; max-width: 1640px; margin: 0 auto; }
+  .kpi-grid {
+    display: grid; gap: 12px;
+    grid-template-columns: repeat(4, minmax(0,1fr));
+  }
+  @media (max-width: 1180px){ .kpi-grid { grid-template-columns: repeat(2,1fr);} }
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r-lg); box-shadow: var(--sh-md);
+  }
+  .kpi {
+    padding: 14px 15px 13px;
+    display: flex; flex-direction: column; gap: 6px; position: relative; overflow: hidden;
+  }
+  .kpi-head { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 11.5px; font-weight: 600; letter-spacing: .02em; text-transform: uppercase; }
+  .kpi-head svg { stroke: var(--accent); }
+  .kpi-val { font-size: 27px; font-weight: 800; letter-spacing: -.02em; line-height: 1.05; }
+  .kpi-val .unit { font-size: 14px; font-weight: 600; color: var(--muted); margin-left: 3px; }
+  .kpi-foot { display: flex; align-items: center; gap: 7px; font-size: 11.5px; color: var(--muted); }
+  .delta { display: inline-flex; align-items: center; gap: 3px; font-weight: 700; padding: 1px 6px; border-radius: var(--r-pill); }
+  .delta.up { color: var(--success); background: var(--success-soft); }
+  .delta.down { color: var(--danger); background: var(--danger-soft); }
+  .delta svg { width: 12px; height: 12px; stroke: currentColor; }
+  .kpi-spark { position: absolute; right: 12px; bottom: 10px; opacity: .9; }
+
+  .panel-grid { display: grid; gap: 12px; margin-top: 12px; grid-template-columns: 1.6fr 1fr; }
+  @media (max-width: 1180px){ .panel-grid { grid-template-columns: 1fr;} }
+  .panel-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 13px 15px; border-bottom: 1px solid var(--border);
+  }
+  .panel-title { font-size: 13.5px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .panel-title svg { stroke: var(--accent); }
+  .panel-body { padding: 14px 15px; }
+  .seg { display: inline-flex; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r-pill); padding: 3px; gap: 2px; }
+  .seg button { border: none; background: transparent; color: var(--muted); font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: var(--r-pill); }
+  .seg button[aria-pressed="true"] { background: var(--surface); color: var(--text); box-shadow: var(--sh-sm); }
+
+  .tier-row { display: flex; align-items: center; gap: 12px; padding: 9px 0; }
+  .tier-row + .tier-row { border-top: 1px solid var(--border); }
+  .tier-label { width: 150px; flex: 0 0 auto; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 12.5px; }
+  .tier-swatch { width: 9px; height: 9px; border-radius: 3px; }
+  .tier-bar { flex: 1; height: 9px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
+  .tier-bar > i { display: block; height: 100%; border-radius: 99px; }
+  .tier-meta { width: 110px; text-align: right; font-family: var(--mono); font-size: 11.5px; color: var(--muted); flex: 0 0 auto; }
+  .tier-meta b { color: var(--text); font-weight: 700; }
+
+  /* ---------- Lifecycle pipeline ---------- */
+  .lifecycle { display: grid; grid-template-columns: repeat(4, 1fr) auto; gap: 0; align-items: stretch; }
+  .lc-stage {
+    position: relative; padding: 14px 16px; min-width: 0;
+    border-right: 1px solid var(--border);
+    transition: background .15s;
+  }
+  .lc-stage:last-of-type { border-right: none; }
+  .lc-stage.is-target { background: var(--accent-soft); }
+  .lc-stage:hover { background: var(--surface2); }
+  .lc-arrow { width: 26px; display: grid; place-items: center; flex: 0 0 auto; }
+  .lc-arrow svg { stroke: var(--muted); }
+  .lc-name { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); display: flex; align-items: center; gap: 7px; }
+  .lc-name .dot { width: 8px; height: 8px; border-radius: 99px; }
+  .lc-count { font-size: 30px; font-weight: 800; letter-spacing: -.02em; margin-top: 4px; }
+  .lc-desc { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+  .lc-flow { display: flex; align-items: stretch; }
+  .lc-flow .lc-stage { flex: 1; }
+  .stale-strip { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-top: 1px solid var(--border); background: var(--warn-soft); color: var(--text); font-size: 12px; }
+  .stale-strip svg { stroke: var(--warn); flex: 0 0 auto; }
+
+  /* ============================== AUTOMATIONS / COWORK CANVAS ============================== */
+  .canvas-layout {
+    display: grid; gap: 12px;
+    grid-template-columns: 268px 1fr;
+    align-items: start;
+  }
+  @media (max-width: 1080px){ .canvas-layout { grid-template-columns: 1fr; } }
+
+  /* left list */
+  .auto-list { display: flex; flex-direction: column; overflow: hidden; }
+  .auto-list-head { padding: 12px 13px; border-bottom: 1px solid var(--border); }
+  .auto-list-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); display: flex; align-items: center; justify-content: space-between; }
+  .search-box { margin-top: 10px; display: flex; align-items: center; gap: 8px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r-md); padding: 7px 10px; }
+  .search-box svg { stroke: var(--muted); flex: 0 0 auto; }
+  .search-box input { border: none; background: transparent; color: var(--text); font-size: 12.5px; width: 100%; outline: none; }
+  .search-box input::placeholder { color: var(--muted); }
+  .filter-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
+  .chip {
+    border: 1px solid var(--border); background: var(--surface2); color: var(--muted);
+    font-size: 10.5px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase;
+    padding: 3px 8px; border-radius: var(--r-pill);
+  }
+  .chip[aria-pressed="true"] { color: var(--text); border-color: var(--accent-line); background: var(--accent-soft); }
+  .chip:hover { color: var(--text); }
+
+  .auto-items { max-height: calc(100vh - 220px); overflow-y: auto; padding: 6px; }
+  .auto-item {
+    width: 100%; text-align: left; border: 1px solid transparent; background: transparent;
+    border-radius: var(--r-md); padding: 10px 11px; display: flex; flex-direction: column; gap: 5px;
+    transition: background .12s, border-color .12s;
+  }
+  .auto-item:hover { background: var(--surface2); }
+  .auto-item[aria-selected="true"] { background: var(--accent-soft); border-color: var(--accent-line); }
+  .auto-item-top { display: flex; align-items: center; gap: 8px; }
+  .auto-item-title { font-size: 12.5px; font-weight: 700; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .auto-item-sub { display: flex; align-items: center; gap: 7px; font-size: 11px; color: var(--muted); }
+  .kind-ico { width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center; flex: 0 0 auto; background: var(--surface2); border: 1px solid var(--border); }
+  .kind-ico svg { stroke: var(--accent2); width: 13px; height: 13px; }
+
+  /* state badges */
+  .badge { display: inline-flex; align-items: center; gap: 5px; font-size: 10.5px; font-weight: 700; letter-spacing: .02em; padding: 2px 8px; border-radius: var(--r-pill); border: 1px solid transparent; text-transform: capitalize; white-space: nowrap; }
+  .badge .bdot { width: 6px; height: 6px; border-radius: 99px; }
+  .badge.trusted { color: var(--success); background: var(--success-soft); border-color: rgba(52,211,153,.25); }
+  .badge.validating { color: var(--accent2); background: var(--accent-soft); border-color: var(--accent-line); }
+  .badge.candidate { color: var(--c3); background: rgba(96,165,250,.12); border-color: rgba(96,165,250,.25); }
+  .badge.stale { color: var(--warn); background: var(--warn-soft); border-color: rgba(251,191,36,.25); }
+  .badge.rejected, .badge.not_promoted { color: var(--muted); background: var(--surface2); border-color: var(--border); }
+  .badge.gated { color: var(--warn); background: var(--warn-soft); border-color: rgba(251,191,36,.25); }
+  .badge.yes { color: var(--success); background: var(--success-soft); border-color: rgba(52,211,153,.25); }
+  .badge.no { color: var(--danger); background: var(--danger-soft); border-color: rgba(251,113,133,.25); }
+  .badge.unknown { color: var(--muted); background: var(--surface2); border-color: var(--border); }
+
+  /* detail (cowork three-pane) */
+  .detail { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+  .detail-head {
+    display: flex; align-items: flex-start; gap: 14px; padding: 15px 17px;
+  }
+  .detail-head .kind-ico { width: 38px; height: 38px; border-radius: 10px; }
+  .detail-head .kind-ico svg { width: 19px; height: 19px; }
+  .detail-title { font-size: 18px; font-weight: 800; letter-spacing: -.01em; }
+  .detail-slug { font-family: var(--mono); font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+  .detail-meta { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 9px; }
+  .meta-pill { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); background: var(--surface2); border: 1px solid var(--border); padding: 3px 9px; border-radius: var(--r-pill); }
+  .meta-pill b { color: var(--text); font-weight: 700; }
+  .detail-actions { margin-left: auto; display: flex; gap: 8px; flex: 0 0 auto; }
+
+  .btn {
+    border: 1px solid var(--border); background: var(--surface2); color: var(--text);
+    font-size: 12.5px; font-weight: 600; padding: 8px 13px; border-radius: var(--r-md);
+    display: inline-flex; align-items: center; gap: 7px; transition: background .12s, border-color .12s, transform .05s;
+  }
+  .btn:hover { background: var(--surface); border-color: var(--muted); }
+  .btn:active { transform: translateY(1px); }
+  .btn svg { stroke: currentColor; width: 14px; height: 14px; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn.primary:hover { filter: brightness(1.08); }
+  .btn.primary svg { stroke: #fff; }
+  .btn.success { background: var(--success); border-color: var(--success); color: #06231a; }
+  .btn.success svg { stroke: #06231a; }
+  .btn.danger-outline { color: var(--danger); border-color: rgba(251,113,133,.35); }
+  .btn.danger-outline:hover { background: var(--danger-soft); }
+  .btn.warn { background: var(--warn); border-color: var(--warn); color: #2a1c00; }
+  .btn.warn svg { stroke: #2a1c00; }
+  .btn[disabled] { opacity: .45; cursor: not-allowed; }
+  .btn.sm { padding: 5px 10px; font-size: 11.5px; }
+
+  /* three pane */
+  .threepane { display: grid; gap: 12px; grid-template-columns: 1.05fr 1.25fr 1fr; align-items: start; }
+  @media (max-width: 1320px){ .threepane { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 880px){ .threepane { grid-template-columns: 1fr; } }
+  .pane { display: flex; flex-direction: column; min-width: 0; }
+  .pane-head {
+    display: flex; align-items: center; gap: 9px; padding: 11px 14px; border-bottom: 1px solid var(--border);
+    font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted);
+  }
+  .pane-head svg { stroke: var(--accent2); width: 15px; height: 15px; }
+  .pane-head .count { margin-left: auto; font-family: var(--mono); color: var(--text); font-size: 11px; background: var(--surface2); border: 1px solid var(--border); padding: 1px 7px; border-radius: var(--r-pill); }
+  .pane-body { padding: 13px 14px; }
+
+  /* progress / workflow timeline */
+  .timeline { position: relative; padding-left: 4px; }
+  .tl-step { position: relative; padding: 0 0 16px 30px; }
+  .tl-step:last-child { padding-bottom: 0; }
+  .tl-step::before {
+    content: ""; position: absolute; left: 9px; top: 20px; bottom: -2px; width: 2px; background: var(--border);
+  }
+  .tl-step:last-child::before { display: none; }
+  .tl-node {
+    position: absolute; left: 0; top: 1px; width: 20px; height: 20px; border-radius: 99px;
+    display: grid; place-items: center; background: var(--surface2); border: 2px solid var(--border); z-index: 1;
+  }
+  .tl-node svg { width: 11px; height: 11px; stroke: var(--muted); }
+  .tl-step.done .tl-node { background: var(--success); border-color: var(--success); }
+  .tl-step.done .tl-node svg { stroke: #06231a; }
+  .tl-step.active .tl-node { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+  .tl-step.active .tl-node svg { stroke: #fff; }
+  .tl-step.gate .tl-node { background: var(--warn); border-color: var(--warn); }
+  .tl-step.gate .tl-node svg { stroke: #2a1c00; }
+  .tl-step.pending .tl-node svg { stroke: var(--muted); }
+  .tl-name { font-size: 12.5px; font-weight: 700; }
+  .tl-sub { font-size: 11px; color: var(--muted); margin-top: 1px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .tag { font-family: var(--mono); font-size: 10px; color: var(--muted); background: var(--surface2); border: 1px solid var(--border); padding: 0 6px; border-radius: 5px; }
+  .tag.irr { color: var(--danger); border-color: rgba(251,113,133,.3); background: var(--danger-soft); }
+
+  /* working folder / artifact */
+  .file-tab { display: flex; align-items: center; gap: 8px; padding: 8px 11px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r-md) var(--r-md) 0 0; border-bottom: none; }
+  .file-tab svg { stroke: var(--accent2); width: 14px; height: 14px; }
+  .file-tab .fname { font-family: var(--mono); font-size: 11.5px; font-weight: 700; }
+  .file-tab .lang { margin-left: auto; font-size: 10px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); background: var(--surface); border: 1px solid var(--border); padding: 1px 7px; border-radius: var(--r-pill); }
+  .code {
+    margin: 0; background: var(--bg); border: 1px solid var(--border); border-radius: 0 0 var(--r-md) var(--r-md);
+    padding: 12px 0; overflow-x: auto; font-family: var(--mono); font-size: 11.5px; line-height: 1.65;
+  }
+  .code .ln { display: flex; }
+  .code .gut { width: 38px; flex: 0 0 auto; text-align: right; padding-right: 12px; color: var(--muted); opacity: .55; user-select: none; }
+  .code .src { white-space: pre; padding-right: 16px; }
+  .tok-kw { color: var(--accent2); }
+  .tok-str { color: var(--success); }
+  .tok-com { color: var(--muted); font-style: italic; }
+  .tok-fn { color: var(--c3); }
+  .tok-num { color: var(--warn); }
+  .artifact-foot { display: flex; gap: 10px; margin-top: 10px; }
+  .stat-mini { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r-md); padding: 8px 10px; }
+  .stat-mini .lbl { font-size: 10px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+  .stat-mini .v { font-size: 16px; font-weight: 800; margin-top: 2px; }
+
+  /* context / memory */
+  .ctx-section + .ctx-section { margin-top: 14px; }
+  .ctx-label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); display: flex; align-items: center; gap: 7px; margin-bottom: 8px; }
+  .ctx-label svg { stroke: var(--muted); width: 13px; height: 13px; }
+  .kv { display: flex; justify-content: space-between; gap: 10px; padding: 5px 0; border-bottom: 1px dashed var(--border); font-size: 12px; }
+  .kv:last-child { border-bottom: none; }
+  .kv .k { color: var(--muted); font-family: var(--mono); font-size: 11.5px; }
+  .kv .val { font-weight: 600; text-align: right; word-break: break-word; }
+  .file-ref { display: flex; align-items: center; gap: 7px; padding: 5px 8px; border-radius: 6px; font-family: var(--mono); font-size: 11px; }
+  .file-ref:hover { background: var(--surface2); }
+  .file-ref svg { stroke: var(--c3); width: 13px; height: 13px; flex: 0 0 auto; }
+  .pill-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .val-pill { font-family: var(--mono); font-size: 11px; background: var(--surface2); border: 1px solid var(--border); padding: 2px 8px; border-radius: var(--r-pill); }
+
+  /* staleness signals row */
+  .stale-grid { display: grid; gap: 8px; margin-top: 8px; }
+  .signal { display: flex; align-items: center; gap: 10px; padding: 9px 11px; border-radius: var(--r-md); border: 1px solid var(--border); background: var(--surface2); }
+  .signal .sig-ico { width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center; flex: 0 0 auto; }
+  .signal .sig-ico svg { width: 14px; height: 14px; }
+  .signal.fresh .sig-ico { background: var(--success-soft); } .signal.fresh .sig-ico svg { stroke: var(--success); }
+  .signal.drift .sig-ico { background: var(--danger-soft); } .signal.drift .sig-ico svg { stroke: var(--danger); }
+  .signal .sig-body { min-width: 0; flex: 1; }
+  .signal .sig-type { font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-transform: capitalize; }
+  .signal .sig-detail { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .signal .sig-state { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; padding: 2px 7px; border-radius: var(--r-pill); flex: 0 0 auto; }
+  .signal.fresh .sig-state { color: var(--success); background: var(--success-soft); }
+  .signal.drift .sig-state { color: var(--danger); background: var(--danger-soft); }
+
+  /* ============================== APPROVALS ============================== */
+  .approval-layout { display: grid; gap: 12px; grid-template-columns: 1.3fr 1fr; align-items: start; }
+  @media (max-width: 1080px){ .approval-layout { grid-template-columns: 1fr; } }
+  .approval-banner {
+    display: flex; align-items: center; gap: 13px; padding: 14px 17px; border-radius: var(--r-lg);
+    background: linear-gradient(100deg, var(--warn-soft), transparent 70%);
+    border: 1px solid rgba(251,191,36,.3);
+  }
+  .approval-banner .ab-ico { width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center; background: var(--warn-soft); flex: 0 0 auto; }
+  .approval-banner .ab-ico svg { stroke: var(--warn); width: 21px; height: 21px; }
+  .approval-banner h2 { margin: 0; font-size: 15px; }
+  .approval-banner p { margin: 2px 0 0; font-size: 12px; color: var(--muted); }
+  .ab-count { margin-left: auto; text-align: right; flex: 0 0 auto; }
+  .ab-count .n { font-size: 30px; font-weight: 800; color: var(--warn); line-height: 1; }
+  .ab-count .l { font-size: 11px; color: var(--muted); }
+
+  .approval-card { margin-top: 12px; overflow: hidden; }
+  .ac-head { display: flex; align-items: center; gap: 11px; padding: 13px 15px; border-bottom: 1px solid var(--border); }
+  .ac-id { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .ac-title { font-weight: 700; font-size: 13.5px; }
+  .ac-body { padding: 13px 15px; display: grid; gap: 12px; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 640px){ .ac-body { grid-template-columns: 1fr; } }
+  .ac-block .ac-lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: 6px; }
+  .param-row { display: flex; justify-content: space-between; gap: 10px; padding: 5px 9px; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; font-family: var(--mono); font-size: 11.5px; margin-bottom: 5px; }
+  .param-row .pk { color: var(--muted); }
+  .blast { font-size: 12px; color: var(--text); background: var(--danger-soft); border: 1px solid rgba(251,113,133,.25); border-radius: var(--r-md); padding: 10px 12px; line-height: 1.55; }
+  .blast .blast-head { display: flex; align-items: center; gap: 7px; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--danger); margin-bottom: 5px; }
+  .blast .blast-head svg { stroke: var(--danger); width: 13px; height: 13px; }
+  .ac-foot { display: flex; align-items: center; gap: 8px; padding: 12px 15px; border-top: 1px solid var(--border); background: var(--surface2); }
+  .ac-foot .req { font-size: 11.5px; color: var(--muted); margin-right: auto; }
+  .ac-resolved { opacity: .6; }
+  .resolved-tag { font-size: 10.5px; font-weight: 700; padding: 3px 10px; border-radius: var(--r-pill); text-transform: uppercase; letter-spacing: .03em; }
+  .resolved-tag.approved { color: var(--success); background: var(--success-soft); }
+  .resolved-tag.rejected { color: var(--danger); background: var(--danger-soft); }
+  .resolved-tag.ran { color: var(--accent2); background: var(--accent-soft); }
+
+  /* ============================== LEADERBOARD / HOT PROMPTS ============================== */
+  .hot-layout { display: grid; gap: 12px; grid-template-columns: 1.55fr 1fr; align-items: start; }
+  @media (max-width: 1080px){ .hot-layout { grid-template-columns: 1fr; } }
+  table.lb { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  table.lb th {
+    text-align: left; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--muted);
+    padding: 9px 12px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--surface); z-index: 1;
+    cursor: pointer; user-select: none; white-space: nowrap;
+  }
+  table.lb th.num { text-align: right; }
+  table.lb th .sort-ind { color: var(--accent); margin-left: 4px; }
+  table.lb th:hover { color: var(--text); }
+  table.lb td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  table.lb td.num { text-align: right; font-family: var(--mono); }
+  table.lb tr.hp-row { cursor: pointer; transition: background .1s; }
+  table.lb tr.hp-row:hover { background: var(--surface2); }
+  table.lb tr.hp-row[aria-selected="true"] { background: var(--accent-soft); }
+  .hp-prompt { font-weight: 600; }
+  .hp-exemplar { font-size: 11px; color: var(--muted); font-style: italic; margin-top: 1px; }
+  .hotscore-cell { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+  .hs-bar { width: 54px; height: 6px; background: var(--surface2); border-radius: 99px; overflow: hidden; flex: 0 0 auto; }
+  .hs-bar > i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 99px; }
+
+  .hp-detail-head { padding: 14px 15px; border-bottom: 1px solid var(--border); }
+  .hp-rule { display: flex; align-items: center; gap: 9px; padding: 11px 13px; margin: 13px 15px 0; border-radius: var(--r-md); background: var(--accent-soft); border: 1px solid var(--accent-line); font-size: 12px; }
+  .hp-rule svg { stroke: var(--accent); flex: 0 0 auto; width: 16px; height: 16px; }
+  .verdict-box { margin: 14px 15px 0; }
+  .verdict-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-top: 12px; }
+  .vg-item { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r-md); padding: 10px 12px; }
+  .vg-item .vl { font-size: 10px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+  .vg-item .vv { font-size: 17px; font-weight: 800; margin-top: 2px; }
+
+  /* ============================== EVENT FEED ============================== */
+  .feed-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .feed-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .feed-table th { text-align: left; font-size: 10.5px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); font-weight: 700; padding: 9px 12px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  .feed-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  .feed-table tr:hover td { background: var(--surface2); }
+  .conn { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 600; }
+  .conn .cdot { width: 7px; height: 7px; border-radius: 99px; }
+  .conn.claude .cdot { background: var(--accent); }
+  .conn.codex .cdot { background: var(--c3); }
+  .conn.cowork .cdot { background: var(--accent2); }
+  .served { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; padding: 2px 8px; border-radius: var(--r-pill); }
+  .served.automation { color: var(--success); background: var(--success-soft); }
+  .served.exact { color: var(--c3); background: rgba(96,165,250,.13); }
+  .served.semantic { color: var(--accent2); background: var(--accent-soft); }
+  .served.live { color: var(--warn); background: var(--warn-soft); }
+  .uhash { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .tok-cell { font-family: var(--mono); }
+  .tok-cell.lo { color: var(--success); }
+  .tok-cell.hi { color: var(--warn); }
+
+  /* toast */
+  .toast-wrap { position: fixed; right: 18px; bottom: 18px; display: flex; flex-direction: column; gap: 9px; z-index: 90; }
+  .toast {
+    display: flex; align-items: center; gap: 10px; min-width: 240px; max-width: 340px;
+    background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent);
+    border-radius: var(--r-md); padding: 11px 13px; box-shadow: var(--sh-lg);
+    animation: toastIn .2s ease;
+  }
+  @keyframes toastIn { from { transform: translateY(8px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .toast.success { border-left-color: var(--success); }
+  .toast.danger { border-left-color: var(--danger); }
+  .toast.warn { border-left-color: var(--warn); }
+  .toast svg { flex: 0 0 auto; width: 17px; height: 17px; }
+  .toast .t-msg { font-size: 12.5px; }
+  .toast .t-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+  .section-gap { margin-top: 12px; }
+  .empty { padding: 30px; text-align: center; color: var(--muted); font-size: 12.5px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+</style>
+
+<div class="app">
+  <!-- ===================== TOPBAR ===================== -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2l9 5-9 5-9-5 9-5z M3 12l9 5 9-5 M3 17l9 5 9-5"/>
+        </svg>
+      </span>
+      <div>
+        <div class="brand-name">Atlas Recall</div>
+        <div class="brand-sub">
+          <span class="served-hint" title="This UI is embedded in the Atlas Go binary and served by 'atlas serve'">
+            <span class="served-dot"></span> served by <span class="mono">atlas&nbsp;serve</span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <nav class="topnav" role="tablist" aria-label="Sections">
+      <button role="tab" data-page="automations" aria-selected="true">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.6L18 9.4l-4.2 1.8L12 16l-1.8-4.8L6 9.4l4.2-1.8L12 3z M19 14l.9 2.3L22 17l-2.1.7L19 20l-.9-2.3L16 17l2.1-.7L19 14z"/></svg>
+        Cowork Canvas
+      </button>
+      <button role="tab" data-page="approvals" aria-selected="false">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z M9 12l2 2 4-4"/></svg>
+        Approvals <span id="apr-nav-count" class="mono" style="font-size:10px;background:var(--warn-soft);color:var(--warn);padding:0 6px;border-radius:99px;">3</span>
+      </button>
+      <button role="tab" data-page="overview" aria-selected="false">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14l4-4 M5.5 18a9 9 0 1 1 13 0 M12 14a1.5 1.5 0 1 0 1.5 1.5"/></svg>
+        Overview
+      </button>
+      <button role="tab" data-page="hot" aria-selected="false">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+        Hot Prompts
+      </button>
+      <button role="tab" data-page="feed" aria-selected="false">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        Live Feed
+      </button>
+    </nav>
+
+    <div class="topbar-spacer"></div>
+
+    <div class="topbar-right">
+      <span class="live-chip"><span class="served-dot"></span> <b id="events-today-chip" style="color:var(--text)">1,287</b>&nbsp;events today</span>
+      <button class="icon-btn" id="theme-toggle" aria-label="Toggle light and dark theme" title="Toggle theme">
+        <svg id="theme-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===================== PAGE: COWORK CANVAS (Automations) ===================== -->
+    <section class="page active" id="page-automations" role="tabpanel" aria-label="Cowork Canvas">
+      <div class="wrap">
+
+        <!-- Lifecycle pipeline -->
+        <div class="card" style="margin-bottom:12px;">
+          <div class="panel-head">
+            <div class="panel-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v12 M18 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M18 9a9 9 0 0 1-9 9"/></svg>
+              Automation lifecycle
+            </div>
+            <span class="muted" style="font-size:11.5px;">candidate &rarr; validating &rarr; trusted &rarr; stale &middot; click a stage to filter the list</span>
+          </div>
+          <div class="lc-flow" id="lifecycle-flow"><!-- injected --></div>
+          <div class="stale-strip" id="stale-strip"><!-- injected --></div>
+        </div>
+
+        <!-- Cowork three-pane canvas -->
+        <div class="canvas-layout">
+          <!-- LEFT: list of automations + candidates -->
+          <aside class="card auto-list" aria-label="Automation registry">
+            <div class="auto-list-head">
+              <div class="auto-list-title">
+                <span>Registry</span>
+                <span class="mono" id="auto-count" style="color:var(--muted);font-weight:600;"></span>
+              </div>
+              <label class="search-box">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16z M21 21l-4.3-4.3"/></svg>
+                <input type="text" id="auto-search" placeholder="Search automations…" aria-label="Search automations" />
+              </label>
+              <div class="filter-chips" id="state-filters" role="group" aria-label="Filter by state">
+                <button class="chip" data-state="all" aria-pressed="true">All</button>
+                <button class="chip" data-state="trusted" aria-pressed="false">Trusted</button>
+                <button class="chip" data-state="validating" aria-pressed="false">Validating</button>
+                <button class="chip" data-state="candidate" aria-pressed="false">Candidate</button>
+                <button class="chip" data-state="stale" aria-pressed="false">Stale</button>
+              </div>
+            </div>
+            <div class="auto-items" id="auto-items" role="listbox" aria-label="Automations"></div>
+          </aside>
+
+          <!-- RIGHT: cowork-shaped detail -->
+          <div class="detail" id="auto-detail"><!-- injected --></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== PAGE: APPROVALS ===================== -->
+    <section class="page" id="page-approvals" role="tabpanel" aria-label="Approval queue">
+      <div class="wrap">
+        <div class="approval-banner">
+          <span class="ab-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z M9 12l2 2 4-4"/></svg></span>
+          <div>
+            <h2>Approval queue — human-in-the-loop</h2>
+            <p>Gated automations have an irreversible side effect (a deploy). A human reviews the requested params and blast radius before Atlas may run the distilled workflow.</p>
+          </div>
+          <div class="ab-count"><div class="n" id="apr-awaiting-n">3</div><div class="l">awaiting review</div></div>
+        </div>
+
+        <div class="approval-layout section-gap">
+          <div id="approval-list"><!-- injected --></div>
+          <div>
+            <div class="card">
+              <div class="panel-head">
+                <div class="panel-title">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v12 M18 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M18 9a9 9 0 0 1-9 9"/></svg>
+                  The gated workflow
+                </div>
+              </div>
+              <div class="panel-body">
+                <p class="muted" style="margin-top:0;font-size:12px;">Every approval above runs the same distilled <b style="color:var(--text)">deploy-service-to-env</b> workflow. Step 3 is irreversible — that is why it requires sign-off.</p>
+                <div class="timeline" id="gated-workflow-timeline" style="margin-top:12px;"></div>
+              </div>
+            </div>
+            <div class="card section-gap">
+              <div class="panel-head"><div class="panel-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> Recent approval activity</div></div>
+              <div class="panel-body"><div id="approval-log" style="display:flex;flex-direction:column;gap:9px;"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== PAGE: OVERVIEW ===================== -->
+    <section class="page" id="page-overview" role="tabpanel" aria-label="Overview">
+      <div class="wrap">
+        <div class="kpi-grid" id="kpi-grid"><!-- injected --></div>
+
+        <div class="panel-grid">
+          <!-- token trend -->
+          <div class="card">
+            <div class="panel-head">
+              <div class="panel-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8 M21 7v6h-6"/></svg> Tokens saved &amp; hit-rate — last 30 days</div>
+              <div class="seg" id="chart-seg" role="group" aria-label="Chart metric">
+                <button data-metric="tokens" aria-pressed="true">Tokens saved</button>
+                <button data-metric="hit" aria-pressed="false">Hit-rate</button>
+              </div>
+            </div>
+            <div class="panel-body" id="trend-chart"><!-- injected svg --></div>
+          </div>
+
+          <!-- tier breakdown -->
+          <div class="card">
+            <div class="panel-head"><div class="panel-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 5-9 5-9-5 9-5z M3 12l9 5 9-5 M3 17l9 5 9-5"/></svg> How requests were served</div></div>
+            <div class="panel-body">
+              <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;">
+                <div id="tier-donut"></div>
+                <div style="flex:1;min-width:220px;" id="tier-bars"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== PAGE: HOT PROMPTS ===================== -->
+    <section class="page" id="page-hot" role="tabpanel" aria-label="Hot prompt leaderboard">
+      <div class="wrap">
+        <div class="hot-layout">
+          <div class="card" style="overflow:hidden;">
+            <div class="panel-head">
+              <div class="panel-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></svg> Hot-prompt leaderboard</div>
+              <label class="search-box" style="margin:0;max-width:220px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16z M21 21l-4.3-4.3"/></svg>
+                <input type="text" id="hot-search" placeholder="Filter clusters…" aria-label="Filter hot prompts" />
+              </label>
+            </div>
+            <div style="overflow-x:auto;">
+              <table class="lb" id="lb-table">
+                <thead>
+                  <tr>
+                    <th data-sort="promptNorm">Prompt cluster</th>
+                    <th data-sort="frequency" class="num">Freq</th>
+                    <th data-sort="distinctUsers" class="num">Users</th>
+                    <th data-sort="avgTokens" class="num">Avg tok</th>
+                    <th data-sort="automatable">Verdict</th>
+                    <th data-sort="hotScore" class="num">HotScore</th>
+                  </tr>
+                </thead>
+                <tbody id="lb-body"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card" id="hp-detail" style="overflow:hidden;"><!-- injected --></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== PAGE: LIVE FEED ===================== -->
+    <section class="page" id="page-feed" role="tabpanel" aria-label="Live event feed">
+      <div class="wrap">
+        <div class="card" style="overflow:hidden;">
+          <div class="panel-head">
+            <div class="panel-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> Live event feed <span class="served-dot" style="margin-left:4px;"></span></div>
+            <div class="feed-controls">
+              <label class="search-box" style="margin:0;max-width:240px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16z M21 21l-4.3-4.3"/></svg>
+                <input type="text" id="feed-search" placeholder="Search prompts / users…" aria-label="Search events" />
+              </label>
+              <div class="seg" id="feed-seg" role="group" aria-label="Filter by served tier">
+                <button data-served="all" aria-pressed="true">All</button>
+                <button data-served="automation" aria-pressed="false">Automation</button>
+                <button data-served="exact" aria-pressed="false">Exact</button>
+                <button data-served="semantic" aria-pressed="false">Semantic</button>
+                <button data-served="live" aria-pressed="false">Live LLM</button>
+              </div>
+            </div>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="feed-table" id="feed-table">
+              <thead>
+                <tr>
+                  <th>Time</th><th>User</th><th>Connector</th><th>Prompt</th><th>Repo</th><th>Served by</th><th class="num" style="text-align:right;">Tokens</th><th class="num" style="text-align:right;">Latency</th>
+                </tr>
+              </thead>
+              <tbody id="feed-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="toast-wrap" id="toast-wrap" aria-live="polite"></div>
+
+<script>
+/* ============================================================================
+   INLINE MOCK DATASET (from shared spec atlas-recall-spec.json)
+   ========================================================================== */
+const DATA = {
+  kpis: { tokensSavedTotal:62770896, tokensSavedTrendPct:23.7, pctLlmAvoided:0.7324, hitRate:0.7324, p50ms:41, p95ms:138, trustedAutomations:3, eventsToday:1287, monthlyUsdSaved:194.59 },
+  series: {
+    days:["2026-06-01","2026-06-02","2026-06-03","2026-06-04","2026-06-05","2026-06-06","2026-06-07","2026-06-08","2026-06-09","2026-06-10","2026-06-11","2026-06-12","2026-06-13","2026-06-14","2026-06-15","2026-06-16","2026-06-17","2026-06-18","2026-06-19","2026-06-20","2026-06-21","2026-06-22","2026-06-23","2026-06-24","2026-06-25","2026-06-26","2026-06-27","2026-06-28","2026-06-29","2026-06-30"],
+    tokensSaved:[715587,780020,847225,822910,891848,963557,932312,1005754,1081968,1043793,1121739,1077674,1157353,1239804,1188809,1272992,1359947,1302022,1390710,1482170,1417315,1510507,1439762,1534686,1632383,1554708,1654136,1756337,1671732,1775666],
+    hitRate:[0.38,0.431,0.412,0.463,0.444,0.495,0.476,0.457,0.508,0.489,0.54,0.521,0.572,0.553,0.534,0.586,0.567,0.618,0.599,0.65,0.631,0.612,0.663,0.644,0.695,0.676,0.727,0.708,0.689,0.74]
+  },
+  tierBreakdown: { exactCache:5120, semanticCache:3380, automationReplay:4203, liveLlm:4642 },
+  clusters: [
+    {id:"clu_01",promptNorm:"who calls {symbol}",exemplar:"who calls FlowOrchestrator.dispatch?",frequency:1842,distinctUsers:23,avgTokens:14200,automatable:"yes",state:"automated",repo:"aziron-pulse",lastSeen:"2026-06-30T09:41:00Z",hotScore:2885.2},
+    {id:"clu_02",promptNorm:"explain the {x} pipeline",exemplar:"explain the signalchain pipeline",frequency:1106,distinctUsers:19,avgTokens:22800,automatable:"yes",state:"automated",repo:"aziron-pulse",lastSeen:"2026-06-30T08:55:00Z",hotScore:2088.4},
+    {id:"clu_03",promptNorm:"where are the {x} routes",exemplar:"where are the canvas routes?",frequency:734,distinctUsers:16,avgTokens:11600,automatable:"yes",state:"automated",repo:"aziron-pulse",lastSeen:"2026-06-30T07:12:00Z",hotScore:544.9},
+    {id:"clu_04",promptNorm:"deploy {service} to {env}",exemplar:"deploy pulse to prod",frequency:263,distinctUsers:14,avgTokens:9400,automatable:"gated",state:"validating",repo:"aziron-pulse",lastSeen:"2026-06-30T06:30:00Z",hotScore:129.5},
+    {id:"clu_05",promptNorm:"what is the type of {symbol}",exemplar:"what is the type of JSONBMap?",frequency:588,distinctUsers:12,avgTokens:7300,automatable:"yes",state:"candidate",repo:"aziron-mcp",lastSeen:"2026-06-30T05:48:00Z",hotScore:178.4},
+    {id:"clu_06",promptNorm:"summarize PR {number}",exemplar:"summarize PR #686",frequency:421,distinctUsers:11,avgTokens:26100,automatable:"unknown",state:"candidate",repo:"aziron-pulse",lastSeen:"2026-06-29T22:10:00Z",hotScore:400.9},
+    {id:"clu_07",promptNorm:"find unreferenced config keys",exemplar:"find unreferenced config keys",frequency:196,distinctUsers:9,avgTokens:17400,automatable:"yes",state:"candidate",repo:"aziron-ui",lastSeen:"2026-06-29T18:02:00Z",hotScore:92.1},
+    {id:"clu_08",promptNorm:"rewrite this commit message",exemplar:"rewrite this commit message nicely",frequency:510,distinctUsers:13,avgTokens:1900,automatable:"no",state:"rejected",repo:"aziron-pulse",lastSeen:"2026-06-30T04:20:00Z",hotScore:45.4},
+    {id:"clu_09",promptNorm:"pending migrations for {repo}",exemplar:"pending migrations for aziron-pulse",frequency:402,distinctUsers:10,avgTokens:8200,automatable:"yes",state:"stale",repo:"aziron-pulse",lastSeen:"2026-06-30T03:05:00Z",hotScore:104.2},
+    {id:"clu_10",promptNorm:"why is my local pulse 401ing",exemplar:"why is my local pulse 401ing on this branch?",frequency:37,distinctUsers:1,avgTokens:19500,automatable:"no",state:"not_promoted",repo:"aziron-pulse",lastSeen:"2026-06-29T11:44:00Z",hotScore:0.7}
+  ],
+  automations: [
+    {id:"auto_001",slug:"callers-of-symbol",title:"Who calls {symbol}?",kind:"code_query",state:"trusted",version:7,hits:1842,baselineTokensPerRun:14200,replayTokensPerRun:38,agreementRate:0.992,
+      params:[{name:"symbol",type:"string",required:true},{name:"repo",type:"string",required:false}],
+      workflow:{steps:[{id:"s1",name:"Resolve symbol in index",type:"lookup",reversible:true},{id:"s2",name:"Walk reverse call edges",type:"graph",reversible:true},{id:"s3",name:"Rank + format callers",type:"format",reversible:true}],edges:[{from:"s1",to:"s2",condition:"symbol_found"},{from:"s2",to:"s3",condition:"always"}]},
+      artifact:{name:"callers.atlas.js",lang:"javascript",bodyExcerpt:["export async function callersOf({ symbol, repo }) {","  const sym = await atlas.symbol(symbol, { repo });","  if (!sym) return { callers: [], note: 'symbol not indexed' };","  const edges = await atlas.callers(sym.id, { depth: 1 });","  return edges","    .map(e => ({ caller: e.from, file: e.file, line: e.line }))","    .sort((a, b) => a.file.localeCompare(b.file));","}"]},
+      context:{variables:{defaultRepo:"aziron-pulse",depth:1},findings:{avgCallers:9,topSymbol:"FlowOrchestrator.dispatch"},referenced:["internal/flow/orchestrator.go","internal/flow/dispatch.go"]},
+      staleness:{signals:[{type:"code",strategy:"fingerprint",fresh:true,detail:"graph snapshot 0723d89 matches last index"},{type:"time",strategy:"probe",fresh:true,detail:"re-probed 4m ago, TTL 60m"}],drifted:false},
+      provenance:{minedFromCluster:"clu_01",connector:"claude",author:"atlas-distiller",approvedBy:"auto-trust (agreement>=0.98, n>=500)"},requiresApproval:false,tokensSaved:26086404},
+    {id:"auto_002",slug:"explain-pipeline",title:"Explain the {pipeline} pipeline",kind:"code_query",state:"trusted",version:4,hits:1106,baselineTokensPerRun:22800,replayTokensPerRun:1420,agreementRate:0.974,
+      params:[{name:"pipeline",type:"string",required:true}],
+      workflow:{steps:[{id:"s1",name:"Locate pipeline entrypoint",type:"search",reversible:true},{id:"s2",name:"Trace forward call chain",type:"graph",reversible:true},{id:"s3",name:"Summarize stages (cached)",type:"summarize",reversible:true}],edges:[{from:"s1",to:"s2",condition:"entry_found"},{from:"s2",to:"s3",condition:"always"}]},
+      artifact:{name:"explain_pipeline.atlas.py",lang:"python",bodyExcerpt:["def explain_pipeline(pipeline: str) -> dict:","    entry = atlas.search(f'{pipeline} pipeline entry', kind='function')[0]","    chain = atlas.path(entry.id, direction='callees', max_depth=6)","    stages = [s for s in chain if s.tags and 'stage' in s.tags]","    summary = cache.get_or_compute(","        key=f'pipe::{pipeline}::{entry.snapshot}',","        fn=lambda: llm.summarize(stages),","    )","    return {'entry': entry.fqname, 'stages': stages, 'summary': summary}"]},
+      context:{variables:{maxDepth:6,stageTag:"stage"},findings:{pipelines:["signalchain","rca","pr-review"],avgStages:5},referenced:["internal/signalchain/runner.go","internal/rca/engine.go"]},
+      staleness:{signals:[{type:"code",strategy:"fingerprint",fresh:true,detail:"callee chain hash unchanged since v4"},{type:"external",strategy:"probe",fresh:true,detail:"LLM summary model claude-sonnet-4-6 pinned"}],drifted:false},
+      provenance:{minedFromCluster:"clu_02",connector:"codex",author:"atlas-distiller",approvedBy:"dominic@aziro.com"},requiresApproval:false,tokensSaved:23646280},
+    {id:"auto_003",slug:"where-are-routes",title:"Where are the {area} routes?",kind:"code_query",state:"trusted",version:3,hits:734,baselineTokensPerRun:11600,replayTokensPerRun:52,agreementRate:0.981,
+      params:[{name:"area",type:"string",required:true}],
+      workflow:{steps:[{id:"s1",name:"Query route-contract index",type:"lookup",reversible:true},{id:"s2",name:"Filter by area tag",type:"filter",reversible:true}],edges:[{from:"s1",to:"s2",condition:"always"}]},
+      artifact:{name:"routes.atlas.js",lang:"javascript",bodyExcerpt:["export async function routesFor({ area }) {","  const contracts = await atlas.routeContracts();","  return contracts","    .filter(r => r.tags.includes(area))","    .map(r => ({ method: r.method, path: r.path, handler: r.handler }));","}"]},
+      context:{variables:{framework:"go-chi"},findings:{areas:["auth","pulse","canvas","signal"],totalRoutes:214},referenced:["internal/http/router.go","internal/http/routes_pulse.go"]},
+      staleness:{signals:[{type:"config",strategy:"fingerprint",fresh:true,detail:"router.go mtime + hash match"},{type:"code",strategy:"fingerprint",fresh:true,detail:"route-contract count stable at 214"}],drifted:false},
+      provenance:{minedFromCluster:"clu_03",connector:"claude",author:"atlas-distiller",approvedBy:"auto-trust (agreement>=0.98, n>=500)"},requiresApproval:false,tokensSaved:8476232},
+    {id:"auto_004",slug:"deploy-service-to-env",title:"Deploy {service} to {env}",kind:"workflow",state:"validating",version:2,hits:88,baselineTokensPerRun:9400,replayTokensPerRun:640,agreementRate:0.946,
+      params:[{name:"service",type:"string",required:true},{name:"env",type:"enum[stg,prod]",required:true}],
+      workflow:{steps:[{id:"s1",name:"Resolve service manifest",type:"lookup",reversible:true},{id:"s2",name:"Build + push image",type:"build",reversible:true},{id:"s3",name:"kubectl apply rollout",type:"deploy",reversible:false},{id:"s4",name:"Verify health + smoke",type:"verify",reversible:true}],edges:[{from:"s1",to:"s2",condition:"manifest_found"},{from:"s2",to:"s3",condition:"image_pushed && approved"},{from:"s3",to:"s4",condition:"rollout_started"}]},
+      artifact:{name:"deploy.atlas.sh",lang:"bash",bodyExcerpt:["#!/usr/bin/env bash","set -euo pipefail","SERVICE=\"$1\"; ENV=\"$2\"","manifest=\"deploy/${ENV}/${SERVICE}.yaml\"","[ -f \"$manifest\" ] || { echo \"no manifest for $SERVICE/$ENV\"; exit 2; }","image=\"registry.aziron.io/${SERVICE}:$(git rev-parse --short HEAD)\"","docker build -t \"$image\" \"services/${SERVICE}\" && docker push \"$image\"","# GATED: requires human approval before apply","kubectl --context \"aziron-${ENV}\" apply -f \"$manifest\"","kubectl --context \"aziron-${ENV}\" rollout status deploy/\"$SERVICE\" --timeout=180s"]},
+      context:{variables:{registry:"registry.aziron.io",namespacePrefix:"pulse-runners"},findings:{services:["pulse","atlas","canvas"],avgRolloutSec:64},referenced:["deploy/stg/pulse.yaml","deploy/prod/pulse.yaml"]},
+      staleness:{signals:[{type:"config",strategy:"fingerprint",fresh:true,detail:"manifest checksums current"},{type:"external",strategy:"probe",fresh:true,detail:"cluster reachable, kube context valid"},{type:"time",strategy:"probe",fresh:true,detail:"re-probed 11m ago"}],drifted:false},
+      provenance:{minedFromCluster:"clu_04",connector:"cowork",author:"atlas-distiller",approvedBy:null},requiresApproval:true,tokensSaved:770880},
+    {id:"auto_005",slug:"find-dead-config",title:"Find unreferenced config keys",kind:"script",state:"candidate",version:1,hits:31,baselineTokensPerRun:17400,replayTokensPerRun:210,agreementRate:0.903,
+      params:[{name:"configDir",type:"string",required:false}],
+      workflow:{steps:[{id:"s1",name:"Enumerate config keys",type:"scan",reversible:true},{id:"s2",name:"Search references in code",type:"search",reversible:true},{id:"s3",name:"Report orphans",type:"format",reversible:true}],edges:[{from:"s1",to:"s2",condition:"always"},{from:"s2",to:"s3",condition:"always"}]},
+      artifact:{name:"dead_config.atlas.py",lang:"python",bodyExcerpt:["def find_dead_config(config_dir='config/'):","    keys = parse_keys(config_dir)","    orphans = []","    for k in keys:","        refs = atlas.refs(query=k, kind='string')","        if not refs:","            orphans.append(k)","    return {'scanned': len(keys), 'orphans': orphans}"]},
+      context:{variables:{configGlob:"config/**/*.yaml"},findings:{scanned:412,orphansLastRun:7},referenced:["config/pulse.yaml","config/atlas.yaml"]},
+      staleness:{signals:[{type:"code",strategy:"fingerprint",fresh:true,detail:"ref index current"},{type:"data",strategy:"probe",fresh:true,detail:"config dir hash sampled 2m ago"}],drifted:false},
+      provenance:{minedFromCluster:"clu_07",connector:"codex",author:"atlas-distiller",approvedBy:null},requiresApproval:false,tokensSaved:532890},
+    {id:"auto_006",slug:"migration-status",title:"Pending DB migrations for {repo}",kind:"script",state:"stale",version:5,hits:402,baselineTokensPerRun:8200,replayTokensPerRun:95,agreementRate:0.889,
+      params:[{name:"repo",type:"string",required:true}],
+      workflow:{steps:[{id:"s1",name:"List migration files",type:"scan",reversible:true},{id:"s2",name:"Diff vs schema_migrations",type:"compare",reversible:true}],edges:[{from:"s1",to:"s2",condition:"always"}]},
+      artifact:{name:"migrations.atlas.sh",lang:"bash",bodyExcerpt:["#!/usr/bin/env bash","set -euo pipefail","repo=\"$1\"","applied=$(psql -At -c 'select version from schema_migrations')","for f in db/migrations/*.sql; do","  v=$(basename \"$f\" | cut -d_ -f1)","  grep -qx \"$v\" <<<\"$applied\" || echo \"PENDING $f\"","done"]},
+      context:{variables:{migrationsDir:"db/migrations"},findings:{latestApplied:"086",pending:["087","088"]},referenced:["db/migrations/086_cost_usd.sql"]},
+      staleness:{signals:[{type:"data",strategy:"probe",fresh:false,detail:"schema_migrations probe failed: 2 new rows since fingerprint"},{type:"code",strategy:"fingerprint",fresh:false,detail:"migrations dir changed (087, 088 added)"},{type:"time",strategy:"probe",fresh:true,detail:"probe ran 1m ago"}],drifted:true},
+      provenance:{minedFromCluster:"clu_09",connector:"claude",author:"atlas-distiller",approvedBy:"auto-trust (agreement>=0.98, n>=500)"},requiresApproval:false,tokensSaved:3258210}
+  ],
+  approvals: [
+    {id:"apr_001",automationSlug:"deploy-service-to-env",requestedBy:"u_7af3",params:{service:"pulse",env:"prod"},blastRadius:"prod namespace pulse-runners-prod; rolling restart of 4 pods; ~64s window; reversible via rollback",requestedAt:"2026-06-30T09:12:00Z",status:"awaiting"},
+    {id:"apr_002",automationSlug:"deploy-service-to-env",requestedBy:"u_2c19",params:{service:"atlas",env:"stg"},blastRadius:"stg namespace; 1 deployment; no data migration; low risk",requestedAt:"2026-06-30T08:40:00Z",status:"awaiting"},
+    {id:"apr_003",automationSlug:"deploy-service-to-env",requestedBy:"u_91be",params:{service:"canvas",env:"prod"},blastRadius:"prod; shared canvas runtime; affects active Canvas sessions; advise drain first",requestedAt:"2026-06-30T07:58:00Z",status:"awaiting"}
+  ],
+  events: [
+    {ts:"2026-06-30T09:41:12Z",userHash:"u_7af3",connector:"claude",prompt:"who calls FlowOrchestrator.dispatch?",repo:"aziron-pulse",servedBy:"automation",tokens:38,latencyMs:44},
+    {ts:"2026-06-30T09:40:51Z",userHash:"u_2c19",connector:"codex",prompt:"explain the signalchain pipeline",repo:"aziron-pulse",servedBy:"automation",tokens:1420,latencyMs:61},
+    {ts:"2026-06-30T09:39:33Z",userHash:"u_91be",connector:"claude",prompt:"where are the canvas routes?",repo:"aziron-pulse",servedBy:"exact",tokens:12,latencyMs:9},
+    {ts:"2026-06-30T09:38:02Z",userHash:"u_5d77",connector:"cowork",prompt:"deploy pulse to prod",repo:"aziron-pulse",servedBy:"live",tokens:9400,latencyMs:2210},
+    {ts:"2026-06-30T09:36:48Z",userHash:"u_7af3",connector:"claude",prompt:"what is the type of JSONBMap?",repo:"aziron-mcp",servedBy:"semantic",tokens:240,latencyMs:33},
+    {ts:"2026-06-30T09:35:10Z",userHash:"u_a0f1",connector:"codex",prompt:"who calls RecordSignalUsage?",repo:"aziron-pulse",servedBy:"automation",tokens:41,latencyMs:47},
+    {ts:"2026-06-30T09:33:59Z",userHash:"u_2c19",connector:"claude",prompt:"summarize PR #686",repo:"aziron-pulse",servedBy:"live",tokens:26100,latencyMs:5180},
+    {ts:"2026-06-30T09:32:21Z",userHash:"u_91be",connector:"claude",prompt:"where are the auth routes?",repo:"aziron-pulse",servedBy:"exact",tokens:12,latencyMs:8},
+    {ts:"2026-06-30T09:30:44Z",userHash:"u_c4e2",connector:"codex",prompt:"explain the rca pipeline",repo:"aziron-pulse",servedBy:"semantic",tokens:1510,latencyMs:58},
+    {ts:"2026-06-30T09:29:05Z",userHash:"u_5d77",connector:"claude",prompt:"pending migrations for aziron-pulse",repo:"aziron-pulse",servedBy:"live",tokens:8200,latencyMs:1340},
+    {ts:"2026-06-30T09:27:33Z",userHash:"u_a0f1",connector:"cowork",prompt:"deploy atlas to stg",repo:"aziron-mcp",servedBy:"automation",tokens:640,latencyMs:71},
+    {ts:"2026-06-30T09:25:58Z",userHash:"u_7af3",connector:"claude",prompt:"who calls CrossRepoImpactForChangedPaths?",repo:"aziron-pulse",servedBy:"automation",tokens:39,latencyMs:43},
+    {ts:"2026-06-30T09:24:12Z",userHash:"u_91be",connector:"codex",prompt:"where are the signal routes?",repo:"aziron-pulse",servedBy:"exact",tokens:12,latencyMs:10},
+    {ts:"2026-06-30T09:22:40Z",userHash:"u_d8a3",connector:"claude",prompt:"why is my local pulse 401ing on this branch?",repo:"aziron-pulse",servedBy:"live",tokens:19500,latencyMs:3120}
+  ]
+};
+
+/* ============================================================================
+   INLINE SVG ICON HELPER
+   ========================================================================== */
+const ICONS = {
+  gauge:"M12 14l4-4 M5.5 18a9 9 0 1 1 13 0 M12 14a1.5 1.5 0 1 0 1.5 1.5",
+  bolt:"M13 2L4 14h7l-1 8 9-12h-7l1-8z",
+  list:"M8 6h13 M8 12h13 M8 18h13 M3 6h.01 M3 12h.01 M3 18h.01",
+  clock:"M12 7v5l3 2 M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z",
+  shieldCheck:"M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z M9 12l2 2 4-4",
+  gitBranch:"M6 3v12 M18 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M18 9a9 9 0 0 1-9 9",
+  search:"M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16z M21 21l-4.3-4.3",
+  check:"M20 6L9 17l-5-5",
+  x:"M18 6L6 18 M6 6l12 12",
+  play:"M6 4l14 8-14 8V4z",
+  pin:"M12 17v5 M9 10.8V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v5.8l2 3.2H7l2-3.2z",
+  trendUp:"M3 17l6-6 4 4 8-8 M21 7v6h-6",
+  trendDown:"M3 7l6 6 4-4 8 8 M21 17v-6h-6",
+  database:"M12 8c4.4 0 8-1.3 8-3s-3.6-3-8-3-8 1.3-8 3 3.6 3 8 3z M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5 M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6",
+  activity:"M22 12h-4l-3 9L9 3l-3 9H2",
+  users:"M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M23 21v-2a4 4 0 0 0-3-3.9 M16 3.1a4 4 0 0 1 0 7.8",
+  layers:"M12 2l9 5-9 5-9-5 9-5z M3 12l9 5 9-5 M3 17l9 5 9-5",
+  terminal:"M4 17l6-6-6-6 M12 19h8",
+  fileCode:"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z M14 2v6h6 M10 13l-2 2 2 2 M14 13l2 2-2 2",
+  sparkles:"M12 3l1.8 4.6L18 9.4l-4.2 1.8L12 16l-1.8-4.8L6 9.4l4.2-1.8L12 3z M19 14l.9 2.3L22 17l-2.1.7L19 20l-.9-2.3L16 17l2.1-.7L19 14z",
+  alertTriangle:"M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z M12 9v4 M12 17h.01",
+  refresh:"M21 12a9 9 0 1 1-3-6.7L21 8 M21 3v5h-5",
+  chevronRight:"M9 6l6 6-6 6"
+};
+function icon(name, cls="", size=16){
+  return `<svg class="${cls}" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${ICONS[name]}"/></svg>`;
+}
+const kindIconName = { code_query:"search", script:"terminal", workflow:"gitBranch" };
+
+/* ============================================================================
+   FORMAT HELPERS
+   ========================================================================== */
+const el = (sel, root=document) => root.querySelector(sel);
+const els = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+function fmtNum(n){ return n.toLocaleString("en-US"); }
+function fmtCompact(n){
+  if (n >= 1e9) return (n/1e9).toFixed(2).replace(/\.?0+$/,"")+"B";
+  if (n >= 1e6) return (n/1e6).toFixed(2).replace(/\.?0+$/,"")+"M";
+  if (n >= 1e3) return (n/1e3).toFixed(1).replace(/\.0$/,"")+"K";
+  return String(n);
+}
+function fmtPct(x, d=1){ return (x*100).toFixed(d)+"%"; }
+function fmtTime(iso){ const d=new Date(iso); return d.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}); }
+function ago(iso){
+  const diff = (Date.now() - new Date(iso).getTime())/1000;
+  if (diff < 60) return Math.max(1,Math.round(diff))+"s ago";
+  if (diff < 3600) return Math.round(diff/60)+"m ago";
+  if (diff < 86400) return Math.round(diff/3600)+"h ago";
+  return Math.round(diff/86400)+"d ago";
+}
+function esc(s){ return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+/* ============================================================================
+   THEME TOGGLE
+   ========================================================================== */
+const sunPath = "M12 1v2 M12 21v2 M4.2 4.2l1.4 1.4 M18.4 18.4l1.4 1.4 M1 12h2 M21 12h2 M4.2 19.8l1.4-1.4 M18.4 5.6l1.4-1.4 M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z";
+const moonPath = "M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z";
+function setTheme(t){
+  document.documentElement.setAttribute("data-theme", t);
+  el("#theme-icon").innerHTML = `<path d="${t==='dark'?moonPath:sunPath}"/>`;
+  // re-render charts that depend on CSS-var colors
+  if (state.page==="overview"){ renderTrend(); renderTier(); }
+}
+let currentTheme = "dark";
+// Initial theme apply is inline (NOT setTheme) because `state` (a const declared
+// below) is still in its temporal dead zone here; setTheme reads state.
+document.documentElement.setAttribute("data-theme", currentTheme);
+el("#theme-icon").innerHTML = `<path d="${currentTheme==='dark'?moonPath:sunPath}"/>`;
+el("#theme-toggle").addEventListener("click", ()=>{
+  currentTheme = currentTheme==="dark" ? "light" : "dark";
+  setTheme(currentTheme);
+});
+
+/* ============================================================================
+   APP STATE
+   ========================================================================== */
+const state = {
+  page: "automations",
+  selectedAuto: "auto_001",
+  autoSearch: "",
+  autoStateFilter: "all",
+  selectedCluster: "clu_01",
+  hotSearch: "",
+  lbSort: { key:"hotScore", dir:-1 },
+  chartMetric: "tokens",
+  feedSearch: "",
+  feedServed: "all",
+  approvals: JSON.parse(JSON.stringify(DATA.approvals)),
+  approvalLog: []
+};
+function cssVar(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+/* ============================================================================
+   NAV
+   ========================================================================== */
+els(".topnav button").forEach(btn=>{
+  btn.addEventListener("click", ()=> gotoPage(btn.dataset.page));
+});
+function gotoPage(page){
+  state.page = page;
+  els(".topnav button").forEach(b=> b.setAttribute("aria-selected", b.dataset.page===page ? "true":"false"));
+  els(".page").forEach(p=> p.classList.toggle("active", p.id==="page-"+page));
+  if (page==="overview"){ renderKpis(); renderTrend(); renderTier(); }
+  if (page==="hot"){ renderLeaderboard(); renderClusterDetail(); }
+  if (page==="feed"){ renderFeed(); }
+  if (page==="approvals"){ renderApprovals(); renderGatedWorkflow(); renderApprovalLog(); }
+  if (page==="automations"){ renderAutoList(); renderAutoDetail(); }
+}
+
+/* ============================================================================
+   OVERVIEW — KPIs
+   ========================================================================== */
+function sparkline(values, w=84, h=26, color){
+  const min=Math.min(...values), max=Math.max(...values), span=(max-min)||1;
+  const pts = values.map((v,i)=>{
+    const x = (i/(values.length-1))*w;
+    const y = h - ((v-min)/span)*(h-4) - 2;
+    return [x,y];
+  });
+  const d = pts.map((p,i)=> (i? "L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ");
+  const area = d + ` L ${w} ${h} L 0 ${h} Z`;
+  const id = "spk"+Math.random().toString(36).slice(2,7);
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true">
+    <defs><linearGradient id="${id}" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="${color}" stop-opacity=".28"/><stop offset="100%" stop-color="${color}" stop-opacity="0"/>
+    </linearGradient></defs>
+    <path d="${area}" fill="url(#${id})"/>
+    <path d="${d}" fill="none" stroke="${color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`;
+}
+function renderKpis(){
+  const k = DATA.kpis;
+  const accent = cssVar("--accent"), success = cssVar("--success"), c3 = cssVar("--c3"), c1 = cssVar("--c1");
+  const cards = [
+    { icon:"sparkles", label:"Tokens saved (cumulative)", val:fmtCompact(k.tokensSavedTotal), unit:"tok",
+      foot:`<span class="delta up">${icon("trendUp")}+${k.tokensSavedTrendPct}%</span> vs. prior 30d`,
+      spark: sparkline(DATA.series.tokensSaved, 84, 26, accent) },
+    { icon:"gauge", label:"% LLM calls avoided", val:fmtPct(k.pctLlmAvoided), unit:"",
+      foot:`cache + automation hit-rate`, spark: sparkline(DATA.series.hitRate, 84, 26, success) },
+    { icon:"clock", label:"Replay latency", val:k.p50ms, unit:"ms p50",
+      foot:`<span class="mono">p95 ${k.p95ms}ms</span> &middot; vs ~2.4s live`, spark:"" },
+    { icon:"shieldCheck", label:"Trusted automations", val:k.trustedAutomations, unit:"live",
+      foot:`${DATA.automations.filter(a=>a.state!=='trusted').length} more in pipeline`, spark:"" },
+    { icon:"activity", label:"Events today", val:fmtNum(k.eventsToday), unit:"",
+      foot:`across claude / codex / cowork`, spark:"" },
+    { icon:"layers", label:"Automation hit-rate", val:fmtPct(k.hitRate), unit:"",
+      foot:`served without a live LLM call`, spark: sparkline(DATA.series.hitRate, 84, 26, c1) },
+    { icon:"bolt", label:"Live LLM share", val:fmtPct(DATA.tierBreakdown.liveLlm/Object.values(DATA.tierBreakdown).reduce((a,b)=>a+b,0)), unit:"",
+      foot:`only the genuinely-novel prompts`, spark:"" },
+    { icon:"database", label:"Est. monthly $ saved", val:"$"+k.monthlyUsdSaved.toFixed(2), unit:"",
+      foot:`<span class="delta up">${icon("trendUp")}+${k.tokensSavedTrendPct}%</span> trending up`, spark: sparkline(DATA.series.tokensSaved,84,26,c3) }
+  ];
+  el("#kpi-grid").innerHTML = cards.map(c=>`
+    <div class="card kpi">
+      <div class="kpi-head">${icon(c.icon,"",14)} ${c.label}</div>
+      <div class="kpi-val">${c.val}<span class="unit">${c.unit}</span></div>
+      <div class="kpi-foot">${c.foot}</div>
+      ${c.spark?`<div class="kpi-spark">${c.spark}</div>`:""}
+    </div>`).join("");
+}
+
+/* ---------- Trend chart (hand-rolled SVG) ---------- */
+function renderTrend(){
+  const metric = state.chartMetric;
+  const vals = metric==="tokens" ? DATA.series.tokensSaved : DATA.series.hitRate;
+  const days = DATA.series.days;
+  const W = 640, H = 230, padL = 46, padR = 12, padT = 14, padB = 26;
+  const iw = W-padL-padR, ih = H-padT-padB;
+  const min = metric==="tokens" ? 0 : Math.min(...vals)*0.92;
+  const max = Math.max(...vals)*1.04;
+  const span = (max-min)||1;
+  const accent = cssVar("--accent"), grid = cssVar("--grid"), muted = cssVar("--muted");
+  const x = i => padL + (i/(vals.length-1))*iw;
+  const y = v => padT + ih - ((v-min)/span)*ih;
+  let gridLines="", yLabels="";
+  for (let g=0; g<=4; g++){
+    const yy = padT + (g/4)*ih;
+    const vv = max - (g/4)*span;
+    gridLines += `<line x1="${padL}" x2="${W-padR}" y1="${yy.toFixed(1)}" y2="${yy.toFixed(1)}" stroke="${grid}" stroke-width="1"/>`;
+    const lbl = metric==="tokens" ? fmtCompact(vv) : fmtPct(vv,0);
+    yLabels += `<text x="${padL-8}" y="${(yy+4).toFixed(1)}" text-anchor="end" font-size="10" fill="${muted}" font-family="ui-monospace,monospace">${lbl}</text>`;
+  }
+  const linePts = vals.map((v,i)=>[x(i),y(v)]);
+  const dLine = linePts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ");
+  const dArea = dLine + ` L ${x(vals.length-1).toFixed(1)} ${(padT+ih)} L ${padL} ${(padT+ih)} Z`;
+  let xLabels="";
+  [0,6,12,18,24,29].forEach(i=>{
+    const d = days[i].slice(5);
+    xLabels += `<text x="${x(i).toFixed(1)}" y="${H-7}" text-anchor="middle" font-size="10" fill="${muted}" font-family="ui-monospace,monospace">${d}</text>`;
+  });
+  const dots = [29].map(i=>`<circle cx="${x(i).toFixed(1)}" cy="${y(vals[i]).toFixed(1)}" r="4" fill="${accent}" stroke="var(--surface)" stroke-width="2"/>`).join("");
+  el("#trend-chart").innerHTML = `
+    <svg viewBox="0 0 ${W} ${H}" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Trend chart">
+      <defs><linearGradient id="trendGrad" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0%" stop-color="${accent}" stop-opacity=".30"/><stop offset="100%" stop-color="${accent}" stop-opacity="0"/>
+      </linearGradient></defs>
+      ${gridLines}${yLabels}
+      <path d="${dArea}" fill="url(#trendGrad)"/>
+      <path d="${dLine}" fill="none" stroke="${accent}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      ${dots}${xLabels}
+    </svg>`;
+}
+function renderTier(){
+  const tb = DATA.tierBreakdown;
+  const total = Object.values(tb).reduce((a,b)=>a+b,0);
+  const items = [
+    { key:"automationReplay", label:"Automation replay", color:cssVar("--c2"), v:tb.automationReplay },
+    { key:"exactCache", label:"Exact cache", color:cssVar("--c3"), v:tb.exactCache },
+    { key:"semanticCache", label:"Semantic cache", color:cssVar("--c1"), v:tb.semanticCache },
+    { key:"liveLlm", label:"Live LLM", color:cssVar("--c4"), v:tb.liveLlm }
+  ];
+  // donut
+  const R=54, sw=16, C=2*Math.PI*R; let off=0;
+  const segs = items.map(it=>{
+    const frac = it.v/total;
+    const seg = `<circle cx="70" cy="70" r="${R}" fill="none" stroke="${it.color}" stroke-width="${sw}" stroke-dasharray="${(frac*C).toFixed(2)} ${C.toFixed(2)}" stroke-dashoffset="${(-off*C).toFixed(2)}" transform="rotate(-90 70 70)" stroke-linecap="butt"/>`;
+    off += frac; return seg;
+  }).join("");
+  const avoided = (total-tb.liveLlm)/total;
+  el("#tier-donut").innerHTML = `<svg width="140" height="140" viewBox="0 0 140 140" role="img" aria-label="Tier breakdown donut">
+    ${segs}
+    <text x="70" y="64" text-anchor="middle" font-size="22" font-weight="800" fill="var(--text)">${fmtPct(avoided,0)}</text>
+    <text x="70" y="82" text-anchor="middle" font-size="10" fill="var(--muted)">avoided live</text>
+  </svg>`;
+  el("#tier-bars").innerHTML = items.map(it=>{
+    const frac = it.v/total;
+    return `<div class="tier-row">
+      <div class="tier-label"><span class="tier-swatch" style="background:${it.color}"></span>${it.label}</div>
+      <div class="tier-bar"><i style="width:${(frac*100).toFixed(1)}%;background:${it.color}"></i></div>
+      <div class="tier-meta"><b>${fmtNum(it.v)}</b> &middot; ${fmtPct(frac,0)}</div>
+    </div>`;
+  }).join("");
+}
+el("#chart-seg").addEventListener("click", e=>{
+  const b = e.target.closest("button"); if(!b) return;
+  state.chartMetric = b.dataset.metric;
+  els("#chart-seg button").forEach(x=> x.setAttribute("aria-pressed", x===b?"true":"false"));
+  renderTrend();
+});
+
+/* ============================================================================
+   LIFECYCLE PIPELINE (on automations page)
+   ========================================================================== */
+const LC_STAGES = [
+  { key:"candidate", label:"Candidate", color:cssVar("--c3"), desc:"mined from a hot cluster" },
+  { key:"validating", label:"Validating", color:cssVar("--accent2"), desc:"checking agreement vs live" },
+  { key:"trusted", label:"Trusted", color:cssVar("--success"), desc:"auto-served, de-advertise on drift" },
+  { key:"stale", label:"Stale", color:cssVar("--warn"), desc:"drifted — recompute queued" }
+];
+function renderLifecycle(){
+  const counts = {candidate:0,validating:0,trusted:0,stale:0};
+  DATA.automations.forEach(a=>{ if(counts[a.state]!==undefined) counts[a.state]++; });
+  const arrow = `<span class="lc-arrow">${icon("chevronRight","",18)}</span>`;
+  let html = "";
+  LC_STAGES.forEach((s,i)=>{
+    const active = state.autoStateFilter===s.key;
+    html += `<button class="lc-stage ${active?'is-target':''}" data-lcstate="${s.key}" aria-pressed="${active}" style="border:none;text-align:left;background:${active?'var(--accent-soft)':'transparent'};">
+      <div class="lc-name"><span class="dot" style="background:${s.color}"></span>${s.label}</div>
+      <div class="lc-count">${counts[s.key]}</div>
+      <div class="lc-desc">${s.desc}</div>
+    </button>`;
+    if (i<LC_STAGES.length-1) html += arrow;
+  });
+  el("#lifecycle-flow").innerHTML = html;
+  els("#lifecycle-flow [data-lcstate]").forEach(b=> b.addEventListener("click", ()=>{
+    state.autoStateFilter = state.autoStateFilter===b.dataset.lcstate ? "all" : b.dataset.lcstate;
+    syncStateChips(); renderLifecycle(); renderAutoList();
+  }));
+  // stale strip
+  const stale = DATA.automations.filter(a=>a.staleness.drifted);
+  if (stale.length){
+    const a = stale[0];
+    el("#stale-strip").innerHTML = `${icon("alertTriangle","",15)} <b>${stale.length} automation${stale.length>1?'s':''} de-advertised</b> &mdash; <span class="mono">${esc(a.slug)}</span> drifted: ${esc(a.staleness.signals.find(s=>!s.fresh)?.detail||'')} &middot; recompute queued.`;
+    el("#stale-strip").style.display="flex";
+  } else { el("#stale-strip").style.display="none"; }
+}
+function syncStateChips(){
+  els("#state-filters .chip").forEach(c=> c.setAttribute("aria-pressed", c.dataset.state===state.autoStateFilter ? "true":"false"));
+}
+
+/* ============================================================================
+   AUTOMATION LIST (left rail)
+   ========================================================================== */
+function matchAuto(a){
+  if (state.autoStateFilter!=="all" && a.state!==state.autoStateFilter) return false;
+  const q = state.autoSearch.toLowerCase().trim();
+  if (!q) return true;
+  return (a.title+" "+a.slug+" "+a.kind+" "+a.provenance.connector).toLowerCase().includes(q);
+}
+function renderAutoList(){
+  const list = DATA.automations.filter(matchAuto);
+  el("#auto-count").textContent = list.length + " / " + DATA.automations.length;
+  if (!list.length){ el("#auto-items").innerHTML = `<div class="empty">No automations match.</div>`; return; }
+  el("#auto-items").innerHTML = list.map(a=>{
+    const sel = a.id===state.selectedAuto;
+    const stale = a.staleness.drifted;
+    return `<button class="auto-item" role="option" aria-selected="${sel}" data-auto="${a.id}">
+      <div class="auto-item-top">
+        <span class="kind-ico">${icon(kindIconName[a.kind],"",13)}</span>
+        <span class="auto-item-title">${esc(a.title)}</span>
+        ${a.requiresApproval?`<span title="requires approval">${icon("shieldCheck","",13)}</span>`:""}
+      </div>
+      <div class="auto-item-sub">
+        <span class="badge ${a.state}"><span class="bdot" style="background:currentColor"></span>${a.state}</span>
+        <span class="mono">v${a.version}</span>
+        <span>&middot; ${fmtCompact(a.hits)} hits</span>
+        ${stale?`<span style="color:var(--warn)">&middot; drifted</span>`:""}
+      </div>
+    </button>`;
+  }).join("");
+  els("#auto-items .auto-item").forEach(b=> b.addEventListener("click", ()=>{
+    state.selectedAuto = b.dataset.auto;
+    renderAutoList(); renderAutoDetail();
+  }));
+}
+el("#auto-search").addEventListener("input", e=>{ state.autoSearch=e.target.value; renderAutoList(); });
+el("#state-filters").addEventListener("click", e=>{
+  const c = e.target.closest(".chip"); if(!c) return;
+  state.autoStateFilter = c.dataset.state;
+  syncStateChips(); renderLifecycle(); renderAutoList();
+});
+
+/* ============================================================================
+   AUTOMATION DETAIL — COWORK THREE-PANE
+   ========================================================================== */
+function highlight(line, lang){
+  let s = esc(line);
+  // comments
+  if (lang==="python" || lang==="bash"){
+    s = s.replace(/(#.*)$/g, '<span class="tok-com">$1</span>');
+  } else {
+    s = s.replace(/(\/\/.*)$/g, '<span class="tok-com">$1</span>');
+  }
+  // strings (single + double, simple)
+  s = s.replace(/(&#39;[^&]*?&#39;|&quot;[^&]*?&quot;)/g, '<span class="tok-str">$1</span>');
+  // keywords
+  const kw = lang==="python"
+    ? ["def","return","for","in","if","not","lambda","import","async","await"]
+    : lang==="bash" ? ["set","for","do","done","exit","echo"]
+    : ["export","async","function","const","await","return","if"];
+  kw.forEach(k=>{ s = s.replace(new RegExp("\\b("+k+")\\b","g"), '<span class="tok-kw">$1</span>'); });
+  // numbers
+  s = s.replace(/\b(\d+)\b/g, '<span class="tok-num">$1</span>');
+  return s;
+}
+function codeBlock(art){
+  const lines = art.bodyExcerpt.map((l,i)=>
+    `<div class="ln"><span class="gut">${i+1}</span><span class="src">${highlight(l, art.lang)}</span></div>`).join("");
+  return `<div class="file-tab">${icon("fileCode","",14)}<span class="fname">${esc(art.name)}</span><span class="lang">${esc(art.lang)}</span></div>
+    <pre class="code">${lines}</pre>`;
+}
+function stepStatus(a, step, idx){
+  // workflow progress: trusted = all done; validating = up to gate active; stale = done but flagged
+  if (a.state==="trusted") return "done";
+  if (a.state==="stale") return idx<step.length-1 ? "done":"done";
+  if (a.state==="candidate") return idx===0 ? "active" : "pending";
+  // validating
+  return idx<1 ? "done" : (idx===1 ? "active":"pending");
+}
+function renderWorkflowTimeline(a){
+  const steps = a.workflow.steps;
+  return steps.map((s,i)=>{
+    let cls = stepStatus(a, steps, i);
+    if (!s.reversible) cls = (a.state==="validating" && i>=2) ? "gate" : cls;
+    if (!s.reversible && a.requiresApproval && a.state!=="trusted") cls = "gate";
+    const nodeIcon = cls==="done"?"check": cls==="gate"?"shieldCheck": cls==="active"?"refresh":"chevronRight";
+    const edge = a.workflow.edges.find(e=>e.from===s.id);
+    return `<div class="tl-step ${cls}">
+      <span class="tl-node">${icon(nodeIcon,"",11)}</span>
+      <div class="tl-name">${esc(s.name)}</div>
+      <div class="tl-sub">
+        <span class="tag">${esc(s.type)}</span>
+        ${s.reversible?'<span class="tag">reversible</span>':'<span class="tag irr">irreversible</span>'}
+        ${edge?`<span class="muted">&rarr; <span class="mono">${esc(edge.condition)}</span></span>`:''}
+      </div>
+    </div>`;
+  }).join("");
+}
+function contextPane(a){
+  const c = a.context;
+  const vars = Object.entries(c.variables).map(([k,v])=>
+    `<div class="kv"><span class="k">${esc(k)}</span><span class="val">${esc(typeof v==="object"?JSON.stringify(v):v)}</span></div>`).join("");
+  const findings = Object.entries(c.findings).map(([k,v])=>{
+    const val = Array.isArray(v) ? `<span class="pill-list">${v.map(x=>`<span class="val-pill">${esc(x)}</span>`).join("")}</span>` : `<span class="val">${esc(v)}</span>`;
+    return `<div class="kv"><span class="k">${esc(k)}</span>${Array.isArray(v)?val:`<span class="val">${esc(v)}</span>`}</div>`;
+  }).join("");
+  const refs = c.referenced.map(f=>`<div class="file-ref">${icon("fileCode","",13)} ${esc(f)}</div>`).join("");
+  return `
+    <div class="ctx-section">
+      <div class="ctx-label">${icon("layers","",13)} Variables</div>${vars}
+    </div>
+    <div class="ctx-section">
+      <div class="ctx-label">${icon("sparkles","",13)} Findings (mutable memory)</div>${findings}
+    </div>
+    <div class="ctx-section">
+      <div class="ctx-label">${icon("fileCode","",13)} Referenced files &amp; tools</div>${refs}
+    </div>`;
+}
+function stalenessPane(a){
+  return a.staleness.signals.map(s=>{
+    const cls = s.fresh ? "fresh":"drift";
+    return `<div class="signal ${cls}">
+      <span class="sig-ico">${icon(s.fresh?"check":"alertTriangle","",14)}</span>
+      <div class="sig-body">
+        <div class="sig-type">${esc(s.type)} <span class="tag">${esc(s.strategy)}</span></div>
+        <div class="sig-detail">${esc(s.detail)}</div>
+      </div>
+      <span class="sig-state">${s.fresh?"fresh":"stale"}</span>
+    </div>`;
+  }).join("");
+}
+function renderAutoDetail(){
+  const a = DATA.automations.find(x=>x.id===state.selectedAuto) || DATA.automations[0];
+  const total = a.baselineTokensPerRun - a.replayTokensPerRun;
+  const savePct = total/a.baselineTokensPerRun;
+  const actions = a.requiresApproval
+    ? `<button class="btn warn" data-act="gotoApprovals">${icon("shieldCheck","",14)} Review in queue</button>`
+    : a.state==="stale"
+      ? `<button class="btn primary" data-act="recompute">${icon("refresh","",14)} Recompute</button>`
+      : a.state==="candidate"
+        ? `<button class="btn primary" data-act="promote">${icon("trendUp","",14)} Promote to validating</button><button class="btn" data-act="run">${icon("play","",14)} Dry-run</button>`
+        : `<button class="btn primary" data-act="run">${icon("play","",14)} Run replay</button>`;
+
+  el("#auto-detail").innerHTML = `
+    <div class="card detail-head">
+      <span class="kind-ico">${icon(kindIconName[a.kind],"",19)}</span>
+      <div style="min-width:0;">
+        <div class="detail-title">${esc(a.title)}</div>
+        <div class="detail-slug">${esc(a.slug)} &middot; <span class="badge ${a.kind==='workflow'?'gated':a.state}" style="text-transform:none">${esc(a.kind)}</span></div>
+        <div class="detail-meta">
+          <span class="badge ${a.state}"><span class="bdot" style="background:currentColor"></span>${a.state}</span>
+          <span class="meta-pill">${icon("gitBranch","",12)} v<b>${a.version}</b></span>
+          <span class="meta-pill">${icon("activity","",12)} <b>${fmtCompact(a.hits)}</b> hits</span>
+          <span class="meta-pill">${icon("check","",12)} agreement <b>${fmtPct(a.agreementRate,1)}</b></span>
+          <span class="meta-pill">${icon("sparkles","",12)} <b>${fmtCompact(a.tokensSaved)}</b> tok saved</span>
+          <span class="meta-pill">${icon("users","",12)} ${esc(a.provenance.connector)}</span>
+          <span class="meta-pill">mined from <b>${esc(a.provenance.minedFromCluster)}</b></span>
+        </div>
+      </div>
+      <div class="detail-actions">${actions}</div>
+    </div>
+
+    <div class="threepane">
+      <!-- PROGRESS -->
+      <div class="card pane">
+        <div class="pane-head">${icon("gitBranch","",15)} Progress — workflow <span class="count">${a.workflow.steps.length} steps</span></div>
+        <div class="pane-body"><div class="timeline">${renderWorkflowTimeline(a)}</div></div>
+      </div>
+      <!-- WORKING FOLDER -->
+      <div class="card pane">
+        <div class="pane-head">${icon("terminal","",15)} Working folder — script artifact <span class="count">${esc(a.artifact.lang)}</span></div>
+        <div class="pane-body">
+          ${codeBlock(a.artifact)}
+          <div class="artifact-foot">
+            <div class="stat-mini"><div class="lbl">Baseline / run</div><div class="v">${fmtCompact(a.baselineTokensPerRun)}<span class="unit" style="font-size:11px;color:var(--muted)"> tok</span></div></div>
+            <div class="stat-mini"><div class="lbl">Replay / run</div><div class="v" style="color:var(--success)">${fmtCompact(a.replayTokensPerRun)}<span class="unit" style="font-size:11px;color:var(--muted)"> tok</span></div></div>
+            <div class="stat-mini"><div class="lbl">Saved</div><div class="v">${fmtPct(savePct,1)}</div></div>
+          </div>
+        </div>
+      </div>
+      <!-- CONTEXT -->
+      <div class="card pane">
+        <div class="pane-head">${icon("database","",15)} Context — mutable memory <span class="count">${a.context.referenced.length} refs</span></div>
+        <div class="pane-body">${contextPane(a)}</div>
+      </div>
+    </div>
+
+    <!-- STALENESS -->
+    <div class="card">
+      <div class="panel-head">
+        <div class="panel-title">${icon("refresh","",16)} Change-metric signals</div>
+        <span class="badge ${a.staleness.drifted?'stale':'trusted'}">${a.staleness.drifted?'drifted — de-advertised':'all fresh'}</span>
+      </div>
+      <div class="panel-body"><div class="stale-grid">${stalenessPane(a)}</div></div>
+    </div>`;
+
+  els("#auto-detail [data-act]").forEach(b=> b.addEventListener("click", ()=> autoAction(b.dataset.act, a)));
+}
+function autoAction(act, a){
+  if (act==="gotoApprovals"){ gotoPage("approvals"); return; }
+  if (act==="recompute"){
+    a.staleness.drifted=false; a.staleness.signals.forEach(s=>s.fresh=true); a.state="trusted"; a.version++;
+    toast("success","check",`Recomputed ${a.slug}`,`Re-indexed, re-advertised as trusted v${a.version}.`);
+    renderLifecycle(); renderAutoList(); renderAutoDetail(); return;
+  }
+  if (act==="promote"){
+    a.state="validating";
+    toast("success","trendUp",`Promoted ${a.slug}`,`Now validating agreement against live LLM.`);
+    renderLifecycle(); renderAutoList(); renderAutoDetail(); return;
+  }
+  if (act==="run"){
+    toast("success","play",`Replayed ${a.slug}`,`Served in ~${a.kind==='workflow'?71:44}ms for ${fmtCompact(a.replayTokensPerRun)} tokens.`);
+    return;
+  }
+}
+
+/* ============================================================================
+   APPROVALS PAGE
+   ========================================================================== */
+function renderApprovals(){
+  const awaiting = state.approvals.filter(a=>a.status==="awaiting");
+  el("#apr-awaiting-n").textContent = awaiting.length;
+  el("#apr-nav-count").textContent = awaiting.length;
+  if (!awaiting.length){
+    el("#approval-list").innerHTML = `<div class="card"><div class="empty">${icon("check","",20)}<br>Queue clear — every gated request has been resolved.</div></div>`;
+    return;
+  }
+  el("#approval-list").innerHTML = awaiting.map(ap=>{
+    const auto = DATA.automations.find(a=>a.slug===ap.automationSlug);
+    const isProd = ap.params.env==="prod";
+    const params = Object.entries(ap.params).map(([k,v])=>
+      `<div class="param-row"><span class="pk">${esc(k)}</span><b>${esc(v)}</b></div>`).join("");
+    return `<div class="card approval-card" data-apr="${ap.id}">
+      <div class="ac-head">
+        <span class="kind-ico">${icon("gitBranch","",15)}</span>
+        <div style="flex:1;min-width:0;">
+          <div class="ac-title">${esc(auto.title)} <span class="ac-id">&middot; ${esc(ap.id)}</span></div>
+          <div class="muted" style="font-size:11.5px;">${esc(auto.slug)} &middot; requested ${ago(ap.requestedAt)}</div>
+        </div>
+        <span class="badge gated">${icon("alertTriangle","",12)} gated</span>
+        ${isProd?`<span class="badge no">PROD</span>`:`<span class="badge yes">STG</span>`}
+      </div>
+      <div class="ac-body">
+        <div class="ac-block">
+          <div class="ac-lbl">Requested params</div>
+          ${params}
+        </div>
+        <div class="ac-block">
+          <div class="ac-lbl">Blast radius</div>
+          <div class="blast">
+            <div class="blast-head">${icon("alertTriangle","",13)} irreversible step: kubectl apply rollout</div>
+            ${esc(ap.blastRadius)}
+          </div>
+        </div>
+      </div>
+      <div class="ac-foot">
+        <span class="req">Requested by <span class="uhash">${esc(ap.requestedBy)}</span> via cowork</span>
+        <button class="btn danger-outline sm" data-apract="reject" data-id="${ap.id}">${icon("x","",13)} Reject</button>
+        <button class="btn success sm" data-apract="approve" data-id="${ap.id}">${icon("check","",13)} Approve</button>
+        <button class="btn primary sm" data-apract="run" data-id="${ap.id}">${icon("play","",13)} Approve &amp; Run</button>
+      </div>
+    </div>`;
+  }).join("");
+  els("#approval-list [data-apract]").forEach(b=> b.addEventListener("click", ()=> resolveApproval(b.dataset.id, b.dataset.apract)));
+}
+function resolveApproval(id, action){
+  const ap = state.approvals.find(a=>a.id===id); if(!ap) return;
+  const map = { approve:"approved", reject:"rejected", run:"ran" };
+  ap.status = map[action];
+  ap.resolvedAt = new Date().toISOString();
+  state.approvalLog.unshift({ id:ap.id, action:map[action], svc:ap.params.service, env:ap.params.env, by:"dominic@aziro.com", at:ap.resolvedAt });
+  const t = action==="reject" ? "danger" : "success";
+  const msg = action==="reject" ? `Rejected ${ap.params.service}/${ap.params.env}` : action==="run" ? `Deploying ${ap.params.service} to ${ap.params.env}` : `Approved ${ap.params.service}/${ap.params.env}`;
+  const sub = action==="run" ? "Workflow handed to runner; rollout started." : action==="approve" ? "Cleared to run on next request." : "Request denied; requester notified.";
+  toast(t, action==="reject"?"x":"check", msg, sub);
+  renderApprovals(); renderApprovalLog();
+}
+function renderApprovalLog(){
+  if (!state.approvalLog.length){
+    el("#approval-log").innerHTML = `<div class="muted" style="font-size:12px;">No decisions yet this session. Approve or reject a request to log it here.</div>`;
+    return;
+  }
+  el("#approval-log").innerHTML = state.approvalLog.map(l=>{
+    const tag = l.action==="approved"?"approved":l.action==="rejected"?"rejected":"ran";
+    return `<div style="display:flex;align-items:center;gap:9px;font-size:12px;">
+      <span class="resolved-tag ${tag}">${l.action}</span>
+      <span class="mono">${esc(l.svc)} / ${esc(l.env)}</span>
+      <span class="muted" style="margin-left:auto;">${ago(l.at)} &middot; ${esc(l.by)}</span>
+    </div>`;
+  }).join("");
+}
+function renderGatedWorkflow(){
+  const a = DATA.automations.find(x=>x.slug==="deploy-service-to-env");
+  el("#gated-workflow-timeline").innerHTML = a.workflow.steps.map((s,i)=>{
+    const cls = !s.reversible ? "gate" : (i<2?"done":"pending");
+    const nodeIcon = cls==="done"?"check": cls==="gate"?"shieldCheck":"chevronRight";
+    return `<div class="tl-step ${cls}">
+      <span class="tl-node">${icon(nodeIcon,"",11)}</span>
+      <div class="tl-name">${esc(s.name)}</div>
+      <div class="tl-sub"><span class="tag">${esc(s.type)}</span>${s.reversible?'<span class="tag">reversible</span>':'<span class="tag irr">irreversible &mdash; needs approval</span>'}</div>
+    </div>`;
+  }).join("");
+}
+
+/* ============================================================================
+   HOT-PROMPT LEADERBOARD
+   ========================================================================== */
+const verdictBadge = { yes:"yes", gated:"gated", no:"no", unknown:"unknown" };
+const verdictLabel = { yes:"automatable", gated:"automatable · gated", no:"not automatable", unknown:"unknown" };
+function maxBy(arr, key){ return Math.max(...arr.map(x=>x[key])); }
+function renderLeaderboard(){
+  const q = state.hotSearch.toLowerCase().trim();
+  let rows = DATA.clusters.filter(c=> !q || (c.promptNorm+" "+c.exemplar+" "+c.repo).toLowerCase().includes(q));
+  const { key, dir } = state.lbSort;
+  rows = rows.slice().sort((a,b)=>{
+    let va=a[key], vb=b[key];
+    if (typeof va==="string"){ return va.localeCompare(vb)*dir; }
+    return (va-vb)*dir;
+  });
+  const maxHot = maxBy(DATA.clusters,"hotScore");
+  // sort indicators
+  els("#lb-table th").forEach(th=>{
+    const k = th.dataset.sort;
+    th.querySelector(".sort-ind")?.remove();
+    if (k===key){ const s=document.createElement("span"); s.className="sort-ind"; s.textContent = dir<0?"↓":"↑"; th.appendChild(s); }
+  });
+  el("#lb-body").innerHTML = rows.map(c=>{
+    const sel = c.id===state.selectedCluster;
+    return `<tr class="hp-row" data-clu="${c.id}" aria-selected="${sel}">
+      <td><div class="hp-prompt">${esc(c.promptNorm)}</div><div class="hp-exemplar">"${esc(c.exemplar)}"</div></td>
+      <td class="num">${fmtNum(c.frequency)}</td>
+      <td class="num">${c.distinctUsers}</td>
+      <td class="num">${fmtCompact(c.avgTokens)}</td>
+      <td><span class="badge ${verdictBadge[c.automatable]}">${verdictLabel[c.automatable]}</span></td>
+      <td class="num"><div class="hotscore-cell"><div class="hs-bar"><i style="width:${Math.max(3,(c.hotScore/maxHot*100)).toFixed(0)}%"></i></div><b>${c.hotScore.toLocaleString("en-US",{maximumFractionDigits:1})}</b></div></td>
+    </tr>`;
+  }).join("");
+  els("#lb-body .hp-row").forEach(r=> r.addEventListener("click", ()=>{
+    state.selectedCluster = r.dataset.clu; renderLeaderboard(); renderClusterDetail();
+  }));
+}
+els("#lb-table th").forEach(th=>{
+  th.addEventListener("click", ()=>{
+    const k = th.dataset.sort;
+    if (state.lbSort.key===k) state.lbSort.dir *= -1;
+    else state.lbSort = { key:k, dir: (k==="promptNorm"||k==="automatable")?1:-1 };
+    renderLeaderboard();
+  });
+});
+el("#hot-search").addEventListener("input", e=>{ state.hotSearch=e.target.value; renderLeaderboard(); });
+function renderClusterDetail(){
+  const c = DATA.clusters.find(x=>x.id===state.selectedCluster) || DATA.clusters[0];
+  const auto = DATA.automations.find(a=>a.provenance.minedFromCluster===c.id);
+  const verdictColor = { yes:"var(--success)", gated:"var(--warn)", no:"var(--danger)", unknown:"var(--muted)" }[c.automatable];
+  const verdictText = {
+    yes:"Read-only & deterministic across the org — safe to distil and auto-serve.",
+    gated:"Has an irreversible side effect (a deploy). Distil the workflow but require human approval before each run.",
+    no:"Subjective or single-user output — caching wouldn't generalize. Keep on live LLM.",
+    unknown:"Mixed outputs / not enough agreement yet — needs more samples before a verdict."
+  }[c.automatable];
+  el("#hp-detail").innerHTML = `
+    <div class="hp-detail-head">
+      <div style="display:flex;align-items:center;gap:9px;">
+        <span class="kind-ico">${icon("bolt","",15)}</span>
+        <div style="min-width:0;">
+          <div style="font-size:14px;font-weight:800;">${esc(c.promptNorm)}</div>
+          <div class="muted" style="font-size:11.5px;">${esc(c.id)} &middot; ${esc(c.repo)} &middot; last seen ${ago(c.lastSeen)}</div>
+        </div>
+      </div>
+    </div>
+    <div class="hp-rule">${icon("users","",16)} <div><b>One user asking = skip. Whole org asking = automate.</b><br><span class="muted">${c.distinctUsers} distinct users &middot; ${fmtNum(c.frequency)} hits &middot; HotScore ${c.hotScore.toLocaleString("en-US",{maximumFractionDigits:1})}</span></div></div>
+    <div class="verdict-box">
+      <div class="ctx-label" style="margin-bottom:6px;">Automatability verdict</div>
+      <div style="display:flex;align-items:center;gap:9px;">
+        <span class="badge ${verdictBadge[c.automatable]}" style="font-size:12px;padding:4px 11px;">${verdictLabel[c.automatable]}</span>
+        <span class="muted" style="font-size:11.5px;">${esc(c.state)}</span>
+      </div>
+      <p style="font-size:12px;color:var(--muted);margin:9px 0 0;line-height:1.5;">${verdictText}</p>
+      <div class="verdict-grid">
+        <div class="vg-item"><div class="vl">Frequency</div><div class="vv">${fmtNum(c.frequency)}</div></div>
+        <div class="vg-item"><div class="vl">Distinct users</div><div class="vv">${c.distinctUsers}</div></div>
+        <div class="vg-item"><div class="vl">Avg tokens / call</div><div class="vv">${fmtCompact(c.avgTokens)}</div></div>
+        <div class="vg-item"><div class="vl">HotScore</div><div class="vv" style="color:${verdictColor}">${c.hotScore.toLocaleString("en-US",{maximumFractionDigits:1})}</div></div>
+      </div>
+      ${auto?`<button class="btn primary" style="margin-top:13px;width:100%;justify-content:center;" data-open-auto="${auto.id}">${icon("sparkles","",14)} Open distilled automation &middot; ${esc(auto.slug)}</button>`
+            : `<div style="margin-top:13px;padding:10px 12px;border-radius:var(--r-md);background:var(--surface2);border:1px solid var(--border);font-size:12px;color:var(--muted);text-align:center;">No automation distilled yet for this cluster.</div>`}
+    </div>
+    <div style="padding:0 15px 16px;">
+      <div class="ctx-label" style="margin-top:16px;">HotScore formula</div>
+      <div class="mono" style="font-size:11.5px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-md);padding:10px 12px;color:var(--muted);">
+        freq × users<sup>1.5</sup> × avgTok &rarr; normalized
+      </div>
+    </div>`;
+  const openBtn = el("#hp-detail [data-open-auto]");
+  if (openBtn) openBtn.addEventListener("click", ()=>{
+    state.selectedAuto = openBtn.dataset.openAuto;
+    gotoPage("automations");
+  });
+}
+
+/* ============================================================================
+   LIVE EVENT FEED
+   ========================================================================== */
+function renderFeed(){
+  const q = state.feedSearch.toLowerCase().trim();
+  let rows = DATA.events.filter(ev=>{
+    if (state.feedServed!=="all" && ev.servedBy!==state.feedServed) return false;
+    if (q && !(ev.prompt+" "+ev.userHash+" "+ev.repo+" "+ev.connector).toLowerCase().includes(q)) return false;
+    return true;
+  });
+  if (!rows.length){ el("#feed-body").innerHTML = `<tr><td colspan="8"><div class="empty">No events match.</div></td></tr>`; return; }
+  el("#feed-body").innerHTML = rows.map(ev=>{
+    const lo = ev.tokens < 1000;
+    return `<tr>
+      <td class="mono nowrap">${fmtTime(ev.ts)}</td>
+      <td><span class="uhash">${esc(ev.userHash)}</span></td>
+      <td><span class="conn ${ev.connector}"><span class="cdot"></span>${esc(ev.connector)}</span></td>
+      <td><span style="font-weight:500;">${esc(ev.prompt)}</span></td>
+      <td class="mono muted">${esc(ev.repo)}</td>
+      <td><span class="served ${ev.servedBy}">${esc(ev.servedBy)}</span></td>
+      <td class="num"><span class="tok-cell ${lo?'lo':'hi'}">${fmtNum(ev.tokens)}</span></td>
+      <td class="num mono">${ev.latencyMs}ms</td>
+    </tr>`;
+  }).join("");
+}
+el("#feed-search").addEventListener("input", e=>{ state.feedSearch=e.target.value; renderFeed(); });
+el("#feed-seg").addEventListener("click", e=>{
+  const b = e.target.closest("button"); if(!b) return;
+  state.feedServed = b.dataset.served;
+  els("#feed-seg button").forEach(x=> x.setAttribute("aria-pressed", x===b?"true":"false"));
+  renderFeed();
+});
+
+/* ============================================================================
+   TOAST
+   ========================================================================== */
+function toast(type, ic, msg, sub){
+  const wrap = el("#toast-wrap");
+  const t = document.createElement("div");
+  t.className = "toast "+(type||"");
+  const col = type==="danger"?"var(--danger)":type==="warn"?"var(--warn)":type==="success"?"var(--success)":"var(--accent)";
+  t.innerHTML = `<span style="color:${col}">${icon(ic||"check","",17)}</span><div><div class="t-msg">${esc(msg)}</div>${sub?`<div class="t-sub">${esc(sub)}</div>`:""}</div>`;
+  wrap.appendChild(t);
+  setTimeout(()=>{ t.style.transition="opacity .25s, transform .25s"; t.style.opacity="0"; t.style.transform="translateY(8px)"; setTimeout(()=>t.remove(),260); }, 3200);
+}
+
+/* ============================================================================
+   INITIAL RENDER
+   ========================================================================== */
+el("#events-today-chip").textContent = fmtNum(DATA.kpis.eventsToday);
+renderLifecycle();
+renderAutoList();
+renderAutoDetail();
+// pre-render hot detail so it's ready
+renderClusterDetail();
+
+/* keyboard: arrow nav in automation list */
+el("#auto-items").addEventListener("keydown", e=>{
+  if (e.key!=="ArrowDown" && e.key!=="ArrowUp") return;
+  const items = els("#auto-items .auto-item");
+  const idx = items.findIndex(i=>i.dataset.auto===state.selectedAuto);
+  let next = e.key==="ArrowDown" ? Math.min(items.length-1, idx+1) : Math.max(0, idx-1);
+  if (items[next]){ state.selectedAuto = items[next].dataset.auto; renderAutoList(); renderAutoDetail(); els("#auto-items .auto-item")[next]?.focus(); e.preventDefault(); }
+});
+</script>
