@@ -35,13 +35,14 @@ func parsePowerShellNative(content []byte) ([]symbolDraft, []string, bool) {
 	if root == nil {
 		return nil, imports, false
 	}
-	var drafts []symbolDraft
+	recoveredFunctions, recoveredFunctionRanges := powerShellRecoveredFunctions(content, root)
+	drafts := append([]symbolDraft{}, recoveredFunctions...)
 	var walk func(*tree_sitter.Node)
 	walk = func(n *tree_sitter.Node) {
 		if n == nil {
 			return
 		}
-		if draft, ok := powerShellVariableDefinitionDraft(n, content); ok {
+		if draft, ok := powerShellVariableDefinitionDraft(n, content, recoveredFunctionRanges); ok {
 			drafts = append(drafts, draft)
 		}
 		if draft, ok := powerShellDefinitionDraft(n, content); ok {
@@ -85,8 +86,14 @@ func powerShellDefinitionDraft(n *tree_sitter.Node, content []byte) (symbolDraft
 	}, true
 }
 
-func powerShellVariableDefinitionDraft(n *tree_sitter.Node, content []byte) (symbolDraft, bool) {
-	if n == nil || n.Kind() != "assignment_expression" || powerShellInsideDefinitionBody(n) {
+type powerShellLineRange struct {
+	start int
+	end   int
+}
+
+func powerShellVariableDefinitionDraft(n *tree_sitter.Node, content []byte, recoveredFunctionRanges []powerShellLineRange) (symbolDraft, bool) {
+	if n == nil || n.Kind() != "assignment_expression" || powerShellInsideDefinitionBody(n) ||
+		powerShellLineInRanges(int(n.StartPosition().Row)+1, recoveredFunctionRanges) {
 		return symbolDraft{}, false
 	}
 	name := powerShellVariableAssignmentName(n, content)
@@ -103,6 +110,15 @@ func powerShellVariableDefinitionDraft(n *tree_sitter.Node, content []byte) (sym
 	}, true
 }
 
+func powerShellLineInRanges(line int, ranges []powerShellLineRange) bool {
+	for _, r := range ranges {
+		if line >= r.start && line <= r.end {
+			return true
+		}
+	}
+	return false
+}
+
 func powerShellInsideDefinitionBody(n *tree_sitter.Node) bool {
 	for cur := n.Parent(); cur != nil; cur = cur.Parent() {
 		switch cur.Kind() {
@@ -111,6 +127,153 @@ func powerShellInsideDefinitionBody(n *tree_sitter.Node) bool {
 		}
 	}
 	return false
+}
+
+func powerShellRecoveredFunctions(content []byte, root *tree_sitter.Node) ([]symbolDraft, []powerShellLineRange) {
+	if root == nil {
+		return nil, nil
+	}
+	lines := strings.Split(string(content), "\n")
+	var drafts []symbolDraft
+	var ranges []powerShellLineRange
+	hereEnd := ""
+	blockComment := false
+	for i, line := range lines {
+		scan := powerShellScannerLine(line, &hereEnd, &blockComment)
+		name, ok := powerShellFunctionHeaderName(scan)
+		if !ok {
+			continue
+		}
+		startLine := i + 1
+		endLine := powerShellFunctionEndLine(lines, i)
+		drafts = append(drafts, symbolDraft{
+			name:      name,
+			kind:      "function",
+			signature: strings.TrimSpace(line),
+			startLine: startLine,
+			endLine:   startLine,
+			metadata:  graph.JSONBMap{"source": "tree_sitter_powershell"},
+		})
+		ranges = append(ranges, powerShellLineRange{start: startLine, end: endLine})
+	}
+	return drafts, ranges
+}
+
+func powerShellFunctionHeaderName(line string) (string, bool) {
+	line = strings.TrimSpace(strings.TrimPrefix(line, "\ufeff"))
+	if len(line) < len("function") || !strings.EqualFold(line[:len("function")], "function") {
+		return "", false
+	}
+	rest := line[len("function"):]
+	if rest == "" || powerShellIdentByte(rest[0]) {
+		return "", false
+	}
+	rest = strings.TrimLeft(rest, " \t")
+	if rest == "" || rest[0] == '$' {
+		return "", false
+	}
+	end := 0
+	for end < len(rest) {
+		switch rest[end] {
+		case ' ', '\t', '\r', '\n', '(', '{':
+			name := strings.TrimSpace(rest[:end])
+			return name, powerShellValidFunctionName(name)
+		}
+		end++
+	}
+	name := strings.TrimSpace(rest)
+	return name, powerShellValidFunctionName(name)
+}
+
+func powerShellValidFunctionName(name string) bool {
+	if name == "" {
+		return false
+	}
+	first := name[0]
+	return (first >= 'A' && first <= 'Z') || (first >= 'a' && first <= 'z') || first == '_'
+}
+
+func powerShellFunctionEndLine(lines []string, start int) int {
+	hereEnd := ""
+	blockComment := false
+	balance := 0
+	seenOpen := false
+	for i := start; i < len(lines); i++ {
+		line := powerShellScannerLine(lines[i], &hereEnd, &blockComment)
+		for _, r := range line {
+			switch r {
+			case '{':
+				seenOpen = true
+				balance++
+			case '}':
+				if seenOpen {
+					balance--
+					if balance <= 0 {
+						return i + 1
+					}
+				}
+			}
+		}
+	}
+	return len(lines)
+}
+
+func powerShellScannerLine(line string, hereEnd *string, blockComment *bool) string {
+	if hereEnd != nil && *hereEnd != "" {
+		if strings.HasPrefix(strings.TrimSpace(line), *hereEnd) {
+			*hereEnd = ""
+		}
+		return ""
+	}
+	if blockComment != nil && *blockComment {
+		if end := strings.Index(line, "#>"); end >= 0 {
+			*blockComment = false
+			return powerShellScannerLine(line[end+2:], hereEnd, blockComment)
+		}
+		return ""
+	}
+	var b strings.Builder
+	quote := byte(0)
+	for i := 0; i < len(line); i++ {
+		c := line[i]
+		if quote != 0 {
+			if c == '`' {
+				i++
+				continue
+			}
+			if c == quote {
+				quote = 0
+			}
+			b.WriteByte(' ')
+			continue
+		}
+		if c == '#' {
+			break
+		}
+		if c == '<' && i+1 < len(line) && line[i+1] == '#' {
+			if end := strings.Index(line[i+2:], "#>"); end >= 0 {
+				i += end + 3
+				continue
+			}
+			if blockComment != nil {
+				*blockComment = true
+			}
+			break
+		}
+		if c == '\'' || c == '"' {
+			quote = c
+			b.WriteByte(' ')
+			continue
+		}
+		if c == '@' && i+1 < len(line) && (line[i+1] == '\'' || line[i+1] == '"') {
+			if hereEnd != nil {
+				*hereEnd = string([]byte{line[i+1], '@'})
+			}
+			break
+		}
+		b.WriteByte(c)
+	}
+	return b.String()
 }
 
 func powerShellVariableAssignmentName(n *tree_sitter.Node, content []byte) string {
