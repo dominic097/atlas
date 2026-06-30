@@ -91,11 +91,16 @@ func juliaDefinitionDraft(n *tree_sitter.Node, content []byte) (symbolDraft, boo
 		if left == nil && n.ChildCount() > 0 {
 			left = n.Child(0)
 		}
-		if !juliaIsCallableAssignmentLeft(left) {
+		if juliaIsCallableAssignmentLeft(left) {
+			kind = "function"
+			name = juliaCallableName(left, content)
+			break
+		}
+		if !juliaVariableDefinitionScope(n) {
 			return symbolDraft{}, false
 		}
-		kind = "function"
-		name = juliaCallableName(left, content)
+		kind = "variable"
+		name = juliaVariableName(left, content)
 	default:
 		return symbolDraft{}, false
 	}
@@ -138,6 +143,34 @@ func juliaFirstIdentifier(n *tree_sitter.Node, content []byte) string {
 		}
 	}
 	return ""
+}
+
+func juliaVariableDefinitionScope(n *tree_sitter.Node) bool {
+	for cur := n.Parent(); cur != nil; cur = cur.Parent() {
+		switch cur.Kind() {
+		case "const_statement", "function_definition", "macro_definition", "for_statement",
+			"while_statement", "if_statement", "elseif_clause", "else_clause", "let_statement",
+			"quote_statement", "do_clause", "try_statement":
+			return false
+		case "source_file", "module_definition":
+			return true
+		}
+	}
+	return false
+}
+
+func juliaVariableName(n *tree_sitter.Node, content []byte) string {
+	if n == nil {
+		return ""
+	}
+	switch n.Kind() {
+	case "identifier", "type_identifier":
+		return strings.TrimSpace(nodeText(n, content))
+	case "tuple_expression", "open_tuple":
+		return ""
+	default:
+		return ""
+	}
 }
 
 func juliaCallableName(n *tree_sitter.Node, content []byte) string {

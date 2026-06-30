@@ -1270,6 +1270,7 @@ struct JSONText
   value::String
 end
 const DEFAULT_OBJECT_TYPE = Object{String, Any}
+module_cache = Dict{String,Any}()
 
 macro omit_empty(expr)
   expr
@@ -1277,6 +1278,7 @@ end
 
 function json end
 @noinline function invalid(error, buf, pos::Int, T)
+  localOnly = pos
 end
 Base.getindex(x::Object, key) = get(x, key)
 lazyfile(file; jsonlines::Union{Bool, Nothing}=nothing, kw...) = open(io -> json(io; kw...), file)
@@ -1309,6 +1311,7 @@ end
 		"MutableOptions":      "type",
 		"JSONText":            "type",
 		"DEFAULT_OBJECT_TYPE": "constant",
+		"module_cache":        "variable",
 		"omit_empty":          "macro",
 		"json":                "function",
 		"invalid":             "function",
@@ -1333,7 +1336,7 @@ end
 	if !containsString(res.Imports, "Dates") || !containsString(res.Imports, "StructUtils") {
 		t.Fatalf("imports = %#v, want Dates and StructUtils", res.Imports)
 	}
-	for _, fake := range []string{"DocOnly", "fake_doc", "_ch"} {
+	for _, fake := range []string{"DocOnly", "fake_doc", "_ch", "localOnly"} {
 		if sym := findSymbol(res.Symbols, fake); sym != nil {
 			t.Fatalf("unexpected Julia false-positive symbol %q: %+v", fake, sym)
 		}
