@@ -1,6 +1,6 @@
 # Atlas Final Benchmark Audit
 
-Generated: 2026-06-30T17:49:06.910Z
+Generated: 2026-06-30T17:55:47.373Z
 
 Final pass over Atlas benchmark artifacts: core matrix against Graphify plus native SCIP/LSP tools, live language artifacts against Graphify plus language-specific native/proxy baselines, and public three-repo validation metadata.
 
@@ -14,11 +14,12 @@ Final pass over Atlas benchmark artifacts: core matrix against Graphify plus nat
 - Three-repo validated live artifacts: 35
 - Pending code languages: none
 - Precision evidence harness: present
-- Precision sampled name/location artifacts: 31
-- Precision kind-count-only artifacts: 0
-- Precision count-only artifacts: 5
-- Precision sampled query rows with name+location: 156/199
-- Precision validation rows with kind maps: 63
+- Precision sampled name/location artifacts: 32
+- Precision kind-count-only artifacts: 4
+- Precision count-only artifacts: 0
+- Precision sampled query rows with name+location: 161/199
+- Precision validation rows with kind maps: 81
+- Precision artifacts with native metric kind maps: 27
 - Graphify: graphifyy 0.8.49, dispatch count 89
 
 ## Ground Truth Closeness
@@ -31,17 +32,17 @@ Low-risk live languages: astro, bash, csharp, elixir, fortran, groovy, julia, ko
 
 The precision manifest is an artifact-level audit of what the raw benchmark JSON can prove today: sampled query rows with matching symbol names and locations, native-vs-Atlas kind-count maps, or count-only gaps. It is not a full 99% precision oracle.
 
-Manifest: data/precision-evidence-manifest.md, generated 2026-06-30T17:49:06.841Z.
-Sampled name/location artifacts: 31; kind-count-only artifacts: 0; count-only artifacts: 5.
-Matched sampled query rows: 156/199; validation kind-map rows: 63.
+Manifest: data/precision-evidence-manifest.md, generated 2026-06-30T17:55:47.300Z.
+Sampled name/location artifacts: 32; kind-count-only artifacts: 4; count-only artifacts: 0.
+Matched sampled query rows: 161/199; validation kind-map rows: 81.
+Artifacts with native metric kind maps: 27.
 
-| Language | Status | Query name+location | Validation kind rows | Gap |
-|---|---|--:|--:|---|
-| blade | count-only | 0/6 | 0/3 | Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence. |
-| byond | count-only | 0/5 | 0/3 | Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence. |
-| dart | count-only | 0/6 | 0/3 | Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence. |
-| ets | count-only | 0/5 | 0/3 | Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence. |
-| r | count-only | 0/5 | 0/3 | Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence. |
+| Language | Status | Query name+location | Validation kind rows | Native metric kind map | Gap |
+|---|---|--:|--:|---|---|
+| blade | kind-count-only | 0/6 | 3/3 | yes | No comparable query row currently proves both Atlas and Graphify returned the same symbol name with source locations; kind-count evidence is present. |
+| dart | kind-count-only | 0/6 | 0/3 | yes | No comparable query row currently proves both Atlas and Graphify returned the same symbol name with source locations; kind-count evidence is present. |
+| ets | kind-count-only | 0/5 | 3/3 | yes | No comparable query row currently proves both Atlas and Graphify returned the same symbol name with source locations; kind-count evidence is present. |
+| r | kind-count-only | 0/5 | 3/3 | yes | No comparable query row currently proves both Atlas and Graphify returned the same symbol name with source locations; kind-count evidence is present. |
 
 ### Weak Or Proxy Truth Rows
 

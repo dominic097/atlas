@@ -1,17 +1,18 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T17:49:06.841Z",
+  "generatedAt": "2026-06-30T17:55:47.300Z",
   "source": "data/raw/LIVE_*_BENCHMARK.json",
   "harness": "scripts/precision-evidence-harness.mjs",
   "summary": {
     "artifacts": 36,
-    "sampledNameLocationArtifacts": 31,
-    "kindCountOnlyArtifacts": 0,
-    "countOnlyArtifacts": 5,
+    "sampledNameLocationArtifacts": 32,
+    "kindCountOnlyArtifacts": 4,
+    "countOnlyArtifacts": 0,
     "equivalentRows": 199,
-    "matchedNameLocationRows": 156,
+    "matchedNameLocationRows": 161,
     "validationRows": 105,
-    "validationKindRows": 63,
+    "validationKindRows": 81,
+    "nativeMetricKindArtifacts": 27,
     "passed": true
   },
   "languages": [
@@ -24,6 +25,19 @@
       "matchedNameLocationRatio": 1,
       "validationRows": 3,
       "validationKindRows": 3,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": true,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": {
+          "type": 190,
+          "trigger": 3,
+          "method": 632,
+          "constructor": 22,
+          "sobject": 56,
+          "dml": 169
+        },
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [
         {
           "key": "sample_definitions",
@@ -308,6 +322,12 @@
       "matchedNameLocationRatio": 1,
       "validationRows": 3,
       "validationKindRows": 3,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": false,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": null,
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [
         {
           "key": "sample_definitions",
@@ -493,6 +513,12 @@
       "matchedNameLocationRatio": 1,
       "validationRows": 3,
       "validationKindRows": 0,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": false,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": null,
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [],
       "gap": "",
       "queryRows": [
@@ -592,19 +618,33 @@
     {
       "language": "blade",
       "artifact": "data/raw/LIVE_BLADE_BENCHMARK.json",
-      "status": "count-only",
+      "status": "kind-count-only",
       "equivalentRows": 6,
       "matchedNameLocationRows": 0,
       "matchedNameLocationRatio": 0,
       "validationRows": 3,
-      "validationKindRows": 0,
+      "validationKindRows": 3,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": true,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": {
+          "template": 303,
+          "include": 528,
+          "layout": 102,
+          "section": 130,
+          "slot": 16,
+          "component": 11,
+          "handler": 0
+        },
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [
         {
           "key": "sample_definitions",
           "count": 30
         }
       ],
-      "gap": "Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence.",
+      "gap": "No comparable query row currently proves both Atlas and Graphify returned the same symbol name with source locations; kind-count evidence is present.",
       "queryRows": [
         {
           "symbol": "settings.parts.navbar",
@@ -713,8 +753,16 @@
         {
           "repo": "https://github.com/BookStackApp/BookStack",
           "commit": "f7df78b91b12ff1d8e248ded7747e76203904b8e",
-          "hasKindCountEvidence": false,
-          "nativeCounts": null,
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "template": 306,
+            "include": 528,
+            "layout": 102,
+            "section": 130,
+            "slot": 0,
+            "component": 11,
+            "handler": 0
+          },
           "atlasCounts": {
             "component": 11,
             "include": 528,
@@ -727,8 +775,16 @@
         {
           "repo": "https://github.com/coollabsio/coolify",
           "commit": "e7dff30b7c998c301fd91bd169727b90c59ec291",
-          "hasKindCountEvidence": false,
-          "nativeCounts": null,
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "template": 340,
+            "include": 2,
+            "layout": 14,
+            "section": 4,
+            "slot": 0,
+            "component": 2079,
+            "handler": 0
+          },
           "atlasCounts": {
             "component": 2322,
             "handler": 655,
@@ -741,8 +797,16 @@
         {
           "repo": "https://github.com/koel/koel",
           "commit": "d727dec030d3b0fb349b4a4aa853adc1baae9bdd",
-          "hasKindCountEvidence": false,
-          "nativeCounts": null,
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "template": 9,
+            "include": 0,
+            "layout": 4,
+            "section": 6,
+            "slot": 0,
+            "component": 2,
+            "handler": 0
+          },
           "atlasCounts": {
             "component": 2,
             "layout": 4,
@@ -756,27 +820,47 @@
     {
       "language": "byond",
       "artifact": "data/raw/LIVE_BYOND_BENCHMARK.json",
-      "status": "count-only",
+      "status": "sampled-name-location",
       "equivalentRows": 5,
-      "matchedNameLocationRows": 0,
-      "matchedNameLocationRatio": 0,
+      "matchedNameLocationRows": 5,
+      "matchedNameLocationRatio": 1,
       "validationRows": 3,
-      "validationKindRows": 0,
+      "validationKindRows": 3,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": true,
+        "hasExpandedDefinitionCounts": true,
+        "definitionCounts": {
+          "type": 2561,
+          "method": 6313,
+          "proc": 0,
+          "window": 0,
+          "element": 0,
+          "element_type": 0,
+          "state": 0,
+          "map_reference": 0
+        },
+        "expandedDefinitionCounts": {
+          "type": 2561,
+          "method": 6313,
+          "proc": 0,
+          "variable": 2051
+        }
+      },
       "nativeSampleEvidence": [
         {
           "key": "sample_definitions",
           "count": 30
         }
       ],
-      "gap": "Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence.",
+      "gap": "",
       "queryRows": [
         {
           "symbol": "Say code basics",
           "atlasHasName": true,
           "graphifyHasName": true,
           "atlasHasLocation": true,
-          "graphifyHasLocation": false,
-          "matchedNameAndLocation": false,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
           "atlasHead": [
             "Say code basics s@say_readme.md:1"
           ],
@@ -792,8 +876,8 @@
           "atlasHasName": true,
           "graphifyHasName": true,
           "atlasHasLocation": true,
-          "graphifyHasLocation": false,
-          "matchedNameAndLocation": false,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
           "atlasHead": [
             "MIAUW'S SAY REWRITE s@say_readme.md:5"
           ],
@@ -809,8 +893,8 @@
           "atlasHasName": true,
           "graphifyHasName": true,
           "atlasHasLocation": true,
-          "graphifyHasLocation": false,
-          "matchedNameAndLocation": false,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
           "atlasHead": [
             "PROCS & VARIABLES s@say_readme.md:19"
           ],
@@ -826,8 +910,8 @@
           "atlasHasName": true,
           "graphifyHasName": true,
           "atlasHasLocation": true,
-          "graphifyHasLocation": false,
-          "matchedNameAndLocation": false,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
           "atlasHead": [
             "RADIOS s@say_readme.md:149"
           ],
@@ -843,8 +927,8 @@
           "atlasHasName": true,
           "graphifyHasName": true,
           "atlasHasLocation": true,
-          "graphifyHasLocation": false,
-          "matchedNameAndLocation": false,
+          "graphifyHasLocation": true,
+          "matchedNameAndLocation": true,
           "atlasHead": [
             "VIRTUAL SPEAKERS: s@say_readme.md:165"
           ],
@@ -860,23 +944,44 @@
         {
           "repo": "https://github.com/tgstation/tgstation",
           "commit": "da0d9e08a0b3e9091c287a8aa733f463322e247f",
-          "hasKindCountEvidence": false,
-          "nativeCounts": null,
-          "atlasCounts": null
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "type": 2561,
+            "method": 6313,
+            "proc": 0
+          },
+          "atlasCounts": {
+            "method": 6313,
+            "type": 2561
+          }
         },
         {
           "repo": "https://github.com/goonstation/goonstation",
           "commit": "54977b957b9cb26895407c527e8e643eeff1d8d0",
-          "hasKindCountEvidence": false,
-          "nativeCounts": null,
-          "atlasCounts": null
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "type": 361,
+            "method": 449,
+            "proc": 0
+          },
+          "atlasCounts": {
+            "method": 449,
+            "type": 361
+          }
         },
         {
           "repo": "https://github.com/ParadiseSS13/Paradise",
           "commit": "f9332f11bf0f3a3d98a0c6174630ce840d0eb44c",
-          "hasKindCountEvidence": false,
-          "nativeCounts": null,
-          "atlasCounts": null
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "type": 2821,
+            "method": 5377,
+            "proc": 0
+          },
+          "atlasCounts": {
+            "method": 5377,
+            "type": 2821
+          }
         }
       ]
     },
@@ -889,6 +994,19 @@
       "matchedNameLocationRatio": 0.5,
       "validationRows": 3,
       "validationKindRows": 3,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": true,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": {
+          "class": 377,
+          "interface": 9,
+          "struct": 13,
+          "enum": 22,
+          "record": 4,
+          "method": 1430
+        },
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [],
       "gap": "",
       "queryRows": [
@@ -1033,6 +1151,12 @@
       "matchedNameLocationRatio": 1,
       "validationRows": 3,
       "validationKindRows": 3,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": false,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": null,
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [
         {
           "key": "sample_definitions",
@@ -1153,19 +1277,40 @@
     {
       "language": "dart",
       "artifact": "data/raw/LIVE_DART_BENCHMARK.json",
-      "status": "count-only",
+      "status": "kind-count-only",
       "equivalentRows": 6,
       "matchedNameLocationRows": 0,
       "matchedNameLocationRatio": 0,
       "validationRows": 3,
       "validationKindRows": 0,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": true,
+        "hasExpandedDefinitionCounts": true,
+        "definitionCounts": {
+          "type": 28,
+          "function": 89,
+          "constructor": 30,
+          "getter": 20,
+          "setter": 11,
+          "typedef": 2
+        },
+        "expandedDefinitionCounts": {
+          "type": 28,
+          "function": 89,
+          "constructor": 30,
+          "getter": 20,
+          "setter": 11,
+          "typedef": 2,
+          "variable": 58
+        }
+      },
       "nativeSampleEvidence": [
         {
           "key": "parse_error_samples",
           "count": 0
         }
       ],
-      "gap": "Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence.",
+      "gap": "No comparable query row currently proves both Atlas and Graphify returned the same symbol name with source locations; kind-count evidence is present.",
       "queryRows": [
         {
           "symbol": "Client",
@@ -1303,6 +1448,19 @@
       "matchedNameLocationRatio": 1,
       "validationRows": 3,
       "validationKindRows": 3,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": true,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": {
+          "component": 4595,
+          "component_type": 4595,
+          "event": 1976,
+          "package": 5,
+          "dependency": 14,
+          "unit": 123
+        },
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [
         {
           "key": "sample_definitions",
@@ -1540,6 +1698,18 @@
       "matchedNameLocationRatio": 0.7,
       "validationRows": 3,
       "validationKindRows": 3,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": true,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": {
+          "project": 21,
+          "sdk": 11,
+          "package": 64,
+          "project_reference": 11,
+          "target_framework": 25
+        },
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [
         {
           "key": "sample_definitions",
@@ -1783,6 +1953,17 @@
       "matchedNameLocationRatio": 1,
       "validationRows": 3,
       "validationKindRows": 3,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": true,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": {
+          "template": 20,
+          "include": 16,
+          "function": 0,
+          "variable": 0
+        },
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [
         {
           "key": "sample_definitions",
@@ -1865,6 +2046,20 @@
       "matchedNameLocationRatio": 1,
       "validationRows": 3,
       "validationKindRows": 3,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": true,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": {
+          "module": 83,
+          "protocol": 1,
+          "implementation": 9,
+          "function": 1470,
+          "macro": 67,
+          "delegate": 12,
+          "guard": 0
+        },
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [
         {
           "key": "parse_error_samples",
@@ -2033,19 +2228,31 @@
     {
       "language": "ets",
       "artifact": "data/raw/LIVE_ETS_BENCHMARK.json",
-      "status": "count-only",
+      "status": "kind-count-only",
       "equivalentRows": 5,
       "matchedNameLocationRows": 0,
       "matchedNameLocationRatio": 0,
       "validationRows": 3,
-      "validationKindRows": 0,
+      "validationKindRows": 3,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": true,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": {
+          "type": 20,
+          "function": 0,
+          "method": 69,
+          "constructor": 4,
+          "variable": 60
+        },
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [
         {
           "key": "sample_definitions",
           "count": 30
         }
       ],
-      "gap": "Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence.",
+      "gap": "No comparable query row currently proves both Atlas and Graphify returned the same symbol name with source locations; kind-count evidence is present.",
       "queryRows": [
         {
           "symbol": "App Samples<a name=\"EN-US_TOPIC_0000001115464207\"></a>",
@@ -2122,7 +2329,7 @@
         {
           "repo": "https://github.com/openharmony/applications_app_samples",
           "commit": "a826ab0e75fe51d028c1c5af58188e908736b53b",
-          "hasKindCountEvidence": false,
+          "hasKindCountEvidence": true,
           "nativeCounts": {
             "type": 20,
             "function": 0,
@@ -2130,12 +2337,18 @@
             "constructor": 4,
             "variable": 60
           },
-          "atlasCounts": null
+          "atlasCounts": {
+            "component": 8,
+            "constructor": 4,
+            "method": 69,
+            "type": 20,
+            "variable": 60
+          }
         },
         {
           "repo": "https://github.com/openharmony/codelabs",
           "commit": "eadb14174aa2c4e9a4d8622b50fd16748de57a9e",
-          "hasKindCountEvidence": false,
+          "hasKindCountEvidence": true,
           "nativeCounts": {
             "type": 3,
             "function": 0,
@@ -2143,12 +2356,18 @@
             "constructor": 1,
             "variable": 22
           },
-          "atlasCounts": null
+          "atlasCounts": {
+            "component": 2,
+            "constructor": 1,
+            "method": 10,
+            "type": 3,
+            "variable": 22
+          }
         },
         {
           "repo": "https://github.com/openharmony/applications_filepicker",
           "commit": "5438caec93de79e5c7395887771d2e7a304bd861",
-          "hasKindCountEvidence": false,
+          "hasKindCountEvidence": true,
           "nativeCounts": {
             "type": 48,
             "function": 47,
@@ -2156,7 +2375,14 @@
             "constructor": 9,
             "variable": 565
           },
-          "atlasCounts": null
+          "atlasCounts": {
+            "component": 20,
+            "constructor": 9,
+            "function": 47,
+            "method": 206,
+            "type": 48,
+            "variable": 565
+          }
         }
       ]
     },
@@ -2169,6 +2395,18 @@
       "matchedNameLocationRatio": 1,
       "validationRows": 3,
       "validationKindRows": 0,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": true,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": {
+          "module": 11,
+          "type": 18,
+          "function": 185,
+          "subroutine": 150,
+          "program": 0
+        },
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [
         {
           "key": "parse_error_samples",
@@ -2325,6 +2563,20 @@
       "matchedNameLocationRatio": 1,
       "validationRows": 3,
       "validationKindRows": 3,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": true,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": {
+          "class": 62,
+          "interface": 11,
+          "enum": 2,
+          "trait": 0,
+          "method": 435,
+          "function": 15,
+          "task": 0
+        },
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [
         {
           "key": "parse_error_samples",
@@ -2475,6 +2727,14 @@
       "matchedNameLocationRatio": 1,
       "validationRows": 0,
       "validationKindRows": 0,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": true,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": {
+          "key": 60
+        },
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [
         {
           "key": "sample_keys",
@@ -2703,6 +2963,25 @@
       "matchedNameLocationRatio": 0.8,
       "validationRows": 3,
       "validationKindRows": 0,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": true,
+        "hasExpandedDefinitionCounts": true,
+        "definitionCounts": {
+          "module": 2,
+          "type": 21,
+          "function": 255,
+          "macro": 6,
+          "constant": 26
+        },
+        "expandedDefinitionCounts": {
+          "module": 2,
+          "type": 21,
+          "function": 255,
+          "macro": 6,
+          "constant": 26,
+          "variable": 2
+        }
+      },
       "nativeSampleEvidence": [
         {
           "key": "parse_error_samples",
@@ -2830,6 +3109,16 @@
       "matchedNameLocationRatio": 0.6,
       "validationRows": 3,
       "validationKindRows": 3,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": true,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": {
+          "type": 187,
+          "function": 1586,
+          "variable": 2103
+        },
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [
         {
           "key": "parse_error_samples",
@@ -2983,6 +3272,17 @@
       "matchedNameLocationRatio": 1,
       "validationRows": 3,
       "validationKindRows": 3,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": true,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": {
+          "function": 270,
+          "method": 135,
+          "local_function": 31,
+          "assigned_function": 8
+        },
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [
         {
           "key": "parse_error_samples",
@@ -3111,6 +3411,14 @@
       "matchedNameLocationRatio": 1,
       "validationRows": 3,
       "validationKindRows": 0,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": true,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": {
+          "section": 156
+        },
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [
         {
           "key": "sample_headings",
@@ -3259,6 +3567,15 @@
       "matchedNameLocationRatio": 0.75,
       "validationRows": 3,
       "validationKindRows": 3,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": true,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": {
+          "type": 141,
+          "method": 830
+        },
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [
         {
           "key": "parse_error_samples",
@@ -3389,7 +3706,17 @@
       "matchedNameLocationRows": 11,
       "matchedNameLocationRatio": 1,
       "validationRows": 3,
-      "validationKindRows": 0,
+      "validationKindRows": 3,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": true,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": {
+          "unit": 85,
+          "type": 274,
+          "function": 6072
+        },
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [
         {
           "key": "sample_definitions",
@@ -3590,8 +3917,12 @@
         {
           "repo": "https://github.com/remobjects/pascalscript",
           "commit": "2c826cd803a3c0417354fa37b2417f21993ce4ac",
-          "hasKindCountEvidence": false,
-          "nativeCounts": null,
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "unit": 85,
+            "type": 247,
+            "function": 4983
+          },
           "atlasCounts": {
             "function": 6072,
             "type": 274,
@@ -3601,8 +3932,12 @@
         {
           "repo": "https://github.com/fpc/Lazarus",
           "commit": "e1cc57bb27e48541ffe4bf66c78a8dddfc4f6630",
-          "hasKindCountEvidence": false,
-          "nativeCounts": null,
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "unit": 592,
+            "type": 8217,
+            "function": 50590
+          },
           "atlasCounts": {
             "function": 92656,
             "type": 4997,
@@ -3612,8 +3947,12 @@
         {
           "repo": "https://github.com/transmission-remote-gui/transgui",
           "commit": "da71b860d4920f7ab847a48bd8d804725ddbad7b",
-          "hasKindCountEvidence": false,
-          "nativeCounts": null,
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "unit": 67,
+            "type": 173,
+            "function": 2887
+          },
           "atlasCounts": {
             "function": 5290,
             "type": 181,
@@ -3631,6 +3970,12 @@
       "matchedNameLocationRatio": 1,
       "validationRows": 3,
       "validationKindRows": 0,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": false,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": null,
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [],
       "gap": "",
       "queryRows": [
@@ -3739,6 +4084,15 @@
       "matchedNameLocationRatio": 1,
       "validationRows": 3,
       "validationKindRows": 0,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": false,
+        "hasExpandedDefinitionCounts": true,
+        "definitionCounts": null,
+        "expandedDefinitionCounts": {
+          "function": 28,
+          "variable": 3
+        }
+      },
       "nativeSampleEvidence": [
         {
           "key": "parse_error_samples",
@@ -3849,6 +4203,21 @@
       "matchedNameLocationRatio": 1,
       "validationRows": 3,
       "validationKindRows": 3,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": true,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": {
+          "view": 48,
+          "component": 78,
+          "route": 0,
+          "import": 32,
+          "service": 13,
+          "base": 8,
+          "model": 13,
+          "method": 16
+        },
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [
         {
           "key": "sample_definitions",
@@ -4036,6 +4405,12 @@
       "matchedNameLocationRatio": 1,
       "validationRows": 3,
       "validationKindRows": 3,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": false,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": null,
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [],
       "gap": "",
       "queryRows": [
@@ -4166,6 +4541,12 @@
       "matchedNameLocationRatio": 1,
       "validationRows": 3,
       "validationKindRows": 3,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": false,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": null,
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [
         {
           "key": "sample_paths",
@@ -4322,19 +4703,29 @@
     {
       "language": "r",
       "artifact": "data/raw/LIVE_R_BENCHMARK.json",
-      "status": "count-only",
+      "status": "kind-count-only",
       "equivalentRows": 5,
       "matchedNameLocationRows": 0,
       "matchedNameLocationRatio": 0,
       "validationRows": 3,
-      "validationKindRows": 0,
+      "validationKindRows": 3,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": true,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": {
+          "function": 1584,
+          "type": 133,
+          "variable": 1294
+        },
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [
         {
           "key": "sample_definitions",
           "count": 30
         }
       ],
-      "gap": "Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence.",
+      "gap": "No comparable query row currently proves both Atlas and Graphify returned the same symbol name with source locations; kind-count evidence is present.",
       "queryRows": [
         {
           "symbol": "Contributing to ggplot2 development",
@@ -4411,23 +4802,43 @@
         {
           "repo": "https://github.com/tidyverse/ggplot2",
           "commit": "6870419aa6e106c3580c45c81d5b688cb31758bd",
-          "hasKindCountEvidence": false,
-          "nativeCounts": null,
-          "atlasCounts": null
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "function": 1584,
+            "type": 133
+          },
+          "atlasCounts": {
+            "function": 1584,
+            "type": 133,
+            "variable": 1293
+          }
         },
         {
           "repo": "https://github.com/r-lib/cli",
           "commit": "86bdefe1eb23399499b40884f7fab84194283bc1",
-          "hasKindCountEvidence": false,
-          "nativeCounts": null,
-          "atlasCounts": null
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "function": 782,
+            "type": 0
+          },
+          "atlasCounts": {
+            "function": 782,
+            "variable": 488
+          }
         },
         {
           "repo": "https://github.com/tidyverse/dplyr",
           "commit": "d5e94e7fa8fd4a5f79c1a707d1842216bb4c691f",
-          "hasKindCountEvidence": false,
-          "nativeCounts": null,
-          "atlasCounts": null
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "function": 889,
+            "type": 1
+          },
+          "atlasCounts": {
+            "function": 889,
+            "type": 1,
+            "variable": 540
+          }
         }
       ]
     },
@@ -4440,6 +4851,16 @@
       "matchedNameLocationRatio": 0.2,
       "validationRows": 3,
       "validationKindRows": 3,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": true,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": {
+          "type": 1664,
+          "function": 5155,
+          "variable": 1021
+        },
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [
         {
           "key": "parse_error_samples",
@@ -4591,6 +5012,18 @@
       "matchedNameLocationRatio": 1,
       "validationRows": 3,
       "validationKindRows": 0,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": true,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": {
+          "table": 39,
+          "view": 50,
+          "function": 15,
+          "procedure": 0,
+          "trigger": 7
+        },
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [
         {
           "key": "parse_error_samples",
@@ -4701,6 +5134,12 @@
       "matchedNameLocationRatio": 1,
       "validationRows": 3,
       "validationKindRows": 3,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": false,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": null,
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [
         {
           "key": "parse_error_samples",
@@ -4855,6 +5294,12 @@
       "matchedNameLocationRatio": 0.5,
       "validationRows": 3,
       "validationKindRows": 3,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": false,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": null,
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [
         {
           "key": "sample_paths",
@@ -5006,7 +5451,19 @@
       "matchedNameLocationRows": 4,
       "matchedNameLocationRatio": 1,
       "validationRows": 3,
-      "validationKindRows": 0,
+      "validationKindRows": 3,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": true,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": {
+          "resource": 96,
+          "data": 26,
+          "module": 27,
+          "variable": 291,
+          "output": 1298
+        },
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [],
       "gap": "",
       "queryRows": [
@@ -5083,8 +5540,14 @@
         {
           "repo": "https://github.com/terraform-aws-modules/terraform-aws-vpc",
           "commit": "3ffbd46fb1c7733e1b34d8666893280454e27436",
-          "hasKindCountEvidence": false,
-          "nativeCounts": null,
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "resource": 93,
+            "data": 25,
+            "module": 27,
+            "variable": 291,
+            "output": 1298
+          },
           "atlasCounts": {
             "data": 26,
             "module": 27,
@@ -5096,8 +5559,14 @@
         {
           "repo": "https://github.com/terraform-aws-modules/terraform-aws-eks",
           "commit": "d4669ca8eb109a37f6c19ab8fb9487ab7521a9ba",
-          "hasKindCountEvidence": false,
-          "nativeCounts": null,
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "resource": 111,
+            "data": 64,
+            "module": 81,
+            "variable": 456,
+            "output": 302
+          },
           "atlasCounts": {
             "data": 70,
             "module": 84,
@@ -5109,8 +5578,14 @@
         {
           "repo": "https://github.com/terraform-aws-modules/terraform-aws-security-group",
           "commit": "58d8e895915f5573767081142d063b7caf7a2b47",
-          "hasKindCountEvidence": false,
-          "nativeCounts": null,
+          "hasKindCountEvidence": true,
+          "nativeCounts": {
+            "resource": 12,
+            "data": 1,
+            "module": 114,
+            "variable": 1076,
+            "output": 339
+          },
           "atlasCounts": {
             "data": 1,
             "module": 114,
@@ -5130,6 +5605,21 @@
       "matchedNameLocationRatio": 1,
       "validationRows": 3,
       "validationKindRows": 3,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": true,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": {
+          "module": 28,
+          "interface": 0,
+          "package": 2,
+          "class": 0,
+          "function": 63,
+          "task": 0,
+          "program": 0,
+          "checker": 0
+        },
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [
         {
           "key": "parse_error_samples",
@@ -5311,6 +5801,12 @@
       "matchedNameLocationRatio": 1,
       "validationRows": 3,
       "validationKindRows": 3,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": false,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": null,
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [
         {
           "key": "parse_error_samples",
@@ -5465,6 +5961,16 @@
       "matchedNameLocationRatio": 0.8,
       "validationRows": 3,
       "validationKindRows": 3,
+      "nativeMetricKindEvidence": {
+        "hasDefinitionCounts": true,
+        "hasExpandedDefinitionCounts": false,
+        "definitionCounts": {
+          "function": 1045,
+          "constant": 3976,
+          "type": 258
+        },
+        "expandedDefinitionCounts": null
+      },
       "nativeSampleEvidence": [
         {
           "key": "parse_error_samples",

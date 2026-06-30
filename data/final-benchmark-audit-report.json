@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-30T17:49:06.910Z",
-  "benchmarkGeneratedAt": "2026-06-30T17:49:06.910Z",
+  "generatedAt": "2026-06-30T17:55:47.373Z",
+  "benchmarkGeneratedAt": "2026-06-30T17:55:47.373Z",
   "scope": "Final pass over Atlas benchmark artifacts: core matrix against Graphify plus native SCIP/LSP tools, live language artifacts against Graphify plus language-specific native/proxy baselines, and public three-repo validation metadata.",
   "summary": {
     "coreLanguages": 7,
@@ -16,12 +16,13 @@
     "publicRepoValidationHarness": true,
     "publicRepoValidationWarnings": 34,
     "precisionEvidenceHarness": true,
-    "precisionNameLocationArtifacts": 31,
-    "precisionKindCountOnlyArtifacts": 0,
-    "precisionCountOnlyArtifacts": 5,
-    "precisionMatchedNameLocationRows": 156,
+    "precisionNameLocationArtifacts": 32,
+    "precisionKindCountOnlyArtifacts": 4,
+    "precisionCountOnlyArtifacts": 0,
+    "precisionMatchedNameLocationRows": 161,
     "precisionEquivalentRows": 199,
-    "precisionValidationKindRows": 63,
+    "precisionValidationKindRows": 81,
+    "precisionNativeMetricKindArtifacts": 27,
     "graphifyVersion": "graphifyy 0.8.49",
     "graphifyDispatchCount": 89,
     "detectorOnlyLanguages": [
@@ -465,63 +466,112 @@
     "precisionEvidence": {
       "statement": "The precision manifest is an artifact-level audit of what the raw benchmark JSON can prove today: sampled query rows with matching symbol names and locations, native-vs-Atlas kind-count maps, or count-only gaps. It is not a full 99% precision oracle.",
       "manifest": {
-        "generatedAt": "2026-06-30T17:49:06.841Z",
+        "generatedAt": "2026-06-30T17:55:47.300Z",
         "summary": {
           "artifacts": 36,
-          "sampledNameLocationArtifacts": 31,
-          "kindCountOnlyArtifacts": 0,
-          "countOnlyArtifacts": 5,
+          "sampledNameLocationArtifacts": 32,
+          "kindCountOnlyArtifacts": 4,
+          "countOnlyArtifacts": 0,
           "equivalentRows": 199,
-          "matchedNameLocationRows": 156,
+          "matchedNameLocationRows": 161,
           "validationRows": 105,
-          "validationKindRows": 63,
+          "validationKindRows": 81,
+          "nativeMetricKindArtifacts": 27,
           "passed": true
         },
         "gaps": [
           {
             "language": "blade",
-            "status": "count-only",
+            "status": "kind-count-only",
             "matchedNameLocationRows": 0,
             "equivalentRows": 6,
-            "validationKindRows": 0,
+            "validationKindRows": 3,
             "validationRows": 3,
-            "gap": "Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence."
-          },
-          {
-            "language": "byond",
-            "status": "count-only",
-            "matchedNameLocationRows": 0,
-            "equivalentRows": 5,
-            "validationKindRows": 0,
-            "validationRows": 3,
-            "gap": "Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence."
+            "nativeMetricKindEvidence": {
+              "hasDefinitionCounts": true,
+              "hasExpandedDefinitionCounts": false,
+              "definitionCounts": {
+                "template": 303,
+                "include": 528,
+                "layout": 102,
+                "section": 130,
+                "slot": 16,
+                "component": 11,
+                "handler": 0
+              },
+              "expandedDefinitionCounts": null
+            },
+            "gap": "No comparable query row currently proves both Atlas and Graphify returned the same symbol name with source locations; kind-count evidence is present."
           },
           {
             "language": "dart",
-            "status": "count-only",
+            "status": "kind-count-only",
             "matchedNameLocationRows": 0,
             "equivalentRows": 6,
             "validationKindRows": 0,
             "validationRows": 3,
-            "gap": "Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence."
+            "nativeMetricKindEvidence": {
+              "hasDefinitionCounts": true,
+              "hasExpandedDefinitionCounts": true,
+              "definitionCounts": {
+                "type": 28,
+                "function": 89,
+                "constructor": 30,
+                "getter": 20,
+                "setter": 11,
+                "typedef": 2
+              },
+              "expandedDefinitionCounts": {
+                "type": 28,
+                "function": 89,
+                "constructor": 30,
+                "getter": 20,
+                "setter": 11,
+                "typedef": 2,
+                "variable": 58
+              }
+            },
+            "gap": "No comparable query row currently proves both Atlas and Graphify returned the same symbol name with source locations; kind-count evidence is present."
           },
           {
             "language": "ets",
-            "status": "count-only",
+            "status": "kind-count-only",
             "matchedNameLocationRows": 0,
             "equivalentRows": 5,
-            "validationKindRows": 0,
+            "validationKindRows": 3,
             "validationRows": 3,
-            "gap": "Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence."
+            "nativeMetricKindEvidence": {
+              "hasDefinitionCounts": true,
+              "hasExpandedDefinitionCounts": false,
+              "definitionCounts": {
+                "type": 20,
+                "function": 0,
+                "method": 69,
+                "constructor": 4,
+                "variable": 60
+              },
+              "expandedDefinitionCounts": null
+            },
+            "gap": "No comparable query row currently proves both Atlas and Graphify returned the same symbol name with source locations; kind-count evidence is present."
           },
           {
             "language": "r",
-            "status": "count-only",
+            "status": "kind-count-only",
             "matchedNameLocationRows": 0,
             "equivalentRows": 5,
-            "validationKindRows": 0,
+            "validationKindRows": 3,
             "validationRows": 3,
-            "gap": "Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence."
+            "nativeMetricKindEvidence": {
+              "hasDefinitionCounts": true,
+              "hasExpandedDefinitionCounts": false,
+              "definitionCounts": {
+                "function": 1584,
+                "type": 133,
+                "variable": 1294
+              },
+              "expandedDefinitionCounts": null
+            },
+            "gap": "No comparable query row currently proves both Atlas and Graphify returned the same symbol name with source locations; kind-count evidence is present."
           }
         ]
       }

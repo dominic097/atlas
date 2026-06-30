@@ -557,6 +557,7 @@ function buildFinalAuditReport(dataset) {
       equivalentRows: row.equivalentRows,
       validationKindRows: row.validationKindRows,
       validationRows: row.validationRows,
+      nativeMetricKindEvidence: row.nativeMetricKindEvidence || null,
       gap: row.gap || "",
     }))
     .sort((a, b) => String(a.language).localeCompare(String(b.language)));
@@ -688,6 +689,7 @@ function buildFinalAuditReport(dataset) {
       precisionMatchedNameLocationRows: precisionSummary.matchedNameLocationRows ?? null,
       precisionEquivalentRows: precisionSummary.equivalentRows ?? null,
       precisionValidationKindRows: precisionSummary.validationKindRows ?? null,
+      precisionNativeMetricKindArtifacts: precisionSummary.nativeMetricKindArtifacts ?? null,
       graphifyVersion: dataset.provenance.graphify.version,
       graphifyDispatchCount: dataset.provenance.graphify.dispatchCount,
       detectorOnlyLanguages: dataset.provenance.graphify.detectorOnlyCodeExtensions,
@@ -752,6 +754,7 @@ function renderFinalAuditMarkdown(report) {
   lines.push(`- Precision count-only artifacts: ${report.summary.precisionCountOnlyArtifacts ?? "n/a"}`);
   lines.push(`- Precision sampled query rows with name+location: ${report.summary.precisionMatchedNameLocationRows ?? "n/a"}/${report.summary.precisionEquivalentRows ?? "n/a"}`);
   lines.push(`- Precision validation rows with kind maps: ${report.summary.precisionValidationKindRows ?? "n/a"}`);
+  lines.push(`- Precision artifacts with native metric kind maps: ${report.summary.precisionNativeMetricKindArtifacts ?? "n/a"}`);
   lines.push(`- Graphify: ${report.summary.graphifyVersion}, dispatch count ${report.summary.graphifyDispatchCount}`);
   lines.push("", "## Ground Truth Closeness", "");
   lines.push(report.groundTruthCloseness.statement, "");
@@ -769,12 +772,15 @@ function renderFinalAuditMarkdown(report) {
     lines.push(
       `Matched sampled query rows: ${manifest.summary.matchedNameLocationRows}/${manifest.summary.equivalentRows}; validation kind-map rows: ${manifest.summary.validationKindRows}.`
     );
+    lines.push(`Artifacts with native metric kind maps: ${manifest.summary.nativeMetricKindArtifacts}.`);
     lines.push("");
-    lines.push("| Language | Status | Query name+location | Validation kind rows | Gap |");
-    lines.push("|---|---|--:|--:|---|");
+    lines.push("| Language | Status | Query name+location | Validation kind rows | Native metric kind map | Gap |");
+    lines.push("|---|---|--:|--:|---|---|");
     for (const row of manifest.gaps) {
+      const hasNativeMetricKindMap =
+        row.nativeMetricKindEvidence?.hasDefinitionCounts || row.nativeMetricKindEvidence?.hasExpandedDefinitionCounts;
       lines.push(
-        `| ${row.language} | ${row.status} | ${row.matchedNameLocationRows}/${row.equivalentRows} | ${row.validationKindRows}/${row.validationRows} | ${row.gap || "none"} |`
+        `| ${row.language} | ${row.status} | ${row.matchedNameLocationRows}/${row.equivalentRows} | ${row.validationKindRows}/${row.validationRows} | ${hasNativeMetricKindMap ? "yes" : "no"} | ${row.gap || "none"} |`
       );
     }
   } else {

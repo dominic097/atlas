@@ -36,18 +36,42 @@ function hasAtlasLocation(text) {
 }
 
 function hasGraphifyLocation(text) {
-  return /\bSource:\s+\S.*\bL\d+\b/.test(text);
+  return /\bSource:\s+\S.*\bL\d+\b/.test(text) || /\bloc=L\d+\b/.test(text);
 }
 
-function parseCountMap(note, label) {
-  const escaped = label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const match = new RegExp(`${escaped}\\s+(\\{[^}]+\\})`, "i").exec(note || "");
+function parseJSONMap(match) {
   if (!match) return null;
   try {
     return JSON.parse(match[1]);
   } catch {
     return null;
   }
+}
+
+function parseFirstMap(note, patterns) {
+  for (const pattern of patterns) {
+    const parsed = parseJSONMap(pattern.exec(note || ""));
+    if (parsed) return parsed;
+  }
+  return null;
+}
+
+function parseKindMaps(note) {
+  return {
+    atlasCounts: parseFirstMap(note, [
+      /\bAtlas(?:\s+declaration)?\s+counts\s+(\{[^}]+\})/i,
+      /\bAtlas\s+also\s+reports\b.*?\bin\s+(\{[^}]+\})/i,
+    ]),
+    nativeCounts: parseFirstMap(note, [
+      /\bnative(?:\s+counter|\s+declaration)?\s+counts\s+(\{[^}]+\})/i,
+      /\bnative\s+counts\s+(\{[^}]+\})/i,
+      /\bvalidation\s+denominator\s+counts\s+functions\/types\s+(\{[^}]+\})/i,
+    ]),
+  };
+}
+
+function hasKindMap(value) {
+  return Boolean(value && typeof value === "object" && !Array.isArray(value) && Object.keys(value).length);
 }
 
 function sampleEvidence(metrics = {}) {
@@ -92,8 +116,7 @@ function analyzeArtifact(file) {
   const validationRows = [];
   for (const repo of raw.multi_repo_validation?.repos || []) {
     const note = repo.note || "";
-    const nativeCounts = parseCountMap(note, "native counts");
-    const atlasCounts = parseCountMap(note, "Atlas counts");
+    const { atlasCounts, nativeCounts } = parseKindMaps(note);
     validationRows.push({
       repo: repo.repo,
       commit: repo.commit || null,
@@ -106,13 +129,21 @@ function analyzeArtifact(file) {
   const equivalentRows = queryRows.length;
   const matchedNameLocationRows = queryRows.filter((row) => row.matchedNameAndLocation).length;
   const validationKindRows = validationRows.filter((row) => row.hasKindCountEvidence).length;
+  const nativeMetrics = raw.native_baseline?.metrics || {};
+  const nativeMetricKindEvidence = {
+    hasDefinitionCounts: hasKindMap(nativeMetrics.definition_counts),
+    hasExpandedDefinitionCounts: hasKindMap(nativeMetrics.expanded_definition_counts),
+    definitionCounts: nativeMetrics.definition_counts || null,
+    expandedDefinitionCounts: nativeMetrics.expanded_definition_counts || null,
+  };
+  const hasNativeMetricKindEvidence =
+    nativeMetricKindEvidence.hasDefinitionCounts || nativeMetricKindEvidence.hasExpandedDefinitionCounts;
   const status =
     matchedNameLocationRows > 0
       ? "sampled-name-location"
-      : validationKindRows > 0
+      : validationKindRows > 0 || hasNativeMetricKindEvidence
         ? "kind-count-only"
         : "count-only";
-  const nativeMetrics = raw.native_baseline?.metrics || {};
 
   return {
     language,
@@ -123,12 +154,13 @@ function analyzeArtifact(file) {
     matchedNameLocationRatio: round(matchedNameLocationRows / equivalentRows),
     validationRows: validationRows.length,
     validationKindRows,
+    nativeMetricKindEvidence,
     nativeSampleEvidence: sampleEvidence(nativeMetrics),
     gap:
       status === "sampled-name-location"
         ? ""
         : status === "kind-count-only"
-          ? "No comparable query row currently proves both Atlas and Graphify returned the same symbol name with source locations."
+          ? "No comparable query row currently proves both Atlas and Graphify returned the same symbol name with source locations; kind-count evidence is present."
           : "Raw artifact has coverage counts but no sampled name/location or native-vs-Atlas kind-count evidence.",
     queryRows,
     validationKindEvidence: validationRows,
@@ -151,12 +183,13 @@ function renderMarkdown(report) {
   lines.push(`- Equivalent query rows checked: ${report.summary.equivalentRows}`);
   lines.push(`- Query rows with both name and location: ${report.summary.matchedNameLocationRows}`);
   lines.push(`- Validation rows with native/Atlas kind maps: ${report.summary.validationKindRows}`);
+  lines.push(`- Artifacts with native metric kind maps: ${report.summary.nativeMetricKindArtifacts}`);
   lines.push("");
-  lines.push("| Language | Status | Query name+location | Validation kind rows | Gap |");
-  lines.push("|---|---|--:|--:|---|");
+  lines.push("| Language | Status | Query name+location | Validation kind rows | Native metric kind map | Gap |");
+  lines.push("|---|---|--:|--:|---|---|");
   for (const item of report.languages) {
     lines.push(
-      `| ${item.language} | ${item.status} | ${item.matchedNameLocationRows}/${item.equivalentRows} | ${item.validationKindRows}/${item.validationRows} | ${item.gap || "none"} |`
+      `| ${item.language} | ${item.status} | ${item.matchedNameLocationRows}/${item.equivalentRows} | ${item.validationKindRows}/${item.validationRows} | ${item.nativeMetricKindEvidence?.hasDefinitionCounts || item.nativeMetricKindEvidence?.hasExpandedDefinitionCounts ? "yes" : "no"} | ${item.gap || "none"} |`
     );
   }
   lines.push("");
@@ -181,6 +214,9 @@ function main() {
     matchedNameLocationRows: languages.reduce((total, item) => total + item.matchedNameLocationRows, 0),
     validationRows: languages.reduce((total, item) => total + item.validationRows, 0),
     validationKindRows: languages.reduce((total, item) => total + item.validationKindRows, 0),
+    nativeMetricKindArtifacts: languages.filter(
+      (item) => item.nativeMetricKindEvidence?.hasDefinitionCounts || item.nativeMetricKindEvidence?.hasExpandedDefinitionCounts
+    ).length,
     passed: languages.some((item) => item.status === "sampled-name-location") && languages.some((item) => item.validationKindRows > 0),
   };
   const report = {
