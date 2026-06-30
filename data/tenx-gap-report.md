@@ -1,14 +1,14 @@
 # Atlas 10x Gap Report
 
-Generated: 2026-06-30T10:41:25.133Z
+Generated: 2026-06-30T10:55:26.762Z
 
 Token and latency are ratio targets. Coverage is a native-definition coverage ratio, so the honest accuracy target is >1.0 native coverage exceed, not a fabricated 10x accuracy multiplier.
 
 ## Summary
 
 - Live languages: 36
-- Coverage parity languages still to move into exceed: 9
-- Coverage exceed languages: 27
+- Coverage parity languages still to move into exceed: 8
+- Coverage exceed languages: 28
 - Comparable live languages: 33
 - Token >=10x comparable: 33
 - Latency >=10x comparable: 33

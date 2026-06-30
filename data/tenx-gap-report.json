@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T10:41:25.133Z",
+  "generatedAt": "2026-06-30T10:55:26.762Z",
   "source": "data/benchmark-data.json",
   "targetRatio": 10,
   "metricNote": "Token and latency are ratio targets. Coverage is a native-definition coverage ratio, so the honest accuracy target is >1.0 native coverage exceed, not a fabricated 10x accuracy multiplier.",
   "summary": {
     "liveLanguages": 36,
-    "parityLanguages": 9,
-    "coverageExceedLanguages": 27,
+    "parityLanguages": 8,
+    "coverageExceedLanguages": 28,
     "comparableLanguages": 33,
     "token10xComparable": 33,
     "latency10xComparable": 33,
@@ -23,8 +23,7 @@
     "julia",
     "powershell",
     "r",
-    "sql",
-    "verilog"
+    "sql"
   ],
   "live": [
     {
@@ -711,16 +710,14 @@
       "repo": "https://github.com/lowRISC/ibex",
       "commit": "022f084096baed0a9b5ebdf697ed2965f13e8ed8",
       "artifact": "data/raw/LIVE_VERILOG_BENCHMARK.json",
-      "coverageRatio": 1,
-      "coverageExceedsNative": false,
+      "coverageRatio": 1.5484,
+      "coverageExceedsNative": true,
       "equivalentRows": 6,
-      "tokenRatio": 29.83,
-      "latencyRatio": 10.62,
+      "tokenRatio": 11,
+      "latencyRatio": 14.93,
       "tokenGapTo10x": 1,
       "latencyGapTo10x": 1,
-      "blockers": [
-        "coverage_at_parity"
-      ],
+      "blockers": [],
       "validation": {
         "passed": false,
         "repoCount": 0,

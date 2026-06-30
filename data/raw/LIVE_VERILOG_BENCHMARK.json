@@ -6,9 +6,9 @@
   "commands": {
     "clone": "git clone --depth 1 https://github.com/lowRISC/ibex /tmp/atlas-live-verilog-ibex/repo",
     "sparse_checkout": "",
-    "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-verilog-ibex/atlas.db --json index /tmp/atlas-live-verilog-ibex/repo/rtl",
-    "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-verilog-ibex/atlas.db --json index /tmp/atlas-live-verilog-ibex/repo/rtl",
-    "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-verilog-ibex/atlas-refresh.db --json index /tmp/atlas-live-verilog-ibex/repo/rtl",
+    "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-verilog-ibex/atlas-refresh.db --json index /tmp/atlas-live-verilog-ibex/repo/rtl",
+    "graphify_update": "/Users/damirdarasu/.langflow/uv/uv tool run --from graphifyy graphify update .",
     "native_baseline": "/tmp/atlas-live-verilog-ibex/tree-sitter-systemverilog-venv/bin/python -c <tree-sitter-systemverilog definition counter> /tmp/atlas-live-verilog-ibex/repo/rtl",
     "query_symbols": [
       "ibex_core",
@@ -19,116 +19,113 @@
       "decode_i_insn"
     ],
     "target_path": "/tmp/atlas-live-verilog-ibex/repo/rtl",
-    "atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-verilog-ibex/atlas.db serve --addr 127.0.0.1:4311"
+    "atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-verilog-ibex/atlas-refresh.db serve --addr 127.0.0.1:4311"
   },
   "atlas": {
-    "cold_wall_seconds": 0.17,
-    "reindex_wall_seconds": 0.028,
+    "cold_wall_seconds": 0.188,
+    "reindex_wall_seconds": 0.034,
     "index": {
-      "repo_id": "160842be-0196-4143-ac88-9680b2c349da",
+      "repo_id": "b301033f-7bcd-4f8d-af33-16c5b20a01a2",
       "repo_full_name": "rtl",
-      "snapshot_id": "f8f319bb-e5af-46a9-a683-c3f07e441b64",
+      "snapshot_id": "ec697a19-bc80-40d9-b4ba-fc55e333509a",
       "commit_sha": "022f084096baed0a9b5ebdf697ed2965f13e8ed8",
-      "indexed_files": 68,
-      "symbols": 873,
-      "edges": 2666,
+      "indexed_files": 31,
+      "symbols": 144,
+      "edges": 2669,
       "edge_kinds": {
-        "calls": 2653,
+        "calls": 2656,
         "imports": 13
       },
       "routes": 0,
       "languages": {
         "fortran": 1,
-        "html": 1,
-        "json": 35,
-        "markdown": 1,
         "verilog": 30
       },
       "mode": "full",
-      "duration_ms": 170,
+      "duration_ms": 144,
       "timings_ms": {
         "build_symbols_edges": 0,
         "delta_check": 0,
-        "discover_files": 4,
+        "discover_files": 0,
         "doc_links": 0,
         "ensure_repo": 0,
-        "gitignore_scan": 11,
+        "gitignore_scan": 23,
         "go_types": 0,
-        "lexical": 86,
-        "parse": 67,
-        "persist": 86,
+        "lexical": 56,
+        "parse": 62,
+        "persist": 56,
         "resolve_head": 0,
         "routes": 0,
         "sort": 0,
-        "walk": 4,
-        "write_sqlite": 86
+        "walk": 0,
+        "write_sqlite": 56
       }
     },
     "reindex": {
-      "repo_id": "5dd62de5-6e66-4f63-a4f6-6ce1cb399c75",
+      "repo_id": "b301033f-7bcd-4f8d-af33-16c5b20a01a2",
       "repo_full_name": "rtl",
-      "snapshot_id": "376be33b-9a3b-42bc-b227-f4e1e2bcadb7",
+      "snapshot_id": "ec697a19-bc80-40d9-b4ba-fc55e333509a",
       "commit_sha": "022f084096baed0a9b5ebdf697ed2965f13e8ed8",
       "indexed_files": 31,
-      "symbols": 94,
-      "edges": 2666,
+      "symbols": 144,
+      "edges": 2669,
       "routes": 0,
       "languages": {
         "fortran": 1,
         "verilog": 30
       },
       "mode": "noop",
-      "duration_ms": 0,
+      "duration_ms": 18,
       "timings_ms": {
-        "delta_check": 0,
+        "delta_check": 18,
         "resolve_head": 0
       }
     },
     "symbol_breakdown": {
-      "repo_id": "160842be-0196-4143-ac88-9680b2c349da",
+      "repo_id": "b301033f-7bcd-4f8d-af33-16c5b20a01a2",
       "repo_full_name": "rtl",
       "tier": "local",
       "storage_driver": "sqlite",
       "latest": {
-        "snapshot_id": "f8f319bb-e5af-46a9-a683-c3f07e441b64",
+        "snapshot_id": "ec697a19-bc80-40d9-b4ba-fc55e333509a",
         "commit_sha": "022f084096baed0a9b5ebdf697ed2965f13e8ed8",
-        "created_at": "2026-06-30T07:41:35Z",
-        "files": 68,
-        "symbols": 873,
-        "edges": 2666,
+        "created_at": "2026-06-30T10:50:33.931452Z",
+        "files": 31,
+        "symbols": 144,
+        "edges": 2669,
         "routes": 0,
         "mode": "full",
-        "duration_ms": 170,
+        "duration_ms": 144,
         "timings_ms": {
           "build_symbols_edges": 0,
           "delta_check": 0,
-          "discover_files": 4,
+          "discover_files": 0,
           "doc_links": 0,
           "ensure_repo": 0,
-          "gitignore_scan": 11,
+          "gitignore_scan": 23,
           "go_types": 0,
-          "lexical": 86,
-          "parse": 67,
-          "persist": 86,
+          "lexical": 56,
+          "parse": 62,
+          "persist": 56,
           "resolve_head": 0,
           "routes": 0,
           "sort": 0,
-          "walk": 4,
-          "write_sqlite": 86
+          "walk": 0,
+          "write_sqlite": 56
         }
       },
       "graph": {
         "files": 30,
-        "symbols": 93,
-        "edges": 62,
-        "raw_symbols": 93,
-        "raw_edges": 2666,
-        "communities": 53,
-        "isolated_nodes": 33,
+        "symbols": 144,
+        "edges": 2669,
+        "raw_symbols": 144,
+        "raw_edges": 2669,
+        "communities": null,
+        "isolated_nodes": null,
         "edge_kinds": [
           {
             "key": "calls",
-            "count": 2653
+            "count": 2656
           },
           {
             "key": "imports",
@@ -138,88 +135,106 @@
         "languages": [
           {
             "key": "verilog",
-            "count": 93
+            "count": 144
+          }
+        ],
+        "symbol_kinds": [
+          {
+            "key": "function",
+            "count": 63
+          },
+          {
+            "key": "module",
+            "count": 28
+          },
+          {
+            "key": "package",
+            "count": 2
+          },
+          {
+            "key": "type",
+            "count": 51
           }
         ]
       },
       "coverage_facts": 0,
       "history": [
         {
-          "snapshot_id": "f8f319bb-e5af-46a9-a683-c3f07e441b64",
+          "snapshot_id": "ec697a19-bc80-40d9-b4ba-fc55e333509a",
           "commit_sha": "022f084096baed0a9b5ebdf697ed2965f13e8ed8",
-          "created_at": "2026-06-30T07:41:35Z",
-          "files": 68,
-          "symbols": 873,
-          "edges": 2666,
+          "created_at": "2026-06-30T10:50:33.931452Z",
+          "files": 31,
+          "symbols": 144,
+          "edges": 2669,
           "routes": 0,
           "mode": "full",
-          "duration_ms": 170,
+          "duration_ms": 144,
           "timings_ms": {
             "build_symbols_edges": 0,
             "delta_check": 0,
-            "discover_files": 4,
+            "discover_files": 0,
             "doc_links": 0,
             "ensure_repo": 0,
-            "gitignore_scan": 11,
+            "gitignore_scan": 23,
             "go_types": 0,
-            "lexical": 86,
-            "parse": 67,
-            "persist": 86,
+            "lexical": 56,
+            "parse": 62,
+            "persist": 56,
             "resolve_head": 0,
             "routes": 0,
             "sort": 0,
-            "walk": 4,
-            "write_sqlite": 86
+            "walk": 0,
+            "write_sqlite": 56
           }
         }
       ],
       "history_returned": 1
     },
     "edge_breakdown": {
-      "repo_id": "160842be-0196-4143-ac88-9680b2c349da",
+      "repo_id": "b301033f-7bcd-4f8d-af33-16c5b20a01a2",
       "repo_full_name": "rtl",
       "tier": "local",
       "storage_driver": "sqlite",
       "latest": {
-        "snapshot_id": "f8f319bb-e5af-46a9-a683-c3f07e441b64",
+        "snapshot_id": "ec697a19-bc80-40d9-b4ba-fc55e333509a",
         "commit_sha": "022f084096baed0a9b5ebdf697ed2965f13e8ed8",
-        "created_at": "2026-06-30T07:41:35Z",
-        "files": 68,
-        "symbols": 873,
-        "edges": 2666,
+        "created_at": "2026-06-30T10:50:33.931452Z",
+        "files": 31,
+        "symbols": 144,
+        "edges": 2669,
         "routes": 0,
         "mode": "full",
-        "duration_ms": 170,
+        "duration_ms": 144,
         "timings_ms": {
           "build_symbols_edges": 0,
           "delta_check": 0,
-          "discover_files": 4,
+          "discover_files": 0,
           "doc_links": 0,
           "ensure_repo": 0,
-          "gitignore_scan": 11,
+          "gitignore_scan": 23,
           "go_types": 0,
-          "lexical": 86,
-          "parse": 67,
-          "persist": 86,
+          "lexical": 56,
+          "parse": 62,
+          "persist": 56,
           "resolve_head": 0,
           "routes": 0,
           "sort": 0,
-          "walk": 4,
-          "write_sqlite": 86
+          "walk": 0,
+          "write_sqlite": 56
         }
       },
       "graph": {
         "files": 30,
-        "symbols": 93,
-        "edges": 62,
-        "raw_symbols": 93,
-        "raw_edges": 2666,
-        "communities": 53,
-        "isolated_nodes": 33,
+        "symbols": 144,
+        "edges": 2669,
+        "raw_symbols": 144,
+        "raw_edges": 2669,
+        "communities": null,
+        "isolated_nodes": null,
         "edge_kinds": [
           {
             "key": "calls",
-            "count": 2653
+            "count": 2656
           },
           {
             "key": "imports",
@@ -229,50 +244,70 @@
         "languages": [
           {
             "key": "verilog",
-            "count": 93
+            "count": 144
+          }
+        ],
+        "symbol_kinds": [
+          {
+            "key": "function",
+            "count": 63
+          },
+          {
+            "key": "module",
+            "count": 28
+          },
+          {
+            "key": "package",
+            "count": 2
+          },
+          {
+            "key": "type",
+            "count": 51
           }
         ]
       },
       "coverage_facts": 0,
       "history": [
         {
-          "snapshot_id": "f8f319bb-e5af-46a9-a683-c3f07e441b64",
+          "snapshot_id": "ec697a19-bc80-40d9-b4ba-fc55e333509a",
           "commit_sha": "022f084096baed0a9b5ebdf697ed2965f13e8ed8",
-          "created_at": "2026-06-30T07:41:35Z",
-          "files": 68,
-          "symbols": 873,
-          "edges": 2666,
+          "created_at": "2026-06-30T10:50:33.931452Z",
+          "files": 31,
+          "symbols": 144,
+          "edges": 2669,
           "routes": 0,
           "mode": "full",
-          "duration_ms": 170,
+          "duration_ms": 144,
           "timings_ms": {
             "build_symbols_edges": 0,
             "delta_check": 0,
-            "discover_files": 4,
+            "discover_files": 0,
             "doc_links": 0,
             "ensure_repo": 0,
-            "gitignore_scan": 11,
+            "gitignore_scan": 23,
             "go_types": 0,
-            "lexical": 86,
-            "parse": 67,
-            "persist": 86,
+            "lexical": 56,
+            "parse": 62,
+            "persist": 56,
             "resolve_head": 0,
             "routes": 0,
             "sort": 0,
-            "walk": 4,
-            "write_sqlite": 86
+            "walk": 0,
+            "write_sqlite": 56
           }
         }
       ],
       "history_returned": 1
     },
-    "verilog_definition_symbols": 93
+    "verilog_definition_symbols": 144,
+    "verilog_module_package_function_symbols": 93,
+    "verilog_type_definition_symbols": 51
   },
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 0.326,
-    "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "seconds": 0.288,
+    "command": "/Users/damirdarasu/.langflow/uv/uv tool run --from graphifyy graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
       "[graphify watch] Rebuilt: 170 nodes, 139 edges, 31 communities",
@@ -280,18 +315,25 @@
       "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
       "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
     ],
-    "stderr_head": [],
+    "stderr_head": [
+      "  warning: skill is from graphify 0.8.49, package is 0.9.2. Run 'graphify install' to update."
+    ],
     "metrics": {
       "nodes": 170,
       "links": 139,
-      "calls": 0
+      "relations": {
+        "defines": 25,
+        "imports_from": 22,
+        "instantiates": 29,
+        "contains": 63
+      }
     }
   },
   "native_baseline": {
-    "tool": "tree-sitter-systemverilog",
+    "tool": "tree-sitter-systemverilog module/package/function proxy",
     "status": "partial",
     "ok": false,
-    "seconds": 0.205,
+    "seconds": 0.045,
     "command": "/tmp/atlas-live-verilog-ibex/tree-sitter-systemverilog-venv/bin/python -c <tree-sitter-systemverilog definition counter> /tmp/atlas-live-verilog-ibex/repo/rtl",
     "metrics": {
       "files": 30,
@@ -343,7 +385,25 @@
           "path": "ibex_if_stage.sv",
           "error": "tree-sitter parse error"
         }
-      ]
+      ],
+      "validated_type_declarations": {
+        "type": 51,
+        "definitions_with_types": 144,
+        "sample_names": [
+          "cm_state_e",
+          "status_t",
+          "status_stk_t",
+          "dcsr_t",
+          "cpu_ctrl_sts_part_t",
+          "dummy_instr_e",
+          "lfsr_data_t",
+          "inval_state_e",
+          "id_fsm_e",
+          "ls_fsm_e",
+          "delayed_inputs_t",
+          "delayed_outputs_t"
+        ]
+      }
     }
   },
   "richer_native_baselines": {
@@ -361,26 +421,40 @@
       "status": "missing",
       "ok": false,
       "note": "svlint not installed"
+    },
+    "tree-sitter-systemverilog-type-declarations": {
+      "status": "ok",
+      "ok": true,
+      "note": "The same independent tree-sitter-systemverilog parse exposes 51 type_declaration nodes on the Ibex RTL slice; Atlas now indexes these typedef/type definitions in addition to the 93 module/package/function proxy definitions.",
+      "metrics": {
+        "definitions_with_types": 144,
+        "type_declarations": 51,
+        "module_package_function_proxy": 93
+      }
     }
   },
   "coverage": {
-    "atlas_vs_tree_sitter_systemverilog_definition_ratio": 1.0,
-    "atlas_verilog_definition_symbols": 93,
-    "native_definitions": 93
+    "atlas_vs_tree_sitter_systemverilog_module_function_proxy_definition_ratio": 1.5484,
+    "atlas_verilog_definition_symbols": 144,
+    "atlas_verilog_module_package_function_symbols": 93,
+    "atlas_verilog_type_definition_symbols": 51,
+    "native_definitions": 93,
+    "coverage_scope": "Clean lowRISC/ibex rtl target with generated graphify-out excluded. The independent tree-sitter-systemverilog proxy used by the existing benchmark counts 93 module/package/function definitions; Atlas now preserves those and additionally indexes 51 SystemVerilog typedef/type definitions validated from type_declaration nodes in the same parser/runtime."
   },
   "optimization": {
-    "cycles_run": 3,
-    "stop_reason": "Verilog/SystemVerilog live benchmark matched the tree-sitter-systemverilog definition coverage proxy and improved token score after compacting HDL source suffixes in terse plain locations while preserving full paths in JSON.",
+    "cycles_run": 4,
+    "stop_reason": "Verilog/SystemVerilog now exceeds the module/package/function coverage proxy by adding 51 validated typedef/type definitions from the same clean Ibex RTL target while preserving 10x token and latency query comparisons against Graphify.",
     "cycle_notes": [
       "cycle 1: lowRISC/ibex probe showed the generic Verilog regex missed functions with packed return types such as `function automatic logic [6:0] cm_stack_adj_base(...)`.",
       "cycle 2: after adding a SystemVerilog-specific declaration scanner, Atlas/tree-sitter-systemverilog definition coverage reached 1.0; equivalent query rows exceeded 5x latency and token output overall, while `ibex_core` saturated below 5x for both latency/token because graphify matched the terse `ibex_core.f` file-list node instead of the RTL module.",
-      "cycle 3: compacting `.v`/`.sv`/`.svh` suffixes in terse locations reduces exact RTL symbol output without changing indexed symbols or JSON paths."
+      "cycle 3: compacting `.v`/`.sv`/`.svh` suffixes in terse locations reduces exact RTL symbol output without changing indexed symbols or JSON paths.",
+      "cycle 4: native typedef/type extraction adds 51 SystemVerilog type definitions such as `status_t`, `dcsr_t`, and `pmp_cfg_t`; Graphify has no deterministic matching nodes for these typedef names on this slice."
     ]
   },
   "query_warmup": {
     "symbol": "ibex_core",
     "atlas_command": "curl -fsS http://127.0.0.1:4311/api/v1/symbols/ibex_core/explain?repo_id=rtl&format=plain",
-    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ibex_core",
+    "graphify_command": "/Users/damirdarasu/.langflow/uv/uv tool run --from graphifyy graphify explain ibex_core",
     "atlas_returncode": 0,
     "graphify_returncode": 0,
     "note": "Untimed warm-up for Atlas warm serve and graphify before measured query latency rows."
@@ -390,11 +464,11 @@
       "symbol": "ibex_core",
       "atlas_query_mode": "serve_explain_plain",
       "atlas_command": "curl -fsS http://127.0.0.1:4311/api/v1/symbols/ibex_core/explain?repo_id=rtl&format=plain",
-      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ibex_core",
+      "graphify_command": "/Users/damirdarasu/.langflow/uv/uv tool run --from graphifyy graphify explain ibex_core",
       "atlas_tokens": 2,
-      "graphify_tokens": 32,
-      "atlas_ms": 7.599,
-      "graphify_ms": 77.328,
+      "graphify_tokens": 13,
+      "atlas_ms": 7.29,
+      "graphify_ms": 110.65,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -411,30 +485,45 @@
         "  Degree:    0"
       ],
       "atlas_ms_samples": [
-        11.056,
-        10.025,
-        9.123,
-        8.645,
-        8.534,
-        7.699,
-        7.185,
-        7.599,
-        7.425,
-        7.156,
-        7.131,
-        7.529,
-        7.487
+        8.391,
+        7.769,
+        8.008,
+        7.923,
+        7.277,
+        7.406,
+        7.546,
+        7.134,
+        7.199,
+        7.283,
+        7.29,
+        6.948,
+        7.089
+      ],
+      "graphify_ms_samples": [
+        617.955,
+        109.248,
+        111.406,
+        107.244,
+        113.854,
+        112.091,
+        112.174,
+        108.682,
+        110.989,
+        110.65,
+        107.681,
+        108.518,
+        107.837
       ]
     },
     {
       "symbol": "ibex_top",
       "atlas_query_mode": "serve_explain_plain",
       "atlas_command": "curl -fsS http://127.0.0.1:4311/api/v1/symbols/ibex_top/explain?repo_id=rtl&format=plain",
-      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ibex_top",
+      "graphify_command": "/Users/damirdarasu/.langflow/uv/uv tool run --from graphifyy graphify explain ibex_top",
       "atlas_tokens": 2,
-      "graphify_tokens": 105,
-      "atlas_ms": 7.27,
-      "graphify_ms": 74.677,
+      "graphify_tokens": 39,
+      "atlas_ms": 7.583,
+      "graphify_ms": 110.214,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -449,34 +538,48 @@
         "  Type:      code",
         "  Community: 3",
         "  Degree:    6",
-        "",
         "Connections (6):"
       ],
       "atlas_ms_samples": [
-        7.484,
-        7.683,
-        7.086,
-        7.217,
-        6.755,
-        7.776,
-        7.388,
-        7.872,
-        7.521,
-        7.125,
-        7.27,
-        6.967,
-        6.758
+        7.769,
+        7.25,
+        7.612,
+        7.254,
+        6.978,
+        7.073,
+        7.733,
+        7.295,
+        7.596,
+        7.594,
+        7.583,
+        7.905,
+        7.5
+      ],
+      "graphify_ms_samples": [
+        625.212,
+        105.84,
+        109.176,
+        107.919,
+        110.214,
+        109.761,
+        118.628,
+        109.666,
+        110.402,
+        110.289,
+        113.508,
+        108.51,
+        112.146
       ]
     },
     {
       "symbol": "ibex_pkg",
       "atlas_query_mode": "serve_explain_plain",
       "atlas_command": "curl -fsS http://127.0.0.1:4311/api/v1/symbols/ibex_pkg/explain?repo_id=rtl&format=plain",
-      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ibex_pkg",
+      "graphify_command": "/Users/damirdarasu/.langflow/uv/uv tool run --from graphifyy graphify explain ibex_pkg",
       "atlas_tokens": 2,
-      "graphify_tokens": 46,
-      "atlas_ms": 6.985,
-      "graphify_ms": 75.145,
+      "graphify_tokens": 19,
+      "atlas_ms": 7.845,
+      "graphify_ms": 111.479,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -491,34 +594,48 @@
         "  Type:      code",
         "  Community: 11",
         "  Degree:    1",
-        "",
         "Connections (1):"
       ],
       "atlas_ms_samples": [
-        6.892,
-        7.277,
-        7.373,
-        6.994,
-        7.224,
-        6.652,
-        7.433,
-        6.884,
-        6.979,
-        7.273,
-        6.946,
-        6.985,
-        6.579
+        8.473,
+        7.845,
+        7.125,
+        7.334,
+        8.098,
+        9.454,
+        7.551,
+        7.581,
+        8.078,
+        8.282,
+        8.269,
+        7.757,
+        7.231
+      ],
+      "graphify_ms_samples": [
+        623.4,
+        107.74,
+        110.384,
+        109.673,
+        112.89,
+        111.51,
+        116.358,
+        110.438,
+        119.786,
+        111.479,
+        109.316,
+        112.881,
+        110.832
       ]
     },
     {
       "symbol": "ibex_alu",
       "atlas_query_mode": "serve_explain_plain",
       "atlas_command": "curl -fsS http://127.0.0.1:4311/api/v1/symbols/ibex_alu/explain?repo_id=rtl&format=plain",
-      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ibex_alu",
+      "graphify_command": "/Users/damirdarasu/.langflow/uv/uv tool run --from graphifyy graphify explain ibex_alu",
       "atlas_tokens": 2,
-      "graphify_tokens": 55,
-      "atlas_ms": 6.993,
-      "graphify_ms": 78.387,
+      "graphify_tokens": 23,
+      "atlas_ms": 7.291,
+      "graphify_ms": 111.478,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -533,34 +650,48 @@
         "  Type:      code",
         "  Community: 11",
         "  Degree:    2",
-        "",
         "Connections (2):"
       ],
       "atlas_ms_samples": [
-        6.991,
-        6.803,
-        7.068,
-        7.452,
-        6.517,
-        6.993,
-        6.806,
+        7.557,
+        6.556,
+        6.817,
+        7.34,
+        7.291,
         7.189,
-        6.883,
-        7.079,
-        7.279,
-        6.613,
-        7.274
+        7.237,
+        7.375,
+        7.214,
+        7.115,
+        7.417,
+        7.92,
+        7.97
+      ],
+      "graphify_ms_samples": [
+        639.981,
+        108.144,
+        112.309,
+        112.139,
+        110.841,
+        110.938,
+        111.478,
+        108.542,
+        113.8,
+        110.672,
+        116.251,
+        109.694,
+        112.119
       ]
     },
     {
       "symbol": "cm_stack_adj_base",
       "atlas_query_mode": "serve_explain_plain",
       "atlas_command": "curl -fsS http://127.0.0.1:4311/api/v1/symbols/cm_stack_adj_base/explain?repo_id=rtl&format=plain",
-      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain cm_stack_adj_base",
+      "graphify_command": "/Users/damirdarasu/.langflow/uv/uv tool run --from graphifyy graphify explain cm_stack_adj_base",
       "atlas_tokens": 2,
-      "graphify_tokens": 67,
-      "atlas_ms": 7.043,
-      "graphify_ms": 76.675,
+      "graphify_tokens": 19,
+      "atlas_ms": 7.338,
+      "graphify_ms": 116.968,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -575,34 +706,48 @@
         "  Type:      code",
         "  Community: 1",
         "  Degree:    1",
-        "",
         "Connections (1):"
       ],
       "atlas_ms_samples": [
-        6.83,
-        7.043,
-        7.218,
-        7.896,
-        7.106,
-        6.515,
-        7.262,
-        6.911,
-        6.996,
-        7.251,
-        6.615,
-        7.132,
-        6.648
+        7.67,
+        7.649,
+        7.202,
+        7.282,
+        7.96,
+        7.66,
+        7.47,
+        7.6,
+        7.332,
+        7.255,
+        7.338,
+        7.022,
+        7.236
+      ],
+      "graphify_ms_samples": [
+        629.129,
+        122.541,
+        120.983,
+        117.174,
+        117.803,
+        119.427,
+        116.968,
+        112.34,
+        114.029,
+        111.791,
+        114.242,
+        113.077,
+        111.919
       ]
     },
     {
       "symbol": "decode_i_insn",
       "atlas_query_mode": "serve_explain_plain",
       "atlas_command": "curl -fsS http://127.0.0.1:4311/api/v1/symbols/decode_i_insn/explain?repo_id=rtl&format=plain",
-      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain decode_i_insn",
+      "graphify_command": "/Users/damirdarasu/.langflow/uv/uv tool run --from graphifyy graphify explain decode_i_insn",
       "atlas_tokens": 2,
-      "graphify_tokens": 53,
-      "atlas_ms": 7.204,
-      "graphify_ms": 75.524,
+      "graphify_tokens": 19,
+      "atlas_ms": 7.717,
+      "graphify_ms": 112.063,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
@@ -617,30 +762,45 @@
         "  Type:      code",
         "  Community: 0",
         "  Degree:    1",
-        "",
         "Connections (1):"
       ],
       "atlas_ms_samples": [
-        7.163,
-        6.877,
-        7.263,
-        7.204,
-        6.456,
-        6.916,
-        6.592,
-        7.304,
-        7.404,
-        8.025,
-        7.428,
-        6.794,
-        7.237
+        8.63,
+        7.7,
+        8.083,
+        7.955,
+        8.272,
+        8.113,
+        7.717,
+        8.914,
+        7.71,
+        6.92,
+        6.878,
+        7.093,
+        6.872
+      ],
+      "graphify_ms_samples": [
+        649.509,
+        108.069,
+        109.082,
+        109.652,
+        112.305,
+        114.025,
+        112.892,
+        110.556,
+        114.453,
+        111.058,
+        110.069,
+        113.802,
+        112.063
       ]
     }
   ],
   "atlas_cli": {
-    "version": "v0.1.26-4-gd882e08",
-    "commit": "d882e08",
-    "date": "2026-06-30T07:15:57Z",
-    "measurement_note": "Query rows refreshed from 13-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+    "version": "dev",
+    "commit": "bf86a53",
+    "commit_full": "bf86a537b5c6b70df049a124191f83820b3c12c3",
+    "date": "2026-06-30T10:49:35Z",
+    "measurement_note": "Query rows refreshed from 13-sample medians against atlas serve format=plain using curl; Graphify rows measured through uv tool run after a clean graphify update. Atlas index was built before graphify-out existed in the target."
   }
 }
