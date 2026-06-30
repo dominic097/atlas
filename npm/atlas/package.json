@@ -14,7 +14,7 @@
   ],
   "scripts": {
     "postinstall": "node scripts/install.js",
-    "smoke": "node bin/atlas.js version"
+    "benchmark": "node bin/atlas.js version"
   },
   "keywords": [
     "atlas",

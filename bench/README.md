@@ -67,7 +67,7 @@ npm install -g @sourcegraph/scip-typescript typescript
 # scip-java can be a downloaded release binary or a coursier launch command.
 # The harness accepts commands with args, e.g.
 #   --scip-java "./coursier launch com.sourcegraph:scip-java_2.13:0.12.3 --"
-# JDTLS is a real LSP smoke adapter; eclipse.jdt.ls currently requires Java 21+.
+# JDTLS is a real LSP benchmark adapter; eclipse.jdt.ls currently requires Java 21+.
 # clangd is used as the C/C++ LSP baseline.
 
 # graphify installed by uv is often not on PATH; this path is auto-detected too.
@@ -123,37 +123,15 @@ resort) after measurement.
 See `bench/HONEST_FINDINGS.md` for the measured saturation analysis (where a 25x
 target is or is not physically reachable, with numbers).
 
-## Additional graphify-language smokes
+## Additional graphify-language benchmarks
 
-`additional_language_smoke.py` adds live checks for graphify-supported languages
-outside the core matrix. Each smoke uses a fresh open-source clone, Atlas with
-SQLite, graphify, and the best scriptable native parser baseline available on
-this machine. Benchmark-only dependencies are installed under `/tmp/...` workdirs
-and do not enter the Atlas runtime binary.
+Per-language native-parser evidence is consolidated in
+`bench/RECALL_FINDINGS.md`, with matrix-level summaries in
+`bench/MATRIX_REPORT.md` and `bench/MATRIX_REPORT.json`. The old per-language
+live JSON artifacts and one-off helper scripts were removed after consolidation,
+so committed evidence should be updated in those consolidated reports rather
+than by adding fresh per-language raw files.
 
-Current live artifacts include Apex, Astro, Bash, Blade, BYOND/DM, C#, CUDA,
-Dart, Delphi/Lazarus, .NET project files, EJS, Elixir, ETS, Fortran,
-Groovy/Gradle, JSON config, Julia, Kotlin, Lua, Markdown, Objective-C, Pascal,
-PHP, PowerShell, R, Razor, Ruby, Rust, Scala, Svelte, SQL, Swift,
-Terraform/HCL, Verilog/SystemVerilog, Vue, and Zig. Example:
-
-```sh
-CGO_ENABLED=1 go build -o bin/atlas ./cmd/atlas
-python3 bench/additional_language_smoke.py \
-  --language terraform \
-  --atlas ./bin/atlas \
-  --graphify "$HOME/.local/share/uv/tools/graphifyy/bin/graphify" \
-  --out bench/LIVE_TERRAFORM_SMOKE.json
-```
-
-For languages where graphify exposes no equivalent query rows, run the
-five-pass saturation loop and keep the raw artifact:
-
-```sh
-python3 bench/saturation_check.py \
-  --languages byond,ets,r \
-  --iterations 5 \
-  --atlas ./bin/atlas \
-  --graphify "$HOME/.local/share/uv/tools/graphifyy/bin/graphify" \
-  --out bench/SATURATION_REPORT.json
-```
+For languages where graphify exposes no equivalent query rows, keep the ceiling
+documented in `bench/RECALL_FINDINGS.md` and `bench/SATURATION_REPORT.md` with
+the exact counts and reason the ratio cannot be computed.

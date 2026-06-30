@@ -2,7 +2,7 @@
 
 Measured-only. Every number below was produced live on this machine (Apple
 Silicon, Go 1.25, CGO enabled) against `sirupsen/logrus` (Go) and existing live
-smoke artifacts; raw data is preserved in `bench/MATRIX_REPORT.json`
+benchmark artifacts; raw data is preserved in `bench/MATRIX_REPORT.json`
 (`atlas_warm_serve`, `tools.atlas.metrics`, `queries`) and the per-language logs.
 Where a target ratio is not reached, the bottleneck is named and classified as
 **physical** (a floor that no amount of code change moves below) or
@@ -89,7 +89,7 @@ Atlas already emits near-minimal answers, so the token ratio is large because
 graphify is verbose, not because Atlas is padded — and it cannot grow much
 further without changing retrieval semantics.
 
-SQL (from `bench/LIVE_SQL_SMOKE.json`, measured):
+SQL (from `bench/RECALL_FINDINGS.md`, measured):
 
 | symbol | Atlas tokens | graphify tokens | ratio |
 |---|--:|--:|--:|

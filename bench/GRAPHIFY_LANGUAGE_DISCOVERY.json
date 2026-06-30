@@ -6,7 +6,7 @@
   "code_extension_count": 88,
   "evidence": [
     "CLI help from `graphify --help` did not enumerate languages, but confirmed `update`, `extract`, and code-only AST update commands.",
-    "`graphify.detect.CODE_EXTENSIONS` plus a runtime `detect()` smoke listed code extensions.",
+    "`graphify.detect.CODE_EXTENSIONS` plus a runtime `detect()` benchmark listed code extensions.",
     "`graphify.extract._DISPATCH` provided the deterministic extractor map used as the parser-parity target."
   ],
   "detector_only_code_extensions": [
@@ -794,7 +794,7 @@
     ".vue",
     ".zig"
   ],
-  "detect_smoke_code_extensions": [
+  "detect_benchmark_code_extensions": [
     ".F",
     ".F03",
     ".F08",
@@ -884,5 +884,5 @@
     ".vue",
     ".zig"
   ],
-  "detect_smoke_total_files": 88
+  "detect_benchmark_total_files": 88
 }

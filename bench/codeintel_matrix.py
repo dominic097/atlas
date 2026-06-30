@@ -68,7 +68,7 @@ GRAPHIFY_DISCOVERY_FALLBACK = {
     "code_extension_count": 0,
     "evidence": [
         "CLI help from `graphify --help` did not enumerate languages, but confirmed `update`, `extract`, and code-only AST update commands.",
-        "`graphify.detect.CODE_EXTENSIONS` plus a runtime `detect()` smoke listed code extensions.",
+        "`graphify.detect.CODE_EXTENSIONS` plus a runtime `detect()` benchmark listed code extensions.",
         "`graphify.extract._DISPATCH` provided the deterministic extractor map used as the parser-parity target.",
     ],
     "detector_only_code_extensions": [".ejs", ".ets", ".r"],
@@ -293,10 +293,10 @@ with tempfile.TemporaryDirectory() as td:
     by_path = {}
     for i, ext in enumerate(sorted(detect.CODE_EXTENSIONS)):
         path = root / f"sample_{i:03d}{ext}"
-        path.write_text("// graphify discovery smoke\n", encoding="utf-8")
+        path.write_text("// graphify discovery benchmark\n", encoding="utf-8")
         by_path[str(path.resolve())] = ext
     detected = detect.detect(root)
-    detect_smoke_code_extensions = sorted(
+    detect_benchmark_code_extensions = sorted(
         by_path.get(str(Path(path).resolve()), Path(path).suffix)
         for path in detected.get("files", {}).get("code", [])
     )
@@ -314,8 +314,8 @@ print(json.dumps({
     "dispatch": dispatch,
     "special": special,
     "code_extensions": sorted(detect.CODE_EXTENSIONS),
-    "detect_smoke_code_extensions": detect_smoke_code_extensions,
-    "detect_smoke_total_files": detected.get("total_files", 0),
+    "detect_benchmark_code_extensions": detect_benchmark_code_extensions,
+    "detect_benchmark_total_files": detected.get("total_files", 0),
 }, sort_keys=True))
 '''
     probe = run([py, "-c", script], timeout=30)
@@ -354,8 +354,8 @@ print(json.dumps({
             "dispatch": dispatch,
             "special": special,
             "code_extensions": code_exts,
-            "detect_smoke_code_extensions": runtime.get("detect_smoke_code_extensions", []),
-            "detect_smoke_total_files": runtime.get("detect_smoke_total_files", 0),
+            "detect_benchmark_code_extensions": runtime.get("detect_benchmark_code_extensions", []),
+            "detect_benchmark_total_files": runtime.get("detect_benchmark_total_files", 0),
         }
     )
     return data
@@ -1804,15 +1804,15 @@ def sourcekit_lsp_manifest_entry() -> dict[str, Any]:
     return entry
 
 
-def smoke_tool_versions() -> list[dict[str, Any]]:
+def benchmark_tool_versions() -> list[dict[str, Any]]:
     versions: list[dict[str, Any]] = []
-    for path, display_path in live_smoke_paths():
+    for path, display_path in live_benchmark_paths():
         try:
-            smoke = json.loads(path.read_text())
+            benchmark = json.loads(path.read_text())
         except (OSError, json.JSONDecodeError) as exc:
             versions.append({"artifact": display_path, "status": "unreadable", "error": str(exc)})
             continue
-        native = smoke.get("native_baseline") or {}
+        native = benchmark.get("native_baseline") or {}
         metrics = native.get("metrics") or {}
         metric_versions = {
             key: value
@@ -1822,12 +1822,12 @@ def smoke_tool_versions() -> list[dict[str, Any]]:
         versions.append(
             {
                 "artifact": display_path,
-                "language": smoke.get("language"),
+                "language": benchmark.get("language"),
                 "native_tool": native.get("tool"),
                 "native_status": native.get("status"),
                 "native_command": native.get("command"),
                 "metric_versions": metric_versions,
-                "richer_native_baselines": smoke.get("richer_native_baselines") or {},
+                "richer_native_baselines": benchmark.get("richer_native_baselines") or {},
             }
         )
     return versions
@@ -1871,7 +1871,7 @@ def benchmark_tool_manifest(args: argparse.Namespace, graphify_discovery: dict[s
             "python": sys.version.split()[0],
         },
         "core_tools": probes,
-        "live_smoke_tools": smoke_tool_versions(),
+        "live_benchmark_tools": benchmark_tool_versions(),
     }
 
 
@@ -1897,10 +1897,10 @@ def render_tool_manifest(tool_manifest: dict[str, Any]) -> list[str]:
         if item.get("tool") == "graphify" and item.get("discovered_version"):
             version = item.get("discovered_version")
         w(f"| {item.get('tool')} | {item.get('status')} | `{version}` | `{item.get('command', '')}` |")
-    smoke_count = len(tool_manifest.get("live_smoke_tools") or [])
-    versioned = sum(1 for item in tool_manifest.get("live_smoke_tools") or [] if item.get("metric_versions"))
+    benchmark_count = len(tool_manifest.get("live_benchmark_tools") or [])
+    versioned = sum(1 for item in tool_manifest.get("live_benchmark_tools") or [] if item.get("metric_versions"))
     w("")
-    w(f"- Live smoke native-version details: {versioned}/{smoke_count} artifacts expose explicit native tool or library version fields in raw JSON; all artifacts include native command/status.")
+    w(f"- Live benchmark native-version details: {versioned}/{benchmark_count} artifacts expose explicit native tool or library version fields in raw JSON; all artifacts include native command/status.")
     w("")
     return lines
 
@@ -2040,7 +2040,7 @@ def render_warm_latency(results: list[dict[str, Any]]) -> list[str]:
             f"- {lang} warm-vs-warm context: both Atlas `serve` and {lsp_key} run as persistent "
             f"daemons. Atlas warm explain median is {warm.get('explain_median_ms')}ms and warm /healthz "
             f"is {warm.get('healthz_median_ms')}ms. {lsp_key}'s steady-state per-request latency is "
-            "measured separately in its LSP smoke (different query semantics: a full Atlas context "
+            "measured separately in its LSP benchmark (different query semantics: a full Atlas context "
             "bundle vs a single LSP method), so the two are reported side by side, not as a single ratio."
         )
     w("")
@@ -2070,9 +2070,9 @@ def scip_navigation_symbols(metrics: dict[str, Any]) -> int:
     return sum(count for kind, count in kinds.items() if kind not in excluded)
 
 
-def live_smoke_paths() -> list[tuple[Path, str]]:
+def live_benchmark_paths() -> list[tuple[Path, str]]:
     bench_dir = Path(__file__).parent
-    paths = sorted(path for path in bench_dir.glob("LIVE_*_SMOKE.json") if path.name != "LIVE_MCP_CONTEXT_SMOKE.json")
+    paths = sorted(path for path in bench_dir.glob("LIVE_*_BENCHMARK.json") if path.name != "LIVE_MCP_CONTEXT_BENCHMARK.json")
     if not paths:
         return []
     return [(path, f"bench/{path.name}") for path in paths]
@@ -2085,45 +2085,45 @@ GRAPHIFY_AUDIT_EVIDENCE = {
     "typescript": [("core", "typescript")],
     "java": [("core", "java")],
     "c": [("core", "c")],
-    "cpp/cuda": [("core", "cpp"), ("smoke", "cuda")],
-    "groovy/gradle": [("smoke", "groovy")],
-    "csharp": [("smoke", "csharp")],
-    "rust": [("smoke", "rust")],
-    "ruby": [("smoke", "ruby")],
-    "kotlin": [("smoke", "kotlin")],
-    "scala": [("smoke", "scala")],
-    "php": [("smoke", "php")],
-    "blade": [("smoke", "blade")],
-    "swift": [("smoke", "swift")],
-    "lua": [("smoke", "lua")],
-    "zig": [("smoke", "zig")],
-    "powershell": [("smoke", "powershell")],
-    "elixir": [("smoke", "elixir")],
-    "objective-c": [("smoke", "objc")],
-    "julia": [("smoke", "julia")],
-    "fortran": [("smoke", "fortran")],
-    "dart": [("smoke", "dart")],
-    "verilog/systemverilog": [("smoke", "verilog")],
-    "sql": [("smoke", "sql")],
-    "markdown": [("smoke", "markdown")],
-    "pascal": [("smoke", "pascal")],
-    "delphi/lazarus forms": [("smoke", "delphi")],
-    "shell": [("smoke", "bash")],
-    "json config": [("smoke", "json")],
-    "terraform/hcl": [("smoke", "terraform")],
-    "byond dm": [("smoke", "byond")],
-    "dotnet project": [("smoke", "dotnet")],
-    "razor": [("smoke", "razor")],
-    "apex": [("smoke", "apex")],
-    "vue": [("smoke", "vue")],
-    "svelte": [("smoke", "svelte")],
-    "astro": [("smoke", "astro")],
+    "cpp/cuda": [("core", "cpp"), ("benchmark", "cuda")],
+    "groovy/gradle": [("benchmark", "groovy")],
+    "csharp": [("benchmark", "csharp")],
+    "rust": [("benchmark", "rust")],
+    "ruby": [("benchmark", "ruby")],
+    "kotlin": [("benchmark", "kotlin")],
+    "scala": [("benchmark", "scala")],
+    "php": [("benchmark", "php")],
+    "blade": [("benchmark", "blade")],
+    "swift": [("benchmark", "swift")],
+    "lua": [("benchmark", "lua")],
+    "zig": [("benchmark", "zig")],
+    "powershell": [("benchmark", "powershell")],
+    "elixir": [("benchmark", "elixir")],
+    "objective-c": [("benchmark", "objc")],
+    "julia": [("benchmark", "julia")],
+    "fortran": [("benchmark", "fortran")],
+    "dart": [("benchmark", "dart")],
+    "verilog/systemverilog": [("benchmark", "verilog")],
+    "sql": [("benchmark", "sql")],
+    "markdown": [("benchmark", "markdown")],
+    "pascal": [("benchmark", "pascal")],
+    "delphi/lazarus forms": [("benchmark", "delphi")],
+    "shell": [("benchmark", "bash")],
+    "json config": [("benchmark", "json")],
+    "terraform/hcl": [("benchmark", "terraform")],
+    "byond dm": [("benchmark", "byond")],
+    "dotnet project": [("benchmark", "dotnet")],
+    "razor": [("benchmark", "razor")],
+    "apex": [("benchmark", "apex")],
+    "vue": [("benchmark", "vue")],
+    "svelte": [("benchmark", "svelte")],
+    "astro": [("benchmark", "astro")],
 }
 
 GRAPHIFY_DETECTOR_ONLY_EVIDENCE = {
-    ".ejs": [("smoke", "ejs")],
-    ".ets": [("smoke", "ets")],
-    ".r": [("smoke", "r")],
+    ".ejs": [("benchmark", "ejs")],
+    ".ets": [("benchmark", "ets")],
+    ".r": [("benchmark", "r")],
 }
 
 
@@ -2139,20 +2139,20 @@ def _ratio_x(num: float, den: float) -> str:
     return "n/a" if value is None else f"{value}x"
 
 
-def smoke_audit_summary(language: str) -> tuple[bool, str]:
-    path = Path(__file__).parent / f"LIVE_{language.upper()}_SMOKE.json"
+def benchmark_audit_summary(language: str) -> tuple[bool, str]:
+    path = Path(__file__).parent / f"LIVE_{language.upper()}_BENCHMARK.json"
     display_path = f"bench/{path.name}"
     if not path.exists():
         return False, f"`{display_path}` missing"
     try:
-        smoke = json.loads(path.read_text())
+        benchmark = json.loads(path.read_text())
     except (OSError, json.JSONDecodeError) as exc:
         return False, f"`{display_path}` unreadable: {exc}"
 
-    native = smoke.get("native_baseline") or {}
-    coverage = smoke.get("coverage") or {}
-    atlas = smoke.get("atlas", {}).get("index", {})
-    queries = smoke.get("queries") or []
+    native = benchmark.get("native_baseline") or {}
+    coverage = benchmark.get("coverage") or {}
+    atlas = benchmark.get("atlas", {}).get("index", {})
+    queries = benchmark.get("queries") or []
     qt = query_totals(queries) if queries else {}
     query_bits = ""
     if qt:
@@ -2164,7 +2164,7 @@ def smoke_audit_summary(language: str) -> tuple[bool, str]:
     ok = bool(atlas.get("indexed_files")) and native_has_evidence
     status = "ok" if native.get("ok") else f"native_limited={native.get('status', 'unknown')}"
     summary = (
-        f"`{display_path}` {status}; repo `{smoke.get('repo')}` commit `{smoke.get('commit')}`; "
+        f"`{display_path}` {status}; repo `{benchmark.get('repo')}` commit `{benchmark.get('commit')}`; "
         f"native `{native.get('tool', 'native')}`; {_coverage_ratio_text(coverage)}{query_bits}"
     )
     return ok, summary
@@ -2203,8 +2203,8 @@ def audit_evidence_summary(items: list[tuple[str, str]], results_by_language: di
     for kind, language in items:
         if kind == "core":
             item_ok, summary = core_audit_summary(language, results_by_language)
-        elif kind == "smoke":
-            item_ok, summary = smoke_audit_summary(language)
+        elif kind == "benchmark":
+            item_ok, summary = benchmark_audit_summary(language)
         else:
             item_ok, summary = False, f"unknown evidence kind `{kind}` for `{language}`"
         ok = ok and item_ok
@@ -2238,7 +2238,7 @@ def render_graphify_coverage_audit(graphify_discovery: dict[str, Any], results: 
     w("")
     w(
         f"- Deterministic graphify families covered by Atlas evidence: {deterministic_ok}/{deterministic_total}. "
-        f"Detector-only extensions covered by live Atlas smokes: {detector_ok}/{len(detector_only)}."
+        f"Detector-only extensions covered by live Atlas benchmarks: {detector_ok}/{len(detector_only)}."
     )
     unsupported = graphify_discovery.get("unsupported_rows") or []
     if unsupported:
@@ -2293,37 +2293,37 @@ def render_saturation_report() -> list[str]:
         w("")
         w(
             "Saturation note: these languages are marked saturated only for graphify-equivalent query-score improvement. "
-            "Their native coverage proxies remain in the live smoke artifacts; no 5x query claim is made where graphify exposes no equivalent rows."
+            "Their native coverage proxies remain in the live benchmark artifacts; no 5x query claim is made where graphify exposes no equivalent rows."
         )
     w("")
     return lines
 
 
-def render_mcp_context_smoke() -> list[str]:
-    path = Path(__file__).parent / "LIVE_MCP_CONTEXT_SMOKE.json"
+def render_mcp_context_benchmark() -> list[str]:
+    path = Path(__file__).parent / "LIVE_MCP_CONTEXT_BENCHMARK.json"
     display_path = f"bench/{path.name}"
     if not path.exists():
         return []
     try:
-        smoke = json.loads(path.read_text())
+        benchmark = json.loads(path.read_text())
     except (OSError, json.JSONDecodeError) as exc:
         return [f"- Could not load `{display_path}`: {exc}.", ""]
 
-    commands = smoke.get("commands", {})
-    index = smoke.get("index", {})
+    commands = benchmark.get("commands", {})
+    index = benchmark.get("index", {})
     index_result = index.get("result", {})
-    metrics = smoke.get("metrics", {})
-    graphify = smoke.get("graphify", {})
-    quality = smoke.get("quality", {})
-    registrations = smoke.get("agent_registrations") or [smoke.get("agent_registration", {})]
+    metrics = benchmark.get("metrics", {})
+    graphify = benchmark.get("graphify", {})
+    quality = benchmark.get("quality", {})
+    registrations = benchmark.get("agent_registrations") or [benchmark.get("agent_registration", {})]
 
     lines: list[str] = []
     w = lines.append
-    w("## Pulse local MCP context smoke")
+    w("## Pulse local MCP context benchmark")
     w("")
     w(
-        f"Raw artifact: `{display_path}`. Smoke used a fresh shallow clone of `{smoke.get('repo')}` "
-        f"at commit `{smoke.get('commit')}` and indexed it into local SQLite."
+        f"Raw artifact: `{display_path}`. Benchmark used a fresh shallow clone of `{benchmark.get('repo')}` "
+        f"at commit `{benchmark.get('commit')}` and indexed it into local SQLite."
     )
     w("")
     w("Commands:")
@@ -2378,44 +2378,44 @@ def render_mcp_context_smoke() -> list[str]:
     passed = [key for key in checks if quality.get(key)]
     w(f"- Useful-context checks passed: {len(passed)}/{len(checks)} ({', '.join(passed)}).")
     if (metrics.get("raw_file_to_mcp_plain_token_ratio") or 0) >= 5:
-        w("5x note: this smoke proves the Pulse-style local MCP path is more than 5x lower token cost than raw changed-file context while preserving review-relevant symbols.")
+        w("5x note: this benchmark proves the Pulse-style local MCP path is more than 5x lower token cost than raw changed-file context while preserving review-relevant symbols.")
     else:
-        w("Saturation note: this smoke does not prove the raw-file/MCP token-cost 5x target; inspect the raw artifact before claiming it.")
+        w("Saturation note: this benchmark does not prove the raw-file/MCP token-cost 5x target; inspect the raw artifact before claiming it.")
     w("")
     return lines
 
 
-def render_live_smokes() -> list[str]:
-    smoke_paths = live_smoke_paths()
-    if not smoke_paths:
+def render_live_benchmarks() -> list[str]:
+    benchmark_paths = live_benchmark_paths()
+    if not benchmark_paths:
         return []
 
     lines: list[str] = []
     w = lines.append
-    w("## Live additional-language smokes")
+    w("## Live additional-language benchmarks")
     w("")
-    for path, display_path in smoke_paths:
-        lines.extend(render_one_live_smoke(path, display_path))
+    for path, display_path in benchmark_paths:
+        lines.extend(render_one_live_benchmark(path, display_path))
     return lines
 
 
-def render_one_live_smoke(path: Path, display_path: str) -> list[str]:
+def render_one_live_benchmark(path: Path, display_path: str) -> list[str]:
     try:
-        smoke = json.loads(path.read_text())
+        benchmark = json.loads(path.read_text())
     except (OSError, json.JSONDecodeError) as exc:
         return [
             f"- Could not load `{display_path}`: {exc}.",
             "",
         ]
 
-    atlas = smoke.get("atlas", {})
-    graphify = smoke.get("graphify", {})
+    atlas = benchmark.get("atlas", {})
+    graphify = benchmark.get("graphify", {})
     index = atlas.get("index", {})
     reindex = atlas.get("reindex", {})
-    commands = smoke.get("commands", {})
+    commands = benchmark.get("commands", {})
     lines: list[str] = []
     w = lines.append
-    raw_language = str(smoke.get("language", path.stem))
+    raw_language = str(benchmark.get("language", path.stem))
     language = {
         "apex": "Apex",
         "astro": "Astro",
@@ -2450,8 +2450,8 @@ def render_one_live_smoke(path: Path, display_path: str) -> list[str]:
     w(f"### {language}")
     w("")
     w(
-        f"Raw artifact: `{display_path}`. Smoke used a fresh shallow clone of `{smoke.get('repo')}` at commit "
-        f"`{smoke.get('commit')}`. `graphify-out/` was removed before Atlas indexed "
+        f"Raw artifact: `{display_path}`. Benchmark used a fresh shallow clone of `{benchmark.get('repo')}` at commit "
+        f"`{benchmark.get('commit')}`. `graphify-out/` was removed before Atlas indexed "
         "the repo, then graphify was run afterward for the comparison."
     )
     if commands.get("target_path"):
@@ -2486,27 +2486,27 @@ def render_one_live_smoke(path: Path, display_path: str) -> list[str]:
             f"- graphify rebuilt {graphify_metrics.get('nodes')} nodes and {graphify_metrics.get('links')} links "
             f"in {graphify_seconds}s."
         )
-    if smoke.get("graphify_detector_only"):
+    if benchmark.get("graphify_detector_only"):
         w(
-            f"- graphify detector-only caveat: `{smoke['graphify_detector_only']}` is present in `CODE_EXTENSIONS`, "
+            f"- graphify detector-only caveat: `{benchmark['graphify_detector_only']}` is present in `CODE_EXTENSIONS`, "
             "but this installed graphify runtime has no `_DISPATCH` extractor for it; graphify query rows are kept as missing-baseline evidence rather than 5x proof."
         )
     w("- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.")
-    native = smoke.get("native_baseline") or {}
+    native = benchmark.get("native_baseline") or {}
     if native:
         native_metrics = native.get("metrics", {})
         native_status = native.get("status", "unknown")
         native_bits = ", ".join(f"{k}:{v}" for k, v in native_metrics.items() if isinstance(v, (int, float, str)))
         w(f"- Native baseline `{native.get('tool', 'native')}` status: {native_status}" + (f" ({native_bits})." if native_bits else "."))
-    richer = smoke.get("richer_native_baselines") or {}
+    richer = benchmark.get("richer_native_baselines") or {}
     missing_richer = [name for name, data in richer.items() if data.get("status") == "missing"]
     if missing_richer:
         w(f"- Richer native baselines not available on this machine: {', '.join(f'`{name}`' for name in missing_richer)}.")
-    coverage = smoke.get("coverage") or {}
+    coverage = benchmark.get("coverage") or {}
     if coverage:
         cov_text = ", ".join(f"{k}: {'n/a' if v is None else v}" for k, v in coverage.items())
         w(f"- Coverage proxy: {cov_text}.")
-    optimization = smoke.get("optimization") or {}
+    optimization = benchmark.get("optimization") or {}
     if optimization:
         w(
             f"- Optimization cycles: {optimization.get('cycles_run')} "
@@ -2525,7 +2525,7 @@ def render_one_live_smoke(path: Path, display_path: str) -> list[str]:
     equivalent_graphify_tokens = 0
     equivalent_rows = 0
     missing_rows: list[str] = []
-    for row in smoke.get("queries", []):
+    for row in benchmark.get("queries", []):
         atlas_ms = float(row.get("atlas_ms", 0) or 0)
         graphify_ms = float(row.get("graphify_ms", 0) or 0)
         atlas_tokens = int(row.get("atlas_tokens", 0) or 0)
@@ -2560,25 +2560,25 @@ def render_one_live_smoke(path: Path, display_path: str) -> list[str]:
     language_label = language
     if equivalent_rows == 0:
         w(
-            f"No-equivalent saturation note: this {language_label} smoke proves Atlas indexes the live language slice "
+            f"No-equivalent saturation note: this {language_label} benchmark proves Atlas indexes the live language slice "
             "and matches the native coverage proxy, but graphify returned no equivalent query rows. Latency/token ratios "
             "from missing rows are not treated as 5x evidence; see the saturation loop artifact where applicable."
         )
-    elif smoke.get("graphify_detector_only"):
+    elif benchmark.get("graphify_detector_only"):
         w(
-            f"Detector-only saturation note: this {language_label} smoke proves Atlas indexes the live language slice "
+            f"Detector-only saturation note: this {language_label} benchmark proves Atlas indexes the live language slice "
             "and matches the native coverage proxy, but it does not prove graphify/native 5x query superiority for this extension because "
             "the installed graphify runtime has no deterministic extractor for it."
         )
     elif (latency_ratio or 0) >= 5 and (token_ratio or 0) >= 5:
         w(
-            f"5x note: this {language_label} smoke meets the 5x threshold on equivalent query rows "
+            f"5x note: this {language_label} benchmark meets the 5x threshold on equivalent query rows "
             f"for latency ({latency_ratio}x) and token output ({token_ratio}x). Accuracy still uses the "
             "native/graphify coverage proxies above; this is not a blanket quality claim."
         )
     else:
         w(
-            f"Saturation note: this {language_label} smoke proves Atlas has lower latency than graphify "
+            f"Saturation note: this {language_label} benchmark proves Atlas has lower latency than graphify "
             f"on these live queries ({latency_ratio}x overall), but it does not prove every 5x target "
             f"(token ratio {token_ratio}x overall). Use the raw JSON rows to distinguish exact-symbol "
             "lookup from budgeted context output before making a 5x token claim."
@@ -2620,10 +2620,10 @@ def render(
             f"{graphify_discovery['dispatch_count']} deterministic extractor entries; "
             f"`CODE_EXTENSIONS` exposed {graphify_discovery['code_extension_count']} code extensions."
         )
-    if graphify_discovery.get("detect_smoke_total_files"):
+    if graphify_discovery.get("detect_benchmark_total_files"):
         w(
-            f"- Runtime detect smoke: generated one sample per `CODE_EXTENSIONS` entry; "
-            f"`detect()` returned {graphify_discovery['detect_smoke_total_files']} code files."
+            f"- Runtime detect benchmark: generated one sample per `CODE_EXTENSIONS` entry; "
+            f"`detect()` returned {graphify_discovery['detect_benchmark_total_files']} code files."
         )
     if graphify_discovery.get("runtime_error"):
         w(f"- Runtime discovery warning: {graphify_discovery['runtime_error']}. Falling back to the checked-in family table.")
@@ -2638,9 +2638,9 @@ def render(
         w(line)
     for line in render_saturation_report():
         w(line)
-    for line in render_mcp_context_smoke():
+    for line in render_mcp_context_benchmark():
         w(line)
-    for line in render_live_smokes():
+    for line in render_live_benchmarks():
         w(line)
     w("## Tool matrix\n")
     w("| Language | Repo | Atlas | graphify | SCIP | LSP |")
@@ -2841,7 +2841,7 @@ def render(
             w(f"- SCIP navigation symbols (excluding local variables/packages) = {scip_nav}; Atlas symbols vs SCIP navigation symbols = {ratio(am.get('symbols', 0), scip_nav)}x.")
         if jdtls.get("ok"):
             jm = jdtls["metrics"]
-            w(f"- JDTLS LSP smoke: initialized against build root {jm.get('build_root', '')}, sampled {jm.get('document_symbol_files', 0)}/{jm.get('sample_files', 0)} files, {jm.get('document_symbols', 0)} document symbols, {jm.get('workspace_symbols_query_gson', 0)} workspace symbols for query `Gson`, {jm.get('diagnostics', 0)} diagnostics.")
+            w(f"- JDTLS LSP benchmark: initialized against build root {jm.get('build_root', '')}, sampled {jm.get('document_symbol_files', 0)}/{jm.get('sample_files', 0)} files, {jm.get('document_symbols', 0)} document symbols, {jm.get('workspace_symbols_query_gson', 0)} workspace symbols for query `Gson`, {jm.get('diagnostics', 0)} diagnostics.")
             if jdtls.get("note"):
                 w(f"- LSP caveat: {jdtls.get('note')}.")
         if java.get("queries"):
@@ -2889,7 +2889,7 @@ def render(
             w(f"- graphify extracted calls: {gm.get('extracted_calls', 0)}/{gm.get('calls', 0)} = {gm.get('extracted_pct', 0)}%.")
         if clangd.get("ok"):
             cm = clangd["metrics"]
-            w(f"- clangd LSP smoke: sampled {cm.get('document_symbol_files', 0)}/{cm.get('sample_files', 0)} files, {cm.get('document_symbols', 0)} document symbols, {cm.get('diagnostics', 0)} diagnostics.")
+            w(f"- clangd LSP benchmark: sampled {cm.get('document_symbol_files', 0)}/{cm.get('sample_files', 0)} files, {cm.get('document_symbols', 0)} document symbols, {cm.get('diagnostics', 0)} diagnostics.")
             if clangd.get("note"):
                 w(f"- LSP caveat: {clangd.get('note')}.")
         if result.get("queries"):

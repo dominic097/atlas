@@ -290,10 +290,6 @@ func Parse(repoID, repoFullName, filePath, language string, content []byte) (Res
 		// non-AST-call languages until per-language AST call extractors land).
 		if grammar, query, ok := tagsGrammar(language); ok {
 			rawSyms = tagsSymbols(language, grammar, query, content)
-		} else {
-			// Grammar/query unexpectedly unavailable: fall back rather than drop
-			// the file entirely.
-			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		if len(imports) == 0 {
 			imports = parseLightweightImports(language, content)
@@ -303,198 +299,148 @@ func Parse(repoID, repoFullName, filePath, language string, content []byte) (Res
 		if syms, ok := parseElixirNative(content); ok {
 			rawSyms = syms
 			imports = parseLightweightImports(language, content)
-		} else {
-			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "objc":
 		if syms, ok := parseObjCNative(content); ok {
 			rawSyms = syms
 			imports = parseLightweightImports(language, content)
-		} else {
-			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "julia":
 		if syms, ok := parseJuliaNative(content); ok {
 			rawSyms = syms
 			imports = parseLightweightImports(language, content)
-		} else {
-			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "dart":
 		if syms, ok := parseDartNative(content); ok {
 			rawSyms = syms
 			imports = parseLightweightImports(language, content)
-		} else {
-			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "r":
 		if syms, ok := parseRNative(content); ok {
 			rawSyms = syms
 			imports = parseLightweightImports(language, content)
-		} else {
-			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "fortran":
 		if syms, ok := parseFortranNative(content); ok {
 			rawSyms = syms
 			imports = parseLightweightImports(language, content)
-		} else {
-			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "verilog":
 		if syms, ok := parseVerilogNative(content); ok {
 			rawSyms = syms
 			imports = parseLightweightImports(language, content)
-		} else {
-			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "groovy":
 		if syms, groovyImports, ok := parseGroovyNative(content); ok {
 			rawSyms = syms
 			imports = groovyImports
-		} else {
-			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "bash":
 		if syms, bashImports, ok := parseBashNative(content); ok {
 			rawSyms = syms
 			imports = bashImports
-		} else {
-			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "powershell":
 		if syms, powerShellImports, ok := parsePowerShellNative(content); ok {
 			rawSyms = syms
 			imports = powerShellImports
-		} else {
-			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "vue":
 		if syms, vueImports, ok := parseVueNative(content); ok {
 			rawSyms = syms
 			imports = vueImports
-		} else {
-			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "svelte":
 		if syms, svelteImports, ok := parseSvelteNative(content); ok {
 			rawSyms = syms
 			imports = svelteImports
-		} else {
-			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "astro":
 		if syms, astroImports, ok := parseAstroNative(filePath, content); ok {
 			rawSyms = syms
 			imports = astroImports
-		} else {
-			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "razor":
 		if syms, razorImports, ok := parseRazorNative(filePath, content); ok {
 			rawSyms = syms
 			imports = razorImports
-		} else {
-			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "blade":
 		if syms, bladeImports, ok := parseBladeNative(filePath, content); ok {
 			rawSyms = syms
 			imports = bladeImports
-		} else {
-			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "ejs":
 		if syms, ejsImports, ok := parseEJSNative(filePath, content); ok {
 			rawSyms = syms
 			imports = ejsImports
-		} else {
-			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "pascal":
 		if syms, ok := parsePascalNative(content); ok {
 			rawSyms = syms
 			imports = parseLightweightImports(language, content)
-		} else {
-			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "sql":
 		if syms, ok := parseSQLNative(content); ok {
 			rawSyms = syms
-		} else {
-			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "terraform":
 		if syms, ok := parseTerraformNative(content); ok {
 			rawSyms = syms
-		} else {
-			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "apex":
 		if syms, apexImports, ok := parseApexNative(filePath, content); ok {
 			rawSyms = syms
 			imports = apexImports
-		} else {
-			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "dotnet":
 		if syms, dotnetImports, ok := parseDotnetNative(filePath, content); ok {
 			rawSyms = syms
 			imports = dotnetImports
-		} else {
-			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "p4":
 		if syms, p4Imports, ok := parseP4Native(filePath, content); ok {
 			rawSyms = syms
 			imports = p4Imports
-		} else {
-			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "byond":
 		if syms, byondImports, ok := parseByondNative(filePath, content); ok {
 			rawSyms = syms
 			imports = byondImports
-		} else {
-			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "ets":
 		if syms, etsImports, ok := parseETSNative(filePath, content); ok {
 			rawSyms = syms
 			imports = etsImports
-		} else {
-			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "delphi":
 		if syms, delphiImports, ok := parseDelphiNative(filePath, content); ok {
 			rawSyms = syms
 			imports = delphiImports
-		} else {
-			rawSyms, imports = parseRegexFallback(filePath, language, content)
 		}
 		textEdges = textCallEdges(filePath, language, string(content), rawSyms)
 	case "html", "css":

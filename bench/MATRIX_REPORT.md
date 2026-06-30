@@ -31,7 +31,7 @@ Raw artifact: `bench/MATRIX_TOOL_VERSIONS.json`.
 | pwsh | ok | `PowerShell 7.4.6` | `/usr/local/bin/pwsh --version` |
 | sourcekit-lsp | ok | `Apple Swift version 6.2.4 (swiftlang-6.2.4.1.4 clang-1700.6.4.2)` | `/usr/bin/sourcekit-lsp (no version flag); /usr/bin/swift --version` |
 
-- Live smoke native-version details: 24/36 artifacts expose explicit native tool or library version fields in raw JSON; all artifacts include native command/status.
+- Live benchmark native-version details: 24/36 artifacts expose explicit native tool or library version fields in raw JSON; all artifacts include native command/status.
 
 ## graphify language discovery
 
@@ -41,12 +41,12 @@ Raw artifact: `bench/MATRIX_TOOL_VERSIONS.json`.
 - Extract source: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/lib/python3.12/site-packages/graphify/extract.py`.
 - Detect source: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/lib/python3.12/site-packages/graphify/detect.py`.
 - Evidence: CLI help from `graphify --help` did not enumerate languages, but confirmed `update`, `extract`, and code-only AST update commands.
-- Evidence: `graphify.detect.CODE_EXTENSIONS` plus a runtime `detect()` smoke listed code extensions.
+- Evidence: `graphify.detect.CODE_EXTENSIONS` plus a runtime `detect()` benchmark listed code extensions.
 - Evidence: `graphify.extract._DISPATCH` provided the deterministic extractor map used as the parser-parity target.
 - Raw discovery artifact: `bench/GRAPHIFY_LANGUAGE_DISCOVERY.json`.
 - Runtime help probe: `graphify --help` succeeded and listed 148 command/help lines.
 - Runtime support probe: `_DISPATCH` plus filename-special extractors exposed 89 deterministic extractor entries; `CODE_EXTENSIONS` exposed 88 code extensions.
-- Runtime detect smoke: generated one sample per `CODE_EXTENSIONS` entry; `detect()` returned 88 code files.
+- Runtime detect benchmark: generated one sample per `CODE_EXTENSIONS` entry; `detect()` returned 88 code files.
 - Detector-only code extensions in this graphify build, not counted as deterministic parser support because `_DISPATCH` has no extractor for them: `.ejs`, `.ets`, `.r`.
 
 | graphify family | extensions / special cases | graphify extractor | Atlas status |
@@ -93,7 +93,7 @@ Raw artifact: `bench/MATRIX_TOOL_VERSIONS.json`.
 
 ## graphify coverage audit
 
-- Deterministic graphify families covered by Atlas evidence: 39/39. Detector-only extensions covered by live Atlas smokes: 3/3.
+- Deterministic graphify families covered by Atlas evidence: 39/39. Detector-only extensions covered by live Atlas benchmarks: 3/3.
 - Unsupported graphify rows: none.
 - Missing evidence: none.
 
@@ -104,43 +104,43 @@ Raw artifact: `bench/MATRIX_TOOL_VERSIONS.json`.
 | javascript<br>`.js .jsx .mjs` via `extract_js` | ok | core matrix `javascript` ok; native scip-typescript:ok, tsserver:ok; query eq 3/4, latency 5.37x, tokens 7.0x |
 | typescript<br>`.ts .tsx` via `extract_js` | ok | core matrix `typescript` ok; native scip-typescript:ok, tsserver:ok; query eq 3/4, latency 5.78x, tokens 11.42x |
 | java<br>`.java` via `extract_java` | ok | core matrix `java` ok; native scip-java:missing, jdtls:ok; query eq 2/2, latency 3.88x, tokens 15.29x |
-| groovy/gradle<br>`.groovy .gradle` via `extract_groovy` | ok | `bench/LIVE_GROOVY_SMOKE.json` native_limited=partial; repo `https://github.com/nextflow-io/nextflow` commit `fcf52e54d6854c9648d9c2e66ec02ac76518a000`; native `tree-sitter-groovy`; atlas_vs_tree_sitter_groovy_definition_ratio=1.59, query eq 5/5, latency 6.1x, tokens 9.97x |
+| groovy/gradle<br>`.groovy .gradle` via `extract_groovy` | ok | `bench/RECALL_FINDINGS.md` native_limited=partial; repo `https://github.com/nextflow-io/nextflow` commit `fcf52e54d6854c9648d9c2e66ec02ac76518a000`; native `tree-sitter-groovy`; atlas_vs_tree_sitter_groovy_definition_ratio=1.59, query eq 5/5, latency 6.1x, tokens 9.97x |
 | c<br>`.c .h` via `extract_c` | ok | core matrix `c` ok; native clangd:ok; query eq 4/4, latency 6.13x, tokens 28.71x |
-| cpp/cuda<br>`.cpp .cc .cxx .hpp .cu .cuh` via `extract_cpp` | ok | core matrix `cpp` ok; native clangd:ok; query eq 4/4, latency 5.8x, tokens 10.0x<br>`bench/LIVE_CUDA_SMOKE.json` ok; repo `https://github.com/NVIDIA/cuda-samples` commit `b7c5481c556c3fe98db060207ecaa41a4b9a9abc`; native `cuda-source-counter`; atlas_vs_cuda_source_counter_definition_ratio=1.0, query eq 3/3, latency 5.96x, tokens 6.67x |
-| csharp<br>`.cs` via `extract_csharp` | ok | `bench/LIVE_CSHARP_SMOKE.json` ok; repo `https://github.com/DapperLib/Dapper` commit `72a54c475f75e18cb93cba0809d00a5e6e49efd9`; native `roslyn`; atlas_vs_roslyn_definition_ratio=1.84, query eq 4/4, latency 7.26x, tokens 14.15x |
-| rust<br>`.rs` via `extract_rust` | ok | `bench/LIVE_RUST_SMOKE.json` ok; repo `https://github.com/BurntSushi/ripgrep` commit `dfe4a81d2591daca76d25ae4e052c34b26578155`; native `rust-analyzer`; atlas_vs_rust_analyzer_definition_ratio=1.0, query eq 4/4, latency 8.71x, tokens 40.23x |
-| ruby<br>`.rb` via `extract_ruby` | ok | `bench/LIVE_RUBY_SMOKE.json` ok; repo `https://github.com/sinatra/sinatra` commit `5236d3459b8b9015e5ce21ddd0c6beb0db4081d4`; native `ruby-ripper`; atlas_vs_ruby_ripper_definition_ratio=1.01, query eq 4/4, latency 7.13x, tokens 10.86x |
-| kotlin<br>`.kt .kts` via `extract_kotlin` | ok | `bench/LIVE_KOTLIN_SMOKE.json` native_limited=partial; repo `https://github.com/square/okhttp` commit `0cadfa2997513d20bf88ca530c963a1266f17af9`; native `tree-sitter-kotlin`; atlas_vs_tree_sitter_kotlin_definition_ratio=1.0, query eq 5/5, latency 7.08x, tokens 27.06x |
-| scala<br>`.scala` via `extract_scala` | ok | `bench/LIVE_SCALA_SMOKE.json` native_limited=partial; repo `https://github.com/typelevel/cats` commit `851965a582940d804f9a23179f58a53fc97f07dc`; native `tree-sitter-scala`; atlas_vs_tree_sitter_scala_definition_ratio=1.0, query eq 5/5, latency 9.38x, tokens 38.06x |
-| php<br>`.php` via `extract_php` | ok | `bench/LIVE_PHP_SMOKE.json` ok; repo `https://github.com/slimphp/Slim` commit `0da7dd2fc66956730b6633f6a056b35e59126583`; native `php-tokenizer`; atlas_vs_php_tokenizer_definition_ratio=1.0, query eq 3/4, latency 7.04x, tokens 8.74x |
-| blade<br>`*.blade.php` via `extract_blade` | ok | `bench/LIVE_BLADE_SMOKE.json` ok; repo `https://github.com/BookStackApp/BookStack` commit `f7df78b91b12ff1d8e248ded7747e76203904b8e`; native `blade-directive-counter`; atlas_vs_blade_directive_counter_definition_ratio=1.0, query eq 6/6, latency 6.07x, tokens 6.1x |
-| swift<br>`.swift` via `extract_swift` | ok | `bench/LIVE_SWIFT_SMOKE.json` ok; repo `https://github.com/apple/swift-argument-parser` commit `8122bc5941426c9494c78ff5ad01951e81c02f53`; native `sourcekit-lsp`; atlas_vs_sourcekit_lsp_definition_ratio=1.23, query eq 4/4, latency 7.98x, tokens 21.65x |
-| lua<br>`.lua .luau .toc` via `extract_lua` | ok | `bench/LIVE_LUA_SMOKE.json` ok; repo `https://github.com/folke/lazy.nvim` commit `306a05526ada86a7b30af95c5cc81ffba93fef97`; native `luaparser`; atlas_vs_luaparser_definition_ratio=1.0, query eq 4/4, latency 6.88x, tokens 15.09x |
-| zig<br>`.zig` via `extract_zig` | ok | `bench/LIVE_ZIG_SMOKE.json` native_limited=partial; repo `https://github.com/zigtools/zls` commit `8da87d4f3305a550e7b739bad764e34bf1e46a08`; native `tree-sitter-zig`; atlas_vs_tree_sitter_zig_definition_ratio=1.22, query eq 5/5, latency 5.55x, tokens 28.55x |
-| powershell<br>`.ps1 .psm1 .psd1` via `extract_powershell/extract_powershell_manifest` | ok | `bench/LIVE_POWERSHELL_SMOKE.json` ok; repo `https://github.com/PowerShell/PowerShellGet` commit `a2dac8e74603f7c9eec4a54c5e23459531751b0d`; native `pwsh-parser`; atlas_vs_pwsh_parser_definition_ratio=1.0, query eq 4/4, latency 5.47x, tokens 6.68x |
-| elixir<br>`.ex .exs` via `extract_elixir` | ok | `bench/LIVE_ELIXIR_SMOKE.json` ok; repo `https://github.com/phoenixframework/phoenix` commit `909725968776c2601bbea7827fd5b76e4992cc70`; native `tree-sitter-elixir`; atlas_vs_tree_sitter_elixir_definition_ratio=1.0, query eq 5/5, latency 6.61x, tokens 22.95x |
-| objective-c<br>`.m .mm` via `extract_objc` | ok | `bench/LIVE_OBJC_SMOKE.json` native_limited=partial; repo `https://github.com/SDWebImage/SDWebImage` commit `c3ad5e1a9bf55c9b76d4c362430b5fcded96c502`; native `tree-sitter-objc`; atlas_vs_tree_sitter_objc_definition_ratio=1.0, query eq 4/5, latency 6.78x, tokens 23.63x |
-| julia<br>`.jl` via `extract_julia` | ok | `bench/LIVE_JULIA_SMOKE.json` native_limited=partial; repo `https://github.com/JuliaIO/JSON.jl` commit `e5ef310dece16746843753e4c3b44e868b917b64`; native `tree-sitter-julia`; atlas_vs_tree_sitter_julia_definition_ratio=1.0, query eq 5/6, latency 5.75x, tokens 12.72x |
-| fortran<br>`.f .F .f90 .F90 .f95 .F95 .f03 .F03 .f08 .F08` via `extract_fortran` | ok | `bench/LIVE_FORTRAN_SMOKE.json` ok; repo `https://github.com/fortran-lang/stdlib` commit `4c8521d5658455a576946cca3bfe2bd8ede36e24`; native `tree-sitter-fortran`; atlas_vs_tree_sitter_fortran_definition_ratio=1.0, query eq 6/6, latency 6.06x, tokens 19.69x |
-| dart<br>`.dart` via `extract_dart` | ok | `bench/LIVE_DART_SMOKE.json` ok; repo `https://github.com/dart-lang/http` commit `5d94ef52582867e077bf41c3fa20fb8b1d1d834e`; native `tree-sitter-dart`; atlas_vs_tree_sitter_dart_definition_ratio=1.0, query eq 6/6, latency 6.25x, tokens 8.54x |
-| verilog/systemverilog<br>`.v .sv .svh` via `extract_verilog` | ok | `bench/LIVE_VERILOG_SMOKE.json` native_limited=partial; repo `https://github.com/lowRISC/ibex` commit `022f084096baed0a9b5ebdf697ed2965f13e8ed8`; native `tree-sitter-systemverilog`; atlas_vs_tree_sitter_systemverilog_definition_ratio=1.0, query eq 6/6, latency 5.51x, tokens 8.73x |
-| sql<br>`.sql` via `extract_sql` | ok | `bench/LIVE_SQL_SMOKE.json` ok; repo `https://github.com/hasura/graphql-engine` commit `417c174c0ac3c80dafe6e8f9e8ac39d868334724`; native `sqlfluff`; atlas_vs_sqlfluff_definition_ratio=1.0, query eq 4/4, latency 5.96x, tokens 5.33x |
-| markdown<br>`.md .mdx .qmd` via `extract_markdown` | ok | `bench/LIVE_MARKDOWN_SMOKE.json` ok; repo `https://github.com/rust-lang/mdBook` commit `cb49cc5523e609a731f27dea1af4395a504815a5`; native `markdown-it-py`; atlas_vs_markdown_it_py_definition_ratio=1.0, query eq 6/6, latency 6.69x, tokens 10.31x |
-| pascal<br>`.pas .pp .dpr .dpk .lpr .inc` via `extract_pascal` | ok | `bench/LIVE_PASCAL_SMOKE.json` ok; repo `https://github.com/remobjects/pascalscript` commit `4340039059ce2d270b39fad64c1415ead9f83234`; native `pascal-regex-counter`; atlas_vs_pascal_regex_counter_definition_ratio=1.0, query eq 4/5, latency 8.29x, tokens 12.84x |
-| delphi/lazarus forms<br>`.dfm .lfm .lpk` via `extract_delphi_form/extract_lazarus_form/extract_lazarus_package` | ok | `bench/LIVE_DELPHI_SMOKE.json` ok; repo `https://github.com/fpc/Lazarus` commit `e1cc57bb27e48541ffe4bf66c78a8dddfc4f6630`; native `delphi-lazarus-source-counter`; atlas_vs_delphi_lazarus_source_counter_definition_ratio=1.0, query eq 7/7, latency 11.35x, tokens 12.35x |
-| shell<br>`.sh .bash` via `extract_bash` | ok | `bench/LIVE_BASH_SMOKE.json` ok; repo `https://github.com/nvm-sh/nvm` commit `a6ec73943099a86fba98bde3b04a1c60944a4549`; native `bash-n`; atlas_vs_bash_n_definition_ratio=1.0, query eq 4/4, latency 6.19x, tokens 18.44x |
-| json config<br>`.json` via `extract_json` | ok | `bench/LIVE_JSON_SMOKE.json` ok; repo `https://github.com/eslint/create-config` commit `58d77fc302b25976bb4cc7dc273377b421bc226b`; native `python-json`; atlas_vs_python_json_definition_ratio=1.0, query eq 4/6, latency 6.58x, tokens 13.28x |
-| terraform/hcl<br>`.tf .tfvars .hcl` via `extract_terraform` | ok | `bench/LIVE_TERRAFORM_SMOKE.json` ok; repo `https://github.com/terraform-aws-modules/terraform-aws-vpc` commit `3ffbd46fb1c7733e1b34d8666893280454e27436`; native `python-hcl2`; atlas_vs_python_hcl2_definition_ratio=1.0, query eq 4/4, latency 7.78x, tokens 41.61x |
-| byond dm<br>`.dm .dme .dmi .dmm .dmf` via `extract_dm/extract_dmf/extract_dmi/extract_dmm` | ok | `bench/LIVE_BYOND_SMOKE.json` ok; repo `https://github.com/tgstation/tgstation` commit `ba6e47987178c54dc0432f0d4ee6843f6a3c9828`; native `byond-source-counter`; atlas_vs_byond_source_counter_definition_ratio=1.0, query eq 0/6, latency n/a, tokens n/a |
-| dotnet project<br>`.sln .slnx .csproj .fsproj .vbproj` via `extract_csproj/extract_sln/extract_slnx` | ok | `bench/LIVE_DOTNET_SMOKE.json` ok; repo `https://github.com/DapperLib/Dapper` commit `72a54c475f75e18cb93cba0809d00a5e6e49efd9`; native `python-dotnet-project`; atlas_vs_python_dotnet_project_definition_ratio=1.0, query eq 6/6, latency 7.67x, tokens 6.15x |
-| razor<br>`.razor .cshtml` via `extract_razor` | ok | `bench/LIVE_RAZOR_SMOKE.json` ok; repo `https://github.com/dotnet-architecture/eShopOnWeb` commit `4da8212117e87d808d4bbc7da6286fd2147ce606`; native `razor-directive-counter`; atlas_vs_razor_directive_counter_definition_ratio=1.0, query eq 6/6, latency 6.52x, tokens 7.88x |
-| apex<br>`.cls .trigger` via `extract_apex` | ok | `bench/LIVE_APEX_SMOKE.json` ok; repo `https://github.com/trailheadapps/apex-recipes` commit `cb5cd9d3621985b816476e5a317b5a0016fc3576`; native `apex-source-counter`; atlas_vs_apex_source_counter_definition_ratio=1.0, query eq 5/6, latency 8.15x, tokens 11.67x |
-| vue<br>`.vue` via `extract_js` | ok | `bench/LIVE_VUE_SMOKE.json` ok; repo `https://github.com/gothinkster/vue-realworld-example-app` commit `f7e48c8178602ce25d43293bc6f8ca51d84ae222`; native `vue-compiler-sfc`; atlas_vs_vue_compiler_sfc_definition_ratio=1.0, query eq 4/4, latency 5.51x, tokens 8.04x |
-| svelte<br>`.svelte` via `extract_svelte` | ok | `bench/LIVE_SVELTE_SMOKE.json` ok; repo `https://github.com/carbon-design-system/carbon-components-svelte` commit `4a2c72288d8a21e5fe489d042fc72d2ae7eb7097`; native `svelte-compiler`; atlas_vs_svelte_compiler_definition_ratio=1.0, query eq 5/5, latency 5.92x, tokens 8.81x |
-| astro<br>`.astro` via `extract_astro` | ok | `bench/LIVE_ASTRO_SMOKE.json` ok; repo `https://github.com/withastro/blog-tutorial-demo` commit `b3e12cc12d3292eff8c1237fb14f9b93f31ec33e`; native `astro-compiler`; atlas_vs_astro_compiler_definition_ratio=1.0, query eq 5/6, latency 5.66x, tokens 10.54x |
-| detector-only .ejs<br>`.ejs` in `CODE_EXTENSIONS`, no `_DISPATCH` extractor | ok | `bench/LIVE_EJS_SMOKE.json` ok; repo `https://github.com/expressjs/express` commit `18e5985b8a9d5e8423db0a9121f22bdaecd5b120`; native `ejs-template-counter`; atlas_vs_ejs_template_counter_definition_ratio=1.0, query eq 1/7, latency 5.21x, tokens 6.86x |
-| detector-only .ets<br>`.ets` in `CODE_EXTENSIONS`, no `_DISPATCH` extractor | ok | `bench/LIVE_ETS_SMOKE.json` ok; repo `https://github.com/openharmony/applications_app_samples` commit `a826ab0e75fe51d028c1c5af58188e908736b53b`; native `ets-source-counter`; atlas_vs_ets_source_counter_definition_ratio=1.0, query eq 0/8, latency n/a, tokens n/a |
-| detector-only .r<br>`.r` in `CODE_EXTENSIONS`, no `_DISPATCH` extractor | ok | `bench/LIVE_R_SMOKE.json` ok; repo `https://github.com/tidyverse/ggplot2` commit `6870419aa6e106c3580c45c81d5b688cb31758bd`; native `r-source-counter`; atlas_vs_r_source_counter_definition_ratio=1.0, query eq 0/8, latency n/a, tokens n/a |
+| cpp/cuda<br>`.cpp .cc .cxx .hpp .cu .cuh` via `extract_cpp` | ok | core matrix `cpp` ok; native clangd:ok; query eq 4/4, latency 5.8x, tokens 10.0x<br>`bench/RECALL_FINDINGS.md` ok; repo `https://github.com/NVIDIA/cuda-samples` commit `b7c5481c556c3fe98db060207ecaa41a4b9a9abc`; native `cuda-source-counter`; atlas_vs_cuda_source_counter_definition_ratio=1.0, query eq 3/3, latency 5.96x, tokens 6.67x |
+| csharp<br>`.cs` via `extract_csharp` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/DapperLib/Dapper` commit `72a54c475f75e18cb93cba0809d00a5e6e49efd9`; native `roslyn`; atlas_vs_roslyn_definition_ratio=1.84, query eq 4/4, latency 7.26x, tokens 14.15x |
+| rust<br>`.rs` via `extract_rust` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/BurntSushi/ripgrep` commit `dfe4a81d2591daca76d25ae4e052c34b26578155`; native `rust-analyzer`; atlas_vs_rust_analyzer_definition_ratio=1.0, query eq 4/4, latency 8.71x, tokens 40.23x |
+| ruby<br>`.rb` via `extract_ruby` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/sinatra/sinatra` commit `5236d3459b8b9015e5ce21ddd0c6beb0db4081d4`; native `ruby-ripper`; atlas_vs_ruby_ripper_definition_ratio=1.01, query eq 4/4, latency 7.13x, tokens 10.86x |
+| kotlin<br>`.kt .kts` via `extract_kotlin` | ok | `bench/RECALL_FINDINGS.md` native_limited=partial; repo `https://github.com/square/okhttp` commit `0cadfa2997513d20bf88ca530c963a1266f17af9`; native `tree-sitter-kotlin`; atlas_vs_tree_sitter_kotlin_definition_ratio=1.0, query eq 5/5, latency 7.08x, tokens 27.06x |
+| scala<br>`.scala` via `extract_scala` | ok | `bench/RECALL_FINDINGS.md` native_limited=partial; repo `https://github.com/typelevel/cats` commit `851965a582940d804f9a23179f58a53fc97f07dc`; native `tree-sitter-scala`; atlas_vs_tree_sitter_scala_definition_ratio=1.0, query eq 5/5, latency 9.38x, tokens 38.06x |
+| php<br>`.php` via `extract_php` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/slimphp/Slim` commit `0da7dd2fc66956730b6633f6a056b35e59126583`; native `php-tokenizer`; atlas_vs_php_tokenizer_definition_ratio=1.0, query eq 3/4, latency 7.04x, tokens 8.74x |
+| blade<br>`*.blade.php` via `extract_blade` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/BookStackApp/BookStack` commit `f7df78b91b12ff1d8e248ded7747e76203904b8e`; native `blade-directive-counter`; atlas_vs_blade_directive_counter_definition_ratio=1.0, query eq 6/6, latency 6.07x, tokens 6.1x |
+| swift<br>`.swift` via `extract_swift` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/apple/swift-argument-parser` commit `8122bc5941426c9494c78ff5ad01951e81c02f53`; native `sourcekit-lsp`; atlas_vs_sourcekit_lsp_definition_ratio=1.23, query eq 4/4, latency 7.98x, tokens 21.65x |
+| lua<br>`.lua .luau .toc` via `extract_lua` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/folke/lazy.nvim` commit `306a05526ada86a7b30af95c5cc81ffba93fef97`; native `luaparser`; atlas_vs_luaparser_definition_ratio=1.0, query eq 4/4, latency 6.88x, tokens 15.09x |
+| zig<br>`.zig` via `extract_zig` | ok | `bench/RECALL_FINDINGS.md` native_limited=partial; repo `https://github.com/zigtools/zls` commit `8da87d4f3305a550e7b739bad764e34bf1e46a08`; native `tree-sitter-zig`; atlas_vs_tree_sitter_zig_definition_ratio=1.22, query eq 5/5, latency 5.55x, tokens 28.55x |
+| powershell<br>`.ps1 .psm1 .psd1` via `extract_powershell/extract_powershell_manifest` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/PowerShell/PowerShellGet` commit `a2dac8e74603f7c9eec4a54c5e23459531751b0d`; native `pwsh-parser`; atlas_vs_pwsh_parser_definition_ratio=1.0, query eq 4/4, latency 5.47x, tokens 6.68x |
+| elixir<br>`.ex .exs` via `extract_elixir` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/phoenixframework/phoenix` commit `909725968776c2601bbea7827fd5b76e4992cc70`; native `tree-sitter-elixir`; atlas_vs_tree_sitter_elixir_definition_ratio=1.0, query eq 5/5, latency 6.61x, tokens 22.95x |
+| objective-c<br>`.m .mm` via `extract_objc` | ok | `bench/RECALL_FINDINGS.md` native_limited=partial; repo `https://github.com/SDWebImage/SDWebImage` commit `c3ad5e1a9bf55c9b76d4c362430b5fcded96c502`; native `tree-sitter-objc`; atlas_vs_tree_sitter_objc_definition_ratio=1.0, query eq 4/5, latency 6.78x, tokens 23.63x |
+| julia<br>`.jl` via `extract_julia` | ok | `bench/RECALL_FINDINGS.md` native_limited=partial; repo `https://github.com/JuliaIO/JSON.jl` commit `e5ef310dece16746843753e4c3b44e868b917b64`; native `tree-sitter-julia`; atlas_vs_tree_sitter_julia_definition_ratio=1.0, query eq 5/6, latency 5.75x, tokens 12.72x |
+| fortran<br>`.f .F .f90 .F90 .f95 .F95 .f03 .F03 .f08 .F08` via `extract_fortran` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/fortran-lang/stdlib` commit `4c8521d5658455a576946cca3bfe2bd8ede36e24`; native `tree-sitter-fortran`; atlas_vs_tree_sitter_fortran_definition_ratio=1.0, query eq 6/6, latency 6.06x, tokens 19.69x |
+| dart<br>`.dart` via `extract_dart` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/dart-lang/http` commit `5d94ef52582867e077bf41c3fa20fb8b1d1d834e`; native `tree-sitter-dart`; atlas_vs_tree_sitter_dart_definition_ratio=1.0, query eq 6/6, latency 6.25x, tokens 8.54x |
+| verilog/systemverilog<br>`.v .sv .svh` via `extract_verilog` | ok | `bench/RECALL_FINDINGS.md` native_limited=partial; repo `https://github.com/lowRISC/ibex` commit `022f084096baed0a9b5ebdf697ed2965f13e8ed8`; native `tree-sitter-systemverilog`; atlas_vs_tree_sitter_systemverilog_definition_ratio=1.0, query eq 6/6, latency 5.51x, tokens 8.73x |
+| sql<br>`.sql` via `extract_sql` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/hasura/graphql-engine` commit `417c174c0ac3c80dafe6e8f9e8ac39d868334724`; native `sqlfluff`; atlas_vs_sqlfluff_definition_ratio=1.0, query eq 4/4, latency 5.96x, tokens 5.33x |
+| markdown<br>`.md .mdx .qmd` via `extract_markdown` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/rust-lang/mdBook` commit `cb49cc5523e609a731f27dea1af4395a504815a5`; native `markdown-it-py`; atlas_vs_markdown_it_py_definition_ratio=1.0, query eq 6/6, latency 6.69x, tokens 10.31x |
+| pascal<br>`.pas .pp .dpr .dpk .lpr .inc` via `extract_pascal` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/remobjects/pascalscript` commit `4340039059ce2d270b39fad64c1415ead9f83234`; native `pascal-regex-counter`; atlas_vs_pascal_regex_counter_definition_ratio=1.0, query eq 4/5, latency 8.29x, tokens 12.84x |
+| delphi/lazarus forms<br>`.dfm .lfm .lpk` via `extract_delphi_form/extract_lazarus_form/extract_lazarus_package` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/fpc/Lazarus` commit `e1cc57bb27e48541ffe4bf66c78a8dddfc4f6630`; native `delphi-lazarus-source-counter`; atlas_vs_delphi_lazarus_source_counter_definition_ratio=1.0, query eq 7/7, latency 11.35x, tokens 12.35x |
+| shell<br>`.sh .bash` via `extract_bash` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/nvm-sh/nvm` commit `a6ec73943099a86fba98bde3b04a1c60944a4549`; native `bash-n`; atlas_vs_bash_n_definition_ratio=1.0, query eq 4/4, latency 6.19x, tokens 18.44x |
+| json config<br>`.json` via `extract_json` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/eslint/create-config` commit `58d77fc302b25976bb4cc7dc273377b421bc226b`; native `python-json`; atlas_vs_python_json_definition_ratio=1.0, query eq 4/6, latency 6.58x, tokens 13.28x |
+| terraform/hcl<br>`.tf .tfvars .hcl` via `extract_terraform` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/terraform-aws-modules/terraform-aws-vpc` commit `3ffbd46fb1c7733e1b34d8666893280454e27436`; native `python-hcl2`; atlas_vs_python_hcl2_definition_ratio=1.0, query eq 4/4, latency 7.78x, tokens 41.61x |
+| byond dm<br>`.dm .dme .dmi .dmm .dmf` via `extract_dm/extract_dmf/extract_dmi/extract_dmm` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/tgstation/tgstation` commit `ba6e47987178c54dc0432f0d4ee6843f6a3c9828`; native `byond-source-counter`; atlas_vs_byond_source_counter_definition_ratio=1.0, query eq 0/6, latency n/a, tokens n/a |
+| dotnet project<br>`.sln .slnx .csproj .fsproj .vbproj` via `extract_csproj/extract_sln/extract_slnx` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/DapperLib/Dapper` commit `72a54c475f75e18cb93cba0809d00a5e6e49efd9`; native `python-dotnet-project`; atlas_vs_python_dotnet_project_definition_ratio=1.0, query eq 6/6, latency 7.67x, tokens 6.15x |
+| razor<br>`.razor .cshtml` via `extract_razor` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/dotnet-architecture/eShopOnWeb` commit `4da8212117e87d808d4bbc7da6286fd2147ce606`; native `razor-directive-counter`; atlas_vs_razor_directive_counter_definition_ratio=1.0, query eq 6/6, latency 6.52x, tokens 7.88x |
+| apex<br>`.cls .trigger` via `extract_apex` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/trailheadapps/apex-recipes` commit `cb5cd9d3621985b816476e5a317b5a0016fc3576`; native `apex-source-counter`; atlas_vs_apex_source_counter_definition_ratio=1.0, query eq 5/6, latency 8.15x, tokens 11.67x |
+| vue<br>`.vue` via `extract_js` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/gothinkster/vue-realworld-example-app` commit `f7e48c8178602ce25d43293bc6f8ca51d84ae222`; native `vue-compiler-sfc`; atlas_vs_vue_compiler_sfc_definition_ratio=1.0, query eq 4/4, latency 5.51x, tokens 8.04x |
+| svelte<br>`.svelte` via `extract_svelte` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/carbon-design-system/carbon-components-svelte` commit `4a2c72288d8a21e5fe489d042fc72d2ae7eb7097`; native `svelte-compiler`; atlas_vs_svelte_compiler_definition_ratio=1.0, query eq 5/5, latency 5.92x, tokens 8.81x |
+| astro<br>`.astro` via `extract_astro` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/withastro/blog-tutorial-demo` commit `b3e12cc12d3292eff8c1237fb14f9b93f31ec33e`; native `astro-compiler`; atlas_vs_astro_compiler_definition_ratio=1.0, query eq 5/6, latency 5.66x, tokens 10.54x |
+| detector-only .ejs<br>`.ejs` in `CODE_EXTENSIONS`, no `_DISPATCH` extractor | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/expressjs/express` commit `18e5985b8a9d5e8423db0a9121f22bdaecd5b120`; native `ejs-template-counter`; atlas_vs_ejs_template_counter_definition_ratio=1.0, query eq 1/7, latency 5.21x, tokens 6.86x |
+| detector-only .ets<br>`.ets` in `CODE_EXTENSIONS`, no `_DISPATCH` extractor | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/openharmony/applications_app_samples` commit `a826ab0e75fe51d028c1c5af58188e908736b53b`; native `ets-source-counter`; atlas_vs_ets_source_counter_definition_ratio=1.0, query eq 0/8, latency n/a, tokens n/a |
+| detector-only .r<br>`.r` in `CODE_EXTENSIONS`, no `_DISPATCH` extractor | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/tidyverse/ggplot2` commit `6870419aa6e106c3580c45c81d5b688cb31758bd`; native `r-source-counter`; atlas_vs_r_source_counter_definition_ratio=1.0, query eq 0/8, latency n/a, tokens n/a |
 
 ## Saturation loop evidence
 
@@ -152,13 +152,13 @@ Raw artifacts: `bench/SATURATION_REPORT.json` and `bench/SATURATION_REPORT.md`. 
 | ets | saturated_no_equivalent_graphify_rows | 5 | 0/8, 0/8, 0/8, 0/8, 0/8 | 8, 8, 8, 8, 8 | 1.0, 1.0, 1.0, 1.0, 1.0 |
 | r | saturated_no_equivalent_graphify_rows | 5 | 0/8, 0/8, 0/8, 0/8, 0/8 | 8, 8, 8, 8, 8 | 1.0, 1.0, 1.0, 1.0, 1.0 |
 
-Saturation note: these languages are marked saturated only for graphify-equivalent query-score improvement. Their native coverage proxies remain in the live smoke artifacts; no 5x query claim is made where graphify exposes no equivalent rows.
+Saturation note: these languages are marked saturated only for graphify-equivalent query-score improvement. Their native coverage proxies remain in the live benchmark artifacts; no 5x query claim is made where graphify exposes no equivalent rows.
 
-## Live additional-language smokes
+## Live additional-language benchmarks
 
 ### Apex
 
-Raw artifact: `bench/LIVE_APEX_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/trailheadapps/apex-recipes` at commit `cb5cd9d3621985b816476e5a317b5a0016fc3576`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/trailheadapps/apex-recipes` at commit `cb5cd9d3621985b816476e5a317b5a0016fc3576`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-apex-recipes/repo/force-app`.
 
 Commands:
@@ -177,7 +177,7 @@ Results:
 - Native baseline `apex-source-counter` status: ok (files:142, parsed_files:142, parse_errors:0, definitions:1072).
 - Richer native baselines not available on this machine: `sf`, `sfdx`, `apex-language-server`.
 - Coverage proxy: atlas_vs_apex_source_counter_definition_ratio: 1.0, atlas_apex_definition_symbols: 1072, native_definitions: 1072.
-- Optimization cycles: 3 (Apex native tree-sitter declaration parsing plus SOQL/DML source recovery matched the source-counter coverage proxy after routing `.cls` and `.trigger` files off `parseRegexFallback`.).
+- Optimization cycles: 3 (Apex native tree-sitter declaration parsing plus SOQL/DML source recovery matched the source-counter coverage proxy after routing `.cls` and `.trigger` files off the legacy fallback dispatcher.).
 
 | query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
 |---|---:|---:|---:|---:|---:|---:|
@@ -189,11 +189,11 @@ Results:
 | `listAccounts` | 14.896 | 131.044 | 8.8x | 3 | 9 | 3.0x |
 
 - Query caveat: `listAccounts` (graphify_missing); raw rows remain in the table.
-5x note: this Apex smoke meets the 5x threshold on equivalent query rows for latency (8.15x) and token output (11.67x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this Apex benchmark meets the 5x threshold on equivalent query rows for latency (8.15x) and token output (11.67x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### Astro
 
-Raw artifact: `bench/LIVE_ASTRO_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/withastro/blog-tutorial-demo` at commit `b3e12cc12d3292eff8c1237fb14f9b93f31ec33e`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/withastro/blog-tutorial-demo` at commit `b3e12cc12d3292eff8c1237fb14f9b93f31ec33e`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-astro-blog-tutorial/repo/src`.
 
 Commands:
@@ -224,11 +224,11 @@ Results:
 | `Social` | 12.115 | 68.930 | 5.69x | 7 | 54 | 7.71x |
 
 - Query caveat: `pageTitle` (graphify_missing); raw rows remain in the table.
-5x note: this Astro smoke meets the 5x threshold on equivalent query rows for latency (5.66x) and token output (10.54x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this Astro benchmark meets the 5x threshold on equivalent query rows for latency (5.66x) and token output (10.54x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### Bash
 
-Raw artifact: `bench/LIVE_BASH_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/nvm-sh/nvm` at commit `a6ec73943099a86fba98bde3b04a1c60944a4549`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/nvm-sh/nvm` at commit `a6ec73943099a86fba98bde3b04a1c60944a4549`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-bash-nvm/repo`.
 
 Commands:
@@ -256,11 +256,11 @@ Results:
 | `nvm_die_on_prefix` | 12.614 | 78.156 | 6.2x | 8 | 90 | 11.25x |
 | `nvm_get_os` | 13.051 | 76.389 | 5.85x | 6 | 52 | 8.67x |
 
-5x note: this Bash smoke meets the 5x threshold on equivalent query rows for latency (6.19x) and token output (18.44x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this Bash benchmark meets the 5x threshold on equivalent query rows for latency (6.19x) and token output (18.44x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### Blade
 
-Raw artifact: `bench/LIVE_BLADE_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/BookStackApp/BookStack` at commit `f7df78b91b12ff1d8e248ded7747e76203904b8e`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/BookStackApp/BookStack` at commit `f7df78b91b12ff1d8e248ded7747e76203904b8e`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-blade-bookstack/repo/resources/views`.
 
 Commands:
@@ -279,7 +279,7 @@ Results:
 - Native baseline `blade-directive-counter` status: ok (files:303, parsed_files:303, parse_errors:0, definitions:1090).
 - Richer native baselines not available on this machine: `laravel`, `blade-language-server`.
 - Coverage proxy: atlas_vs_blade_directive_counter_definition_ratio: 1.0, atlas_blade_definition_symbols: 1090, native_definitions: 1090.
-- Optimization cycles: 4 (Blade native source parser matched the directive-counter coverage proxy after routing `.blade.php` files off `parseRegexFallback`, while preserving the compact terse locations that keep the token ratio above 5x.).
+- Optimization cycles: 4 (Blade native source parser matched the directive-counter coverage proxy after routing `.blade.php` files off the legacy fallback dispatcher, while preserving the compact terse locations that keep the token ratio above 5x.).
 
 | query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
 |---|---:|---:|---:|---:|---:|---:|
@@ -290,11 +290,11 @@ Results:
 | `form.user-select` | 12.934 | 78.161 | 6.04x | 11 | 66 | 6.0x |
 | `books.parts.list` | 12.702 | 79.007 | 6.22x | 7 | 56 | 8.0x |
 
-5x note: this Blade smoke meets the 5x threshold on equivalent query rows for latency (6.07x) and token output (6.1x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this Blade benchmark meets the 5x threshold on equivalent query rows for latency (6.07x) and token output (6.1x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### BYOND/DM
 
-Raw artifact: `bench/LIVE_BYOND_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/tgstation/tgstation` at commit `ba6e47987178c54dc0432f0d4ee6843f6a3c9828`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/tgstation/tgstation` at commit `ba6e47987178c54dc0432f0d4ee6843f6a3c9828`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-byond-tgstation/repo/code/modules/mob`.
 
 Commands:
@@ -313,7 +313,7 @@ Results:
 - Native baseline `byond-source-counter` status: ok (files:614, parsed_files:614, parse_errors:0, definitions:8874).
 - Richer native baselines not available on this machine: `dreamchecker`, `dm-langserver`, `tree-sitter-dm`.
 - Coverage proxy: atlas_vs_byond_source_counter_definition_ratio: 1.0, atlas_byond_definition_symbols: 8874, native_definitions: 8874.
-- Optimization cycles: 6 (BYOND/DM native source parser matches the benchmark-owned source-counter coverage proxy after routing BYOND resource files off `parseRegexFallback`; graphify still misses every path-like DM query on this machine.).
+- Optimization cycles: 6 (BYOND/DM native source parser matches the benchmark-owned source-counter coverage proxy after routing BYOND resource files off the legacy fallback dispatcher; graphify still misses every path-like DM query on this machine.).
 
 | query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
 |---|---:|---:|---:|---:|---:|---:|
@@ -325,11 +325,11 @@ Results:
 | `/mob/living/MobBump` | 16.428 | 68.526 | 4.17x | 8 | 11 | 1.38x |
 
 - Query caveat: `/mob/living` (graphify_missing), `/mob/living/Initialize` (graphify_missing), `/mob/living/prepare_data_huds` (graphify_missing), `/mob/living/ZImpactDamage` (graphify_missing), `/datum/movespeed_modifier/landed_on_feet` (graphify_missing), `/mob/living/MobBump` (graphify_missing); raw rows remain in the table.
-No-equivalent saturation note: this BYOND/DM smoke proves Atlas indexes the live language slice and matches the native coverage proxy, but graphify returned no equivalent query rows. Latency/token ratios from missing rows are not treated as 5x evidence; see the saturation loop artifact where applicable.
+No-equivalent saturation note: this BYOND/DM benchmark proves Atlas indexes the live language slice and matches the native coverage proxy, but graphify returned no equivalent query rows. Latency/token ratios from missing rows are not treated as 5x evidence; see the saturation loop artifact where applicable.
 
 ### C#
 
-Raw artifact: `bench/LIVE_CSHARP_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/DapperLib/Dapper` at commit `72a54c475f75e18cb93cba0809d00a5e6e49efd9`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/DapperLib/Dapper` at commit `72a54c475f75e18cb93cba0809d00a5e6e49efd9`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-csharp-dapper/repo`.
 
 Commands:
@@ -348,7 +348,7 @@ Results:
 - Native baseline `roslyn` status: ok (files:157, parsed_files:157, parse_errors:0, definitions:1855, roslyn_version:5.6.0.0).
 - Richer native baselines not available on this machine: `csc`, `omnisharp`, `csharp-ls`.
 - Coverage proxy: atlas_vs_roslyn_definition_ratio: 1.84, atlas_csharp_definition_symbols: 3419, native_definitions: 1855.
-- Optimization cycles: 3 (C# live smoke improves Atlas type/method recall on real Dapper code, records Atlas/graphify query metrics, and measures coverage against a Roslyn syntax-tree baseline when dotnet is installed.).
+- Optimization cycles: 3 (C# live benchmark improves Atlas type/method recall on real Dapper code, records Atlas/graphify query metrics, and measures coverage against a Roslyn syntax-tree baseline when dotnet is installed.).
 
 | query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
 |---|---:|---:|---:|---:|---:|---:|
@@ -357,11 +357,11 @@ Results:
 | `DynamicParameters` | 17.532 | 115.266 | 6.57x | 18 | 69 | 3.83x |
 | `TypeHandlerCache` | 13.714 | 115.341 | 8.41x | 13 | 106 | 8.15x |
 
-5x note: this C# smoke meets the 5x threshold on equivalent query rows for latency (7.26x) and token output (14.15x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this C# benchmark meets the 5x threshold on equivalent query rows for latency (7.26x) and token output (14.15x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### CUDA C++
 
-Raw artifact: `bench/LIVE_CUDA_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/NVIDIA/cuda-samples` at commit `b7c5481c556c3fe98db060207ecaa41a4b9a9abc`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/NVIDIA/cuda-samples` at commit `b7c5481c556c3fe98db060207ecaa41a4b9a9abc`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-cuda-samples/repo/cpp/0_Introduction/simpleAtomicIntrinsics`.
 
 Commands:
@@ -380,7 +380,7 @@ Results:
 - Native baseline `cuda-source-counter` status: ok (files:2, parsed_files:2, parse_errors:0, functions:3, definitions:3).
 - Richer native baselines not available on this machine: `nvcc`.
 - Coverage proxy: atlas_vs_cuda_source_counter_definition_ratio: 1.0, atlas_cuda_definition_symbols: 3, native_definitions: 3.
-- Optimization cycles: 2 (CUDA live smoke covers graphify's .cu/.cuh support inside the cpp/cuda family and improved token score after compacting CUDA source suffixes in terse plain locations while preserving full paths in JSON.).
+- Optimization cycles: 2 (CUDA live benchmark covers graphify's .cu/.cuh support inside the cpp/cuda family and improved token score after compacting CUDA source suffixes in terse plain locations while preserving full paths in JSON.).
 
 | query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
 |---|---:|---:|---:|---:|---:|---:|
@@ -388,11 +388,11 @@ Results:
 | `runTest` | 13.256 | 76.893 | 5.8x | 10 | 64 | 6.4x |
 | `main` | 12.683 | 74.508 | 5.87x | 9 | 63 | 7.0x |
 
-5x note: this CUDA C++ smoke meets the 5x threshold on equivalent query rows for latency (5.96x) and token output (6.67x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this CUDA C++ benchmark meets the 5x threshold on equivalent query rows for latency (5.96x) and token output (6.67x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### Dart
 
-Raw artifact: `bench/LIVE_DART_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/dart-lang/http` at commit `5d94ef52582867e077bf41c3fa20fb8b1d1d834e`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/dart-lang/http` at commit `5d94ef52582867e077bf41c3fa20fb8b1d1d834e`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-dart-http/repo/pkgs/http/lib`.
 
 Commands:
@@ -422,11 +422,11 @@ Results:
 | `send` | 14.192 | 87.197 | 6.14x | 7 | 42 | 6.0x |
 | `RetryClient` | 13.433 | 85.696 | 6.38x | 6 | 55 | 9.17x |
 
-5x note: this Dart smoke meets the 5x threshold on equivalent query rows for latency (6.25x) and token output (8.54x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this Dart benchmark meets the 5x threshold on equivalent query rows for latency (6.25x) and token output (8.54x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### Delphi/Lazarus
 
-Raw artifact: `bench/LIVE_DELPHI_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/fpc/Lazarus` at commit `e1cc57bb27e48541ffe4bf66c78a8dddfc4f6630`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/fpc/Lazarus` at commit `e1cc57bb27e48541ffe4bf66c78a8dddfc4f6630`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-delphi-lazarus/repo/ide`.
 
 Commands:
@@ -445,7 +445,7 @@ Results:
 - Native baseline `delphi-lazarus-source-counter` status: ok (files:206, parsed_files:206, parse_errors:0, definitions:11308).
 - Richer native baselines not available on this machine: `fpc`, `lazbuild`, `pasls`.
 - Coverage proxy: atlas_vs_delphi_lazarus_source_counter_definition_ratio: 1.0, atlas_delphi_definition_symbols: 11308, native_definitions: 11308.
-- Optimization cycles: 3 (Delphi/Lazarus native source parser matches the benchmark-owned form/package coverage proxy after routing `.dfm`, `.lfm`, and `.lpk` files off `parseRegexFallback`.).
+- Optimization cycles: 3 (Delphi/Lazarus native source parser matches the benchmark-owned form/package coverage proxy after routing `.dfm`, `.lfm`, and `.lpk` files off the legacy fallback dispatcher.).
 
 | query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
 |---|---:|---:|---:|---:|---:|---:|
@@ -457,11 +457,11 @@ Results:
 | `BuildManager` | 29.597 | 344.489 | 11.64x | 8 | 268 | 33.5x |
 | `IdePackager` | 29.282 | 353.408 | 12.07x | 9 | 165 | 18.33x |
 
-5x note: this Delphi/Lazarus smoke meets the 5x threshold on equivalent query rows for latency (11.35x) and token output (12.35x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this Delphi/Lazarus benchmark meets the 5x threshold on equivalent query rows for latency (11.35x) and token output (12.35x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### .NET Project
 
-Raw artifact: `bench/LIVE_DOTNET_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/DapperLib/Dapper` at commit `72a54c475f75e18cb93cba0809d00a5e6e49efd9`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/DapperLib/Dapper` at commit `72a54c475f75e18cb93cba0809d00a5e6e49efd9`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-dotnet-dapper/repo`.
 
 Commands:
@@ -480,7 +480,7 @@ Results:
 - Native baseline `python-dotnet-project` status: ok (files:12, parsed_files:12, parse_errors:0, definitions:132).
 - Richer native baselines not available on this machine: `msbuild`.
 - Coverage proxy: atlas_vs_python_dotnet_project_definition_ratio: 1.0, atlas_dotnet_definition_symbols: 132, native_definitions: 132.
-- Optimization cycles: 4 (.NET project native structured parser matched the Python XML/solution coverage proxy after routing project files off `parseRegexFallback`, while preserving compact project-file locations.).
+- Optimization cycles: 4 (.NET project native structured parser matched the Python XML/solution coverage proxy after routing project files off the legacy fallback dispatcher, while preserving compact project-file locations.).
 
 | query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
 |---|---:|---:|---:|---:|---:|---:|
@@ -491,11 +491,11 @@ Results:
 | `Dapper.ProviderTools` | 13.767 | 107.905 | 7.84x | 12 | 62 | 5.17x |
 | `net8.0` | 13.603 | 108.424 | 7.97x | 9 | 72 | 8.0x |
 
-5x note: this .NET Project smoke meets the 5x threshold on equivalent query rows for latency (7.67x) and token output (6.15x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this .NET Project benchmark meets the 5x threshold on equivalent query rows for latency (7.67x) and token output (6.15x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### EJS
 
-Raw artifact: `bench/LIVE_EJS_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/expressjs/express` at commit `18e5985b8a9d5e8423db0a9121f22bdaecd5b120`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/expressjs/express` at commit `18e5985b8a9d5e8423db0a9121f22bdaecd5b120`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-ejs-express/repo/examples`.
 
 Commands:
@@ -515,7 +515,7 @@ Results:
 - Native baseline `ejs-template-counter` status: ok (files:20, parsed_files:20, parse_errors:0, definitions:36).
 - Richer native baselines not available on this machine: `ejs`, `ejs-language-server`.
 - Coverage proxy: atlas_vs_ejs_template_counter_definition_ratio: 1.0, atlas_ejs_definition_symbols: 36, native_definitions: 36.
-- Optimization cycles: 3 (EJS native source parser matched the template-counter coverage proxy after routing `.ejs` files off `parseRegexFallback`; graphify remains a detector-only ceiling in this installed runtime.).
+- Optimization cycles: 3 (EJS native source parser matched the template-counter coverage proxy after routing `.ejs` files off the legacy fallback dispatcher; graphify remains a detector-only ceiling in this installed runtime.).
 
 | query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
 |---|---:|---:|---:|---:|---:|---:|
@@ -528,11 +528,11 @@ Results:
 | `error_header` | 12.610 | 68.781 | 5.45x | 7 | 9 | 1.29x |
 
 - Query caveat: `login` (graphify_missing), `header` (graphify_missing), `footer` (graphify_missing), `../header` (graphify_missing), `../footer` (graphify_missing), `error_header` (graphify_missing); raw rows remain in the table.
-Detector-only saturation note: this EJS smoke proves Atlas indexes the live language slice and matches the native coverage proxy, but it does not prove graphify/native 5x query superiority for this extension because the installed graphify runtime has no deterministic extractor for it.
+Detector-only saturation note: this EJS benchmark proves Atlas indexes the live language slice and matches the native coverage proxy, but it does not prove graphify/native 5x query superiority for this extension because the installed graphify runtime has no deterministic extractor for it.
 
 ### Elixir
 
-Raw artifact: `bench/LIVE_ELIXIR_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/phoenixframework/phoenix` at commit `909725968776c2601bbea7827fd5b76e4992cc70`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/phoenixframework/phoenix` at commit `909725968776c2601bbea7827fd5b76e4992cc70`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-elixir-phoenix/repo/lib`.
 
 Commands:
@@ -561,11 +561,11 @@ Results:
 | `path` | 15.774 | 100.239 | 6.35x | 7 | 70 | 10.0x |
 | `socket` | 15.585 | 101.003 | 6.48x | 7 | 58 | 8.29x |
 
-5x note: this Elixir smoke meets the 5x threshold on equivalent query rows for latency (6.61x) and token output (22.95x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this Elixir benchmark meets the 5x threshold on equivalent query rows for latency (6.61x) and token output (22.95x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### ETS/ArkTS
 
-Raw artifact: `bench/LIVE_ETS_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/openharmony/applications_app_samples` at commit `a826ab0e75fe51d028c1c5af58188e908736b53b`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/openharmony/applications_app_samples` at commit `a826ab0e75fe51d028c1c5af58188e908736b53b`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-ets-openharmony-tabs/repo/code/ArkTS1.2/TabsSample/entry/src/main/ets`.
 
 Commands:
@@ -585,7 +585,7 @@ Results:
 - Native baseline `ets-source-counter` status: ok (files:18, parsed_files:18, parse_errors:0, definitions:153).
 - Richer native baselines not available on this machine: `arkts`, `hvigor`, `ohpm`.
 - Coverage proxy: atlas_vs_ets_source_counter_definition_ratio: 1.0, atlas_ets_definition_symbols: 153, native_definitions: 153.
-- Optimization cycles: 6 (ETS native ArkTS source parser matches the benchmark-owned source-counter coverage proxy after routing `.ets` files off `parseRegexFallback`; graphify still exposes no equivalent ETS query rows in this runtime.).
+- Optimization cycles: 6 (ETS native ArkTS source parser matches the benchmark-owned source-counter coverage proxy after routing `.ets` files off the legacy fallback dispatcher; graphify still exposes no equivalent ETS query rows in this runtime.).
 
 | query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
 |---|---:|---:|---:|---:|---:|---:|
@@ -599,11 +599,11 @@ Results:
 | `articleItemBuilder` | 12.854 | 67.888 | 5.28x | 14 | 11 | 0.79x |
 
 - Query caveat: `MyStateSample` (graphify_missing), `ComExampleTrivialApplication` (graphify_missing), `WaterFlowDataSource` (graphify_missing), `notifyDataReload` (graphify_missing), `ArticleNode` (graphify_missing), `TabViewComponent` (graphify_missing), `CollapseMenuSection` (graphify_missing), `articleItemBuilder` (graphify_missing); raw rows remain in the table.
-No-equivalent saturation note: this ETS/ArkTS smoke proves Atlas indexes the live language slice and matches the native coverage proxy, but graphify returned no equivalent query rows. Latency/token ratios from missing rows are not treated as 5x evidence; see the saturation loop artifact where applicable.
+No-equivalent saturation note: this ETS/ArkTS benchmark proves Atlas indexes the live language slice and matches the native coverage proxy, but graphify returned no equivalent query rows. Latency/token ratios from missing rows are not treated as 5x evidence; see the saturation loop artifact where applicable.
 
 ### Fortran
 
-Raw artifact: `bench/LIVE_FORTRAN_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/fortran-lang/stdlib` at commit `4c8521d5658455a576946cca3bfe2bd8ede36e24`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/fortran-lang/stdlib` at commit `4c8521d5658455a576946cca3bfe2bd8ede36e24`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-fortran-stdlib/repo/src`.
 
 Commands:
@@ -633,11 +633,11 @@ Results:
 | `loading` | 12.250 | 74.470 | 6.08x | 7 | 65 | 9.29x |
 | `free_chaining_map` | 12.179 | 74.126 | 6.09x | 14 | 103 | 7.36x |
 
-5x note: this Fortran smoke meets the 5x threshold on equivalent query rows for latency (6.06x) and token output (19.69x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this Fortran benchmark meets the 5x threshold on equivalent query rows for latency (6.06x) and token output (19.69x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### Groovy/Gradle
 
-Raw artifact: `bench/LIVE_GROOVY_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/nextflow-io/nextflow` at commit `fcf52e54d6854c9648d9c2e66ec02ac76518a000`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/nextflow-io/nextflow` at commit `fcf52e54d6854c9648d9c2e66ec02ac76518a000`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-groovy-nextflow/repo/modules/nf-commons/src/main`.
 
 Commands:
@@ -666,11 +666,11 @@ Results:
 | `getVersion` | 12.712 | 80.442 | 6.33x | 9 | 64 | 7.11x |
 | `format` | 13.595 | 78.097 | 5.74x | 8 | 97 | 12.12x |
 
-5x note: this Groovy/Gradle smoke meets the 5x threshold on equivalent query rows for latency (6.1x) and token output (9.97x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this Groovy/Gradle benchmark meets the 5x threshold on equivalent query rows for latency (6.1x) and token output (9.97x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### JSON Config
 
-Raw artifact: `bench/LIVE_JSON_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/eslint/create-config` at commit `58d77fc302b25976bb4cc7dc273377b421bc226b`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/eslint/create-config` at commit `58d77fc302b25976bb4cc7dc273377b421bc226b`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-json-eslint-create-config/repo`.
 
 Commands:
@@ -689,7 +689,7 @@ Results:
 - Native baseline `python-json` status: ok (files:5, parsed_files:5, parse_errors:0, definitions:60).
 - Richer native baselines not available on this machine: `ajv`.
 - Coverage proxy: atlas_vs_python_json_definition_ratio: 1.0, atlas_json_definition_symbols: 60, native_definitions: 60.
-- Optimization cycles: 2 (JSON config live smoke matched Python stdlib object-key coverage after replacing opaque file-level JSON documents with structured key-path symbols.).
+- Optimization cycles: 2 (JSON config live benchmark matched Python stdlib object-key coverage after replacing opaque file-level JSON documents with structured key-path symbols.).
 
 | query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
 |---|---:|---:|---:|---:|---:|---:|
@@ -701,11 +701,11 @@ Results:
 | `publishConfig.access` | 11.713 | 74.802 | 6.39x | 9 | 11 | 1.22x |
 
 - Query caveat: `scripts.test` (graphify_missing), `publishConfig.access` (graphify_missing); raw rows remain in the table.
-5x note: this JSON Config smoke meets the 5x threshold on equivalent query rows for latency (6.58x) and token output (13.28x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this JSON Config benchmark meets the 5x threshold on equivalent query rows for latency (6.58x) and token output (13.28x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### Julia
 
-Raw artifact: `bench/LIVE_JULIA_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/JuliaIO/JSON.jl` at commit `e5ef310dece16746843753e4c3b44e868b917b64`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/JuliaIO/JSON.jl` at commit `e5ef310dece16746843753e4c3b44e868b917b64`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-julia-json/repo/src`.
 
 Commands:
@@ -736,11 +736,11 @@ Results:
 | `LazyValue` | 12.144 | 69.943 | 5.76x | 6 | 9 | 1.5x |
 
 - Query caveat: `LazyValue` (graphify_missing); raw rows remain in the table.
-5x note: this Julia smoke meets the 5x threshold on equivalent query rows for latency (5.75x) and token output (12.72x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this Julia benchmark meets the 5x threshold on equivalent query rows for latency (5.75x) and token output (12.72x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### Kotlin
 
-Raw artifact: `bench/LIVE_KOTLIN_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/square/okhttp` at commit `0cadfa2997513d20bf88ca530c963a1266f17af9`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/square/okhttp` at commit `0cadfa2997513d20bf88ca530c963a1266f17af9`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-kotlin-okhttp/repo/okhttp/src/commonJvmAndroid/kotlin`.
 
 Commands:
@@ -759,7 +759,7 @@ Results:
 - Native baseline `tree-sitter-kotlin` status: partial (files:138, parsed_files:136, parse_errors:2, definitions:3876, tree_sitter_version:0.25.2, tree_sitter_kotlin_version:1.1.0).
 - Richer native baselines not available on this machine: `kotlinc`, `kotlin-language-server`, `ktlint`.
 - Coverage proxy: atlas_vs_tree_sitter_kotlin_definition_ratio: 1.0, atlas_kotlin_definition_symbols: 3875, native_definitions: 3876.
-- Optimization cycles: 3 (Kotlin live smoke met the current 5x latency/token thresholds and matched the unique tree-sitter-kotlin definition set exactly. The remaining one-count raw gap is a duplicated native counter entry for `connectResult` in `SequentialExchangeFinder.kt`, so this is recorded as a measurement ceiling rather than an Atlas recall miss.).
+- Optimization cycles: 3 (Kotlin live benchmark met the current 5x latency/token thresholds and matched the unique tree-sitter-kotlin definition set exactly. The remaining one-count raw gap is a duplicated native counter entry for `connectResult` in `SequentialExchangeFinder.kt`, so this is recorded as a measurement ceiling rather than an Atlas recall miss.).
 
 | query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
 |---|---:|---:|---:|---:|---:|---:|
@@ -769,11 +769,11 @@ Results:
 | `HttpUrl` | 17.174 | 118.643 | 6.91x | 7 | 239 | 34.14x |
 | `Headers` | 16.049 | 116.876 | 7.28x | 6 | 246 | 41.0x |
 
-5x note: this Kotlin smoke meets the 5x threshold on equivalent query rows for latency (7.08x) and token output (27.06x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this Kotlin benchmark meets the 5x threshold on equivalent query rows for latency (7.08x) and token output (27.06x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### Lua
 
-Raw artifact: `bench/LIVE_LUA_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/folke/lazy.nvim` at commit `306a05526ada86a7b30af95c5cc81ffba93fef97`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/folke/lazy.nvim` at commit `306a05526ada86a7b30af95c5cc81ffba93fef97`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-lua-lazy/repo`.
 
 Commands:
@@ -792,7 +792,7 @@ Results:
 - Native baseline `luaparser` status: ok (files:65, parsed_files:65, parse_errors:0, definitions:444, luaparser_version:4.0.1).
 - Richer native baselines not available on this machine: `lua`, `luac`, `luacheck`, `stylua`.
 - Coverage proxy: atlas_vs_luaparser_definition_ratio: 1.0, atlas_lua_definition_symbols: 444, native_definitions: 444.
-- Optimization cycles: 1 (Lua live smoke exceeded 5x query latency plus token output on equivalent function-symbol queries and exceeded the luaparser named-definition coverage proxy on cycle 1.).
+- Optimization cycles: 1 (Lua live benchmark exceeded 5x query latency plus token output on equivalent function-symbol queries and exceeded the luaparser named-definition coverage proxy on cycle 1.).
 
 | query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
 |---|---:|---:|---:|---:|---:|---:|
@@ -801,11 +801,11 @@ Results:
 | `M.add` | 14.664 | 103.973 | 7.09x | 5 | 65 | 13.0x |
 | `M.reload` | 15.532 | 103.940 | 6.69x | 7 | 78 | 11.14x |
 
-5x note: this Lua smoke meets the 5x threshold on equivalent query rows for latency (6.88x) and token output (15.09x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this Lua benchmark meets the 5x threshold on equivalent query rows for latency (6.88x) and token output (15.09x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### Markdown
 
-Raw artifact: `bench/LIVE_MARKDOWN_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/rust-lang/mdBook` at commit `cb49cc5523e609a731f27dea1af4395a504815a5`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/rust-lang/mdBook` at commit `cb49cc5523e609a731f27dea1af4395a504815a5`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-markdown-mdbook/repo/guide/src`.
 
 Commands:
@@ -824,7 +824,7 @@ Results:
 - Native baseline `markdown-it-py` status: ok (files:35, parsed_files:35, parse_errors:0, definitions:156, markdown_it_py_version:4.0.0).
 - Richer native baselines not available on this machine: `markdownlint`, `remark`.
 - Coverage proxy: atlas_vs_markdown_it_py_definition_ratio: 1.0, atlas_markdown_definition_symbols: 156, native_definitions: 156.
-- Optimization cycles: 2 (Markdown live smoke matched the markdown-it-py CommonMark heading coverage proxy after making Atlas section extraction fence-aware; query latency/token ratios are reported against graphify's document parser output.).
+- Optimization cycles: 2 (Markdown live benchmark matched the markdown-it-py CommonMark heading coverage proxy after making Atlas section extraction fence-aware; query latency/token ratios are reported against graphify's document parser output.).
 
 | query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
 |---|---:|---:|---:|---:|---:|---:|
@@ -835,11 +835,11 @@ Results:
 | `mdBook-specific features` | 11.798 | 75.959 | 6.44x | 9 | 140 | 15.56x |
 | `Configuring Renderers` | 12.256 | 94.648 | 7.72x | 9 | 97 | 10.78x |
 
-5x note: this Markdown smoke meets the 5x threshold on equivalent query rows for latency (6.69x) and token output (10.31x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this Markdown benchmark meets the 5x threshold on equivalent query rows for latency (6.69x) and token output (10.31x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### Objective-C
 
-Raw artifact: `bench/LIVE_OBJC_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/SDWebImage/SDWebImage` at commit `c3ad5e1a9bf55c9b76d4c362430b5fcded96c502`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/SDWebImage/SDWebImage` at commit `c3ad5e1a9bf55c9b76d4c362430b5fcded96c502`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-objc-sdwebimage/repo/SDWebImage`.
 
 Commands:
@@ -868,11 +868,11 @@ Results:
 | `objectForKey:` | 13.261 | 90.933 | 6.86x | 8 | 56 | 7.0x |
 
 - Query caveat: `storeImage:forKey:completion:` (graphify_missing); raw rows remain in the table.
-5x note: this Objective-C smoke meets the 5x threshold on equivalent query rows for latency (6.78x) and token output (23.63x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this Objective-C benchmark meets the 5x threshold on equivalent query rows for latency (6.78x) and token output (23.63x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### Pascal
 
-Raw artifact: `bench/LIVE_PASCAL_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/remobjects/pascalscript` at commit `4340039059ce2d270b39fad64c1415ead9f83234`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/remobjects/pascalscript` at commit `4340039059ce2d270b39fad64c1415ead9f83234`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-pascal-pascalscript/repo/Source`.
 
 Commands:
@@ -902,11 +902,11 @@ Results:
 | `RegisterClassLibraryRuntime` | 16.233 | 128.502 | 7.92x | 14 | 81 | 5.79x |
 
 - Query caveat: `TPSExec.InnerfuseCall` (graphify_missing); raw rows remain in the table.
-5x note: this Pascal smoke meets the 5x threshold on equivalent query rows for latency (8.29x) and token output (12.84x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this Pascal benchmark meets the 5x threshold on equivalent query rows for latency (8.29x) and token output (12.84x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### PHP
 
-Raw artifact: `bench/LIVE_PHP_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/slimphp/Slim` at commit `0da7dd2fc66956730b6633f6a056b35e59126583`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/slimphp/Slim` at commit `0da7dd2fc66956730b6633f6a056b35e59126583`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-php-slim/repo`.
 
 Commands:
@@ -925,7 +925,7 @@ Results:
 - Native baseline `php-tokenizer` status: ok (files:125, parsed_files:125, parse_errors:0, classes:106, interfaces:18, traits:0, enums:0, functions:742, requires:1, namespaces:124, uses:881, use_functions:163, php_version:8.4.14, definitions:866).
 - Richer native baselines not available on this machine: `intelephense`, `phpstan`, `psalm`.
 - Coverage proxy: atlas_vs_php_tokenizer_definition_ratio: 1.0, atlas_php_definition_symbols: 866, native_definitions: 866.
-- Optimization cycles: 2 (PHP live smoke met the current 5x latency/token thresholds and matched PHP tokenizer definition coverage after separating `use function` imports from real function definitions in the native baseline.).
+- Optimization cycles: 2 (PHP live benchmark met the current 5x latency/token thresholds and matched PHP tokenizer definition coverage after separating `use function` imports from real function definitions in the native baseline.).
 
 | query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
 |---|---:|---:|---:|---:|---:|---:|
@@ -935,11 +935,11 @@ Results:
 | `getResponseFactory` | 14.040 | 96.832 | 6.9x | 12 | 77 | 6.42x |
 
 - Query caveat: `addRoute` (graphify_missing); raw rows remain in the table.
-5x note: this PHP smoke meets the 5x threshold on equivalent query rows for latency (7.04x) and token output (8.74x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this PHP benchmark meets the 5x threshold on equivalent query rows for latency (7.04x) and token output (8.74x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### PowerShell
 
-Raw artifact: `bench/LIVE_POWERSHELL_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/PowerShell/PowerShellGet` at commit `a2dac8e74603f7c9eec4a54c5e23459531751b0d`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/PowerShell/PowerShellGet` at commit `a2dac8e74603f7c9eec4a54c5e23459531751b0d`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-powershell-powershellget/repo/src`.
 
 Commands:
@@ -967,11 +967,11 @@ Results:
 | `Register-PSRepository` | 12.460 | 67.653 | 5.43x | 10 | 57 | 5.7x |
 | `Update-ModuleManifest` | 12.292 | 67.977 | 5.53x | 10 | 57 | 5.7x |
 
-5x note: this PowerShell smoke meets the 5x threshold on equivalent query rows for latency (5.47x) and token output (6.68x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this PowerShell benchmark meets the 5x threshold on equivalent query rows for latency (5.47x) and token output (6.68x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### Razor
 
-Raw artifact: `bench/LIVE_RAZOR_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/dotnet-architecture/eShopOnWeb` at commit `4da8212117e87d808d4bbc7da6286fd2147ce606`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/dotnet-architecture/eShopOnWeb` at commit `4da8212117e87d808d4bbc7da6286fd2147ce606`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-razor-eshoponweb/repo/src`.
 
 Commands:
@@ -1001,11 +1001,11 @@ Results:
 | `CreateClick` | 13.008 | 85.148 | 6.55x | 8 | 60 | 7.5x |
 | `ConfirmEmailModel` | 12.744 | 85.867 | 6.74x | 9 | 60 | 6.67x |
 
-5x note: this Razor smoke meets the 5x threshold on equivalent query rows for latency (6.52x) and token output (7.88x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this Razor benchmark meets the 5x threshold on equivalent query rows for latency (6.52x) and token output (7.88x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### Ruby
 
-Raw artifact: `bench/LIVE_RUBY_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/sinatra/sinatra` at commit `5236d3459b8b9015e5ce21ddd0c6beb0db4081d4`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/sinatra/sinatra` at commit `5236d3459b8b9015e5ce21ddd0c6beb0db4081d4`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-ruby-sinatra/repo`.
 
 Commands:
@@ -1024,7 +1024,7 @@ Results:
 - Native baseline `ruby-ripper` status: ok (files:147, parsed_files:147, parse_errors:0, classes:131, modules:138, methods:895, requires:0, ruby_version:2.6.10, definitions:1164).
 - Richer native baselines not available on this machine: `solargraph`, `ruby-lsp`.
 - Coverage proxy: atlas_vs_ruby_ripper_definition_ratio: 1.01, atlas_ruby_definition_symbols: 1173, native_definitions: 1164.
-- Optimization cycles: 2 (Ruby live smoke met the current 5x latency/token thresholds and the Ripper definition coverage proxy after adding operator, receiver-qualified, and ::-qualified module/class parsing.).
+- Optimization cycles: 2 (Ruby live benchmark met the current 5x latency/token thresholds and the Ripper definition coverage proxy after adding operator, receiver-qualified, and ::-qualified module/class parsing.).
 
 | query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
 |---|---:|---:|---:|---:|---:|---:|
@@ -1033,11 +1033,11 @@ Results:
 | `route` | 13.280 | 94.267 | 7.1x | 7 | 96 | 13.71x |
 | `settings` | 13.291 | 93.757 | 7.05x | 6 | 58 | 9.67x |
 
-5x note: this Ruby smoke meets the 5x threshold on equivalent query rows for latency (7.13x) and token output (10.86x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this Ruby benchmark meets the 5x threshold on equivalent query rows for latency (7.13x) and token output (10.86x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### Rust
 
-Raw artifact: `bench/LIVE_RUST_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/BurntSushi/ripgrep` at commit `dfe4a81d2591daca76d25ae4e052c34b26578155`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/BurntSushi/ripgrep` at commit `dfe4a81d2591daca76d25ae4e052c34b26578155`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-rust-ripgrep/repo`.
 
 Commands:
@@ -1055,7 +1055,7 @@ Results:
 - The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
 - Native baseline `rust-analyzer` status: ok (sample_files:16, document_symbol_files:16, document_symbols:1310, comparable_document_symbols:1151, definitions:1151, definition_kind_scope:LSP module/class/method/enum/interface/function/constant/struct kinds; fields, variables, enum members, and type parameters excluded, diagnostic_files:0, diagnostics:0).
 - Coverage proxy: atlas_vs_rust_analyzer_definition_ratio: 1.0, atlas_rust_definition_symbols: 1153, native_definitions: 1151, coverage_scope: 16 sampled files from rust-analyzer.
-- Optimization cycles: 2 (Rust live smoke records reproducible Atlas/graphify measurements and measures sampled source coverage against rust-analyzer documentSymbol when available, with deterministic source-counter fallback.).
+- Optimization cycles: 2 (Rust live benchmark records reproducible Atlas/graphify measurements and measures sampled source coverage against rust-analyzer documentSymbol when available, with deterministic source-counter fallback.).
 
 | query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
 |---|---:|---:|---:|---:|---:|---:|
@@ -1064,11 +1064,11 @@ Results:
 | `PatternMatcher` | 14.436 | 132.168 | 9.16x | 7 | 119 | 17.0x |
 | `WalkBuilder` | 17.170 | 142.743 | 8.31x | 6 | 259 | 43.17x |
 
-5x note: this Rust smoke meets the 5x threshold on equivalent query rows for latency (8.71x) and token output (40.23x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this Rust benchmark meets the 5x threshold on equivalent query rows for latency (8.71x) and token output (40.23x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### R
 
-Raw artifact: `bench/LIVE_R_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/tidyverse/ggplot2` at commit `6870419aa6e106c3580c45c81d5b688cb31758bd`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/tidyverse/ggplot2` at commit `6870419aa6e106c3580c45c81d5b688cb31758bd`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-r-ggplot2/repo/R`.
 
 Commands:
@@ -1102,11 +1102,11 @@ Results:
 | `coord_cartesian` | 13.903 | 71.674 | 5.16x | 11 | 10 | 0.91x |
 
 - Query caveat: `ggplot` (graphify_missing), `ggplot.default` (graphify_missing), `GeomPoint` (graphify_missing), `geom_point` (graphify_missing), `StatSummary` (graphify_missing), `theme` (graphify_missing), `aes` (graphify_missing), `coord_cartesian` (graphify_missing); raw rows remain in the table.
-No-equivalent saturation note: this R smoke proves Atlas indexes the live language slice and matches the native coverage proxy, but graphify returned no equivalent query rows. Latency/token ratios from missing rows are not treated as 5x evidence; see the saturation loop artifact where applicable.
+No-equivalent saturation note: this R benchmark proves Atlas indexes the live language slice and matches the native coverage proxy, but graphify returned no equivalent query rows. Latency/token ratios from missing rows are not treated as 5x evidence; see the saturation loop artifact where applicable.
 
 ### Scala
 
-Raw artifact: `bench/LIVE_SCALA_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/typelevel/cats` at commit `851965a582940d804f9a23179f58a53fc97f07dc`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/typelevel/cats` at commit `851965a582940d804f9a23179f58a53fc97f07dc`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-scala-cats/repo/core/src/main/scala`.
 
 Commands:
@@ -1125,7 +1125,7 @@ Results:
 - Native baseline `tree-sitter-scala` status: partial (files:206, parsed_files:204, parse_errors:2, definitions:7840, tree_sitter_version:0.25.2, tree_sitter_scala_version:0.26.0).
 - Richer native baselines not available on this machine: `metals`, `scalac`, `scala-cli`.
 - Coverage proxy: atlas_vs_tree_sitter_scala_definition_ratio: 1.0, atlas_scala_definition_symbols: 7840, native_definitions: 7840.
-- Optimization cycles: 2 (Scala live smoke met the current 5x latency/token thresholds and improved Cats definition coverage after widening Atlas modifier and type-alias handling; Metals/scalac remain unavailable on this machine.).
+- Optimization cycles: 2 (Scala live benchmark met the current 5x latency/token thresholds and improved Cats definition coverage after widening Atlas modifier and type-alias handling; Metals/scalac remain unavailable on this machine.).
 
 | query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
 |---|---:|---:|---:|---:|---:|---:|
@@ -1135,11 +1135,11 @@ Results:
 | `Traverse` | 18.045 | 176.085 | 9.76x | 7 | 91 | 13.0x |
 | `Eval` | 20.505 | 174.025 | 8.49x | 4 | 256 | 64.0x |
 
-5x note: this Scala smoke meets the 5x threshold on equivalent query rows for latency (9.38x) and token output (38.06x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this Scala benchmark meets the 5x threshold on equivalent query rows for latency (9.38x) and token output (38.06x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### SQL
 
-Raw artifact: `bench/LIVE_SQL_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/hasura/graphql-engine` at commit `417c174c0ac3c80dafe6e8f9e8ac39d868334724`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/hasura/graphql-engine` at commit `417c174c0ac3c80dafe6e8f9e8ac39d868334724`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-sql-hasura/repo/server/src-rsr/migrations`.
 
 Commands:
@@ -1157,7 +1157,7 @@ Results:
 - The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
 - Native baseline `sqlfluff` status: ok (files:82, parsed_files:82, parse_errors:0, definitions:111, sqlfluff_version:sqlfluff, version 3.5.0).
 - Coverage proxy: atlas_vs_sqlfluff_definition_ratio: 1.0, atlas_sql_definition_symbols: 111, native_definitions: 111.
-- Optimization cycles: 5 (SQL native source parser matches SQLFluff DDL definition coverage after routing `.sql` files off `parseRegexFallback`; it exceeds 5x latency/token thresholds, while the generated tree-sitter-sql C parser was rejected because CGO compilation was killed on this machine.).
+- Optimization cycles: 5 (SQL native source parser matches SQLFluff DDL definition coverage after routing `.sql` files off the legacy fallback dispatcher; it exceeds 5x latency/token thresholds, while the generated tree-sitter-sql C parser was rejected because CGO compilation was killed on this machine.).
 
 | query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
 |---|---:|---:|---:|---:|---:|---:|
@@ -1166,11 +1166,11 @@ Results:
 | `hdb_catalog.hdb_schema_update_event_notifier` | 11.995 | 72.389 | 6.03x | 16 | 80 | 5.0x |
 | `hdb_catalog.hdb_function_agg` | 12.461 | 71.679 | 5.75x | 11 | 56 | 5.09x |
 
-5x note: this SQL smoke meets the 5x threshold on equivalent query rows for latency (5.96x) and token output (5.33x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this SQL benchmark meets the 5x threshold on equivalent query rows for latency (5.96x) and token output (5.33x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### Svelte
 
-Raw artifact: `bench/LIVE_SVELTE_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/carbon-design-system/carbon-components-svelte` at commit `4a2c72288d8a21e5fe489d042fc72d2ae7eb7097`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/carbon-design-system/carbon-components-svelte` at commit `4a2c72288d8a21e5fe489d042fc72d2ae7eb7097`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-svelte-carbon/repo/src`.
 
 Commands:
@@ -1199,11 +1199,11 @@ Results:
 | `handleKeydown` | 14.087 | 79.105 | 5.62x | 12 | 79 | 6.58x |
 | `handleOutsideClick` | 14.947 | 79.465 | 5.32x | 12 | 90 | 7.5x |
 
-5x note: this Svelte smoke meets the 5x threshold on equivalent query rows for latency (5.92x) and token output (8.81x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this Svelte benchmark meets the 5x threshold on equivalent query rows for latency (5.92x) and token output (8.81x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### Swift
 
-Raw artifact: `bench/LIVE_SWIFT_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/apple/swift-argument-parser` at commit `8122bc5941426c9494c78ff5ad01951e81c02f53`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/apple/swift-argument-parser` at commit `8122bc5941426c9494c78ff5ad01951e81c02f53`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-swift-argument-parser/repo`.
 
 Commands:
@@ -1222,7 +1222,7 @@ Results:
 - Native baseline `sourcekit-lsp` status: ok (sample_files:16, document_symbol_files:16, document_symbols:209, definitions:209, diagnostic_files:0, diagnostics:0, swift_version:Apple Swift version 6.2.4 (swiftlang-6.2.4.1.4 clang-1700.6.4.2)).
 - Richer native baselines not available on this machine: `swift-syntax`.
 - Coverage proxy: atlas_vs_sourcekit_lsp_definition_ratio: 1.23, atlas_swift_definition_symbols: 257, native_definitions: 209, coverage_scope: 16 sampled files from sourcekit-lsp.
-- Optimization cycles: 1 (Swift live smoke met the current 5x latency/token thresholds and exceeded the SourceKit-LSP sampled definition coverage proxy on cycle 1.).
+- Optimization cycles: 1 (Swift live benchmark met the current 5x latency/token thresholds and exceeded the SourceKit-LSP sampled definition coverage proxy on cycle 1.).
 
 | query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
 |---|---:|---:|---:|---:|---:|---:|
@@ -1231,11 +1231,11 @@ Results:
 | `run` | 18.878 | 144.785 | 7.67x | 6 | 48 | 8.0x |
 | `help` | 18.602 | 147.211 | 7.91x | 7 | 44 | 6.29x |
 
-5x note: this Swift smoke meets the 5x threshold on equivalent query rows for latency (7.98x) and token output (21.65x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this Swift benchmark meets the 5x threshold on equivalent query rows for latency (7.98x) and token output (21.65x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### Terraform/HCL
 
-Raw artifact: `bench/LIVE_TERRAFORM_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/terraform-aws-modules/terraform-aws-vpc` at commit `3ffbd46fb1c7733e1b34d8666893280454e27436`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/terraform-aws-modules/terraform-aws-vpc` at commit `3ffbd46fb1c7733e1b34d8666893280454e27436`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-terraform-vpc/repo`.
 
 Commands:
@@ -1254,7 +1254,7 @@ Results:
 - Native baseline `python-hcl2` status: ok (files:77, parsed_files:77, parse_errors:0, definitions:1738, python_hcl2_version:8.1.2).
 - Richer native baselines not available on this machine: `terraform`.
 - Coverage proxy: atlas_vs_python_hcl2_definition_ratio: 1.0, atlas_terraform_definition_symbols: 1738, native_definitions: 1738.
-- Optimization cycles: 3 (Terraform/HCL native tree-sitter parser matched python-hcl2 definition coverage after routing `.tf`, `.tfvars`, and `.hcl` files off `parseRegexFallback`, while keeping graphify latency/token ratios above 5x.).
+- Optimization cycles: 3 (Terraform/HCL native tree-sitter parser matched python-hcl2 definition coverage after routing `.tf`, `.tfvars`, and `.hcl` files off the legacy fallback dispatcher, while keeping graphify latency/token ratios above 5x.).
 
 | query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
 |---|---:|---:|---:|---:|---:|---:|
@@ -1263,11 +1263,11 @@ Results:
 | `aws_route_table.public` | 13.839 | 109.361 | 7.9x | 8 | 280 | 35.0x |
 | `aws_nat_gateway.this` | 13.259 | 108.610 | 8.19x | 8 | 286 | 35.75x |
 
-5x note: this Terraform/HCL smoke meets the 5x threshold on equivalent query rows for latency (7.78x) and token output (41.61x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this Terraform/HCL benchmark meets the 5x threshold on equivalent query rows for latency (7.78x) and token output (41.61x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### Verilog
 
-Raw artifact: `bench/LIVE_VERILOG_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/lowRISC/ibex` at commit `022f084096baed0a9b5ebdf697ed2965f13e8ed8`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/lowRISC/ibex` at commit `022f084096baed0a9b5ebdf697ed2965f13e8ed8`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-verilog-ibex/repo/rtl`.
 
 Commands:
@@ -1297,11 +1297,11 @@ Results:
 | `cm_stack_adj_base` | 12.266 | 70.176 | 5.72x | 12 | 67 | 5.58x |
 | `decode_i_insn` | 11.888 | 69.946 | 5.88x | 8 | 53 | 6.62x |
 
-5x note: this Verilog smoke meets the 5x threshold on equivalent query rows for latency (5.51x) and token output (8.73x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this Verilog benchmark meets the 5x threshold on equivalent query rows for latency (5.51x) and token output (8.73x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### Vue
 
-Raw artifact: `bench/LIVE_VUE_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/gothinkster/vue-realworld-example-app` at commit `f7e48c8178602ce25d43293bc6f8ca51d84ae222`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/gothinkster/vue-realworld-example-app` at commit `f7e48c8178602ce25d43293bc6f8ca51d84ae222`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-vue-realworld/repo/src`.
 
 Commands:
@@ -1329,11 +1329,11 @@ Results:
 | `goTo` | 12.256 | 69.169 | 5.64x | 4 | 45 | 11.25x |
 | `onPageChange` | 12.291 | 72.857 | 5.93x | 7 | 49 | 7.0x |
 
-5x note: this Vue smoke meets the 5x threshold on equivalent query rows for latency (5.51x) and token output (8.04x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this Vue benchmark meets the 5x threshold on equivalent query rows for latency (5.51x) and token output (8.04x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ### Zig
 
-Raw artifact: `bench/LIVE_ZIG_SMOKE.json`. Smoke used a fresh shallow clone of `https://github.com/zigtools/zls` at commit `8da87d4f3305a550e7b739bad764e34bf1e46a08`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
+Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/zigtools/zls` at commit `8da87d4f3305a550e7b739bad764e34bf1e46a08`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
 Benchmark target: `/tmp/atlas-live-zig-zls/repo/src`.
 
 Commands:
@@ -1352,7 +1352,7 @@ Results:
 - Native baseline `tree-sitter-zig` status: partial (files:43, parsed_files:42, parse_errors:1, definitions:5279, tree_sitter_version:0.25.2, tree_sitter_zig_version:1.1.2).
 - Richer native baselines not available on this machine: `zig`, `zls`.
 - Coverage proxy: atlas_vs_tree_sitter_zig_definition_ratio: 1.22, atlas_zig_definition_symbols: 6462, native_definitions: 5279.
-- Optimization cycles: 2 (Zig live smoke met the current 5x latency/token thresholds and exceeded the tree-sitter-zig definition coverage proxy after widening Atlas Zig declaration handling; zig/zls remain unavailable on this machine.).
+- Optimization cycles: 2 (Zig live benchmark met the current 5x latency/token thresholds and exceeded the tree-sitter-zig definition coverage proxy after widening Atlas Zig declaration handling; zig/zls remain unavailable on this machine.).
 
 | query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
 |---|---:|---:|---:|---:|---:|---:|
@@ -1362,7 +1362,7 @@ Results:
 | `Config` | 17.543 | 106.124 | 6.05x | 8 | 79 | 9.88x |
 | `main` | 17.303 | 105.760 | 6.11x | 7 | 202 | 28.86x |
 
-5x note: this Zig smoke meets the 5x threshold on equivalent query rows for latency (5.55x) and token output (28.55x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
+5x note: this Zig benchmark meets the 5x threshold on equivalent query rows for latency (5.55x) and token output (28.55x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
 
 ## Tool matrix
 
@@ -1456,7 +1456,7 @@ Results:
 - Call coverage proxy: Atlas internal calls 2403 vs graphify calls 927, Atlas/graphify = 2.59x.
 - Atlas receiver-typed calls: 2326/3105 = 74.9%.
 - graphify extracted calls: 599/927 = 64.6%.
-- JDTLS LSP smoke: initialized against build root gson, sampled 5/5 files, 54 document symbols, 11 workspace symbols for query `Gson`, 425 diagnostics.
+- JDTLS LSP benchmark: initialized against build root gson, sampled 5/5 files, 54 document symbols, 11 workspace symbols for query `Gson`, 425 diagnostics.
 - Query token cost (2/2 equivalent rows): graphify 214 tokens vs Atlas 14 tokens, graphify/Atlas = 15.29x.
 - Query latency (2/2 equivalent rows): graphify 181.041ms vs Atlas 46.613ms, graphify/Atlas = 3.88x.
 - Java cold-build saturation: cold-vs-cold full-index ratio is 3.11x (graphify FULL 0.87s / Atlas cold 0.28s), below 5x; Atlas's largest cold phases are lexical:176ms, persist:176ms, write_sqlite:176ms.
@@ -1472,7 +1472,7 @@ Results:
 - Call coverage proxy: Atlas internal calls 1975 vs graphify calls 1018, Atlas/graphify = 1.94x.
 - Atlas receiver-typed calls: 18/4973 = 0.4%.
 - graphify extracted calls: 492/1018 = 48.3%.
-- clangd LSP smoke: sampled 8/8 files, 258 document symbols, 2 diagnostics.
+- clangd LSP benchmark: sampled 8/8 files, 258 document symbols, 2 diagnostics.
 - Query token cost (4/4 equivalent rows): graphify 1206 tokens vs Atlas 42 tokens, graphify/Atlas = 28.71x.
 - Query latency (4/4 equivalent rows): graphify 350.624ms vs Atlas 57.171ms, graphify/Atlas = 6.13x.
 - c cold-build saturation: cold-vs-cold full-index ratio is 2.58x (graphify FULL 0.86s / Atlas cold 0.333s), below 5x; Atlas's largest cold phases are lexical:163ms, persist:163ms, write_sqlite:163ms.
@@ -1485,7 +1485,7 @@ Results:
 - Call coverage proxy: Atlas internal calls 6217 vs graphify calls 1195, Atlas/graphify = 5.2x.
 - Atlas receiver-typed calls: 1959/9481 = 20.7%.
 - graphify extracted calls: 1027/1195 = 85.9%.
-- clangd LSP smoke: sampled 8/8 files, 421 document symbols, 167 diagnostics.
+- clangd LSP benchmark: sampled 8/8 files, 421 document symbols, 167 diagnostics.
 - Query token cost (4/4 equivalent rows): graphify 320 tokens vs Atlas 32 tokens, graphify/Atlas = 10.0x.
 - Query latency (4/4 equivalent rows): graphify 397.063ms vs Atlas 68.453ms, graphify/Atlas = 5.8x.
 - cpp cold-build saturation: cold-vs-cold full-index ratio is 3.41x (graphify FULL 1.218s / Atlas cold 0.357s), below 5x; Atlas's largest cold phases are lexical:214ms, persist:214ms, write_sqlite:214ms.
@@ -1504,11 +1504,11 @@ Atlas `serve` is started against the already-indexed DB, warmed, then warm HTTP 
 | c | 0.521 | 2.138 | 14.28 | 6.68x |
 | cpp | 0.487 | 2.393 | 14.529 | 6.07x |
 
-- go warm-vs-warm context: both Atlas `serve` and gopls run as persistent daemons. Atlas warm explain median is 1.234ms and warm /healthz is 0.465ms. gopls's steady-state per-request latency is measured separately in its LSP smoke (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
-- python warm-vs-warm context: both Atlas `serve` and pyright run as persistent daemons. Atlas warm explain median is 1.568ms and warm /healthz is 0.521ms. pyright's steady-state per-request latency is measured separately in its LSP smoke (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
-- java warm-vs-warm context: both Atlas `serve` and jdtls run as persistent daemons. Atlas warm explain median is 11.119ms and warm /healthz is 0.5ms. jdtls's steady-state per-request latency is measured separately in its LSP smoke (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
-- c warm-vs-warm context: both Atlas `serve` and clangd run as persistent daemons. Atlas warm explain median is 2.138ms and warm /healthz is 0.521ms. clangd's steady-state per-request latency is measured separately in its LSP smoke (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
-- cpp warm-vs-warm context: both Atlas `serve` and clangd run as persistent daemons. Atlas warm explain median is 2.393ms and warm /healthz is 0.487ms. clangd's steady-state per-request latency is measured separately in its LSP smoke (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
+- go warm-vs-warm context: both Atlas `serve` and gopls run as persistent daemons. Atlas warm explain median is 1.234ms and warm /healthz is 0.465ms. gopls's steady-state per-request latency is measured separately in its LSP benchmark (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
+- python warm-vs-warm context: both Atlas `serve` and pyright run as persistent daemons. Atlas warm explain median is 1.568ms and warm /healthz is 0.521ms. pyright's steady-state per-request latency is measured separately in its LSP benchmark (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
+- java warm-vs-warm context: both Atlas `serve` and jdtls run as persistent daemons. Atlas warm explain median is 11.119ms and warm /healthz is 0.5ms. jdtls's steady-state per-request latency is measured separately in its LSP benchmark (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
+- c warm-vs-warm context: both Atlas `serve` and clangd run as persistent daemons. Atlas warm explain median is 2.138ms and warm /healthz is 0.521ms. clangd's steady-state per-request latency is measured separately in its LSP benchmark (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
+- cpp warm-vs-warm context: both Atlas `serve` and clangd run as persistent daemons. Atlas warm explain median is 2.393ms and warm /healthz is 0.487ms. clangd's steady-state per-request latency is measured separately in its LSP benchmark (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
 
 
 ## Query token probes

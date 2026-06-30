@@ -1,7 +1,7 @@
 ; Kotlin definition tags for Atlas's generic native tree-sitter extractor.
 ; tree-sitter-grammars/tree-sitter-kotlin v1.1.0 ships no official tags.scm, so
 ; these patterns cover the source definition surface used by the independent
-; tree-sitter-kotlin smoke: types, functions, properties, and enum entries.
+; tree-sitter-kotlin benchmark: types, functions, properties, and enum entries.
 ; Keep Kotlin's existing Atlas kind surface (`type`, `function`, `variable`) so
 ; switching off the regex fallback does not break callers.
 

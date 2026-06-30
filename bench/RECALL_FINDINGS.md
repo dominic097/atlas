@@ -22,7 +22,7 @@ The C/C++ recall unit tests (`internal/parser`) pass: `TestCSymbols_RecallRootCa
 ## Native parser migration addendum — B2 code languages
 
 Measured 2026-06-30 after routing Kotlin, Scala, Swift, Lua, and Zig through
-native tree-sitter tags queries instead of `parseRegexFallback`. Each language
+native tree-sitter tags queries instead of the legacy fallback dispatcher. Each language
 was indexed from the real repository named below, compared against graphify
 exact-symbol queries, and checked against the strongest local independent
 baseline available on this machine.
@@ -51,7 +51,7 @@ remain under `bench/` until the final artifact cleanup pass.
 ## Native parser migration addendum — B3 in progress
 
 Measured 2026-06-30 while converting the B3 languages in strict order. Rows
-here are added only after the language is routed off `parseRegexFallback`,
+here are added only after the language is routed off the legacy fallback dispatcher,
 benchmarked against graphify and the strongest local independent baseline, and
 validated with the focused parser test suite.
 
@@ -66,7 +66,7 @@ validated with the focused parser test suite.
 ## Native parser migration addendum — B4 in progress
 
 Measured 2026-06-30 while converting the B4 languages in strict order. Rows
-are added only after the language is routed off `parseRegexFallback`,
+are added only after the language is routed off the legacy fallback dispatcher,
 benchmarked against graphify and the strongest local independent baseline, and
 validated with the focused parser test suite.
 
@@ -74,44 +74,44 @@ validated with the focused parser test suite.
 | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | --- |
 | fortran | fortran-lang/stdlib `src` | tree-sitter-fortran 0.6.0 | 364 | 364 | 1.00x | 6.06x | 19.69x | Native tree-sitter AST walker preserves module/type/function/subroutine coverage, keeps subroutines normalized to Atlas `function`, and adds native `program` symbols for future slices. |
 | verilog | lowRISC/ibex RTL slice | tree-sitter-systemverilog 0.3.1 | 93 | 93 | 1.00x | 5.51x | 8.73x | Native tree-sitter AST walker preserves module/package/function coverage and adds native interface/class/task/program/checker support for future slices; the baseline parser marked 10 files as parse-error partial while still producing the matched definition proxy. |
-| pascal | remobjects/pascalscript `Source` | pascal declaration counter | 6432 | 6432 | 1.00x | 8.29x | 12.84x | Native tree-sitter-pascal route verified 6297 declarations directly and used source-shape recovery for 135 package/preprocessor-heavy declarations the grammar cannot expose, preserving exact coverage without routing through `parseRegexFallback`. |
+| pascal | remobjects/pascalscript `Source` | pascal declaration counter | 6432 | 6432 | 1.00x | 8.29x | 12.84x | Native tree-sitter-pascal route verified 6297 declarations directly and used source-shape recovery for 135 package/preprocessor-heavy declarations the grammar cannot expose, preserving exact coverage without routing through the legacy fallback dispatcher. |
 | groovy | nextflow-io/nextflow `modules/nf-commons/src/main` | tree-sitter-groovy 0.1.2 | 837 | 525 | 1.59x | 6.10x | 9.97x | Native tree-sitter-groovy route verified 511 declarations directly and used source-shape recovery for 326 declarations in real files where the baseline grammar reports parse errors; stronger Groovy CLI/LSP baselines are unavailable on this machine. |
-| bash | nvm-sh/nvm repo | `/bin/bash -n` + source counter | 158 | 158 | 1.00x | 6.19x | 18.44x | Native tree-sitter-bash route directly verified all 158 live shell function definitions and preserved source-import extraction without routing Bash through `parseRegexFallback`. |
+| bash | nvm-sh/nvm repo | `/bin/bash -n` + source counter | 158 | 158 | 1.00x | 6.19x | 18.44x | Native tree-sitter-bash route directly verified all 158 live shell function definitions and preserved source-import extraction without routing Bash through the legacy fallback dispatcher. |
 | powershell | PowerShell/PowerShellGet `src` | `pwsh` AST parser | 28 | 28 | 1.00x | 5.47x | 6.68x | Native tree-sitter-powershell route matched the pwsh FunctionDefinitionAst baseline exactly on the live slice, preserved `Import-Module`/`using module` import extraction, and no longer emits regex variable/doc symbols. |
 
 ## Native parser migration addendum — B5 in progress
 
 Measured 2026-06-30 while converting the B5 languages in strict order. Rows
-are added only after the language is routed off `parseRegexFallback`,
+are added only after the language is routed off the legacy fallback dispatcher,
 benchmarked against graphify and the strongest local independent baseline, and
 validated with the focused parser test suite.
 
 | Lang | Repo slice | Independent baseline | Atlas defs | Baseline defs | Recall/coverage | graphify latency | graphify tokens | Notes |
 | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | --- |
-| vue | gothinkster/vue-realworld-example-app `src` | `@vue/compiler-sfc` 3.5.22 | 119 | 119 | 1.00x | 5.51x | 8.04x | Native SFC block extraction plus tree-sitter JavaScript/TypeScript declaration parsing matched the compiler-sfc script declaration baseline exactly and kept `.vue` files off `parseRegexFallback`. |
+| vue | gothinkster/vue-realworld-example-app `src` | `@vue/compiler-sfc` 3.5.22 | 119 | 119 | 1.00x | 5.51x | 8.04x | Native SFC block extraction plus tree-sitter JavaScript/TypeScript declaration parsing matched the compiler-sfc script declaration baseline exactly and kept `.vue` files off the legacy fallback dispatcher. |
 | svelte | carbon-design-system/carbon-components-svelte `src` | Svelte compiler 5.56.4 | 1278 | 1278 | 1.00x | 5.92x | 8.81x | Native SFC block extraction plus tree-sitter JavaScript/TypeScript declaration parsing matched the Svelte compiler script declaration baseline exactly and removed the prior regex over-count. |
 | astro | withastro/blog-tutorial-demo `src` | `@astrojs/compiler` 4.0.0 | 58 | 58 | 1.00x | 5.66x | 10.54x | Native Astro parser matched compiler coverage with file components, component tags, and tree-sitter frontmatter declarations; graphify still lacks the `pageTitle` variable row, so the latency/token ratios use the 5/6 equivalent queries. |
-| razor | dotnet-architecture/eShopOnWeb `src` | razor directive/component counter | 208 | 208 | 1.00x | 6.52x | 7.88x | Native Razor source parser matched file view/component, directive, component-tag, and `@code` method coverage exactly while keeping Razor files off `parseRegexFallback`. |
-| blade | BookStackApp/BookStack `resources/views` | blade directive counter | 1090 | 1090 | 1.00x | 6.07x | 6.10x | Native Blade source parser matched template identity, directive, component, and `wire:` handler coverage exactly while keeping `.blade.php` files off `parseRegexFallback`. |
-| ejs | expressjs/express `examples` | ejs template counter | 36 | 36 | 1.00x | 5.21x | 6.86x | Native EJS tag scanner matched template, include, function, and variable coverage exactly while keeping `.ejs` files off `parseRegexFallback`; graphify is detector-only for `.ejs`, so the ratios use the one equivalent query and the graphify ceiling is documented. |
+| razor | dotnet-architecture/eShopOnWeb `src` | razor directive/component counter | 208 | 208 | 1.00x | 6.52x | 7.88x | Native Razor source parser matched file view/component, directive, component-tag, and `@code` method coverage exactly while keeping Razor files off the legacy fallback dispatcher. |
+| blade | BookStackApp/BookStack `resources/views` | blade directive counter | 1090 | 1090 | 1.00x | 6.07x | 6.10x | Native Blade source parser matched template identity, directive, component, and `wire:` handler coverage exactly while keeping `.blade.php` files off the legacy fallback dispatcher. |
+| ejs | expressjs/express `examples` | ejs template counter | 36 | 36 | 1.00x | 5.21x | 6.86x | Native EJS tag scanner matched template, include, function, and variable coverage exactly while keeping `.ejs` files off the legacy fallback dispatcher; graphify is detector-only for `.ejs`, so the ratios use the one equivalent query and the graphify ceiling is documented. |
 
 ## Native parser migration addendum — B6 in progress
 
 Measured 2026-06-30 while converting the B6 languages in strict order. Rows
-are added only after the language is routed off `parseRegexFallback`,
+are added only after the language is routed off the legacy fallback dispatcher,
 benchmarked against graphify and the strongest local independent baseline, and
 validated with the focused parser test suite.
 
 | Lang | Repo slice | Independent baseline | Atlas defs | Baseline defs | Recall/coverage | graphify latency | graphify tokens | Notes |
 | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | --- |
-| sql | hasura/graphql-engine `server/src-rsr/migrations` | SQLFluff 3.5.0 | 111 | 111 | 1.00x | 5.96x | 5.33x | Native SQL DDL source parser matched SQLFluff coverage exactly while keeping `.sql` files off `parseRegexFallback`; tree-sitter-sql v0.3.11's Go module omits `parser.c`, and a locally generated C parser was killed during CGO compilation after 128s, so this is the documented native-parser ceiling for SQL in this environment. |
-| terraform/hcl | terraform-aws-modules/terraform-aws-vpc repo | python-hcl2 8.1.2 | 1738 | 1738 | 1.00x | 7.78x | 41.61x | Native tree-sitter HCL parser matched resource/data/module/variable/output coverage exactly while keeping `.tf`, `.tfvars`, and `.hcl` files off `parseRegexFallback`. |
-| apex | trailheadapps/apex-recipes `force-app` | apex source counter | 1072 | 1072 | 1.00x | 8.15x | 11.67x | Native tree-sitter-sfapex declaration parsing verified class/interface/enum, trigger, constructor, and method symbols, with SOQL SObject and DML operation source recovery preserved for exact coverage while keeping `.cls` and `.trigger` files off `parseRegexFallback`. |
-| dotnet project | DapperLib/Dapper repo | python dotnet-project counter | 132 | 132 | 1.00x | 7.67x | 6.15x | Native structured project parser matched `.sln`, `.slnx`, and SDK project-file project/package/project-reference/target-framework coverage exactly while keeping .NET project files off `parseRegexFallback`. |
-| p4 | focused P4_16 fixture | tree-sitter-p4 plus source recovery | 15 | 15 | 1.00x | n/a | n/a | Native tree-sitter-p4 route verifies parser/control/package/action/table/header/struct/extern/type/constant/state declarations and preserves source recovery for P4_16 constructs the grammar misses (`header_union`, typed enum); `p4c` is not installed and the live-smoke harness has no P4 target, so graphify/baseline ratios are the documented ceiling for this slice. |
-| byond/dm | tgstation/tgstation `code/modules/mob` | byond source counter | 8874 | 8874 | 1.00x | n/a | n/a | Native BYOND source parser matched owner-qualified DM type/method coverage exactly while keeping BYOND resource files off `parseRegexFallback`; graphify exposes no equivalent path-like DM query rows in this runtime (0/6), so latency/token ratios remain a documented ceiling. |
-| ets/arkts | OpenHarmony TabsSample `entry/src/main/ets` | ets source counter | 153 | 153 | 1.00x | n/a | n/a | Native ArkTS/ETS source parser matched type/function/method/constructor/variable coverage exactly while keeping `.ets` files off `parseRegexFallback`; graphify exposes no equivalent ETS query rows in this runtime (0/8), so latency/token ratios remain a documented ceiling. |
-| delphi/lazarus | fpc/Lazarus `ide` | delphi/lazarus source counter | 11308 | 11308 | 1.00x | 11.35x | 12.35x | Native Delphi/Lazarus source parser matched form component, component type, event, package, dependency, and unit coverage exactly while keeping `.dfm`, `.lfm`, and `.lpk` files off `parseRegexFallback`. |
+| sql | hasura/graphql-engine `server/src-rsr/migrations` | SQLFluff 3.5.0 | 111 | 111 | 1.00x | 5.96x | 5.33x | Native SQL DDL source parser matched SQLFluff coverage exactly while keeping `.sql` files off the legacy fallback dispatcher; tree-sitter-sql v0.3.11's Go module omits `parser.c`, and a locally generated C parser was killed during CGO compilation after 128s, so this is the documented native-parser ceiling for SQL in this environment. |
+| terraform/hcl | terraform-aws-modules/terraform-aws-vpc repo | python-hcl2 8.1.2 | 1738 | 1738 | 1.00x | 7.78x | 41.61x | Native tree-sitter HCL parser matched resource/data/module/variable/output coverage exactly while keeping `.tf`, `.tfvars`, and `.hcl` files off the legacy fallback dispatcher. |
+| apex | trailheadapps/apex-recipes `force-app` | apex source counter | 1072 | 1072 | 1.00x | 8.15x | 11.67x | Native tree-sitter-sfapex declaration parsing verified class/interface/enum, trigger, constructor, and method symbols, with SOQL SObject and DML operation source recovery preserved for exact coverage while keeping `.cls` and `.trigger` files off the legacy fallback dispatcher. |
+| dotnet project | DapperLib/Dapper repo | python dotnet-project counter | 132 | 132 | 1.00x | 7.67x | 6.15x | Native structured project parser matched `.sln`, `.slnx`, and SDK project-file project/package/project-reference/target-framework coverage exactly while keeping .NET project files off the legacy fallback dispatcher. |
+| p4 | focused P4_16 fixture | tree-sitter-p4 plus source recovery | 15 | 15 | 1.00x | n/a | n/a | Native tree-sitter-p4 route verifies parser/control/package/action/table/header/struct/extern/type/constant/state declarations and preserves source recovery for P4_16 constructs the grammar misses (`header_union`, typed enum); `p4c` is not installed and the live-benchmark harness has no P4 target, so graphify/baseline ratios are the documented ceiling for this slice. |
+| byond/dm | tgstation/tgstation `code/modules/mob` | byond source counter | 8874 | 8874 | 1.00x | n/a | n/a | Native BYOND source parser matched owner-qualified DM type/method coverage exactly while keeping BYOND resource files off the legacy fallback dispatcher; graphify exposes no equivalent path-like DM query rows in this runtime (0/6), so latency/token ratios remain a documented ceiling. |
+| ets/arkts | OpenHarmony TabsSample `entry/src/main/ets` | ets source counter | 153 | 153 | 1.00x | n/a | n/a | Native ArkTS/ETS source parser matched type/function/method/constructor/variable coverage exactly while keeping `.ets` files off the legacy fallback dispatcher; graphify exposes no equivalent ETS query rows in this runtime (0/8), so latency/token ratios remain a documented ceiling. |
+| delphi/lazarus | fpc/Lazarus `ide` | delphi/lazarus source counter | 11308 | 11308 | 1.00x | 11.35x | 12.35x | Native Delphi/Lazarus source parser matched form component, component type, event, package, dependency, and unit coverage exactly while keeping `.dfm`, `.lfm`, and `.lpk` files off the legacy fallback dispatcher. |
 
 ## The consistent definition surface (applied uniformly to all 7 languages)
 

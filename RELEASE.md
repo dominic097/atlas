@@ -78,7 +78,7 @@ docker run --rm -v "$PWD":/src -w /src \
   release --snapshot --clean --skip=publish,sign
 
 cd npm/atlas
-ATLAS_BINARY=../../bin/atlas npm run smoke
+ATLAS_BINARY=../../bin/atlas npm run benchmark
 ATLAS_SKIP_DOWNLOAD=1 npm publish --dry-run --access public
 ```
 

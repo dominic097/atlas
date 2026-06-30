@@ -1,6 +1,6 @@
 # Atlas benchmark saturation report
 
-This report records repeated live smokes for languages where graphify did not expose equivalent query rows.
+This report records repeated live benchmarks for languages where graphify did not expose equivalent query rows.
 
 - Iterations requested per language: 5
 - Atlas binary: `bin/atlas`

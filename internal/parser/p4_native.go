@@ -7,7 +7,7 @@ import (
 )
 
 func parseP4Native(path string, content []byte) ([]symbolDraft, []string, bool) {
-	legacy, imports := parseRegexFallback(path, "p4", content)
+	legacy, imports := parseLightweightCodeSymbols(path, "p4", content)
 	treeDecls, ok := p4TreeSitterDeclarations(content)
 	if !ok {
 		return legacy, imports, true

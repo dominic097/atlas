@@ -49,7 +49,7 @@ func TestSymbolToHitSanitizesNonFiniteScores(t *testing.T) {
 }
 
 // writeFixtureRepo writes a tiny Go package whose symbol names/docs make token
-// overlap meaningful for the ranking smoke test, and returns its path.
+// overlap meaningful for the ranking benchmark test, and returns its path.
 func writeFixtureRepo(t *testing.T) string {
 	t.Helper()
 	dir := t.TempDir()
@@ -132,7 +132,7 @@ func TestSemanticSearchDegradesWhenNoEmbeddings(t *testing.T) {
 	}
 }
 
-// TestSemanticSearchRankingWithVectors is the ranking smoke test: index with
+// TestSemanticSearchRankingWithVectors is the ranking benchmark test: index with
 // vectors ON (offline Hashing embedder), then a semantic query for a user-related
 // term must run in "semantic" mode and rank the user-named symbols above the
 // disjoint invoice-template symbol.
