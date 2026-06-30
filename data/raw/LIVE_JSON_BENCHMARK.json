@@ -18,15 +18,16 @@
       "publishConfig",
       "publishConfig.access"
     ],
-    "target_path": "/tmp/atlas-live-json-eslint-create-config/repo"
+    "target_path": "/tmp/atlas-live-json-eslint-create-config/repo",
+    "atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-json-eslint-create-config/atlas.db serve --addr 127.0.0.1:4232"
   },
   "atlas": {
-    "cold_wall_seconds": 0.099,
+    "cold_wall_seconds": 0.045,
     "reindex_wall_seconds": 0.02,
     "index": {
-      "repo_id": "933e7e36-1b53-4846-8ebb-0de5cd5c8d84",
+      "repo_id": "147c04e0-25fe-469b-9190-f99fcdcf357b",
       "repo_full_name": "repo",
-      "snapshot_id": "5c24bb68-61d6-4036-b0c2-985d03ba14bb",
+      "snapshot_id": "efb2dde2-f724-4c29-83a3-76b1867c9a1f",
       "commit_sha": "58d77fc302b25976bb4cc7dc273377b421bc226b",
       "indexed_files": 27,
       "symbols": 252,
@@ -44,18 +45,23 @@
         "yaml": 6
       },
       "mode": "full",
-      "duration_ms": 64,
+      "duration_ms": 45,
       "timings_ms": {
+        "build_symbols_edges": 0,
         "delta_check": 0,
-        "ensure_repo": 1,
+        "discover_files": 0,
+        "doc_links": 0,
+        "ensure_repo": 0,
+        "gitignore_scan": 13,
         "go_types": 0,
-        "lexical": 18,
-        "parse": 16,
-        "persist": 19,
+        "lexical": 22,
+        "parse": 8,
+        "persist": 22,
         "resolve_head": 0,
         "routes": 0,
         "sort": 0,
-        "walk": 9
+        "walk": 0,
+        "write_sqlite": 22
       }
     },
     "reindex": {
@@ -229,21 +235,21 @@
   },
   "query_warmup": {
     "symbol": "scripts",
-    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-json-eslint-create-config/atlas.db --format plain --repo repo explain scripts",
+    "atlas_command": "curl -fsS http://127.0.0.1:4232/api/v1/symbols/scripts/explain?repo_id=repo&format=plain",
     "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain scripts",
     "atlas_returncode": 0,
     "graphify_returncode": 0,
-    "note": "Untimed warm-up for both tools before measured query latency rows."
+    "note": "Untimed warm-up for Atlas warm serve and graphify before measured query latency rows."
   },
   "queries": [
     {
       "symbol": "scripts",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-json-eslint-create-config/atlas.db --format plain --repo repo explain scripts",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4232/api/v1/symbols/scripts/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain scripts",
-      "atlas_tokens": 6,
+      "atlas_tokens": 2,
       "graphify_tokens": 113,
-      "atlas_ms": 11.97,
+      "atlas_ms": 7.812,
       "graphify_ms": 79.198,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
@@ -261,16 +267,31 @@
         "  Degree:    8",
         "",
         "Connections (8):"
+      ],
+      "atlas_ms_samples": [
+        9.81,
+        9.171,
+        9.36,
+        9.46,
+        8.577,
+        8.23,
+        7.812,
+        7.333,
+        7.736,
+        7.511,
+        7.435,
+        7.045,
+        7.266
       ]
     },
     {
       "symbol": "scripts.test",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-json-eslint-create-config/atlas.db --format plain --repo repo explain scripts.test",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4232/api/v1/symbols/scripts.test/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain scripts.test",
-      "atlas_tokens": 7,
+      "atlas_tokens": 2,
       "graphify_tokens": 9,
-      "atlas_ms": 11.486,
+      "atlas_ms": 7.576,
       "graphify_ms": 75.439,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
@@ -281,16 +302,31 @@
       ],
       "graphify_stdout_head": [
         "No node matching 'scripts.test' found."
+      ],
+      "atlas_ms_samples": [
+        7.912,
+        8.801,
+        8.09,
+        7.533,
+        7.735,
+        7.576,
+        7.868,
+        7.835,
+        7.457,
+        7.0,
+        7.369,
+        7.551,
+        7.127
       ]
     },
     {
       "symbol": "dependencies",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-json-eslint-create-config/atlas.db --format plain --repo repo explain dependencies",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4232/api/v1/symbols/dependencies/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain dependencies",
-      "atlas_tokens": 7,
+      "atlas_tokens": 2,
       "graphify_tokens": 86,
-      "atlas_ms": 11.395,
+      "atlas_ms": 7.402,
       "graphify_ms": 74.984,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
@@ -308,16 +344,31 @@
         "  Degree:    5",
         "",
         "Connections (5):"
+      ],
+      "atlas_ms_samples": [
+        7.207,
+        7.658,
+        7.361,
+        7.435,
+        7.42,
+        7.384,
+        7.57,
+        7.799,
+        7.399,
+        7.043,
+        7.628,
+        7.402,
+        7.336
       ]
     },
     {
       "symbol": "devDependencies",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-json-eslint-create-config/atlas.db --format plain --repo repo explain devDependencies",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4232/api/v1/symbols/devDependencies/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain devDependencies",
-      "atlas_tokens": 8,
+      "atlas_tokens": 2,
       "graphify_tokens": 129,
-      "atlas_ms": 11.579,
+      "atlas_ms": 7.387,
       "graphify_ms": 75.906,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
@@ -335,16 +386,31 @@
         "  Degree:    9",
         "",
         "Connections (9):"
+      ],
+      "atlas_ms_samples": [
+        7.153,
+        7.137,
+        7.239,
+        7.815,
+        7.182,
+        7.387,
+        7.196,
+        8.122,
+        7.402,
+        7.831,
+        7.354,
+        7.387,
+        7.69
       ]
     },
     {
       "symbol": "publishConfig",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-json-eslint-create-config/atlas.db --format plain --repo repo explain publishConfig",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4232/api/v1/symbols/publishConfig/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain publishConfig",
-      "atlas_tokens": 8,
+      "atlas_tokens": 2,
       "graphify_tokens": 57,
-      "atlas_ms": 11.464,
+      "atlas_ms": 7.378,
       "graphify_ms": 75.482,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
@@ -362,16 +428,31 @@
         "  Degree:    2",
         "",
         "Connections (2):"
+      ],
+      "atlas_ms_samples": [
+        7.447,
+        7.327,
+        7.421,
+        7.751,
+        7.368,
+        7.028,
+        7.348,
+        7.478,
+        7.296,
+        7.787,
+        7.065,
+        7.629,
+        7.378
       ]
     },
     {
       "symbol": "publishConfig.access",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-json-eslint-create-config/atlas.db --format plain --repo repo explain publishConfig.access",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4232/api/v1/symbols/publishConfig.access/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain publishConfig.access",
-      "atlas_tokens": 9,
+      "atlas_tokens": 2,
       "graphify_tokens": 11,
-      "atlas_ms": 11.713,
+      "atlas_ms": 7.405,
       "graphify_ms": 74.802,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
@@ -382,7 +463,28 @@
       ],
       "graphify_stdout_head": [
         "No node matching 'publishConfig.access' found."
+      ],
+      "atlas_ms_samples": [
+        7.328,
+        7.497,
+        7.538,
+        7.231,
+        7.34,
+        8.098,
+        7.691,
+        7.173,
+        7.301,
+        7.628,
+        7.405,
+        7.454,
+        7.189
       ]
     }
-  ]
+  ],
+  "atlas_cli": {
+    "version": "v0.1.26-4-gd882e08",
+    "commit": "d882e08",
+    "date": "2026-06-30T07:15:57Z",
+    "measurement_note": "Query rows refreshed from 13-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+  }
 }

@@ -16,39 +16,45 @@
       "Register-PSRepository",
       "Update-ModuleManifest"
     ],
-    "target_path": "/tmp/atlas-live-powershell-powershellget/repo/src"
+    "target_path": "/tmp/atlas-live-powershell-powershellget/repo/src",
+    "atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-powershell-powershellget/atlas.db serve --addr 127.0.0.1:4230"
   },
   "atlas": {
-    "cold_wall_seconds": 0.12,
+    "cold_wall_seconds": 0.053,
     "reindex_wall_seconds": 0.021,
     "index": {
-      "repo_id": "726d9ca3-d66a-42fe-8527-bcb1e9e8a453",
+      "repo_id": "31f401bd-afb1-49ff-b28d-fa90ae5a69cf",
       "repo_full_name": "src",
-      "snapshot_id": "0fe53b07-960f-4297-82e6-b3d599af9b33",
+      "snapshot_id": "799693c7-45dc-43b2-93af-a75665eb5d5b",
       "commit_sha": "a2dac8e74603f7c9eec4a54c5e23459531751b0d",
       "indexed_files": 2,
-      "symbols": 159,
-      "edges": 805,
+      "symbols": 28,
+      "edges": 803,
       "edge_kinds": {
-        "calls": 805
+        "calls": 803
       },
       "routes": 0,
       "languages": {
         "powershell": 2
       },
       "mode": "full",
-      "duration_ms": 77,
+      "duration_ms": 53,
       "timings_ms": {
+        "build_symbols_edges": 0,
         "delta_check": 0,
+        "discover_files": 0,
+        "doc_links": 0,
         "ensure_repo": 0,
+        "gitignore_scan": 11,
         "go_types": 0,
-        "lexical": 18,
-        "parse": 51,
-        "persist": 7,
+        "lexical": 14,
+        "parse": 27,
+        "persist": 14,
         "resolve_head": 0,
         "routes": 0,
         "sort": 0,
-        "walk": 0
+        "walk": 0,
+        "write_sqlite": 14
       }
     },
     "reindex": {
@@ -73,24 +79,14 @@
     "symbol_breakdown": [
       {
         "language": "powershell",
-        "kind": "document",
-        "count": 1
-      },
-      {
-        "language": "powershell",
         "kind": "function",
         "count": 28
-      },
-      {
-        "language": "powershell",
-        "kind": "variable",
-        "count": 130
       }
     ],
     "edge_breakdown": [
       {
         "kind": "calls",
-        "count": 805
+        "count": 803
       }
     ],
     "powershell_definition_symbols": 28
@@ -163,28 +159,28 @@
   },
   "query_warmup": {
     "symbol": "Find-Module",
-    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-powershell-powershellget/atlas.db --format plain --repo src explain Find-Module",
+    "atlas_command": "curl -fsS http://127.0.0.1:4230/api/v1/symbols/Find-Module/explain?repo_id=src&format=plain",
     "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Find-Module",
     "atlas_returncode": 0,
     "graphify_returncode": 0,
-    "note": "Untimed warm-up for both tools before measured query latency rows."
+    "note": "Untimed warm-up for Atlas warm serve and graphify before measured query latency rows."
   },
   "queries": [
     {
       "symbol": "Find-Module",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-powershell-powershellget/atlas.db --format plain --repo src explain Find-Module",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4230/api/v1/symbols/Find-Module/explain?repo_id=src&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Find-Module",
-      "atlas_tokens": 8,
+      "atlas_tokens": 2,
       "graphify_tokens": 66,
-      "atlas_ms": 11.894,
+      "atlas_ms": 7.865,
       "graphify_ms": 86.563,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Find-Module f@PowerShellGet:409"
+        "Find-Module f@PowerShellGet:410"
       ],
       "graphify_stdout_head": [
         "Node: Find-Module()",
@@ -195,23 +191,38 @@
         "  Degree:    2",
         "",
         "Connections (2):"
+      ],
+      "atlas_ms_samples": [
+        8.529,
+        8.833,
+        8.405,
+        8.25,
+        8.679,
+        7.885,
+        7.417,
+        7.865,
+        7.109,
+        7.504,
+        7.407,
+        7.509,
+        7.102
       ]
     },
     {
       "symbol": "Install-Module",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-powershell-powershellget/atlas.db --format plain --repo src explain Install-Module",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4230/api/v1/symbols/Install-Module/explain?repo_id=src&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Install-Module",
-      "atlas_tokens": 9,
+      "atlas_tokens": 2,
       "graphify_tokens": 67,
-      "atlas_ms": 14.181,
+      "atlas_ms": 7.385,
       "graphify_ms": 81.918,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Install-Module f@PowerShellGet:1036"
+        "Install-Module f@PowerShellGet:1037"
       ],
       "graphify_stdout_head": [
         "Node: Install-Module()",
@@ -222,23 +233,38 @@
         "  Degree:    2",
         "",
         "Connections (2):"
+      ],
+      "atlas_ms_samples": [
+        6.743,
+        7.155,
+        7.74,
+        7.249,
+        7.658,
+        7.081,
+        7.718,
+        7.385,
+        7.701,
+        8.69,
+        7.83,
+        7.278,
+        7.265
       ]
     },
     {
       "symbol": "Register-PSRepository",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-powershell-powershellget/atlas.db --format plain --repo src explain Register-PSRepository",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4230/api/v1/symbols/Register-PSRepository/explain?repo_id=src&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Register-PSRepository",
-      "atlas_tokens": 10,
+      "atlas_tokens": 2,
       "graphify_tokens": 57,
-      "atlas_ms": 11.968,
+      "atlas_ms": 7.426,
       "graphify_ms": 76.33,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Register-PSRepository f@PowerShellGet:1715"
+        "Register-PSRepository f@PowerShellGet:1716"
       ],
       "graphify_stdout_head": [
         "Node: Register-PSRepository()",
@@ -249,23 +275,38 @@
         "  Degree:    1",
         "",
         "Connections (1):"
+      ],
+      "atlas_ms_samples": [
+        7.623,
+        7.452,
+        6.959,
+        7.58,
+        6.999,
+        7.545,
+        7.423,
+        7.232,
+        7.868,
+        7.119,
+        7.465,
+        7.03,
+        7.426
       ]
     },
     {
       "symbol": "Update-ModuleManifest",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-powershell-powershellget/atlas.db --format plain --repo src explain Update-ModuleManifest",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4230/api/v1/symbols/Update-ModuleManifest/explain?repo_id=src&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Update-ModuleManifest",
-      "atlas_tokens": 10,
+      "atlas_tokens": 2,
       "graphify_tokens": 57,
-      "atlas_ms": 12.137,
+      "atlas_ms": 7.309,
       "graphify_ms": 75.029,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Update-ModuleManifest f@PowerShellGet:2881"
+        "Update-ModuleManifest f@PowerShellGet:2882"
       ],
       "graphify_stdout_head": [
         "Node: Update-ModuleManifest()",
@@ -276,7 +317,28 @@
         "  Degree:    1",
         "",
         "Connections (1):"
+      ],
+      "atlas_ms_samples": [
+        7.745,
+        6.923,
+        7.178,
+        7.548,
+        6.968,
+        7.197,
+        7.092,
+        7.524,
+        8.141,
+        8.327,
+        7.309,
+        7.397,
+        7.282
       ]
     }
-  ]
+  ],
+  "atlas_cli": {
+    "version": "v0.1.26-4-gd882e08",
+    "commit": "d882e08",
+    "date": "2026-06-30T07:15:57Z",
+    "measurement_note": "Query rows refreshed from 13-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+  }
 }

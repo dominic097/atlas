@@ -16,27 +16,30 @@
       "nvm_die_on_prefix",
       "nvm_get_os"
     ],
-    "target_path": "/tmp/atlas-live-bash-nvm/repo"
+    "target_path": "/tmp/atlas-live-bash-nvm/repo",
+    "atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-bash-nvm/atlas.db serve --addr 127.0.0.1:4213"
   },
   "atlas": {
-    "cold_wall_seconds": 0.163,
+    "cold_wall_seconds": 0.306,
     "reindex_wall_seconds": 0.025,
     "index": {
-      "repo_id": "c7ac70ad-4e98-4c02-b921-eff42789ff85",
+      "repo_id": "159e5c97-493b-45cd-a382-a4fd7546f1cd",
       "repo_full_name": "repo",
-      "snapshot_id": "fbe0f00f-f42b-45fb-be7c-6732becefba1",
+      "snapshot_id": "111fb238-5331-48c9-8709-9197b02393eb",
       "commit_sha": "a6ec73943099a86fba98bde3b04a1c60944a4549",
-      "indexed_files": 64,
-      "symbols": 479,
-      "edges": 102,
+      "indexed_files": 66,
+      "symbols": 481,
+      "edges": 103,
       "edge_kinds": {
-        "calls": 102
+        "calls": 102,
+        "references": 1
       },
       "routes": 0,
       "languages": {
         "bash": 5,
         "config": 2,
         "dockerfile": 1,
+        "image": 2,
         "javascript": 1,
         "json": 6,
         "makefile": 1,
@@ -45,18 +48,23 @@
         "yaml": 18
       },
       "mode": "full",
-      "duration_ms": 123,
+      "duration_ms": 306,
       "timings_ms": {
+        "build_symbols_edges": 0,
         "delta_check": 0,
+        "discover_files": 1,
+        "doc_links": 0,
         "ensure_repo": 0,
+        "gitignore_scan": 14,
         "go_types": 0,
-        "lexical": 54,
-        "parse": 36,
-        "persist": 30,
+        "lexical": 31,
+        "parse": 258,
+        "persist": 31,
         "resolve_head": 0,
         "routes": 0,
         "sort": 0,
-        "walk": 1
+        "walk": 1,
+        "write_sqlite": 31
       }
     },
     "reindex": {
@@ -103,6 +111,11 @@
         "count": 1
       },
       {
+        "language": "image",
+        "kind": "image",
+        "count": 2
+      },
+      {
         "language": "json",
         "kind": "document",
         "count": 4
@@ -142,6 +155,10 @@
       {
         "kind": "calls",
         "count": 102
+      },
+      {
+        "kind": "references",
+        "count": 1
       }
     ],
     "bash_definition_symbols": 158
@@ -209,28 +226,28 @@
   },
   "query_warmup": {
     "symbol": "nvm",
-    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-bash-nvm/atlas.db --format plain --repo repo explain nvm",
+    "atlas_command": "curl -fsS http://127.0.0.1:4213/api/v1/symbols/nvm/explain?repo_id=repo&format=plain",
     "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain nvm",
     "atlas_returncode": 0,
     "graphify_returncode": 0,
-    "note": "Untimed warm-up for both tools before measured query latency rows."
+    "note": "Untimed warm-up for Atlas warm serve and graphify before measured query latency rows."
   },
   "queries": [
     {
       "symbol": "nvm",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-bash-nvm/atlas.db --format plain --repo repo explain nvm",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4213/api/v1/symbols/nvm/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain nvm",
-      "atlas_tokens": 5,
+      "atlas_tokens": 2,
       "graphify_tokens": 269,
-      "atlas_ms": 12.298,
+      "atlas_ms": 8.988,
       "graphify_ms": 84.038,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "nvm f@nvm.sh:3154 d1"
+        "nvm f@nvm:3155"
       ],
       "graphify_stdout_head": [
         "Node: nvm.sh",
@@ -241,23 +258,34 @@
         "  Degree:    117",
         "",
         "Connections (117):"
+      ],
+      "atlas_ms_samples": [
+        12.214,
+        10.755,
+        9.961,
+        9.419,
+        8.988,
+        8.902,
+        8.216,
+        8.025,
+        7.859
       ]
     },
     {
       "symbol": "nvm_install_binary",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-bash-nvm/atlas.db --format plain --repo repo explain nvm_install_binary",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4213/api/v1/symbols/nvm_install_binary/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain nvm_install_binary",
-      "atlas_tokens": 8,
+      "atlas_tokens": 2,
       "graphify_tokens": 87,
-      "atlas_ms": 12.47,
+      "atlas_ms": 7.545,
       "graphify_ms": 83.141,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "nvm_install_binary f@nvm.sh:2331"
+        "nvm_install_binary f@nvm:2331"
       ],
       "graphify_stdout_head": [
         "Node: nvm_install_binary()",
@@ -268,23 +296,34 @@
         "  Degree:    5",
         "",
         "Connections (5):"
+      ],
+      "atlas_ms_samples": [
+        8.061,
+        7.891,
+        7.194,
+        7.545,
+        7.137,
+        7.47,
+        7.445,
+        8.493,
+        7.8
       ]
     },
     {
       "symbol": "nvm_die_on_prefix",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-bash-nvm/atlas.db --format plain --repo repo explain nvm_die_on_prefix",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4213/api/v1/symbols/nvm_die_on_prefix/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain nvm_die_on_prefix",
-      "atlas_tokens": 8,
+      "atlas_tokens": 2,
       "graphify_tokens": 90,
-      "atlas_ms": 12.192,
+      "atlas_ms": 7.83,
       "graphify_ms": 81.912,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "nvm_die_on_prefix f@nvm.sh:2862"
+        "nvm_die_on_prefix f@nvm:2863"
       ],
       "graphify_stdout_head": [
         "Node: nvm_die_on_prefix()",
@@ -295,23 +334,34 @@
         "  Degree:    5",
         "",
         "Connections (5):"
+      ],
+      "atlas_ms_samples": [
+        8.873,
+        7.83,
+        7.595,
+        8.157,
+        9.148,
+        7.61,
+        7.987,
+        7.75,
+        7.645
       ]
     },
     {
       "symbol": "nvm_get_os",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-bash-nvm/atlas.db --format plain --repo repo explain nvm_get_os",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4213/api/v1/symbols/nvm_get_os/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain nvm_get_os",
-      "atlas_tokens": 6,
+      "atlas_tokens": 2,
       "graphify_tokens": 52,
-      "atlas_ms": 12.337,
+      "atlas_ms": 7.33,
       "graphify_ms": 80.538,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "nvm_get_os f@nvm.sh:2128"
+        "nvm_get_os f@nvm:2129"
       ],
       "graphify_stdout_head": [
         "Node: nvm_get_os()",
@@ -322,7 +372,24 @@
         "  Degree:    2",
         "",
         "Connections (2):"
+      ],
+      "atlas_ms_samples": [
+        7.819,
+        7.587,
+        7.751,
+        7.188,
+        7.089,
+        7.325,
+        7.695,
+        7.33,
+        7.065
       ]
     }
-  ]
+  ],
+  "atlas_cli": {
+    "version": "v0.1.26-4-gd882e08",
+    "commit": "d882e08",
+    "date": "2026-06-30T07:15:57Z",
+    "measurement_note": "Query rows refreshed from nine-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+  }
 }

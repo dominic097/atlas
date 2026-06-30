@@ -16,21 +16,22 @@
       "addRoute",
       "getResponseFactory"
     ],
-    "target_path": "/tmp/atlas-live-php-slim/repo"
+    "target_path": "/tmp/atlas-live-php-slim/repo",
+    "atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-php-slim/atlas.db serve --addr 127.0.0.1:4210"
   },
   "atlas": {
-    "cold_wall_seconds": 0.288,
+    "cold_wall_seconds": 0.189,
     "reindex_wall_seconds": 0.021,
     "index": {
-      "repo_id": "556022eb-ba3b-4f70-92ba-0db5b5958558",
+      "repo_id": "59742966-bce9-4d28-a903-c8e88adc637d",
       "repo_full_name": "repo",
-      "snapshot_id": "a05a3c5d-2d0d-4084-9cd8-1142c2f0336f",
+      "snapshot_id": "a86b50f9-0070-4d0a-a5d1-e370eb47ae82",
       "commit_sha": "0da7dd2fc66956730b6633f6a056b35e59126583",
       "indexed_files": 140,
-      "symbols": 1144,
-      "edges": 6546,
+      "symbols": 1365,
+      "edges": 6537,
       "edge_kinds": {
-        "calls": 5722,
+        "calls": 5713,
         "imports": 824
       },
       "routes": 0,
@@ -43,18 +44,23 @@
         "yaml": 4
       },
       "mode": "full",
-      "duration_ms": 248,
+      "duration_ms": 189,
       "timings_ms": {
+        "build_symbols_edges": 1,
         "delta_check": 0,
-        "ensure_repo": 2,
+        "discover_files": 0,
+        "doc_links": 0,
+        "ensure_repo": 0,
+        "gitignore_scan": 12,
         "go_types": 0,
-        "lexical": 116,
-        "parse": 34,
-        "persist": 83,
+        "lexical": 118,
+        "parse": 55,
+        "persist": 118,
         "resolve_head": 0,
         "routes": 0,
         "sort": 1,
-        "walk": 8
+        "walk": 0,
+        "write_sqlite": 118
       }
     },
     "reindex": {
@@ -104,8 +110,13 @@
       },
       {
         "language": "php",
-        "kind": "document",
-        "count": 1
+        "kind": "class",
+        "count": 106
+      },
+      {
+        "language": "php",
+        "kind": "field",
+        "count": 222
       },
       {
         "language": "php",
@@ -114,12 +125,12 @@
       },
       {
         "language": "php",
-        "kind": "namespace",
-        "count": 124
+        "kind": "interface",
+        "count": 18
       },
       {
         "language": "php",
-        "kind": "type",
+        "kind": "module",
         "count": 124
       },
       {
@@ -136,7 +147,7 @@
     "edge_breakdown": [
       {
         "kind": "calls",
-        "count": 5722
+        "count": 5713
       },
       {
         "kind": "imports",
@@ -221,28 +232,28 @@
   },
   "query_warmup": {
     "symbol": "handle",
-    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-php-slim/atlas.db --format plain --repo repo explain handle",
+    "atlas_command": "curl -fsS http://127.0.0.1:4210/api/v1/symbols/handle/explain?repo_id=repo&format=plain",
     "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain handle",
     "atlas_returncode": 0,
     "graphify_returncode": 0,
-    "note": "Untimed warm-up for both tools before measured query latency rows."
+    "note": "Untimed warm-up for Atlas warm serve and graphify before measured query latency rows."
   },
   "queries": [
     {
       "symbol": "handle",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-php-slim/atlas.db --format plain --repo repo explain handle",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4210/api/v1/symbols/handle/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain handle",
-      "atlas_tokens": 7,
+      "atlas_tokens": 2,
       "graphify_tokens": 78,
-      "atlas_ms": 14.811,
+      "atlas_ms": 8.099,
       "graphify_ms": 108.19,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "handle f@App:207 df11 c69 d20"
+        "handle f@App:207"
       ],
       "graphify_stdout_head": [
         "Node: .handle()",
@@ -253,23 +264,34 @@
         "  Degree:    4",
         "",
         "Connections (4):"
+      ],
+      "atlas_ms_samples": [
+        10.054,
+        8.943,
+        8.819,
+        8.495,
+        7.875,
+        8.037,
+        7.906,
+        8.099,
+        7.756
       ]
     },
     {
       "symbol": "process",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-php-slim/atlas.db --format plain --repo repo explain process",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4210/api/v1/symbols/process/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain process",
-      "atlas_tokens": 12,
+      "atlas_tokens": 2,
       "graphify_tokens": 116,
-      "atlas_ms": 14.003,
+      "atlas_ms": 7.537,
       "graphify_ms": 96.875,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "process f@BodyParsingMiddleware:54 df10 c14 d15"
+        "process f@BodyParsingMiddleware:55"
       ],
       "graphify_stdout_head": [
         "Node: .process()",
@@ -280,16 +302,27 @@
         "  Degree:    5",
         "",
         "Connections (5):"
+      ],
+      "atlas_ms_samples": [
+        8.578,
+        7.676,
+        7.537,
+        7.347,
+        7.579,
+        7.421,
+        7.23,
+        8.41,
+        7.147
       ]
     },
     {
       "symbol": "addRoute",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-php-slim/atlas.db --format plain --repo repo explain addRoute",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4210/api/v1/symbols/addRoute/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain addRoute",
-      "atlas_tokens": 2,
+      "atlas_tokens": 1,
       "graphify_tokens": 8,
-      "atlas_ms": 12.723,
+      "atlas_ms": 7.738,
       "graphify_ms": 93.636,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
@@ -300,23 +333,34 @@
       ],
       "graphify_stdout_head": [
         "No node matching 'addRoute' found."
+      ],
+      "atlas_ms_samples": [
+        9.633,
+        7.743,
+        7.855,
+        8.355,
+        7.27,
+        7.505,
+        7.738,
+        7.37,
+        7.135
       ]
     },
     {
       "symbol": "getResponseFactory",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-php-slim/atlas.db --format plain --repo repo explain getResponseFactory",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4210/api/v1/symbols/getResponseFactory/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain getResponseFactory",
-      "atlas_tokens": 12,
+      "atlas_tokens": 2,
       "graphify_tokens": 77,
-      "atlas_ms": 14.04,
+      "atlas_ms": 7.578,
       "graphify_ms": 96.832,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "getResponseFactory f@Psr17Factory:35 df7 c50 d3"
+        "getResponseFactory f@Psr17Factory:35"
       ],
       "graphify_stdout_head": [
         "Node: .getResponseFactory()",
@@ -327,7 +371,24 @@
         "  Degree:    2",
         "",
         "Connections (2):"
+      ],
+      "atlas_ms_samples": [
+        7.578,
+        7.457,
+        7.25,
+        7.978,
+        7.557,
+        7.423,
+        7.684,
+        8.12,
+        7.658
       ]
     }
-  ]
+  ],
+  "atlas_cli": {
+    "version": "v0.1.26-4-gd882e08",
+    "commit": "d882e08",
+    "date": "2026-06-30T07:15:57Z",
+    "measurement_note": "Query rows refreshed from nine-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+  }
 }

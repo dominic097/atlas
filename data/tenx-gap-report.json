@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T07:25:41.787Z",
+  "generatedAt": "2026-06-30T07:35:21.464Z",
   "source": "data/benchmark-data.json",
   "targetRatio": 10,
   "metricNote": "Token and latency are ratio targets. Coverage is a native-definition coverage ratio, so the honest accuracy target is >1.0 native coverage exceed, not a fabricated 10x accuracy multiplier.",
@@ -9,9 +9,9 @@
     "parityLanguages": 29,
     "coverageExceedLanguages": 7,
     "comparableLanguages": 33,
-    "token10xComparable": 21,
-    "latency10xComparable": 6,
-    "performance10xComparable": 6
+    "token10xComparable": 26,
+    "latency10xComparable": 16,
+    "performance10xComparable": 16
   },
   "parityLanguages": [
     "apex",
@@ -86,13 +86,12 @@
       "coverageRatio": 1,
       "coverageExceedsNative": false,
       "equivalentRows": 4,
-      "tokenRatio": 18.44,
-      "latencyRatio": 6.69,
+      "tokenRatio": 62.25,
+      "latencyRatio": 10.4,
       "tokenGapTo10x": 1,
-      "latencyGapTo10x": 1.5,
+      "latencyGapTo10x": 1,
       "blockers": [
-        "coverage_at_parity",
-        "latency_ratio_below_10x"
+        "coverage_at_parity"
       ]
     },
     {
@@ -103,14 +102,12 @@
       "coverageRatio": 1,
       "coverageExceedsNative": false,
       "equivalentRows": 6,
-      "tokenRatio": 6.1,
-      "latencyRatio": 6.74,
-      "tokenGapTo10x": 1.64,
-      "latencyGapTo10x": 1.48,
+      "tokenRatio": 31.5,
+      "latencyRatio": 12.36,
+      "tokenGapTo10x": 1,
+      "latencyGapTo10x": 1,
       "blockers": [
-        "coverage_at_parity",
-        "token_ratio_below_10x",
-        "latency_ratio_below_10x"
+        "coverage_at_parity"
       ]
     },
     {
@@ -172,14 +169,12 @@
       "coverageRatio": 1,
       "coverageExceedsNative": false,
       "equivalentRows": 6,
-      "tokenRatio": 8.33,
-      "latencyRatio": 6.46,
-      "tokenGapTo10x": 1.2,
-      "latencyGapTo10x": 1.55,
+      "tokenRatio": 29.17,
+      "latencyRatio": 10.61,
+      "tokenGapTo10x": 1,
+      "latencyGapTo10x": 1,
       "blockers": [
-        "coverage_at_parity",
-        "token_ratio_below_10x",
-        "latency_ratio_below_10x"
+        "coverage_at_parity"
       ]
     },
     {
@@ -240,13 +235,12 @@
       "coverageRatio": 1,
       "coverageExceedsNative": false,
       "equivalentRows": 5,
-      "tokenRatio": 23.58,
-      "latencyRatio": 6.93,
+      "tokenRatio": 84.9,
+      "latencyRatio": 11.78,
       "tokenGapTo10x": 1,
-      "latencyGapTo10x": 1.44,
+      "latencyGapTo10x": 1,
       "blockers": [
-        "coverage_at_parity",
-        "latency_ratio_below_10x"
+        "coverage_at_parity"
       ]
     },
     {
@@ -274,13 +268,12 @@
       "coverageRatio": 1,
       "coverageExceedsNative": false,
       "equivalentRows": 6,
-      "tokenRatio": 19.69,
-      "latencyRatio": 6.61,
+      "tokenRatio": 88.58,
+      "latencyRatio": 10.2,
       "tokenGapTo10x": 1,
-      "latencyGapTo10x": 1.51,
+      "latencyGapTo10x": 1,
       "blockers": [
-        "coverage_at_parity",
-        "latency_ratio_below_10x"
+        "coverage_at_parity"
       ]
     },
     {
@@ -308,13 +301,12 @@
       "coverageRatio": 1,
       "coverageExceedsNative": false,
       "equivalentRows": 4,
-      "tokenRatio": 13.28,
-      "latencyRatio": 6.58,
+      "tokenRatio": 48.13,
+      "latencyRatio": 10.19,
       "tokenGapTo10x": 1,
-      "latencyGapTo10x": 1.52,
+      "latencyGapTo10x": 1,
       "blockers": [
-        "coverage_at_parity",
-        "latency_ratio_below_10x"
+        "coverage_at_parity"
       ]
     },
     {
@@ -424,14 +416,12 @@
       "coverageRatio": 1,
       "coverageExceedsNative": false,
       "equivalentRows": 3,
-      "tokenRatio": 8.74,
-      "latencyRatio": 7.04,
-      "tokenGapTo10x": 1.14,
-      "latencyGapTo10x": 1.42,
+      "tokenRatio": 45.17,
+      "latencyRatio": 13,
+      "tokenGapTo10x": 1,
+      "latencyGapTo10x": 1,
       "blockers": [
-        "coverage_at_parity",
-        "token_ratio_below_10x",
-        "latency_ratio_below_10x"
+        "coverage_at_parity"
       ]
     },
     {
@@ -442,14 +432,12 @@
       "coverageRatio": 1,
       "coverageExceedsNative": false,
       "equivalentRows": 4,
-      "tokenRatio": 6.68,
-      "latencyRatio": 6.37,
-      "tokenGapTo10x": 1.5,
-      "latencyGapTo10x": 1.57,
+      "tokenRatio": 30.88,
+      "latencyRatio": 10.67,
+      "tokenGapTo10x": 1,
+      "latencyGapTo10x": 1,
       "blockers": [
-        "coverage_at_parity",
-        "token_ratio_below_10x",
-        "latency_ratio_below_10x"
+        "coverage_at_parity"
       ]
     },
     {
@@ -543,14 +531,12 @@
       "coverageRatio": 1,
       "coverageExceedsNative": false,
       "equivalentRows": 4,
-      "tokenRatio": 5.33,
-      "latencyRatio": 6.23,
-      "tokenGapTo10x": 1.88,
-      "latencyGapTo10x": 1.61,
+      "tokenRatio": 30.63,
+      "latencyRatio": 10.22,
+      "tokenGapTo10x": 1,
+      "latencyGapTo10x": 1,
       "blockers": [
-        "coverage_at_parity",
-        "token_ratio_below_10x",
-        "latency_ratio_below_10x"
+        "coverage_at_parity"
       ]
     },
     {
@@ -594,13 +580,12 @@
       "coverageRatio": 1,
       "coverageExceedsNative": false,
       "equivalentRows": 4,
-      "tokenRatio": 41.61,
-      "latencyRatio": 6.27,
+      "tokenRatio": 145.63,
+      "latencyRatio": 15.12,
       "tokenGapTo10x": 1,
-      "latencyGapTo10x": 1.59,
+      "latencyGapTo10x": 1,
       "blockers": [
-        "coverage_at_parity",
-        "latency_ratio_below_10x"
+        "coverage_at_parity"
       ]
     },
     {
@@ -763,24 +748,6 @@
       ]
     },
     {
-      "language": "sql",
-      "repo": "https://github.com/hasura/graphql-engine",
-      "commit": "417c174c0ac3c80dafe6e8f9e8ac39d868334724",
-      "artifact": "data/raw/LIVE_SQL_BENCHMARK.json",
-      "coverageRatio": 1,
-      "coverageExceedsNative": false,
-      "equivalentRows": 4,
-      "tokenRatio": 5.33,
-      "latencyRatio": 6.23,
-      "tokenGapTo10x": 1.88,
-      "latencyGapTo10x": 1.61,
-      "blockers": [
-        "coverage_at_parity",
-        "token_ratio_below_10x",
-        "latency_ratio_below_10x"
-      ]
-    },
-    {
       "language": "vue",
       "repo": "https://github.com/gothinkster/vue-realworld-example-app",
       "commit": "f7e48c8178602ce25d43293bc6f8ca51d84ae222",
@@ -833,78 +800,57 @@
       ]
     },
     {
-      "language": "terraform",
-      "repo": "https://github.com/terraform-aws-modules/terraform-aws-vpc",
-      "commit": "3ffbd46fb1c7733e1b34d8666893280454e27436",
-      "artifact": "data/raw/LIVE_TERRAFORM_BENCHMARK.json",
+      "language": "markdown",
+      "repo": "https://github.com/rust-lang/mdBook",
+      "commit": "cb49cc5523e609a731f27dea1af4395a504815a5",
+      "artifact": "data/raw/LIVE_MARKDOWN_BENCHMARK.json",
       "coverageRatio": 1,
       "coverageExceedsNative": false,
-      "equivalentRows": 4,
-      "tokenRatio": 41.61,
-      "latencyRatio": 6.27,
+      "equivalentRows": 6,
+      "tokenRatio": 10.31,
+      "latencyRatio": 6.69,
       "tokenGapTo10x": 1,
-      "latencyGapTo10x": 1.59,
+      "latencyGapTo10x": 1.5,
       "blockers": [
         "coverage_at_parity",
         "latency_ratio_below_10x"
       ]
     },
     {
-      "language": "powershell",
-      "repo": "https://github.com/PowerShell/PowerShellGet",
-      "commit": "a2dac8e74603f7c9eec4a54c5e23459531751b0d",
-      "artifact": "data/raw/LIVE_POWERSHELL_BENCHMARK.json",
-      "coverageRatio": 1,
-      "coverageExceedsNative": false,
-      "equivalentRows": 4,
-      "tokenRatio": 6.68,
-      "latencyRatio": 6.37,
-      "tokenGapTo10x": 1.5,
-      "latencyGapTo10x": 1.57,
+      "language": "groovy",
+      "repo": "https://github.com/nextflow-io/nextflow",
+      "commit": "83d452a51796aca34f136f796383185d703c349c",
+      "artifact": "data/raw/LIVE_GROOVY_BENCHMARK.json",
+      "coverageRatio": 1.59,
+      "coverageExceedsNative": true,
+      "equivalentRows": 5,
+      "tokenRatio": 9.97,
+      "latencyRatio": 6.79,
+      "tokenGapTo10x": 1,
+      "latencyGapTo10x": 1.47,
       "blockers": [
-        "coverage_at_parity",
         "token_ratio_below_10x",
+        "latency_ratio_below_10x"
+      ]
+    },
+    {
+      "language": "kotlin",
+      "repo": "https://github.com/square/okhttp",
+      "commit": "0cadfa2997513d20bf88ca530c963a1266f17af9",
+      "artifact": "data/raw/LIVE_KOTLIN_BENCHMARK.json",
+      "coverageRatio": 1.01,
+      "coverageExceedsNative": true,
+      "equivalentRows": 5,
+      "tokenRatio": 27.06,
+      "latencyRatio": 6.82,
+      "tokenGapTo10x": 1,
+      "latencyGapTo10x": 1.47,
+      "blockers": [
         "latency_ratio_below_10x"
       ]
     }
   ],
   "biggestTokenGaps": [
-    {
-      "language": "sql",
-      "repo": "https://github.com/hasura/graphql-engine",
-      "commit": "417c174c0ac3c80dafe6e8f9e8ac39d868334724",
-      "artifact": "data/raw/LIVE_SQL_BENCHMARK.json",
-      "coverageRatio": 1,
-      "coverageExceedsNative": false,
-      "equivalentRows": 4,
-      "tokenRatio": 5.33,
-      "latencyRatio": 6.23,
-      "tokenGapTo10x": 1.88,
-      "latencyGapTo10x": 1.61,
-      "blockers": [
-        "coverage_at_parity",
-        "token_ratio_below_10x",
-        "latency_ratio_below_10x"
-      ]
-    },
-    {
-      "language": "blade",
-      "repo": "https://github.com/BookStackApp/BookStack",
-      "commit": "f7df78b91b12ff1d8e248ded7747e76203904b8e",
-      "artifact": "data/raw/LIVE_BLADE_BENCHMARK.json",
-      "coverageRatio": 1,
-      "coverageExceedsNative": false,
-      "equivalentRows": 6,
-      "tokenRatio": 6.1,
-      "latencyRatio": 6.74,
-      "tokenGapTo10x": 1.64,
-      "latencyGapTo10x": 1.48,
-      "blockers": [
-        "coverage_at_parity",
-        "token_ratio_below_10x",
-        "latency_ratio_below_10x"
-      ]
-    },
     {
       "language": "cuda",
       "repo": "https://github.com/NVIDIA/cuda-samples",
@@ -917,24 +863,6 @@
       "latencyRatio": 5.96,
       "tokenGapTo10x": 1.5,
       "latencyGapTo10x": 1.68,
-      "blockers": [
-        "coverage_at_parity",
-        "token_ratio_below_10x",
-        "latency_ratio_below_10x"
-      ]
-    },
-    {
-      "language": "powershell",
-      "repo": "https://github.com/PowerShell/PowerShellGet",
-      "commit": "a2dac8e74603f7c9eec4a54c5e23459531751b0d",
-      "artifact": "data/raw/LIVE_POWERSHELL_BENCHMARK.json",
-      "coverageRatio": 1,
-      "coverageExceedsNative": false,
-      "equivalentRows": 4,
-      "tokenRatio": 6.68,
-      "latencyRatio": 6.37,
-      "tokenGapTo10x": 1.5,
-      "latencyGapTo10x": 1.57,
       "blockers": [
         "coverage_at_parity",
         "token_ratio_below_10x",
@@ -996,24 +924,6 @@
       ]
     },
     {
-      "language": "dart",
-      "repo": "https://github.com/dart-lang/http",
-      "commit": "5d94ef52582867e077bf41c3fa20fb8b1d1d834e",
-      "artifact": "data/raw/LIVE_DART_BENCHMARK.json",
-      "coverageRatio": 1,
-      "coverageExceedsNative": false,
-      "equivalentRows": 6,
-      "tokenRatio": 8.33,
-      "latencyRatio": 6.46,
-      "tokenGapTo10x": 1.2,
-      "latencyGapTo10x": 1.55,
-      "blockers": [
-        "coverage_at_parity",
-        "token_ratio_below_10x",
-        "latency_ratio_below_10x"
-      ]
-    },
-    {
       "language": "verilog",
       "repo": "https://github.com/lowRISC/ibex",
       "commit": "022f084096baed0a9b5ebdf697ed2965f13e8ed8",
@@ -1025,24 +935,6 @@
       "latencyRatio": 6.09,
       "tokenGapTo10x": 1.15,
       "latencyGapTo10x": 1.64,
-      "blockers": [
-        "coverage_at_parity",
-        "token_ratio_below_10x",
-        "latency_ratio_below_10x"
-      ]
-    },
-    {
-      "language": "php",
-      "repo": "https://github.com/slimphp/Slim",
-      "commit": "0da7dd2fc66956730b6633f6a056b35e59126583",
-      "artifact": "data/raw/LIVE_PHP_BENCHMARK.json",
-      "coverageRatio": 1,
-      "coverageExceedsNative": false,
-      "equivalentRows": 3,
-      "tokenRatio": 8.74,
-      "latencyRatio": 7.04,
-      "tokenGapTo10x": 1.14,
-      "latencyGapTo10x": 1.42,
       "blockers": [
         "coverage_at_parity",
         "token_ratio_below_10x",

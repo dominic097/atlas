@@ -16,39 +16,45 @@
       "hdb_catalog.hdb_schema_update_event_notifier",
       "hdb_catalog.hdb_function_agg"
     ],
-    "target_path": "/tmp/atlas-live-sql-hasura/repo/server/src-rsr/migrations"
+    "target_path": "/tmp/atlas-live-sql-hasura/repo/server/src-rsr/migrations",
+    "atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-sql-hasura/atlas.db serve --addr 127.0.0.1:4233"
   },
   "atlas": {
-    "cold_wall_seconds": 0.094,
+    "cold_wall_seconds": 0.087,
     "reindex_wall_seconds": 0.021,
     "index": {
-      "repo_id": "644d88ab-1d3c-459f-bbaf-710f90b1bca3",
+      "repo_id": "093ed229-b180-49d4-b8f9-779dfb6e2fe0",
       "repo_full_name": "migrations",
-      "snapshot_id": "ada2c826-aa9a-47e4-9760-5ab54a734490",
+      "snapshot_id": "90d2512b-95b3-4fe4-a886-5545b977a584",
       "commit_sha": "417c174c0ac3c80dafe6e8f9e8ac39d868334724",
       "indexed_files": 82,
-      "symbols": 152,
-      "edges": 857,
+      "symbols": 111,
+      "edges": 816,
       "edge_kinds": {
-        "calls": 857
+        "calls": 816
       },
       "routes": 0,
       "languages": {
         "sql": 82
       },
       "mode": "full",
-      "duration_ms": 65,
+      "duration_ms": 87,
       "timings_ms": {
+        "build_symbols_edges": 0,
         "delta_check": 0,
+        "discover_files": 0,
+        "doc_links": 0,
         "ensure_repo": 0,
+        "gitignore_scan": 34,
         "go_types": 0,
-        "lexical": 25,
-        "parse": 17,
+        "lexical": 21,
+        "parse": 31,
         "persist": 21,
         "resolve_head": 0,
         "routes": 0,
         "sort": 0,
-        "walk": 0
+        "walk": 0,
+        "write_sqlite": 21
       }
     },
     "reindex": {
@@ -73,11 +79,6 @@
     "symbol_breakdown": [
       {
         "language": "sql",
-        "kind": "document",
-        "count": 41
-      },
-      {
-        "language": "sql",
         "kind": "function",
         "count": 15
       },
@@ -100,7 +101,7 @@
     "edge_breakdown": [
       {
         "kind": "calls",
-        "count": 857
+        "count": 816
       }
     ],
     "sql_definition_symbols": 111
@@ -170,28 +171,28 @@
   },
   "query_warmup": {
     "symbol": "hdb_catalog.event_triggers",
-    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-sql-hasura/atlas.db --format plain --repo migrations explain hdb_catalog.event_triggers",
+    "atlas_command": "curl -fsS http://127.0.0.1:4233/api/v1/symbols/hdb_catalog.event_triggers/explain?repo_id=migrations&format=plain",
     "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain hdb_catalog.event_triggers",
     "atlas_returncode": 0,
     "graphify_returncode": 0,
-    "note": "Untimed warm-up for both tools before measured query latency rows."
+    "note": "Untimed warm-up for Atlas warm serve and graphify before measured query latency rows."
   },
   "queries": [
     {
       "symbol": "hdb_catalog.event_triggers",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-sql-hasura/atlas.db --format plain --repo migrations explain hdb_catalog.event_triggers",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4233/api/v1/symbols/hdb_catalog.event_triggers/explain?repo_id=migrations&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain hdb_catalog.event_triggers",
-      "atlas_tokens": 10,
+      "atlas_tokens": 2,
       "graphify_tokens": 55,
-      "atlas_ms": 12.253,
+      "atlas_ms": 7.98,
       "graphify_ms": 77.696,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "hdb_catalog.event_triggers t@1_to_2:3 df2"
+        "hdb_catalog.event_triggers t@1_to_2:4"
       ],
       "graphify_stdout_head": [
         "Node: hdb_catalog.event_triggers",
@@ -202,16 +203,31 @@
         "  Degree:    1",
         "",
         "Connections (1):"
+      ],
+      "atlas_ms_samples": [
+        10.3,
+        9.621,
+        8.14,
+        8.229,
+        7.98,
+        8.335,
+        7.425,
+        8.155,
+        7.283,
+        7.661,
+        7.608,
+        7.637,
+        7.009
       ]
     },
     {
       "symbol": "hdb_catalog.hdb_metadata",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-sql-hasura/atlas.db --format plain --repo migrations explain hdb_catalog.hdb_metadata",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4233/api/v1/symbols/hdb_catalog.hdb_metadata/explain?repo_id=migrations&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain hdb_catalog.hdb_metadata",
-      "atlas_tokens": 9,
+      "atlas_tokens": 2,
       "graphify_tokens": 54,
-      "atlas_ms": 11.626,
+      "atlas_ms": 7.422,
       "graphify_ms": 76.589,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
@@ -229,23 +245,38 @@
         "  Degree:    1",
         "",
         "Connections (1):"
+      ],
+      "atlas_ms_samples": [
+        7.536,
+        6.948,
+        7.662,
+        7.345,
+        7.617,
+        7.411,
+        7.422,
+        7.34,
+        7.092,
+        7.795,
+        7.007,
+        7.511,
+        7.696
       ]
     },
     {
       "symbol": "hdb_catalog.hdb_schema_update_event_notifier",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-sql-hasura/atlas.db --format plain --repo migrations explain hdb_catalog.hdb_schema_update_event_notifier",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4233/api/v1/symbols/hdb_catalog.hdb_schema_update_event_notifier/explain?repo_id=migrations&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain hdb_catalog.hdb_schema_update_event_notifier",
-      "atlas_tokens": 16,
+      "atlas_tokens": 2,
       "graphify_tokens": 80,
-      "atlas_ms": 12.489,
+      "atlas_ms": 7.45,
       "graphify_ms": 76.536,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "hdb_catalog.hdb_schema_update_event_notifier f@10_to_11:6 df4 d1"
+        "hdb_catalog.hdb_schema_update_event_notifier f@10_to_11:7"
       ],
       "graphify_stdout_head": [
         "Node: hdb_catalog.hdb_schema_update_event_notifier()",
@@ -256,23 +287,38 @@
         "  Degree:    2",
         "",
         "Connections (2):"
+      ],
+      "atlas_ms_samples": [
+        7.221,
+        7.777,
+        7.041,
+        7.45,
+        7.543,
+        7.182,
+        7.456,
+        6.852,
+        7.348,
+        7.749,
+        7.744,
+        7.502,
+        7.31
       ]
     },
     {
       "symbol": "hdb_catalog.hdb_function_agg",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-sql-hasura/atlas.db --format plain --repo migrations explain hdb_catalog.hdb_function_agg",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4233/api/v1/symbols/hdb_catalog.hdb_function_agg/explain?repo_id=migrations&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain hdb_catalog.hdb_function_agg",
-      "atlas_tokens": 11,
+      "atlas_tokens": 2,
       "graphify_tokens": 56,
-      "atlas_ms": 12.95,
+      "atlas_ms": 7.224,
       "graphify_ms": 76.437,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "hdb_catalog.hdb_function_agg v@12_to_13:1 df10"
+        "hdb_catalog.hdb_function_agg w@12_to_13:1"
       ],
       "graphify_stdout_head": [
         "Node: hdb_catalog.hdb_function_agg",
@@ -283,7 +329,28 @@
         "  Degree:    1",
         "",
         "Connections (1):"
+      ],
+      "atlas_ms_samples": [
+        7.367,
+        7.572,
+        6.908,
+        7.419,
+        6.663,
+        7.171,
+        7.305,
+        6.948,
+        7.224,
+        7.164,
+        8.35,
+        7.011,
+        7.901
       ]
     }
-  ]
+  ],
+  "atlas_cli": {
+    "version": "v0.1.26-4-gd882e08",
+    "commit": "d882e08",
+    "date": "2026-06-30T07:15:57Z",
+    "measurement_note": "Query rows refreshed from 13-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+  }
 }

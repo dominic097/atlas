@@ -18,40 +18,46 @@
       "send",
       "RetryClient"
     ],
-    "target_path": "/tmp/atlas-live-dart-http/repo/pkgs/http/lib"
+    "target_path": "/tmp/atlas-live-dart-http/repo/pkgs/http/lib",
+    "atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-dart-http/atlas.db serve --addr 127.0.0.1:4219"
   },
   "atlas": {
-    "cold_wall_seconds": 0.103,
+    "cold_wall_seconds": 0.051,
     "reindex_wall_seconds": 0.026,
     "index": {
-      "repo_id": "456e43f0-3dbd-457c-9a63-be8bb3c86f8c",
+      "repo_id": "55d85215-9926-448c-ade4-861bd7fb717a",
       "repo_full_name": "lib",
-      "snapshot_id": "dc42dc20-fe37-4605-ae25-1e6d5908637f",
+      "snapshot_id": "098142e7-e1e9-498a-aac2-805c634ffcd6",
       "commit_sha": "5d94ef52582867e077bf41c3fa20fb8b1d1d834e",
       "indexed_files": 27,
-      "symbols": 184,
-      "edges": 565,
+      "symbols": 180,
+      "edges": 531,
       "edge_kinds": {
-        "calls": 427,
-        "imports": 138
+        "calls": 405,
+        "imports": 126
       },
       "routes": 0,
       "languages": {
         "dart": 27
       },
       "mode": "full",
-      "duration_ms": 72,
+      "duration_ms": 51,
       "timings_ms": {
+        "build_symbols_edges": 0,
         "delta_check": 0,
+        "discover_files": 0,
+        "doc_links": 0,
         "ensure_repo": 2,
+        "gitignore_scan": 15,
         "go_types": 0,
-        "lexical": 26,
-        "parse": 27,
-        "persist": 15,
+        "lexical": 20,
+        "parse": 11,
+        "persist": 20,
         "resolve_head": 0,
         "routes": 0,
         "sort": 0,
-        "walk": 0
+        "walk": 0,
+        "write_sqlite": 20
       }
     },
     "reindex": {
@@ -78,11 +84,6 @@
         "language": "dart",
         "kind": "constructor",
         "count": 30
-      },
-      {
-        "language": "dart",
-        "kind": "document",
-        "count": 4
       },
       {
         "language": "dart",
@@ -113,11 +114,11 @@
     "edge_breakdown": [
       {
         "kind": "calls",
-        "count": 427
+        "count": 405
       },
       {
         "kind": "imports",
-        "count": 138
+        "count": 126
       }
     ],
     "dart_definition_symbols": 180
@@ -197,28 +198,28 @@
   },
   "query_warmup": {
     "symbol": "Client",
-    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-dart-http/atlas.db --format plain --repo lib explain Client",
+    "atlas_command": "curl -fsS http://127.0.0.1:4219/api/v1/symbols/Client/explain?repo_id=lib&format=plain",
     "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Client",
     "atlas_returncode": 0,
     "graphify_returncode": 0,
-    "note": "Untimed warm-up for both tools before measured query latency rows."
+    "note": "Untimed warm-up for Atlas warm serve and graphify before measured query latency rows."
   },
   "queries": [
     {
       "symbol": "Client",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-dart-http/atlas.db --format plain --repo lib explain Client",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4219/api/v1/symbols/Client/explain?repo_id=lib&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Client",
-      "atlas_tokens": 7,
+      "atlas_tokens": 2,
       "graphify_tokens": 42,
-      "atlas_ms": 12.483,
+      "atlas_ms": 8.712,
       "graphify_ms": 81.204,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Client t@client:20 df2 c6 d1"
+        "Client t@client:36"
       ],
       "graphify_stdout_head": [
         "Node: client",
@@ -229,23 +230,34 @@
         "  Degree:    1",
         "",
         "Connections (1):"
+      ],
+      "atlas_ms_samples": [
+        10.876,
+        9.476,
+        9.771,
+        8.446,
+        9.284,
+        8.712,
+        7.915,
+        7.684,
+        8.057
       ]
     },
     {
       "symbol": "BaseClient",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-dart-http/atlas.db --format plain --repo lib explain BaseClient",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4219/api/v1/symbols/BaseClient/explain?repo_id=lib&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain BaseClient",
-      "atlas_tokens": 7,
+      "atlas_tokens": 2,
       "graphify_tokens": 101,
-      "atlas_ms": 13.019,
+      "atlas_ms": 7.862,
       "graphify_ms": 90.902,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "BaseClient t@base_client:15"
+        "BaseClient t@base_client:20"
       ],
       "graphify_stdout_head": [
         "Node: BaseClient",
@@ -256,23 +268,34 @@
         "  Degree:    6",
         "",
         "Connections (6):"
+      ],
+      "atlas_ms_samples": [
+        8.001,
+        7.65,
+        7.939,
+        7.862,
+        8.341,
+        8.215,
+        7.709,
+        7.471,
+        7.779
       ]
     },
     {
       "symbol": "Request",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-dart-http/atlas.db --format plain --repo lib explain Request",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4219/api/v1/symbols/Request/explain?repo_id=lib&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Request",
-      "atlas_tokens": 7,
+      "atlas_tokens": 2,
       "graphify_tokens": 51,
-      "atlas_ms": 12.36,
+      "atlas_ms": 7.469,
       "graphify_ms": 79.273,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Request t@request:14 df2 c3"
+        "Request t@request:16"
       ],
       "graphify_stdout_head": [
         "Node: request",
@@ -283,23 +306,34 @@
         "  Degree:    1",
         "",
         "Connections (1):"
+      ],
+      "atlas_ms_samples": [
+        7.79,
+        7.903,
+        7.29,
+        7.078,
+        8.155,
+        7.286,
+        7.516,
+        7.131,
+        7.469
       ]
     },
     {
       "symbol": "Response",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-dart-http/atlas.db --format plain --repo lib explain Response",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4219/api/v1/symbols/Response/explain?repo_id=lib&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Response",
-      "atlas_tokens": 8,
+      "atlas_tokens": 2,
       "graphify_tokens": 59,
-      "atlas_ms": 12.034,
+      "atlas_ms": 7.69,
       "graphify_ms": 76.472,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Response t@response:14 df2 c1 d1"
+        "Response t@response:16"
       ],
       "graphify_stdout_head": [
         "Node: Response",
@@ -310,23 +344,34 @@
         "  Degree:    2",
         "",
         "Connections (2):"
+      ],
+      "atlas_ms_samples": [
+        8.206,
+        7.85,
+        6.898,
+        7.241,
+        7.703,
+        7.69,
+        6.959,
+        7.851,
+        7.243
       ]
     },
     {
       "symbol": "send",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-dart-http/atlas.db --format plain --repo lib explain send",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4219/api/v1/symbols/send/explain?repo_id=lib&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain send",
-      "atlas_tokens": 7,
+      "atlas_tokens": 2,
       "graphify_tokens": 42,
-      "atlas_ms": 12.848,
+      "atlas_ms": 7.209,
       "graphify_ms": 76.377,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "send f@retry:113 df7 c4 d18"
+        "send f@retry:113"
       ],
       "graphify_stdout_head": [
         "Node: send",
@@ -337,23 +382,34 @@
         "  Degree:    1",
         "",
         "Connections (1):"
+      ],
+      "atlas_ms_samples": [
+        7.525,
+        7.101,
+        7.248,
+        7.927,
+        7.069,
+        7.072,
+        7.515,
+        6.547,
+        7.209
       ]
     },
     {
       "symbol": "RetryClient",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-dart-http/atlas.db --format plain --repo lib explain RetryClient",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4219/api/v1/symbols/RetryClient/explain?repo_id=lib&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain RetryClient",
-      "atlas_tokens": 6,
+      "atlas_tokens": 2,
       "graphify_tokens": 55,
-      "atlas_ms": 13.781,
+      "atlas_ms": 7.683,
       "graphify_ms": 90.288,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "RetryClient t@retry:11 df2"
+        "RetryClient t@retry:17"
       ],
       "graphify_stdout_head": [
         "Node: RetryClient",
@@ -364,7 +420,24 @@
         "  Degree:    2",
         "",
         "Connections (2):"
+      ],
+      "atlas_ms_samples": [
+        9.87,
+        7.872,
+        9.166,
+        7.683,
+        7.746,
+        7.15,
+        7.44,
+        6.925,
+        7.671
       ]
     }
-  ]
+  ],
+  "atlas_cli": {
+    "version": "v0.1.26-4-gd882e08",
+    "commit": "d882e08",
+    "date": "2026-06-30T07:15:57Z",
+    "measurement_note": "Query rows refreshed from nine-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+  }
 }
