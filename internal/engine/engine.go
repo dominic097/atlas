@@ -445,8 +445,10 @@ type RefsResult struct {
 }
 
 type ExplainInput struct {
-	Name       string
-	RepoID     string
+	Name   string
+	RepoID string
+	// CountsOnly asks explain to build the compact transport/rendering shape:
+	// first definition plus route/cross-repo counts, without imports or call graph.
 	CountsOnly bool `json:"-"`
 }
 
@@ -475,6 +477,7 @@ type ExplainRoute struct {
 type ExplainResult struct {
 	Symbol             string         `json:"symbol"`
 	Definitions        []ExplainDef   `json:"definitions"`
+	DefinitionCount    int            `json:"definition_count,omitempty"`
 	Callers            []string       `json:"callers"`
 	Callees            []string       `json:"callees"`
 	CallerCount        int            `json:"caller_count,omitempty"`
@@ -1840,26 +1843,16 @@ func (e *localEngine) Explain(ctx context.Context, in ExplainInput) (*ExplainRes
 	if err != nil {
 		return nil, err
 	}
-	defs, err := e.store.SymbolsByName(ctx, snap.ID, in.Name)
+
+	defs, defCount, err := e.explainDefs(ctx, snap, in)
 	if err != nil {
-		return nil, fmt.Errorf("engine: explain defs: %w", err)
+		return nil, err
 	}
 	res := &ExplainResult{
 		Symbol:      in.Name,
 		Definitions: make([]ExplainDef, 0, len(defs)),
 	}
-	if in.CountsOnly {
-		callerCount, err := query.CallersGraphCount(ctx, e.store, snap.ID, in.Name)
-		if err != nil {
-			return nil, fmt.Errorf("engine: explain callers: %w", err)
-		}
-		calleeCount, err := query.CalleesGraphCount(ctx, e.store, snap.ID, in.Name)
-		if err != nil {
-			return nil, fmt.Errorf("engine: explain callees: %w", err)
-		}
-		res.CallerCount = callerCount
-		res.CalleeCount = calleeCount
-	} else {
+	if !in.CountsOnly {
 		callers, err := query.CallersGraph(ctx, e.store, snap.ID, in.Name)
 		if err != nil {
 			return nil, fmt.Errorf("engine: explain callers: %w", err)
@@ -1884,11 +1877,17 @@ func (e *localEngine) Explain(ctx context.Context, in ExplainInput) (*ExplainRes
 			break
 		}
 	}
+	if defCount > len(res.Definitions) {
+		res.DefinitionCount = defCount
+	}
 
-	// Imports of the defining file(s), via the indexed file rows.
-	res.Imports = capStrings(e.importsForPaths(ctx, snap.ID, defPaths), navCap)
-	if len(res.Imports) == 0 {
-		res.Imports = nil
+	if !in.CountsOnly {
+		// Imports of the defining file(s), via the indexed file rows. Terse/plain
+		// explain output never renders imports, so skip this read on that hot path.
+		res.Imports = capStrings(e.importsForPaths(ctx, snap.ID, defPaths), navCap)
+		if len(res.Imports) == 0 {
+			res.Imports = nil
+		}
 	}
 
 	servedLabels := map[string]bool{}
@@ -1938,6 +1937,29 @@ func (e *localEngine) Explain(ctx context.Context, in ExplainInput) (*ExplainRes
 		}
 	}
 	return res, nil
+}
+
+func (e *localEngine) explainDefs(ctx context.Context, snap *graph.Snapshot, in ExplainInput) ([]graph.CodeSymbol, int, error) {
+	if in.CountsOnly && snap.RouteCount == 0 {
+		if fast, ok := e.store.(interface {
+			SymbolSummaryByName(context.Context, string, string) (graph.CodeSymbol, int, bool, error)
+		}); ok {
+			first, total, found, err := fast.SymbolSummaryByName(ctx, snap.ID, in.Name)
+			if err != nil {
+				return nil, 0, fmt.Errorf("engine: explain defs: %w", err)
+			}
+			if !found {
+				return nil, 0, nil
+			}
+			return []graph.CodeSymbol{first}, total, nil
+		}
+	}
+
+	defs, err := e.store.SymbolsByName(ctx, snap.ID, in.Name)
+	if err != nil {
+		return nil, 0, fmt.Errorf("engine: explain defs: %w", err)
+	}
+	return defs, len(defs), nil
 }
 
 func (e *localEngine) Coverage(ctx context.Context, in CoverageInput) (*CoverageResult, error) {

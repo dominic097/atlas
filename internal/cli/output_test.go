@@ -110,13 +110,14 @@ func TestRenderTerseIsDenseAndShorterThanPretty(t *testing.T) {
 
 func TestRenderTerseUsesExplainCountFields(t *testing.T) {
 	r := &engine.ExplainResult{
-		Symbol:      "Functor",
-		Definitions: []engine.ExplainDef{{Kind: "trait", Path: "cats/Functor.scala", Line: 31}},
-		CallerCount: 66,
-		CalleeCount: 3,
+		Symbol:          "Functor",
+		Definitions:     []engine.ExplainDef{{Kind: "trait", Path: "cats/Functor.scala", Line: 31}},
+		DefinitionCount: 2,
+		CallerCount:     66,
+		CalleeCount:     3,
 	}
 	terse := renderTo(t, "plain", r)
-	if !strings.Contains(terse, "c66") || !strings.Contains(terse, "d3") {
+	if !strings.Contains(terse, "df2") || !strings.Contains(terse, "c66") || !strings.Contains(terse, "d3") {
 		t.Fatalf("terse explain should render count-only caller/callee fields: %q", terse)
 	}
 	if strings.Contains(terse, "callers") || strings.Contains(terse, "callees") {

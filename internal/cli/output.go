@@ -225,8 +225,12 @@ func terseExplain(r *engine.ExplainResult) string {
 	if kind != "" || location != "" {
 		parts = append(parts, strings.TrimRight(fmt.Sprintf("%s@%s", kind, location), "@"))
 	}
-	if len(r.Definitions) > 1 {
-		parts = append(parts, fmt.Sprintf("df%d", len(r.Definitions)))
+	definitionCount := len(r.Definitions)
+	if r.DefinitionCount > definitionCount {
+		definitionCount = r.DefinitionCount
+	}
+	if definitionCount > 1 {
+		parts = append(parts, fmt.Sprintf("df%d", definitionCount))
 	}
 	callerCount := len(r.Callers)
 	if r.CallerCount > callerCount {

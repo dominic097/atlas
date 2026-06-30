@@ -13,9 +13,11 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"net/url"
 	"os"
+	"path"
 	"strconv"
 	"strings"
 
@@ -209,7 +211,16 @@ func (s *Server) handleExplain(w http.ResponseWriter, r *http.Request) {
 		writeProblem(w, http.StatusBadRequest, "bad_request", "invalid symbol name: "+err.Error())
 		return
 	}
-	res, err := s.eng.Explain(r.Context(), engine.ExplainInput{Name: name, RepoID: r.URL.Query().Get("repo_id")})
+	plain := plainFormat(r.URL.Query().Get("format"))
+	res, err := s.eng.Explain(r.Context(), engine.ExplainInput{
+		Name:       name,
+		RepoID:     r.URL.Query().Get("repo_id"),
+		CountsOnly: plain,
+	})
+	if plain {
+		writeExplainPlain(w, res, err)
+		return
+	}
 	writeResult(w, res, err)
 }
 
@@ -501,6 +512,125 @@ func writeResult(w http.ResponseWriter, v any, err error) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(w).Encode(map[string]any{"data": v})
+}
+
+func writeExplainPlain(w http.ResponseWriter, res *engine.ExplainResult, err error) {
+	if err != nil {
+		writeError(w, err)
+		return
+	}
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	_, _ = w.Write([]byte(terseExplain(res)))
+}
+
+func plainFormat(format string) bool {
+	switch strings.ToLower(strings.TrimSpace(format)) {
+	case "plain", "terse", "text":
+		return true
+	default:
+		return false
+	}
+}
+
+func terseExplain(r *engine.ExplainResult) string {
+	kind, location := "", ""
+	if len(r.Definitions) > 0 {
+		d := r.Definitions[0]
+		kind = kindCode(d.Kind)
+		location = compactLoc(d.Path, d.Line)
+	}
+	parts := []string{r.Symbol}
+	if kind != "" || location != "" {
+		parts = append(parts, strings.TrimRight(fmt.Sprintf("%s@%s", kind, location), "@"))
+	}
+	if len(r.ServedRoutes) > 0 {
+		parts = append(parts, fmt.Sprintf("r%d", len(r.ServedRoutes)))
+	}
+	if len(r.CrossRepoConsumers) > 0 {
+		parts = append(parts, fmt.Sprintf("x%d", len(r.CrossRepoConsumers)))
+	}
+	return strings.Join(parts, " ") + "\n"
+}
+
+func compactLoc(file string, line int) string {
+	file = strings.TrimSpace(file)
+	if file == "" {
+		return ""
+	}
+	base := path.Base(strings.ReplaceAll(file, "\\", "/"))
+	if suffix := compactLocSuffix(base); suffix != "" {
+		base = base[:len(base)-len(suffix)]
+	} else if strings.EqualFold(path.Ext(base), ".sql") {
+		base = strings.TrimSuffix(base, path.Ext(base))
+	}
+	if line > 0 {
+		return fmt.Sprintf("%s:%d", base, line)
+	}
+	return base
+}
+
+func compactLocSuffix(base string) string {
+	lower := strings.ToLower(base)
+	for _, suffix := range []string{
+		".blade.php",
+		".csproj", ".fsproj", ".vbproj", ".slnx",
+		".ps1", ".psm1", ".psd1",
+		".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx",
+		".cu", ".cuh",
+		".razor", ".cshtml", ".vue",
+		".v", ".sv", ".svh",
+		".go", ".py", ".java",
+		".cpp", ".cc", ".cxx", ".hpp", ".hxx", ".hh", ".c", ".h",
+		".rs", ".rb", ".kt", ".kts", ".scala", ".php", ".swift",
+		".lua", ".luau", ".zig", ".ex", ".exs", ".m", ".mm", ".jl",
+		".f90", ".f95", ".f03", ".f08", ".f",
+		".dart", ".pas", ".pp", ".inc", ".dpr", ".dfm", ".lfm", ".lpk",
+		".groovy", ".gradle", ".sh", ".bash", ".zsh", ".R", ".r",
+		".tf", ".tfvars", ".hcl", ".cls", ".trigger", ".ejs", ".ets", ".dme", ".dm",
+	} {
+		if strings.HasSuffix(lower, strings.ToLower(suffix)) {
+			return suffix
+		}
+	}
+	return ""
+}
+
+func kindCode(kind string) string {
+	switch strings.ToLower(strings.TrimSpace(kind)) {
+	case "function", "func", "method", "event":
+		return "f"
+	case "class", "component", "component_type":
+		return "c"
+	case "type", "struct", "interface", "trait", "enum":
+		return "t"
+	case "variable", "constant", "const":
+		return "v"
+	case "module", "package", "project":
+		return "p"
+	case "table":
+		return "t"
+	case "view":
+		return "w"
+	case "trigger":
+		return "g"
+	case "resource":
+		return "r"
+	case "data":
+		return "d"
+	case "output":
+		return "o"
+	case "include", "template":
+		return "i"
+	case "target":
+		return "t"
+	case "dependency", "unit":
+		return "d"
+	default:
+		if kind = strings.TrimSpace(kind); kind != "" {
+			return strings.ToLower(kind[:1])
+		}
+		return ""
+	}
 }
 
 // writeError maps engine errors onto the right RFC 9457 problem response:

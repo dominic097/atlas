@@ -842,6 +842,27 @@ func (d *postgresDriver) SymbolsByName(ctx context.Context, snapshotID, name str
 	return out, rows.Err()
 }
 
+// SymbolSummaryByName returns the first deterministic symbol row for minimal
+// explain output, avoiding full symbol materialization when the renderer only
+// needs one compact location.
+func (d *postgresDriver) SymbolSummaryByName(ctx context.Context, snapshotID, name string) (graph.CodeSymbol, int, bool, error) {
+	row := d.db.QueryRowContext(ctx, `
+		SELECT `+symbolCols+`
+		FROM symbols WHERE snapshot_id = $1 AND name = $2
+		ORDER BY path, start_line
+		LIMIT 1`,
+		snapshotID, name,
+	)
+	sym, err := scanSymbolRowPG(row)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return graph.CodeSymbol{}, 0, false, nil
+		}
+		return graph.CodeSymbol{}, 0, false, fmt.Errorf("store: symbol summary by name: %w", err)
+	}
+	return sym, 1, true, nil
+}
+
 // pgChunk is the IN-list batch size for the chunked readers. Postgres allows up
 // to 65535 bound params per statement; 1000 names/refs + the snapshot_id stays
 // well under that while keeping round-trips low.

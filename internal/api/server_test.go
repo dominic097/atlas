@@ -150,6 +150,21 @@ func TestStatsOK(t *testing.T) {
 	}
 }
 
+func TestExplainPlainFormat(t *testing.T) {
+	s := newTestServer(t, "")
+	rec := do(t, s, http.MethodGet, "/api/v1/symbols/Callee/explain?repo_id=org/sample&format=plain", nil, nil)
+	if rec.Code != http.StatusOK {
+		t.Fatalf("explain plain: got %d, body=%s", rec.Code, rec.Body.String())
+	}
+	if ct := rec.Header().Get("Content-Type"); !strings.HasPrefix(ct, "text/plain") {
+		t.Fatalf("content-type: got %q, want text/plain", ct)
+	}
+	got := strings.TrimSpace(rec.Body.String())
+	if got != "Callee f@sample:4" {
+		t.Fatalf("plain explain = %q, want %q", got, "Callee f@sample:4")
+	}
+}
+
 func TestSearchOK(t *testing.T) {
 	s := newTestServer(t, "")
 	rec := do(t, s, http.MethodGet, "/api/v1/search?q=Caller", nil, nil)

@@ -1131,6 +1131,27 @@ func (d *sqliteDriver) SymbolsByName(ctx context.Context, snapshotID, name strin
 	return out, rows.Err()
 }
 
+// SymbolSummaryByName returns the first deterministic symbol row for minimal
+// explain output, avoiding full symbol materialization when the renderer only
+// needs one compact location.
+func (d *sqliteDriver) SymbolSummaryByName(ctx context.Context, snapshotID, name string) (graph.CodeSymbol, int, bool, error) {
+	row := d.db.QueryRowContext(ctx, `
+		SELECT `+symbolCols+`
+		FROM symbols WHERE snapshot_id = (SELECT sid FROM snapshots WHERE id = ?) AND name = ?
+		ORDER BY path, start_line
+		LIMIT 1`,
+		snapshotID, name,
+	)
+	sym, err := scanSymbolRow(row, snapshotID)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return graph.CodeSymbol{}, 0, false, nil
+		}
+		return graph.CodeSymbol{}, 0, false, fmt.Errorf("store: symbol summary by name: %w", err)
+	}
+	return sym, 1, true, nil
+}
+
 // symbolsChunk is the IN-list batch size for SymbolsByNames; same rationale as
 // callEdgesChunk — 400 names + the snapshot_id stays under SQLite's bound-param cap.
 const symbolsChunk = 400
