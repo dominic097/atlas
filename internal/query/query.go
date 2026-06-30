@@ -1003,6 +1003,46 @@ func CallersGraph(ctx context.Context, drv store.StorageDriver, snapshotID, name
 	return out, nil
 }
 
+// CallersGraphCount is the low-allocation counterpart to CallersGraph for terse
+// explain output, which only prints the caller count. It keeps the same callee
+// target-resolution gate as CallersGraph, then dedupes caller identities from
+// the edge's already-indexed caller side instead of resolving every caller into
+// display symbols.
+func CallersGraphCount(ctx context.Context, drv store.StorageDriver, snapshotID, name string) (int, error) {
+	if strings.TrimSpace(name) == "" {
+		return 0, nil
+	}
+	edges, err := drv.CallEdgesByToRefs(ctx, snapshotID, []string{name})
+	if err != nil {
+		return 0, err
+	}
+	cache := newSymbolCache(ctx, drv, snapshotID)
+	byName, err := cache.lowerMap(name)
+	if err != nil {
+		return 0, err
+	}
+	seen := map[string]bool{}
+	for _, e := range edges {
+		if e.Kind != graph.EdgeCalls {
+			continue
+		}
+		resolved := false
+		for _, t := range resolveTargets(e, byName, cache.isRepoType) {
+			if strings.EqualFold(t.Name, name) {
+				resolved = true
+				break
+			}
+		}
+		if !resolved {
+			continue
+		}
+		if k := callerEdgeKey(e); k != "" {
+			seen[k] = true
+		}
+	}
+	return len(seen), nil
+}
+
 // ReferencesGraph returns the symbols that REFERENCE the type named `name` as a
 // type-use (not a call), resolved through indexed store reads over the
 // "references" edges emitted by the go/types analyzer. Each such edge carries
@@ -1084,6 +1124,57 @@ func CalleesGraph(ctx context.Context, drv store.StorageDriver, snapshotID, from
 	}
 	sortSymbols(out)
 	return out, nil
+}
+
+// CalleesGraphCount mirrors CalleesGraph's target-resolution rules but returns
+// only the distinct resolved target count for terse explain output.
+func CalleesGraphCount(ctx context.Context, drv store.StorageDriver, snapshotID, fromName string) (int, error) {
+	if strings.TrimSpace(fromName) == "" {
+		return 0, nil
+	}
+	edges, err := drv.CallEdgesByFromSymbols(ctx, snapshotID, []string{fromName})
+	if err != nil {
+		return 0, err
+	}
+	cache := newSymbolCache(ctx, drv, snapshotID)
+	var toRefs []string
+	for _, e := range edges {
+		if e.Kind == graph.EdgeCalls && strings.TrimSpace(e.ToRef) != "" {
+			toRefs = append(toRefs, e.ToRef)
+		}
+	}
+	if err := cache.prefetchNames(toRefs); err != nil {
+		return 0, err
+	}
+	seen := map[string]bool{}
+	for _, e := range edges {
+		if e.Kind != graph.EdgeCalls {
+			continue
+		}
+		byName, err := cache.lowerMap(e.ToRef)
+		if err != nil {
+			return 0, err
+		}
+		for _, t := range resolveTargets(e, byName, cache.isRepoType) {
+			seen[symbolKey(t)] = true
+		}
+	}
+	return len(seen), nil
+}
+
+func callerEdgeKey(e graph.DependencyEdge) string {
+	fromName := strings.TrimSpace(e.FromSymbol)
+	fromFile := canonicalPath(e.FromFile)
+	switch {
+	case fromName != "" && fromFile != "":
+		return fromFile + "\x00" + fromName
+	case fromName != "":
+		return "name:" + fromName
+	case fromFile != "":
+		return "file:" + fromFile
+	default:
+		return ""
+	}
 }
 
 func sortSymbols(s []graph.CodeSymbol) {

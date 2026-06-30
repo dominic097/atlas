@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -563,6 +564,40 @@ func (d *postgresDriver) LatestSnapshot(ctx context.Context, repoID string) (*gr
 			return nil, nil
 		}
 		return nil, fmt.Errorf("store: latest snapshot: %w", err)
+	}
+	return &s, nil
+}
+
+// LatestSnapshotByRepoRef resolves a repo id, full name, or path/basename ref
+// directly to its newest snapshot. It is the hot read path for CLI explain-style
+// commands that already have --repo and should not list every repo first.
+func (d *postgresDriver) LatestSnapshotByRepoRef(ctx context.Context, scope, repoRef string) (*graph.Snapshot, error) {
+	repoRef = strings.TrimSpace(repoRef)
+	if repoRef == "" {
+		return nil, nil
+	}
+	base := filepath.Base(repoRef)
+	row := d.db.QueryRowContext(ctx,
+		`SELECT `+snapshotColsS+`
+		 FROM snapshots s
+		 JOIN repos r ON r.id = s.repo_id
+		 WHERE ($1 = '' OR r.scope = $2)
+		   AND (
+		     r.id = $3
+		     OR lower(r.full_name) = lower($4)
+		     OR lower(r.full_name) = lower($5)
+		     OR lower(r.full_name) LIKE '%/' || lower($6)
+		   )
+		 ORDER BY s.created_at DESC
+		 LIMIT 1`,
+		scope, scope, repoRef, repoRef, base, base,
+	)
+	s, err := scanSnapshotPG(row)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
+		return nil, fmt.Errorf("store: latest snapshot by repo ref: %w", err)
 	}
 	return &s, nil
 }

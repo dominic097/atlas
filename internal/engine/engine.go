@@ -445,8 +445,9 @@ type RefsResult struct {
 }
 
 type ExplainInput struct {
-	Name   string
-	RepoID string
+	Name       string
+	RepoID     string
+	CountsOnly bool `json:"-"`
 }
 
 // ExplainDef is one definition of the explained symbol with its location/doc.
@@ -476,6 +477,8 @@ type ExplainResult struct {
 	Definitions        []ExplainDef   `json:"definitions"`
 	Callers            []string       `json:"callers"`
 	Callees            []string       `json:"callees"`
+	CallerCount        int            `json:"caller_count,omitempty"`
+	CalleeCount        int            `json:"callee_count,omitempty"`
 	Imports            []string       `json:"imports,omitempty"`
 	ServedRoutes       []ExplainRoute `json:"served_routes,omitempty"`
 	CrossRepoConsumers []string       `json:"cross_repo_consumers,omitempty"`
@@ -1629,6 +1632,17 @@ func (e *localEngine) Close() error {
 // repo in the DB (the common single-repo local case).
 func (e *localEngine) resolveSnapshot(ctx context.Context, repoID string) (*graph.Snapshot, error) {
 	if repoID != "" {
+		if fast, ok := e.store.(interface {
+			LatestSnapshotByRepoRef(context.Context, string, string) (*graph.Snapshot, error)
+		}); ok {
+			snap, err := fast.LatestSnapshotByRepoRef(ctx, e.cfg.Scope, repoID)
+			if err != nil {
+				return nil, err
+			}
+			if snap != nil {
+				return snap, nil
+			}
+		}
 		// Resolve the ref (repo_id, org/name, or path) to a canonical repo
 		// first — LatestSnapshot keys on the repo UUID, so a bare full_name or
 		// path would otherwise miss. Mirrors resolveRepo used by the other ops.
@@ -1830,20 +1844,32 @@ func (e *localEngine) Explain(ctx context.Context, in ExplainInput) (*ExplainRes
 	if err != nil {
 		return nil, fmt.Errorf("engine: explain defs: %w", err)
 	}
-	callers, err := query.CallersGraph(ctx, e.store, snap.ID, in.Name)
-	if err != nil {
-		return nil, fmt.Errorf("engine: explain callers: %w", err)
-	}
-	callees, err := query.CalleesGraph(ctx, e.store, snap.ID, in.Name)
-	if err != nil {
-		return nil, fmt.Errorf("engine: explain callees: %w", err)
-	}
-
 	res := &ExplainResult{
 		Symbol:      in.Name,
 		Definitions: make([]ExplainDef, 0, len(defs)),
-		Callers:     namesOf(callers, navCap),
-		Callees:     namesOf(callees, navCap),
+	}
+	if in.CountsOnly {
+		callerCount, err := query.CallersGraphCount(ctx, e.store, snap.ID, in.Name)
+		if err != nil {
+			return nil, fmt.Errorf("engine: explain callers: %w", err)
+		}
+		calleeCount, err := query.CalleesGraphCount(ctx, e.store, snap.ID, in.Name)
+		if err != nil {
+			return nil, fmt.Errorf("engine: explain callees: %w", err)
+		}
+		res.CallerCount = callerCount
+		res.CalleeCount = calleeCount
+	} else {
+		callers, err := query.CallersGraph(ctx, e.store, snap.ID, in.Name)
+		if err != nil {
+			return nil, fmt.Errorf("engine: explain callers: %w", err)
+		}
+		callees, err := query.CalleesGraph(ctx, e.store, snap.ID, in.Name)
+		if err != nil {
+			return nil, fmt.Errorf("engine: explain callees: %w", err)
+		}
+		res.Callers = namesOf(callers, navCap)
+		res.Callees = namesOf(callees, navCap)
 	}
 	defPaths := map[string]bool{}
 	for _, s := range defs {

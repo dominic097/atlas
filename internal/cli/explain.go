@@ -1,6 +1,8 @@
 package cli
 
 import (
+	"strings"
+
 	"github.com/spf13/cobra"
 
 	"github.com/dominic097/atlas/pkg/atlas"
@@ -15,6 +17,7 @@ func newExplainCmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			in.Name = args[0]
 			in.RepoID = gf.repo
+			in.CountsOnly = explainCountsOnly()
 			eng, err := resolveEngine(cmd.Context())
 			if err != nil {
 				return err
@@ -28,4 +31,13 @@ func newExplainCmd() *cobra.Command {
 		},
 	}
 	return cmd
+}
+
+func explainCountsOnly() bool {
+	switch strings.ToLower(strings.TrimSpace(gf.format)) {
+	case "plain", "terse", "text":
+		return true
+	default:
+		return false
+	}
 }

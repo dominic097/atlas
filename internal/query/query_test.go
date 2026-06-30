@@ -1,11 +1,14 @@
 package query
 
 import (
+	"context"
+	"path/filepath"
 	"reflect"
 	"sort"
 	"testing"
 
 	"github.com/dominic097/atlas/internal/graph"
+	"github.com/dominic097/atlas/internal/store"
 )
 
 // tinyGraph builds the canonical A -> B -> C call chain:
@@ -128,6 +131,59 @@ func TestReferencesIncludesReferenceEdges(t *testing.T) {
 	sort.Strings(got)
 	if !reflect.DeepEqual(got, []string{"B", "D"}) {
 		t.Errorf("References(C) = %v, want [B D]", got)
+	}
+}
+
+func TestGraphCountHelpersMatchFullGraph(t *testing.T) {
+	ctx := context.Background()
+	dbPath := filepath.Join(t.TempDir(), "atlas.db")
+	drv, err := store.Open(ctx, store.Options{Kind: "sqlite", SQLitePath: dbPath})
+	if err != nil {
+		t.Fatalf("Open: %v", err)
+	}
+	t.Cleanup(func() { _ = drv.Close() })
+	if err := drv.Migrate(ctx); err != nil {
+		t.Fatalf("Migrate: %v", err)
+	}
+
+	const snapID = "snap-1"
+	snap := &graph.Snapshot{ID: snapID, RepoID: "repo-1", CommitSHA: "deadbeef"}
+	syms := []graph.CodeSymbol{
+		{ID: "sa", SnapshotID: snapID, Path: "a.go", Language: "go", Kind: "function", Name: "A", StartLine: 1},
+		{ID: "sb", SnapshotID: snapID, Path: "b.go", Language: "go", Kind: "function", Name: "B", StartLine: 1},
+		{ID: "sc", SnapshotID: snapID, Path: "c.go", Language: "go", Kind: "function", Name: "C", StartLine: 1},
+	}
+	edges := []graph.DependencyEdge{
+		{SnapshotID: snapID, FromFile: "a.go", FromSymbol: "A", ToRef: "B", Kind: graph.EdgeCalls, Language: "go", Line: 2},
+		{SnapshotID: snapID, FromFile: "a.go", FromSymbol: "A", ToRef: "B", Kind: graph.EdgeCalls, Language: "go", Line: 3},
+		{SnapshotID: snapID, FromFile: "b.go", FromSymbol: "B", ToRef: "C", Kind: graph.EdgeCalls, Language: "go", Line: 2},
+	}
+	if err := drv.SaveSnapshot(ctx, snap, nil, syms, edges, nil); err != nil {
+		t.Fatalf("SaveSnapshot: %v", err)
+	}
+
+	fullCallers, err := CallersGraph(ctx, drv, snapID, "B")
+	if err != nil {
+		t.Fatalf("CallersGraph: %v", err)
+	}
+	countCallers, err := CallersGraphCount(ctx, drv, snapID, "B")
+	if err != nil {
+		t.Fatalf("CallersGraphCount: %v", err)
+	}
+	if countCallers != len(fullCallers) {
+		t.Fatalf("CallersGraphCount = %d, want %d", countCallers, len(fullCallers))
+	}
+
+	fullCallees, err := CalleesGraph(ctx, drv, snapID, "A")
+	if err != nil {
+		t.Fatalf("CalleesGraph: %v", err)
+	}
+	countCallees, err := CalleesGraphCount(ctx, drv, snapID, "A")
+	if err != nil {
+		t.Fatalf("CalleesGraphCount: %v", err)
+	}
+	if countCallees != len(fullCallees) {
+		t.Fatalf("CalleesGraphCount = %d, want %d", countCallees, len(fullCallees))
 	}
 }
 

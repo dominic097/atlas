@@ -104,4 +104,28 @@ func TestSQLiteLatestSnapshotAnyUsesNewestVisibleSnapshot(t *testing.T) {
 	if scoped == nil || scoped.ID != "snap-c" {
 		t.Fatalf("LatestSnapshotAny(team-a) = %+v, want snap-c", scoped)
 	}
+
+	byFullName, err := d.(*sqliteDriver).LatestSnapshotByRepoRef(ctx, "team-a", "org/c")
+	if err != nil {
+		t.Fatalf("LatestSnapshotByRepoRef(full name): %v", err)
+	}
+	if byFullName == nil || byFullName.ID != "snap-c" {
+		t.Fatalf("LatestSnapshotByRepoRef(full name) = %+v, want snap-c", byFullName)
+	}
+
+	byBase, err := d.(*sqliteDriver).LatestSnapshotByRepoRef(ctx, "team-a", "c")
+	if err != nil {
+		t.Fatalf("LatestSnapshotByRepoRef(base): %v", err)
+	}
+	if byBase == nil || byBase.ID != "snap-c" {
+		t.Fatalf("LatestSnapshotByRepoRef(base) = %+v, want snap-c", byBase)
+	}
+
+	crossScope, err := d.(*sqliteDriver).LatestSnapshotByRepoRef(ctx, "team-b", "org/c")
+	if err != nil {
+		t.Fatalf("LatestSnapshotByRepoRef(cross scope): %v", err)
+	}
+	if crossScope != nil {
+		t.Fatalf("LatestSnapshotByRepoRef(cross scope) = %+v, want nil", crossScope)
+	}
 }

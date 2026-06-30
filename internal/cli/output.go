@@ -228,11 +228,19 @@ func terseExplain(r *engine.ExplainResult) string {
 	if len(r.Definitions) > 1 {
 		parts = append(parts, fmt.Sprintf("df%d", len(r.Definitions)))
 	}
-	if len(r.Callers) > 0 {
-		parts = append(parts, fmt.Sprintf("c%d", len(r.Callers)))
+	callerCount := len(r.Callers)
+	if r.CallerCount > callerCount {
+		callerCount = r.CallerCount
 	}
-	if len(r.Callees) > 0 {
-		parts = append(parts, fmt.Sprintf("d%d", len(r.Callees)))
+	calleeCount := len(r.Callees)
+	if r.CalleeCount > calleeCount {
+		calleeCount = r.CalleeCount
+	}
+	if callerCount > 0 {
+		parts = append(parts, fmt.Sprintf("c%d", callerCount))
+	}
+	if calleeCount > 0 {
+		parts = append(parts, fmt.Sprintf("d%d", calleeCount))
 	}
 	if len(r.ServedRoutes) > 0 {
 		parts = append(parts, fmt.Sprintf("r%d", len(r.ServedRoutes)))

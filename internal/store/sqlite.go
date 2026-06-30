@@ -809,6 +809,40 @@ func (d *sqliteDriver) LatestSnapshot(ctx context.Context, repoID string) (*grap
 	return &s, nil
 }
 
+// LatestSnapshotByRepoRef resolves a repo id, full name, or path/basename ref
+// directly to its newest snapshot. It is the hot read path for CLI explain-style
+// commands that already have --repo and should not list every repo first.
+func (d *sqliteDriver) LatestSnapshotByRepoRef(ctx context.Context, scope, repoRef string) (*graph.Snapshot, error) {
+	repoRef = strings.TrimSpace(repoRef)
+	if repoRef == "" {
+		return nil, nil
+	}
+	base := filepath.Base(repoRef)
+	row := d.db.QueryRowContext(ctx,
+		`SELECT `+snapshotColsS+`
+		 FROM snapshots s
+		 JOIN repos r ON r.id = s.repo_id
+		 WHERE (? = '' OR r.scope = ?)
+		   AND (
+		     r.id = ?
+		     OR lower(r.full_name) = lower(?)
+		     OR lower(r.full_name) = lower(?)
+		     OR lower(r.full_name) LIKE '%/' || lower(?)
+		   )
+		 ORDER BY s.created_at DESC
+		 LIMIT 1`,
+		scope, scope, repoRef, repoRef, base, base,
+	)
+	s, err := scanSnapshot(row)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
+		return nil, fmt.Errorf("store: latest snapshot by repo ref: %w", err)
+	}
+	return &s, nil
+}
+
 func (d *sqliteDriver) LatestSnapshotAny(ctx context.Context, scope string) (*graph.Snapshot, error) {
 	var (
 		row *sql.Row
