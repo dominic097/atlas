@@ -1,6 +1,6 @@
 # Atlas Final Benchmark Audit
 
-Generated: 2026-06-30T19:24:18.319Z
+Generated: 2026-06-30T19:52:50.403Z
 
 Final pass over Atlas benchmark artifacts: core matrix against Graphify plus native SCIP/LSP tools, live language artifacts against Graphify plus language-specific native/proxy baselines, and public three-repo validation metadata.
 
@@ -53,7 +53,7 @@ Low-risk live languages: astro, csharp, fortran, groovy, julia, kotlin, lua, obj
 
 The validation remeasurement manifest audits replay readiness for public validation rows. It proves pinned Atlas and Graphify replay commands can be reconstructed, but it does not execute native/proxy counters unless executable per-repo native commands are present in the artifacts.
 
-Manifest: data/validation-remeasurement-manifest.md, generated 2026-06-30T19:24:08.219Z.
+Manifest: data/validation-remeasurement-manifest.md, generated 2026-06-30T19:52:49.769Z.
 Repo rows: 105; Atlas replay-ready: 105; Graphify replay-ready: 105; native/proxy command candidates: 105; candidate-executable: 21; native/proxy command-ready: 0.
 Full remeasurement-ready artifacts: 0; candidates with placeholders: 69; candidates with ephemeral helper paths: 51; proxy or detector-only code artifacts: 14.
 
@@ -100,7 +100,7 @@ Full remeasurement-ready artifacts: 0; candidates with placeholders: 69; candida
 
 The precision manifest is an artifact-level audit of what the raw benchmark JSON can prove today: sampled query rows with matching symbol names and locations, native-vs-Atlas kind-count maps, or count-only gaps. It is not a full 99% precision oracle.
 
-Manifest: data/precision-evidence-manifest.md, generated 2026-06-30T19:23:54.589Z.
+Manifest: data/precision-evidence-manifest.md, generated 2026-06-30T19:52:49.947Z.
 Sampled name/location artifacts: 32; kind-count-only artifacts: 4; count-only artifacts: 0.
 Matched sampled query rows: 161/199; validation kind-map rows: 81.
 Artifacts with native metric kind maps: 27.
@@ -116,7 +116,7 @@ Artifacts with native metric kind maps: 27.
 
 The call-edge manifest audits what raw artifacts can prove today: receiver-typed call counts for the core matrix and call-count evidence for live artifacts. It does not prove receiver-type precision for live converted languages.
 
-Manifest: data/call-edge-evidence-manifest.md, generated 2026-06-30T19:24:00.013Z.
+Manifest: data/call-edge-evidence-manifest.md, generated 2026-06-30T19:52:50.142Z.
 Core receiver-typed calls: 5016/21254; live Atlas calls: 258529.
 Live receiver-typed artifacts: 0/36; live artifacts with call counts: 36/36.
 
@@ -163,7 +163,7 @@ Live receiver-typed artifacts: 0/36; live artifacts with call counts: 36/36.
 
 The Graphify support manifest separates deterministic extractor support from detector-only extension detection and sampled query rows with no Graphify equivalent.
 
-Manifest: data/graphify-support-manifest.md, generated 2026-06-30T19:24:02.979Z.
+Manifest: data/graphify-support-manifest.md, generated 2026-06-30T19:52:50.322Z.
 Deterministic discovery rows: 39; detector-only extensions: 3.
 Live deterministic artifacts: 33; live detector-only artifacts: 3; sampled Graphify-equivalent rows: 199/224.
 
@@ -206,13 +206,13 @@ Detector-only extensions:
 
 | Language | Native tools | Graphify | Equivalent rows | Graphify missing | Token ratio | Latency ratio |
 |---|---|---|--:|--:|--:|--:|
-| go | scip-go:ok, gopls:ok | ok | 4 | 0 | 18.95 | 6.44 |
-| python | scip-python:ok, pyright:ok | ok | 3 | 0 | 24.31 | 6.63 |
-| javascript | scip-typescript:ok, tsserver:ok | ok | 3 | 1 | 8.24 | 5.74 |
-| typescript | scip-typescript:ok, tsserver:ok | ok | 3 | 1 | 12.06 | 5.95 |
-| java | scip-java:ok, jdtls:ok | ok | 2 | 0 | 21.4 | 7.37 |
-| c | clangd:ok | ok | 4 | 0 | 33.5 | 7.33 |
-| cpp | clangd:ok | ok | 4 | 0 | 11.85 | 8.21 |
+| go | scip-go:ok, gopls:ok | ok | 4 | 0 | 18.95 | 7.18 |
+| python | scip-python:ok, pyright:ok | ok | 3 | 0 | 24.31 | 7.51 |
+| javascript | scip-typescript:ok, tsserver:ok | ok | 3 | 1 | 8.24 | 6.54 |
+| typescript | scip-typescript:ok, tsserver:ok | ok | 3 | 1 | 12.06 | 6.89 |
+| java | scip-java:ok, jdtls:ok | ok | 2 | 0 | 21.4 | 7.99 |
+| c | clangd:ok | ok | 4 | 0 | 33.5 | 7.53 |
+| cpp | clangd:ok | ok | 4 | 0 | 11.85 | 8.73 |
 
 ## Stubs And Hallucination Audit
 

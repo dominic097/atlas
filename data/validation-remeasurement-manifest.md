@@ -1,6 +1,6 @@
 # Validation Remeasurement Readiness Manifest
 
-Generated: 2026-06-30T19:24:08.219Z
+Generated: 2026-06-30T19:52:49.769Z
 
 This manifest is regenerated from committed `data/raw/LIVE_*_BENCHMARK.json` artifacts by `scripts/validation-remeasurement-harness.mjs`.
 It is a readiness audit, not a full remeasurement run: Atlas and Graphify replay commands are generated from pinned repo/commit/target rows, while native/proxy counters are marked ready only when the validation row stores an executable native replay command.

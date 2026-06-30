@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-30T19:24:18.319Z",
-  "benchmarkGeneratedAt": "2026-06-30T19:24:18.319Z",
+  "generatedAt": "2026-06-30T19:52:50.403Z",
+  "benchmarkGeneratedAt": "2026-06-30T19:52:50.403Z",
   "scope": "Final pass over Atlas benchmark artifacts: core matrix against Graphify plus native SCIP/LSP tools, live language artifacts against Graphify plus language-specific native/proxy baselines, and public three-repo validation metadata.",
   "summary": {
     "coreLanguages": 7,
@@ -264,7 +264,7 @@
         "equivalentRows": 4,
         "graphifyMissingRows": 0,
         "tokenRatio": 18.95,
-        "latencyRatio": 6.44
+        "latencyRatio": 7.18
       },
       {
         "language": "python",
@@ -284,7 +284,7 @@
         "equivalentRows": 3,
         "graphifyMissingRows": 0,
         "tokenRatio": 24.31,
-        "latencyRatio": 6.63
+        "latencyRatio": 7.51
       },
       {
         "language": "javascript",
@@ -304,7 +304,7 @@
         "equivalentRows": 3,
         "graphifyMissingRows": 1,
         "tokenRatio": 8.24,
-        "latencyRatio": 5.74
+        "latencyRatio": 6.54
       },
       {
         "language": "typescript",
@@ -324,7 +324,7 @@
         "equivalentRows": 3,
         "graphifyMissingRows": 1,
         "tokenRatio": 12.06,
-        "latencyRatio": 5.95
+        "latencyRatio": 6.89
       },
       {
         "language": "java",
@@ -344,7 +344,7 @@
         "equivalentRows": 2,
         "graphifyMissingRows": 0,
         "tokenRatio": 21.4,
-        "latencyRatio": 7.37
+        "latencyRatio": 7.99
       },
       {
         "language": "c",
@@ -359,7 +359,7 @@
         "equivalentRows": 4,
         "graphifyMissingRows": 0,
         "tokenRatio": 33.5,
-        "latencyRatio": 7.33
+        "latencyRatio": 7.53
       },
       {
         "language": "cpp",
@@ -374,7 +374,7 @@
         "equivalentRows": 4,
         "graphifyMissingRows": 0,
         "tokenRatio": 11.85,
-        "latencyRatio": 8.21
+        "latencyRatio": 8.73
       }
     ],
     "nearParityValidationRows": [
@@ -522,7 +522,7 @@
     "validationRemeasurement": {
       "statement": "The validation remeasurement manifest audits replay readiness for public validation rows. It proves pinned Atlas and Graphify replay commands can be reconstructed, but it does not execute native/proxy counters unless executable per-repo native commands are present in the artifacts.",
       "manifest": {
-        "generatedAt": "2026-06-30T19:24:08.219Z",
+        "generatedAt": "2026-06-30T19:52:49.769Z",
         "summary": {
           "artifacts": 36,
           "codeArtifacts": 34,
@@ -1150,7 +1150,7 @@
     "precisionEvidence": {
       "statement": "The precision manifest is an artifact-level audit of what the raw benchmark JSON can prove today: sampled query rows with matching symbol names and locations, native-vs-Atlas kind-count maps, or count-only gaps. It is not a full 99% precision oracle.",
       "manifest": {
-        "generatedAt": "2026-06-30T19:23:54.589Z",
+        "generatedAt": "2026-06-30T19:52:49.947Z",
         "summary": {
           "artifacts": 36,
           "sampledNameLocationArtifacts": 32,
@@ -1263,7 +1263,7 @@
     "callEdgeEvidence": {
       "statement": "The call-edge manifest audits what raw artifacts can prove today: receiver-typed call counts for the core matrix and call-count evidence for live artifacts. It does not prove receiver-type precision for live converted languages.",
       "manifest": {
-        "generatedAt": "2026-06-30T19:24:00.013Z",
+        "generatedAt": "2026-06-30T19:52:50.142Z",
         "summary": {
           "coreLanguages": 7,
           "coreReceiverTypedLanguages": 7,
@@ -1572,7 +1572,7 @@
     "graphifySupport": {
       "statement": "The Graphify support manifest separates deterministic extractor support from detector-only extension detection and sampled query rows with no Graphify equivalent.",
       "manifest": {
-        "generatedAt": "2026-06-30T19:24:02.979Z",
+        "generatedAt": "2026-06-30T19:52:50.322Z",
         "summary": {
           "graphifyVersion": "graphifyy 0.8.49",
           "dispatchCount": 89,
