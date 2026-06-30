@@ -1543,18 +1543,27 @@ def query_token_rows(atlas_bin: str | None, graphify_bin: str | None, db: Path, 
 
     rows: list[dict[str, Any]] = []
     for name in names[:4]:
-        t0 = time.time()
-        atlas = run([atlas_bin, "--db", f"sqlite://{db}", "--format", "plain", "explain", name])
-        atlas_ms = round((time.time() - t0) * 1000, 3)
-        t0 = time.time()
-        graphify = run([graphify_bin, "explain", name], cwd=target)
-        graphify_ms = round((time.time() - t0) * 1000, 3)
+        atlas_samples: list[float] = []
+        graphify_samples: list[float] = []
+        atlas = subprocess.CompletedProcess([atlas_bin], 1, "", "")
+        graphify = subprocess.CompletedProcess([graphify_bin], 1, "", "")
+        for _ in range(5):
+            t0 = time.perf_counter()
+            atlas = run([atlas_bin, "--db", f"sqlite://{db}", "--format", "plain", "explain", name])
+            atlas_samples.append(round((time.perf_counter() - t0) * 1000, 3))
+            t0 = time.perf_counter()
+            graphify = run([graphify_bin, "explain", name], cwd=target)
+            graphify_samples.append(round((time.perf_counter() - t0) * 1000, 3))
+        atlas_ms = round(statistics.median(atlas_samples), 3)
+        graphify_ms = round(statistics.median(graphify_samples), 3)
         row = {
             "symbol": name,
             "atlas_tokens": tokens(atlas.stdout),
             "graphify_tokens": tokens(graphify.stdout),
             "atlas_ms": atlas_ms,
             "graphify_ms": graphify_ms,
+            "atlas_ms_samples": atlas_samples,
+            "graphify_ms_samples": graphify_samples,
             "atlas_missing": not atlas.stdout.strip(),
             "graphify_missing": "No node matching" in graphify.stdout or not graphify.stdout.strip(),
         }
@@ -1562,7 +1571,8 @@ def query_token_rows(atlas_bin: str | None, graphify_bin: str | None, db: Path, 
         log.append(
             f"$ explain {name}\n"
             f"atlas_tokens={row['atlas_tokens']} graphify_tokens={row['graphify_tokens']} "
-            f"atlas_ms={row['atlas_ms']} graphify_ms={row['graphify_ms']}"
+            f"atlas_ms_median={row['atlas_ms']} graphify_ms_median={row['graphify_ms']} "
+            f"atlas_samples={atlas_samples} graphify_samples={graphify_samples}"
         )
     return rows
 
