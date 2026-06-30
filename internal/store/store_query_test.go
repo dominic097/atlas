@@ -106,7 +106,6 @@ func TestIndexedQueries(t *testing.T) {
 	if len(paths) != 2 || paths[0] != "app.go" || paths[1] != "engine.go" {
 		t.Fatalf("SymbolPathsByName = %v, want [app.go engine.go]", paths)
 	}
-
 	// A miss returns nothing.
 	none, err := d.SymbolsByName(ctx, snapID, "nope")
 	if err != nil {
@@ -181,6 +180,13 @@ func TestIndexedQueries(t *testing.T) {
 	}
 	if routeCount != len(matchedRoutes) {
 		t.Fatalf("RouteCountForSymbol = %d, want %d", routeCount, len(matchedRoutes))
+	}
+	routeCount, err = routeReader.RouteCountForSymbol(ctx, snapID, "addTask", nil)
+	if err != nil {
+		t.Fatalf("RouteCountForSymbol(nil): %v", err)
+	}
+	if routeCount != len(matchedRoutes) {
+		t.Fatalf("RouteCountForSymbol(nil) = %d, want %d", routeCount, len(matchedRoutes))
 	}
 
 	// CallEdgesByToRefs: index hit returns the edge with metadata; a ref not in

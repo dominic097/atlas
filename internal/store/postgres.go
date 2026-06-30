@@ -1235,7 +1235,12 @@ func (d *postgresDriver) RoutesForSymbol(ctx context.Context, snapshotID, symbol
 func (d *postgresDriver) RouteCountForSymbol(ctx context.Context, snapshotID, symbolName string, defPaths []string) (int, error) {
 	defPaths = uniqueNonEmpty(defPaths)
 	args := []any{snapshotID, symbolName}
-	handlerPredicate := ""
+	handlerPredicate := `
+				OR handler_file IN (
+					SELECT DISTINCT path
+					FROM symbols
+					WHERE snapshot_id = $1 AND name = $2 AND path <> ''
+				)`
 	if len(defPaths) > 0 {
 		handlerPredicate = ` OR handler_file IN (` + inPlaceholders(3, len(defPaths)) + `)`
 		for _, path := range defPaths {
@@ -1248,7 +1253,10 @@ func (d *postgresDriver) RouteCountForSymbol(ctx context.Context, snapshotID, sy
 		FROM routes
 		WHERE snapshot_id = $1
 			AND role = 'producer'
-			AND (metadata->>'handler_symbol' = $2`+handlerPredicate+`)`, args...).Scan(&count); err != nil {
+			AND (
+				metadata->>'handler_symbol' = $2
+				`+handlerPredicate+`
+			)`, args...).Scan(&count); err != nil {
 		return 0, fmt.Errorf("store: route count for symbol: %w", err)
 	}
 	return count, nil

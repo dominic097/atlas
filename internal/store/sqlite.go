@@ -1615,7 +1615,12 @@ func (d *sqliteDriver) RoutesForSymbol(ctx context.Context, snapshotID, symbolNa
 func (d *sqliteDriver) RouteCountForSymbol(ctx context.Context, snapshotID, symbolName string, defPaths []string) (int, error) {
 	defPaths = uniqueNonEmpty(defPaths)
 	args := []any{snapshotID, symbolName}
-	handlerPredicate := ""
+	handlerPredicate := `
+				OR handler_file IN (
+					SELECT DISTINCT path
+					FROM symbols
+					WHERE snapshot_id = (SELECT sid FROM snapshots WHERE id = ?) AND name = ? AND path <> ''
+				)`
 	if len(defPaths) > 0 {
 		placeholders := strings.Repeat("?,", len(defPaths))
 		placeholders = placeholders[:len(placeholders)-1]
@@ -1623,6 +1628,8 @@ func (d *sqliteDriver) RouteCountForSymbol(ctx context.Context, snapshotID, symb
 		for _, path := range defPaths {
 			args = append(args, path)
 		}
+	} else {
+		args = append(args, snapshotID, symbolName)
 	}
 	var count int
 	if err := d.db.QueryRowContext(ctx, `
@@ -1630,7 +1637,10 @@ func (d *sqliteDriver) RouteCountForSymbol(ctx context.Context, snapshotID, symb
 		FROM routes
 		WHERE snapshot_id = (SELECT sid FROM snapshots WHERE id = ?)
 			AND role = 'producer'
-			AND (json_extract(metadata, '$.handler_symbol') = ?`+handlerPredicate+`)`, args...).Scan(&count); err != nil {
+			AND (
+				json_extract(metadata, '$.handler_symbol') = ?
+				`+handlerPredicate+`
+			)`, args...).Scan(&count); err != nil {
 		return 0, fmt.Errorf("store: route count for symbol: %w", err)
 	}
 	return count, nil

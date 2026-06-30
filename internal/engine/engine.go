@@ -1881,19 +1881,6 @@ func (e *localEngine) Explain(ctx context.Context, in ExplainInput) (*ExplainRes
 	if defCount > len(res.Definitions) {
 		res.DefinitionCount = defCount
 	}
-	if in.CountsOnly && snap.RouteCount > 0 {
-		if fast, ok := e.store.(interface {
-			SymbolPathsByName(context.Context, string, string) ([]string, error)
-		}); ok {
-			paths, err := fast.SymbolPathsByName(ctx, snap.ID, in.Name)
-			if err != nil {
-				return nil, fmt.Errorf("engine: explain symbol paths: %w", err)
-			}
-			for _, path := range paths {
-				defPaths[path] = true
-			}
-		}
-	}
 
 	if !in.CountsOnly {
 		// Imports of the defining file(s), via the indexed file rows. Terse/plain
@@ -1907,7 +1894,7 @@ func (e *localEngine) Explain(ctx context.Context, in ExplainInput) (*ExplainRes
 	servedLabels := map[string]bool{}
 	if snap.RouteCount > 0 {
 		if in.CountsOnly {
-			if count, ok, err := e.routeCountForExplain(ctx, snap.ID, in.Name, defPaths); err != nil {
+			if count, ok, err := e.routeCountForExplain(ctx, snap.ID, in.Name); err != nil {
 				return nil, fmt.Errorf("engine: explain routes: %w", err)
 			} else if ok {
 				res.ServedRouteCount = count
@@ -1959,18 +1946,14 @@ func (e *localEngine) Explain(ctx context.Context, in ExplainInput) (*ExplainRes
 	return res, nil
 }
 
-func (e *localEngine) routeCountForExplain(ctx context.Context, snapshotID, name string, defPaths map[string]bool) (int, bool, error) {
+func (e *localEngine) routeCountForExplain(ctx context.Context, snapshotID, name string) (int, bool, error) {
 	fast, ok := e.store.(interface {
 		RouteCountForSymbol(context.Context, string, string, []string) (int, error)
 	})
 	if !ok {
 		return 0, false, nil
 	}
-	paths := make([]string, 0, len(defPaths))
-	for path := range defPaths {
-		paths = append(paths, path)
-	}
-	count, err := fast.RouteCountForSymbol(ctx, snapshotID, name, paths)
+	count, err := fast.RouteCountForSymbol(ctx, snapshotID, name, nil)
 	return count, true, err
 }
 
