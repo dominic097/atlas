@@ -53,7 +53,7 @@ test.describe("Atlas — The Benchmark Instrument", () => {
       await expect(page.getByTestId("parity-ladder")).toBeVisible();
       await expect(page.getByTestId("parity-column")).toContainText(
         String(
-          data.liveSmokes.filter((r) => r.coverage && r.coverage.ratio <= 1.0).length
+          data.liveBenchmarks.filter((r) => r.coverage && r.coverage.ratio <= 1.0).length
         )
       );
       // C# is the strongest standout (×1.84, more defs than native)
@@ -79,7 +79,7 @@ test.describe("Atlas — The Benchmark Instrument", () => {
       await expect(page.getByTestId("lx-view-toggle")).toBeVisible();
       // 43 languages benchmarked, surfaced as the all-filter count
       await expect(page.getByTestId("lx-chip-all")).toContainText(
-        String(data.coreMatrix.length + data.liveSmokes.length)
+        String(data.coreMatrix.length + data.liveBenchmarks.length)
       );
       await expect(page.getByTestId("evidence")).toBeVisible();
       await expect(page.getByTestId("provenance")).toContainText(data.provenance.graphify.version);
@@ -95,7 +95,7 @@ test.describe("Atlas — The Benchmark Instrument", () => {
         await expect(page.getByTestId("lx-table")).toContainText(fmt.format(row.atlas.metrics.symbols));
       }
       // a live exceeds-native language shows its >1.0 coverage ratio
-      const csharp = data.liveSmokes.find((r) => r.language === "csharp");
+      const csharp = data.liveBenchmarks.find((r) => r.language === "csharp");
       await expect(page.getByTestId("lx-table")).toContainText(
         `${csharp.coverage.ratio.toFixed(2)}×`
       );
@@ -131,7 +131,7 @@ test.describe("Atlas — The Benchmark Instrument", () => {
     await expect(table).toContainText("not comparable");
     // exactly the 3 saturated rows, none folded into a win
     await expect(page.getByTestId("lx-row")).toHaveCount(
-      data.liveSmokes.filter((r) => r.querySummary.tokenRatio == null).length
+      data.liveBenchmarks.filter((r) => r.querySummary.tokenRatio == null).length
     );
   });
 

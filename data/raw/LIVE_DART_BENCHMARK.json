@@ -1,0 +1,370 @@
+{
+  "language": "dart",
+  "repo": "https://github.com/dart-lang/http",
+  "commit": "5d94ef52582867e077bf41c3fa20fb8b1d1d834e",
+  "graphify_detector_only": "",
+  "commands": {
+    "clone": "git clone --depth 1 https://github.com/dart-lang/http /tmp/atlas-live-dart-http/repo",
+    "sparse_checkout": "",
+    "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-dart-http/atlas.db --json index /tmp/atlas-live-dart-http/repo/pkgs/http/lib",
+    "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-dart-http/atlas.db --json index /tmp/atlas-live-dart-http/repo/pkgs/http/lib",
+    "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "native_baseline": "/tmp/atlas-live-dart-http/tree-sitter-dart-venv/bin/python -c <tree-sitter-dart definition counter> /tmp/atlas-live-dart-http/repo/pkgs/http/lib",
+    "query_symbols": [
+      "Client",
+      "BaseClient",
+      "Request",
+      "Response",
+      "send",
+      "RetryClient"
+    ],
+    "target_path": "/tmp/atlas-live-dart-http/repo/pkgs/http/lib"
+  },
+  "atlas": {
+    "cold_wall_seconds": 0.103,
+    "reindex_wall_seconds": 0.026,
+    "index": {
+      "repo_id": "456e43f0-3dbd-457c-9a63-be8bb3c86f8c",
+      "repo_full_name": "lib",
+      "snapshot_id": "dc42dc20-fe37-4605-ae25-1e6d5908637f",
+      "commit_sha": "5d94ef52582867e077bf41c3fa20fb8b1d1d834e",
+      "indexed_files": 27,
+      "symbols": 184,
+      "edges": 565,
+      "edge_kinds": {
+        "calls": 427,
+        "imports": 138
+      },
+      "routes": 0,
+      "languages": {
+        "dart": 27
+      },
+      "mode": "full",
+      "duration_ms": 72,
+      "timings_ms": {
+        "delta_check": 0,
+        "ensure_repo": 2,
+        "go_types": 0,
+        "lexical": 26,
+        "parse": 27,
+        "persist": 15,
+        "resolve_head": 0,
+        "routes": 0,
+        "sort": 0,
+        "walk": 0
+      }
+    },
+    "reindex": {
+      "repo_id": "456e43f0-3dbd-457c-9a63-be8bb3c86f8c",
+      "repo_full_name": "lib",
+      "snapshot_id": "dc42dc20-fe37-4605-ae25-1e6d5908637f",
+      "commit_sha": "5d94ef52582867e077bf41c3fa20fb8b1d1d834e",
+      "indexed_files": 27,
+      "symbols": 184,
+      "edges": 565,
+      "routes": 0,
+      "languages": {
+        "dart": 27
+      },
+      "mode": "noop",
+      "duration_ms": 0,
+      "timings_ms": {
+        "delta_check": 0,
+        "resolve_head": 0
+      }
+    },
+    "symbol_breakdown": [
+      {
+        "language": "dart",
+        "kind": "constructor",
+        "count": 30
+      },
+      {
+        "language": "dart",
+        "kind": "document",
+        "count": 4
+      },
+      {
+        "language": "dart",
+        "kind": "function",
+        "count": 89
+      },
+      {
+        "language": "dart",
+        "kind": "getter",
+        "count": 20
+      },
+      {
+        "language": "dart",
+        "kind": "setter",
+        "count": 11
+      },
+      {
+        "language": "dart",
+        "kind": "type",
+        "count": 28
+      },
+      {
+        "language": "dart",
+        "kind": "typedef",
+        "count": 2
+      }
+    ],
+    "edge_breakdown": [
+      {
+        "kind": "calls",
+        "count": 427
+      },
+      {
+        "kind": "imports",
+        "count": 138
+      }
+    ],
+    "dart_definition_symbols": 180
+  },
+  "graphify": {
+    "status": "ok",
+    "ok": true,
+    "seconds": 0.429,
+    "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "stdout_head": [
+      "Re-extracting code files in . (no LLM needed)...",
+      "[graphify watch] Rebuilt: 314 nodes, 424 edges, 16 communities",
+      "[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out",
+      "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
+      "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
+    ],
+    "stderr_head": [],
+    "metrics": {
+      "nodes": 314,
+      "links": 424,
+      "calls": 0
+    }
+  },
+  "native_baseline": {
+    "tool": "tree-sitter-dart",
+    "status": "ok",
+    "ok": true,
+    "seconds": 0.081,
+    "command": "/tmp/atlas-live-dart-http/tree-sitter-dart-venv/bin/python -c <tree-sitter-dart definition counter> /tmp/atlas-live-dart-http/repo/pkgs/http/lib",
+    "metrics": {
+      "files": 27,
+      "parsed_files": 27,
+      "parse_errors": 0,
+      "definition_counts": {
+        "type": 28,
+        "function": 89,
+        "constructor": 30,
+        "getter": 20,
+        "setter": 11,
+        "typedef": 2
+      },
+      "definitions": 180,
+      "tree_sitter_version": "0.25.2",
+      "tree_sitter_dart_version": "0.1.0",
+      "parse_error_samples": []
+    }
+  },
+  "richer_native_baselines": {
+    "dart": {
+      "status": "missing",
+      "ok": false,
+      "note": "dart SDK not installed; tree-sitter-dart parser used as the isolated definition baseline"
+    },
+    "flutter": {
+      "status": "missing",
+      "ok": false,
+      "note": "flutter not installed"
+    },
+    "dart_language_server": {
+      "status": "missing",
+      "ok": false,
+      "note": "dart_language_server not installed"
+    }
+  },
+  "coverage": {
+    "atlas_vs_tree_sitter_dart_definition_ratio": 1.0,
+    "atlas_dart_definition_symbols": 180,
+    "native_definitions": 180
+  },
+  "optimization": {
+    "cycles_run": 2,
+    "stop_reason": "Dart live benchmark met the current 5x latency/token thresholds and matched the tree-sitter-dart definition coverage proxy after replacing generic regex parsing with a Dart-specific signature scanner.",
+    "cycle_notes": [
+      "cycle 1: dart-lang/http probe showed the generic fallback over-indexed constructor calls such as Duration and missed real generic-return methods such as `Future<StreamedResponse> send(...)`.",
+      "cycle 2: after adding a Dart-specific parser, Atlas/tree-sitter-dart definition coverage matched on the live package slice and exact-symbol query rows exceeded 5x for latency and token output vs graphify."
+    ]
+  },
+  "query_warmup": {
+    "symbol": "Client",
+    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-dart-http/atlas.db --format plain --repo lib explain Client",
+    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Client",
+    "atlas_returncode": 0,
+    "graphify_returncode": 0,
+    "note": "Untimed warm-up for both tools before measured query latency rows."
+  },
+  "queries": [
+    {
+      "symbol": "Client",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-dart-http/atlas.db --format plain --repo lib explain Client",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Client",
+      "atlas_tokens": 7,
+      "graphify_tokens": 42,
+      "atlas_ms": 12.483,
+      "graphify_ms": 81.204,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "Client t@client:20 df2 c6 d1"
+      ],
+      "graphify_stdout_head": [
+        "Node: client",
+        "  ID:        http_client",
+        "  Source:    http.dart None",
+        "  Type:      code",
+        "  Community: 8",
+        "  Degree:    1",
+        "",
+        "Connections (1):"
+      ]
+    },
+    {
+      "symbol": "BaseClient",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-dart-http/atlas.db --format plain --repo lib explain BaseClient",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain BaseClient",
+      "atlas_tokens": 7,
+      "graphify_tokens": 101,
+      "atlas_ms": 13.019,
+      "graphify_ms": 90.902,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "BaseClient t@base_client:15"
+      ],
+      "graphify_stdout_head": [
+        "Node: BaseClient",
+        "  ID:        src_base_client_baseclient",
+        "  Source:    src/base_client.dart None",
+        "  Type:      code",
+        "  Community: 9",
+        "  Degree:    6",
+        "",
+        "Connections (6):"
+      ]
+    },
+    {
+      "symbol": "Request",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-dart-http/atlas.db --format plain --repo lib explain Request",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Request",
+      "atlas_tokens": 7,
+      "graphify_tokens": 51,
+      "atlas_ms": 12.36,
+      "graphify_ms": 79.273,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "Request t@request:14 df2 c3"
+      ],
+      "graphify_stdout_head": [
+        "Node: request",
+        "  ID:        src_base_response_request",
+        "  Source:    src/base_response.dart None",
+        "  Type:      code",
+        "  Community: 3",
+        "  Degree:    1",
+        "",
+        "Connections (1):"
+      ]
+    },
+    {
+      "symbol": "Response",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-dart-http/atlas.db --format plain --repo lib explain Response",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Response",
+      "atlas_tokens": 8,
+      "graphify_tokens": 59,
+      "atlas_ms": 12.034,
+      "graphify_ms": 76.472,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "Response t@response:14 df2 c1 d1"
+      ],
+      "graphify_stdout_head": [
+        "Node: Response",
+        "  ID:        src_response_response",
+        "  Source:    src/response.dart None",
+        "  Type:      code",
+        "  Community: 3",
+        "  Degree:    2",
+        "",
+        "Connections (2):"
+      ]
+    },
+    {
+      "symbol": "send",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-dart-http/atlas.db --format plain --repo lib explain send",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain send",
+      "atlas_tokens": 7,
+      "graphify_tokens": 42,
+      "atlas_ms": 12.848,
+      "graphify_ms": 76.377,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "send f@retry:113 df7 c4 d18"
+      ],
+      "graphify_stdout_head": [
+        "Node: send",
+        "  ID:        retry_send",
+        "  Source:    retry.dart None",
+        "  Type:      code",
+        "  Community: 9",
+        "  Degree:    1",
+        "",
+        "Connections (1):"
+      ]
+    },
+    {
+      "symbol": "RetryClient",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-dart-http/atlas.db --format plain --repo lib explain RetryClient",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain RetryClient",
+      "atlas_tokens": 6,
+      "graphify_tokens": 55,
+      "atlas_ms": 13.781,
+      "graphify_ms": 90.288,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "RetryClient t@retry:11 df2"
+      ],
+      "graphify_stdout_head": [
+        "Node: RetryClient",
+        "  ID:        retry_retryclient",
+        "  Source:    retry.dart None",
+        "  Type:      code",
+        "  Community: 9",
+        "  Degree:    2",
+        "",
+        "Connections (2):"
+      ]
+    }
+  ]
+}

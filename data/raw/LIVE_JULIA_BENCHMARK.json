@@ -1,0 +1,352 @@
+{
+  "language": "julia",
+  "repo": "https://github.com/JuliaIO/JSON.jl",
+  "commit": "e5ef310dece16746843753e4c3b44e868b917b64",
+  "graphify_detector_only": "",
+  "commands": {
+    "clone": "git clone --depth 1 https://github.com/JuliaIO/JSON.jl /tmp/atlas-live-julia-json/repo",
+    "sparse_checkout": "",
+    "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-julia-json/atlas.db --json index /tmp/atlas-live-julia-json/repo/src",
+    "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-julia-json/atlas.db --json index /tmp/atlas-live-julia-json/repo/src",
+    "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "native_baseline": "/tmp/atlas-live-julia-json/tree-sitter-julia-venv/bin/python -c <tree-sitter-julia definition counter> /tmp/atlas-live-julia-json/repo/src",
+    "query_symbols": [
+      "JSON",
+      "JSONText",
+      "Object",
+      "parse",
+      "json",
+      "LazyValue"
+    ],
+    "target_path": "/tmp/atlas-live-julia-json/repo/src"
+  },
+  "atlas": {
+    "cold_wall_seconds": 0.146,
+    "reindex_wall_seconds": 0.024,
+    "index": {
+      "repo_id": "db5fb19b-b77f-467f-80fd-4f7a88255e0c",
+      "repo_full_name": "src",
+      "snapshot_id": "fcf5a61f-e3b2-4c9e-aecd-d19fdc3c02ae",
+      "commit_sha": "e5ef310dece16746843753e4c3b44e868b917b64",
+      "indexed_files": 6,
+      "symbols": 310,
+      "edges": 1047,
+      "edge_kinds": {
+        "calls": 1039,
+        "imports": 8
+      },
+      "routes": 0,
+      "languages": {
+        "julia": 6
+      },
+      "mode": "full",
+      "duration_ms": 102,
+      "timings_ms": {
+        "delta_check": 0,
+        "ensure_repo": 2,
+        "go_types": 0,
+        "lexical": 47,
+        "parse": 35,
+        "persist": 16,
+        "resolve_head": 0,
+        "routes": 0,
+        "sort": 0,
+        "walk": 0
+      }
+    },
+    "reindex": {
+      "repo_id": "db5fb19b-b77f-467f-80fd-4f7a88255e0c",
+      "repo_full_name": "src",
+      "snapshot_id": "fcf5a61f-e3b2-4c9e-aecd-d19fdc3c02ae",
+      "commit_sha": "e5ef310dece16746843753e4c3b44e868b917b64",
+      "indexed_files": 6,
+      "symbols": 310,
+      "edges": 1047,
+      "routes": 0,
+      "languages": {
+        "julia": 6
+      },
+      "mode": "noop",
+      "duration_ms": 0,
+      "timings_ms": {
+        "delta_check": 0,
+        "resolve_head": 0
+      }
+    },
+    "symbol_breakdown": [
+      {
+        "language": "julia",
+        "kind": "constant",
+        "count": 26
+      },
+      {
+        "language": "julia",
+        "kind": "function",
+        "count": 255
+      },
+      {
+        "language": "julia",
+        "kind": "macro",
+        "count": 6
+      },
+      {
+        "language": "julia",
+        "kind": "module",
+        "count": 2
+      },
+      {
+        "language": "julia",
+        "kind": "type",
+        "count": 21
+      }
+    ],
+    "edge_breakdown": [
+      {
+        "kind": "calls",
+        "count": 1039
+      },
+      {
+        "kind": "imports",
+        "count": 8
+      }
+    ],
+    "julia_definition_symbols": 310
+  },
+  "graphify": {
+    "status": "ok",
+    "ok": true,
+    "seconds": 0.19,
+    "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "stdout_head": [
+      "Re-extracting code files in . (no LLM needed)...",
+      "[graphify watch] Rebuilt: 114 nodes, 179 edges, 11 communities",
+      "[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out",
+      "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
+      "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
+    ],
+    "stderr_head": [],
+    "metrics": {
+      "nodes": 114,
+      "links": 179,
+      "calls": 70
+    }
+  },
+  "native_baseline": {
+    "tool": "tree-sitter-julia",
+    "status": "partial",
+    "ok": false,
+    "seconds": 0.098,
+    "command": "/tmp/atlas-live-julia-json/tree-sitter-julia-venv/bin/python -c <tree-sitter-julia definition counter> /tmp/atlas-live-julia-json/repo/src",
+    "metrics": {
+      "files": 6,
+      "parsed_files": 5,
+      "parse_errors": 1,
+      "definition_counts": {
+        "module": 2,
+        "type": 21,
+        "function": 255,
+        "macro": 6,
+        "constant": 26
+      },
+      "definitions": 310,
+      "tree_sitter_version": "0.25.2",
+      "tree_sitter_julia_version": "0.23.1",
+      "parse_error_samples": [
+        {
+          "path": "write.jl",
+          "error": "tree-sitter parse error"
+        }
+      ]
+    }
+  },
+  "richer_native_baselines": {
+    "julia": {
+      "status": "missing",
+      "ok": false,
+      "note": "julia CLI not installed; tree-sitter-julia parser used as the isolated definition baseline"
+    },
+    "LanguageServer.jl": {
+      "status": "missing_adapter",
+      "ok": false,
+      "note": "LanguageServer.jl is not wired into this harness; tree-sitter-julia source parse coverage is used for this benchmark"
+    }
+  },
+  "coverage": {
+    "atlas_vs_tree_sitter_julia_definition_ratio": 1.0,
+    "atlas_julia_definition_symbols": 310,
+    "native_definitions": 310
+  },
+  "optimization": {
+    "cycles_run": 2,
+    "stop_reason": "Julia live benchmark met the current 5x latency/token thresholds and matched the tree-sitter-julia definition coverage proxy after masking docstrings/strings and supporting macro-prefixed structs.",
+    "cycle_notes": [
+      "cycle 1: JuliaIO/JSON.jl probe showed generic Julia regex parsing missed macros/constants and counted docstring examples as real definitions.",
+      "cycle 2: after adding a Julia-specific parser with non-code masking, method-assignment detection, and macro-prefixed struct support, Atlas matched the tree-sitter-julia source definition proxy."
+    ]
+  },
+  "query_warmup": {
+    "symbol": "JSON",
+    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-julia-json/atlas.db --format plain --repo src explain JSON",
+    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain JSON",
+    "atlas_returncode": 0,
+    "graphify_returncode": 0,
+    "note": "Untimed warm-up for both tools before measured query latency rows."
+  },
+  "queries": [
+    {
+      "symbol": "JSON",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-julia-json/atlas.db --format plain --repo src explain JSON",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain JSON",
+      "atlas_tokens": 3,
+      "graphify_tokens": 38,
+      "atlas_ms": 11.642,
+      "graphify_ms": 74.514,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "JSON m@JSON:1"
+      ],
+      "graphify_stdout_head": [
+        "Node: JSON.jl",
+        "  ID:        json",
+        "  Source:    JSON.jl L1",
+        "  Type:      code",
+        "  Community: 3",
+        "  Degree:    1",
+        "",
+        "Connections (1):"
+      ]
+    },
+    {
+      "symbol": "JSONText",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-julia-json/atlas.db --format plain --repo src explain JSONText",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain JSONText",
+      "atlas_tokens": 6,
+      "graphify_tokens": 51,
+      "atlas_ms": 12.032,
+      "graphify_ms": 73.121,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "JSONText t@JSON:84 c3 d1"
+      ],
+      "graphify_stdout_head": [
+        "Node: JSONText",
+        "  ID:        json_jsontext",
+        "  Source:    JSON.jl L84",
+        "  Type:      code",
+        "  Community: 3",
+        "  Degree:    2",
+        "",
+        "Connections (2):"
+      ]
+    },
+    {
+      "symbol": "Object",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-julia-json/atlas.db --format plain --repo src explain Object",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Object",
+      "atlas_tokens": 7,
+      "graphify_tokens": 75,
+      "atlas_ms": 11.988,
+      "graphify_ms": 72.949,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "Object t@object:17 df11 c1 d1"
+      ],
+      "graphify_stdout_head": [
+        "Node: object.jl",
+        "  ID:        object",
+        "  Source:    object.jl L1",
+        "  Type:      code",
+        "  Community: 8",
+        "  Degree:    5",
+        "",
+        "Connections (5):"
+      ]
+    },
+    {
+      "symbol": "parse",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-julia-json/atlas.db --format plain --repo src explain parse",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain parse",
+      "atlas_tokens": 7,
+      "graphify_tokens": 167,
+      "atlas_ms": 11.946,
+      "graphify_ms": 73.814,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "parse f@parse:148 df4 c7 d3"
+      ],
+      "graphify_stdout_head": [
+        "Node: parse.jl",
+        "  ID:        parse",
+        "  Source:    parse.jl L1",
+        "  Type:      code",
+        "  Community: 2",
+        "  Degree:    13",
+        "",
+        "Connections (13):"
+      ]
+    },
+    {
+      "symbol": "json",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-julia-json/atlas.db --format plain --repo src explain json",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain json",
+      "atlas_tokens": 6,
+      "graphify_tokens": 38,
+      "atlas_ms": 12.487,
+      "graphify_ms": 72.815,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "json f@write:430 df4 c3 d6"
+      ],
+      "graphify_stdout_head": [
+        "Node: JSON.jl",
+        "  ID:        json",
+        "  Source:    JSON.jl L1",
+        "  Type:      code",
+        "  Community: 3",
+        "  Degree:    1",
+        "",
+        "Connections (1):"
+      ]
+    },
+    {
+      "symbol": "LazyValue",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-julia-json/atlas.db --format plain --repo src explain LazyValue",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain LazyValue",
+      "atlas_tokens": 6,
+      "graphify_tokens": 9,
+      "atlas_ms": 11.453,
+      "graphify_ms": 72.092,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": true,
+      "atlas_stdout_head": [
+        "LazyValue t@lazy:134 c4"
+      ],
+      "graphify_stdout_head": [
+        "No node matching 'LazyValue' found."
+      ]
+    }
+  ]
+}

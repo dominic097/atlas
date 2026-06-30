@@ -303,10 +303,10 @@ function HeroReadout({ data }) {
   // (Distinct from the 39/39 comparable deterministic-row figure, which counts
   // query rows, not languages — they are reported as separate facts, never one
   // mixed denominator.)
-  const parityLangs = data.liveSmokes.filter(
+  const parityLangs = data.liveBenchmarks.filter(
     (r) => r.coverage && typeof r.coverage.ratio === "number" && r.coverage.ratio >= 1.0
   ).length;
-  const liveCovered = data.liveSmokes.filter(
+  const liveCovered = data.liveBenchmarks.filter(
     (r) => r.coverage && typeof r.coverage.ratio === "number"
   ).length;
   // comparable deterministic-row universe — the data key was renamed off the
@@ -729,7 +729,7 @@ const TOOL_MANIFEST = [
 const DETECTOR_LANGS = new Set(["ejs", "ets", "r"]);
 
 function buildParityModel(data) {
-  const rows = data.liveSmokes
+  const rows = data.liveBenchmarks
     .filter((r) => r.coverage && typeof r.coverage.ratio === "number")
     .map((r) => ({
       lang: r.language,

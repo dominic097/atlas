@@ -1,0 +1,508 @@
+{
+  "language": "ejs",
+  "repo": "https://github.com/expressjs/express",
+  "commit": "18e5985b8a9d5e8423db0a9121f22bdaecd5b120",
+  "graphify_detector_only": ".ejs",
+  "commands": {
+    "clone": "git clone --depth 1 https://github.com/expressjs/express /tmp/atlas-live-ejs-express/repo",
+    "sparse_checkout": "",
+    "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-ejs-express/atlas.db --json index /tmp/atlas-live-ejs-express/repo/examples",
+    "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-ejs-express/atlas.db --json index /tmp/atlas-live-ejs-express/repo/examples",
+    "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "native_baseline": "python3 <ejs template counter> /tmp/atlas-live-ejs-express/repo/examples",
+    "query_symbols": [
+      "login",
+      "index",
+      "header",
+      "footer",
+      "../header",
+      "../footer",
+      "error_header"
+    ],
+    "target_path": "/tmp/atlas-live-ejs-express/repo/examples"
+  },
+  "atlas": {
+    "cold_wall_seconds": 0.097,
+    "reindex_wall_seconds": 0.021,
+    "index": {
+      "repo_id": "d256fecf-f324-4cbe-ad37-4b2bb5fc10a7",
+      "repo_full_name": "examples",
+      "snapshot_id": "8a08683c-256e-4943-ae20-9c0afed0ec70",
+      "commit_sha": "18e5985b8a9d5e8423db0a9121f22bdaecd5b120",
+      "indexed_files": 77,
+      "symbols": 251,
+      "edges": 767,
+      "edge_kinds": {
+        "calls": 669,
+        "imports": 98
+      },
+      "routes": 60,
+      "languages": {
+        "css": 4,
+        "ejs": 20,
+        "html": 4,
+        "javascript": 43,
+        "markdown": 2,
+        "text": 4
+      },
+      "mode": "full",
+      "duration_ms": 59,
+      "timings_ms": {
+        "delta_check": 0,
+        "ensure_repo": 1,
+        "go_types": 0,
+        "lexical": 16,
+        "parse": 16,
+        "persist": 19,
+        "resolve_head": 0,
+        "routes": 0,
+        "sort": 0,
+        "walk": 5
+      }
+    },
+    "reindex": {
+      "repo_id": "d256fecf-f324-4cbe-ad37-4b2bb5fc10a7",
+      "repo_full_name": "examples",
+      "snapshot_id": "8a08683c-256e-4943-ae20-9c0afed0ec70",
+      "commit_sha": "18e5985b8a9d5e8423db0a9121f22bdaecd5b120",
+      "indexed_files": 77,
+      "symbols": 251,
+      "edges": 767,
+      "routes": 60,
+      "languages": {
+        "css": 4,
+        "ejs": 20,
+        "html": 4,
+        "javascript": 43,
+        "markdown": 2,
+        "text": 4
+      },
+      "mode": "noop",
+      "duration_ms": 4,
+      "timings_ms": {
+        "delta_check": 4,
+        "resolve_head": 0
+      }
+    },
+    "symbol_breakdown": [
+      {
+        "language": "ejs",
+        "kind": "include",
+        "count": 16
+      },
+      {
+        "language": "ejs",
+        "kind": "template",
+        "count": 20
+      },
+      {
+        "language": "javascript",
+        "kind": "function",
+        "count": 17
+      },
+      {
+        "language": "javascript",
+        "kind": "variable",
+        "count": 192
+      },
+      {
+        "language": "markdown",
+        "kind": "section",
+        "count": 2
+      },
+      {
+        "language": "text",
+        "kind": "document",
+        "count": 4
+      }
+    ],
+    "edge_breakdown": [
+      {
+        "kind": "calls",
+        "count": 669
+      },
+      {
+        "kind": "imports",
+        "count": 98
+      }
+    ],
+    "ejs_definition_symbols": 36
+  },
+  "graphify": {
+    "status": "ok",
+    "ok": true,
+    "seconds": 0.317,
+    "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "stdout_head": [
+      "Re-extracting code files in . (no LLM needed)...",
+      "[graphify watch] Rebuilt: 86 nodes, 52 edges, 36 communities",
+      "[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out",
+      "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
+      "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
+    ],
+    "stderr_head": [],
+    "metrics": {
+      "nodes": 86,
+      "links": 52,
+      "calls": 1
+    }
+  },
+  "native_baseline": {
+    "tool": "ejs-template-counter",
+    "status": "ok",
+    "ok": true,
+    "seconds": 0.001,
+    "command": "python3 <ejs template counter> /tmp/atlas-live-ejs-express/repo/examples",
+    "metrics": {
+      "files": 20,
+      "parsed_files": 20,
+      "parse_errors": 0,
+      "definition_counts": {
+        "template": 20,
+        "include": 16,
+        "function": 0,
+        "variable": 0
+      },
+      "definitions": 36,
+      "sample_definitions": [
+        {
+          "kind": "template",
+          "name": "foot",
+          "path": "auth/views/foot.ejs"
+        },
+        {
+          "kind": "template",
+          "name": "head",
+          "path": "auth/views/head.ejs"
+        },
+        {
+          "kind": "template",
+          "name": "login",
+          "path": "auth/views/login.ejs"
+        },
+        {
+          "kind": "include",
+          "name": "head",
+          "path": "auth/views/login.ejs"
+        },
+        {
+          "kind": "include",
+          "name": "foot",
+          "path": "auth/views/login.ejs"
+        },
+        {
+          "kind": "template",
+          "name": "404",
+          "path": "error-pages/views/404.ejs"
+        },
+        {
+          "kind": "include",
+          "name": "error_header",
+          "path": "error-pages/views/404.ejs"
+        },
+        {
+          "kind": "include",
+          "name": "footer",
+          "path": "error-pages/views/404.ejs"
+        },
+        {
+          "kind": "template",
+          "name": "500",
+          "path": "error-pages/views/500.ejs"
+        },
+        {
+          "kind": "include",
+          "name": "error_header",
+          "path": "error-pages/views/500.ejs"
+        },
+        {
+          "kind": "include",
+          "name": "footer",
+          "path": "error-pages/views/500.ejs"
+        },
+        {
+          "kind": "template",
+          "name": "error_header",
+          "path": "error-pages/views/error_header.ejs"
+        },
+        {
+          "kind": "template",
+          "name": "footer",
+          "path": "error-pages/views/footer.ejs"
+        },
+        {
+          "kind": "template",
+          "name": "index",
+          "path": "error-pages/views/index.ejs"
+        },
+        {
+          "kind": "template",
+          "name": "edit",
+          "path": "mvc/controllers/pet/views/edit.ejs"
+        },
+        {
+          "kind": "template",
+          "name": "show",
+          "path": "mvc/controllers/pet/views/show.ejs"
+        },
+        {
+          "kind": "template",
+          "name": "404",
+          "path": "mvc/views/404.ejs"
+        },
+        {
+          "kind": "template",
+          "name": "5xx",
+          "path": "mvc/views/5xx.ejs"
+        },
+        {
+          "kind": "template",
+          "name": "footer",
+          "path": "route-separation/views/footer.ejs"
+        },
+        {
+          "kind": "template",
+          "name": "header",
+          "path": "route-separation/views/header.ejs"
+        },
+        {
+          "kind": "template",
+          "name": "index",
+          "path": "route-separation/views/index.ejs"
+        },
+        {
+          "kind": "include",
+          "name": "header",
+          "path": "route-separation/views/index.ejs"
+        },
+        {
+          "kind": "include",
+          "name": "footer",
+          "path": "route-separation/views/index.ejs"
+        },
+        {
+          "kind": "template",
+          "name": "posts.index",
+          "path": "route-separation/views/posts/index.ejs"
+        },
+        {
+          "kind": "include",
+          "name": "../header",
+          "path": "route-separation/views/posts/index.ejs"
+        },
+        {
+          "kind": "include",
+          "name": "../footer",
+          "path": "route-separation/views/posts/index.ejs"
+        },
+        {
+          "kind": "template",
+          "name": "users.edit",
+          "path": "route-separation/views/users/edit.ejs"
+        },
+        {
+          "kind": "include",
+          "name": "../header",
+          "path": "route-separation/views/users/edit.ejs"
+        },
+        {
+          "kind": "include",
+          "name": "../footer",
+          "path": "route-separation/views/users/edit.ejs"
+        },
+        {
+          "kind": "template",
+          "name": "users.index",
+          "path": "route-separation/views/users/index.ejs"
+        }
+      ]
+    }
+  },
+  "richer_native_baselines": {
+    "ejs-template-counter": {
+      "status": "ok",
+      "ok": true,
+      "note": "benchmark-owned EJS template/include counter used as the scriptable parser coverage proxy"
+    },
+    "ejs": {
+      "status": "missing",
+      "ok": false,
+      "note": "EJS CLI not installed; source-only template parser proxy used for this benchmark"
+    },
+    "ejs-language-server": {
+      "status": "missing",
+      "ok": false,
+      "note": "EJS language server is not installed; source counter coverage proxy used for this graphify detector-only benchmark"
+    }
+  },
+  "coverage": {
+    "atlas_vs_ejs_template_counter_definition_ratio": 1.0,
+    "atlas_ejs_definition_symbols": 36,
+    "native_definitions": 36
+  },
+  "optimization": {
+    "cycles_run": 2,
+    "stop_reason": "EJS live benchmark covers a graphify detector-only extension by adding Atlas template-file, include, function, and variable symbols; graphify has no deterministic EJS extractor in this installed runtime.",
+    "cycle_notes": [
+      "cycle 1: expressjs/express examples probe showed Atlas could map .ejs files but only extracted include/function/variable tags, missing file-level template identity.",
+      "cycle 2: after adding an EJS-specific parser, Atlas records template identity plus include edges against the live Express EJS slice; graphify query rows remain detector-only caveats."
+    ]
+  },
+  "query_warmup": {
+    "symbol": "login",
+    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ejs-express/atlas.db --format plain --repo examples explain login",
+    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain login",
+    "atlas_returncode": 0,
+    "graphify_returncode": 0,
+    "note": "Untimed warm-up for both tools before measured query latency rows."
+  },
+  "queries": [
+    {
+      "symbol": "login",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ejs-express/atlas.db --format plain --repo examples explain login",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain login",
+      "atlas_tokens": 5,
+      "graphify_tokens": 8,
+      "atlas_ms": 12.05,
+      "graphify_ms": 76.097,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": true,
+      "atlas_stdout_head": [
+        "login t@login.ejs:1"
+      ],
+      "graphify_stdout_head": [
+        "No node matching 'login' found."
+      ]
+    },
+    {
+      "symbol": "index",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ejs-express/atlas.db --format plain --repo examples explain index",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain index",
+      "atlas_tokens": 6,
+      "graphify_tokens": 48,
+      "atlas_ms": 12.325,
+      "graphify_ms": 76.349,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "index t@index.ejs:1 df3 r1"
+      ],
+      "graphify_stdout_head": [
+        "Node: index()",
+        "  ID:        main_index_index",
+        "  Source:    mvc/controllers/main/index.js L3",
+        "  Type:      code",
+        "  Community: 9",
+        "  Degree:    1",
+        "",
+        "Connections (1):"
+      ]
+    },
+    {
+      "symbol": "header",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ejs-express/atlas.db --format plain --repo examples explain header",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain header",
+      "atlas_tokens": 6,
+      "graphify_tokens": 8,
+      "atlas_ms": 12.215,
+      "graphify_ms": 75.49,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": true,
+      "atlas_stdout_head": [
+        "header t@header.ejs:1 df2"
+      ],
+      "graphify_stdout_head": [
+        "No node matching 'header' found."
+      ]
+    },
+    {
+      "symbol": "footer",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ejs-express/atlas.db --format plain --repo examples explain footer",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain footer",
+      "atlas_tokens": 5,
+      "graphify_tokens": 8,
+      "atlas_ms": 12.131,
+      "graphify_ms": 75.008,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": true,
+      "atlas_stdout_head": [
+        "footer i@404.ejs:3 df5"
+      ],
+      "graphify_stdout_head": [
+        "No node matching 'footer' found."
+      ]
+    },
+    {
+      "symbol": "../header",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ejs-express/atlas.db --format plain --repo examples explain ../header",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ../header",
+      "atlas_tokens": 7,
+      "graphify_tokens": 9,
+      "atlas_ms": 11.775,
+      "graphify_ms": 75.232,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": true,
+      "atlas_stdout_head": [
+        "../header i@index.ejs:1 df4"
+      ],
+      "graphify_stdout_head": [
+        "No node matching '../header' found."
+      ]
+    },
+    {
+      "symbol": "../footer",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ejs-express/atlas.db --format plain --repo examples explain ../footer",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ../footer",
+      "atlas_tokens": 7,
+      "graphify_tokens": 9,
+      "atlas_ms": 12.129,
+      "graphify_ms": 74.627,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": true,
+      "atlas_stdout_head": [
+        "../footer i@index.ejs:12 df4"
+      ],
+      "graphify_stdout_head": [
+        "No node matching '../footer' found."
+      ]
+    },
+    {
+      "symbol": "error_header",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-ejs-express/atlas.db --format plain --repo examples explain error_header",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain error_header",
+      "atlas_tokens": 7,
+      "graphify_tokens": 9,
+      "atlas_ms": 11.802,
+      "graphify_ms": 77.753,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": true,
+      "atlas_stdout_head": [
+        "error_header i@404.ejs:1 df3"
+      ],
+      "graphify_stdout_head": [
+        "No node matching 'error_header' found."
+      ]
+    }
+  ]
+}

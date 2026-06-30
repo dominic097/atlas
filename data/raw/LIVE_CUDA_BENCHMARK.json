@@ -1,0 +1,284 @@
+{
+  "language": "cuda",
+  "repo": "https://github.com/NVIDIA/cuda-samples",
+  "commit": "b7c5481c556c3fe98db060207ecaa41a4b9a9abc",
+  "graphify_detector_only": "",
+  "commands": {
+    "clone": "git clone --depth 1 --filter=blob:none --sparse https://github.com/NVIDIA/cuda-samples /tmp/atlas-live-cuda-samples/repo",
+    "sparse_checkout": "git -C /tmp/atlas-live-cuda-samples/repo sparse-checkout set cpp/0_Introduction/simpleAtomicIntrinsics",
+    "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-cuda-samples/atlas.db --json index /tmp/atlas-live-cuda-samples/repo/cpp/0_Introduction/simpleAtomicIntrinsics",
+    "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-cuda-samples/atlas.db --json index /tmp/atlas-live-cuda-samples/repo/cpp/0_Introduction/simpleAtomicIntrinsics",
+    "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "native_baseline": "python3 <cuda source counter> /tmp/atlas-live-cuda-samples/repo/cpp/0_Introduction/simpleAtomicIntrinsics",
+    "query_symbols": [
+      "testKernel",
+      "runTest",
+      "main"
+    ],
+    "target_path": "/tmp/atlas-live-cuda-samples/repo/cpp/0_Introduction/simpleAtomicIntrinsics"
+  },
+  "atlas": {
+    "cold_wall_seconds": 0.073,
+    "reindex_wall_seconds": 0.023,
+    "index": {
+      "repo_id": "d6b8e736-16f5-4250-9df0-f9770bab93ee",
+      "repo_full_name": "simpleAtomicIntrinsics",
+      "snapshot_id": "d9da1e4c-6fab-4959-9450-c2258d502fd1",
+      "commit_sha": "b7c5481c556c3fe98db060207ecaa41a4b9a9abc",
+      "indexed_files": 7,
+      "symbols": 26,
+      "edges": 63,
+      "edge_kinds": {
+        "calls": 52,
+        "imports": 11
+      },
+      "routes": 0,
+      "languages": {
+        "cpp": 3,
+        "json": 2,
+        "markdown": 1,
+        "text": 1
+      },
+      "mode": "full",
+      "duration_ms": 38,
+      "timings_ms": {
+        "delta_check": 0,
+        "ensure_repo": 2,
+        "go_types": 0,
+        "lexical": 19,
+        "parse": 13,
+        "persist": 2,
+        "resolve_head": 0,
+        "routes": 0,
+        "sort": 0,
+        "walk": 0
+      }
+    },
+    "reindex": {
+      "repo_id": "d6b8e736-16f5-4250-9df0-f9770bab93ee",
+      "repo_full_name": "simpleAtomicIntrinsics",
+      "snapshot_id": "d9da1e4c-6fab-4959-9450-c2258d502fd1",
+      "commit_sha": "b7c5481c556c3fe98db060207ecaa41a4b9a9abc",
+      "indexed_files": 7,
+      "symbols": 26,
+      "edges": 63,
+      "routes": 0,
+      "languages": {
+        "cpp": 3,
+        "json": 2,
+        "markdown": 1,
+        "text": 1
+      },
+      "mode": "noop",
+      "duration_ms": 0,
+      "timings_ms": {
+        "delta_check": 0,
+        "resolve_head": 0
+      }
+    },
+    "symbol_breakdown": [
+      {
+        "language": "cpp",
+        "kind": "function",
+        "count": 4
+      },
+      {
+        "language": "json",
+        "kind": "key",
+        "count": 11
+      },
+      {
+        "language": "markdown",
+        "kind": "section",
+        "count": 10
+      },
+      {
+        "language": "text",
+        "kind": "document",
+        "count": 1
+      }
+    ],
+    "edge_breakdown": [
+      {
+        "kind": "calls",
+        "count": 52
+      },
+      {
+        "kind": "imports",
+        "count": 11
+      }
+    ],
+    "cuda_definition_symbols": 3
+  },
+  "graphify": {
+    "status": "ok",
+    "ok": true,
+    "seconds": 0.129,
+    "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "stdout_head": [
+      "Re-extracting code files in . (no LLM needed)...",
+      "[graphify watch] Rebuilt: 19 nodes, 17 edges, 5 communities",
+      "[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out",
+      "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
+      "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
+    ],
+    "stderr_head": [],
+    "metrics": {
+      "nodes": 19,
+      "links": 17,
+      "calls": 1
+    }
+  },
+  "native_baseline": {
+    "tool": "cuda-source-counter",
+    "status": "ok",
+    "ok": true,
+    "seconds": 0.0,
+    "command": "python3 <cuda source counter> /tmp/atlas-live-cuda-samples/repo/cpp/0_Introduction/simpleAtomicIntrinsics",
+    "metrics": {
+      "files": 2,
+      "parsed_files": 2,
+      "parse_errors": 0,
+      "functions": 3,
+      "definitions": 3,
+      "sample_definitions": [
+        {
+          "kind": "function",
+          "name": "main",
+          "path": "simpleAtomicIntrinsics.cu"
+        },
+        {
+          "kind": "function",
+          "name": "runTest",
+          "path": "simpleAtomicIntrinsics.cu"
+        },
+        {
+          "kind": "function",
+          "name": "testKernel",
+          "path": "simpleAtomicIntrinsics_kernel.cuh"
+        }
+      ]
+    }
+  },
+  "richer_native_baselines": {
+    "cuda-source-counter": {
+      "status": "ok",
+      "ok": true,
+      "note": "benchmark-owned CUDA .cu/.cuh function counter used as the extension-dispatch coverage proxy"
+    },
+    "nvcc": {
+      "status": "missing",
+      "ok": false,
+      "note": "nvcc not installed; source-only parser proxy used for this benchmark"
+    },
+    "clangd": {
+      "status": "available",
+      "ok": true,
+      "note": "clangd is available, but this benchmark uses source-only CUDA extension coverage to avoid compile database coupling"
+    }
+  },
+  "coverage": {
+    "atlas_vs_cuda_source_counter_definition_ratio": 1.0,
+    "atlas_cuda_definition_symbols": 3,
+    "native_definitions": 3
+  },
+  "optimization": {
+    "cycles_run": 2,
+    "stop_reason": "CUDA live benchmark covers graphify's .cu/.cuh support inside the cpp/cuda family and improved token score after compacting CUDA source suffixes in terse plain locations while preserving full paths in JSON.",
+    "cycle_notes": [
+      "cycle 1: NVIDIA/cuda-samples simpleAtomicIntrinsics benchmark verified Atlas maps .cu/.cuh files to cpp symbols, resolves kernel/host functions, and records graphify/native query metrics on the same live files.",
+      "cycle 2: compacting `.cu`/`.cuh` suffixes in terse locations reduces exact-symbol output for CUDA host/kernel files without changing indexed symbols or JSON paths."
+    ]
+  },
+  "query_warmup": {
+    "symbol": "testKernel",
+    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-cuda-samples/atlas.db --format plain --repo simpleAtomicIntrinsics explain testKernel",
+    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain testKernel",
+    "atlas_returncode": 0,
+    "graphify_returncode": 0,
+    "note": "Untimed warm-up for both tools before measured query latency rows."
+  },
+  "queries": [
+    {
+      "symbol": "testKernel",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-cuda-samples/atlas.db --format plain --repo simpleAtomicIntrinsics explain testKernel",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain testKernel",
+      "atlas_tokens": 11,
+      "graphify_tokens": 73,
+      "atlas_ms": 12.634,
+      "graphify_ms": 78.659,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "testKernel f@simpleAtomicIntrinsics_kernel:38"
+      ],
+      "graphify_stdout_head": [
+        "Node: testKernel()",
+        "  ID:        simpleatomicintrinsics_kernel_testkernel",
+        "  Source:    simpleAtomicIntrinsics_kernel.cuh L38",
+        "  Type:      code",
+        "  Community: 1",
+        "  Degree:    2",
+        "",
+        "Connections (2):"
+      ]
+    },
+    {
+      "symbol": "runTest",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-cuda-samples/atlas.db --format plain --repo simpleAtomicIntrinsics explain runTest",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain runTest",
+      "atlas_tokens": 10,
+      "graphify_tokens": 64,
+      "atlas_ms": 13.256,
+      "graphify_ms": 76.893,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "runTest f@simpleAtomicIntrinsics:84 c1 d1"
+      ],
+      "graphify_stdout_head": [
+        "Node: runTest()",
+        "  ID:        simpleatomicintrinsics_runtest",
+        "  Source:    simpleAtomicIntrinsics.cu L84",
+        "  Type:      code",
+        "  Community: 2",
+        "  Degree:    2",
+        "",
+        "Connections (2):"
+      ]
+    },
+    {
+      "symbol": "main",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-cuda-samples/atlas.db --format plain --repo simpleAtomicIntrinsics explain main",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain main",
+      "atlas_tokens": 9,
+      "graphify_tokens": 63,
+      "atlas_ms": 12.683,
+      "graphify_ms": 74.508,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "main f@simpleAtomicIntrinsics:71 d1"
+      ],
+      "graphify_stdout_head": [
+        "Node: main()",
+        "  ID:        simpleatomicintrinsics_main",
+        "  Source:    simpleAtomicIntrinsics.cu L71",
+        "  Type:      code",
+        "  Community: 2",
+        "  Degree:    2",
+        "",
+        "Connections (2):"
+      ]
+    }
+  ]
+}

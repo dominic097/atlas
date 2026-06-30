@@ -1,21 +1,21 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-29T10:01:48.163Z",
+  "generatedAt": "2026-06-30T00:03:09.844Z",
   "sourceLabel": "Atlas benchmark JSON artifacts from bench/",
   "sourceArtifacts": [
     {
       "name": "MATRIX_REPORT.json",
       "source": "bench/MATRIX_REPORT.json",
       "path": "data/raw/MATRIX_REPORT.json",
-      "bytes": 28101,
-      "sha256": "a4ebed518b98667df83ff093879c50ad7232ab1fe418e5cd461df9f062948834"
+      "bytes": 41012,
+      "sha256": "9177a98c8ff8453607d3583cebc481db89d7dc9913b9643f9b29ae71aaf07cfa"
     },
     {
       "name": "SATURATION_REPORT.json",
       "source": "bench/SATURATION_REPORT.json",
       "path": "data/raw/SATURATION_REPORT.json",
-      "bytes": 13911,
-      "sha256": "4fa0bde7e729c90e9b49e13bf98aadd4791cf24f7e627105526dfab4d7fb949b"
+      "bytes": 13971,
+      "sha256": "3bf405b1f417971a97b1ac659cfdc5305d19c6ab767206c5eecab481b06388db"
     },
     {
       "name": "REPORT.json",
@@ -28,271 +28,271 @@
       "name": "MATRIX_TOOL_VERSIONS.json",
       "source": "bench/MATRIX_TOOL_VERSIONS.json",
       "path": "data/raw/MATRIX_TOOL_VERSIONS.json",
-      "bytes": 42124,
-      "sha256": "933c28593bedd6bbc35ce1d98f18a6393efd6b81d5cc92d27f93b7f20cad56f3"
+      "bytes": 42274,
+      "sha256": "f2a4228000ae4dcdd90d5a9634ceb30c6c4b48389077ea1a609f583903e6a7e6"
     },
     {
       "name": "GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "path": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
-      "bytes": 17401,
-      "sha256": "35f6e39bf214addb6cc837e7965dd719e0de791f2a4303b05da9d4ceb77241e5"
+      "bytes": 17588,
+      "sha256": "3199ba355b23492114d26531712dfce648fb4a37ffc3a83d6b97a8ab2cc750c2"
     },
     {
-      "name": "LIVE_APEX_SMOKE.json",
-      "source": "bench/LIVE_APEX_SMOKE.json",
-      "path": "data/raw/LIVE_APEX_SMOKE.json",
-      "bytes": 18651,
-      "sha256": "4dc79a93905c6086e4557b898f31ac2edd354091cec684b4b91e0a733213b0d5"
+      "name": "LIVE_APEX_BENCHMARK.json",
+      "source": "bench/LIVE_APEX_BENCHMARK.json",
+      "path": "data/raw/LIVE_APEX_BENCHMARK.json",
+      "bytes": 18663,
+      "sha256": "a423e4aea3607fd9840525f42969d859e511433d7216b4a22c542e5560f23804"
     },
     {
-      "name": "LIVE_ASTRO_SMOKE.json",
-      "source": "bench/LIVE_ASTRO_SMOKE.json",
-      "path": "data/raw/LIVE_ASTRO_SMOKE.json",
-      "bytes": 15712,
-      "sha256": "05aff14227a3dfda1a6bace042675f9a3333f3be4847d7519dbcc5cfbb7b4c48"
+      "name": "LIVE_ASTRO_BENCHMARK.json",
+      "source": "bench/LIVE_ASTRO_BENCHMARK.json",
+      "path": "data/raw/LIVE_ASTRO_BENCHMARK.json",
+      "bytes": 15720,
+      "sha256": "e6a5ed84b427bd7a6586683f06bfb39d42eb8f11f46fe4620438387bb047458f"
     },
     {
-      "name": "LIVE_BASH_SMOKE.json",
-      "source": "bench/LIVE_BASH_SMOKE.json",
-      "path": "data/raw/LIVE_BASH_SMOKE.json",
-      "bytes": 9760,
-      "sha256": "49bc3e10eeb05bcc413f261d65c12c1a065487973a9e9b58ad1bef04299ea929"
+      "name": "LIVE_BASH_BENCHMARK.json",
+      "source": "bench/LIVE_BASH_BENCHMARK.json",
+      "path": "data/raw/LIVE_BASH_BENCHMARK.json",
+      "bytes": 9768,
+      "sha256": "19d05b722a948ded3a035f8ff12fb101a47a812f0d8c06f3cf22b5d032e16c2f"
     },
     {
-      "name": "LIVE_BLADE_SMOKE.json",
-      "source": "bench/LIVE_BLADE_SMOKE.json",
-      "path": "data/raw/LIVE_BLADE_SMOKE.json",
-      "bytes": 17423,
-      "sha256": "b47b29f18ff14a0e022b1b49836aaa392ea31e650c8ce2991cabb83a888734da"
+      "name": "LIVE_BLADE_BENCHMARK.json",
+      "source": "bench/LIVE_BLADE_BENCHMARK.json",
+      "path": "data/raw/LIVE_BLADE_BENCHMARK.json",
+      "bytes": 17435,
+      "sha256": "a78504cabc93db6f3185d18751e037514101ac15d56cdd1c611a3b7cd9530058"
     },
     {
-      "name": "LIVE_BYOND_SMOKE.json",
-      "source": "bench/LIVE_BYOND_SMOKE.json",
-      "path": "data/raw/LIVE_BYOND_SMOKE.json",
-      "bytes": 16600,
-      "sha256": "95ed01b612b8e6ed52c73ca1c266a28b679d122d4ae035318b6c1ed6172e107a"
+      "name": "LIVE_BYOND_BENCHMARK.json",
+      "source": "bench/LIVE_BYOND_BENCHMARK.json",
+      "path": "data/raw/LIVE_BYOND_BENCHMARK.json",
+      "bytes": 16616,
+      "sha256": "bea2bad4d3e36973a86a2ec8724df4985bf8ec73f7ddedc882ccdeff0ca69cda"
     },
     {
-      "name": "LIVE_CSHARP_SMOKE.json",
-      "source": "bench/LIVE_CSHARP_SMOKE.json",
-      "path": "data/raw/LIVE_CSHARP_SMOKE.json",
-      "bytes": 12403,
-      "sha256": "40b09c2a719426bbf197b20404760ebd77104a818deb44f9f81728d64d92ff41"
+      "name": "LIVE_CSHARP_BENCHMARK.json",
+      "source": "bench/LIVE_CSHARP_BENCHMARK.json",
+      "path": "data/raw/LIVE_CSHARP_BENCHMARK.json",
+      "bytes": 12407,
+      "sha256": "df8a57816f18b200e9e8e66b215257108d0e5392a20068189b52abdcd3d232ec"
     },
     {
-      "name": "LIVE_CUDA_SMOKE.json",
-      "source": "bench/LIVE_CUDA_SMOKE.json",
-      "path": "data/raw/LIVE_CUDA_SMOKE.json",
-      "bytes": 9541,
-      "sha256": "dc6462b88b5c4689e553cacb4cf1857af56bf8f553641202e3a910cd98bb4b51"
+      "name": "LIVE_CUDA_BENCHMARK.json",
+      "source": "bench/LIVE_CUDA_BENCHMARK.json",
+      "path": "data/raw/LIVE_CUDA_BENCHMARK.json",
+      "bytes": 9557,
+      "sha256": "ff0704739046a60dfc2e2fe11e944b1e1b75300330d434ed89965ae401fa6e0a"
     },
     {
-      "name": "LIVE_DART_SMOKE.json",
-      "source": "bench/LIVE_DART_SMOKE.json",
-      "path": "data/raw/LIVE_DART_SMOKE.json",
-      "bytes": 11799,
-      "sha256": "6c51b41f3e6df721da72abe2dbb439df7782dc47bb44b4ce9f821045ce07a62e"
+      "name": "LIVE_DART_BENCHMARK.json",
+      "source": "bench/LIVE_DART_BENCHMARK.json",
+      "path": "data/raw/LIVE_DART_BENCHMARK.json",
+      "bytes": 11803,
+      "sha256": "6c17925be05ca20f0746832768e0c722e6b2443166bdc45e3b683215698fc8a2"
     },
     {
-      "name": "LIVE_DELPHI_SMOKE.json",
-      "source": "bench/LIVE_DELPHI_SMOKE.json",
-      "path": "data/raw/LIVE_DELPHI_SMOKE.json",
-      "bytes": 18163,
-      "sha256": "a6722c4327eb6620533a3566fed116eb11669de2583d9eff0a8e33a501d2c520"
+      "name": "LIVE_DELPHI_BENCHMARK.json",
+      "source": "bench/LIVE_DELPHI_BENCHMARK.json",
+      "path": "data/raw/LIVE_DELPHI_BENCHMARK.json",
+      "bytes": 18175,
+      "sha256": "5c974a111fbd6126541728de9fdcd43d298a818f1c9d5b1b123bf00a42745dbf"
     },
     {
-      "name": "LIVE_DOTNET_SMOKE.json",
-      "source": "bench/LIVE_DOTNET_SMOKE.json",
-      "path": "data/raw/LIVE_DOTNET_SMOKE.json",
-      "bytes": 18770,
-      "sha256": "452d3c342552e1ed8db73bea3b71e8130ce8b0529ff7dcde87302e231b0a8b11"
+      "name": "LIVE_DOTNET_BENCHMARK.json",
+      "source": "bench/LIVE_DOTNET_BENCHMARK.json",
+      "path": "data/raw/LIVE_DOTNET_BENCHMARK.json",
+      "bytes": 18774,
+      "sha256": "6497903e8b625336305a6ddb85e2b14bfb96e6fea185aab1d36917df9687ba40"
     },
     {
-      "name": "LIVE_EJS_SMOKE.json",
-      "source": "bench/LIVE_EJS_SMOKE.json",
-      "path": "data/raw/LIVE_EJS_SMOKE.json",
-      "bytes": 15448,
-      "sha256": "856564a2f1ba27927355ebbc9d6174ca2a172a2939caff1048c9019429e2fd70"
+      "name": "LIVE_EJS_BENCHMARK.json",
+      "source": "bench/LIVE_EJS_BENCHMARK.json",
+      "path": "data/raw/LIVE_EJS_BENCHMARK.json",
+      "bytes": 15460,
+      "sha256": "ff4e39bb25589673bb6fb67c6516237ec49d7d78067f82865819e70777cc6914"
     },
     {
-      "name": "LIVE_ELIXIR_SMOKE.json",
-      "source": "bench/LIVE_ELIXIR_SMOKE.json",
-      "path": "data/raw/LIVE_ELIXIR_SMOKE.json",
-      "bytes": 11350,
-      "sha256": "eda120db16cf7c026c376c314974e89733c79e4bc4c1e37a9dee0c9529c11a0c"
+      "name": "LIVE_ELIXIR_BENCHMARK.json",
+      "source": "bench/LIVE_ELIXIR_BENCHMARK.json",
+      "path": "data/raw/LIVE_ELIXIR_BENCHMARK.json",
+      "bytes": 11354,
+      "sha256": "5c35d39d0d68092bc34d7842802b9936feac7e8fea244f969185ba717d4f8e21"
     },
     {
-      "name": "LIVE_ETS_SMOKE.json",
-      "source": "bench/LIVE_ETS_SMOKE.json",
-      "path": "data/raw/LIVE_ETS_SMOKE.json",
-      "bytes": 17264,
-      "sha256": "f8ee74e50bcb2e68c6e21231f7bbde74f207dc8f1e8845a945699db03469201b"
+      "name": "LIVE_ETS_BENCHMARK.json",
+      "source": "bench/LIVE_ETS_BENCHMARK.json",
+      "path": "data/raw/LIVE_ETS_BENCHMARK.json",
+      "bytes": 17280,
+      "sha256": "1eba5534d61c8cfa8daa437b39d9075cab5b3ffb6a182026f53eeb0efa176cd7"
     },
     {
-      "name": "LIVE_FORTRAN_SMOKE.json",
-      "source": "bench/LIVE_FORTRAN_SMOKE.json",
-      "path": "data/raw/LIVE_FORTRAN_SMOKE.json",
-      "bytes": 12359,
-      "sha256": "cf5e0e3c56dcb89829e34918c3f4f80093e4bb7d650ebcae73c1f8d4dee10c58"
+      "name": "LIVE_FORTRAN_BENCHMARK.json",
+      "source": "bench/LIVE_FORTRAN_BENCHMARK.json",
+      "path": "data/raw/LIVE_FORTRAN_BENCHMARK.json",
+      "bytes": 12363,
+      "sha256": "2e95f63562b0580589f59a208ab0d320c3fcfe68ffb3a730ce8e4329490ec9e6"
     },
     {
-      "name": "LIVE_GROOVY_SMOKE.json",
-      "source": "bench/LIVE_GROOVY_SMOKE.json",
-      "path": "data/raw/LIVE_GROOVY_SMOKE.json",
-      "bytes": 13131,
-      "sha256": "025f294cd318b2490cb45eb7ac00c0ebf59467f5c4b890ea03a6d0ef53dbec02"
+      "name": "LIVE_GROOVY_BENCHMARK.json",
+      "source": "bench/LIVE_GROOVY_BENCHMARK.json",
+      "path": "data/raw/LIVE_GROOVY_BENCHMARK.json",
+      "bytes": 13139,
+      "sha256": "1a288b866f4f22c8266ced3397d2cf9c39889e626053858f07f60bd73862c39b"
     },
     {
-      "name": "LIVE_JSON_SMOKE.json",
-      "source": "bench/LIVE_JSON_SMOKE.json",
-      "path": "data/raw/LIVE_JSON_SMOKE.json",
-      "bytes": 12360,
-      "sha256": "5dc5a5196254f31c7c451a538d44ea18d09eca9d83e1527284da1332a4bdac6c"
+      "name": "LIVE_JSON_BENCHMARK.json",
+      "source": "bench/LIVE_JSON_BENCHMARK.json",
+      "path": "data/raw/LIVE_JSON_BENCHMARK.json",
+      "bytes": 12364,
+      "sha256": "44fcdbb17f7bafc9bda36cb45b908eb978f67570bd6385bee081a5531ae38ee2"
     },
     {
-      "name": "LIVE_JULIA_SMOKE.json",
-      "source": "bench/LIVE_JULIA_SMOKE.json",
-      "path": "data/raw/LIVE_JULIA_SMOKE.json",
-      "bytes": 11227,
-      "sha256": "db5cce227cd4ace2fdc1749df601178e4b7e391aac97f073b596f31095d85334"
+      "name": "LIVE_JULIA_BENCHMARK.json",
+      "source": "bench/LIVE_JULIA_BENCHMARK.json",
+      "path": "data/raw/LIVE_JULIA_BENCHMARK.json",
+      "bytes": 11235,
+      "sha256": "09079437646c3861710927eaa08ddac904df9071a317bdaf8c4635354866171a"
     },
     {
-      "name": "LIVE_KOTLIN_SMOKE.json",
-      "source": "bench/LIVE_KOTLIN_SMOKE.json",
-      "path": "data/raw/LIVE_KOTLIN_SMOKE.json",
-      "bytes": 11180,
-      "sha256": "21a552ff582c1381f8738bbba24a74a124ccf9a9ef43afa2924af94372afcc1d"
+      "name": "LIVE_KOTLIN_BENCHMARK.json",
+      "source": "bench/LIVE_KOTLIN_BENCHMARK.json",
+      "path": "data/raw/LIVE_KOTLIN_BENCHMARK.json",
+      "bytes": 11188,
+      "sha256": "981df643e10c2c4714b3dcc17aede8ec329880e55273bbbb677e7fb0c888a2ff"
     },
     {
-      "name": "LIVE_LUA_SMOKE.json",
-      "source": "bench/LIVE_LUA_SMOKE.json",
-      "path": "data/raw/LIVE_LUA_SMOKE.json",
-      "bytes": 10042,
-      "sha256": "53d5dfbb6a6266213912050926002ee49c36580e103a87819e944429aad1fb4d"
+      "name": "LIVE_LUA_BENCHMARK.json",
+      "source": "bench/LIVE_LUA_BENCHMARK.json",
+      "path": "data/raw/LIVE_LUA_BENCHMARK.json",
+      "bytes": 10050,
+      "sha256": "41253cb794b70f439357488e1b90355774d1ca5d677479ae3209306aa183cb05"
     },
     {
-      "name": "LIVE_MARKDOWN_SMOKE.json",
-      "source": "bench/LIVE_MARKDOWN_SMOKE.json",
-      "path": "data/raw/LIVE_MARKDOWN_SMOKE.json",
-      "bytes": 14480,
-      "sha256": "ee6f88128cb14794a0c9e6b8dbfda4bbe869bfda92de3e9762b3702280e024be"
+      "name": "LIVE_MARKDOWN_BENCHMARK.json",
+      "source": "bench/LIVE_MARKDOWN_BENCHMARK.json",
+      "path": "data/raw/LIVE_MARKDOWN_BENCHMARK.json",
+      "bytes": 14484,
+      "sha256": "6bd29a35cca9a42f17a74b9a7dc4c68370d8711a61b52b522aa4e404cc29b513"
     },
     {
-      "name": "LIVE_OBJC_SMOKE.json",
-      "source": "bench/LIVE_OBJC_SMOKE.json",
-      "path": "data/raw/LIVE_OBJC_SMOKE.json",
-      "bytes": 11867,
-      "sha256": "714090c1e59afc82f590d22cb37b26bce04c8db8a4cb4ded9fb3574770270723"
+      "name": "LIVE_OBJC_BENCHMARK.json",
+      "source": "bench/LIVE_OBJC_BENCHMARK.json",
+      "path": "data/raw/LIVE_OBJC_BENCHMARK.json",
+      "bytes": 11871,
+      "sha256": "e5b6616e3e5b84e36594d30723d86d468f57a2e129b426c9b64373b56ea7a131"
     },
     {
-      "name": "LIVE_PASCAL_SMOKE.json",
-      "source": "bench/LIVE_PASCAL_SMOKE.json",
-      "path": "data/raw/LIVE_PASCAL_SMOKE.json",
-      "bytes": 15867,
-      "sha256": "2d444d15da41bce7c035f5d8561c232ab4a4a83e0408ca0bd7652622b14b7dbe"
+      "name": "LIVE_PASCAL_BENCHMARK.json",
+      "source": "bench/LIVE_PASCAL_BENCHMARK.json",
+      "path": "data/raw/LIVE_PASCAL_BENCHMARK.json",
+      "bytes": 15871,
+      "sha256": "28bb8811ef06502298651054ef9272cd6b920477cde381e6d1ef15378ac216c9"
     },
     {
-      "name": "LIVE_PHP_SMOKE.json",
-      "source": "bench/LIVE_PHP_SMOKE.json",
-      "path": "data/raw/LIVE_PHP_SMOKE.json",
-      "bytes": 10258,
-      "sha256": "19382a0955d96d35d563d1e9b7b5120eaada7bef58ecd29ffe244a76386b58ee"
+      "name": "LIVE_PHP_BENCHMARK.json",
+      "source": "bench/LIVE_PHP_BENCHMARK.json",
+      "path": "data/raw/LIVE_PHP_BENCHMARK.json",
+      "bytes": 10266,
+      "sha256": "acc498b5dfd98f70c1e69adad3fcb2ee3905a8a51264f4ea456dd02be8c668f9"
     },
     {
-      "name": "LIVE_POWERSHELL_SMOKE.json",
-      "source": "bench/LIVE_POWERSHELL_SMOKE.json",
-      "path": "data/raw/LIVE_POWERSHELL_SMOKE.json",
-      "bytes": 9925,
-      "sha256": "64a247dc4acbd2e0e00fa1855a5e2d2648884f42c375efd197c22c1b83ab23ab"
+      "name": "LIVE_POWERSHELL_BENCHMARK.json",
+      "source": "bench/LIVE_POWERSHELL_BENCHMARK.json",
+      "path": "data/raw/LIVE_POWERSHELL_BENCHMARK.json",
+      "bytes": 9937,
+      "sha256": "9f3256b7bc88f7267e52bf050694c5ed651b3bf16bdeb52943a58f62d440649d"
     },
     {
-      "name": "LIVE_RAZOR_SMOKE.json",
-      "source": "bench/LIVE_RAZOR_SMOKE.json",
-      "path": "data/raw/LIVE_RAZOR_SMOKE.json",
-      "bytes": 19020,
-      "sha256": "c47bf3887e582208fc8bee32efad14f74adfd2a5216c562c9420d7321e113cea"
+      "name": "LIVE_RAZOR_BENCHMARK.json",
+      "source": "bench/LIVE_RAZOR_BENCHMARK.json",
+      "path": "data/raw/LIVE_RAZOR_BENCHMARK.json",
+      "bytes": 19028,
+      "sha256": "30048aa22f4150f5b06faf7137da7e941055599305fefb54ff2112c0eaee1878"
     },
     {
-      "name": "LIVE_RUBY_SMOKE.json",
-      "source": "bench/LIVE_RUBY_SMOKE.json",
-      "path": "data/raw/LIVE_RUBY_SMOKE.json",
-      "bytes": 9797,
-      "sha256": "1f457f2025d06685f857bed637234e565526966a1defb939b073115bc0f235e0"
+      "name": "LIVE_RUBY_BENCHMARK.json",
+      "source": "bench/LIVE_RUBY_BENCHMARK.json",
+      "path": "data/raw/LIVE_RUBY_BENCHMARK.json",
+      "bytes": 9805,
+      "sha256": "e9b04b927f4a3e2e47741024ecc3e55b8f8c19707eb1b631ad3f2275207b469e"
     },
     {
-      "name": "LIVE_RUST_SMOKE.json",
-      "source": "bench/LIVE_RUST_SMOKE.json",
-      "path": "data/raw/LIVE_RUST_SMOKE.json",
-      "bytes": 12500,
-      "sha256": "d20fb2b7f327a5c31b489bb72936262dd149b1f7498ad1460132e5e49fe5e747"
+      "name": "LIVE_RUST_BENCHMARK.json",
+      "source": "bench/LIVE_RUST_BENCHMARK.json",
+      "path": "data/raw/LIVE_RUST_BENCHMARK.json",
+      "bytes": 12508,
+      "sha256": "7fda6aae97b663a465ba29551a0caefbf2fa9605bc74912c788e119b6cf863c5"
     },
     {
-      "name": "LIVE_R_SMOKE.json",
-      "source": "bench/LIVE_R_SMOKE.json",
-      "path": "data/raw/LIVE_R_SMOKE.json",
-      "bytes": 15426,
-      "sha256": "e8d8bf384c6ac585fc38726f4c6bde50fd511a2ecd5842bf7351d0160a4cc879"
+      "name": "LIVE_R_BENCHMARK.json",
+      "source": "bench/LIVE_R_BENCHMARK.json",
+      "path": "data/raw/LIVE_R_BENCHMARK.json",
+      "bytes": 15442,
+      "sha256": "1cf6722a60bfd2ec6e1ddf07d6e336ba555420ac6e35f0f959ae4c5778cc9c63"
     },
     {
-      "name": "LIVE_SCALA_SMOKE.json",
-      "source": "bench/LIVE_SCALA_SMOKE.json",
-      "path": "data/raw/LIVE_SCALA_SMOKE.json",
-      "bytes": 10918,
-      "sha256": "a249f379c1f828c562b72fbcf469135cac2ca49e909f9dda453a81e92c219549"
+      "name": "LIVE_SCALA_BENCHMARK.json",
+      "source": "bench/LIVE_SCALA_BENCHMARK.json",
+      "path": "data/raw/LIVE_SCALA_BENCHMARK.json",
+      "bytes": 10926,
+      "sha256": "49c287e869047f4320312a2805f2a2760cfe19bd128092788edc2a79c44d1a85"
     },
     {
-      "name": "LIVE_SQL_SMOKE.json",
-      "source": "bench/LIVE_SQL_SMOKE.json",
-      "path": "data/raw/LIVE_SQL_SMOKE.json",
-      "bytes": 10461,
-      "sha256": "e04cec52d8d3372fca5bb5510c535605e9ebdc78f893cc3d00199c102513c7ea"
+      "name": "LIVE_SQL_BENCHMARK.json",
+      "source": "bench/LIVE_SQL_BENCHMARK.json",
+      "path": "data/raw/LIVE_SQL_BENCHMARK.json",
+      "bytes": 10469,
+      "sha256": "ee9a5fc878ca3ac5ec2d1da894d5c2bb1cdea972a6cbef9d61d5610bb5f285fe"
     },
     {
-      "name": "LIVE_SVELTE_SMOKE.json",
-      "source": "bench/LIVE_SVELTE_SMOKE.json",
-      "path": "data/raw/LIVE_SVELTE_SMOKE.json",
-      "bytes": 11684,
-      "sha256": "52eb0a622eaa5042a7f0d65d37ada12ebcc05089851cdc9d888c6812896a1647"
+      "name": "LIVE_SVELTE_BENCHMARK.json",
+      "source": "bench/LIVE_SVELTE_BENCHMARK.json",
+      "path": "data/raw/LIVE_SVELTE_BENCHMARK.json",
+      "bytes": 11696,
+      "sha256": "fb8ebc5330371e11433a28c2b331a0dcc2c41aaeafbd6c7852e9e524beb7a0da"
     },
     {
-      "name": "LIVE_SWIFT_SMOKE.json",
-      "source": "bench/LIVE_SWIFT_SMOKE.json",
-      "path": "data/raw/LIVE_SWIFT_SMOKE.json",
-      "bytes": 11524,
-      "sha256": "cf914017b1a03a917d89267274de8ac33fcfc1cb1743e9915c21b9c0b521fcb1"
+      "name": "LIVE_SWIFT_BENCHMARK.json",
+      "source": "bench/LIVE_SWIFT_BENCHMARK.json",
+      "path": "data/raw/LIVE_SWIFT_BENCHMARK.json",
+      "bytes": 11532,
+      "sha256": "7735918d9376c86feab5aa13d1bb1c9ff3a074856400c22a3685f83e8b46dcbe"
     },
     {
-      "name": "LIVE_TERRAFORM_SMOKE.json",
-      "source": "bench/LIVE_TERRAFORM_SMOKE.json",
-      "path": "data/raw/LIVE_TERRAFORM_SMOKE.json",
-      "bytes": 10317,
-      "sha256": "add3e9afefc7490f5ae98ca1258b1806a6055e69aeb7f86aa810cfe444ff5db6"
+      "name": "LIVE_TERRAFORM_BENCHMARK.json",
+      "source": "bench/LIVE_TERRAFORM_BENCHMARK.json",
+      "path": "data/raw/LIVE_TERRAFORM_BENCHMARK.json",
+      "bytes": 10321,
+      "sha256": "f4b3cc637ea5a0324f8a37bea116be02e1d686b2949e31132c6ffabbe9ebb45e"
     },
     {
-      "name": "LIVE_VERILOG_SMOKE.json",
-      "source": "bench/LIVE_VERILOG_SMOKE.json",
-      "path": "data/raw/LIVE_VERILOG_SMOKE.json",
-      "bytes": 12957,
-      "sha256": "445ebb5731e65f89efd9966869091d04bccf639d32e468b08f879485144ecb17"
+      "name": "LIVE_VERILOG_BENCHMARK.json",
+      "source": "bench/LIVE_VERILOG_BENCHMARK.json",
+      "path": "data/raw/LIVE_VERILOG_BENCHMARK.json",
+      "bytes": 12961,
+      "sha256": "77ccb0652e52cb39d37675d1d52a42bbf3c3d0016f2a49ea634c594224d9348d"
     },
     {
-      "name": "LIVE_VUE_SMOKE.json",
-      "source": "bench/LIVE_VUE_SMOKE.json",
-      "path": "data/raw/LIVE_VUE_SMOKE.json",
-      "bytes": 9611,
-      "sha256": "887255380ee1d516ea533c8bacbdaddd7b084b98ccb8281737505a5511a6a036"
+      "name": "LIVE_VUE_BENCHMARK.json",
+      "source": "bench/LIVE_VUE_BENCHMARK.json",
+      "path": "data/raw/LIVE_VUE_BENCHMARK.json",
+      "bytes": 9623,
+      "sha256": "171543477390276865edf575851472ced1d3e582c2ec779e17a82e8ce204967a"
     },
     {
-      "name": "LIVE_ZIG_SMOKE.json",
-      "source": "bench/LIVE_ZIG_SMOKE.json",
-      "path": "data/raw/LIVE_ZIG_SMOKE.json",
-      "bytes": 10826,
-      "sha256": "b80c7211a986b1b26e73b9378cbf3029ffc60c039981f65f30cd2a4eb939ed9a"
+      "name": "LIVE_ZIG_BENCHMARK.json",
+      "source": "bench/LIVE_ZIG_BENCHMARK.json",
+      "path": "data/raw/LIVE_ZIG_BENCHMARK.json",
+      "bytes": 10834,
+      "sha256": "ded63e36a476022dfe054fef2fe84e4110fc602944c92505bc8830ecfda76af9"
     }
   ],
   "provenance": {
-    "toolManifestGeneratedAt": "2026-06-29T08:49:16.000Z",
+    "toolManifestGeneratedAt": "2026-06-29T23:50:06.000Z",
     "saturationGeneratedAt": "2026-06-29T08:44:30.000Z",
     "platform": {
       "system": "Darwin",
@@ -309,11 +309,11 @@
         ".ets",
         ".r"
       ],
-      "detectSmokeTotalFiles": 88
+      "detectBenchmarkTotalFiles": 88
     },
     "tools": {
       "coreCount": 21,
-      "liveSmokeCount": 36,
+      "liveBenchmarkCount": 36,
       "core": [
         {
           "tool": "atlas",
@@ -326,7 +326,7 @@
             "atlas dev (none, unknown)"
           ],
           "exit_code": 0,
-          "seconds": 0.01
+          "seconds": 0.011
         },
         {
           "tool": "graphify",
@@ -339,7 +339,7 @@
           ],
           "stderr": [],
           "exit_code": 0,
-          "seconds": 0.036,
+          "seconds": 0.032,
           "discovered_version": "graphifyy 0.8.49",
           "binary": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify"
         },
@@ -354,7 +354,7 @@
           ],
           "stderr": [],
           "exit_code": 0,
-          "seconds": 0.011
+          "seconds": 0.01
         },
         {
           "tool": "python",
@@ -367,7 +367,7 @@
           ],
           "stderr": [],
           "exit_code": 0,
-          "seconds": 0.008
+          "seconds": 0.007
         },
         {
           "tool": "java",
@@ -382,7 +382,7 @@
             "OpenJDK 64-Bit Server VM Homebrew (build 17.0.18+0, mixed mode, sharing)"
           ],
           "exit_code": 0,
-          "seconds": 0.025
+          "seconds": 0.027
         },
         {
           "tool": "maven",
@@ -399,7 +399,7 @@
           ],
           "stderr": [],
           "exit_code": 0,
-          "seconds": 0.379
+          "seconds": 0.394
         },
         {
           "tool": "scip-go",
@@ -412,7 +412,7 @@
           ],
           "stderr": [],
           "exit_code": 0,
-          "seconds": 0.093
+          "seconds": 0.065
         },
         {
           "tool": "scip-python",
@@ -425,7 +425,7 @@
           ],
           "stderr": [],
           "exit_code": 0,
-          "seconds": 0.152
+          "seconds": 0.133
         },
         {
           "tool": "scip-typescript",
@@ -438,20 +438,17 @@
           ],
           "stderr": [],
           "exit_code": 0,
-          "seconds": 0.459
+          "seconds": 0.4
         },
         {
           "tool": "scip-java",
-          "status": "ok",
-          "ok": true,
-          "command": "/tmp/atlas-bench-tools/scip-java --version",
-          "version": "0.12.3",
-          "stdout": [
-            "0.12.3"
-          ],
-          "stderr": [],
-          "exit_code": 0,
-          "seconds": 0.387
+          "status": "missing",
+          "ok": false,
+          "command": "",
+          "version": "",
+          "stdout": "",
+          "stderr": "",
+          "exit_code": 127
         },
         {
           "tool": "gopls",
@@ -464,7 +461,7 @@
           ],
           "stderr": [],
           "exit_code": 0,
-          "seconds": 0.037
+          "seconds": 0.029
         },
         {
           "tool": "pyright",
@@ -477,7 +474,7 @@
           ],
           "stderr": [],
           "exit_code": 0,
-          "seconds": 0.115
+          "seconds": 0.104
         },
         {
           "tool": "tsc",
@@ -490,7 +487,7 @@
           ],
           "stderr": [],
           "exit_code": 0,
-          "seconds": 0.294
+          "seconds": 0.251
         },
         {
           "tool": "jdtls",
@@ -529,7 +526,7 @@
           ],
           "stderr": [],
           "exit_code": 0,
-          "seconds": 0.018
+          "seconds": 0.004
         },
         {
           "tool": "dotnet",
@@ -542,7 +539,7 @@
           ],
           "stderr": [],
           "exit_code": 0,
-          "seconds": 0.178
+          "seconds": 0.057
         },
         {
           "tool": "ruby",
@@ -555,7 +552,7 @@
           ],
           "stderr": [],
           "exit_code": 0,
-          "seconds": 0.017
+          "seconds": 0.007
         },
         {
           "tool": "php",
@@ -572,7 +569,7 @@
           ],
           "stderr": [],
           "exit_code": 0,
-          "seconds": 0.108
+          "seconds": 0.044
         },
         {
           "tool": "pwsh",
@@ -585,7 +582,7 @@
           ],
           "stderr": [],
           "exit_code": 0,
-          "seconds": 0.306
+          "seconds": 0.042
         },
         {
           "tool": "sourcekit-lsp",
@@ -601,14 +598,14 @@
             "swift-driver version: 1.127.15"
           ],
           "exit_code": 0,
-          "seconds": 0.384,
+          "seconds": 0.066,
           "binary": "/usr/bin/sourcekit-lsp",
           "note": "sourcekit-lsp has no version flag in this toolchain; Swift toolchain version is recorded as the closest reproducible native version."
         }
       ],
-      "liveSmokeTools": [
+      "liveBenchmarkTools": [
         {
-          "artifact": "bench/LIVE_APEX_SMOKE.json",
+          "artifact": "bench/LIVE_APEX_BENCHMARK.json",
           "language": "apex",
           "native_tool": "apex-source-counter",
           "native_status": "ok",
@@ -623,7 +620,7 @@
             "sf": {
               "status": "missing",
               "ok": false,
-              "note": "Salesforce CLI not installed; source-only Apex parser proxy used for this smoke"
+              "note": "Salesforce CLI not installed; source-only Apex parser proxy used for this benchmark"
             },
             "sfdx": {
               "status": "missing",
@@ -633,12 +630,12 @@
             "apex-language-server": {
               "status": "missing",
               "ok": false,
-              "note": "Apex language server is not installed; source counter coverage proxy used for this smoke"
+              "note": "Apex language server is not installed; source counter coverage proxy used for this benchmark"
             }
           }
         },
         {
-          "artifact": "bench/LIVE_ASTRO_SMOKE.json",
+          "artifact": "bench/LIVE_ASTRO_BENCHMARK.json",
           "language": "astro",
           "native_tool": "astro-compiler",
           "native_status": "ok",
@@ -655,7 +652,7 @@
             "astro-language-server": {
               "status": "missing",
               "ok": false,
-              "note": "Astro language server is not installed; @astrojs/compiler parse coverage used for this smoke"
+              "note": "Astro language server is not installed; @astrojs/compiler parse coverage used for this benchmark"
             },
             "@astrojs/compiler": {
               "status": "ok",
@@ -665,7 +662,7 @@
           }
         },
         {
-          "artifact": "bench/LIVE_BASH_SMOKE.json",
+          "artifact": "bench/LIVE_BASH_BENCHMARK.json",
           "language": "bash",
           "native_tool": "bash-n",
           "native_status": "ok",
@@ -687,7 +684,7 @@
           }
         },
         {
-          "artifact": "bench/LIVE_BLADE_SMOKE.json",
+          "artifact": "bench/LIVE_BLADE_BENCHMARK.json",
           "language": "blade",
           "native_tool": "blade-directive-counter",
           "native_status": "ok",
@@ -702,17 +699,17 @@
             "laravel": {
               "status": "missing",
               "ok": false,
-              "note": "Laravel application runtime is not installed for this source-only smoke"
+              "note": "Laravel application runtime is not installed for this source-only benchmark"
             },
             "blade-language-server": {
               "status": "missing",
               "ok": false,
-              "note": "Blade language server is not installed; directive coverage proxy used for this smoke"
+              "note": "Blade language server is not installed; directive coverage proxy used for this benchmark"
             }
           }
         },
         {
-          "artifact": "bench/LIVE_BYOND_SMOKE.json",
+          "artifact": "bench/LIVE_BYOND_BENCHMARK.json",
           "language": "byond",
           "native_tool": "byond-source-counter",
           "native_status": "ok",
@@ -727,12 +724,12 @@
             "dreamchecker": {
               "status": "missing",
               "ok": false,
-              "note": "dreamchecker not installed; source-only BYOND parser proxy used for this smoke"
+              "note": "dreamchecker not installed; source-only BYOND parser proxy used for this benchmark"
             },
             "dm-langserver": {
               "status": "missing",
               "ok": false,
-              "note": "BYOND/DM language server is not installed; source counter coverage proxy used for this smoke"
+              "note": "BYOND/DM language server is not installed; source counter coverage proxy used for this benchmark"
             },
             "tree-sitter-dm": {
               "status": "missing",
@@ -742,7 +739,7 @@
           }
         },
         {
-          "artifact": "bench/LIVE_CSHARP_SMOKE.json",
+          "artifact": "bench/LIVE_CSHARP_BENCHMARK.json",
           "language": "csharp",
           "native_tool": "roslyn",
           "native_status": "ok",
@@ -782,7 +779,7 @@
           }
         },
         {
-          "artifact": "bench/LIVE_CUDA_SMOKE.json",
+          "artifact": "bench/LIVE_CUDA_BENCHMARK.json",
           "language": "cuda",
           "native_tool": "cuda-source-counter",
           "native_status": "ok",
@@ -797,17 +794,17 @@
             "nvcc": {
               "status": "missing",
               "ok": false,
-              "note": "nvcc not installed; source-only parser proxy used for this smoke"
+              "note": "nvcc not installed; source-only parser proxy used for this benchmark"
             },
             "clangd": {
               "status": "available",
               "ok": true,
-              "note": "clangd is available, but this smoke uses source-only CUDA extension coverage to avoid compile database coupling"
+              "note": "clangd is available, but this benchmark uses source-only CUDA extension coverage to avoid compile database coupling"
             }
           }
         },
         {
-          "artifact": "bench/LIVE_DART_SMOKE.json",
+          "artifact": "bench/LIVE_DART_BENCHMARK.json",
           "language": "dart",
           "native_tool": "tree-sitter-dart",
           "native_status": "ok",
@@ -835,7 +832,7 @@
           }
         },
         {
-          "artifact": "bench/LIVE_DELPHI_SMOKE.json",
+          "artifact": "bench/LIVE_DELPHI_BENCHMARK.json",
           "language": "delphi",
           "native_tool": "delphi-lazarus-source-counter",
           "native_status": "ok",
@@ -850,12 +847,12 @@
             "fpc": {
               "status": "missing",
               "ok": false,
-              "note": "Free Pascal compiler not installed; source-only form/package parser proxy used for this smoke"
+              "note": "Free Pascal compiler not installed; source-only form/package parser proxy used for this benchmark"
             },
             "lazbuild": {
               "status": "missing",
               "ok": false,
-              "note": "lazbuild not installed; source-only form/package parser proxy used for this smoke"
+              "note": "lazbuild not installed; source-only form/package parser proxy used for this benchmark"
             },
             "pasls": {
               "status": "missing",
@@ -865,7 +862,7 @@
           }
         },
         {
-          "artifact": "bench/LIVE_DOTNET_SMOKE.json",
+          "artifact": "bench/LIVE_DOTNET_BENCHMARK.json",
           "language": "dotnet",
           "native_tool": "python-dotnet-project",
           "native_status": "ok",
@@ -885,7 +882,7 @@
           }
         },
         {
-          "artifact": "bench/LIVE_EJS_SMOKE.json",
+          "artifact": "bench/LIVE_EJS_BENCHMARK.json",
           "language": "ejs",
           "native_tool": "ejs-template-counter",
           "native_status": "ok",
@@ -900,17 +897,17 @@
             "ejs": {
               "status": "missing",
               "ok": false,
-              "note": "EJS CLI not installed; source-only template parser proxy used for this smoke"
+              "note": "EJS CLI not installed; source-only template parser proxy used for this benchmark"
             },
             "ejs-language-server": {
               "status": "missing",
               "ok": false,
-              "note": "EJS language server is not installed; source counter coverage proxy used for this graphify detector-only smoke"
+              "note": "EJS language server is not installed; source counter coverage proxy used for this graphify detector-only benchmark"
             }
           }
         },
         {
-          "artifact": "bench/LIVE_ELIXIR_SMOKE.json",
+          "artifact": "bench/LIVE_ELIXIR_BENCHMARK.json",
           "language": "elixir",
           "native_tool": "tree-sitter-elixir",
           "native_status": "ok",
@@ -938,7 +935,7 @@
           }
         },
         {
-          "artifact": "bench/LIVE_ETS_SMOKE.json",
+          "artifact": "bench/LIVE_ETS_BENCHMARK.json",
           "language": "ets",
           "native_tool": "ets-source-counter",
           "native_status": "ok",
@@ -953,12 +950,12 @@
             "arkts": {
               "status": "missing",
               "ok": false,
-              "note": "ArkTS compiler CLI not installed; source-only parser proxy used for this smoke"
+              "note": "ArkTS compiler CLI not installed; source-only parser proxy used for this benchmark"
             },
             "hvigor": {
               "status": "missing",
               "ok": false,
-              "note": "hvigor not installed; OpenHarmony build execution is avoided for this source-only smoke"
+              "note": "hvigor not installed; OpenHarmony build execution is avoided for this source-only benchmark"
             },
             "ohpm": {
               "status": "missing",
@@ -968,7 +965,7 @@
           }
         },
         {
-          "artifact": "bench/LIVE_FORTRAN_SMOKE.json",
+          "artifact": "bench/LIVE_FORTRAN_BENCHMARK.json",
           "language": "fortran",
           "native_tool": "tree-sitter-fortran",
           "native_status": "ok",
@@ -996,7 +993,7 @@
           }
         },
         {
-          "artifact": "bench/LIVE_GROOVY_SMOKE.json",
+          "artifact": "bench/LIVE_GROOVY_BENCHMARK.json",
           "language": "groovy",
           "native_tool": "tree-sitter-groovy",
           "native_status": "partial",
@@ -1019,12 +1016,12 @@
             "groovy-language-server": {
               "status": "missing",
               "ok": false,
-              "note": "Groovy language server is not installed; tree-sitter-groovy parse coverage used for this smoke"
+              "note": "Groovy language server is not installed; tree-sitter-groovy parse coverage used for this benchmark"
             }
           }
         },
         {
-          "artifact": "bench/LIVE_JSON_SMOKE.json",
+          "artifact": "bench/LIVE_JSON_BENCHMARK.json",
           "language": "json",
           "native_tool": "python-json",
           "native_status": "ok",
@@ -1049,7 +1046,7 @@
           }
         },
         {
-          "artifact": "bench/LIVE_JULIA_SMOKE.json",
+          "artifact": "bench/LIVE_JULIA_BENCHMARK.json",
           "language": "julia",
           "native_tool": "tree-sitter-julia",
           "native_status": "partial",
@@ -1067,12 +1064,12 @@
             "LanguageServer.jl": {
               "status": "missing_adapter",
               "ok": false,
-              "note": "LanguageServer.jl is not wired into this harness; tree-sitter-julia source parse coverage is used for this smoke"
+              "note": "LanguageServer.jl is not wired into this harness; tree-sitter-julia source parse coverage is used for this benchmark"
             }
           }
         },
         {
-          "artifact": "bench/LIVE_KOTLIN_SMOKE.json",
+          "artifact": "bench/LIVE_KOTLIN_BENCHMARK.json",
           "language": "kotlin",
           "native_tool": "tree-sitter-kotlin",
           "native_status": "partial",
@@ -1100,7 +1097,7 @@
           }
         },
         {
-          "artifact": "bench/LIVE_LUA_SMOKE.json",
+          "artifact": "bench/LIVE_LUA_BENCHMARK.json",
           "language": "lua",
           "native_tool": "luaparser",
           "native_status": "ok",
@@ -1132,7 +1129,7 @@
           }
         },
         {
-          "artifact": "bench/LIVE_MARKDOWN_SMOKE.json",
+          "artifact": "bench/LIVE_MARKDOWN_BENCHMARK.json",
           "language": "markdown",
           "native_tool": "markdown-it-py",
           "native_status": "ok",
@@ -1159,7 +1156,7 @@
           }
         },
         {
-          "artifact": "bench/LIVE_OBJC_SMOKE.json",
+          "artifact": "bench/LIVE_OBJC_BENCHMARK.json",
           "language": "objc",
           "native_tool": "tree-sitter-objc",
           "native_status": "partial",
@@ -1187,7 +1184,7 @@
           }
         },
         {
-          "artifact": "bench/LIVE_PASCAL_SMOKE.json",
+          "artifact": "bench/LIVE_PASCAL_BENCHMARK.json",
           "language": "pascal",
           "native_tool": "pascal-regex-counter",
           "native_status": "ok",
@@ -1212,7 +1209,7 @@
           }
         },
         {
-          "artifact": "bench/LIVE_PHP_SMOKE.json",
+          "artifact": "bench/LIVE_PHP_BENCHMARK.json",
           "language": "php",
           "native_tool": "php-tokenizer",
           "native_status": "ok",
@@ -1239,7 +1236,7 @@
           }
         },
         {
-          "artifact": "bench/LIVE_POWERSHELL_SMOKE.json",
+          "artifact": "bench/LIVE_POWERSHELL_BENCHMARK.json",
           "language": "powershell",
           "native_tool": "pwsh-parser",
           "native_status": "ok",
@@ -1256,7 +1253,7 @@
             "powershell-editor-services": {
               "status": "missing",
               "ok": false,
-              "note": "PowerShellEditorServices LSP is not installed; pwsh AST parser used for this smoke"
+              "note": "PowerShellEditorServices LSP is not installed; pwsh AST parser used for this benchmark"
             },
             "psscriptanalyzer": {
               "status": "missing",
@@ -1266,7 +1263,7 @@
           }
         },
         {
-          "artifact": "bench/LIVE_RAZOR_SMOKE.json",
+          "artifact": "bench/LIVE_RAZOR_BENCHMARK.json",
           "language": "razor",
           "native_tool": "razor-directive-counter",
           "native_status": "ok",
@@ -1286,12 +1283,12 @@
             "razor-language-server": {
               "status": "missing",
               "ok": false,
-              "note": "Razor language server is not installed; directive/component coverage proxy used for this smoke"
+              "note": "Razor language server is not installed; directive/component coverage proxy used for this benchmark"
             }
           }
         },
         {
-          "artifact": "bench/LIVE_RUBY_SMOKE.json",
+          "artifact": "bench/LIVE_RUBY_BENCHMARK.json",
           "language": "ruby",
           "native_tool": "ruby-ripper",
           "native_status": "ok",
@@ -1313,7 +1310,7 @@
           }
         },
         {
-          "artifact": "bench/LIVE_RUST_SMOKE.json",
+          "artifact": "bench/LIVE_RUST_BENCHMARK.json",
           "language": "rust",
           "native_tool": "rust-analyzer",
           "native_status": "ok",
@@ -1349,7 +1346,7 @@
           }
         },
         {
-          "artifact": "bench/LIVE_R_SMOKE.json",
+          "artifact": "bench/LIVE_R_BENCHMARK.json",
           "language": "r",
           "native_tool": "r-source-counter",
           "native_status": "ok",
@@ -1364,17 +1361,17 @@
             "Rscript": {
               "status": "missing",
               "ok": false,
-              "note": "Rscript not installed; source-only parser proxy used for this smoke"
+              "note": "Rscript not installed; source-only parser proxy used for this benchmark"
             },
             "languageserver": {
               "status": "missing_adapter",
               "ok": false,
-              "note": "R languageserver is not installed or wired into this harness; source counter coverage proxy used for this graphify detector-only smoke"
+              "note": "R languageserver is not installed or wired into this harness; source counter coverage proxy used for this graphify detector-only benchmark"
             }
           }
         },
         {
-          "artifact": "bench/LIVE_SCALA_SMOKE.json",
+          "artifact": "bench/LIVE_SCALA_BENCHMARK.json",
           "language": "scala",
           "native_tool": "tree-sitter-scala",
           "native_status": "partial",
@@ -1402,7 +1399,7 @@
           }
         },
         {
-          "artifact": "bench/LIVE_SQL_SMOKE.json",
+          "artifact": "bench/LIVE_SQL_BENCHMARK.json",
           "language": "sql",
           "native_tool": "sqlfluff",
           "native_status": "ok",
@@ -1419,7 +1416,7 @@
           }
         },
         {
-          "artifact": "bench/LIVE_SVELTE_SMOKE.json",
+          "artifact": "bench/LIVE_SVELTE_BENCHMARK.json",
           "language": "svelte",
           "native_tool": "svelte-compiler",
           "native_status": "ok",
@@ -1436,12 +1433,12 @@
             "svelte-language-server": {
               "status": "missing",
               "ok": false,
-              "note": "Svelte language server is not installed; Svelte compiler parse coverage used for this smoke"
+              "note": "Svelte language server is not installed; Svelte compiler parse coverage used for this benchmark"
             }
           }
         },
         {
-          "artifact": "bench/LIVE_SWIFT_SMOKE.json",
+          "artifact": "bench/LIVE_SWIFT_BENCHMARK.json",
           "language": "swift",
           "native_tool": "sourcekit-lsp",
           "native_status": "ok",
@@ -1463,7 +1460,7 @@
           }
         },
         {
-          "artifact": "bench/LIVE_TERRAFORM_SMOKE.json",
+          "artifact": "bench/LIVE_TERRAFORM_BENCHMARK.json",
           "language": "terraform",
           "native_tool": "python-hcl2",
           "native_status": "ok",
@@ -1480,7 +1477,7 @@
           }
         },
         {
-          "artifact": "bench/LIVE_VERILOG_SMOKE.json",
+          "artifact": "bench/LIVE_VERILOG_BENCHMARK.json",
           "language": "verilog",
           "native_tool": "tree-sitter-systemverilog",
           "native_status": "partial",
@@ -1508,7 +1505,7 @@
           }
         },
         {
-          "artifact": "bench/LIVE_VUE_SMOKE.json",
+          "artifact": "bench/LIVE_VUE_BENCHMARK.json",
           "language": "vue",
           "native_tool": "vue-compiler-sfc",
           "native_status": "ok",
@@ -1525,12 +1522,12 @@
             "volar": {
               "status": "missing",
               "ok": false,
-              "note": "Volar language server is not installed; compiler-sfc parse coverage used for this smoke"
+              "note": "Volar language server is not installed; compiler-sfc parse coverage used for this benchmark"
             }
           }
         },
         {
-          "artifact": "bench/LIVE_ZIG_SMOKE.json",
+          "artifact": "bench/LIVE_ZIG_BENCHMARK.json",
           "language": "zig",
           "native_tool": "tree-sitter-zig",
           "native_status": "partial",
@@ -1558,11 +1555,11 @@
   "summary": {
     "core": {
       "languages": 7,
-      "queryRows": 26,
-      "equivalentRows": 24,
+      "queryRows": 25,
+      "equivalentRows": 23,
       "graphifyMissingRows": 2,
-      "tokenRatio": 16.92,
-      "latencyRatio": 6.04
+      "tokenRatio": 16.39,
+      "latencyRatio": 5.61
     },
     "live": {
       "artifacts": 36,
@@ -1572,7 +1569,7 @@
       "detectorOnlyArtifacts": 3
     },
     "coverage": {
-      "comparableRows": 39,
+      "graphifyRows": 39,
       "deterministicRowsCovered": 39,
       "detectorOnlyRowsCovered": 3
     },
@@ -1592,13 +1589,13 @@
       "atlas": {
         "status": "ok",
         "ok": true,
-        "seconds": 0.046,
+        "seconds": 0.026,
         "metrics": {
           "files": 57,
-          "symbols": 676,
-          "edges": 2931,
+          "symbols": 679,
+          "edges": 2948,
           "edge_kinds": {
-            "calls": 2085,
+            "calls": 2102,
             "imports": 224,
             "references": 622
           },
@@ -1610,44 +1607,56 @@
             "markdown": 4,
             "yaml": 3
           },
-          "duration_ms": 0,
+          "duration_ms": 2,
           "timings_ms": {
-            "delta_check": 0,
+            "delta_check": 2,
             "resolve_head": 0
           },
           "mode": "noop",
-          "cold_seconds": 0.923,
-          "cold_duration_ms": 803,
+          "cold_seconds": 0.291,
+          "cold_duration_ms": 254,
           "cold_timings_ms": {
+            "build_symbols_edges": 135,
             "delta_check": 0,
+            "discover_files": 0,
+            "doc_links": 0,
             "ensure_repo": 0,
-            "go_types": 585,
-            "lexical": 121,
-            "parse": 43,
-            "persist": 49,
+            "gitignore_scan": 12,
+            "go_types": 135,
+            "lexical": 81,
+            "parse": 24,
+            "persist": 81,
             "resolve_head": 0,
             "routes": 0,
             "sort": 0,
-            "walk": 1
+            "walk": 0,
+            "write_sqlite": 81
           },
-          "calls": 2085,
-          "internal_calls": 1134,
-          "recv_typed": 624,
+          "full_seconds": 0.291,
+          "cold_mode": "full",
+          "delta_seconds": 0.026,
+          "delta_mode": "noop",
+          "calls": 2102,
+          "internal_calls": 1143,
+          "recv_typed": 632,
           "sources": {
-            "go_ast": 2085
+            "go_ast": 2102
           }
         }
       },
       "graphify": {
         "status": "ok",
         "ok": true,
-        "seconds": 0.855,
+        "seconds": 0.625,
         "metrics": {
-          "nodes": 707,
-          "links": 1236,
-          "calls": 330,
-          "extracted_calls": 196,
-          "extracted_pct": 59.4
+          "nodes": 711,
+          "links": 1244,
+          "calls": 333,
+          "extracted_calls": 198,
+          "extracted_pct": 59.5,
+          "full_seconds": 0.625,
+          "delta_seconds": 0.277,
+          "supports_incremental": true
         }
       },
       "nativeTools": [
@@ -1655,49 +1664,49 @@
           "name": "scip-go",
           "status": "ok",
           "ok": true,
-          "seconds": 0.356,
+          "seconds": 0.206,
           "metrics": {
             "documents": 47,
             "total_documents": 47,
             "external_symbols": 1,
-            "symbols": 2214,
-            "occurrences": 11799,
-            "definitions": 2220,
-            "references": 9579,
+            "symbols": 2225,
+            "occurrences": 11887,
+            "definitions": 2231,
+            "references": 9656,
             "imports": 0,
-            "relationships": 148,
+            "relationships": 150,
             "kinds": {
               "Constant": 30,
               "Field": 95,
-              "Function": 251,
+              "Function": 252,
               "Interface": 11,
-              "Method": 175,
+              "Method": 176,
               "MethodSpecification": 35,
               "Package": 16,
-              "Struct": 27,
+              "Struct": 28,
               "Type": 10,
               "UnspecifiedKind": 2,
-              "Variable": 1562
+              "Variable": 1570
             },
-            "index_bytes": 984825
+            "index_bytes": 991412
           }
         },
         {
           "name": "gopls",
           "status": "ok",
           "ok": true,
-          "seconds": 0.611,
+          "seconds": 0.325,
           "metrics": {
             "gopls_version": "v0.22.0",
             "go_version": "go1.26.4",
-            "initial_workspace_load_ms": 279.346,
+            "initial_workspace_load_ms": 260.489,
             "dir_files": 87,
             "dir_go_files": 47,
             "workspace_packages": 12,
             "workspace_compiled_go_files": 57,
             "all_packages": 207,
             "diagnostics": 0,
-            "heap_alloc_bytes": 191019912
+            "heap_alloc_bytes": 187970384
           }
         }
       ],
@@ -1708,20 +1717,20 @@
         "atlasMissing": 0,
         "graphifyMissing": 0,
         "atlasTokens": 28,
-        "graphifyTokens": 389,
-        "atlasMs": 66.006,
-        "graphifyMs": 397.312,
-        "tokenRatio": 13.89,
-        "latencyRatio": 6.02,
+        "graphifyTokens": 398,
+        "atlasMs": 52.133,
+        "graphifyMs": 313.221,
+        "tokenRatio": 14.21,
+        "latencyRatio": 6.01,
         "pass5x": true
       },
       "queries": [
         {
           "symbol": "log",
           "atlasTokens": 5,
-          "graphifyTokens": 96,
-          "atlasMs": 17.7,
-          "graphifyMs": 104.901,
+          "graphifyTokens": 105,
+          "atlasMs": 12.654,
+          "graphifyMs": 78.941,
           "atlasMissing": false,
           "graphifyMissing": false
         },
@@ -1729,8 +1738,8 @@
           "symbol": "newEntry",
           "atlasTokens": 7,
           "graphifyTokens": 62,
-          "atlasMs": 17.049,
-          "graphifyMs": 95.228,
+          "atlasMs": 12.802,
+          "graphifyMs": 77.704,
           "atlasMissing": false,
           "graphifyMissing": false
         },
@@ -1738,8 +1747,8 @@
           "symbol": "releaseEntry",
           "atlasTokens": 8,
           "graphifyTokens": 175,
-          "atlasMs": 14.458,
-          "graphifyMs": 101.06,
+          "atlasMs": 13.096,
+          "graphifyMs": 77.997,
           "atlasMissing": false,
           "graphifyMissing": false
         },
@@ -1747,8 +1756,8 @@
           "symbol": "Fire",
           "atlasTokens": 8,
           "graphifyTokens": 56,
-          "atlasMs": 16.799,
-          "graphifyMs": 96.123,
+          "atlasMs": 13.581,
+          "graphifyMs": 78.579,
           "atlasMissing": false,
           "graphifyMissing": false
         }
@@ -1763,7 +1772,7 @@
       "atlas": {
         "status": "ok",
         "ok": true,
-        "seconds": 0.03,
+        "seconds": 0.022,
         "metrics": {
           "files": 19,
           "symbols": 517,
@@ -1781,20 +1790,29 @@
             "resolve_head": 0
           },
           "mode": "noop",
-          "cold_seconds": 0.174,
-          "cold_duration_ms": 129,
+          "cold_seconds": 0.15,
+          "cold_duration_ms": 125,
           "cold_timings_ms": {
+            "build_symbols_edges": 0,
             "delta_check": 0,
+            "discover_files": 0,
+            "doc_links": 0,
             "ensure_repo": 0,
+            "gitignore_scan": 11,
             "go_types": 0,
-            "lexical": 65,
-            "parse": 38,
-            "persist": 23,
+            "lexical": 83,
+            "parse": 28,
+            "persist": 83,
             "resolve_head": 0,
             "routes": 0,
             "sort": 0,
-            "walk": 0
+            "walk": 0,
+            "write_sqlite": 83
           },
+          "full_seconds": 0.15,
+          "cold_mode": "full",
+          "delta_seconds": 0.022,
+          "delta_mode": "noop",
           "calls": 961,
           "internal_calls": 371,
           "recv_typed": 73,
@@ -1806,13 +1824,16 @@
       "graphify": {
         "status": "ok",
         "ok": true,
-        "seconds": 0.631,
+        "seconds": 0.59,
         "metrics": {
           "nodes": 580,
           "links": 1514,
           "calls": 229,
           "extracted_calls": 221,
-          "extracted_pct": 96.5
+          "extracted_pct": 96.5,
+          "full_seconds": 0.59,
+          "delta_seconds": 0.271,
+          "supports_incremental": true
         }
       },
       "nativeTools": [
@@ -1820,7 +1841,7 @@
           "name": "scip-python",
           "status": "ok",
           "ok": true,
-          "seconds": 2.352,
+          "seconds": 1.942,
           "metrics": {
             "documents": 19,
             "total_documents": 19,
@@ -1842,7 +1863,7 @@
           "name": "pyright",
           "status": "ok",
           "ok": true,
-          "seconds": 0.807,
+          "seconds": 0.708,
           "metrics": {
             "pyright_version": "1.1.411",
             "diagnostics": 12,
@@ -1860,7 +1881,7 @@
             "error_count": 12,
             "warning_count": 0,
             "information_count": 0,
-            "time_in_sec": 0.604,
+            "time_in_sec": 0.546,
             "exit_code": 1
           }
         }
@@ -1883,10 +1904,10 @@
         "graphifyMissing": 0,
         "atlasTokens": 21,
         "graphifyTokens": 389,
-        "atlasMs": 40.374,
-        "graphifyMs": 279.124,
+        "atlasMs": 40.125,
+        "graphifyMs": 245.337,
         "tokenRatio": 18.52,
-        "latencyRatio": 6.91,
+        "latencyRatio": 6.11,
         "pass5x": true
       },
       "queries": [
@@ -1894,8 +1915,8 @@
           "symbol": "get",
           "atlasTokens": 6,
           "graphifyTokens": 142,
-          "atlasMs": 13.275,
-          "graphifyMs": 96.15,
+          "atlasMs": 13.277,
+          "graphifyMs": 81.236,
           "atlasMissing": false,
           "graphifyMissing": false
         },
@@ -1903,8 +1924,8 @@
           "symbol": "request",
           "atlasTokens": 6,
           "graphifyTokens": 185,
-          "atlasMs": 13.347,
-          "graphifyMs": 93.073,
+          "atlasMs": 13.225,
+          "graphifyMs": 83.183,
           "atlasMissing": false,
           "graphifyMissing": false
         },
@@ -1912,8 +1933,8 @@
           "symbol": "__init__",
           "atlasTokens": 9,
           "graphifyTokens": 62,
-          "atlasMs": 13.752,
-          "graphifyMs": 89.901,
+          "atlasMs": 13.623,
+          "graphifyMs": 80.918,
           "atlasMissing": false,
           "graphifyMissing": false
         }
@@ -1928,10 +1949,10 @@
       "atlas": {
         "status": "ok",
         "ok": true,
-        "seconds": 0.022,
+        "seconds": 0.024,
         "metrics": {
           "files": 7,
-          "symbols": 301,
+          "symbols": 314,
           "edges": 486,
           "edge_kinds": {
             "calls": 435,
@@ -1947,22 +1968,31 @@
             "resolve_head": 0
           },
           "mode": "noop",
-          "cold_seconds": 0.15,
-          "cold_duration_ms": 98,
+          "cold_seconds": 0.092,
+          "cold_duration_ms": 64,
           "cold_timings_ms": {
-            "delta_check": 10,
-            "ensure_repo": 2,
+            "build_symbols_edges": 0,
+            "delta_check": 0,
+            "discover_files": 0,
+            "doc_links": 0,
+            "ensure_repo": 0,
+            "gitignore_scan": 10,
             "go_types": 0,
-            "lexical": 40,
-            "parse": 20,
-            "persist": 23,
+            "lexical": 38,
+            "parse": 14,
+            "persist": 38,
             "resolve_head": 0,
             "routes": 0,
             "sort": 0,
-            "walk": 0
+            "walk": 0,
+            "write_sqlite": 38
           },
+          "full_seconds": 0.092,
+          "cold_mode": "full",
+          "delta_seconds": 0.024,
+          "delta_mode": "noop",
           "calls": 435,
-          "internal_calls": 194,
+          "internal_calls": 231,
           "recv_typed": 0,
           "sources": {
             "javascript_ts": 435
@@ -1972,13 +2002,16 @@
       "graphify": {
         "status": "ok",
         "ok": true,
-        "seconds": 0.157,
+        "seconds": 0.153,
         "metrics": {
           "nodes": 31,
           "links": 39,
           "calls": 3,
           "extracted_calls": 3,
-          "extracted_pct": 100
+          "extracted_pct": 100,
+          "full_seconds": 0.153,
+          "delta_seconds": 0.136,
+          "supports_incremental": true
         }
       },
       "nativeTools": [
@@ -1986,7 +2019,7 @@
           "name": "scip-typescript",
           "status": "ok",
           "ok": true,
-          "seconds": 1.493,
+          "seconds": 0.775,
           "metrics": {
             "documents": 6,
             "total_documents": 6,
@@ -2008,7 +2041,7 @@
           "name": "tsserver",
           "status": "ok",
           "ok": true,
-          "seconds": 0.673,
+          "seconds": 0.529,
           "metrics": {
             "diagnostics": 257,
             "diagnostics_by_code": {
@@ -2043,14 +2076,14 @@
             "symbols": 32443,
             "types": 1417,
             "instantiations": 578,
-            "memory_kb": 82359,
-            "iioo_read_sec": 0.01,
+            "memory_kb": 82486,
+            "iioo_read_sec": 0,
             "iioo_write_sec": 0,
-            "parse_time_sec": 0.09,
+            "parse_time_sec": 0.07,
             "bind_time_sec": 0.03,
             "check_time_sec": 0.09,
             "emit_time_sec": 0,
-            "total_time_sec": 0.21
+            "total_time_sec": 0.19
           }
         }
       ],
@@ -2060,21 +2093,30 @@
         "equivalentRows": 3,
         "atlasMissing": 0,
         "graphifyMissing": 1,
-        "atlasTokens": 22,
-        "graphifyTokens": 136,
-        "atlasMs": 37.997,
-        "graphifyMs": 237.784,
-        "tokenRatio": 6.18,
-        "latencyRatio": 6.26,
+        "atlasTokens": 20,
+        "graphifyTokens": 140,
+        "atlasMs": 39.801,
+        "graphifyMs": 213.57,
+        "tokenRatio": 7,
+        "latencyRatio": 5.37,
         "pass5x": true
       },
       "queries": [
         {
+          "symbol": "get",
+          "atlasTokens": 6,
+          "graphifyTokens": 47,
+          "atlasMs": 13.585,
+          "graphifyMs": 71.8,
+          "atlasMissing": false,
+          "graphifyMissing": false
+        },
+        {
           "symbol": "sendFile",
           "atlasTokens": 7,
           "graphifyTokens": 46,
-          "atlasMs": 12.873,
-          "graphifyMs": 77.313,
+          "atlasMs": 12.93,
+          "graphifyMs": 70.529,
           "atlasMissing": false,
           "graphifyMissing": false
         },
@@ -2082,26 +2124,17 @@
           "symbol": "defineGetter",
           "atlasTokens": 7,
           "graphifyTokens": 47,
-          "atlasMs": 12.836,
-          "graphifyMs": 78.468,
+          "atlasMs": 13.286,
+          "graphifyMs": 71.241,
           "atlasMissing": false,
           "graphifyMissing": false
         },
         {
-          "symbol": "render",
-          "atlasTokens": 8,
-          "graphifyTokens": 43,
-          "atlasMs": 12.288,
-          "graphifyMs": 82.003,
-          "atlasMissing": false,
-          "graphifyMissing": false
-        },
-        {
-          "symbol": "contentDisposition",
-          "atlasTokens": 9,
-          "graphifyTokens": 11,
-          "atlasMs": 12.421,
-          "graphifyMs": 77.318,
+          "symbol": "format",
+          "atlasTokens": 7,
+          "graphifyTokens": 8,
+          "atlasMs": 12.857,
+          "graphifyMs": 70.512,
           "atlasMissing": false,
           "graphifyMissing": true
         }
@@ -2116,10 +2149,10 @@
       "atlas": {
         "status": "ok",
         "ok": true,
-        "seconds": 0.021,
+        "seconds": 0.035,
         "metrics": {
           "files": 17,
-          "symbols": 222,
+          "symbols": 227,
           "edges": 224,
           "edge_kinds": {
             "calls": 197,
@@ -2135,22 +2168,31 @@
             "resolve_head": 0
           },
           "mode": "noop",
-          "cold_seconds": 0.095,
-          "cold_duration_ms": 53,
+          "cold_seconds": 0.079,
+          "cold_duration_ms": 52,
           "cold_timings_ms": {
+            "build_symbols_edges": 0,
             "delta_check": 0,
+            "discover_files": 0,
+            "doc_links": 0,
             "ensure_repo": 0,
+            "gitignore_scan": 13,
             "go_types": 0,
-            "lexical": 22,
-            "parse": 24,
-            "persist": 5,
+            "lexical": 19,
+            "parse": 18,
+            "persist": 19,
             "resolve_head": 0,
             "routes": 0,
             "sort": 0,
-            "walk": 0
+            "walk": 0,
+            "write_sqlite": 19
           },
+          "full_seconds": 0.079,
+          "cold_mode": "full",
+          "delta_seconds": 0.035,
+          "delta_mode": "noop",
           "calls": 197,
-          "internal_calls": 79,
+          "internal_calls": 81,
           "recv_typed": 8,
           "sources": {
             "javascript_ts": 197
@@ -2160,13 +2202,16 @@
       "graphify": {
         "status": "ok",
         "ok": true,
-        "seconds": 0.189,
+        "seconds": 0.163,
         "metrics": {
           "nodes": 112,
           "links": 171,
           "calls": 6,
           "extracted_calls": 6,
-          "extracted_pct": 100
+          "extracted_pct": 100,
+          "full_seconds": 0.163,
+          "delta_seconds": 0.148,
+          "supports_incremental": true
         }
       },
       "nativeTools": [
@@ -2174,7 +2219,7 @@
           "name": "scip-typescript",
           "status": "ok",
           "ok": true,
-          "seconds": 1.233,
+          "seconds": 0.613,
           "metrics": {
             "documents": 16,
             "total_documents": 16,
@@ -2196,7 +2241,7 @@
           "name": "tsserver",
           "status": "ok",
           "ok": true,
-          "seconds": 0.515,
+          "seconds": 0.467,
           "metrics": {
             "diagnostics": 1,
             "diagnostics_by_code": {
@@ -2210,7 +2255,7 @@
             "symbols": 40624,
             "types": 85,
             "instantiations": 0,
-            "memory_kb": 72532,
+            "memory_kb": 72442,
             "iioo_read_sec": 0.01,
             "iioo_write_sec": 0,
             "parse_time_sec": 0.11,
@@ -2227,12 +2272,12 @@
         "equivalentRows": 3,
         "atlasMissing": 0,
         "graphifyMissing": 1,
-        "atlasTokens": 20,
-        "graphifyTokens": 180,
-        "atlasMs": 38.745,
-        "graphifyMs": 236.943,
-        "tokenRatio": 9,
-        "latencyRatio": 6.12,
+        "atlasTokens": 19,
+        "graphifyTokens": 217,
+        "atlasMs": 37.489,
+        "graphifyMs": 216.767,
+        "tokenRatio": 11.42,
+        "latencyRatio": 5.78,
         "pass5x": true
       },
       "queries": [
@@ -2240,8 +2285,8 @@
           "symbol": "DevtoolsImpl",
           "atlasTokens": 7,
           "graphifyTokens": 53,
-          "atlasMs": 13.644,
-          "graphifyMs": 78.69,
+          "atlasMs": 12.031,
+          "graphifyMs": 71.359,
           "atlasMissing": false,
           "graphifyMissing": false
         },
@@ -2249,26 +2294,26 @@
           "symbol": "hydrate",
           "atlasTokens": 7,
           "graphifyTokens": 8,
-          "atlasMs": 12.893,
-          "graphifyMs": 82.746,
+          "atlasMs": 12.476,
+          "graphifyMs": 71.844,
           "atlasMissing": false,
           "graphifyMissing": true
-        },
-        {
-          "symbol": "persistImpl",
-          "atlasTokens": 7,
-          "graphifyTokens": 52,
-          "atlasMs": 13.026,
-          "graphifyMs": 79.508,
-          "atlasMissing": false,
-          "graphifyMissing": false
         },
         {
           "symbol": "shallow",
           "atlasTokens": 6,
           "graphifyTokens": 75,
-          "atlasMs": 12.075,
-          "graphifyMs": 78.745,
+          "atlasMs": 13.131,
+          "graphifyMs": 72.215,
+          "atlasMissing": false,
+          "graphifyMissing": false
+        },
+        {
+          "symbol": "CreateStore",
+          "atlasTokens": 6,
+          "graphifyTokens": 89,
+          "atlasMs": 12.327,
+          "graphifyMs": 73.193,
           "atlasMissing": false,
           "graphifyMissing": false
         }
@@ -2283,10 +2328,10 @@
       "atlas": {
         "status": "ok",
         "ok": true,
-        "seconds": 0.02,
+        "seconds": 0.036,
         "metrics": {
           "files": 86,
-          "symbols": 1401,
+          "symbols": 1558,
           "edges": 3782,
           "edge_kinds": {
             "calls": 3105,
@@ -2295,28 +2340,37 @@
           "languages": {
             "java": 86
           },
-          "duration_ms": 0,
+          "duration_ms": 6,
           "timings_ms": {
-            "delta_check": 0,
+            "delta_check": 6,
             "resolve_head": 0
           },
           "mode": "noop",
-          "cold_seconds": 0.375,
-          "cold_duration_ms": 319,
+          "cold_seconds": 0.28,
+          "cold_duration_ms": 246,
           "cold_timings_ms": {
+            "build_symbols_edges": 0,
             "delta_check": 0,
+            "discover_files": 0,
+            "doc_links": 0,
             "ensure_repo": 0,
+            "gitignore_scan": 12,
             "go_types": 0,
-            "lexical": 178,
-            "parse": 51,
-            "persist": 86,
+            "lexical": 176,
+            "parse": 55,
+            "persist": 176,
             "resolve_head": 0,
             "routes": 0,
-            "sort": 1,
-            "walk": 1
+            "sort": 0,
+            "walk": 0,
+            "write_sqlite": 176
           },
+          "full_seconds": 0.28,
+          "cold_mode": "full",
+          "delta_seconds": 0.036,
+          "delta_mode": "noop",
           "calls": 3105,
-          "internal_calls": 2401,
+          "internal_calls": 2403,
           "recv_typed": 2326,
           "sources": {
             "java_ts": 3105
@@ -2326,58 +2380,31 @@
       "graphify": {
         "status": "ok",
         "ok": true,
-        "seconds": 0.917,
+        "seconds": 0.87,
         "metrics": {
           "nodes": 1016,
           "links": 3668,
           "calls": 927,
           "extracted_calls": 599,
-          "extracted_pct": 64.6
+          "extracted_pct": 64.6,
+          "full_seconds": 0.87,
+          "delta_seconds": 0.558,
+          "supports_incremental": true
         }
       },
       "nativeTools": [
         {
           "name": "scip-java",
-          "status": "ok",
-          "ok": true,
-          "seconds": 4.007,
-          "metrics": {
-            "documents": 85,
-            "total_documents": 209,
-            "filter_prefixes": [
-              "src/main/java"
-            ],
-            "external_symbols": 0,
-            "symbols": 3408,
-            "occurrences": 21514,
-            "definitions": 3405,
-            "references": 18109,
-            "imports": 0,
-            "relationships": 832,
-            "kinds": {
-              "AbstractMethod": 44,
-              "Class": 89,
-              "Constructor": 116,
-              "Enum": 6,
-              "Field": 199,
-              "Interface": 18,
-              "Method": 675,
-              "StaticField": 171,
-              "StaticMethod": 135,
-              "TypeParameter": 96,
-              "UnspecifiedKind": 1072,
-              "Variable": 787
-            },
-            "index_bytes": 9069422,
-            "scope": "gson",
-            "document_filter": "src/main/java"
-          }
+          "status": "missing",
+          "ok": false,
+          "seconds": 0,
+          "metrics": {}
         },
         {
           "name": "jdtls",
           "status": "ok",
           "ok": true,
-          "seconds": 2.08,
+          "seconds": 1.716,
           "metrics": {
             "build_root": "gson",
             "sample_files": 5,
@@ -2390,7 +2417,7 @@
             "java_home": "/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home",
             "stderr_tail": [
               "WARNING: Using incubator modules: jdk.incubator.vector",
-              "Jun 29, 2026 2:19:03 PM org.apache.aries.spifly.BaseActivator log",
+              "Jun 30, 2026 5:19:52 AM org.apache.aries.spifly.BaseActivator log",
               "INFO: Registered provider ch.qos.logback.classic.spi.LogbackServiceProvider of service org.slf4j.spi.SLF4JServiceProvider in bundle ch.qos.logback.classic"
             ]
           }
@@ -2398,43 +2425,25 @@
       ],
       "truth": {},
       "querySummary": {
-        "rows": 4,
-        "equivalentRows": 4,
+        "rows": 2,
+        "equivalentRows": 2,
         "atlasMissing": 0,
         "graphifyMissing": 0,
-        "atlasTokens": 32,
-        "graphifyTokens": 517,
-        "atlasMs": 69.868,
-        "graphifyMs": 392.217,
-        "tokenRatio": 16.16,
-        "latencyRatio": 5.61,
-        "pass5x": true
+        "atlasTokens": 14,
+        "graphifyTokens": 214,
+        "atlasMs": 46.613,
+        "graphifyMs": 181.041,
+        "tokenRatio": 15.29,
+        "latencyRatio": 3.88,
+        "pass5x": false
       },
       "queries": [
-        {
-          "symbol": "create",
-          "atlasTokens": 9,
-          "graphifyTokens": 64,
-          "atlasMs": 16.801,
-          "graphifyMs": 97.728,
-          "atlasMissing": false,
-          "graphifyMissing": false
-        },
         {
           "symbol": "write",
           "atlasTokens": 7,
           "graphifyTokens": 112,
-          "atlasMs": 19.004,
-          "graphifyMs": 98.185,
-          "atlasMissing": false,
-          "graphifyMissing": false
-        },
-        {
-          "symbol": "peek",
-          "atlasTokens": 9,
-          "graphifyTokens": 239,
-          "atlasMs": 15.37,
-          "graphifyMs": 97.394,
+          "atlasMs": 24.955,
+          "graphifyMs": 89.672,
           "atlasMissing": false,
           "graphifyMissing": false
         },
@@ -2442,8 +2451,8 @@
           "symbol": "read",
           "atlasTokens": 7,
           "graphifyTokens": 102,
-          "atlasMs": 18.693,
-          "graphifyMs": 98.91,
+          "atlasMs": 21.658,
+          "graphifyMs": 91.369,
           "atlasMissing": false,
           "graphifyMissing": false
         }
@@ -2458,14 +2467,14 @@
       "atlas": {
         "status": "ok",
         "ok": true,
-        "seconds": 0.043,
+        "seconds": 0.03,
         "metrics": {
-          "files": 177,
-          "symbols": 1626,
-          "edges": 5400,
+          "files": 178,
+          "symbols": 1790,
+          "edges": 5373,
           "edge_kinds": {
-            "calls": 4996,
-            "imports": 404
+            "calls": 4973,
+            "imports": 400
           },
           "languages": {
             "bash": 3,
@@ -2474,37 +2483,47 @@
             "json": 4,
             "makefile": 5,
             "markdown": 12,
+            "pdf": 1,
             "python": 2,
             "ruby": 16,
             "text": 9,
             "yaml": 23
           },
-          "duration_ms": 0,
+          "duration_ms": 9,
           "timings_ms": {
-            "delta_check": 0,
+            "delta_check": 9,
             "resolve_head": 0
           },
           "mode": "noop",
-          "cold_seconds": 0.491,
-          "cold_duration_ms": 448,
+          "cold_seconds": 0.333,
+          "cold_duration_ms": 295,
           "cold_timings_ms": {
+            "build_symbols_edges": 1,
             "delta_check": 0,
+            "discover_files": 1,
+            "doc_links": 0,
             "ensure_repo": 0,
+            "gitignore_scan": 11,
             "go_types": 0,
-            "lexical": 204,
-            "parse": 98,
-            "persist": 123,
-            "resolve_head": 1,
+            "lexical": 163,
+            "parse": 116,
+            "persist": 163,
+            "resolve_head": 0,
             "routes": 0,
-            "sort": 1,
-            "walk": 17
+            "sort": 0,
+            "walk": 1,
+            "write_sqlite": 163
           },
-          "calls": 4996,
-          "internal_calls": 1883,
+          "full_seconds": 0.333,
+          "cold_mode": "full",
+          "delta_seconds": 0.03,
+          "delta_mode": "noop",
+          "calls": 4973,
+          "internal_calls": 1975,
           "recv_typed": 18,
           "sources": {
             "cpp_ts": 4275,
-            "call_pattern": 579,
+            "call_pattern": 556,
             "python_ts": 142
           }
         }
@@ -2512,13 +2531,16 @@
       "graphify": {
         "status": "ok",
         "ok": true,
-        "seconds": 0.916,
+        "seconds": 0.86,
         "metrics": {
           "nodes": 971,
           "links": 2148,
           "calls": 1018,
           "extracted_calls": 492,
-          "extracted_pct": 48.3
+          "extracted_pct": 48.3,
+          "full_seconds": 0.86,
+          "delta_seconds": 0.479,
+          "supports_incremental": true
         }
       },
       "nativeTools": [
@@ -2526,7 +2548,7 @@
           "name": "clangd",
           "status": "ok",
           "ok": true,
-          "seconds": 0.136,
+          "seconds": 0.068,
           "metrics": {
             "sample_files": 8,
             "document_symbol_files": 8,
@@ -2535,11 +2557,11 @@
             "diagnostics": 2,
             "initialized": true,
             "stderr_tail": [
-              "I[14:19:08.669] --> reply:textDocument/documentSymbol(17) 79 ms",
-              "I[14:19:08.674] --> textDocument/publishDiagnostics",
-              "I[14:19:08.674] --> reply:textDocument/documentSymbol(11) 85 ms",
-              "I[14:19:08.678] --> textDocument/publishDiagnostics",
-              "I[14:19:08.680] --> reply:textDocument/documentSymbol(10) 91 ms"
+              "I[05:19:57.931] --> reply:textDocument/documentSymbol(16) 42 ms",
+              "I[05:19:57.935] --> textDocument/publishDiagnostics",
+              "I[05:19:57.936] --> reply:textDocument/documentSymbol(11) 47 ms",
+              "I[05:19:57.938] --> textDocument/publishDiagnostics",
+              "I[05:19:57.940] --> reply:textDocument/documentSymbol(10) 51 ms"
             ]
           }
         }
@@ -2552,10 +2574,10 @@
         "graphifyMissing": 0,
         "atlasTokens": 42,
         "graphifyTokens": 1206,
-        "atlasMs": 62.176,
-        "graphifyMs": 378.208,
+        "atlasMs": 57.171,
+        "graphifyMs": 350.624,
         "tokenRatio": 28.71,
-        "latencyRatio": 6.08,
+        "latencyRatio": 6.13,
         "pass5x": true
       },
       "queries": [
@@ -2563,8 +2585,8 @@
           "symbol": "cJSON_Delete",
           "atlasTokens": 8,
           "graphifyTokens": 284,
-          "atlasMs": 18.582,
-          "graphifyMs": 94.97,
+          "atlasMs": 15.014,
+          "graphifyMs": 88.866,
           "atlasMissing": false,
           "graphifyMissing": false
         },
@@ -2572,8 +2594,8 @@
           "symbol": "cjson_functions_should_not_crash_with_null_pointers",
           "atlasTokens": 18,
           "graphifyTokens": 288,
-          "atlasMs": 14.268,
-          "graphifyMs": 94.846,
+          "atlasMs": 14.447,
+          "graphifyMs": 87.159,
           "atlasMissing": false,
           "graphifyMissing": false
         },
@@ -2581,8 +2603,8 @@
           "symbol": "cJSON_CreateObject",
           "atlasTokens": 9,
           "graphifyTokens": 332,
-          "atlasMs": 14.509,
-          "graphifyMs": 93.733,
+          "atlasMs": 14.113,
+          "graphifyMs": 88.063,
           "atlasMissing": false,
           "graphifyMissing": false
         },
@@ -2590,8 +2612,8 @@
           "symbol": "UnityPrint",
           "atlasTokens": 7,
           "graphifyTokens": 302,
-          "atlasMs": 14.817,
-          "graphifyMs": 94.659,
+          "atlasMs": 13.597,
+          "graphifyMs": 86.536,
           "atlasMissing": false,
           "graphifyMissing": false
         }
@@ -2606,14 +2628,14 @@
       "atlas": {
         "status": "ok",
         "ok": true,
-        "seconds": 0.026,
+        "seconds": 0.029,
         "metrics": {
           "files": 144,
-          "symbols": 1368,
-          "edges": 10314,
+          "symbols": 2088,
+          "edges": 10255,
           "edge_kinds": {
-            "calls": 9537,
-            "imports": 777
+            "calls": 9481,
+            "imports": 774
           },
           "languages": {
             "c": 57,
@@ -2624,44 +2646,56 @@
             "text": 1,
             "yaml": 1
           },
-          "duration_ms": 0,
+          "duration_ms": 12,
           "timings_ms": {
-            "delta_check": 0,
+            "delta_check": 12,
             "resolve_head": 0
           },
           "mode": "noop",
-          "cold_seconds": 0.471,
-          "cold_duration_ms": 419,
+          "cold_seconds": 0.357,
+          "cold_duration_ms": 318,
           "cold_timings_ms": {
+            "build_symbols_edges": 4,
             "delta_check": 0,
+            "discover_files": 4,
+            "doc_links": 0,
             "ensure_repo": 0,
+            "gitignore_scan": 12,
             "go_types": 0,
-            "lexical": 141,
-            "parse": 74,
-            "persist": 194,
+            "lexical": 214,
+            "parse": 82,
+            "persist": 214,
             "resolve_head": 0,
             "routes": 0,
             "sort": 3,
-            "walk": 4
+            "walk": 4,
+            "write_sqlite": 214
           },
-          "calls": 9537,
-          "internal_calls": 4388,
-          "recv_typed": 1977,
+          "full_seconds": 0.357,
+          "cold_mode": "full",
+          "delta_seconds": 0.029,
+          "delta_mode": "noop",
+          "calls": 9481,
+          "internal_calls": 6217,
+          "recv_typed": 1959,
           "sources": {
-            "cpp_ts": 9537
+            "cpp_ts": 9481
           }
         }
       },
       "graphify": {
         "status": "ok",
         "ok": true,
-        "seconds": 1.298,
+        "seconds": 1.218,
         "metrics": {
           "nodes": 2206,
           "links": 4995,
           "calls": 1195,
           "extracted_calls": 1027,
-          "extracted_pct": 85.9
+          "extracted_pct": 85.9,
+          "full_seconds": 1.218,
+          "delta_seconds": 0.779,
+          "supports_incremental": true
         }
       },
       "nativeTools": [
@@ -2669,7 +2703,7 @@
           "name": "clangd",
           "status": "ok",
           "ok": true,
-          "seconds": 0.242,
+          "seconds": 0.185,
           "metrics": {
             "sample_files": 8,
             "document_symbol_files": 8,
@@ -2678,45 +2712,45 @@
             "diagnostics": 167,
             "initialized": true,
             "stderr_tail": [
-              "E[14:19:10.971] IncludeCleaner: Failed to get an entry for resolved path : No such file or directory",
-              "E[14:19:10.971] IncludeCleaner: Failed to get an entry for resolved path : No such file or directory",
-              "E[14:19:10.971] IncludeCleaner: Failed to get an entry for resolved path : No such file or directory",
-              "I[14:19:10.972] --> textDocument/publishDiagnostics",
-              "I[14:19:10.972] --> reply:textDocument/documentSymbol(11) 222 ms"
+              "E[05:20:01.072] IncludeCleaner: Failed to get an entry for resolved path : No such file or directory",
+              "E[05:20:01.072] IncludeCleaner: Failed to get an entry for resolved path : No such file or directory",
+              "E[05:20:01.072] IncludeCleaner: Failed to get an entry for resolved path : No such file or directory",
+              "I[05:20:01.073] --> textDocument/publishDiagnostics",
+              "I[05:20:01.073] --> reply:textDocument/documentSymbol(11) 169 ms"
             ]
           }
         }
       ],
       "truth": {},
       "querySummary": {
-        "rows": 3,
-        "equivalentRows": 3,
+        "rows": 4,
+        "equivalentRows": 4,
         "atlasMissing": 0,
         "graphifyMissing": 0,
-        "atlasTokens": 25,
-        "graphifyTokens": 397,
-        "atlasMs": 56.515,
-        "graphifyMs": 322.337,
-        "tokenRatio": 15.88,
-        "latencyRatio": 5.7,
+        "atlasTokens": 32,
+        "graphifyTokens": 320,
+        "atlasMs": 68.453,
+        "graphifyMs": 397.063,
+        "tokenRatio": 10,
+        "latencyRatio": 5.8,
         "pass5x": true
       },
       "queries": [
         {
-          "symbol": "TEST_F",
-          "atlasTokens": 10,
-          "graphifyTokens": 93,
-          "atlasMs": 27.83,
-          "graphifyMs": 108.202,
+          "symbol": "RandomString",
+          "atlasTokens": 9,
+          "graphifyTokens": 76,
+          "atlasMs": 14.751,
+          "graphifyMs": 98.705,
           "atlasMissing": false,
           "graphifyMissing": false
         },
         {
-          "symbol": "slice",
-          "atlasTokens": 6,
-          "graphifyTokens": 232,
-          "atlasMs": 14.104,
-          "graphifyMs": 106.565,
+          "symbol": "MemEnvTest",
+          "atlasTokens": 8,
+          "graphifyTokens": 100,
+          "atlasMs": 13.15,
+          "graphifyMs": 98.39,
           "atlasMissing": false,
           "graphifyMissing": false
         },
@@ -2724,21 +2758,30 @@
           "symbol": "Size",
           "atlasTokens": 9,
           "graphifyTokens": 72,
-          "atlasMs": 14.581,
-          "graphifyMs": 107.57,
+          "atlasMs": 14.308,
+          "graphifyMs": 99.834,
+          "atlasMissing": false,
+          "graphifyMissing": false
+        },
+        {
+          "symbol": "size",
+          "atlasTokens": 6,
+          "graphifyTokens": 72,
+          "atlasMs": 26.244,
+          "graphifyMs": 100.134,
           "atlasMissing": false,
           "graphifyMissing": false
         }
       ]
     }
   ],
-  "liveSmokes": [
+  "liveBenchmarks": [
     {
       "language": "apex",
       "repo": "https://github.com/trailheadapps/apex-recipes",
       "commit": "cb5cd9d3621985b816476e5a317b5a0016fc3576",
-      "artifact": "data/raw/LIVE_APEX_SMOKE.json",
-      "source": "bench/LIVE_APEX_SMOKE.json",
+      "artifact": "data/raw/LIVE_APEX_BENCHMARK.json",
+      "source": "bench/LIVE_APEX_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 1.365,
@@ -2804,7 +2847,7 @@
         "sf": {
           "status": "missing",
           "ok": false,
-          "note": "Salesforce CLI not installed; source-only Apex parser proxy used for this smoke"
+          "note": "Salesforce CLI not installed; source-only Apex parser proxy used for this benchmark"
         },
         "sfdx": {
           "status": "missing",
@@ -2814,7 +2857,7 @@
         "apex-language-server": {
           "status": "missing",
           "ok": false,
-          "note": "Apex language server is not installed; source counter coverage proxy used for this smoke"
+          "note": "Apex language server is not installed; source counter coverage proxy used for this benchmark"
         }
       },
       "coverage": {
@@ -2826,7 +2869,7 @@
       },
       "optimization": {
         "cyclesRun": 2,
-        "stopReason": "Apex live smoke matched the source-counter coverage proxy after adding an Apex-specific parser for Salesforce classes, triggers, constructors, SOQL SObjects, and DML operations.",
+        "stopReason": "Apex live benchmark matched the source-counter coverage proxy after adding an Apex-specific parser for Salesforce classes, triggers, constructors, SOQL SObjects, and DML operations.",
         "cycleNotes": [
           "cycle 1: trailheadapps/apex-recipes probe showed the generic Apex rules indexed classes/triggers/methods but missed richer graphify-style SOQL/DML context and misclassified constructors after nested interface/enum declarations.",
           "cycle 2: after adding a dedicated Apex parser, Atlas records class/interface/enum types, triggers, constructors, methods, SOQL SObjects, and DML operation context against the live Salesforce sample app."
@@ -2906,8 +2949,8 @@
       "language": "astro",
       "repo": "https://github.com/withastro/blog-tutorial-demo",
       "commit": "0859a3ea85f35325c0a292f9b3131824ef95ee38",
-      "artifact": "data/raw/LIVE_ASTRO_SMOKE.json",
-      "source": "bench/LIVE_ASTRO_SMOKE.json",
+      "artifact": "data/raw/LIVE_ASTRO_BENCHMARK.json",
+      "source": "bench/LIVE_ASTRO_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 0.065,
@@ -2970,7 +3013,7 @@
         "astro-language-server": {
           "status": "missing",
           "ok": false,
-          "note": "Astro language server is not installed; @astrojs/compiler parse coverage used for this smoke"
+          "note": "Astro language server is not installed; @astrojs/compiler parse coverage used for this benchmark"
         },
         "@astrojs/compiler": {
           "status": "ok",
@@ -2987,7 +3030,7 @@
       },
       "optimization": {
         "cyclesRun": 2,
-        "stopReason": "Astro live smoke matched the @astrojs/compiler/frontmatter coverage proxy after adding an Astro-specific parser for component files, component tags, frontmatter functions, and variables.",
+        "stopReason": "Astro live benchmark matched the @astrojs/compiler/frontmatter coverage proxy after adding an Astro-specific parser for component files, component tags, frontmatter functions, and variables.",
         "cycleNotes": [
           "cycle 1: withastro/blog-tutorial-demo probe showed the generic regex missed Astro component/file symbols and component tags.",
           "cycle 2: after adding an Astro-specific parser, Atlas matched @astrojs/compiler/source coverage and exact-symbol rows exceeded 5x where graphify exposed matching labels."
@@ -3067,8 +3110,8 @@
       "language": "bash",
       "repo": "https://github.com/nvm-sh/nvm",
       "commit": "a6ec73943099a86fba98bde3b04a1c60944a4549",
-      "artifact": "data/raw/LIVE_BASH_SMOKE.json",
-      "source": "bench/LIVE_BASH_SMOKE.json",
+      "artifact": "data/raw/LIVE_BASH_BENCHMARK.json",
+      "source": "bench/LIVE_BASH_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 0.163,
@@ -3147,9 +3190,9 @@
       },
       "optimization": {
         "cyclesRun": 1,
-        "stopReason": "Bash live smoke met the current 5x latency/token thresholds and matched the /bin/bash -n function-definition coverage proxy on cycle 1.",
+        "stopReason": "Bash live benchmark met the current 5x latency/token thresholds and matched the /bin/bash -n function-definition coverage proxy on cycle 1.",
         "cycleNotes": [
-          "cycle 1: nvm-sh/nvm smoke reached 1.0 Atlas/native function coverage and exceeded 5x query latency plus token output vs graphify on exact function queries."
+          "cycle 1: nvm-sh/nvm benchmark reached 1.0 Atlas/native function coverage and exceeded 5x query latency plus token output vs graphify on exact function queries."
         ]
       },
       "querySummary": {
@@ -3208,8 +3251,8 @@
       "language": "blade",
       "repo": "https://github.com/BookStackApp/BookStack",
       "commit": "f7df78b91b12ff1d8e248ded7747e76203904b8e",
-      "artifact": "data/raw/LIVE_BLADE_SMOKE.json",
-      "source": "bench/LIVE_BLADE_SMOKE.json",
+      "artifact": "data/raw/LIVE_BLADE_BENCHMARK.json",
+      "source": "bench/LIVE_BLADE_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 0.277,
@@ -3270,12 +3313,12 @@
         "laravel": {
           "status": "missing",
           "ok": false,
-          "note": "Laravel application runtime is not installed for this source-only smoke"
+          "note": "Laravel application runtime is not installed for this source-only benchmark"
         },
         "blade-language-server": {
           "status": "missing",
           "ok": false,
-          "note": "Blade language server is not installed; directive coverage proxy used for this smoke"
+          "note": "Blade language server is not installed; directive coverage proxy used for this benchmark"
         }
       },
       "coverage": {
@@ -3287,7 +3330,7 @@
       },
       "optimization": {
         "cyclesRun": 3,
-        "stopReason": "Blade live smoke matched the directive-counter coverage proxy and improved token score after compacting verbose `.blade.php` suffixes in terse plain locations while preserving full paths in JSON.",
+        "stopReason": "Blade live benchmark matched the directive-counter coverage proxy and improved token score after compacting verbose `.blade.php` suffixes in terse plain locations while preserving full paths in JSON.",
         "cycleNotes": [
           "cycle 1: BookStack probe showed the generic Blade rules matched graphify's @include target labels but missed file template identity plus @extends/@section/@yield and component directives useful for code-review context.",
           "cycle 2: after adding a Blade-specific parser, Atlas matched the benchmark-owned directive coverage proxy and exact @include query rows exceeded 5x for latency and token output vs graphify.",
@@ -3368,8 +3411,8 @@
       "language": "byond",
       "repo": "https://github.com/tgstation/tgstation",
       "commit": "4c88909444709d715adfb8f96e9e96cccd986095",
-      "artifact": "data/raw/LIVE_BYOND_SMOKE.json",
-      "source": "bench/LIVE_BYOND_SMOKE.json",
+      "artifact": "data/raw/LIVE_BYOND_BENCHMARK.json",
+      "source": "bench/LIVE_BYOND_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 2.088,
@@ -3430,12 +3473,12 @@
         "dreamchecker": {
           "status": "missing",
           "ok": false,
-          "note": "dreamchecker not installed; source-only BYOND parser proxy used for this smoke"
+          "note": "dreamchecker not installed; source-only BYOND parser proxy used for this benchmark"
         },
         "dm-langserver": {
           "status": "missing",
           "ok": false,
-          "note": "BYOND/DM language server is not installed; source counter coverage proxy used for this smoke"
+          "note": "BYOND/DM language server is not installed; source counter coverage proxy used for this benchmark"
         },
         "tree-sitter-dm": {
           "status": "missing",
@@ -3452,12 +3495,12 @@
       },
       "optimization": {
         "cyclesRun": 5,
-        "stopReason": "BYOND/DM live smoke replaces the generic regex fallback with a dedicated source parser and records saturation evidence; the five-pass saturation report records that graphify misses every path-like DM query on this machine.",
+        "stopReason": "BYOND/DM live benchmark replaces the generic regex fallback with a dedicated source parser and records saturation evidence; the five-pass saturation report records that graphify misses every path-like DM query on this machine.",
         "cycleNotes": [
           "cycle 1: tgstation/tgstation probe showed the generic BYOND fallback over-indexed call/control-flow lines such as if(...) while missing graphify-style owner-qualified proc paths and resource-file context.",
           "cycle 2: after adding a dedicated BYOND parser and benchmark-owned source counter, Atlas indexes owner-qualified DM paths plus BYOND resource symbols against the live tgstation code slice.",
           "cycle 3: hard-budgeted context probes increased tokens/latency for path-like DM symbols, so exact-symbol explain remains the lower-cost measurement; 5x is not claimed because graphify has no equivalent rows.",
-          "cycles 4-5: repeated live smokes kept native coverage at 1.0 and graphify-equivalent query rows at 0/6, so BYOND query-score improvement is saturated until graphify exposes equivalent DM query nodes for these paths."
+          "cycles 4-5: repeated live benchmarks kept native coverage at 1.0 and graphify-equivalent query rows at 0/6, so BYOND query-score improvement is saturated until graphify exposes equivalent DM query nodes for these paths."
         ]
       },
       "querySummary": {
@@ -3534,8 +3577,8 @@
       "language": "csharp",
       "repo": "https://github.com/DapperLib/Dapper",
       "commit": "72a54c475f75e18cb93cba0809d00a5e6e49efd9",
-      "artifact": "data/raw/LIVE_CSHARP_SMOKE.json",
-      "source": "bench/LIVE_CSHARP_SMOKE.json",
+      "artifact": "data/raw/LIVE_CSHARP_BENCHMARK.json",
+      "source": "bench/LIVE_CSHARP_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 0.644,
@@ -3631,7 +3674,7 @@
       },
       "optimization": {
         "cyclesRun": 3,
-        "stopReason": "C# live smoke improves Atlas type/method recall on real Dapper code, records Atlas/graphify query metrics, and measures coverage against a Roslyn syntax-tree baseline when dotnet is installed.",
+        "stopReason": "C# live benchmark improves Atlas type/method recall on real Dapper code, records Atlas/graphify query metrics, and measures coverage against a Roslyn syntax-tree baseline when dotnet is installed.",
         "cycleNotes": [
           "cycle 1: Dapper probe exposed an Atlas C# parser gap: multi-modifier declarations such as `public static partial class SqlMapper` were missed, leaving 1,332 C# definition symbols.",
           "cycle 2: after expanding C# modifier/type/method regexes, the same Dapper checkout indexes 3,419 C# definition symbols and resolves Dapper type queries that were previously absent.",
@@ -3694,8 +3737,8 @@
       "language": "cuda",
       "repo": "https://github.com/NVIDIA/cuda-samples",
       "commit": "b7c5481c556c3fe98db060207ecaa41a4b9a9abc",
-      "artifact": "data/raw/LIVE_CUDA_SMOKE.json",
-      "source": "bench/LIVE_CUDA_SMOKE.json",
+      "artifact": "data/raw/LIVE_CUDA_BENCHMARK.json",
+      "source": "bench/LIVE_CUDA_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 0.073,
@@ -3758,12 +3801,12 @@
         "nvcc": {
           "status": "missing",
           "ok": false,
-          "note": "nvcc not installed; source-only parser proxy used for this smoke"
+          "note": "nvcc not installed; source-only parser proxy used for this benchmark"
         },
         "clangd": {
           "status": "available",
           "ok": true,
-          "note": "clangd is available, but this smoke uses source-only CUDA extension coverage to avoid compile database coupling"
+          "note": "clangd is available, but this benchmark uses source-only CUDA extension coverage to avoid compile database coupling"
         }
       },
       "coverage": {
@@ -3775,9 +3818,9 @@
       },
       "optimization": {
         "cyclesRun": 2,
-        "stopReason": "CUDA live smoke covers graphify's .cu/.cuh support inside the cpp/cuda family and improved token score after compacting CUDA source suffixes in terse plain locations while preserving full paths in JSON.",
+        "stopReason": "CUDA live benchmark covers graphify's .cu/.cuh support inside the cpp/cuda family and improved token score after compacting CUDA source suffixes in terse plain locations while preserving full paths in JSON.",
         "cycleNotes": [
-          "cycle 1: NVIDIA/cuda-samples simpleAtomicIntrinsics smoke verified Atlas maps .cu/.cuh files to cpp symbols, resolves kernel/host functions, and records graphify/native query metrics on the same live files.",
+          "cycle 1: NVIDIA/cuda-samples simpleAtomicIntrinsics benchmark verified Atlas maps .cu/.cuh files to cpp symbols, resolves kernel/host functions, and records graphify/native query metrics on the same live files.",
           "cycle 2: compacting `.cu`/`.cuh` suffixes in terse locations reduces exact-symbol output for CUDA host/kernel files without changing indexed symbols or JSON paths."
         ]
       },
@@ -3828,8 +3871,8 @@
       "language": "dart",
       "repo": "https://github.com/dart-lang/http",
       "commit": "5d94ef52582867e077bf41c3fa20fb8b1d1d834e",
-      "artifact": "data/raw/LIVE_DART_SMOKE.json",
-      "source": "bench/LIVE_DART_SMOKE.json",
+      "artifact": "data/raw/LIVE_DART_BENCHMARK.json",
+      "source": "bench/LIVE_DART_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 0.103,
@@ -3906,7 +3949,7 @@
       },
       "optimization": {
         "cyclesRun": 2,
-        "stopReason": "Dart live smoke met the current 5x latency/token thresholds and matched the tree-sitter-dart definition coverage proxy after replacing generic regex parsing with a Dart-specific signature scanner.",
+        "stopReason": "Dart live benchmark met the current 5x latency/token thresholds and matched the tree-sitter-dart definition coverage proxy after replacing generic regex parsing with a Dart-specific signature scanner.",
         "cycleNotes": [
           "cycle 1: dart-lang/http probe showed the generic fallback over-indexed constructor calls such as Duration and missed real generic-return methods such as `Future<StreamedResponse> send(...)`.",
           "cycle 2: after adding a Dart-specific parser, Atlas/tree-sitter-dart definition coverage matched on the live package slice and exact-symbol query rows exceeded 5x for latency and token output vs graphify."
@@ -3986,8 +4029,8 @@
       "language": "delphi",
       "repo": "https://github.com/fpc/Lazarus",
       "commit": "a37c7c35c6a271b377cd799c48586ea2689a8e0f",
-      "artifact": "data/raw/LIVE_DELPHI_SMOKE.json",
-      "source": "bench/LIVE_DELPHI_SMOKE.json",
+      "artifact": "data/raw/LIVE_DELPHI_BENCHMARK.json",
+      "source": "bench/LIVE_DELPHI_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 7.385,
@@ -4051,12 +4094,12 @@
         "fpc": {
           "status": "missing",
           "ok": false,
-          "note": "Free Pascal compiler not installed; source-only form/package parser proxy used for this smoke"
+          "note": "Free Pascal compiler not installed; source-only form/package parser proxy used for this benchmark"
         },
         "lazbuild": {
           "status": "missing",
           "ok": false,
-          "note": "lazbuild not installed; source-only form/package parser proxy used for this smoke"
+          "note": "lazbuild not installed; source-only form/package parser proxy used for this benchmark"
         },
         "pasls": {
           "status": "missing",
@@ -4073,7 +4116,7 @@
       },
       "optimization": {
         "cyclesRun": 2,
-        "stopReason": "Delphi/Lazarus live smoke replaces the generic one-regex form fallback with a dedicated parser for form component instances, component classes, event handlers, package names, package dependencies, and units.",
+        "stopReason": "Delphi/Lazarus live benchmark replaces the generic one-regex form fallback with a dedicated parser for form component instances, component classes, event handlers, package names, package dependencies, and units.",
         "cycleNotes": [
           "cycle 1: fpc/Lazarus IDE probe showed the generic Delphi fallback indexed only form component instance names and missed event handlers plus .lpk package/unit/dependency context exposed by graphify.",
           "cycle 2: after adding a dedicated Delphi/Lazarus parser and benchmark-owned source counter, Atlas covers form and package context on the live Lazarus IDE slice."
@@ -4162,8 +4205,8 @@
       "language": "dotnet",
       "repo": "https://github.com/DapperLib/Dapper",
       "commit": "72a54c475f75e18cb93cba0809d00a5e6e49efd9",
-      "artifact": "data/raw/LIVE_DOTNET_SMOKE.json",
-      "source": "bench/LIVE_DOTNET_SMOKE.json",
+      "artifact": "data/raw/LIVE_DOTNET_BENCHMARK.json",
+      "source": "bench/LIVE_DOTNET_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 0.645,
@@ -4244,7 +4287,7 @@
       },
       "optimization": {
         "cyclesRun": 3,
-        "stopReason": ".NET project live smoke matched the Python XML/solution coverage proxy and improved token score after compacting project-file suffixes in terse plain locations while preserving full paths in JSON.",
+        "stopReason": ".NET project live benchmark matched the Python XML/solution coverage proxy and improved token score after compacting project-file suffixes in terse plain locations while preserving full paths in JSON.",
         "cycleNotes": [
           "cycle 1: Dapper project-file probe showed Atlas only captured a few XML PackageReference/ProjectReference entries and missed .slnx project entries plus target frameworks.",
           "cycle 2: after adding a dedicated .NET project parser, Atlas/python-dotnet-project coverage reached 1.0 on the live Dapper repo.",
@@ -4325,8 +4368,8 @@
       "language": "ejs",
       "repo": "https://github.com/expressjs/express",
       "commit": "18e5985b8a9d5e8423db0a9121f22bdaecd5b120",
-      "artifact": "data/raw/LIVE_EJS_SMOKE.json",
-      "source": "bench/LIVE_EJS_SMOKE.json",
+      "artifact": "data/raw/LIVE_EJS_BENCHMARK.json",
+      "source": "bench/LIVE_EJS_BENCHMARK.json",
       "detectorOnly": true,
       "atlas": {
         "coldSeconds": 0.097,
@@ -4391,12 +4434,12 @@
         "ejs": {
           "status": "missing",
           "ok": false,
-          "note": "EJS CLI not installed; source-only template parser proxy used for this smoke"
+          "note": "EJS CLI not installed; source-only template parser proxy used for this benchmark"
         },
         "ejs-language-server": {
           "status": "missing",
           "ok": false,
-          "note": "EJS language server is not installed; source counter coverage proxy used for this graphify detector-only smoke"
+          "note": "EJS language server is not installed; source counter coverage proxy used for this graphify detector-only benchmark"
         }
       },
       "coverage": {
@@ -4408,7 +4451,7 @@
       },
       "optimization": {
         "cyclesRun": 2,
-        "stopReason": "EJS live smoke covers a graphify detector-only extension by adding Atlas template-file, include, function, and variable symbols; graphify has no deterministic EJS extractor in this installed runtime.",
+        "stopReason": "EJS live benchmark covers a graphify detector-only extension by adding Atlas template-file, include, function, and variable symbols; graphify has no deterministic EJS extractor in this installed runtime.",
         "cycleNotes": [
           "cycle 1: expressjs/express examples probe showed Atlas could map .ejs files but only extracted include/function/variable tags, missing file-level template identity.",
           "cycle 2: after adding an EJS-specific parser, Atlas records template identity plus include edges against the live Express EJS slice; graphify query rows remain detector-only caveats."
@@ -4497,8 +4540,8 @@
       "language": "elixir",
       "repo": "https://github.com/phoenixframework/phoenix",
       "commit": "9d3f1f63e00c92aafc8f015073969a2632c6879a",
-      "artifact": "data/raw/LIVE_ELIXIR_SMOKE.json",
-      "source": "bench/LIVE_ELIXIR_SMOKE.json",
+      "artifact": "data/raw/LIVE_ELIXIR_BENCHMARK.json",
+      "source": "bench/LIVE_ELIXIR_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 0.32,
@@ -4575,7 +4618,7 @@
       },
       "optimization": {
         "cyclesRun": 3,
-        "stopReason": "Elixir live smoke matched the tree-sitter-elixir definition coverage proxy exactly and met the current 5x latency/token thresholds; elixir/mix/Lexical remain unavailable on this machine.",
+        "stopReason": "Elixir live benchmark matched the tree-sitter-elixir definition coverage proxy exactly and met the current 5x latency/token thresholds; elixir/mix/Lexical remain unavailable on this machine.",
         "cycleNotes": [
           "cycle 1: phoenixframework/phoenix probe showed the biggest Atlas gap was Elixir macros, delegates, guards, protocols, and implementations beyond basic defmodule/def parsing.",
           "cycle 2: after parser widening, Atlas/tree-sitter-elixir definition ratio reached 1.07, revealing doc/comment false positives from regex parsing.",
@@ -4647,8 +4690,8 @@
       "language": "ets",
       "repo": "https://github.com/openharmony/applications_app_samples",
       "commit": "a826ab0e75fe51d028c1c5af58188e908736b53b",
-      "artifact": "data/raw/LIVE_ETS_SMOKE.json",
-      "source": "bench/LIVE_ETS_SMOKE.json",
+      "artifact": "data/raw/LIVE_ETS_BENCHMARK.json",
+      "source": "bench/LIVE_ETS_BENCHMARK.json",
       "detectorOnly": true,
       "atlas": {
         "coldSeconds": 0.117,
@@ -4708,12 +4751,12 @@
         "arkts": {
           "status": "missing",
           "ok": false,
-          "note": "ArkTS compiler CLI not installed; source-only parser proxy used for this smoke"
+          "note": "ArkTS compiler CLI not installed; source-only parser proxy used for this benchmark"
         },
         "hvigor": {
           "status": "missing",
           "ok": false,
-          "note": "hvigor not installed; OpenHarmony build execution is avoided for this source-only smoke"
+          "note": "hvigor not installed; OpenHarmony build execution is avoided for this source-only benchmark"
         },
         "ohpm": {
           "status": "missing",
@@ -4730,11 +4773,11 @@
       },
       "optimization": {
         "cyclesRun": 5,
-        "stopReason": "ETS live smoke covers a graphify detector-only extension with ArkTS/ETS declarations while avoiding control-flow false positives; the five-pass saturation report records that graphify exposes no equivalent query rows in this runtime.",
+        "stopReason": "ETS live benchmark covers a graphify detector-only extension with ArkTS/ETS declarations while avoiding control-flow false positives; the five-pass saturation report records that graphify exposes no equivalent query rows in this runtime.",
         "cycleNotes": [
           "cycle 1: OpenHarmony TabsSample probe showed the generic ETS regex would index control-flow keywords such as if(...) as methods on live ArkTS files.",
           "cycle 2: after adding an ETS-specific scanner, Atlas indexes structs/classes/functions/methods/constructors/fields/state variables while skipping control-flow and ArkUI component-call noise.",
-          "cycles 3-5: repeated live smokes kept native coverage at 1.0 and graphify-equivalent query rows at 0/8, so ETS query-score improvement is saturated until graphify ships a deterministic ETS extractor."
+          "cycles 3-5: repeated live benchmarks kept native coverage at 1.0 and graphify-equivalent query rows at 0/8, so ETS query-score improvement is saturated until graphify ships a deterministic ETS extractor."
         ]
       },
       "querySummary": {
@@ -4829,8 +4872,8 @@
       "language": "fortran",
       "repo": "https://github.com/fortran-lang/stdlib",
       "commit": "4c8521d5658455a576946cca3bfe2bd8ede36e24",
-      "artifact": "data/raw/LIVE_FORTRAN_SMOKE.json",
-      "source": "bench/LIVE_FORTRAN_SMOKE.json",
+      "artifact": "data/raw/LIVE_FORTRAN_BENCHMARK.json",
+      "source": "bench/LIVE_FORTRAN_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 0.16,
@@ -4909,7 +4952,7 @@
       },
       "optimization": {
         "cyclesRun": 2,
-        "stopReason": "Fortran live smoke matched the tree-sitter-fortran definition coverage proxy and met the current 5x latency/token thresholds after widening Atlas Fortran declaration handling.",
+        "stopReason": "Fortran live benchmark matched the tree-sitter-fortran definition coverage proxy and met the current 5x latency/token thresholds after widening Atlas Fortran declaration handling.",
         "cycleNotes": [
           "cycle 1: fortran-lang/stdlib probe showed the generic Fortran regex could misclassify `module procedure` interface entries as modules and miss `module function`/`module subroutine` definitions.",
           "cycle 2: after tightening module matching and widening function/subroutine modifiers plus typed functions, Atlas/tree-sitter-fortran definition coverage reached 1.0 and exact-symbol query rows exceeded 5x for latency and token output vs graphify."
@@ -4989,8 +5032,8 @@
       "language": "groovy",
       "repo": "https://github.com/nextflow-io/nextflow",
       "commit": "83d452a51796aca34f136f796383185d703c349c",
-      "artifact": "data/raw/LIVE_GROOVY_SMOKE.json",
-      "source": "bench/LIVE_GROOVY_SMOKE.json",
+      "artifact": "data/raw/LIVE_GROOVY_BENCHMARK.json",
+      "source": "bench/LIVE_GROOVY_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 0.287,
@@ -5056,7 +5099,7 @@
         "groovy-language-server": {
           "status": "missing",
           "ok": false,
-          "note": "Groovy language server is not installed; tree-sitter-groovy parse coverage used for this smoke"
+          "note": "Groovy language server is not installed; tree-sitter-groovy parse coverage used for this benchmark"
         }
       },
       "coverage": {
@@ -5068,7 +5111,7 @@
       },
       "optimization": {
         "cyclesRun": 3,
-        "stopReason": "Groovy/Gradle live smoke met the current 5x latency/token thresholds after widening Atlas Groovy declaration handling; definition coverage is saturated by tree-sitter-groovy parse errors on real Nextflow files, so the 1.59x native ratio is not claimed as exact recall.",
+        "stopReason": "Groovy/Gradle live benchmark met the current 5x latency/token thresholds after widening Atlas Groovy declaration handling; definition coverage is saturated by tree-sitter-groovy parse errors on real Nextflow files, so the 1.59x native ratio is not claimed as exact recall.",
         "cycleNotes": [
           "cycle 1: Nextflow nf-commons probe showed the biggest Atlas gap was typed Groovy methods, interfaces, enums, traits, constructors, and Gradle task declarations beyond class plus untyped def parsing.",
           "cycle 2: after parser widening, Atlas/tree-sitter-groovy definition ratio was inflated by control-flow false positives such as if/for/catch/synchronized being indexed as methods.",
@@ -5140,8 +5183,8 @@
       "language": "json",
       "repo": "https://github.com/eslint/create-config",
       "commit": "58d77fc302b25976bb4cc7dc273377b421bc226b",
-      "artifact": "data/raw/LIVE_JSON_SMOKE.json",
-      "source": "bench/LIVE_JSON_SMOKE.json",
+      "artifact": "data/raw/LIVE_JSON_BENCHMARK.json",
+      "source": "bench/LIVE_JSON_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 0.099,
@@ -5222,7 +5265,7 @@
       },
       "optimization": {
         "cyclesRun": 2,
-        "stopReason": "JSON config live smoke matched Python stdlib object-key coverage after replacing opaque file-level JSON documents with structured key-path symbols.",
+        "stopReason": "JSON config live benchmark matched Python stdlib object-key coverage after replacing opaque file-level JSON documents with structured key-path symbols.",
         "cycleNotes": [
           "cycle 1: eslint/create-config probe showed Atlas could retrieve JSON only as whole-file document context, not exact package/config keys.",
           "cycle 2: after adding recursive JSON key-path symbols, Atlas/python-json key coverage reached 1.0 on the live config slice."
@@ -5302,8 +5345,8 @@
       "language": "julia",
       "repo": "https://github.com/JuliaIO/JSON.jl",
       "commit": "e5ef310dece16746843753e4c3b44e868b917b64",
-      "artifact": "data/raw/LIVE_JULIA_SMOKE.json",
-      "source": "bench/LIVE_JULIA_SMOKE.json",
+      "artifact": "data/raw/LIVE_JULIA_BENCHMARK.json",
+      "source": "bench/LIVE_JULIA_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 0.146,
@@ -5363,7 +5406,7 @@
         "LanguageServer.jl": {
           "status": "missing_adapter",
           "ok": false,
-          "note": "LanguageServer.jl is not wired into this harness; tree-sitter-julia source parse coverage is used for this smoke"
+          "note": "LanguageServer.jl is not wired into this harness; tree-sitter-julia source parse coverage is used for this benchmark"
         }
       },
       "coverage": {
@@ -5375,7 +5418,7 @@
       },
       "optimization": {
         "cyclesRun": 2,
-        "stopReason": "Julia live smoke met the current 5x latency/token thresholds and matched the tree-sitter-julia definition coverage proxy after masking docstrings/strings and supporting macro-prefixed structs.",
+        "stopReason": "Julia live benchmark met the current 5x latency/token thresholds and matched the tree-sitter-julia definition coverage proxy after masking docstrings/strings and supporting macro-prefixed structs.",
         "cycleNotes": [
           "cycle 1: JuliaIO/JSON.jl probe showed generic Julia regex parsing missed macros/constants and counted docstring examples as real definitions.",
           "cycle 2: after adding a Julia-specific parser with non-code masking, method-assignment detection, and macro-prefixed struct support, Atlas matched the tree-sitter-julia source definition proxy."
@@ -5455,8 +5498,8 @@
       "language": "kotlin",
       "repo": "https://github.com/square/okhttp",
       "commit": "0cadfa2997513d20bf88ca530c963a1266f17af9",
-      "artifact": "data/raw/LIVE_KOTLIN_SMOKE.json",
-      "source": "bench/LIVE_KOTLIN_SMOKE.json",
+      "artifact": "data/raw/LIVE_KOTLIN_BENCHMARK.json",
+      "source": "bench/LIVE_KOTLIN_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 0.596,
@@ -5533,9 +5576,9 @@
       },
       "optimization": {
         "cyclesRun": 2,
-        "stopReason": "Kotlin live smoke met the current 5x latency/token thresholds and exceeded the tree-sitter-kotlin definition coverage proxy after widening Atlas Kotlin modifier handling.",
+        "stopReason": "Kotlin live benchmark met the current 5x latency/token thresholds and exceeded the tree-sitter-kotlin definition coverage proxy after widening Atlas Kotlin modifier handling.",
         "cycleNotes": [
-          "cycle 1: square/okhttp smoke found Atlas/tree-sitter-kotlin definition ratio 0.78; biggest gap was Kotlin modifiers before type/function/property declarations.",
+          "cycle 1: square/okhttp benchmark found Atlas/tree-sitter-kotlin definition ratio 0.78; biggest gap was Kotlin modifiers before type/function/property declarations.",
           "cycle 2: after widening Kotlin declaration regexes for actual/open/value/fun-interface/override forms, Atlas/tree-sitter-kotlin definition ratio reached 1.01 and equivalent query rows exceeded 5x for latency and token output vs graphify."
         ]
       },
@@ -5604,8 +5647,8 @@
       "language": "lua",
       "repo": "https://github.com/folke/lazy.nvim",
       "commit": "306a05526ada86a7b30af95c5cc81ffba93fef97",
-      "artifact": "data/raw/LIVE_LUA_SMOKE.json",
-      "source": "bench/LIVE_LUA_SMOKE.json",
+      "artifact": "data/raw/LIVE_LUA_BENCHMARK.json",
+      "source": "bench/LIVE_LUA_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 0.774,
@@ -5693,9 +5736,9 @@
       },
       "optimization": {
         "cyclesRun": 1,
-        "stopReason": "Lua live smoke exceeded 5x query latency plus token output on equivalent function-symbol queries and exceeded the luaparser named-definition coverage proxy on cycle 1.",
+        "stopReason": "Lua live benchmark exceeded 5x query latency plus token output on equivalent function-symbol queries and exceeded the luaparser named-definition coverage proxy on cycle 1.",
         "cycleNotes": [
-          "cycle 1: folke/lazy.nvim smoke used luaparser as an isolated AST baseline; Atlas indexed more navigable Lua function symbols than luaparser's named definition count while keeping exact-symbol explain output terse."
+          "cycle 1: folke/lazy.nvim benchmark used luaparser as an isolated AST baseline; Atlas indexed more navigable Lua function symbols than luaparser's named definition count while keeping exact-symbol explain output terse."
         ]
       },
       "querySummary": {
@@ -5754,8 +5797,8 @@
       "language": "markdown",
       "repo": "https://github.com/rust-lang/mdBook",
       "commit": "cb49cc5523e609a731f27dea1af4395a504815a5",
-      "artifact": "data/raw/LIVE_MARKDOWN_SMOKE.json",
-      "source": "bench/LIVE_MARKDOWN_SMOKE.json",
+      "artifact": "data/raw/LIVE_MARKDOWN_BENCHMARK.json",
+      "source": "bench/LIVE_MARKDOWN_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 0.079,
@@ -5834,7 +5877,7 @@
       },
       "optimization": {
         "cyclesRun": 2,
-        "stopReason": "Markdown live smoke matched the markdown-it-py CommonMark heading coverage proxy after making Atlas section extraction fence-aware; query latency/token ratios are reported against graphify's document parser output.",
+        "stopReason": "Markdown live benchmark matched the markdown-it-py CommonMark heading coverage proxy after making Atlas section extraction fence-aware; query latency/token ratios are reported against graphify's document parser output.",
         "cycleNotes": [
           "cycle 1: rust-lang/mdBook guide probe showed Atlas treated `#` lines inside fenced Rust/shell examples as real headings.",
           "cycle 2: after skipping fenced code blocks and tightening ATX heading parsing, Atlas/markdown-it-py section coverage reached 1.0 on the live docs slice."
@@ -5914,8 +5957,8 @@
       "language": "objc",
       "repo": "https://github.com/SDWebImage/SDWebImage",
       "commit": "c3ad5e1a9bf55c9b76d4c362430b5fcded96c502",
-      "artifact": "data/raw/LIVE_OBJC_SMOKE.json",
-      "source": "bench/LIVE_OBJC_SMOKE.json",
+      "artifact": "data/raw/LIVE_OBJC_BENCHMARK.json",
+      "source": "bench/LIVE_OBJC_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 0.216,
@@ -5993,7 +6036,7 @@
       },
       "optimization": {
         "cyclesRun": 2,
-        "stopReason": "Objective-C live smoke matched the graphify-scoped tree-sitter-objc definition coverage proxy and exceeded 5x latency/token thresholds on equivalent rows after preserving full multi-part selectors in Atlas.",
+        "stopReason": "Objective-C live benchmark matched the graphify-scoped tree-sitter-objc definition coverage proxy and exceeded 5x latency/token thresholds on equivalent rows after preserving full multi-part selectors in Atlas.",
         "cycleNotes": [
           "cycle 1: SDWebImage probe showed Atlas only captured the first Objective-C selector segment, losing precision for multi-argument methods.",
           "cycle 2: after adding an Objective-C-specific parser, Atlas preserves selectors such as `storeImage:forKey:completion:`; graphify flattens those selector names, so the colon-selector row is kept as a visible graphify-missing caveat."
@@ -6064,8 +6107,8 @@
       "language": "pascal",
       "repo": "https://github.com/remobjects/pascalscript",
       "commit": "2c826cd803a3c0417354fa37b2417f21993ce4ac",
-      "artifact": "data/raw/LIVE_PASCAL_SMOKE.json",
-      "source": "bench/LIVE_PASCAL_SMOKE.json",
+      "artifact": "data/raw/LIVE_PASCAL_BENCHMARK.json",
+      "source": "bench/LIVE_PASCAL_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 1.365,
@@ -6146,7 +6189,7 @@
       },
       "optimization": {
         "cyclesRun": 2,
-        "stopReason": "Pascal live smoke matched the declaration-counter coverage proxy after widening Atlas parsing for constructors, destructors, and class methods; stronger Pascal LSP/tree-sitter baselines are recorded as unavailable or unusable on this machine.",
+        "stopReason": "Pascal live benchmark matched the declaration-counter coverage proxy after widening Atlas parsing for constructors, destructors, and class methods; stronger Pascal LSP/tree-sitter baselines are recorded as unavailable or unusable on this machine.",
         "cycleNotes": [
           "cycle 1: remobjects/pascalscript probe showed the generic Pascal rule missed constructor/destructor and `class procedure/function` declarations.",
           "cycle 2: after widening Pascal declaration parsing, Atlas matched the benchmark-owned declaration counter on the live Source slice."
@@ -6217,8 +6260,8 @@
       "language": "php",
       "repo": "https://github.com/slimphp/Slim",
       "commit": "0da7dd2fc66956730b6633f6a056b35e59126583",
-      "artifact": "data/raw/LIVE_PHP_SMOKE.json",
-      "source": "bench/LIVE_PHP_SMOKE.json",
+      "artifact": "data/raw/LIVE_PHP_BENCHMARK.json",
+      "source": "bench/LIVE_PHP_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 0.288,
@@ -6300,9 +6343,9 @@
       },
       "optimization": {
         "cyclesRun": 2,
-        "stopReason": "PHP live smoke met the current 5x latency/token thresholds and matched PHP tokenizer definition coverage after separating `use function` imports from real function definitions in the native baseline.",
+        "stopReason": "PHP live benchmark met the current 5x latency/token thresholds and matched PHP tokenizer definition coverage after separating `use function` imports from real function definitions in the native baseline.",
         "cycleNotes": [
-          "cycle 1: Slim smoke found an apparent Atlas/PHP-tokenizer definition ratio of 0.96; biggest gap was the native tokenizer script counting `use function` imports as definitions.",
+          "cycle 1: Slim benchmark found an apparent Atlas/PHP-tokenizer definition ratio of 0.96; biggest gap was the native tokenizer script counting `use function` imports as definitions.",
           "cycle 2: after benchmark baseline correction, Atlas/PHP-tokenizer definition ratio reached 1.0 and equivalent query rows exceeded 5x for latency and token output vs graphify."
         ]
       },
@@ -6362,8 +6405,8 @@
       "language": "powershell",
       "repo": "https://github.com/PowerShell/PowerShellGet",
       "commit": "a2dac8e74603f7c9eec4a54c5e23459531751b0d",
-      "artifact": "data/raw/LIVE_POWERSHELL_SMOKE.json",
-      "source": "bench/LIVE_POWERSHELL_SMOKE.json",
+      "artifact": "data/raw/LIVE_POWERSHELL_BENCHMARK.json",
+      "source": "bench/LIVE_POWERSHELL_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 0.12,
@@ -6422,7 +6465,7 @@
         "powershell-editor-services": {
           "status": "missing",
           "ok": false,
-          "note": "PowerShellEditorServices LSP is not installed; pwsh AST parser used for this smoke"
+          "note": "PowerShellEditorServices LSP is not installed; pwsh AST parser used for this benchmark"
         },
         "psscriptanalyzer": {
           "status": "missing",
@@ -6439,9 +6482,9 @@
       },
       "optimization": {
         "cyclesRun": 2,
-        "stopReason": "PowerShell live smoke matched pwsh AST function-definition coverage and improved token score after compacting PowerShell script suffixes in terse plain locations while preserving full paths in JSON.",
+        "stopReason": "PowerShell live benchmark matched pwsh AST function-definition coverage and improved token score after compacting PowerShell script suffixes in terse plain locations while preserving full paths in JSON.",
         "cycleNotes": [
-          "cycle 1: PowerShellGet src smoke used the native PowerShell parser for syntax/function-definition truth; Atlas matched function coverage and kept exact-symbol explain output terse.",
+          "cycle 1: PowerShellGet src benchmark used the native PowerShell parser for syntax/function-definition truth; Atlas matched function coverage and kept exact-symbol explain output terse.",
           "cycle 2: compacting `.ps1`/`.psm1`/`.psd1` suffixes in terse locations improved the live PowerShellGet summed token ratio from 5.74x to 6.68x without changing indexed symbols or JSON paths."
         ]
       },
@@ -6501,8 +6544,8 @@
       "language": "r",
       "repo": "https://github.com/tidyverse/ggplot2",
       "commit": "6870419aa6e106c3580c45c81d5b688cb31758bd",
-      "artifact": "data/raw/LIVE_R_SMOKE.json",
-      "source": "bench/LIVE_R_SMOKE.json",
+      "artifact": "data/raw/LIVE_R_BENCHMARK.json",
+      "source": "bench/LIVE_R_BENCHMARK.json",
       "detectorOnly": true,
       "atlas": {
         "coldSeconds": 0.705,
@@ -6561,12 +6604,12 @@
         "Rscript": {
           "status": "missing",
           "ok": false,
-          "note": "Rscript not installed; source-only parser proxy used for this smoke"
+          "note": "Rscript not installed; source-only parser proxy used for this benchmark"
         },
         "languageserver": {
           "status": "missing_adapter",
           "ok": false,
-          "note": "R languageserver is not installed or wired into this harness; source counter coverage proxy used for this graphify detector-only smoke"
+          "note": "R languageserver is not installed or wired into this harness; source counter coverage proxy used for this graphify detector-only benchmark"
         }
       },
       "coverage": {
@@ -6578,11 +6621,11 @@
       },
       "optimization": {
         "cyclesRun": 5,
-        "stopReason": "R live smoke covers a graphify detector-only extension by adding Atlas R function, multiline function, S4/R6/ggproto type, and variable symbols; the five-pass saturation report records that graphify exposes no equivalent query rows in this runtime.",
+        "stopReason": "R live benchmark covers a graphify detector-only extension by adding Atlas R function, multiline function, S4/R6/ggproto type, and variable symbols; the five-pass saturation report records that graphify exposes no equivalent query rows in this runtime.",
         "cycleNotes": [
           "cycle 1: tidyverse/ggplot2 probe showed the generic R rules missed multiline function assignments and ggproto declarations such as GeomPoint and StatSummary.",
           "cycle 2: after widening R lightweight parsing, Atlas covers ggplot2-style functions and ggproto types against the live R source slice; graphify query rows remain detector-only caveats.",
-          "cycles 3-5: repeated live smokes kept native coverage at 1.0 and graphify-equivalent query rows at 0/8, so R query-score improvement is saturated until graphify ships a deterministic R extractor."
+          "cycles 3-5: repeated live benchmarks kept native coverage at 1.0 and graphify-equivalent query rows at 0/8, so R query-score improvement is saturated until graphify ships a deterministic R extractor."
         ]
       },
       "querySummary": {
@@ -6677,8 +6720,8 @@
       "language": "razor",
       "repo": "https://github.com/dotnet-architecture/eShopOnWeb",
       "commit": "4da8212117e87d808d4bbc7da6286fd2147ce606",
-      "artifact": "data/raw/LIVE_RAZOR_SMOKE.json",
-      "source": "bench/LIVE_RAZOR_SMOKE.json",
+      "artifact": "data/raw/LIVE_RAZOR_BENCHMARK.json",
+      "source": "bench/LIVE_RAZOR_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 0.277,
@@ -6751,7 +6794,7 @@
         "razor-language-server": {
           "status": "missing",
           "ok": false,
-          "note": "Razor language server is not installed; directive/component coverage proxy used for this smoke"
+          "note": "Razor language server is not installed; directive/component coverage proxy used for this benchmark"
         }
       },
       "coverage": {
@@ -6763,7 +6806,7 @@
       },
       "optimization": {
         "cyclesRun": 3,
-        "stopReason": "Razor live smoke matched the directive/component coverage proxy and improved token score after compacting Razor view suffixes in terse plain locations while preserving full paths in JSON.",
+        "stopReason": "Razor live benchmark matched the directive/component coverage proxy and improved token score after compacting Razor view suffixes in terse plain locations while preserving full paths in JSON.",
         "cycleNotes": [
           "cycle 1: eShopOnWeb probe showed the generic Razor rules missed file identity, @model/@inherits, injected services as symbols, and @code methods while graphify exposes those as code-review context.",
           "cycle 2: after adding a Razor-specific parser, Atlas matched the benchmark-owned coverage proxy and exact directive/component query rows are reported against graphify with honest saturation notes if below 5x.",
@@ -6844,8 +6887,8 @@
       "language": "ruby",
       "repo": "https://github.com/sinatra/sinatra",
       "commit": "5236d3459b8b9015e5ce21ddd0c6beb0db4081d4",
-      "artifact": "data/raw/LIVE_RUBY_SMOKE.json",
-      "source": "bench/LIVE_RUBY_SMOKE.json",
+      "artifact": "data/raw/LIVE_RUBY_BENCHMARK.json",
+      "source": "bench/LIVE_RUBY_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 0.272,
@@ -6922,9 +6965,9 @@
       },
       "optimization": {
         "cyclesRun": 2,
-        "stopReason": "Ruby live smoke met the current 5x latency/token thresholds and the Ripper definition coverage proxy after adding operator, receiver-qualified, and ::-qualified module/class parsing.",
+        "stopReason": "Ruby live benchmark met the current 5x latency/token thresholds and the Ripper definition coverage proxy after adding operator, receiver-qualified, and ::-qualified module/class parsing.",
         "cycleNotes": [
-          "cycle 1: Sinatra smoke found Atlas/Ripper definition ratio 0.98; biggest gap was Ruby operator and qualified definition syntax.",
+          "cycle 1: Sinatra benchmark found Atlas/Ripper definition ratio 0.98; biggest gap was Ruby operator and qualified definition syntax.",
           "cycle 2: after parser patch, Atlas/Ripper definition ratio reached 1.01 and equivalent query rows exceeded 5x for latency and token output vs graphify."
         ]
       },
@@ -6984,8 +7027,8 @@
       "language": "rust",
       "repo": "https://github.com/BurntSushi/ripgrep",
       "commit": "dfe4a81d2591daca76d25ae4e052c34b26578155",
-      "artifact": "data/raw/LIVE_RUST_SMOKE.json",
-      "source": "bench/LIVE_RUST_SMOKE.json",
+      "artifact": "data/raw/LIVE_RUST_BENCHMARK.json",
+      "source": "bench/LIVE_RUST_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 1.637,
@@ -7076,9 +7119,9 @@
       },
       "optimization": {
         "cyclesRun": 2,
-        "stopReason": "Rust live smoke records reproducible Atlas/graphify measurements and measures sampled source coverage against rust-analyzer documentSymbol when available, with deterministic source-counter fallback.",
+        "stopReason": "Rust live benchmark records reproducible Atlas/graphify measurements and measures sampled source coverage against rust-analyzer documentSymbol when available, with deterministic source-counter fallback.",
         "cycleNotes": [
-          "cycle 1: BurntSushi/ripgrep smoke records live Atlas and graphify query behavior on shared Rust type symbols while explicitly marking rust-analyzer/cargo/rustc unavailable.",
+          "cycle 1: BurntSushi/ripgrep benchmark records live Atlas and graphify query behavior on shared Rust type symbols while explicitly marking rust-analyzer/cargo/rustc unavailable.",
           "cycle 2: added a rust-analyzer documentSymbol adapter for sampled-file native coverage and a Rust source-counter fallback for machines without rust-analyzer."
         ]
       },
@@ -7138,8 +7181,8 @@
       "language": "scala",
       "repo": "https://github.com/typelevel/cats",
       "commit": "851965a582940d804f9a23179f58a53fc97f07dc",
-      "artifact": "data/raw/LIVE_SCALA_SMOKE.json",
-      "source": "bench/LIVE_SCALA_SMOKE.json",
+      "artifact": "data/raw/LIVE_SCALA_BENCHMARK.json",
+      "source": "bench/LIVE_SCALA_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 1.096,
@@ -7216,10 +7259,10 @@
       },
       "optimization": {
         "cyclesRun": 2,
-        "stopReason": "Scala live smoke met the current 5x latency/token thresholds and improved Cats definition coverage after widening Atlas modifier and type-alias handling; Metals/scalac remain unavailable on this machine.",
+        "stopReason": "Scala live benchmark met the current 5x latency/token thresholds and improved Cats definition coverage after widening Atlas modifier and type-alias handling; Metals/scalac remain unavailable on this machine.",
         "cycleNotes": [
           "cycle 1: typelevel/cats probe showed the biggest Atlas gap was Scala modifiers and type aliases such as `private[cats] trait`, `sealed abstract class`, and `opaque type`.",
-          "cycle 2: after parser widening, the Cats smoke uses tree-sitter-scala as a source-only definition baseline while explicitly marking Metals/scalac availability separately."
+          "cycle 2: after parser widening, the Cats benchmark uses tree-sitter-scala as a source-only definition baseline while explicitly marking Metals/scalac availability separately."
         ]
       },
       "querySummary": {
@@ -7287,8 +7330,8 @@
       "language": "sql",
       "repo": "https://github.com/hasura/graphql-engine",
       "commit": "417c174c0ac3c80dafe6e8f9e8ac39d868334724",
-      "artifact": "data/raw/LIVE_SQL_SMOKE.json",
-      "source": "bench/LIVE_SQL_SMOKE.json",
+      "artifact": "data/raw/LIVE_SQL_BENCHMARK.json",
+      "source": "bench/LIVE_SQL_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 0.094,
@@ -7354,12 +7397,12 @@
       },
       "optimization": {
         "cyclesRun": 4,
-        "stopReason": "SQL live smoke matches SQLFluff DDL definition coverage and now exceeds 5x latency/token thresholds after compacting SQL terse locations and warming both tools before measured query rows.",
+        "stopReason": "SQL live benchmark matches SQLFluff DDL definition coverage and now exceeds 5x latency/token thresholds after compacting SQL terse locations and warming both tools before measured query rows.",
         "cycleNotes": [
           "cycle 1: graphify advertised SQL support but produced an empty graph until its optional tree_sitter_sql dependency was installed in the graphify tool environment.",
           "cycle 2: hasura/graphql-engine migrations reached 1.0 Atlas/SQLFluff DDL coverage and exceeded 5x latency; token output stayed below 5x without removing useful source context.",
           "cycle 3: hard-budgeted context probes increased token output compared with exact-symbol explain, so the benchmark keeps exact-symbol explain and documents the 4.9x token saturation point.",
-          "cycle 4: SQL terse output now keeps full paths in JSON but drops the redundant `.sql` suffix in plain locations, and the harness runs one untimed warm-up for both tools; live SQL smoke measured 5.33x summed token ratio and 6.14x average latency."
+          "cycle 4: SQL terse output now keeps full paths in JSON but drops the redundant `.sql` suffix in plain locations, and the harness runs one untimed warm-up for both tools; live SQL benchmark measured 5.33x summed token ratio and 6.14x average latency."
         ]
       },
       "querySummary": {
@@ -7418,8 +7461,8 @@
       "language": "svelte",
       "repo": "https://github.com/carbon-design-system/carbon-components-svelte",
       "commit": "454a3881cd2b5ac3e47b92d7524a8faa5d99f03d",
-      "artifact": "data/raw/LIVE_SVELTE_SMOKE.json",
-      "source": "bench/LIVE_SVELTE_SMOKE.json",
+      "artifact": "data/raw/LIVE_SVELTE_BENCHMARK.json",
+      "source": "bench/LIVE_SVELTE_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 0.343,
@@ -7481,7 +7524,7 @@
         "svelte-language-server": {
           "status": "missing",
           "ok": false,
-          "note": "Svelte language server is not installed; Svelte compiler parse coverage used for this smoke"
+          "note": "Svelte language server is not installed; Svelte compiler parse coverage used for this benchmark"
         }
       },
       "coverage": {
@@ -7493,9 +7536,9 @@
       },
       "optimization": {
         "cyclesRun": 1,
-        "stopReason": "Svelte live smoke exceeded 5x query latency plus token output and exceeded the Svelte compiler script-declaration coverage proxy on cycle 1.",
+        "stopReason": "Svelte live benchmark exceeded 5x query latency plus token output and exceeded the Svelte compiler script-declaration coverage proxy on cycle 1.",
         "cycleNotes": [
-          "cycle 1: carbon-components-svelte smoke used the native Svelte compiler as an isolated SFC parser baseline; Atlas indexed at least the compiler-counted top-level script declarations and resolved exact component function symbols."
+          "cycle 1: carbon-components-svelte benchmark used the native Svelte compiler as an isolated SFC parser baseline; Atlas indexed at least the compiler-counted top-level script declarations and resolved exact component function symbols."
         ]
       },
       "querySummary": {
@@ -7563,8 +7606,8 @@
       "language": "swift",
       "repo": "https://github.com/apple/swift-argument-parser",
       "commit": "8122bc5941426c9494c78ff5ad01951e81c02f53",
-      "artifact": "data/raw/LIVE_SWIFT_SMOKE.json",
-      "source": "bench/LIVE_SWIFT_SMOKE.json",
+      "artifact": "data/raw/LIVE_SWIFT_BENCHMARK.json",
+      "source": "bench/LIVE_SWIFT_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 0.702,
@@ -7642,9 +7685,9 @@
       },
       "optimization": {
         "cyclesRun": 1,
-        "stopReason": "Swift live smoke met the current 5x latency/token thresholds and exceeded the SourceKit-LSP sampled definition coverage proxy on cycle 1.",
+        "stopReason": "Swift live benchmark met the current 5x latency/token thresholds and exceeded the SourceKit-LSP sampled definition coverage proxy on cycle 1.",
         "cycleNotes": [
-          "cycle 1: apple/swift-argument-parser smoke reached 1.19x Atlas/SourceKit-LSP sampled definition coverage, 8.07x query latency, and 14.82x token output vs graphify."
+          "cycle 1: apple/swift-argument-parser benchmark reached 1.19x Atlas/SourceKit-LSP sampled definition coverage, 8.07x query latency, and 14.82x token output vs graphify."
         ]
       },
       "querySummary": {
@@ -7703,8 +7746,8 @@
       "language": "terraform",
       "repo": "https://github.com/terraform-aws-modules/terraform-aws-vpc",
       "commit": "3ffbd46fb1c7733e1b34d8666893280454e27436",
-      "artifact": "data/raw/LIVE_TERRAFORM_SMOKE.json",
-      "source": "bench/LIVE_TERRAFORM_SMOKE.json",
+      "artifact": "data/raw/LIVE_TERRAFORM_BENCHMARK.json",
+      "source": "bench/LIVE_TERRAFORM_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 0.329,
@@ -7774,7 +7817,7 @@
       },
       "optimization": {
         "cyclesRun": 2,
-        "stopReason": "Terraform/HCL live smoke matched python-hcl2 definition coverage and exceeded 5x query latency plus token output after installing graphify's optional tree_sitter_hcl parser.",
+        "stopReason": "Terraform/HCL live benchmark matched python-hcl2 definition coverage and exceeded 5x query latency plus token output after installing graphify's optional tree_sitter_hcl parser.",
         "cycleNotes": [
           "cycle 1: graphify advertised Terraform/HCL support but produced no HCL code nodes until its optional tree_sitter_hcl dependency was installed in the graphify tool environment.",
           "cycle 2: terraform-aws-modules/terraform-aws-vpc reached 1.0 Atlas/python-hcl2 definition coverage and exceeded 5x latency plus token output on exact HCL resource queries."
@@ -7836,8 +7879,8 @@
       "language": "verilog",
       "repo": "https://github.com/lowRISC/ibex",
       "commit": "022f084096baed0a9b5ebdf697ed2965f13e8ed8",
-      "artifact": "data/raw/LIVE_VERILOG_SMOKE.json",
-      "source": "bench/LIVE_VERILOG_SMOKE.json",
+      "artifact": "data/raw/LIVE_VERILOG_BENCHMARK.json",
+      "source": "bench/LIVE_VERILOG_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 0.117,
@@ -7915,7 +7958,7 @@
       },
       "optimization": {
         "cyclesRun": 3,
-        "stopReason": "Verilog/SystemVerilog live smoke matched the tree-sitter-systemverilog definition coverage proxy and improved token score after compacting HDL source suffixes in terse plain locations while preserving full paths in JSON.",
+        "stopReason": "Verilog/SystemVerilog live benchmark matched the tree-sitter-systemverilog definition coverage proxy and improved token score after compacting HDL source suffixes in terse plain locations while preserving full paths in JSON.",
         "cycleNotes": [
           "cycle 1: lowRISC/ibex probe showed the generic Verilog regex missed functions with packed return types such as `function automatic logic [6:0] cm_stack_adj_base(...)`.",
           "cycle 2: after adding a SystemVerilog-specific declaration scanner, Atlas/tree-sitter-systemverilog definition coverage reached 1.0; equivalent query rows exceeded 5x latency and token output overall, while `ibex_core` saturated below 5x for both latency/token because graphify matched the terse `ibex_core.f` file-list node instead of the RTL module.",
@@ -7996,8 +8039,8 @@
       "language": "vue",
       "repo": "https://github.com/gothinkster/vue-realworld-example-app",
       "commit": "f7e48c8178602ce25d43293bc6f8ca51d84ae222",
-      "artifact": "data/raw/LIVE_VUE_SMOKE.json",
-      "source": "bench/LIVE_VUE_SMOKE.json",
+      "artifact": "data/raw/LIVE_VUE_BENCHMARK.json",
+      "source": "bench/LIVE_VUE_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 0.097,
@@ -8058,7 +8101,7 @@
         "volar": {
           "status": "missing",
           "ok": false,
-          "note": "Volar language server is not installed; compiler-sfc parse coverage used for this smoke"
+          "note": "Volar language server is not installed; compiler-sfc parse coverage used for this benchmark"
         }
       },
       "coverage": {
@@ -8070,9 +8113,9 @@
       },
       "optimization": {
         "cyclesRun": 2,
-        "stopReason": "Vue live smoke matched @vue/compiler-sfc script declaration coverage and improved token score after compacting `.vue` suffixes in terse plain locations while preserving full paths in JSON.",
+        "stopReason": "Vue live benchmark matched @vue/compiler-sfc script declaration coverage and improved token score after compacting `.vue` suffixes in terse plain locations while preserving full paths in JSON.",
         "cycleNotes": [
-          "cycle 1: vue-realworld smoke used @vue/compiler-sfc as an isolated SFC parser baseline; Atlas matched top-level script declaration coverage while keeping exact-symbol explain output terse.",
+          "cycle 1: vue-realworld benchmark used @vue/compiler-sfc as an isolated SFC parser baseline; Atlas matched top-level script declaration coverage while keeping exact-symbol explain output terse.",
           "cycle 2: compacting `.vue` suffixes in terse locations reduces exact SFC symbol output without changing indexed symbols or JSON paths."
         ]
       },
@@ -8132,8 +8175,8 @@
       "language": "zig",
       "repo": "https://github.com/zigtools/zls",
       "commit": "8da87d4f3305a550e7b739bad764e34bf1e46a08",
-      "artifact": "data/raw/LIVE_ZIG_SMOKE.json",
-      "source": "bench/LIVE_ZIG_SMOKE.json",
+      "artifact": "data/raw/LIVE_ZIG_BENCHMARK.json",
+      "source": "bench/LIVE_ZIG_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
         "coldSeconds": 0.94,
@@ -8207,9 +8250,9 @@
       },
       "optimization": {
         "cyclesRun": 2,
-        "stopReason": "Zig live smoke met the current 5x latency/token thresholds and exceeded the tree-sitter-zig definition coverage proxy after widening Atlas Zig declaration handling; zig/zls remain unavailable on this machine.",
+        "stopReason": "Zig live benchmark met the current 5x latency/token thresholds and exceeded the tree-sitter-zig definition coverage proxy after widening Atlas Zig declaration handling; zig/zls remain unavailable on this machine.",
         "cycleNotes": [
-          "cycle 1: zigtools/zls smoke found Atlas/tree-sitter-zig definition ratio 0.89; biggest gaps were typed constants, compound const declarations, inline/noinline functions, and packed/extern container aliases.",
+          "cycle 1: zigtools/zls benchmark found Atlas/tree-sitter-zig definition ratio 0.89; biggest gaps were typed constants, compound const declarations, inline/noinline functions, and packed/extern container aliases.",
           "cycle 2: after widening Zig declaration rules and correcting the native compound-const counter, Atlas/tree-sitter-zig definition ratio reached 1.0 while exact-symbol query rows exceeded 5x for latency and token output vs graphify."
         ]
       },
@@ -8325,7 +8368,7 @@
       "family": "groovy/gradle",
       "extensions": ".groovy .gradle",
       "graphifyExtractor": "extract_groovy",
-      "atlasStatus": "lightweight regex",
+      "atlasStatus": "native tree-sitter AST",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8352,7 +8395,7 @@
       "family": "csharp",
       "extensions": ".cs",
       "graphifyExtractor": "extract_csharp",
-      "atlasStatus": "lightweight regex",
+      "atlasStatus": "native tree-sitter tags",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8361,7 +8404,7 @@
       "family": "rust",
       "extensions": ".rs",
       "graphifyExtractor": "extract_rust",
-      "atlasStatus": "lightweight regex",
+      "atlasStatus": "native tree-sitter tags",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8370,7 +8413,7 @@
       "family": "ruby",
       "extensions": ".rb",
       "graphifyExtractor": "extract_ruby",
-      "atlasStatus": "lightweight regex",
+      "atlasStatus": "native tree-sitter tags",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8379,7 +8422,7 @@
       "family": "kotlin",
       "extensions": ".kt .kts",
       "graphifyExtractor": "extract_kotlin",
-      "atlasStatus": "lightweight regex",
+      "atlasStatus": "native tree-sitter tags",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8388,7 +8431,7 @@
       "family": "scala",
       "extensions": ".scala",
       "graphifyExtractor": "extract_scala",
-      "atlasStatus": "lightweight regex",
+      "atlasStatus": "native tree-sitter tags",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8397,7 +8440,7 @@
       "family": "php",
       "extensions": ".php",
       "graphifyExtractor": "extract_php",
-      "atlasStatus": "lightweight regex",
+      "atlasStatus": "native tree-sitter tags",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8406,7 +8449,7 @@
       "family": "blade",
       "extensions": "*.blade.php",
       "graphifyExtractor": "extract_blade",
-      "atlasStatus": "lightweight regex",
+      "atlasStatus": "native Blade source parser",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8415,7 +8458,7 @@
       "family": "swift",
       "extensions": ".swift",
       "graphifyExtractor": "extract_swift",
-      "atlasStatus": "lightweight regex",
+      "atlasStatus": "native tree-sitter tags",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8424,7 +8467,7 @@
       "family": "lua",
       "extensions": ".lua .luau .toc",
       "graphifyExtractor": "extract_lua",
-      "atlasStatus": "lightweight regex",
+      "atlasStatus": "native tree-sitter tags",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8433,7 +8476,7 @@
       "family": "zig",
       "extensions": ".zig",
       "graphifyExtractor": "extract_zig",
-      "atlasStatus": "lightweight regex",
+      "atlasStatus": "native tree-sitter tags",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8442,7 +8485,7 @@
       "family": "powershell",
       "extensions": ".ps1 .psm1 .psd1",
       "graphifyExtractor": "extract_powershell/extract_powershell_manifest",
-      "atlasStatus": "lightweight regex",
+      "atlasStatus": "native tree-sitter AST",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8451,7 +8494,7 @@
       "family": "elixir",
       "extensions": ".ex .exs",
       "graphifyExtractor": "extract_elixir",
-      "atlasStatus": "lightweight regex",
+      "atlasStatus": "native tree-sitter AST",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8460,7 +8503,7 @@
       "family": "objective-c",
       "extensions": ".m .mm",
       "graphifyExtractor": "extract_objc",
-      "atlasStatus": "lightweight regex",
+      "atlasStatus": "native tree-sitter AST",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8469,7 +8512,7 @@
       "family": "julia",
       "extensions": ".jl",
       "graphifyExtractor": "extract_julia",
-      "atlasStatus": "lightweight regex",
+      "atlasStatus": "native tree-sitter AST",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8478,7 +8521,7 @@
       "family": "fortran",
       "extensions": ".f .F .f90 .F90 .f95 .F95 .f03 .F03 .f08 .F08",
       "graphifyExtractor": "extract_fortran",
-      "atlasStatus": "lightweight regex",
+      "atlasStatus": "native tree-sitter AST",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8487,7 +8530,7 @@
       "family": "dart",
       "extensions": ".dart",
       "graphifyExtractor": "extract_dart",
-      "atlasStatus": "lightweight regex",
+      "atlasStatus": "native tree-sitter AST",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8496,7 +8539,7 @@
       "family": "verilog/systemverilog",
       "extensions": ".v .sv .svh",
       "graphifyExtractor": "extract_verilog",
-      "atlasStatus": "lightweight regex",
+      "atlasStatus": "native tree-sitter AST",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8505,7 +8548,7 @@
       "family": "sql",
       "extensions": ".sql",
       "graphifyExtractor": "extract_sql",
-      "atlasStatus": "lightweight regex",
+      "atlasStatus": "native SQL source parser",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8523,7 +8566,7 @@
       "family": "pascal",
       "extensions": ".pas .pp .dpr .dpk .lpr .inc",
       "graphifyExtractor": "extract_pascal",
-      "atlasStatus": "lightweight regex",
+      "atlasStatus": "native tree-sitter AST",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8532,7 +8575,7 @@
       "family": "delphi/lazarus forms",
       "extensions": ".dfm .lfm .lpk",
       "graphifyExtractor": "extract_delphi_form/extract_lazarus_form/extract_lazarus_package",
-      "atlasStatus": "lightweight regex/document fallback",
+      "atlasStatus": "native Delphi/Lazarus source parser",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8541,7 +8584,7 @@
       "family": "shell",
       "extensions": ".sh .bash",
       "graphifyExtractor": "extract_bash",
-      "atlasStatus": "lightweight regex",
+      "atlasStatus": "native tree-sitter AST",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8559,7 +8602,7 @@
       "family": "terraform/hcl",
       "extensions": ".tf .tfvars .hcl",
       "graphifyExtractor": "extract_terraform",
-      "atlasStatus": "lightweight regex",
+      "atlasStatus": "native tree-sitter HCL",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8568,7 +8611,7 @@
       "family": "byond dm",
       "extensions": ".dm .dme .dmi .dmm .dmf",
       "graphifyExtractor": "extract_dm/extract_dmf/extract_dmi/extract_dmm",
-      "atlasStatus": "lightweight regex/document fallback",
+      "atlasStatus": "native BYOND source parser",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8577,7 +8620,7 @@
       "family": "dotnet project",
       "extensions": ".sln .slnx .csproj .fsproj .vbproj",
       "graphifyExtractor": "extract_csproj/extract_sln/extract_slnx",
-      "atlasStatus": "lightweight regex",
+      "atlasStatus": "native structured project parser",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8586,7 +8629,7 @@
       "family": "razor",
       "extensions": ".razor .cshtml",
       "graphifyExtractor": "extract_razor",
-      "atlasStatus": "lightweight regex",
+      "atlasStatus": "native Razor source parser",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8595,7 +8638,7 @@
       "family": "apex",
       "extensions": ".cls .trigger",
       "graphifyExtractor": "extract_apex",
-      "atlasStatus": "lightweight regex",
+      "atlasStatus": "native tree-sitter Apex",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8604,7 +8647,7 @@
       "family": "vue",
       "extensions": ".vue",
       "graphifyExtractor": "extract_js",
-      "atlasStatus": "lightweight regex",
+      "atlasStatus": "native SFC/tree-sitter AST",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8613,7 +8656,7 @@
       "family": "svelte",
       "extensions": ".svelte",
       "graphifyExtractor": "extract_svelte",
-      "atlasStatus": "lightweight regex",
+      "atlasStatus": "native SFC/tree-sitter AST",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8622,7 +8665,7 @@
       "family": "astro",
       "extensions": ".astro",
       "graphifyExtractor": "extract_astro",
-      "atlasStatus": "lightweight regex",
+      "atlasStatus": "native Astro/tree-sitter AST",
       "supportType": "deterministic extractor",
       "artifact": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json",
       "source": "bench/GRAPHIFY_LANGUAGE_DISCOVERY.json"
@@ -8631,28 +8674,28 @@
       "family": "detector-only .ejs",
       "extensions": ".ejs",
       "graphifyExtractor": "detector only, no _DISPATCH extractor",
-      "atlasStatus": "live Atlas smoke evidence",
+      "atlasStatus": "live Atlas benchmark evidence",
       "supportType": "detector-only",
-      "artifact": "data/raw/LIVE_EJS_SMOKE.json",
-      "source": "bench/LIVE_EJS_SMOKE.json"
+      "artifact": "data/raw/LIVE_EJS_BENCHMARK.json",
+      "source": "bench/LIVE_EJS_BENCHMARK.json"
     },
     {
       "family": "detector-only .ets",
       "extensions": ".ets",
       "graphifyExtractor": "detector only, no _DISPATCH extractor",
-      "atlasStatus": "live Atlas smoke evidence",
+      "atlasStatus": "live Atlas benchmark evidence",
       "supportType": "detector-only",
-      "artifact": "data/raw/LIVE_ETS_SMOKE.json",
-      "source": "bench/LIVE_ETS_SMOKE.json"
+      "artifact": "data/raw/LIVE_ETS_BENCHMARK.json",
+      "source": "bench/LIVE_ETS_BENCHMARK.json"
     },
     {
       "family": "detector-only .r",
       "extensions": ".r",
       "graphifyExtractor": "detector only, no _DISPATCH extractor",
-      "atlasStatus": "live Atlas smoke evidence",
+      "atlasStatus": "live Atlas benchmark evidence",
       "supportType": "detector-only",
-      "artifact": "data/raw/LIVE_R_SMOKE.json",
-      "source": "bench/LIVE_R_SMOKE.json"
+      "artifact": "data/raw/LIVE_R_BENCHMARK.json",
+      "source": "bench/LIVE_R_BENCHMARK.json"
     }
   ],
   "saturation": [
@@ -8676,7 +8719,7 @@
           "graphifyMissing": 6,
           "tokenRatio": null,
           "latencyRatio": null,
-          "artifact": "bench/LIVE_BYOND_SMOKE.json"
+          "artifact": "bench/LIVE_BYOND_BENCHMARK.json"
         },
         {
           "iteration": 2,
@@ -8687,7 +8730,7 @@
           "graphifyMissing": 6,
           "tokenRatio": null,
           "latencyRatio": null,
-          "artifact": "bench/LIVE_BYOND_SMOKE.json"
+          "artifact": "bench/LIVE_BYOND_BENCHMARK.json"
         },
         {
           "iteration": 3,
@@ -8698,7 +8741,7 @@
           "graphifyMissing": 6,
           "tokenRatio": null,
           "latencyRatio": null,
-          "artifact": "bench/LIVE_BYOND_SMOKE.json"
+          "artifact": "bench/LIVE_BYOND_BENCHMARK.json"
         },
         {
           "iteration": 4,
@@ -8709,7 +8752,7 @@
           "graphifyMissing": 6,
           "tokenRatio": null,
           "latencyRatio": null,
-          "artifact": "bench/LIVE_BYOND_SMOKE.json"
+          "artifact": "bench/LIVE_BYOND_BENCHMARK.json"
         },
         {
           "iteration": 5,
@@ -8720,7 +8763,7 @@
           "graphifyMissing": 6,
           "tokenRatio": null,
           "latencyRatio": null,
-          "artifact": "bench/LIVE_BYOND_SMOKE.json"
+          "artifact": "bench/LIVE_BYOND_BENCHMARK.json"
         }
       ]
     },
@@ -8744,7 +8787,7 @@
           "graphifyMissing": 8,
           "tokenRatio": null,
           "latencyRatio": null,
-          "artifact": "bench/LIVE_ETS_SMOKE.json"
+          "artifact": "bench/LIVE_ETS_BENCHMARK.json"
         },
         {
           "iteration": 2,
@@ -8755,7 +8798,7 @@
           "graphifyMissing": 8,
           "tokenRatio": null,
           "latencyRatio": null,
-          "artifact": "bench/LIVE_ETS_SMOKE.json"
+          "artifact": "bench/LIVE_ETS_BENCHMARK.json"
         },
         {
           "iteration": 3,
@@ -8766,7 +8809,7 @@
           "graphifyMissing": 8,
           "tokenRatio": null,
           "latencyRatio": null,
-          "artifact": "bench/LIVE_ETS_SMOKE.json"
+          "artifact": "bench/LIVE_ETS_BENCHMARK.json"
         },
         {
           "iteration": 4,
@@ -8777,7 +8820,7 @@
           "graphifyMissing": 8,
           "tokenRatio": null,
           "latencyRatio": null,
-          "artifact": "bench/LIVE_ETS_SMOKE.json"
+          "artifact": "bench/LIVE_ETS_BENCHMARK.json"
         },
         {
           "iteration": 5,
@@ -8788,7 +8831,7 @@
           "graphifyMissing": 8,
           "tokenRatio": null,
           "latencyRatio": null,
-          "artifact": "bench/LIVE_ETS_SMOKE.json"
+          "artifact": "bench/LIVE_ETS_BENCHMARK.json"
         }
       ]
     },
@@ -8812,7 +8855,7 @@
           "graphifyMissing": 8,
           "tokenRatio": null,
           "latencyRatio": null,
-          "artifact": "bench/LIVE_R_SMOKE.json"
+          "artifact": "bench/LIVE_R_BENCHMARK.json"
         },
         {
           "iteration": 2,
@@ -8823,7 +8866,7 @@
           "graphifyMissing": 8,
           "tokenRatio": null,
           "latencyRatio": null,
-          "artifact": "bench/LIVE_R_SMOKE.json"
+          "artifact": "bench/LIVE_R_BENCHMARK.json"
         },
         {
           "iteration": 3,
@@ -8834,7 +8877,7 @@
           "graphifyMissing": 8,
           "tokenRatio": null,
           "latencyRatio": null,
-          "artifact": "bench/LIVE_R_SMOKE.json"
+          "artifact": "bench/LIVE_R_BENCHMARK.json"
         },
         {
           "iteration": 4,
@@ -8845,7 +8888,7 @@
           "graphifyMissing": 8,
           "tokenRatio": null,
           "latencyRatio": null,
-          "artifact": "bench/LIVE_R_SMOKE.json"
+          "artifact": "bench/LIVE_R_BENCHMARK.json"
         },
         {
           "iteration": 5,
@@ -8856,7 +8899,7 @@
           "graphifyMissing": 8,
           "tokenRatio": null,
           "latencyRatio": null,
-          "artifact": "bench/LIVE_R_SMOKE.json"
+          "artifact": "bench/LIVE_R_BENCHMARK.json"
         }
       ]
     }

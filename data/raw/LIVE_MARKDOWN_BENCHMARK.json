@@ -1,0 +1,454 @@
+{
+  "language": "markdown",
+  "repo": "https://github.com/rust-lang/mdBook",
+  "commit": "cb49cc5523e609a731f27dea1af4395a504815a5",
+  "graphify_detector_only": "",
+  "commands": {
+    "clone": "git clone --depth 1 https://github.com/rust-lang/mdBook /tmp/atlas-live-markdown-mdbook/repo",
+    "sparse_checkout": "",
+    "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-markdown-mdbook/atlas.db --json index /tmp/atlas-live-markdown-mdbook/repo/guide/src",
+    "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-markdown-mdbook/atlas.db --json index /tmp/atlas-live-markdown-mdbook/repo/guide/src",
+    "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "native_baseline": "/tmp/atlas-live-markdown-mdbook/markdown-it-venv/bin/python -c <markdown-it-py heading counter> /tmp/atlas-live-markdown-mdbook/repo/guide/src",
+    "query_symbols": [
+      "Installation",
+      "Creating a book",
+      "The build command",
+      "Running `mdbook` in continuous integration",
+      "mdBook-specific features",
+      "Configuring Renderers"
+    ],
+    "target_path": "/tmp/atlas-live-markdown-mdbook/repo/guide/src"
+  },
+  "atlas": {
+    "cold_wall_seconds": 0.079,
+    "reindex_wall_seconds": 0.034,
+    "index": {
+      "repo_id": "c9aee73a-17e3-4d79-8d6c-5d6a8422188d",
+      "repo_full_name": "src",
+      "snapshot_id": "d42c1197-6bd9-4283-a1e8-460919c85224",
+      "commit_sha": "cb49cc5523e609a731f27dea1af4395a504815a5",
+      "indexed_files": 38,
+      "symbols": 161,
+      "edges": 27,
+      "edge_kinds": {
+        "calls": 19,
+        "imports": 8
+      },
+      "routes": 0,
+      "languages": {
+        "markdown": 35,
+        "rust": 2,
+        "toml": 1
+      },
+      "mode": "full",
+      "duration_ms": 54,
+      "timings_ms": {
+        "delta_check": 0,
+        "ensure_repo": 0,
+        "go_types": 0,
+        "lexical": 34,
+        "parse": 15,
+        "persist": 3,
+        "resolve_head": 0,
+        "routes": 0,
+        "sort": 0,
+        "walk": 0
+      }
+    },
+    "reindex": {
+      "repo_id": "c9aee73a-17e3-4d79-8d6c-5d6a8422188d",
+      "repo_full_name": "src",
+      "snapshot_id": "d42c1197-6bd9-4283-a1e8-460919c85224",
+      "commit_sha": "cb49cc5523e609a731f27dea1af4395a504815a5",
+      "indexed_files": 38,
+      "symbols": 161,
+      "edges": 27,
+      "routes": 0,
+      "languages": {
+        "markdown": 35,
+        "rust": 2,
+        "toml": 1
+      },
+      "mode": "noop",
+      "duration_ms": 0,
+      "timings_ms": {
+        "delta_check": 0,
+        "resolve_head": 0
+      }
+    },
+    "symbol_breakdown": [
+      {
+        "language": "markdown",
+        "kind": "section",
+        "count": 156
+      },
+      {
+        "language": "rust",
+        "kind": "function",
+        "count": 3
+      },
+      {
+        "language": "rust",
+        "kind": "type",
+        "count": 1
+      },
+      {
+        "language": "toml",
+        "kind": "document",
+        "count": 1
+      }
+    ],
+    "edge_breakdown": [
+      {
+        "kind": "calls",
+        "count": 19
+      },
+      {
+        "kind": "imports",
+        "count": 8
+      }
+    ],
+    "markdown_definition_symbols": 156
+  },
+  "graphify": {
+    "status": "ok",
+    "ok": true,
+    "seconds": 0.318,
+    "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "stdout_head": [
+      "Re-extracting code files in . (no LLM needed)...",
+      "[graphify watch] Rebuilt: 205 nodes, 249 edges, 26 communities",
+      "[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out",
+      "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
+      "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
+    ],
+    "stderr_head": [],
+    "metrics": {
+      "nodes": 205,
+      "links": 249,
+      "calls": 1
+    }
+  },
+  "native_baseline": {
+    "tool": "markdown-it-py",
+    "status": "ok",
+    "ok": true,
+    "command": "/tmp/atlas-live-markdown-mdbook/markdown-it-venv/bin/python -c <markdown-it-py heading counter> /tmp/atlas-live-markdown-mdbook/repo/guide/src",
+    "metrics": {
+      "files": 35,
+      "parsed_files": 35,
+      "parse_errors": 0,
+      "definition_counts": {
+        "section": 156
+      },
+      "definitions": 156,
+      "markdown_it_py_version": "4.0.0",
+      "sample_headings": [
+        {
+          "path": "404.md",
+          "line": 1,
+          "title": "Document not found (404)"
+        },
+        {
+          "path": "README.md",
+          "line": 1,
+          "title": "Introduction"
+        },
+        {
+          "path": "README.md",
+          "line": 46,
+          "title": "Contributing"
+        },
+        {
+          "path": "README.md",
+          "line": 55,
+          "title": "License"
+        },
+        {
+          "path": "SUMMARY.md",
+          "line": 1,
+          "title": "Summary"
+        },
+        {
+          "path": "SUMMARY.md",
+          "line": 5,
+          "title": "User guide"
+        },
+        {
+          "path": "SUMMARY.md",
+          "line": 11,
+          "title": "Reference guide"
+        },
+        {
+          "path": "cli/README.md",
+          "line": 1,
+          "title": "Command-line tool"
+        },
+        {
+          "path": "cli/arg-watcher.md",
+          "line": 1,
+          "title": "`--watcher`"
+        },
+        {
+          "path": "cli/build.md",
+          "line": 1,
+          "title": "The build command"
+        },
+        {
+          "path": "cli/build.md",
+          "line": 16,
+          "title": "Specify a directory"
+        },
+        {
+          "path": "cli/build.md",
+          "line": 25,
+          "title": "`--open`"
+        },
+        {
+          "path": "cli/build.md",
+          "line": 30,
+          "title": "`--dest-dir`"
+        },
+        {
+          "path": "cli/clean.md",
+          "line": 1,
+          "title": "The clean command"
+        },
+        {
+          "path": "cli/clean.md",
+          "line": 10,
+          "title": "Specify a directory"
+        },
+        {
+          "path": "cli/clean.md",
+          "line": 19,
+          "title": "`--dest-dir`"
+        },
+        {
+          "path": "cli/completions.md",
+          "line": 1,
+          "title": "The completions command"
+        },
+        {
+          "path": "cli/init.md",
+          "line": 1,
+          "title": "The init command"
+        },
+        {
+          "path": "cli/init.md",
+          "line": 32,
+          "title": "Tip: Generate chapters from SUMMARY.md"
+        },
+        {
+          "path": "cli/init.md",
+          "line": 39,
+          "title": "Specify a directory"
+        }
+      ],
+      "parse_error_samples": []
+    }
+  },
+  "richer_native_baselines": {
+    "markdown-it-py": {
+      "status": "ok",
+      "ok": true,
+      "note": "CommonMark heading parser used as the isolated Markdown section baseline"
+    },
+    "markdownlint": {
+      "status": "missing",
+      "ok": false,
+      "note": "markdownlint not installed; it is lint-focused, not a definition index baseline"
+    },
+    "remark": {
+      "status": "missing",
+      "ok": false,
+      "note": "remark CLI not installed; markdown-it-py used as the scriptable parser baseline"
+    }
+  },
+  "coverage": {
+    "atlas_vs_markdown_it_py_definition_ratio": 1.0,
+    "atlas_markdown_definition_symbols": 156,
+    "native_definitions": 156
+  },
+  "optimization": {
+    "cycles_run": 2,
+    "stop_reason": "Markdown live benchmark matched the markdown-it-py CommonMark heading coverage proxy after making Atlas section extraction fence-aware; query latency/token ratios are reported against graphify's document parser output.",
+    "cycle_notes": [
+      "cycle 1: rust-lang/mdBook guide probe showed Atlas treated `#` lines inside fenced Rust/shell examples as real headings.",
+      "cycle 2: after skipping fenced code blocks and tightening ATX heading parsing, Atlas/markdown-it-py section coverage reached 1.0 on the live docs slice."
+    ]
+  },
+  "query_warmup": {
+    "symbol": "Installation",
+    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-markdown-mdbook/atlas.db --format plain --repo src explain Installation",
+    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Installation",
+    "atlas_returncode": 0,
+    "graphify_returncode": 0,
+    "note": "Untimed warm-up for both tools before measured query latency rows."
+  },
+  "queries": [
+    {
+      "symbol": "Installation",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-markdown-mdbook/atlas.db --format plain --repo src explain Installation",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Installation",
+      "atlas_tokens": 8,
+      "graphify_tokens": 95,
+      "atlas_ms": 11.915,
+      "graphify_ms": 78.396,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "Installation s@installation.md:1"
+      ],
+      "graphify_stdout_head": [
+        "Node: Installation",
+        "  ID:        guide_installation_installation",
+        "  Source:    guide/installation.md L1",
+        "  Type:      document",
+        "  Community: 17",
+        "  Degree:    4",
+        "",
+        "Connections (4):"
+      ]
+    },
+    {
+      "symbol": "Creating a book",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-markdown-mdbook/atlas.db --format plain --repo src explain Creating a book",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Creating a book",
+      "atlas_tokens": 8,
+      "graphify_tokens": 88,
+      "atlas_ms": 11.739,
+      "graphify_ms": 76.825,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "Creating a book s@creating.md:1"
+      ],
+      "graphify_stdout_head": [
+        "Node: Creating a book",
+        "  ID:        guide_creating_creating_a_book",
+        "  Source:    guide/creating.md L1",
+        "  Type:      document",
+        "  Community: 10",
+        "  Degree:    4",
+        "",
+        "Connections (4):"
+      ]
+    },
+    {
+      "symbol": "The build command",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-markdown-mdbook/atlas.db --format plain --repo src explain The build command",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain The build command",
+      "atlas_tokens": 7,
+      "graphify_tokens": 83,
+      "atlas_ms": 12.123,
+      "graphify_ms": 77.995,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "The build command s@build.md:1"
+      ],
+      "graphify_stdout_head": [
+        "Node: The build command",
+        "  ID:        cli_build_the_build_command",
+        "  Source:    cli/build.md L1",
+        "  Type:      document",
+        "  Community: 20",
+        "  Degree:    4",
+        "",
+        "Connections (4):"
+      ]
+    },
+    {
+      "symbol": "Running `mdbook` in continuous integration",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-markdown-mdbook/atlas.db --format plain --repo src explain Running `mdbook` in continuous integration",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Running `mdbook` in continuous integration",
+      "atlas_tokens": 18,
+      "graphify_tokens": 105,
+      "atlas_ms": 11.824,
+      "graphify_ms": 75.329,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "Running `mdbook` in continuous integration s@continuous-integration.md:1"
+      ],
+      "graphify_stdout_head": [
+        "Node: Running `mdbook` in continuous integration",
+        "  ID:        continuous_integration_running_mdbook_in_continuous_integration",
+        "  Source:    continuous-integration.md L1",
+        "  Type:      document",
+        "  Community: 7",
+        "  Degree:    4",
+        "",
+        "Connections (4):"
+      ]
+    },
+    {
+      "symbol": "mdBook-specific features",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-markdown-mdbook/atlas.db --format plain --repo src explain mdBook-specific features",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain mdBook-specific features",
+      "atlas_tokens": 9,
+      "graphify_tokens": 140,
+      "atlas_ms": 11.798,
+      "graphify_ms": 75.959,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "mdBook-specific features s@mdbook.md:1"
+      ],
+      "graphify_stdout_head": [
+        "Node: mdBook-specific features",
+        "  ID:        format_mdbook_mdbook_specific_features",
+        "  Source:    format/mdbook.md L1",
+        "  Type:      document",
+        "  Community: 9",
+        "  Degree:    7",
+        "",
+        "Connections (7):"
+      ]
+    },
+    {
+      "symbol": "Configuring Renderers",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-markdown-mdbook/atlas.db --format plain --repo src explain Configuring Renderers",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Configuring Renderers",
+      "atlas_tokens": 9,
+      "graphify_tokens": 97,
+      "atlas_ms": 12.256,
+      "graphify_ms": 94.648,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "Configuring Renderers s@renderers.md:1"
+      ],
+      "graphify_stdout_head": [
+        "Node: Configuring Renderers",
+        "  ID:        configuration_renderers_configuring_renderers",
+        "  Source:    format/configuration/renderers.md L1",
+        "  Type:      document",
+        "  Community: 4",
+        "  Degree:    4",
+        "",
+        "Connections (4):"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,497 @@
+{
+  "language": "r",
+  "repo": "https://github.com/tidyverse/ggplot2",
+  "commit": "6870419aa6e106c3580c45c81d5b688cb31758bd",
+  "graphify_detector_only": ".r",
+  "commands": {
+    "clone": "git clone --depth 1 https://github.com/tidyverse/ggplot2 /tmp/atlas-live-r-ggplot2/repo",
+    "sparse_checkout": "",
+    "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-r-ggplot2/atlas.db --json index /tmp/atlas-live-r-ggplot2/repo/R",
+    "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-r-ggplot2/atlas.db --json index /tmp/atlas-live-r-ggplot2/repo/R",
+    "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "native_baseline": "python3 <R source counter> /tmp/atlas-live-r-ggplot2/repo/R",
+    "query_symbols": [
+      "ggplot",
+      "ggplot.default",
+      "GeomPoint",
+      "geom_point",
+      "StatSummary",
+      "theme",
+      "aes",
+      "coord_cartesian"
+    ],
+    "target_path": "/tmp/atlas-live-r-ggplot2/repo/R"
+  },
+  "atlas": {
+    "cold_wall_seconds": 0.705,
+    "reindex_wall_seconds": 0.029,
+    "index": {
+      "repo_id": "77e49f00-97a0-4155-a687-b3956028fdda",
+      "repo_full_name": "R",
+      "snapshot_id": "93d6f42f-bc5a-4daa-9b28-824d4a82f0a4",
+      "commit_sha": "6870419aa6e106c3580c45c81d5b688cb31758bd",
+      "indexed_files": 201,
+      "symbols": 3018,
+      "edges": 16950,
+      "edge_kinds": {
+        "calls": 16950
+      },
+      "routes": 0,
+      "languages": {
+        "r": 201
+      },
+      "mode": "full",
+      "duration_ms": 665,
+      "timings_ms": {
+        "delta_check": 0,
+        "ensure_repo": 0,
+        "go_types": 0,
+        "lexical": 288,
+        "parse": 57,
+        "persist": 313,
+        "resolve_head": 0,
+        "routes": 0,
+        "sort": 4,
+        "walk": 0
+      }
+    },
+    "reindex": {
+      "repo_id": "77e49f00-97a0-4155-a687-b3956028fdda",
+      "repo_full_name": "R",
+      "snapshot_id": "93d6f42f-bc5a-4daa-9b28-824d4a82f0a4",
+      "commit_sha": "6870419aa6e106c3580c45c81d5b688cb31758bd",
+      "indexed_files": 201,
+      "symbols": 3018,
+      "edges": 16950,
+      "routes": 0,
+      "languages": {
+        "r": 201
+      },
+      "mode": "noop",
+      "duration_ms": 0,
+      "timings_ms": {
+        "delta_check": 0,
+        "resolve_head": 0
+      }
+    },
+    "symbol_breakdown": [
+      {
+        "language": "r",
+        "kind": "document",
+        "count": 7
+      },
+      {
+        "language": "r",
+        "kind": "function",
+        "count": 1584
+      },
+      {
+        "language": "r",
+        "kind": "type",
+        "count": 133
+      },
+      {
+        "language": "r",
+        "kind": "variable",
+        "count": 1294
+      }
+    ],
+    "edge_breakdown": [
+      {
+        "kind": "calls",
+        "count": 16950
+      }
+    ],
+    "r_definition_symbols": 3011
+  },
+  "graphify": {
+    "status": "ok",
+    "ok": true,
+    "seconds": 0.208,
+    "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "stdout_head": [
+      "Re-extracting code files in . (no LLM needed)...",
+      "[graphify watch] Rebuilt: 0 nodes, 0 edges, 0 communities",
+      "[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out",
+      "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
+      "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
+    ],
+    "stderr_head": [],
+    "metrics": {
+      "nodes": 0,
+      "links": 0,
+      "calls": 0
+    }
+  },
+  "native_baseline": {
+    "tool": "r-source-counter",
+    "status": "ok",
+    "ok": true,
+    "seconds": 0.055,
+    "command": "python3 <R source counter> /tmp/atlas-live-r-ggplot2/repo/R",
+    "metrics": {
+      "files": 201,
+      "parsed_files": 201,
+      "parse_errors": 0,
+      "definition_counts": {
+        "function": 1584,
+        "type": 133,
+        "variable": 1294
+      },
+      "definitions": 3011,
+      "sample_definitions": [
+        {
+          "kind": "function",
+          "name": "after_stat",
+          "path": "aes-delayed-eval.R"
+        },
+        {
+          "kind": "function",
+          "name": "stat",
+          "path": "aes-delayed-eval.R"
+        },
+        {
+          "kind": "function",
+          "name": "after_scale",
+          "path": "aes-delayed-eval.R"
+        },
+        {
+          "kind": "function",
+          "name": "from_theme",
+          "path": "aes-delayed-eval.R"
+        },
+        {
+          "kind": "function",
+          "name": "stage",
+          "path": "aes-delayed-eval.R"
+        },
+        {
+          "kind": "function",
+          "name": "stage_calculated",
+          "path": "aes-delayed-eval.R"
+        },
+        {
+          "kind": "function",
+          "name": "stage_scaled",
+          "path": "aes-delayed-eval.R"
+        },
+        {
+          "kind": "function",
+          "name": "is_calculated_aes",
+          "path": "aes-delayed-eval.R"
+        },
+        {
+          "kind": "function",
+          "name": "is_scaled_aes",
+          "path": "aes-delayed-eval.R"
+        },
+        {
+          "kind": "function",
+          "name": "is_staged_aes",
+          "path": "aes-delayed-eval.R"
+        },
+        {
+          "kind": "function",
+          "name": "is_themed_aes",
+          "path": "aes-delayed-eval.R"
+        },
+        {
+          "kind": "function",
+          "name": "is_calculated",
+          "path": "aes-delayed-eval.R"
+        },
+        {
+          "kind": "function",
+          "name": "is_scaled",
+          "path": "aes-delayed-eval.R"
+        },
+        {
+          "kind": "function",
+          "name": "is_staged",
+          "path": "aes-delayed-eval.R"
+        },
+        {
+          "kind": "function",
+          "name": "is_themed",
+          "path": "aes-delayed-eval.R"
+        },
+        {
+          "kind": "function",
+          "name": "strip_dots",
+          "path": "aes-delayed-eval.R"
+        },
+        {
+          "kind": "function",
+          "name": "error",
+          "path": "aes-delayed-eval.R"
+        },
+        {
+          "kind": "function",
+          "name": "strip_stage",
+          "path": "aes-delayed-eval.R"
+        },
+        {
+          "kind": "function",
+          "name": "eval_aesthetics",
+          "path": "aes-delayed-eval.R"
+        },
+        {
+          "kind": "function",
+          "name": "mask_function",
+          "path": "aes-delayed-eval.R"
+        },
+        {
+          "kind": "variable",
+          "name": "match_calculated_aes",
+          "path": "aes-delayed-eval.R"
+        },
+        {
+          "kind": "function",
+          "name": "aes_",
+          "path": "aes-variants.R"
+        },
+        {
+          "kind": "function",
+          "name": "as_quosure_aes",
+          "path": "aes-variants.R"
+        },
+        {
+          "kind": "function",
+          "name": "aes_string",
+          "path": "aes-variants.R"
+        },
+        {
+          "kind": "function",
+          "name": "aes_all",
+          "path": "aes-variants.R"
+        },
+        {
+          "kind": "function",
+          "name": "aes_auto",
+          "path": "aes-variants.R"
+        },
+        {
+          "kind": "variable",
+          "name": "details",
+          "path": "aes-variants.R"
+        },
+        {
+          "kind": "variable",
+          "name": "mapping",
+          "path": "aes-variants.R"
+        },
+        {
+          "kind": "variable",
+          "name": "details",
+          "path": "aes-variants.R"
+        },
+        {
+          "kind": "variable",
+          "name": "mapping",
+          "path": "aes-variants.R"
+        }
+      ]
+    }
+  },
+  "richer_native_baselines": {
+    "r-source-counter": {
+      "status": "ok",
+      "ok": true,
+      "note": "benchmark-owned R function/type/variable counter used as the scriptable parser coverage proxy"
+    },
+    "Rscript": {
+      "status": "missing",
+      "ok": false,
+      "note": "Rscript not installed; source-only parser proxy used for this benchmark"
+    },
+    "languageserver": {
+      "status": "missing_adapter",
+      "ok": false,
+      "note": "R languageserver is not installed or wired into this harness; source counter coverage proxy used for this graphify detector-only benchmark"
+    }
+  },
+  "coverage": {
+    "atlas_vs_r_source_counter_definition_ratio": 1.0,
+    "atlas_r_definition_symbols": 3011,
+    "native_definitions": 3011
+  },
+  "optimization": {
+    "cycles_run": 5,
+    "stop_reason": "R live benchmark covers a graphify detector-only extension by adding Atlas R function, multiline function, S4/R6/ggproto type, and variable symbols; the five-pass saturation report records that graphify exposes no equivalent query rows in this runtime.",
+    "cycle_notes": [
+      "cycle 1: tidyverse/ggplot2 probe showed the generic R rules missed multiline function assignments and ggproto declarations such as GeomPoint and StatSummary.",
+      "cycle 2: after widening R lightweight parsing, Atlas covers ggplot2-style functions and ggproto types against the live R source slice; graphify query rows remain detector-only caveats.",
+      "cycles 3-5: repeated live benchmarks kept native coverage at 1.0 and graphify-equivalent query rows at 0/8, so R query-score improvement is saturated until graphify ships a deterministic R extractor."
+    ]
+  },
+  "query_warmup": {
+    "symbol": "ggplot",
+    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-r-ggplot2/atlas.db --format plain --repo R explain ggplot",
+    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ggplot",
+    "atlas_returncode": 0,
+    "graphify_returncode": 0,
+    "note": "Untimed warm-up for both tools before measured query latency rows."
+  },
+  "queries": [
+    {
+      "symbol": "ggplot",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-r-ggplot2/atlas.db --format plain --repo R explain ggplot",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ggplot",
+      "atlas_tokens": 6,
+      "graphify_tokens": 8,
+      "atlas_ms": 16.912,
+      "graphify_ms": 76.94,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": true,
+      "atlas_stdout_head": [
+        "ggplot f@plot.R:106 c44 d2"
+      ],
+      "graphify_stdout_head": [
+        "No node matching 'ggplot' found."
+      ]
+    },
+    {
+      "symbol": "ggplot.default",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-r-ggplot2/atlas.db --format plain --repo R explain ggplot.default",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain ggplot.default",
+      "atlas_tokens": 7,
+      "graphify_tokens": 10,
+      "atlas_ms": 13.468,
+      "graphify_ms": 75.495,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": true,
+      "atlas_stdout_head": [
+        "ggplot.default f@plot.R:116 d6"
+      ],
+      "graphify_stdout_head": [
+        "No node matching 'ggplot.default' found."
+      ]
+    },
+    {
+      "symbol": "GeomPoint",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-r-ggplot2/atlas.db --format plain --repo R explain GeomPoint",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain GeomPoint",
+      "atlas_tokens": 7,
+      "graphify_tokens": 9,
+      "atlas_ms": 14.03,
+      "graphify_ms": 76.013,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": true,
+      "atlas_stdout_head": [
+        "GeomPoint t@geom-point.R:5 d1"
+      ],
+      "graphify_stdout_head": [
+        "No node matching 'GeomPoint' found."
+      ]
+    },
+    {
+      "symbol": "geom_point",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-r-ggplot2/atlas.db --format plain --repo R explain geom_point",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain geom_point",
+      "atlas_tokens": 2,
+      "graphify_tokens": 9,
+      "atlas_ms": 16.361,
+      "graphify_ms": 76.13,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": true,
+      "atlas_stdout_head": [
+        "geom_point"
+      ],
+      "graphify_stdout_head": [
+        "No node matching 'geom_point' found."
+      ]
+    },
+    {
+      "symbol": "StatSummary",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-r-ggplot2/atlas.db --format plain --repo R explain StatSummary",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain StatSummary",
+      "atlas_tokens": 9,
+      "graphify_tokens": 9,
+      "atlas_ms": 14.796,
+      "graphify_ms": 74.207,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": true,
+      "atlas_stdout_head": [
+        "StatSummary t@stat-summary.R:181 d1"
+      ],
+      "graphify_stdout_head": [
+        "No node matching 'StatSummary' found."
+      ]
+    },
+    {
+      "symbol": "theme",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-r-ggplot2/atlas.db --format plain --repo R explain theme",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain theme",
+      "atlas_tokens": 6,
+      "graphify_tokens": 8,
+      "atlas_ms": 15.575,
+      "graphify_ms": 92.82,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": true,
+      "atlas_stdout_head": [
+        "theme f@theme.R:343 c32 d5"
+      ],
+      "graphify_stdout_head": [
+        "No node matching 'theme' found."
+      ]
+    },
+    {
+      "symbol": "aes",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-r-ggplot2/atlas.db --format plain --repo R explain aes",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain aes",
+      "atlas_tokens": 6,
+      "graphify_tokens": 7,
+      "atlas_ms": 30.621,
+      "graphify_ms": 82.621,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": true,
+      "atlas_stdout_head": [
+        "aes f@aes.R:93 df2 c93 d3"
+      ],
+      "graphify_stdout_head": [
+        "No node matching 'aes' found."
+      ]
+    },
+    {
+      "symbol": "coord_cartesian",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-r-ggplot2/atlas.db --format plain --repo R explain coord_cartesian",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain coord_cartesian",
+      "atlas_tokens": 11,
+      "graphify_tokens": 10,
+      "atlas_ms": 15.012,
+      "graphify_ms": 79.342,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": true,
+      "atlas_stdout_head": [
+        "coord_cartesian f@coord-cartesian-.R:78 c5 d3"
+      ],
+      "graphify_stdout_head": [
+        "No node matching 'coord_cartesian' found."
+      ]
+    }
+  ]
+}

@@ -15,7 +15,7 @@ The command installed by every package surface is:
 atlas
 ```
 
-Smoke check:
+Benchmark check:
 
 ```sh
 atlas version

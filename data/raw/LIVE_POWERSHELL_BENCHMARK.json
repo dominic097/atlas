@@ -1,0 +1,282 @@
+{
+  "language": "powershell",
+  "repo": "https://github.com/PowerShell/PowerShellGet",
+  "commit": "a2dac8e74603f7c9eec4a54c5e23459531751b0d",
+  "graphify_detector_only": "",
+  "commands": {
+    "clone": "git clone --depth 1 https://github.com/PowerShell/PowerShellGet /tmp/atlas-live-powershell-powershellget/repo",
+    "sparse_checkout": "",
+    "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-powershell-powershellget/atlas.db --json index /tmp/atlas-live-powershell-powershellget/repo/src",
+    "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-powershell-powershellget/atlas.db --json index /tmp/atlas-live-powershell-powershellget/repo/src",
+    "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "native_baseline": "/usr/local/bin/pwsh -NoLogo -NoProfile -File /tmp/atlas-live-powershell-powershellget/pwsh_stats.ps1 /tmp/atlas-live-powershell-powershellget/repo/src",
+    "query_symbols": [
+      "Find-Module",
+      "Install-Module",
+      "Register-PSRepository",
+      "Update-ModuleManifest"
+    ],
+    "target_path": "/tmp/atlas-live-powershell-powershellget/repo/src"
+  },
+  "atlas": {
+    "cold_wall_seconds": 0.12,
+    "reindex_wall_seconds": 0.021,
+    "index": {
+      "repo_id": "726d9ca3-d66a-42fe-8527-bcb1e9e8a453",
+      "repo_full_name": "src",
+      "snapshot_id": "0fe53b07-960f-4297-82e6-b3d599af9b33",
+      "commit_sha": "a2dac8e74603f7c9eec4a54c5e23459531751b0d",
+      "indexed_files": 2,
+      "symbols": 159,
+      "edges": 805,
+      "edge_kinds": {
+        "calls": 805
+      },
+      "routes": 0,
+      "languages": {
+        "powershell": 2
+      },
+      "mode": "full",
+      "duration_ms": 77,
+      "timings_ms": {
+        "delta_check": 0,
+        "ensure_repo": 0,
+        "go_types": 0,
+        "lexical": 18,
+        "parse": 51,
+        "persist": 7,
+        "resolve_head": 0,
+        "routes": 0,
+        "sort": 0,
+        "walk": 0
+      }
+    },
+    "reindex": {
+      "repo_id": "726d9ca3-d66a-42fe-8527-bcb1e9e8a453",
+      "repo_full_name": "src",
+      "snapshot_id": "0fe53b07-960f-4297-82e6-b3d599af9b33",
+      "commit_sha": "a2dac8e74603f7c9eec4a54c5e23459531751b0d",
+      "indexed_files": 2,
+      "symbols": 159,
+      "edges": 805,
+      "routes": 0,
+      "languages": {
+        "powershell": 2
+      },
+      "mode": "noop",
+      "duration_ms": 0,
+      "timings_ms": {
+        "delta_check": 0,
+        "resolve_head": 0
+      }
+    },
+    "symbol_breakdown": [
+      {
+        "language": "powershell",
+        "kind": "document",
+        "count": 1
+      },
+      {
+        "language": "powershell",
+        "kind": "function",
+        "count": 28
+      },
+      {
+        "language": "powershell",
+        "kind": "variable",
+        "count": 130
+      }
+    ],
+    "edge_breakdown": [
+      {
+        "kind": "calls",
+        "count": 805
+      }
+    ],
+    "powershell_definition_symbols": 28
+  },
+  "graphify": {
+    "status": "ok",
+    "ok": true,
+    "seconds": 0.14,
+    "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "stdout_head": [
+      "Re-extracting code files in . (no LLM needed)...",
+      "[graphify watch] Rebuilt: 30 nodes, 43 edges, 4 communities",
+      "[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out",
+      "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
+      "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
+    ],
+    "stderr_head": [],
+    "metrics": {
+      "nodes": 30,
+      "links": 43,
+      "calls": 14
+    }
+  },
+  "native_baseline": {
+    "tool": "pwsh-parser",
+    "status": "ok",
+    "ok": true,
+    "seconds": 0.714,
+    "command": "/usr/local/bin/pwsh -NoLogo -NoProfile -File /tmp/atlas-live-powershell-powershellget/pwsh_stats.ps1 /tmp/atlas-live-powershell-powershellget/repo/src",
+    "metrics": {
+      "files": 2,
+      "parsed_files": 2,
+      "parse_errors": 0,
+      "functions": 28,
+      "assignments": 391,
+      "definitions": 28,
+      "powershell_version": "7.4.6",
+      "parse_error_samples": []
+    }
+  },
+  "richer_native_baselines": {
+    "pwsh": {
+      "status": "available",
+      "ok": true,
+      "note": "PowerShell parser used as native syntax/function-definition baseline"
+    },
+    "powershell-editor-services": {
+      "status": "missing",
+      "ok": false,
+      "note": "PowerShellEditorServices LSP is not installed; pwsh AST parser used for this benchmark"
+    },
+    "psscriptanalyzer": {
+      "status": "missing",
+      "ok": false,
+      "note": "PSScriptAnalyzer not installed; it is lint-focused, not a definition index baseline"
+    }
+  },
+  "coverage": {
+    "atlas_vs_pwsh_parser_definition_ratio": 1.0,
+    "atlas_powershell_definition_symbols": 28,
+    "native_definitions": 28
+  },
+  "optimization": {
+    "cycles_run": 2,
+    "stop_reason": "PowerShell live benchmark matched pwsh AST function-definition coverage and improved token score after compacting PowerShell script suffixes in terse plain locations while preserving full paths in JSON.",
+    "cycle_notes": [
+      "cycle 1: PowerShellGet src benchmark used the native PowerShell parser for syntax/function-definition truth; Atlas matched function coverage and kept exact-symbol explain output terse.",
+      "cycle 2: compacting `.ps1`/`.psm1`/`.psd1` suffixes in terse locations improved the live PowerShellGet summed token ratio from 5.74x to 6.68x without changing indexed symbols or JSON paths."
+    ]
+  },
+  "query_warmup": {
+    "symbol": "Find-Module",
+    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-powershell-powershellget/atlas.db --format plain --repo src explain Find-Module",
+    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Find-Module",
+    "atlas_returncode": 0,
+    "graphify_returncode": 0,
+    "note": "Untimed warm-up for both tools before measured query latency rows."
+  },
+  "queries": [
+    {
+      "symbol": "Find-Module",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-powershell-powershellget/atlas.db --format plain --repo src explain Find-Module",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Find-Module",
+      "atlas_tokens": 8,
+      "graphify_tokens": 66,
+      "atlas_ms": 11.894,
+      "graphify_ms": 86.563,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "Find-Module f@PowerShellGet:409"
+      ],
+      "graphify_stdout_head": [
+        "Node: Find-Module()",
+        "  ID:        powershellget_find_module",
+        "  Source:    PowerShellGet.psm1 L410",
+        "  Type:      code",
+        "  Community: 1",
+        "  Degree:    2",
+        "",
+        "Connections (2):"
+      ]
+    },
+    {
+      "symbol": "Install-Module",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-powershell-powershellget/atlas.db --format plain --repo src explain Install-Module",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Install-Module",
+      "atlas_tokens": 9,
+      "graphify_tokens": 67,
+      "atlas_ms": 14.181,
+      "graphify_ms": 81.918,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "Install-Module f@PowerShellGet:1036"
+      ],
+      "graphify_stdout_head": [
+        "Node: Install-Module()",
+        "  ID:        powershellget_install_module",
+        "  Source:    PowerShellGet.psm1 L1037",
+        "  Type:      code",
+        "  Community: 1",
+        "  Degree:    2",
+        "",
+        "Connections (2):"
+      ]
+    },
+    {
+      "symbol": "Register-PSRepository",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-powershell-powershellget/atlas.db --format plain --repo src explain Register-PSRepository",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Register-PSRepository",
+      "atlas_tokens": 10,
+      "graphify_tokens": 57,
+      "atlas_ms": 11.968,
+      "graphify_ms": 76.33,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "Register-PSRepository f@PowerShellGet:1715"
+      ],
+      "graphify_stdout_head": [
+        "Node: Register-PSRepository()",
+        "  ID:        powershellget_register_psrepository",
+        "  Source:    PowerShellGet.psm1 L1716",
+        "  Type:      code",
+        "  Community: 0",
+        "  Degree:    1",
+        "",
+        "Connections (1):"
+      ]
+    },
+    {
+      "symbol": "Update-ModuleManifest",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-powershell-powershellget/atlas.db --format plain --repo src explain Update-ModuleManifest",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Update-ModuleManifest",
+      "atlas_tokens": 10,
+      "graphify_tokens": 57,
+      "atlas_ms": 12.137,
+      "graphify_ms": 75.029,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "Update-ModuleManifest f@PowerShellGet:2881"
+      ],
+      "graphify_stdout_head": [
+        "Node: Update-ModuleManifest()",
+        "  ID:        powershellget_update_modulemanifest",
+        "  Source:    PowerShellGet.psm1 L2882",
+        "  Type:      code",
+        "  Community: 0",
+        "  Degree:    1",
+        "",
+        "Connections (1):"
+      ]
+    }
+  ]
+}

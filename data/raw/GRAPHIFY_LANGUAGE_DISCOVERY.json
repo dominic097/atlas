@@ -6,7 +6,7 @@
   "code_extension_count": 88,
   "evidence": [
     "CLI help from `graphify --help` did not enumerate languages, but confirmed `update`, `extract`, and code-only AST update commands.",
-    "`graphify.detect.CODE_EXTENSIONS` plus a runtime `detect()` smoke listed code extensions.",
+    "`graphify.detect.CODE_EXTENSIONS` plus a runtime `detect()` benchmark listed code extensions.",
     "`graphify.extract._DISPATCH` provided the deterministic extractor map used as the parser-parity target."
   ],
   "detector_only_code_extensions": [
@@ -49,7 +49,7 @@
       "groovy/gradle",
       ".groovy .gradle",
       "extract_groovy",
-      "lightweight regex"
+      "native tree-sitter AST"
     ],
     [
       "c",
@@ -67,109 +67,109 @@
       "csharp",
       ".cs",
       "extract_csharp",
-      "lightweight regex"
+      "native tree-sitter tags"
     ],
     [
       "rust",
       ".rs",
       "extract_rust",
-      "lightweight regex"
+      "native tree-sitter tags"
     ],
     [
       "ruby",
       ".rb",
       "extract_ruby",
-      "lightweight regex"
+      "native tree-sitter tags"
     ],
     [
       "kotlin",
       ".kt .kts",
       "extract_kotlin",
-      "lightweight regex"
+      "native tree-sitter tags"
     ],
     [
       "scala",
       ".scala",
       "extract_scala",
-      "lightweight regex"
+      "native tree-sitter tags"
     ],
     [
       "php",
       ".php",
       "extract_php",
-      "lightweight regex"
+      "native tree-sitter tags"
     ],
     [
       "blade",
       "*.blade.php",
       "extract_blade",
-      "lightweight regex"
+      "native Blade source parser"
     ],
     [
       "swift",
       ".swift",
       "extract_swift",
-      "lightweight regex"
+      "native tree-sitter tags"
     ],
     [
       "lua",
       ".lua .luau .toc",
       "extract_lua",
-      "lightweight regex"
+      "native tree-sitter tags"
     ],
     [
       "zig",
       ".zig",
       "extract_zig",
-      "lightweight regex"
+      "native tree-sitter tags"
     ],
     [
       "powershell",
       ".ps1 .psm1 .psd1",
       "extract_powershell/extract_powershell_manifest",
-      "lightweight regex"
+      "native tree-sitter AST"
     ],
     [
       "elixir",
       ".ex .exs",
       "extract_elixir",
-      "lightweight regex"
+      "native tree-sitter AST"
     ],
     [
       "objective-c",
       ".m .mm",
       "extract_objc",
-      "lightweight regex"
+      "native tree-sitter AST"
     ],
     [
       "julia",
       ".jl",
       "extract_julia",
-      "lightweight regex"
+      "native tree-sitter AST"
     ],
     [
       "fortran",
       ".f .F .f90 .F90 .f95 .F95 .f03 .F03 .f08 .F08",
       "extract_fortran",
-      "lightweight regex"
+      "native tree-sitter AST"
     ],
     [
       "dart",
       ".dart",
       "extract_dart",
-      "lightweight regex"
+      "native tree-sitter AST"
     ],
     [
       "verilog/systemverilog",
       ".v .sv .svh",
       "extract_verilog",
-      "lightweight regex"
+      "native tree-sitter AST"
     ],
     [
       "sql",
       ".sql",
       "extract_sql",
-      "lightweight regex"
+      "native SQL source parser"
     ],
     [
       "markdown",
@@ -181,19 +181,19 @@
       "pascal",
       ".pas .pp .dpr .dpk .lpr .inc",
       "extract_pascal",
-      "lightweight regex"
+      "native tree-sitter AST"
     ],
     [
       "delphi/lazarus forms",
       ".dfm .lfm .lpk",
       "extract_delphi_form/extract_lazarus_form/extract_lazarus_package",
-      "lightweight regex/document fallback"
+      "native Delphi/Lazarus source parser"
     ],
     [
       "shell",
       ".sh .bash",
       "extract_bash",
-      "lightweight regex"
+      "native tree-sitter AST"
     ],
     [
       "json config",
@@ -205,49 +205,49 @@
       "terraform/hcl",
       ".tf .tfvars .hcl",
       "extract_terraform",
-      "lightweight regex"
+      "native tree-sitter HCL"
     ],
     [
       "byond dm",
       ".dm .dme .dmi .dmm .dmf",
       "extract_dm/extract_dmf/extract_dmi/extract_dmm",
-      "lightweight regex/document fallback"
+      "native BYOND source parser"
     ],
     [
       "dotnet project",
       ".sln .slnx .csproj .fsproj .vbproj",
       "extract_csproj/extract_sln/extract_slnx",
-      "lightweight regex"
+      "native structured project parser"
     ],
     [
       "razor",
       ".razor .cshtml",
       "extract_razor",
-      "lightweight regex"
+      "native Razor source parser"
     ],
     [
       "apex",
       ".cls .trigger",
       "extract_apex",
-      "lightweight regex"
+      "native tree-sitter Apex"
     ],
     [
       "vue",
       ".vue",
       "extract_js",
-      "lightweight regex"
+      "native SFC/tree-sitter AST"
     ],
     [
       "svelte",
       ".svelte",
       "extract_svelte",
-      "lightweight regex"
+      "native SFC/tree-sitter AST"
     ],
     [
       "astro",
       ".astro",
       "extract_astro",
-      "lightweight regex"
+      "native Astro/tree-sitter AST"
     ]
   ],
   "runtime_error": "",
@@ -794,7 +794,7 @@
     ".vue",
     ".zig"
   ],
-  "detect_smoke_code_extensions": [
+  "detect_benchmark_code_extensions": [
     ".F",
     ".F03",
     ".F08",
@@ -884,5 +884,5 @@
     ".vue",
     ".zig"
   ],
-  "detect_smoke_total_files": 88
+  "detect_benchmark_total_files": 88
 }

@@ -109,7 +109,7 @@ function publicSource(file) {
 function copyRawArtifacts() {
   fs.rmSync(rawDir, { recursive: true, force: true });
   fs.mkdirSync(rawDir, { recursive: true });
-  const live = fs.readdirSync(benchDir).filter((file) => /^LIVE_.*_SMOKE\.json$/.test(file)).sort();
+  const live = fs.readdirSync(benchDir).filter((file) => /^LIVE_.*_BENCHMARK\.json$/.test(file)).sort();
   const files = [...required, ...live];
   for (const file of files) {
     fs.copyFileSync(path.join(benchDir, file), path.join(rawDir, file));
@@ -174,9 +174,9 @@ function buildCoreMatrix(matrix) {
   });
 }
 
-function buildLiveSmokes(artifactFiles) {
+function buildLiveBenchmarks(artifactFiles) {
   return artifactFiles
-    .filter((file) => /^LIVE_.*_SMOKE\.json$/.test(file))
+    .filter((file) => /^LIVE_.*_BENCHMARK\.json$/.test(file))
     .map((file) => {
       const row = readJSON(file);
       return {
@@ -219,7 +219,7 @@ function buildLiveSmokes(artifactFiles) {
     .sort((a, b) => a.language.localeCompare(b.language));
 }
 
-function buildCoverageAudit(discovery, liveSmokes) {
+function buildCoverageAudit(discovery, liveBenchmarks) {
   const detectorMap = new Map([
     [".ejs", "ejs"],
     [".ets", "ets"],
@@ -236,12 +236,12 @@ function buildCoverageAudit(discovery, liveSmokes) {
   }));
   for (const extension of discovery.detector_only_code_extensions || []) {
     const language = detectorMap.get(extension) || extension.replace(/^\./, "");
-    const live = liveSmokes.find((item) => item.language === language);
+    const live = liveBenchmarks.find((item) => item.language === language);
     rows.push({
       family: `detector-only ${extension}`,
       extensions: extension,
       graphifyExtractor: "detector only, no _DISPATCH extractor",
-      atlasStatus: live ? "live Atlas smoke evidence" : "no live smoke artifact",
+      atlasStatus: live ? "live Atlas benchmark evidence" : "no live benchmark artifact",
       supportType: "detector-only",
       artifact: live?.artifact || artifactPath("GRAPHIFY_LANGUAGE_DISCOVERY.json"),
       source: live?.source || publicSource("GRAPHIFY_LANGUAGE_DISCOVERY.json"),
@@ -291,14 +291,14 @@ function aggregateCore(coreMatrix) {
   };
 }
 
-function aggregateLive(liveSmokes) {
-  const comparable = liveSmokes.filter((row) => row.querySummary.equivalentRows > 0);
+function aggregateLive(liveBenchmarks) {
+  const comparable = liveBenchmarks.filter((row) => row.querySummary.equivalentRows > 0);
   return {
-    artifacts: liveSmokes.length,
+    artifacts: liveBenchmarks.length,
     withComparableRows: comparable.length,
-    saturatedNoComparable: liveSmokes.filter((row) => row.querySummary.equivalentRows === 0).length,
+    saturatedNoComparable: liveBenchmarks.filter((row) => row.querySummary.equivalentRows === 0).length,
     fiveXComparable: comparable.filter((row) => row.querySummary.pass5x).length,
-    detectorOnlyArtifacts: liveSmokes.filter((row) => row.detectorOnly).length,
+    detectorOnlyArtifacts: liveBenchmarks.filter((row) => row.detectorOnly).length,
   };
 }
 
@@ -316,8 +316,8 @@ function main() {
   const toolVersions = readJSON("MATRIX_TOOL_VERSIONS.json");
   const graphifyDiscovery = readJSON("GRAPHIFY_LANGUAGE_DISCOVERY.json");
   const coreMatrix = buildCoreMatrix(matrix);
-  const liveSmokes = buildLiveSmokes(artifacts.map((artifact) => artifact.name));
-  const coverageAudit = buildCoverageAudit(graphifyDiscovery, liveSmokes);
+  const liveBenchmarks = buildLiveBenchmarks(artifacts.map((artifact) => artifact.name));
+  const coverageAudit = buildCoverageAudit(graphifyDiscovery, liveBenchmarks);
   const saturationRows = buildSaturation(saturation);
 
   const dataset = {
@@ -334,18 +334,18 @@ function main() {
         dispatchCount: graphifyDiscovery.dispatch_count,
         codeExtensionCount: graphifyDiscovery.code_extension_count,
         detectorOnlyCodeExtensions: graphifyDiscovery.detector_only_code_extensions || [],
-        detectSmokeTotalFiles: graphifyDiscovery.detect_smoke_total_files,
+        detectBenchmarkTotalFiles: graphifyDiscovery.detect_benchmark_total_files,
       },
       tools: {
         coreCount: (toolVersions.core_tools || []).length,
-        liveSmokeCount: (toolVersions.live_smoke_tools || []).length,
+        liveBenchmarkCount: (toolVersions.live_benchmark_tools || []).length,
         core: toolVersions.core_tools || [],
-        liveSmokeTools: toolVersions.live_smoke_tools || [],
+        liveBenchmarkTools: toolVersions.live_benchmark_tools || [],
       },
     },
     summary: {
       core: aggregateCore(coreMatrix),
-      live: aggregateLive(liveSmokes),
+      live: aggregateLive(liveBenchmarks),
       coverage: {
         graphifyRows: (graphifyDiscovery.rows || []).length,
         deterministicRowsCovered: (graphifyDiscovery.rows || []).length,
@@ -358,7 +358,7 @@ function main() {
       },
     },
     coreMatrix,
-    liveSmokes,
+    liveBenchmarks,
     coverageAudit,
     saturation: saturationRows,
     caveats: [

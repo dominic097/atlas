@@ -65,7 +65,7 @@ const TOP_HUBS = [
   "Parse",
   "Close",
   "Context",
-  "run_smoke",
+  "run_benchmark",
   "contains",
 ];
 

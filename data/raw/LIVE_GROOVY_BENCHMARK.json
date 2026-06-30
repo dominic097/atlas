@@ -1,0 +1,399 @@
+{
+  "language": "groovy",
+  "repo": "https://github.com/nextflow-io/nextflow",
+  "commit": "83d452a51796aca34f136f796383185d703c349c",
+  "graphify_detector_only": "",
+  "commands": {
+    "clone": "git clone --depth 1 https://github.com/nextflow-io/nextflow /tmp/atlas-live-groovy-nextflow/repo",
+    "sparse_checkout": "",
+    "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-groovy-nextflow/atlas.db --json index /tmp/atlas-live-groovy-nextflow/repo/modules/nf-commons/src/main",
+    "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-groovy-nextflow/atlas.db --json index /tmp/atlas-live-groovy-nextflow/repo/modules/nf-commons/src/main",
+    "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "native_baseline": "/tmp/atlas-live-groovy-nextflow/tree-sitter-groovy-venv/bin/python -c <tree-sitter-groovy definition counter> /tmp/atlas-live-groovy-nextflow/repo/modules/nf-commons/src/main",
+    "query_symbols": [
+      "SysEnv",
+      "Const",
+      "Duration",
+      "getVersion",
+      "format"
+    ],
+    "target_path": "/tmp/atlas-live-groovy-nextflow/repo/modules/nf-commons/src/main"
+  },
+  "atlas": {
+    "cold_wall_seconds": 0.287,
+    "reindex_wall_seconds": 0.023,
+    "index": {
+      "repo_id": "193c04a8-f450-4272-b78b-f33fed978452",
+      "repo_full_name": "main",
+      "snapshot_id": "96712eb9-5bee-4a98-a4b4-aba10fdb37e7",
+      "commit_sha": "83d452a51796aca34f136f796383185d703c349c",
+      "indexed_files": 100,
+      "symbols": 1049,
+      "edges": 3712,
+      "edge_kinds": {
+        "calls": 3110,
+        "imports": 602
+      },
+      "routes": 0,
+      "languages": {
+        "groovy": 88,
+        "java": 12
+      },
+      "mode": "full",
+      "duration_ms": 257,
+      "timings_ms": {
+        "delta_check": 0,
+        "ensure_repo": 0,
+        "go_types": 0,
+        "lexical": 108,
+        "parse": 88,
+        "persist": 47,
+        "resolve_head": 0,
+        "routes": 0,
+        "sort": 1,
+        "walk": 11
+      }
+    },
+    "reindex": {
+      "repo_id": "193c04a8-f450-4272-b78b-f33fed978452",
+      "repo_full_name": "main",
+      "snapshot_id": "96712eb9-5bee-4a98-a4b4-aba10fdb37e7",
+      "commit_sha": "83d452a51796aca34f136f796383185d703c349c",
+      "indexed_files": 100,
+      "symbols": 1049,
+      "edges": 3712,
+      "routes": 0,
+      "languages": {
+        "groovy": 88,
+        "java": 12
+      },
+      "mode": "noop",
+      "duration_ms": 0,
+      "timings_ms": {
+        "delta_check": 0,
+        "resolve_head": 0
+      }
+    },
+    "symbol_breakdown": [
+      {
+        "language": "groovy",
+        "kind": "class",
+        "count": 77
+      },
+      {
+        "language": "groovy",
+        "kind": "enum",
+        "count": 2
+      },
+      {
+        "language": "groovy",
+        "kind": "interface",
+        "count": 11
+      },
+      {
+        "language": "groovy",
+        "kind": "method",
+        "count": 746
+      },
+      {
+        "language": "java",
+        "kind": "class",
+        "count": 12
+      },
+      {
+        "language": "java",
+        "kind": "constructor",
+        "count": 31
+      },
+      {
+        "language": "java",
+        "kind": "enum",
+        "count": 1
+      },
+      {
+        "language": "java",
+        "kind": "enum_constant",
+        "count": 4
+      },
+      {
+        "language": "java",
+        "kind": "field",
+        "count": 48
+      },
+      {
+        "language": "java",
+        "kind": "method",
+        "count": 109
+      },
+      {
+        "language": "java",
+        "kind": "type_parameter",
+        "count": 8
+      }
+    ],
+    "edge_breakdown": [
+      {
+        "kind": "calls",
+        "count": 3110
+      },
+      {
+        "kind": "imports",
+        "count": 602
+      }
+    ],
+    "groovy_definition_symbols": 836
+  },
+  "graphify": {
+    "status": "ok",
+    "ok": true,
+    "seconds": 0.937,
+    "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "stdout_head": [
+      "Re-extracting code files in . (no LLM needed)...",
+      "  AST extraction: 100/100 uncached files (100%) [14 workers]",
+      "  AST extraction: 100/100 files (100%) [14 workers]",
+      "[graphify watch] Rebuilt: 742 nodes, 1227 edges, 67 communities",
+      "[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out",
+      "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
+      "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
+    ],
+    "stderr_head": [],
+    "metrics": {
+      "nodes": 742,
+      "links": 1227,
+      "calls": 358
+    }
+  },
+  "native_baseline": {
+    "tool": "tree-sitter-groovy",
+    "status": "partial",
+    "ok": false,
+    "seconds": 0.11,
+    "command": "/tmp/atlas-live-groovy-nextflow/tree-sitter-groovy-venv/bin/python -c <tree-sitter-groovy definition counter> /tmp/atlas-live-groovy-nextflow/repo/modules/nf-commons/src/main",
+    "metrics": {
+      "files": 88,
+      "parsed_files": 21,
+      "parse_errors": 67,
+      "definition_counts": {
+        "class": 62,
+        "interface": 11,
+        "enum": 2,
+        "trait": 0,
+        "method": 435,
+        "function": 15,
+        "task": 0
+      },
+      "definitions": 525,
+      "tree_sitter_version": "0.25.2",
+      "tree_sitter_groovy_version": "0.1.2",
+      "parse_error_samples": [
+        {
+          "path": "nextflow/BuildInfo.groovy",
+          "error": "tree-sitter parse error"
+        },
+        {
+          "path": "nextflow/Const.groovy",
+          "error": "tree-sitter parse error"
+        },
+        {
+          "path": "nextflow/Global.groovy",
+          "error": "tree-sitter parse error"
+        },
+        {
+          "path": "nextflow/SysEnv.groovy",
+          "error": "tree-sitter parse error"
+        },
+        {
+          "path": "nextflow/config/RegistryConfig.groovy",
+          "error": "tree-sitter parse error"
+        },
+        {
+          "path": "nextflow/extension/Bolts.groovy",
+          "error": "tree-sitter parse error"
+        },
+        {
+          "path": "nextflow/extension/FilesEx.groovy",
+          "error": "tree-sitter parse error"
+        },
+        {
+          "path": "nextflow/file/CopyOptions.groovy",
+          "error": "tree-sitter parse error"
+        }
+      ]
+    }
+  },
+  "richer_native_baselines": {
+    "groovy": {
+      "status": "missing",
+      "ok": false,
+      "note": "groovy CLI not installed; tree-sitter-groovy parser used as the isolated definition baseline"
+    },
+    "gradle": {
+      "status": "missing",
+      "ok": false,
+      "note": "gradle not installed; source parser baseline used instead of dependency/build execution"
+    },
+    "groovy-language-server": {
+      "status": "missing",
+      "ok": false,
+      "note": "Groovy language server is not installed; tree-sitter-groovy parse coverage used for this benchmark"
+    }
+  },
+  "coverage": {
+    "atlas_vs_tree_sitter_groovy_definition_ratio": 1.59,
+    "atlas_groovy_definition_symbols": 836,
+    "native_definitions": 525
+  },
+  "optimization": {
+    "cycles_run": 3,
+    "stop_reason": "Groovy/Gradle live benchmark met the current 5x latency/token thresholds after widening Atlas Groovy declaration handling; definition coverage is saturated by tree-sitter-groovy parse errors on real Nextflow files, so the 1.59x native ratio is not claimed as exact recall.",
+    "cycle_notes": [
+      "cycle 1: Nextflow nf-commons probe showed the biggest Atlas gap was typed Groovy methods, interfaces, enums, traits, constructors, and Gradle task declarations beyond class plus untyped def parsing.",
+      "cycle 2: after parser widening, Atlas/tree-sitter-groovy definition ratio was inflated by control-flow false positives such as if/for/catch/synchronized being indexed as methods.",
+      "cycle 3: after restricting constructor and return-type matching, Atlas resolves the shared query symbols and exceeds 5x latency/token output vs graphify; native coverage remains partial because tree-sitter-groovy reports parse errors for most files in this real repo slice."
+    ]
+  },
+  "query_warmup": {
+    "symbol": "SysEnv",
+    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-groovy-nextflow/atlas.db --format plain --repo main explain SysEnv",
+    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain SysEnv",
+    "atlas_returncode": 0,
+    "graphify_returncode": 0,
+    "note": "Untimed warm-up for both tools before measured query latency rows."
+  },
+  "queries": [
+    {
+      "symbol": "SysEnv",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-groovy-nextflow/atlas.db --format plain --repo main explain SysEnv",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain SysEnv",
+      "atlas_tokens": 7,
+      "graphify_tokens": 125,
+      "atlas_ms": 12.605,
+      "graphify_ms": 86.908,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "SysEnv c@SysEnv.groovy:21 d1"
+      ],
+      "graphify_stdout_head": [
+        "Node: SysEnv",
+        "  ID:        nextflow_sysenv_sysenv",
+        "  Source:    nextflow/SysEnv.groovy L28",
+        "  Type:      code",
+        "  Community: 2",
+        "  Degree:    9",
+        "",
+        "Connections (9):"
+      ]
+    },
+    {
+      "symbol": "Const",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-groovy-nextflow/atlas.db --format plain --repo main explain Const",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Const",
+      "atlas_tokens": 6,
+      "graphify_tokens": 77,
+      "atlas_ms": 12.385,
+      "graphify_ms": 88.607,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "Const c@Const.groovy:21 d1"
+      ],
+      "graphify_stdout_head": [
+        "Node: Const.groovy",
+        "  ID:        nextflow_const",
+        "  Source:    nextflow/Const.groovy L1",
+        "  Type:      code",
+        "  Community: 5",
+        "  Degree:    4",
+        "",
+        "Connections (4):"
+      ]
+    },
+    {
+      "symbol": "Duration",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-groovy-nextflow/atlas.db --format plain --repo main explain Duration",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Duration",
+      "atlas_tokens": 10,
+      "graphify_tokens": 36,
+      "atlas_ms": 12.422,
+      "graphify_ms": 86.62,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "Duration c@Duration.groovy:31 df5 c8 d5"
+      ],
+      "graphify_stdout_head": [
+        "Node: Duration.groovy",
+        "  ID:        util_duration",
+        "  Source:    nextflow/util/Duration.groovy L1",
+        "  Type:      code",
+        "  Community: 63",
+        "  Degree:    0"
+      ]
+    },
+    {
+      "symbol": "getVersion",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-groovy-nextflow/atlas.db --format plain --repo main explain getVersion",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain getVersion",
+      "atlas_tokens": 9,
+      "graphify_tokens": 64,
+      "atlas_ms": 12.34,
+      "graphify_ms": 83.422,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "getVersion m@BuildInfo.groovy:48 d1"
+      ],
+      "graphify_stdout_head": [
+        "Node: getVersion()",
+        "  ID:        nextflow_buildinfo_getversion",
+        "  Source:    nextflow/BuildInfo.groovy L49",
+        "  Type:      code",
+        "  Community: 5",
+        "  Degree:    2",
+        "",
+        "Connections (2):"
+      ]
+    },
+    {
+      "symbol": "format",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-groovy-nextflow/atlas.db --format plain --repo main explain format",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain format",
+      "atlas_tokens": 8,
+      "graphify_tokens": 97,
+      "atlas_ms": 13.739,
+      "graphify_ms": 85.268,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "format m@Bolts.groovy:73 df4 c4 d2"
+      ],
+      "graphify_stdout_head": [
+        "Node: .format()",
+        "  ID:        extension_bolts_bolts_format",
+        "  Source:    nextflow/extension/Bolts.groovy L87",
+        "  Type:      code",
+        "  Community: 5",
+        "  Degree:    5",
+        "",
+        "Connections (5):"
+      ]
+    }
+  ]
+}

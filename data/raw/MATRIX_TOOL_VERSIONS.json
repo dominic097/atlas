@@ -1,5 +1,5 @@
 {
-  "generated_at_unix": 1782722956,
+  "generated_at_unix": 1782777006,
   "platform": {
     "system": "Darwin",
     "release": "25.5.0",
@@ -18,7 +18,7 @@
         "atlas dev (none, unknown)"
       ],
       "exit_code": 0,
-      "seconds": 0.01
+      "seconds": 0.011
     },
     {
       "tool": "graphify",
@@ -31,7 +31,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.036,
+      "seconds": 0.032,
       "discovered_version": "graphifyy 0.8.49",
       "binary": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify"
     },
@@ -46,7 +46,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.011
+      "seconds": 0.01
     },
     {
       "tool": "python",
@@ -59,7 +59,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.008
+      "seconds": 0.007
     },
     {
       "tool": "java",
@@ -74,7 +74,7 @@
         "OpenJDK 64-Bit Server VM Homebrew (build 17.0.18+0, mixed mode, sharing)"
       ],
       "exit_code": 0,
-      "seconds": 0.025
+      "seconds": 0.027
     },
     {
       "tool": "maven",
@@ -91,7 +91,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.379
+      "seconds": 0.394
     },
     {
       "tool": "scip-go",
@@ -104,7 +104,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.093
+      "seconds": 0.065
     },
     {
       "tool": "scip-python",
@@ -117,7 +117,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.152
+      "seconds": 0.133
     },
     {
       "tool": "scip-typescript",
@@ -130,20 +130,17 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.459
+      "seconds": 0.4
     },
     {
       "tool": "scip-java",
-      "status": "ok",
-      "ok": true,
-      "command": "/tmp/atlas-bench-tools/scip-java --version",
-      "version": "0.12.3",
-      "stdout": [
-        "0.12.3"
-      ],
-      "stderr": [],
-      "exit_code": 0,
-      "seconds": 0.387
+      "status": "missing",
+      "ok": false,
+      "command": "",
+      "version": "",
+      "stdout": "",
+      "stderr": "",
+      "exit_code": 127
     },
     {
       "tool": "gopls",
@@ -156,7 +153,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.037
+      "seconds": 0.029
     },
     {
       "tool": "pyright",
@@ -169,7 +166,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.115
+      "seconds": 0.104
     },
     {
       "tool": "tsc",
@@ -182,7 +179,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.294
+      "seconds": 0.251
     },
     {
       "tool": "jdtls",
@@ -221,7 +218,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.018
+      "seconds": 0.004
     },
     {
       "tool": "dotnet",
@@ -234,7 +231,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.178
+      "seconds": 0.057
     },
     {
       "tool": "ruby",
@@ -247,7 +244,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.017
+      "seconds": 0.007
     },
     {
       "tool": "php",
@@ -264,7 +261,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.108
+      "seconds": 0.044
     },
     {
       "tool": "pwsh",
@@ -277,7 +274,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.306
+      "seconds": 0.042
     },
     {
       "tool": "sourcekit-lsp",
@@ -293,14 +290,14 @@
         "swift-driver version: 1.127.15"
       ],
       "exit_code": 0,
-      "seconds": 0.384,
+      "seconds": 0.066,
       "binary": "/usr/bin/sourcekit-lsp",
       "note": "sourcekit-lsp has no version flag in this toolchain; Swift toolchain version is recorded as the closest reproducible native version."
     }
   ],
-  "live_smoke_tools": [
+  "live_benchmark_tools": [
     {
-      "artifact": "bench/LIVE_APEX_SMOKE.json",
+      "artifact": "bench/LIVE_APEX_BENCHMARK.json",
       "language": "apex",
       "native_tool": "apex-source-counter",
       "native_status": "ok",
@@ -315,7 +312,7 @@
         "sf": {
           "status": "missing",
           "ok": false,
-          "note": "Salesforce CLI not installed; source-only Apex parser proxy used for this smoke"
+          "note": "Salesforce CLI not installed; source-only Apex parser proxy used for this benchmark"
         },
         "sfdx": {
           "status": "missing",
@@ -325,12 +322,12 @@
         "apex-language-server": {
           "status": "missing",
           "ok": false,
-          "note": "Apex language server is not installed; source counter coverage proxy used for this smoke"
+          "note": "Apex language server is not installed; source counter coverage proxy used for this benchmark"
         }
       }
     },
     {
-      "artifact": "bench/LIVE_ASTRO_SMOKE.json",
+      "artifact": "bench/LIVE_ASTRO_BENCHMARK.json",
       "language": "astro",
       "native_tool": "astro-compiler",
       "native_status": "ok",
@@ -347,7 +344,7 @@
         "astro-language-server": {
           "status": "missing",
           "ok": false,
-          "note": "Astro language server is not installed; @astrojs/compiler parse coverage used for this smoke"
+          "note": "Astro language server is not installed; @astrojs/compiler parse coverage used for this benchmark"
         },
         "@astrojs/compiler": {
           "status": "ok",
@@ -357,7 +354,7 @@
       }
     },
     {
-      "artifact": "bench/LIVE_BASH_SMOKE.json",
+      "artifact": "bench/LIVE_BASH_BENCHMARK.json",
       "language": "bash",
       "native_tool": "bash-n",
       "native_status": "ok",
@@ -379,7 +376,7 @@
       }
     },
     {
-      "artifact": "bench/LIVE_BLADE_SMOKE.json",
+      "artifact": "bench/LIVE_BLADE_BENCHMARK.json",
       "language": "blade",
       "native_tool": "blade-directive-counter",
       "native_status": "ok",
@@ -394,17 +391,17 @@
         "laravel": {
           "status": "missing",
           "ok": false,
-          "note": "Laravel application runtime is not installed for this source-only smoke"
+          "note": "Laravel application runtime is not installed for this source-only benchmark"
         },
         "blade-language-server": {
           "status": "missing",
           "ok": false,
-          "note": "Blade language server is not installed; directive coverage proxy used for this smoke"
+          "note": "Blade language server is not installed; directive coverage proxy used for this benchmark"
         }
       }
     },
     {
-      "artifact": "bench/LIVE_BYOND_SMOKE.json",
+      "artifact": "bench/LIVE_BYOND_BENCHMARK.json",
       "language": "byond",
       "native_tool": "byond-source-counter",
       "native_status": "ok",
@@ -419,12 +416,12 @@
         "dreamchecker": {
           "status": "missing",
           "ok": false,
-          "note": "dreamchecker not installed; source-only BYOND parser proxy used for this smoke"
+          "note": "dreamchecker not installed; source-only BYOND parser proxy used for this benchmark"
         },
         "dm-langserver": {
           "status": "missing",
           "ok": false,
-          "note": "BYOND/DM language server is not installed; source counter coverage proxy used for this smoke"
+          "note": "BYOND/DM language server is not installed; source counter coverage proxy used for this benchmark"
         },
         "tree-sitter-dm": {
           "status": "missing",
@@ -434,7 +431,7 @@
       }
     },
     {
-      "artifact": "bench/LIVE_CSHARP_SMOKE.json",
+      "artifact": "bench/LIVE_CSHARP_BENCHMARK.json",
       "language": "csharp",
       "native_tool": "roslyn",
       "native_status": "ok",
@@ -474,7 +471,7 @@
       }
     },
     {
-      "artifact": "bench/LIVE_CUDA_SMOKE.json",
+      "artifact": "bench/LIVE_CUDA_BENCHMARK.json",
       "language": "cuda",
       "native_tool": "cuda-source-counter",
       "native_status": "ok",
@@ -489,17 +486,17 @@
         "nvcc": {
           "status": "missing",
           "ok": false,
-          "note": "nvcc not installed; source-only parser proxy used for this smoke"
+          "note": "nvcc not installed; source-only parser proxy used for this benchmark"
         },
         "clangd": {
           "status": "available",
           "ok": true,
-          "note": "clangd is available, but this smoke uses source-only CUDA extension coverage to avoid compile database coupling"
+          "note": "clangd is available, but this benchmark uses source-only CUDA extension coverage to avoid compile database coupling"
         }
       }
     },
     {
-      "artifact": "bench/LIVE_DART_SMOKE.json",
+      "artifact": "bench/LIVE_DART_BENCHMARK.json",
       "language": "dart",
       "native_tool": "tree-sitter-dart",
       "native_status": "ok",
@@ -527,7 +524,7 @@
       }
     },
     {
-      "artifact": "bench/LIVE_DELPHI_SMOKE.json",
+      "artifact": "bench/LIVE_DELPHI_BENCHMARK.json",
       "language": "delphi",
       "native_tool": "delphi-lazarus-source-counter",
       "native_status": "ok",
@@ -542,12 +539,12 @@
         "fpc": {
           "status": "missing",
           "ok": false,
-          "note": "Free Pascal compiler not installed; source-only form/package parser proxy used for this smoke"
+          "note": "Free Pascal compiler not installed; source-only form/package parser proxy used for this benchmark"
         },
         "lazbuild": {
           "status": "missing",
           "ok": false,
-          "note": "lazbuild not installed; source-only form/package parser proxy used for this smoke"
+          "note": "lazbuild not installed; source-only form/package parser proxy used for this benchmark"
         },
         "pasls": {
           "status": "missing",
@@ -557,7 +554,7 @@
       }
     },
     {
-      "artifact": "bench/LIVE_DOTNET_SMOKE.json",
+      "artifact": "bench/LIVE_DOTNET_BENCHMARK.json",
       "language": "dotnet",
       "native_tool": "python-dotnet-project",
       "native_status": "ok",
@@ -577,7 +574,7 @@
       }
     },
     {
-      "artifact": "bench/LIVE_EJS_SMOKE.json",
+      "artifact": "bench/LIVE_EJS_BENCHMARK.json",
       "language": "ejs",
       "native_tool": "ejs-template-counter",
       "native_status": "ok",
@@ -592,17 +589,17 @@
         "ejs": {
           "status": "missing",
           "ok": false,
-          "note": "EJS CLI not installed; source-only template parser proxy used for this smoke"
+          "note": "EJS CLI not installed; source-only template parser proxy used for this benchmark"
         },
         "ejs-language-server": {
           "status": "missing",
           "ok": false,
-          "note": "EJS language server is not installed; source counter coverage proxy used for this graphify detector-only smoke"
+          "note": "EJS language server is not installed; source counter coverage proxy used for this graphify detector-only benchmark"
         }
       }
     },
     {
-      "artifact": "bench/LIVE_ELIXIR_SMOKE.json",
+      "artifact": "bench/LIVE_ELIXIR_BENCHMARK.json",
       "language": "elixir",
       "native_tool": "tree-sitter-elixir",
       "native_status": "ok",
@@ -630,7 +627,7 @@
       }
     },
     {
-      "artifact": "bench/LIVE_ETS_SMOKE.json",
+      "artifact": "bench/LIVE_ETS_BENCHMARK.json",
       "language": "ets",
       "native_tool": "ets-source-counter",
       "native_status": "ok",
@@ -645,12 +642,12 @@
         "arkts": {
           "status": "missing",
           "ok": false,
-          "note": "ArkTS compiler CLI not installed; source-only parser proxy used for this smoke"
+          "note": "ArkTS compiler CLI not installed; source-only parser proxy used for this benchmark"
         },
         "hvigor": {
           "status": "missing",
           "ok": false,
-          "note": "hvigor not installed; OpenHarmony build execution is avoided for this source-only smoke"
+          "note": "hvigor not installed; OpenHarmony build execution is avoided for this source-only benchmark"
         },
         "ohpm": {
           "status": "missing",
@@ -660,7 +657,7 @@
       }
     },
     {
-      "artifact": "bench/LIVE_FORTRAN_SMOKE.json",
+      "artifact": "bench/LIVE_FORTRAN_BENCHMARK.json",
       "language": "fortran",
       "native_tool": "tree-sitter-fortran",
       "native_status": "ok",
@@ -688,7 +685,7 @@
       }
     },
     {
-      "artifact": "bench/LIVE_GROOVY_SMOKE.json",
+      "artifact": "bench/LIVE_GROOVY_BENCHMARK.json",
       "language": "groovy",
       "native_tool": "tree-sitter-groovy",
       "native_status": "partial",
@@ -711,12 +708,12 @@
         "groovy-language-server": {
           "status": "missing",
           "ok": false,
-          "note": "Groovy language server is not installed; tree-sitter-groovy parse coverage used for this smoke"
+          "note": "Groovy language server is not installed; tree-sitter-groovy parse coverage used for this benchmark"
         }
       }
     },
     {
-      "artifact": "bench/LIVE_JSON_SMOKE.json",
+      "artifact": "bench/LIVE_JSON_BENCHMARK.json",
       "language": "json",
       "native_tool": "python-json",
       "native_status": "ok",
@@ -741,7 +738,7 @@
       }
     },
     {
-      "artifact": "bench/LIVE_JULIA_SMOKE.json",
+      "artifact": "bench/LIVE_JULIA_BENCHMARK.json",
       "language": "julia",
       "native_tool": "tree-sitter-julia",
       "native_status": "partial",
@@ -759,12 +756,12 @@
         "LanguageServer.jl": {
           "status": "missing_adapter",
           "ok": false,
-          "note": "LanguageServer.jl is not wired into this harness; tree-sitter-julia source parse coverage is used for this smoke"
+          "note": "LanguageServer.jl is not wired into this harness; tree-sitter-julia source parse coverage is used for this benchmark"
         }
       }
     },
     {
-      "artifact": "bench/LIVE_KOTLIN_SMOKE.json",
+      "artifact": "bench/LIVE_KOTLIN_BENCHMARK.json",
       "language": "kotlin",
       "native_tool": "tree-sitter-kotlin",
       "native_status": "partial",
@@ -792,7 +789,7 @@
       }
     },
     {
-      "artifact": "bench/LIVE_LUA_SMOKE.json",
+      "artifact": "bench/LIVE_LUA_BENCHMARK.json",
       "language": "lua",
       "native_tool": "luaparser",
       "native_status": "ok",
@@ -824,7 +821,7 @@
       }
     },
     {
-      "artifact": "bench/LIVE_MARKDOWN_SMOKE.json",
+      "artifact": "bench/LIVE_MARKDOWN_BENCHMARK.json",
       "language": "markdown",
       "native_tool": "markdown-it-py",
       "native_status": "ok",
@@ -851,7 +848,7 @@
       }
     },
     {
-      "artifact": "bench/LIVE_OBJC_SMOKE.json",
+      "artifact": "bench/LIVE_OBJC_BENCHMARK.json",
       "language": "objc",
       "native_tool": "tree-sitter-objc",
       "native_status": "partial",
@@ -879,7 +876,7 @@
       }
     },
     {
-      "artifact": "bench/LIVE_PASCAL_SMOKE.json",
+      "artifact": "bench/LIVE_PASCAL_BENCHMARK.json",
       "language": "pascal",
       "native_tool": "pascal-regex-counter",
       "native_status": "ok",
@@ -904,7 +901,7 @@
       }
     },
     {
-      "artifact": "bench/LIVE_PHP_SMOKE.json",
+      "artifact": "bench/LIVE_PHP_BENCHMARK.json",
       "language": "php",
       "native_tool": "php-tokenizer",
       "native_status": "ok",
@@ -931,7 +928,7 @@
       }
     },
     {
-      "artifact": "bench/LIVE_POWERSHELL_SMOKE.json",
+      "artifact": "bench/LIVE_POWERSHELL_BENCHMARK.json",
       "language": "powershell",
       "native_tool": "pwsh-parser",
       "native_status": "ok",
@@ -948,7 +945,7 @@
         "powershell-editor-services": {
           "status": "missing",
           "ok": false,
-          "note": "PowerShellEditorServices LSP is not installed; pwsh AST parser used for this smoke"
+          "note": "PowerShellEditorServices LSP is not installed; pwsh AST parser used for this benchmark"
         },
         "psscriptanalyzer": {
           "status": "missing",
@@ -958,7 +955,7 @@
       }
     },
     {
-      "artifact": "bench/LIVE_RAZOR_SMOKE.json",
+      "artifact": "bench/LIVE_RAZOR_BENCHMARK.json",
       "language": "razor",
       "native_tool": "razor-directive-counter",
       "native_status": "ok",
@@ -978,12 +975,12 @@
         "razor-language-server": {
           "status": "missing",
           "ok": false,
-          "note": "Razor language server is not installed; directive/component coverage proxy used for this smoke"
+          "note": "Razor language server is not installed; directive/component coverage proxy used for this benchmark"
         }
       }
     },
     {
-      "artifact": "bench/LIVE_RUBY_SMOKE.json",
+      "artifact": "bench/LIVE_RUBY_BENCHMARK.json",
       "language": "ruby",
       "native_tool": "ruby-ripper",
       "native_status": "ok",
@@ -1005,7 +1002,7 @@
       }
     },
     {
-      "artifact": "bench/LIVE_RUST_SMOKE.json",
+      "artifact": "bench/LIVE_RUST_BENCHMARK.json",
       "language": "rust",
       "native_tool": "rust-analyzer",
       "native_status": "ok",
@@ -1041,7 +1038,7 @@
       }
     },
     {
-      "artifact": "bench/LIVE_R_SMOKE.json",
+      "artifact": "bench/LIVE_R_BENCHMARK.json",
       "language": "r",
       "native_tool": "r-source-counter",
       "native_status": "ok",
@@ -1056,17 +1053,17 @@
         "Rscript": {
           "status": "missing",
           "ok": false,
-          "note": "Rscript not installed; source-only parser proxy used for this smoke"
+          "note": "Rscript not installed; source-only parser proxy used for this benchmark"
         },
         "languageserver": {
           "status": "missing_adapter",
           "ok": false,
-          "note": "R languageserver is not installed or wired into this harness; source counter coverage proxy used for this graphify detector-only smoke"
+          "note": "R languageserver is not installed or wired into this harness; source counter coverage proxy used for this graphify detector-only benchmark"
         }
       }
     },
     {
-      "artifact": "bench/LIVE_SCALA_SMOKE.json",
+      "artifact": "bench/LIVE_SCALA_BENCHMARK.json",
       "language": "scala",
       "native_tool": "tree-sitter-scala",
       "native_status": "partial",
@@ -1094,7 +1091,7 @@
       }
     },
     {
-      "artifact": "bench/LIVE_SQL_SMOKE.json",
+      "artifact": "bench/LIVE_SQL_BENCHMARK.json",
       "language": "sql",
       "native_tool": "sqlfluff",
       "native_status": "ok",
@@ -1111,7 +1108,7 @@
       }
     },
     {
-      "artifact": "bench/LIVE_SVELTE_SMOKE.json",
+      "artifact": "bench/LIVE_SVELTE_BENCHMARK.json",
       "language": "svelte",
       "native_tool": "svelte-compiler",
       "native_status": "ok",
@@ -1128,12 +1125,12 @@
         "svelte-language-server": {
           "status": "missing",
           "ok": false,
-          "note": "Svelte language server is not installed; Svelte compiler parse coverage used for this smoke"
+          "note": "Svelte language server is not installed; Svelte compiler parse coverage used for this benchmark"
         }
       }
     },
     {
-      "artifact": "bench/LIVE_SWIFT_SMOKE.json",
+      "artifact": "bench/LIVE_SWIFT_BENCHMARK.json",
       "language": "swift",
       "native_tool": "sourcekit-lsp",
       "native_status": "ok",
@@ -1155,7 +1152,7 @@
       }
     },
     {
-      "artifact": "bench/LIVE_TERRAFORM_SMOKE.json",
+      "artifact": "bench/LIVE_TERRAFORM_BENCHMARK.json",
       "language": "terraform",
       "native_tool": "python-hcl2",
       "native_status": "ok",
@@ -1172,7 +1169,7 @@
       }
     },
     {
-      "artifact": "bench/LIVE_VERILOG_SMOKE.json",
+      "artifact": "bench/LIVE_VERILOG_BENCHMARK.json",
       "language": "verilog",
       "native_tool": "tree-sitter-systemverilog",
       "native_status": "partial",
@@ -1200,7 +1197,7 @@
       }
     },
     {
-      "artifact": "bench/LIVE_VUE_SMOKE.json",
+      "artifact": "bench/LIVE_VUE_BENCHMARK.json",
       "language": "vue",
       "native_tool": "vue-compiler-sfc",
       "native_status": "ok",
@@ -1217,12 +1214,12 @@
         "volar": {
           "status": "missing",
           "ok": false,
-          "note": "Volar language server is not installed; compiler-sfc parse coverage used for this smoke"
+          "note": "Volar language server is not installed; compiler-sfc parse coverage used for this benchmark"
         }
       }
     },
     {
-      "artifact": "bench/LIVE_ZIG_SMOKE.json",
+      "artifact": "bench/LIVE_ZIG_BENCHMARK.json",
       "language": "zig",
       "native_tool": "tree-sitter-zig",
       "native_status": "partial",

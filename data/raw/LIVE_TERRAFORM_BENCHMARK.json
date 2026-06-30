@@ -1,0 +1,320 @@
+{
+  "language": "terraform",
+  "repo": "https://github.com/terraform-aws-modules/terraform-aws-vpc",
+  "commit": "3ffbd46fb1c7733e1b34d8666893280454e27436",
+  "graphify_detector_only": "",
+  "commands": {
+    "clone": "git clone --depth 1 https://github.com/terraform-aws-modules/terraform-aws-vpc /tmp/atlas-live-terraform-vpc/repo",
+    "sparse_checkout": "",
+    "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-terraform-vpc/atlas.db --json index /tmp/atlas-live-terraform-vpc/repo",
+    "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-terraform-vpc/atlas.db --json index /tmp/atlas-live-terraform-vpc/repo",
+    "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "native_baseline": "/tmp/atlas-live-terraform-vpc/hcl2-venv/bin/python -c <hcl2 definition counter> /tmp/atlas-live-terraform-vpc/repo",
+    "query_symbols": [
+      "aws_vpc.this",
+      "aws_subnet.public",
+      "aws_route_table.public",
+      "aws_nat_gateway.this"
+    ],
+    "target_path": "/tmp/atlas-live-terraform-vpc/repo"
+  },
+  "atlas": {
+    "cold_wall_seconds": 0.329,
+    "reindex_wall_seconds": 0.022,
+    "index": {
+      "repo_id": "aab2e706-0f02-4a7d-a61c-d702f1acffb3",
+      "repo_full_name": "repo",
+      "snapshot_id": "f998e123-e79d-41d7-84a1-ca019ee452e2",
+      "commit_sha": "3ffbd46fb1c7733e1b34d8666893280454e27436",
+      "indexed_files": 109,
+      "symbols": 2276,
+      "edges": 1078,
+      "edge_kinds": {
+        "calls": 1078
+      },
+      "routes": 0,
+      "languages": {
+        "config": 1,
+        "json": 1,
+        "markdown": 24,
+        "terraform": 77,
+        "yaml": 6
+      },
+      "mode": "full",
+      "duration_ms": 279,
+      "timings_ms": {
+        "delta_check": 0,
+        "ensure_repo": 0,
+        "go_types": 0,
+        "lexical": 194,
+        "parse": 35,
+        "persist": 48,
+        "resolve_head": 0,
+        "routes": 0,
+        "sort": 0,
+        "walk": 0
+      }
+    },
+    "reindex": {
+      "repo_id": "aab2e706-0f02-4a7d-a61c-d702f1acffb3",
+      "repo_full_name": "repo",
+      "snapshot_id": "f998e123-e79d-41d7-84a1-ca019ee452e2",
+      "commit_sha": "3ffbd46fb1c7733e1b34d8666893280454e27436",
+      "indexed_files": 109,
+      "symbols": 2276,
+      "edges": 1078,
+      "routes": 0,
+      "languages": {
+        "config": 1,
+        "json": 1,
+        "markdown": 24,
+        "terraform": 77,
+        "yaml": 6
+      },
+      "mode": "noop",
+      "duration_ms": 0,
+      "timings_ms": {
+        "delta_check": 0,
+        "resolve_head": 0
+      }
+    },
+    "symbol_breakdown": [
+      {
+        "language": "config",
+        "kind": "document",
+        "count": 1
+      },
+      {
+        "language": "json",
+        "kind": "key",
+        "count": 11
+      },
+      {
+        "language": "markdown",
+        "kind": "section",
+        "count": 488
+      },
+      {
+        "language": "terraform",
+        "kind": "data",
+        "count": 26
+      },
+      {
+        "language": "terraform",
+        "kind": "document",
+        "count": 32
+      },
+      {
+        "language": "terraform",
+        "kind": "module",
+        "count": 27
+      },
+      {
+        "language": "terraform",
+        "kind": "output",
+        "count": 1298
+      },
+      {
+        "language": "terraform",
+        "kind": "resource",
+        "count": 96
+      },
+      {
+        "language": "terraform",
+        "kind": "variable",
+        "count": 291
+      },
+      {
+        "language": "yaml",
+        "kind": "document",
+        "count": 6
+      }
+    ],
+    "edge_breakdown": [
+      {
+        "kind": "calls",
+        "count": 1078
+      }
+    ],
+    "terraform_definition_symbols": 1738
+  },
+  "graphify": {
+    "status": "ok",
+    "ok": true,
+    "seconds": 0.921,
+    "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "stdout_head": [
+      "Re-extracting code files in . (no LLM needed)...",
+      "  AST extraction: 100/102 uncached files (98%) [14 workers]",
+      "  AST extraction: 102/102 files (100%) [14 workers]",
+      "[graphify watch] Rebuilt: 2461 nodes, 4736 edges, 145 communities",
+      "[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out",
+      "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
+      "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
+    ],
+    "stderr_head": [],
+    "metrics": {
+      "nodes": 2461,
+      "links": 4736,
+      "calls": 0
+    }
+  },
+  "native_baseline": {
+    "tool": "python-hcl2",
+    "status": "ok",
+    "ok": true,
+    "command": "/tmp/atlas-live-terraform-vpc/hcl2-venv/bin/python -c <hcl2 definition counter> /tmp/atlas-live-terraform-vpc/repo",
+    "metrics": {
+      "files": 77,
+      "parsed_files": 77,
+      "parse_errors": 0,
+      "definition_counts": {
+        "resource": 96,
+        "data": 26,
+        "module": 27,
+        "variable": 291,
+        "output": 1298
+      },
+      "definitions": 1738,
+      "python_hcl2_version": "8.1.2"
+    }
+  },
+  "richer_native_baselines": {
+    "terraform": {
+      "status": "missing",
+      "ok": false,
+      "note": "terraform CLI not installed; python-hcl2 parser used as the scriptable native baseline"
+    }
+  },
+  "coverage": {
+    "atlas_vs_python_hcl2_definition_ratio": 1.0,
+    "atlas_terraform_definition_symbols": 1738,
+    "native_definitions": 1738
+  },
+  "optimization": {
+    "cycles_run": 2,
+    "stop_reason": "Terraform/HCL live benchmark matched python-hcl2 definition coverage and exceeded 5x query latency plus token output after installing graphify's optional tree_sitter_hcl parser.",
+    "cycle_notes": [
+      "cycle 1: graphify advertised Terraform/HCL support but produced no HCL code nodes until its optional tree_sitter_hcl dependency was installed in the graphify tool environment.",
+      "cycle 2: terraform-aws-modules/terraform-aws-vpc reached 1.0 Atlas/python-hcl2 definition coverage and exceeded 5x latency plus token output on exact HCL resource queries."
+    ]
+  },
+  "query_warmup": {
+    "symbol": "aws_vpc.this",
+    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-terraform-vpc/atlas.db --format plain --repo repo explain aws_vpc.this",
+    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain aws_vpc.this",
+    "atlas_returncode": 0,
+    "graphify_returncode": 0,
+    "note": "Untimed warm-up for both tools before measured query latency rows."
+  },
+  "queries": [
+    {
+      "symbol": "aws_vpc.this",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-terraform-vpc/atlas.db --format plain --repo repo explain aws_vpc.this",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain aws_vpc.this",
+      "atlas_tokens": 5,
+      "graphify_tokens": 291,
+      "atlas_ms": 13.376,
+      "graphify_ms": 115.136,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "aws_vpc.this r@main:27"
+      ],
+      "graphify_stdout_head": [
+        "Node: aws_vpc.this",
+        "  ID:        repo_aws_vpc_this",
+        "  Source:    main.tf L28",
+        "  Type:      code",
+        "  Community: 13",
+        "  Degree:    44",
+        "",
+        "Connections (44):"
+      ]
+    },
+    {
+      "symbol": "aws_subnet.public",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-terraform-vpc/atlas.db --format plain --repo repo explain aws_subnet.public",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain aws_subnet.public",
+      "atlas_tokens": 7,
+      "graphify_tokens": 308,
+      "atlas_ms": 14.151,
+      "graphify_ms": 117.631,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "aws_subnet.public r@main:144"
+      ],
+      "graphify_stdout_head": [
+        "Node: aws_subnet.public",
+        "  ID:        repo_aws_subnet_public",
+        "  Source:    main.tf L145",
+        "  Type:      code",
+        "  Community: 18",
+        "  Degree:    33",
+        "",
+        "Connections (33):"
+      ]
+    },
+    {
+      "symbol": "aws_route_table.public",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-terraform-vpc/atlas.db --format plain --repo repo explain aws_route_table.public",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain aws_route_table.public",
+      "atlas_tokens": 8,
+      "graphify_tokens": 280,
+      "atlas_ms": 13.102,
+      "graphify_ms": 118.337,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "aws_route_table.public r@main:175"
+      ],
+      "graphify_stdout_head": [
+        "Node: aws_route_table.public",
+        "  ID:        repo_aws_route_table_public",
+        "  Source:    main.tf L176",
+        "  Type:      code",
+        "  Community: 18",
+        "  Degree:    17",
+        "",
+        "Connections (17):"
+      ]
+    },
+    {
+      "symbol": "aws_nat_gateway.this",
+      "atlas_query_mode": "explain",
+      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-terraform-vpc/atlas.db --format plain --repo repo explain aws_nat_gateway.this",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain aws_nat_gateway.this",
+      "atlas_tokens": 8,
+      "graphify_tokens": 286,
+      "atlas_ms": 35.727,
+      "graphify_ms": 127.937,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "aws_nat_gateway.this r@main:1227"
+      ],
+      "graphify_stdout_head": [
+        "Node: aws_nat_gateway.this",
+        "  ID:        repo_aws_nat_gateway_this",
+        "  Source:    main.tf L1228",
+        "  Type:      code",
+        "  Community: 15",
+        "  Degree:    19",
+        "",
+        "Connections (19):"
+      ]
+    }
+  ]
+}

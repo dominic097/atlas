@@ -89,7 +89,7 @@ function buildAllRows(data) {
     };
   });
 
-  const live = data.liveSmokes.map((r) => {
+  const live = data.liveBenchmarks.map((r) => {
     const idx = r.atlas?.index || {};
     const qs = r.querySummary || {};
     const cov = r.coverage || {};
@@ -462,7 +462,7 @@ function MetricBars({ rows, metric, onInspect, inspect, data, reduced }) {
   // the dataset (so the "X at parity · Y exceed · Z below" counts are languages,
   // never silently the row figure). Kept distinct from the deterministic-row
   // figure above to avoid mixing two denominators.
-  const covLangs = data.liveSmokes.filter((r) => r.coverage && typeof r.coverage.ratio === "number");
+  const covLangs = data.liveBenchmarks.filter((r) => r.coverage && typeof r.coverage.ratio === "number");
   const atParityLangs = covLangs.filter((r) => r.coverage.ratio <= 1.0001).length;
   const exceedLangs = covLangs.filter((r) => r.coverage.ratio > 1.0001).length;
   const belowLangs = covLangs.filter((r) => r.coverage.ratio < 0.9999).length;
