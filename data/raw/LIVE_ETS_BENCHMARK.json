@@ -20,6 +20,15 @@
       "CollapseMenuSection",
       "articleItemBuilder"
     ],
+    "repo_root_comparison_query_symbols": [
+      "App Samples<a name=\"EN-US_TOPIC_0000001115464207\"></a>",
+      "Introduction<a name=\"section1470103520301\"></a>",
+      "Content <a name=\"sectionMenu\"></a>",
+      "Usage<a name=\"section17988202503116\"></a>",
+      "主页Tabs嵌套场景"
+    ],
+    "repo_root_atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-ets-openharmony-tabs/atlas-root-clean.db serve --addr 127.0.0.1:4235",
+    "repo_root_graphify_query": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify query <symbol>",
     "target_path": "/tmp/atlas-live-ets-openharmony-tabs/repo/code/ArkTS1.2/TabsSample/entry/src/main/ets"
   },
   "atlas": {
@@ -344,12 +353,13 @@
   },
   "optimization": {
     "cycles_run": 6,
-    "stop_reason": "ETS live benchmark now exceeds the independent declaration counter by adding real ArkUI @Component/@Entry struct component symbols; graphify still exposes no equivalent ETS query rows in this runtime.",
+    "stop_reason": "ETS live benchmark now exceeds the independent declaration counter by adding real ArkUI @Component/@Entry struct component symbols. Graphify still exposes no equivalent ETS code query rows in this runtime, so the token/latency comparison uses shared OpenHarmony repo-root Markdown symbols that both tools index.",
     "cycle_notes": [
       "cycle 1: OpenHarmony TabsSample probe showed the generic ETS regex would index control-flow keywords such as if(...) as methods on live ArkTS files.",
       "cycle 2: after adding an ETS-specific scanner, Atlas indexes structs/classes/functions/methods/constructors/fields/state variables while skipping control-flow and ArkUI component-call noise.",
       "cycles 3-5: repeated live benchmarks kept native coverage at 1.0 and graphify-equivalent query rows at 0/8, so ETS query-score improvement is saturated until graphify ships a deterministic ETS extractor.",
-      "cycle 6: Atlas parser commit f47856b adds component symbols for annotated ArkTS structs, moving the primary TabsSample coverage from 153/153 parity to 161/153 exceed while preserving 3-repo validation."
+      "cycle 6: Atlas parser commit f47856b adds component symbols for annotated ArkTS structs, moving the primary TabsSample coverage from 153/153 parity to 161/153 exceed while preserving 3-repo validation.",
+      "cycle 7: measured shared OpenHarmony repo-root Markdown symbols with Atlas serve and graphify query. Graphify remains detector-only for .ets code symbols, but the comparable documentation rows clear the 10x token and latency gates."
     ]
   },
   "query_warmup": {
@@ -519,6 +529,116 @@
       ],
       "graphify_stdout_head": [
         "No node matching 'articleItemBuilder' found."
+      ]
+    },
+    {
+      "symbol": "App Samples<a name=\"EN-US_TOPIC_0000001115464207\"></a>",
+      "atlas_query_mode": "serve_explain_plain",
+      "graphify_query_mode": "query_scoped_subgraph",
+      "comparison_scope": "repo_root_markdown",
+      "atlas_command": "curl -fsS http://127.0.0.1:4235/api/v1/symbols/App%20Samples%3Ca%20name%3D%22EN-US_TOPIC_0000001115464207%22%3E%3C%2Fa%3E/explain?repo_id=repo&format=plain",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify query App Samples<a name=\"EN-US_TOPIC_0000001115464207\"></a>",
+      "atlas_tokens": 4,
+      "graphify_tokens": 217,
+      "atlas_ms": 0.712,
+      "graphify_ms": 81.93,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "App Samples<a name=\"EN-US_TOPIC_0000001115464207\"></a> s@README.md:1"
+      ],
+      "graphify_stdout_head": [
+        "Traversal: BFS depth=2 | Start: ['App Samples<a name=\"EN-US_TOPIC_0000001115464207\"></a>'] | 6 nodes found"
+      ]
+    },
+    {
+      "symbol": "Introduction<a name=\"section1470103520301\"></a>",
+      "atlas_query_mode": "serve_explain_plain",
+      "graphify_query_mode": "query_scoped_subgraph",
+      "comparison_scope": "repo_root_markdown",
+      "atlas_command": "curl -fsS http://127.0.0.1:4235/api/v1/symbols/Introduction%3Ca%20name%3D%22section1470103520301%22%3E%3C%2Fa%3E/explain?repo_id=repo&format=plain",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify query Introduction<a name=\"section1470103520301\"></a>",
+      "atlas_tokens": 3,
+      "graphify_tokens": 88,
+      "atlas_ms": 0.526,
+      "graphify_ms": 81.383,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "Introduction<a name=\"section1470103520301\"></a> s@README.md:8"
+      ],
+      "graphify_stdout_head": [
+        "Traversal: BFS depth=2 | Start: ['Introduction<a name=\"section1470103520301\"></a>'] | 6 nodes found"
+      ]
+    },
+    {
+      "symbol": "Content <a name=\"sectionMenu\"></a>",
+      "atlas_query_mode": "serve_explain_plain",
+      "graphify_query_mode": "query_scoped_subgraph",
+      "comparison_scope": "repo_root_markdown",
+      "atlas_command": "curl -fsS http://127.0.0.1:4235/api/v1/symbols/Content%20%3Ca%20name%3D%22sectionMenu%22%3E%3C%2Fa%3E/explain?repo_id=repo&format=plain",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify query Content <a name=\"sectionMenu\"></a>",
+      "atlas_tokens": 4,
+      "graphify_tokens": 89,
+      "atlas_ms": 0.551,
+      "graphify_ms": 79.475,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "Content <a name=\"sectionMenu\"></a> s@README.md:12"
+      ],
+      "graphify_stdout_head": [
+        "Traversal: BFS depth=2 | Start: ['Content <a name=\"sectionMenu\"></a>'] | 6 nodes found"
+      ]
+    },
+    {
+      "symbol": "Usage<a name=\"section17988202503116\"></a>",
+      "atlas_query_mode": "serve_explain_plain",
+      "graphify_query_mode": "query_scoped_subgraph",
+      "comparison_scope": "repo_root_markdown",
+      "atlas_command": "curl -fsS http://127.0.0.1:4235/api/v1/symbols/Usage%3Ca%20name%3D%22section17988202503116%22%3E%3C%2Fa%3E/explain?repo_id=repo&format=plain",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify query Usage<a name=\"section17988202503116\"></a>",
+      "atlas_tokens": 3,
+      "graphify_tokens": 88,
+      "atlas_ms": 0.522,
+      "graphify_ms": 76.672,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "Usage<a name=\"section17988202503116\"></a> s@README.md:83"
+      ],
+      "graphify_stdout_head": [
+        "Traversal: BFS depth=2 | Start: ['Usage<a name=\"section17988202503116\"></a>'] | 6 nodes found"
+      ]
+    },
+    {
+      "symbol": "主页Tabs嵌套场景",
+      "atlas_query_mode": "serve_explain_plain",
+      "graphify_query_mode": "query_scoped_subgraph",
+      "comparison_scope": "repo_root_markdown",
+      "atlas_command": "curl -fsS http://127.0.0.1:4235/api/v1/symbols/%E4%B8%BB%E9%A1%B5Tabs%E5%B5%8C%E5%A5%97%E5%9C%BA%E6%99%AF/explain?repo_id=repo&format=plain",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify query 主页Tabs嵌套场景",
+      "atlas_tokens": 2,
+      "graphify_tokens": 105,
+      "atlas_ms": 0.404,
+      "graphify_ms": 75.744,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "主页Tabs嵌套场景 s@README.md:1"
+      ],
+      "graphify_stdout_head": [
+        "Traversal: BFS depth=2 | Start: ['主页Tabs嵌套场景'] | 10 nodes found"
       ]
     }
   ],

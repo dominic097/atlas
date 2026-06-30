@@ -153,13 +153,19 @@ test.describe("Atlas — The Benchmark Instrument", () => {
     });
   }
 
-  test("saturated languages reachable + shown as not comparable via the explorer filter", async ({ page }) => {
+  test("not-comparable filter reflects current benchmark state", async ({ page }) => {
     await page.goto(baseURL, { waitUntil: "networkidle" });
     // the unified explorer: filter to not-comparable, then read them in the table
     await page.getByTestId("lx-chip-not-comparable").click();
     await page.getByTestId("lx-view-table").click();
-    const table = page.getByTestId("lx-table");
     const notComparable = data.liveBenchmarks.filter((r) => r.querySummary.tokenRatio == null);
+    if (notComparable.length === 0) {
+      await expect(page.getByTestId("lx-empty")).toContainText("No languages match");
+      await expect(page.getByTestId("lx-row")).toHaveCount(0);
+      return;
+    }
+
+    const table = page.getByTestId("lx-table");
     for (const row of notComparable) {
       const label = row.language === "r" ? row.repo.replace(/^https:\/\/github\.com\//, "") : row.language.toUpperCase();
       await expect(table).toContainText(label);
