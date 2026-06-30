@@ -6,7 +6,23 @@ const baseURL = process.env.ATLAS_BENCHMARK_URL || "http://127.0.0.1:4179/";
 const data = JSON.parse(
   fs.readFileSync(path.join(__dirname, "..", "data", "benchmark-data.json"), "utf8")
 );
+const tenXGap = JSON.parse(
+  fs.readFileSync(path.join(__dirname, "..", "data", "tenx-gap-report.json"), "utf8")
+);
 const fmt = new Intl.NumberFormat("en-US");
+const liveCoverageRows = data.liveBenchmarks.filter(
+  (r) => r.coverage && typeof r.coverage.ratio === "number"
+);
+const parityRows = liveCoverageRows.filter((r) => r.coverage.ratio <= 1.0001);
+const parityComparableRows = parityRows.filter(
+  (r) =>
+    r.querySummary &&
+    r.querySummary.equivalentRows > 0 &&
+    r.querySummary.tokenRatio != null &&
+    r.querySummary.latencyRatio != null
+);
+const parityToken10 = parityComparableRows.filter((r) => r.querySummary.tokenRatio >= 10).length;
+const parityLatency10 = parityComparableRows.filter((r) => r.querySummary.latencyRatio >= 10).length;
 
 // The 5 install commands that must appear VERBATIM under #install.
 const INSTALL_COMMANDS = [
@@ -50,11 +66,30 @@ test.describe("Atlas — The Benchmark Instrument", () => {
       // vs-native peer-framed callout + the unified native-parity ladder
       await expect(page.getByTestId("native-callout")).toContainText("Native indexers are the peer bar");
       await expect(page.getByTestId("native-callout")).toContainText("never averaged into");
+      await expect(page.getByTestId("tenx-target")).toContainText("10x target tracker");
+      await expect(page.getByTestId("tenx-target")).toContainText(
+        `0/${parityRows.length}`
+      );
+      await expect(page.getByTestId("tenx-target")).toContainText(
+        `${parityToken10}/${parityComparableRows.length}`
+      );
+      await expect(page.getByTestId("tenx-target")).toContainText(
+        `${parityLatency10}/${parityComparableRows.length}`
+      );
+      await expect(page.getByTestId("tenx-target")).toContainText(
+        `${data.summary.live.tenXComparable}/${data.summary.live.withComparableRows}`
+      );
+      await expect(page.locator('a[href="data/tenx-gap-report.md"]')).toHaveCount(4);
+      expect(tenXGap.summary.parityLanguages).toBe(data.summary.live.coverageParityLanguages);
+      expect(tenXGap.summary.performance10xComparable).toBe(data.summary.live.tenXComparable);
       await expect(page.getByTestId("parity-ladder")).toBeVisible();
       await expect(page.getByTestId("parity-column")).toContainText(
         String(
           data.liveBenchmarks.filter((r) => r.coverage && r.coverage.ratio <= 1.0).length
         )
+      );
+      await expect(page.getByTestId("parity-column")).toContainText(
+        String(data.summary.live.artifacts)
       );
       // C# is the strongest standout (×1.84, more defs than native)
       await expect(page.getByTestId("standout-csharp")).toHaveCount(1);

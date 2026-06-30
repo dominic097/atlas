@@ -23,6 +23,9 @@ const required = [
   "GRAPHIFY_LANGUAGE_DISCOVERY.json",
 ];
 
+const TEN_X_TARGET = 10;
+const COVERAGE_EPSILON = 0.0001;
+
 function readJSON(file) {
   return JSON.parse(fs.readFileSync(path.join(benchDir, file), "utf8"));
 }
@@ -59,6 +62,8 @@ function querySummary(queries = []) {
   const graphifyMs = sum(comparable, "graphify_ms");
   const tokenRatio = atlasTokens > 0 ? graphifyTokens / atlasTokens : null;
   const latencyRatio = atlasMs > 0 ? graphifyMs / atlasMs : null;
+  const token10x = Number(tokenRatio) >= TEN_X_TARGET;
+  const latency10x = Number(latencyRatio) >= TEN_X_TARGET;
   return {
     rows: queries.length,
     equivalentRows: comparable.length,
@@ -70,7 +75,13 @@ function querySummary(queries = []) {
     graphifyMs: round(graphifyMs, 3),
     tokenRatio: round(tokenRatio, 2),
     latencyRatio: round(latencyRatio, 2),
+    targetRatio: TEN_X_TARGET,
     pass5x: Number(tokenRatio) >= 5 && Number(latencyRatio) >= 5,
+    token10x,
+    latency10x,
+    pass10x: token10x && latency10x,
+    tokenGapTo10x: token10x ? 1 : round(TEN_X_TARGET / tokenRatio, 2),
+    latencyGapTo10x: latency10x ? 1 : round(TEN_X_TARGET / latencyRatio, 2),
   };
 }
 
@@ -107,10 +118,22 @@ function publicSource(file) {
 }
 
 function copyRawArtifacts() {
-  fs.rmSync(rawDir, { recursive: true, force: true });
-  fs.mkdirSync(rawDir, { recursive: true });
   const live = fs.readdirSync(benchDir).filter((file) => /^LIVE_.*_BENCHMARK\.json$/.test(file)).sort();
   const files = [...required, ...live];
+  if (benchDir === rawDir) {
+    return files.map((file) => {
+      const source = path.join(benchDir, file);
+      return {
+        name: file,
+        source: publicSource(file),
+        path: artifactPath(file),
+        bytes: fs.statSync(source).size,
+        sha256: sha256(source),
+      };
+    });
+  }
+  fs.rmSync(rawDir, { recursive: true, force: true });
+  fs.mkdirSync(rawDir, { recursive: true });
   for (const file of files) {
     fs.copyFileSync(path.join(benchDir, file), path.join(rawDir, file));
   }
@@ -174,12 +197,39 @@ function buildCoreMatrix(matrix) {
   });
 }
 
+function tenXStatus(row) {
+  const qs = row.querySummary || {};
+  const cov = row.coverage || {};
+  const coverageRatio = typeof cov.ratio === "number" ? cov.ratio : null;
+  const comparable = Number(qs.equivalentRows) > 0 && qs.tokenRatio != null && qs.latencyRatio != null;
+  const coverageParity = coverageRatio != null && coverageRatio >= 1.0 - COVERAGE_EPSILON;
+  const coverageExceedsNative = coverageRatio != null && coverageRatio > 1.0 + COVERAGE_EPSILON;
+  const blockers = [];
+  if (!coverageExceedsNative) blockers.push(coverageRatio == null ? "coverage_missing" : "coverage_at_parity");
+  if (!comparable) blockers.push("no_comparable_query_rows");
+  if (comparable && !qs.token10x) blockers.push("token_ratio_below_10x");
+  if (comparable && !qs.latency10x) blockers.push("latency_ratio_below_10x");
+  return {
+    targetRatio: TEN_X_TARGET,
+    comparable,
+    coverageParity,
+    coverageExceedsNative,
+    token10x: Boolean(qs.token10x),
+    latency10x: Boolean(qs.latency10x),
+    performance10x: Boolean(qs.pass10x),
+    strict10x: comparable && coverageExceedsNative && Boolean(qs.pass10x),
+    blockers,
+    note:
+      "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier.",
+  };
+}
+
 function buildLiveBenchmarks(artifactFiles) {
   return artifactFiles
     .filter((file) => /^LIVE_.*_BENCHMARK\.json$/.test(file))
     .map((file) => {
       const row = readJSON(file);
-      return {
+      const out = {
         language: row.language,
         repo: row.repo,
         commit: row.commit,
@@ -215,6 +265,8 @@ function buildLiveBenchmarks(artifactFiles) {
           graphifyMissing: Boolean(query.graphify_missing),
         })),
       };
+      out.tenX = tenXStatus(out);
+      return out;
     })
     .sort((a, b) => a.language.localeCompare(b.language));
 }
@@ -288,18 +340,119 @@ function aggregateCore(coreMatrix) {
     graphifyMissingRows: sum(summaries, "graphifyMissing"),
     tokenRatio: round(graphifyTokens / atlasTokens, 2),
     latencyRatio: round(graphifyMs / atlasMs, 2),
+    targetRatio: TEN_X_TARGET,
+    token10xRows: summaries.filter((row) => row.token10x).length,
+    latency10xRows: summaries.filter((row) => row.latency10x).length,
+    pass10xRows: summaries.filter((row) => row.pass10x).length,
   };
 }
 
 function aggregateLive(liveBenchmarks) {
   const comparable = liveBenchmarks.filter((row) => row.querySummary.equivalentRows > 0);
+  const coverageRows = liveBenchmarks.filter((row) => row.coverage && typeof row.coverage.ratio === "number");
+  const parity = coverageRows.filter((row) => row.coverage.ratio <= 1.0 + COVERAGE_EPSILON);
+  const exceed = coverageRows.filter((row) => row.coverage.ratio > 1.0 + COVERAGE_EPSILON);
+  const parityComparable = parity.filter((row) => row.querySummary.equivalentRows > 0);
   return {
     artifacts: liveBenchmarks.length,
     withComparableRows: comparable.length,
     saturatedNoComparable: liveBenchmarks.filter((row) => row.querySummary.equivalentRows === 0).length,
     fiveXComparable: comparable.filter((row) => row.querySummary.pass5x).length,
+    targetRatio: TEN_X_TARGET,
+    token10xComparable: comparable.filter((row) => row.querySummary.token10x).length,
+    latency10xComparable: comparable.filter((row) => row.querySummary.latency10x).length,
+    tenXComparable: comparable.filter((row) => row.querySummary.pass10x).length,
+    strict10x: comparable.filter((row) => row.tenX?.strict10x).length,
+    coverageParityLanguages: parity.length,
+    coverageExceedLanguages: exceed.length,
+    coverageBelowLanguages: coverageRows.filter((row) => row.coverage.ratio < 1.0 - COVERAGE_EPSILON).length,
+    parityComparable: parityComparable.length,
+    parityToken10x: parityComparable.filter((row) => row.querySummary.token10x).length,
+    parityLatency10x: parityComparable.filter((row) => row.querySummary.latency10x).length,
+    parityTenX: parityComparable.filter((row) => row.querySummary.pass10x).length,
     detectorOnlyArtifacts: liveBenchmarks.filter((row) => row.detectorOnly).length,
   };
+}
+
+function buildTenXGap(dataset) {
+  const live = dataset.liveBenchmarks.map((row) => ({
+    language: row.language,
+    repo: row.repo,
+    commit: row.commit,
+    artifact: row.artifact,
+    coverageRatio: row.coverage?.ratio ?? null,
+    coverageExceedsNative: Boolean(row.tenX?.coverageExceedsNative),
+    equivalentRows: row.querySummary?.equivalentRows ?? 0,
+    tokenRatio: row.querySummary?.tokenRatio ?? null,
+    latencyRatio: row.querySummary?.latencyRatio ?? null,
+    tokenGapTo10x: row.querySummary?.tokenGapTo10x ?? null,
+    latencyGapTo10x: row.querySummary?.latencyGapTo10x ?? null,
+    blockers: row.tenX?.blockers ?? [],
+  }));
+  const parity = live.filter((row) => typeof row.coverageRatio === "number" && row.coverageRatio <= 1.0 + COVERAGE_EPSILON);
+  const comparable = live.filter((row) => row.equivalentRows > 0 && row.tokenRatio != null && row.latencyRatio != null);
+  return {
+    schemaVersion: 1,
+    generatedAt: dataset.generatedAt,
+    source: "data/benchmark-data.json",
+    targetRatio: TEN_X_TARGET,
+    metricNote:
+      "Token and latency are ratio targets. Coverage is a native-definition coverage ratio, so the honest accuracy target is >1.0 native coverage exceed, not a fabricated 10x accuracy multiplier.",
+    summary: {
+      liveLanguages: live.length,
+      parityLanguages: parity.length,
+      coverageExceedLanguages: live.filter((row) => row.coverageExceedsNative).length,
+      comparableLanguages: comparable.length,
+      token10xComparable: comparable.filter((row) => Number(row.tokenRatio) >= TEN_X_TARGET).length,
+      latency10xComparable: comparable.filter((row) => Number(row.latencyRatio) >= TEN_X_TARGET).length,
+      performance10xComparable: comparable.filter(
+        (row) => Number(row.tokenRatio) >= TEN_X_TARGET && Number(row.latencyRatio) >= TEN_X_TARGET
+      ).length,
+    },
+    parityLanguages: parity.map((row) => row.language),
+    live,
+    biggestLatencyGaps: comparable
+      .filter((row) => row.latencyGapTo10x != null && row.latencyGapTo10x > 1)
+      .sort((a, b) => b.latencyGapTo10x - a.latencyGapTo10x)
+      .slice(0, 12),
+    biggestTokenGaps: comparable
+      .filter((row) => row.tokenGapTo10x != null && row.tokenGapTo10x > 1)
+      .sort((a, b) => b.tokenGapTo10x - a.tokenGapTo10x)
+      .slice(0, 12),
+  };
+}
+
+function renderTenXGapMarkdown(report) {
+  const lines = [];
+  lines.push("# Atlas 10x Gap Report", "");
+  lines.push(`Generated: ${report.generatedAt}`, "");
+  lines.push(report.metricNote, "");
+  lines.push("## Summary", "");
+  lines.push(`- Live languages: ${report.summary.liveLanguages}`);
+  lines.push(`- Coverage parity languages still to move into exceed: ${report.summary.parityLanguages}`);
+  lines.push(`- Coverage exceed languages: ${report.summary.coverageExceedLanguages}`);
+  lines.push(`- Comparable live languages: ${report.summary.comparableLanguages}`);
+  lines.push(`- Token >=10x comparable: ${report.summary.token10xComparable}`);
+  lines.push(`- Latency >=10x comparable: ${report.summary.latency10xComparable}`);
+  lines.push(`- Token+latency >=10x comparable: ${report.summary.performance10xComparable}`);
+  lines.push("", "## Biggest Latency Gaps", "");
+  lines.push("| Language | latencyRatio | improvement to 10x | tokenRatio | blockers |");
+  lines.push("|---|--:|--:|--:|---|");
+  for (const row of report.biggestLatencyGaps) {
+    lines.push(
+      `| ${row.language} | ${row.latencyRatio ?? "n/a"} | ${row.latencyGapTo10x ?? "n/a"}x | ${row.tokenRatio ?? "n/a"} | ${row.blockers.join(", ")} |`
+    );
+  }
+  lines.push("", "## Biggest Token Gaps", "");
+  lines.push("| Language | tokenRatio | improvement to 10x | latencyRatio | blockers |");
+  lines.push("|---|--:|--:|--:|---|");
+  for (const row of report.biggestTokenGaps) {
+    lines.push(
+      `| ${row.language} | ${row.tokenRatio ?? "n/a"} | ${row.tokenGapTo10x ?? "n/a"}x | ${row.latencyRatio ?? "n/a"} | ${row.blockers.join(", ")} |`
+    );
+  }
+  lines.push("");
+  return `${lines.join("\n")}\n`;
 }
 
 function main() {
@@ -366,11 +519,15 @@ function main() {
       "BYOND, ETS, and R have saturation evidence with zero graphify-equivalent query rows; no latency/token ratio is claimed for those rows.",
       "Timings are one-machine benchmark snapshots, not production guarantees.",
       "Atlas and graphify expose different graph models, so coverage and precision fields are shown separately.",
+      "10x target fields are strict for token and latency ratios; coverage is reported as native-definition parity/exceed and is not converted into a fabricated 10x accuracy multiplier.",
     ],
   };
 
   fs.writeFileSync(path.join(dataDir, "benchmark-data.json"), `${JSON.stringify(dataset, null, 2)}\n`);
-  console.log(`Wrote data/benchmark-data.json from ${artifacts.length} JSON artifacts`);
+  const tenXGap = buildTenXGap(dataset);
+  fs.writeFileSync(path.join(dataDir, "tenx-gap-report.json"), `${JSON.stringify(tenXGap, null, 2)}\n`);
+  fs.writeFileSync(path.join(dataDir, "tenx-gap-report.md"), renderTenXGapMarkdown(tenXGap));
+  console.log(`Wrote data/benchmark-data.json and tenx gap reports from ${artifacts.length} JSON artifacts`);
 }
 
 main();

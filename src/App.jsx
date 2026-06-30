@@ -52,6 +52,43 @@ function langLabel(v) {
   if (!v) return "unknown";
   return String(v).replace(/\b\w/g, (c) => c.toUpperCase());
 }
+function tenXModel(data) {
+  const summary = data.summary?.live || {};
+  const liveRows = (data.liveBenchmarks || []).filter(
+    (r) => r.coverage && typeof r.coverage.ratio === "number"
+  );
+  const parityRows = liveRows.filter((r) => r.coverage.ratio <= 1.0001);
+  const parityComparable = parityRows.filter(
+    (r) =>
+      r.querySummary &&
+      r.querySummary.equivalentRows > 0 &&
+      r.querySummary.tokenRatio != null &&
+      r.querySummary.latencyRatio != null
+  );
+  const liveComparable = liveRows.filter(
+    (r) =>
+      r.querySummary &&
+      r.querySummary.equivalentRows > 0 &&
+      r.querySummary.tokenRatio != null &&
+      r.querySummary.latencyRatio != null
+  );
+  const count = (rows, pred) => rows.filter(pred).length;
+  return {
+    liveTotal: summary.artifacts ?? liveRows.length,
+    liveComparable: summary.withComparableRows ?? liveComparable.length,
+    liveCoverageExceed: summary.coverageExceedLanguages ?? count(liveRows, (r) => r.coverage.ratio > 1.0001),
+    liveToken10: summary.token10xComparable ?? count(liveComparable, (r) => r.querySummary.tokenRatio >= 10),
+    liveLatency10: summary.latency10xComparable ?? count(liveComparable, (r) => r.querySummary.latencyRatio >= 10),
+    livePerformance10: summary.tenXComparable ?? count(liveComparable, (r) => r.querySummary.tokenRatio >= 10 && r.querySummary.latencyRatio >= 10),
+    parityTotal: summary.coverageParityLanguages ?? parityRows.length,
+    parityComparable: summary.parityComparable ?? parityComparable.length,
+    parityCoverageExceed: 0,
+    parityToken10: summary.parityToken10x ?? count(parityComparable, (r) => r.querySummary.tokenRatio >= 10),
+    parityLatency10: summary.parityLatency10x ?? count(parityComparable, (r) => r.querySummary.latencyRatio >= 10),
+    parityPerformance10: summary.parityTenX ?? count(parityComparable, (r) => r.querySummary.tokenRatio >= 10 && r.querySummary.latencyRatio >= 10),
+    parityNonComparable: parityRows.length - parityComparable.length,
+  };
+}
 function usePrefersReducedMotion() {
   const [reduced, setReduced] = useState(false);
   useEffect(() => {
@@ -292,6 +329,9 @@ function ConsoleBar({ data, active }) {
 function HeroReadout({ data }) {
   const core = data.summary.core;
   const liveLangs = data.summary.live.artifacts;
+  const liveSummary = data.summary.live;
+  const parityCoverage = liveSummary.coverageParityLanguages ?? 0;
+  const exceedCoverage = liveSummary.coverageExceedLanguages ?? 0;
   // Atlas's OWN per-query response size, straight from coreMatrix atlasTokens —
   // the hero identity. graphify's ratio is a supporting comparison, not this.
   const atlasTokensList = data.coreMatrix.map((r) => r.querySummary.atlasTokens).filter((v) => v != null);
@@ -407,15 +447,15 @@ function HeroReadout({ data }) {
 
           {/* ALL-NATIVE breadth — one story, no core/live/detector split. The
               language count and the comparable-row count are kept as two clearly
-              distinct denominators, never blurred into one. */}
+          distinct denominators, never blurred into one. */}
           <div className="mt-7 hairline" style={{ paddingTop: 18 }}>
             <p className="max-w-xl" style={{ fontSize: 13, lineHeight: 1.55, color: "var(--text)" }}>
               All{" "}
               <span className="num" style={{ color: "var(--success)", fontWeight: 600 }}>{nativeLangCount}</span>{" "}
-              languages parsed natively — real tree-sitter / compiler AST or a dedicated native source parser, zero regex
-              or smoke fallback.{" "}
+              benchmarked languages parsed natively — {core.languages} core matrix + {liveLangs} live ladder, zero regex
+              or smoke fallback. The live ladder is {parityCoverage} exactly at parity + {exceedCoverage} above native;{" "}
               <span className="num" style={{ color: "var(--success)", fontWeight: 600 }}>{parityLangs}/{liveCovered}</span>{" "}
-              live languages meet or beat native SCIP/LSP definition coverage — none below ×1.0 — across{" "}
+              live languages are ≥ ×1.0 across{" "}
               <span className="num" style={{ color: "var(--success)", fontWeight: 600 }}>{cov.deterministicRowsCovered}/{comparableRows}</span>{" "}
               comparable deterministic rows.
             </p>
@@ -442,13 +482,14 @@ function HeroReadout({ data }) {
 
           {/* instrument rail of plain mono stat ticks */}
           <div
-            className="mt-7 grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-4"
+            className="mt-7 grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-5"
             style={{ borderTop: "1px solid var(--line)", paddingTop: 20 }}
           >
-            <StatTick label="Languages" value={`${nativeLangCount} native`} sub="tree-sitter · compiler AST · zero fallback" />
-            <StatTick label="Native parity" value={`${cov.deterministicRowsCovered}/${comparableRows}`} sub="comparable rows ≥ native SCIP/LSP" />
+            <StatTick label="Languages" value={`${nativeLangCount} native`} sub={`${core.languages} core + ${liveLangs} live · zero fallback`} />
+            <StatTick label="Coverage split" value={`${parityCoverage} + ${exceedCoverage}`} sub="parity + exceed in live ladder" />
+            <StatTick label="10x target" value={`${liveSummary.tenXComparable}/${liveSummary.withComparableRows}`} sub="token+latency comparable live" />
             <StatTick label="Tools benchmarked" value={toolCount} sub="incl. SCIP / LSP / graphify" />
-            <StatTick label="Evidence" value={data.sourceArtifacts.length} sub="downloadable artifacts" />
+            <StatTick label="Evidence" value={data.sourceArtifacts.length + 2} sub="artifacts + 10x gap reports" />
           </div>
 
           <div className="mt-9 flex flex-wrap gap-3">
@@ -457,6 +498,9 @@ function HeroReadout({ data }) {
             </a>
             <a href="data/benchmark-data.json" download data-source-artifact className="btn btn-ghost focusring" style={{ textDecoration: "none" }}>
               Download evidence <Download className="h-4 w-4" aria-hidden />
+            </a>
+            <a href="data/tenx-gap-report.md" download data-source-artifact className="btn btn-ghost focusring" style={{ textDecoration: "none" }}>
+              10x gap report <Download className="h-4 w-4" aria-hidden />
             </a>
           </div>
         </div>
@@ -788,6 +832,7 @@ function NativeParityLadder({ data }) {
 
   const model = useMemo(() => buildParityModel(data), [data]);
   const { atParity, standouts, maxRatio, maxDefs, minRatio } = model;
+  const liveTotal = atParity.length + standouts.length;
 
   // ---- one shared horizontal ratio scale, used by BOTH zones --------------
   // Domain starts a hair below 1.0 so the spine has air to its left; it ends a
@@ -864,7 +909,7 @@ function NativeParityLadder({ data }) {
             data-testid="parity-column"
             onClick={() => setExpanded((v) => !v)}
             aria-expanded={expanded}
-            aria-label={`${atParity.length} languages exactly at native parity. ${expanded ? "Collapse" : "Expand"} the roster.`}
+            aria-label={`${atParity.length} of ${liveTotal} live languages exactly at native coverage parity. ${expanded ? "Collapse" : "Expand"} the roster.`}
             className="focusring relative flex flex-col items-center justify-end pr-3 text-center"
             style={{ background: "transparent", border: "none", cursor: "pointer", minHeight: 200 }}
           >
@@ -879,17 +924,17 @@ function NativeParityLadder({ data }) {
               }}
             >
               <span className="num" style={{ fontSize: 34, fontWeight: 600, color: "var(--success)", lineHeight: 1 }}>
-                {atParity.length}
+                {atParity.length}/{liveTotal}
               </span>
               <span className="mono mt-1" style={{ fontSize: 10.5, color: "var(--muted)" }}>
-                of {atParity.length + standouts.length} live
+                live languages
               </span>
               <span className="mono mt-3 mb-2" style={{ fontSize: 10, color: "var(--faint)" }}>
                 {expanded ? "hide roster ▴" : "show roster ▾"}
               </span>
             </div>
             <span className="num mt-2" style={{ fontSize: 12, color: "var(--warning)" }}>×1.00</span>
-            <span className="mono" style={{ fontSize: 10, color: "var(--faint)" }}>exactly at parity</span>
+            <span className="mono" style={{ fontSize: 10, color: "var(--faint)" }}>coverage parity</span>
           </button>
 
           {/* -------- ZONE B: STANDOUTS LADDER (the 7 above parity) -------- */}
@@ -1055,6 +1100,54 @@ function NativeParityLadder({ data }) {
   );
 }
 
+function TenXTargetReadout({ data }) {
+  const m = tenXModel(data);
+  return (
+    <div
+      data-testid="tenx-target"
+      className="mb-7 grid gap-3 rounded-lg px-5 py-4 sm:grid-cols-3"
+      style={{ border: "1px solid var(--line-strong)", background: "var(--bg2)" }}
+      aria-label="10x target progress for at-parity live languages"
+    >
+      <div className="sm:col-span-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="kicker">10x target tracker</div>
+          <SourceLink href="data/tenx-gap-report.md" download>
+            <Download className="h-3 w-3" aria-hidden /> tenx-gap-report.md
+          </SourceLink>
+        </div>
+        <p className="mt-2 max-w-3xl" style={{ fontSize: 13, lineHeight: 1.5, color: "var(--muted)" }}>
+          Goal: move the {m.parityTotal} live languages that are exactly at native coverage parity into the exceed
+          column, while also proving at least 10x token and latency ratios on comparable rows. Current data keeps the
+          axes separate: coverage proves parity/exceed, while token and latency carry the 10x ratio target.
+        </p>
+      </div>
+      <StatTick
+        label="Coverage exceed"
+        value={`${m.parityCoverageExceed}/${m.parityTotal}`}
+        sub={`${m.liveCoverageExceed}/${m.liveTotal} live already > native`}
+      />
+      <StatTick
+        label="Token ≥10x"
+        value={`${m.parityToken10}/${m.parityComparable}`}
+        sub={`${m.liveToken10}/${m.liveComparable} comparable live rows`}
+      />
+      <StatTick
+        label="Latency ≥10x"
+        value={`${m.parityLatency10}/${m.parityComparable}`}
+        sub={`${m.parityNonComparable} parity languages not comparable`}
+      />
+      <div className="sm:col-span-3">
+        <p className="mono" style={{ fontSize: 12, lineHeight: 1.5, color: "var(--warning)" }}>
+          Strict token+latency 10x now: {m.livePerformance10}/{m.liveComparable} comparable live languages. Accuracy is
+          tracked as definition coverage versus native, so the honest target is moving {m.parityTotal} parity languages
+          above ×1.0 native coverage, not inventing a 10x accuracy ratio from a bounded denominator.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function VsNative({ data }) {
   // The ladder's universe is the LIVE languages (each has a native SCIP/LSP
   // coverage ratio). The core languages are benchmarked head-to-head in the
@@ -1086,6 +1179,8 @@ function VsNative({ data }) {
           averaged into any efficiency ratio.
         </p>
       </div>
+
+      <TenXTargetReadout data={data} />
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.55fr)_minmax(260px,0.9fr)]">
         <div className="panel min-w-0 p-5 sm:p-6">
@@ -1444,6 +1539,9 @@ function Install() {
             <SourceLink href="data/raw/MATRIX_REPORT.json" download>
               <Download className="h-3 w-3" aria-hidden /> MATRIX_REPORT.json
             </SourceLink>
+            <SourceLink href="data/tenx-gap-report.md" download>
+              <Download className="h-3 w-3" aria-hidden /> tenx-gap-report.md
+            </SourceLink>
           </div>
         </div>
         <div className="mt-4">
@@ -1451,6 +1549,7 @@ function Install() {
             lines={[
               "curl -LO https://aziron-ai.github.io/atlas/data/benchmark-data.json",
               "curl -LO https://aziron-ai.github.io/atlas/data/raw/MATRIX_REPORT.json",
+              "curl -LO https://aziron-ai.github.io/atlas/data/tenx-gap-report.md",
             ]}
           />
         </div>
@@ -1491,6 +1590,9 @@ function Evidence({ data }) {
         </a>
         <a href="data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json" download data-source-artifact data-testid="download-link" className="btn btn-ghost focusring" style={{ textDecoration: "none" }}>
           <Download className="h-4 w-4" aria-hidden /> GRAPHIFY_LANGUAGE_DISCOVERY.json
+        </a>
+        <a href="data/tenx-gap-report.md" download data-source-artifact data-testid="download-link" className="btn btn-ghost focusring" style={{ textDecoration: "none" }}>
+          <Download className="h-4 w-4" aria-hidden /> tenx-gap-report.md
         </a>
       </div>
 

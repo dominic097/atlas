@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T04:33:42.394Z",
+  "generatedAt": "2026-06-30T05:44:08.091Z",
   "sourceLabel": "Atlas benchmark JSON artifacts from bench/",
   "sourceArtifacts": [
     {
@@ -613,13 +613,29 @@
       "equivalentRows": 23,
       "graphifyMissingRows": 2,
       "tokenRatio": 16.39,
-      "latencyRatio": 6.32
+      "latencyRatio": 6.32,
+      "targetRatio": 10,
+      "token10xRows": 6,
+      "latency10xRows": 0,
+      "pass10xRows": 0
     },
     "live": {
       "artifacts": 36,
       "withComparableRows": 33,
       "saturatedNoComparable": 3,
       "fiveXComparable": 33,
+      "targetRatio": 10,
+      "token10xComparable": 20,
+      "latency10xComparable": 0,
+      "tenXComparable": 0,
+      "strict10x": 0,
+      "coverageParityLanguages": 29,
+      "coverageExceedLanguages": 7,
+      "coverageBelowLanguages": 0,
+      "parityComparable": 26,
+      "parityToken10x": 15,
+      "parityLatency10x": 0,
+      "parityTenX": 0,
       "detectorOnlyArtifacts": 3
     },
     "coverage": {
@@ -776,7 +792,13 @@
         "graphifyMs": 378.563,
         "tokenRatio": 14.21,
         "latencyRatio": 6.22,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": true,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1,
+        "latencyGapTo10x": 1.61
       },
       "queries": [
         {
@@ -962,7 +984,13 @@
         "graphifyMs": 297.577,
         "tokenRatio": 18.52,
         "latencyRatio": 6.27,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": true,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1,
+        "latencyGapTo10x": 1.59
       },
       "queries": [
         {
@@ -1152,7 +1180,13 @@
         "graphifyMs": 247.995,
         "tokenRatio": 7,
         "latencyRatio": 5.59,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": false,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1.43,
+        "latencyGapTo10x": 1.79
       },
       "queries": [
         {
@@ -1330,7 +1364,13 @@
         "graphifyMs": 248.938,
         "tokenRatio": 11.42,
         "latencyRatio": 5.75,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": true,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1,
+        "latencyGapTo10x": 1.74
       },
       "queries": [
         {
@@ -1487,7 +1527,13 @@
         "graphifyMs": 263.843,
         "tokenRatio": 15.29,
         "latencyRatio": 5.56,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": true,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1,
+        "latencyGapTo10x": 1.8
       },
       "queries": [
         {
@@ -1630,7 +1676,13 @@
         "graphifyMs": 405.374,
         "tokenRatio": 28.71,
         "latencyRatio": 6.91,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": true,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1,
+        "latencyGapTo10x": 1.45
       },
       "queries": [
         {
@@ -1785,7 +1837,13 @@
         "graphifyMs": 478.781,
         "tokenRatio": 10,
         "latencyRatio": 7.34,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": true,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1,
+        "latencyGapTo10x": 1.36
       },
       "queries": [
         {
@@ -1938,7 +1996,13 @@
         "graphifyMs": 729.2,
         "tokenRatio": 11.67,
         "latencyRatio": 8.52,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": true,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1,
+        "latencyGapTo10x": 1.17
       },
       "queries": [
         {
@@ -1995,7 +2059,22 @@
           "atlasMissing": false,
           "graphifyMissing": true
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": false,
+        "token10x": true,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "coverage_at_parity",
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "astro",
@@ -2099,7 +2178,13 @@
         "graphifyMs": 383.355,
         "tokenRatio": 10.54,
         "latencyRatio": 6.26,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": true,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1,
+        "latencyGapTo10x": 1.6
       },
       "queries": [
         {
@@ -2156,7 +2241,22 @@
           "atlasMissing": false,
           "graphifyMissing": false
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": false,
+        "token10x": true,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "coverage_at_parity",
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "bash",
@@ -2258,7 +2358,13 @@
         "graphifyMs": 329.629,
         "tokenRatio": 18.44,
         "latencyRatio": 6.69,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": true,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1,
+        "latencyGapTo10x": 1.5
       },
       "queries": [
         {
@@ -2297,7 +2403,22 @@
           "atlasMissing": false,
           "graphifyMissing": false
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": false,
+        "token10x": true,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "coverage_at_parity",
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "blade",
@@ -2400,7 +2521,13 @@
         "graphifyMs": 563.31,
         "tokenRatio": 6.1,
         "latencyRatio": 6.74,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": false,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1.64,
+        "latencyGapTo10x": 1.48
       },
       "queries": [
         {
@@ -2457,7 +2584,23 @@
           "atlasMissing": false,
           "graphifyMissing": false
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": false,
+        "token10x": false,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "coverage_at_parity",
+          "token_ratio_below_10x",
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "byond",
@@ -2566,7 +2709,13 @@
         "graphifyMs": 0,
         "tokenRatio": null,
         "latencyRatio": null,
-        "pass5x": false
+        "targetRatio": 10,
+        "pass5x": false,
+        "token10x": false,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": null,
+        "latencyGapTo10x": null
       },
       "queries": [
         {
@@ -2623,7 +2772,22 @@
           "atlasMissing": false,
           "graphifyMissing": true
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": false,
+        "coverageParity": true,
+        "coverageExceedsNative": false,
+        "token10x": false,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "coverage_at_parity",
+          "no_comparable_query_rows"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "csharp",
@@ -2744,7 +2908,13 @@
         "graphifyMs": 465.693,
         "tokenRatio": 14.15,
         "latencyRatio": 7.26,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": true,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1,
+        "latencyGapTo10x": 1.38
       },
       "queries": [
         {
@@ -2783,7 +2953,21 @@
           "atlasMissing": false,
           "graphifyMissing": false
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": true,
+        "token10x": true,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "cuda",
@@ -2887,7 +3071,13 @@
         "graphifyMs": 230.06,
         "tokenRatio": 6.67,
         "latencyRatio": 5.96,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": false,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1.5,
+        "latencyGapTo10x": 1.68
       },
       "queries": [
         {
@@ -2917,7 +3107,23 @@
           "atlasMissing": false,
           "graphifyMissing": false
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": false,
+        "token10x": false,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "coverage_at_parity",
+          "token_ratio_below_10x",
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "dart",
@@ -3018,7 +3224,13 @@
         "graphifyMs": 494.516,
         "tokenRatio": 8.33,
         "latencyRatio": 6.46,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": false,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1.2,
+        "latencyGapTo10x": 1.55
       },
       "queries": [
         {
@@ -3075,7 +3287,23 @@
           "atlasMissing": false,
           "graphifyMissing": false
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": false,
+        "token10x": false,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "coverage_at_parity",
+          "token_ratio_below_10x",
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "delphi",
@@ -3185,7 +3413,13 @@
         "graphifyMs": 2487.519,
         "tokenRatio": 12.35,
         "latencyRatio": 9.25,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": true,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1,
+        "latencyGapTo10x": 1.08
       },
       "queries": [
         {
@@ -3251,7 +3485,22 @@
           "atlasMissing": false,
           "graphifyMissing": false
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": false,
+        "token10x": true,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "coverage_at_parity",
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "dotnet",
@@ -3357,7 +3606,13 @@
         "graphifyMs": 717.38,
         "tokenRatio": 6.15,
         "latencyRatio": 8.89,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": false,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1.63,
+        "latencyGapTo10x": 1.12
       },
       "queries": [
         {
@@ -3414,7 +3669,23 @@
           "atlasMissing": false,
           "graphifyMissing": false
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": false,
+        "token10x": false,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "coverage_at_parity",
+          "token_ratio_below_10x",
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "ejs",
@@ -3520,7 +3791,13 @@
         "graphifyMs": 76.349,
         "tokenRatio": 8,
         "latencyRatio": 6.19,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": false,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1.25,
+        "latencyGapTo10x": 1.61
       },
       "queries": [
         {
@@ -3586,7 +3863,23 @@
           "atlasMissing": false,
           "graphifyMissing": true
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": false,
+        "token10x": false,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "coverage_at_parity",
+          "token_ratio_below_10x",
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "elixir",
@@ -3688,7 +3981,13 @@
         "graphifyMs": 456.274,
         "tokenRatio": 23.58,
         "latencyRatio": 6.93,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": true,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1,
+        "latencyGapTo10x": 1.44
       },
       "queries": [
         {
@@ -3736,7 +4035,22 @@
           "atlasMissing": false,
           "graphifyMissing": false
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": false,
+        "token10x": true,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "coverage_at_parity",
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "ets",
@@ -3843,7 +4157,13 @@
         "graphifyMs": 0,
         "tokenRatio": null,
         "latencyRatio": null,
-        "pass5x": false
+        "targetRatio": 10,
+        "pass5x": false,
+        "token10x": false,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": null,
+        "latencyGapTo10x": null
       },
       "queries": [
         {
@@ -3918,7 +4238,22 @@
           "atlasMissing": false,
           "graphifyMissing": true
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": false,
+        "coverageParity": true,
+        "coverageExceedsNative": false,
+        "token10x": false,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "coverage_at_parity",
+          "no_comparable_query_rows"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "fortran",
@@ -4021,7 +4356,13 @@
         "graphifyMs": 479.434,
         "tokenRatio": 19.69,
         "latencyRatio": 6.61,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": true,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1,
+        "latencyGapTo10x": 1.51
       },
       "queries": [
         {
@@ -4078,7 +4419,22 @@
           "atlasMissing": false,
           "graphifyMissing": false
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": false,
+        "token10x": true,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "coverage_at_parity",
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "groovy",
@@ -4181,7 +4537,13 @@
         "graphifyMs": 430.825,
         "tokenRatio": 9.97,
         "latencyRatio": 6.79,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": false,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1,
+        "latencyGapTo10x": 1.47
       },
       "queries": [
         {
@@ -4229,7 +4591,22 @@
           "atlasMissing": false,
           "graphifyMissing": false
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": true,
+        "token10x": false,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "token_ratio_below_10x",
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "json",
@@ -4334,7 +4711,13 @@
         "graphifyMs": 305.57,
         "tokenRatio": 13.28,
         "latencyRatio": 6.58,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": true,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1,
+        "latencyGapTo10x": 1.52
       },
       "queries": [
         {
@@ -4391,7 +4774,22 @@
           "atlasMissing": false,
           "graphifyMissing": true
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": false,
+        "token10x": true,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "coverage_at_parity",
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "julia",
@@ -4487,7 +4885,13 @@
         "graphifyMs": 367.213,
         "tokenRatio": 12.72,
         "latencyRatio": 6.11,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": true,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1,
+        "latencyGapTo10x": 1.64
       },
       "queries": [
         {
@@ -4544,7 +4948,22 @@
           "atlasMissing": false,
           "graphifyMissing": true
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": false,
+        "token10x": true,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "coverage_at_parity",
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "kotlin",
@@ -4645,7 +5064,13 @@
         "graphifyMs": 518.79,
         "tokenRatio": 27.06,
         "latencyRatio": 6.82,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": true,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1,
+        "latencyGapTo10x": 1.47
       },
       "queries": [
         {
@@ -4693,7 +5118,21 @@
           "atlasMissing": false,
           "graphifyMissing": false
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": true,
+        "token10x": true,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "lua",
@@ -4804,7 +5243,13 @@
         "graphifyMs": 362.254,
         "tokenRatio": 15.09,
         "latencyRatio": 6.22,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": true,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1,
+        "latencyGapTo10x": 1.61
       },
       "queries": [
         {
@@ -4843,7 +5288,21 @@
           "atlasMissing": false,
           "graphifyMissing": false
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": true,
+        "token10x": true,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "markdown",
@@ -4946,7 +5405,13 @@
         "graphifyMs": 479.152,
         "tokenRatio": 10.31,
         "latencyRatio": 6.69,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": true,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1,
+        "latencyGapTo10x": 1.5
       },
       "queries": [
         {
@@ -5003,7 +5468,22 @@
           "atlasMissing": false,
           "graphifyMissing": false
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": false,
+        "token10x": true,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "coverage_at_parity",
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "objc",
@@ -5105,7 +5585,13 @@
         "graphifyMs": 369.85,
         "tokenRatio": 23.63,
         "latencyRatio": 7.41,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": true,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1,
+        "latencyGapTo10x": 1.35
       },
       "queries": [
         {
@@ -5153,7 +5639,22 @@
           "atlasMissing": false,
           "graphifyMissing": false
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": false,
+        "token10x": true,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "coverage_at_parity",
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "pascal",
@@ -5258,7 +5759,13 @@
         "graphifyMs": 544.285,
         "tokenRatio": 12.84,
         "latencyRatio": 8.33,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": true,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1,
+        "latencyGapTo10x": 1.2
       },
       "queries": [
         {
@@ -5306,7 +5813,22 @@
           "atlasMissing": false,
           "graphifyMissing": false
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": false,
+        "token10x": true,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "coverage_at_parity",
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "php",
@@ -5412,7 +5934,13 @@
         "graphifyMs": 301.897,
         "tokenRatio": 8.74,
         "latencyRatio": 7.04,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": false,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1.14,
+        "latencyGapTo10x": 1.42
       },
       "queries": [
         {
@@ -5451,7 +5979,23 @@
           "atlasMissing": false,
           "graphifyMissing": false
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": false,
+        "token10x": false,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "coverage_at_parity",
+          "token_ratio_below_10x",
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "powershell",
@@ -5551,7 +6095,13 @@
         "graphifyMs": 319.84,
         "tokenRatio": 6.68,
         "latencyRatio": 6.37,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": false,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1.5,
+        "latencyGapTo10x": 1.57
       },
       "queries": [
         {
@@ -5590,7 +6140,23 @@
           "atlasMissing": false,
           "graphifyMissing": false
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": false,
+        "token10x": false,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "coverage_at_parity",
+          "token_ratio_below_10x",
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "r",
@@ -5691,7 +6257,13 @@
         "graphifyMs": 0,
         "tokenRatio": null,
         "latencyRatio": null,
-        "pass5x": false
+        "targetRatio": 10,
+        "pass5x": false,
+        "token10x": false,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": null,
+        "latencyGapTo10x": null
       },
       "queries": [
         {
@@ -5766,7 +6338,22 @@
           "atlasMissing": false,
           "graphifyMissing": true
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": false,
+        "coverageParity": true,
+        "coverageExceedsNative": false,
+        "token10x": false,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "coverage_at_parity",
+          "no_comparable_query_rows"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "razor",
@@ -5876,7 +6463,13 @@
         "graphifyMs": 540.966,
         "tokenRatio": 7.88,
         "latencyRatio": 7.15,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": false,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1.27,
+        "latencyGapTo10x": 1.4
       },
       "queries": [
         {
@@ -5933,7 +6526,23 @@
           "atlasMissing": false,
           "graphifyMissing": false
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": false,
+        "token10x": false,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "coverage_at_parity",
+          "token_ratio_below_10x",
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "ruby",
@@ -6034,7 +6643,13 @@
         "graphifyMs": 387.043,
         "tokenRatio": 10.86,
         "latencyRatio": 7.13,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": true,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1,
+        "latencyGapTo10x": 1.4
       },
       "queries": [
         {
@@ -6073,7 +6688,21 @@
           "atlasMissing": false,
           "graphifyMissing": false
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": true,
+        "token10x": true,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "rust",
@@ -6188,7 +6817,13 @@
         "graphifyMs": 541.737,
         "tokenRatio": 40.23,
         "latencyRatio": 8.71,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": true,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1,
+        "latencyGapTo10x": 1.15
       },
       "queries": [
         {
@@ -6227,7 +6862,22 @@
           "atlasMissing": false,
           "graphifyMissing": false
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": false,
+        "token10x": true,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "coverage_at_parity",
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "scala",
@@ -6328,7 +6978,13 @@
         "graphifyMs": 799.141,
         "tokenRatio": 38.06,
         "latencyRatio": 9.16,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": true,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1,
+        "latencyGapTo10x": 1.09
       },
       "queries": [
         {
@@ -6376,7 +7032,22 @@
           "atlasMissing": false,
           "graphifyMissing": false
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": false,
+        "token10x": true,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "coverage_at_parity",
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "sql",
@@ -6468,7 +7139,13 @@
         "graphifyMs": 307.258,
         "tokenRatio": 5.33,
         "latencyRatio": 6.23,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": false,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1.88,
+        "latencyGapTo10x": 1.61
       },
       "queries": [
         {
@@ -6507,7 +7184,23 @@
           "atlasMissing": false,
           "graphifyMissing": false
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": false,
+        "token10x": false,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "coverage_at_parity",
+          "token_ratio_below_10x",
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "svelte",
@@ -6604,7 +7297,13 @@
         "graphifyMs": 424.204,
         "tokenRatio": 8.81,
         "latencyRatio": 6.3,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": false,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1.13,
+        "latencyGapTo10x": 1.59
       },
       "queries": [
         {
@@ -6652,7 +7351,22 @@
           "atlasMissing": false,
           "graphifyMissing": false
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": true,
+        "token10x": false,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "token_ratio_below_10x",
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "swift",
@@ -6753,7 +7467,13 @@
         "graphifyMs": 542.523,
         "tokenRatio": 17.59,
         "latencyRatio": 7.96,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": true,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1,
+        "latencyGapTo10x": 1.26
       },
       "queries": [
         {
@@ -6792,7 +7512,21 @@
           "atlasMissing": false,
           "graphifyMissing": false
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": true,
+        "token10x": true,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "terraform",
@@ -6886,7 +7620,13 @@
         "graphifyMs": 479.041,
         "tokenRatio": 41.61,
         "latencyRatio": 6.27,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": true,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1,
+        "latencyGapTo10x": 1.59
       },
       "queries": [
         {
@@ -6925,7 +7665,22 @@
           "atlasMissing": false,
           "graphifyMissing": false
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": false,
+        "token10x": true,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "coverage_at_parity",
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "verilog",
@@ -7028,7 +7783,13 @@
         "graphifyMs": 457.736,
         "tokenRatio": 8.73,
         "latencyRatio": 6.09,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": false,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1.15,
+        "latencyGapTo10x": 1.64
       },
       "queries": [
         {
@@ -7085,7 +7846,23 @@
           "atlasMissing": false,
           "graphifyMissing": false
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": false,
+        "token10x": false,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "coverage_at_parity",
+          "token_ratio_below_10x",
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "vue",
@@ -7182,7 +7959,13 @@
         "graphifyMs": 302.503,
         "tokenRatio": 8.04,
         "latencyRatio": 6.22,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": false,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1.24,
+        "latencyGapTo10x": 1.61
       },
       "queries": [
         {
@@ -7221,7 +8004,23 @@
           "atlasMissing": false,
           "graphifyMissing": false
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": false,
+        "token10x": false,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "coverage_at_parity",
+          "token_ratio_below_10x",
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     },
     {
       "language": "zig",
@@ -7319,7 +8118,13 @@
         "graphifyMs": 443.883,
         "tokenRatio": 27.82,
         "latencyRatio": 5.74,
-        "pass5x": true
+        "targetRatio": 10,
+        "pass5x": true,
+        "token10x": true,
+        "latency10x": false,
+        "pass10x": false,
+        "tokenGapTo10x": 1,
+        "latencyGapTo10x": 1.74
       },
       "queries": [
         {
@@ -7367,7 +8172,22 @@
           "atlasMissing": false,
           "graphifyMissing": false
         }
-      ]
+      ],
+      "tenX": {
+        "targetRatio": 10,
+        "comparable": true,
+        "coverageParity": true,
+        "coverageExceedsNative": false,
+        "token10x": true,
+        "latency10x": false,
+        "performance10x": false,
+        "strict10x": false,
+        "blockers": [
+          "coverage_at_parity",
+          "latency_ratio_below_10x"
+        ],
+        "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
+      }
     }
   ],
   "coverageAudit": [
@@ -7960,6 +8780,7 @@
     "Ratios are computed only where both Atlas and graphify returned comparable query rows.",
     "BYOND, ETS, and R have saturation evidence with zero graphify-equivalent query rows; no latency/token ratio is claimed for those rows.",
     "Timings are one-machine benchmark snapshots, not production guarantees.",
-    "Atlas and graphify expose different graph models, so coverage and precision fields are shown separately."
+    "Atlas and graphify expose different graph models, so coverage and precision fields are shown separately.",
+    "10x target fields are strict for token and latency ratios; coverage is reported as native-definition parity/exceed and is not converted into a fabricated 10x accuracy multiplier."
   ]
 }
