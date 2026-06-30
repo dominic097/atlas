@@ -1645,24 +1645,14 @@ func (e *localEngine) resolveSnapshot(ctx context.Context, repoID string) (*grap
 		}
 		return snap, nil
 	}
-	repos, err := e.store.ListRepos(ctx, e.cfg.Scope)
+	snap, err := e.store.LatestSnapshotAny(ctx, e.cfg.Scope)
 	if err != nil {
 		return nil, err
 	}
-	var best *graph.Snapshot
-	for _, r := range repos {
-		snap, err := e.store.LatestSnapshot(ctx, r.ID)
-		if err != nil || snap == nil {
-			continue
-		}
-		if best == nil || snap.CreatedAt.After(best.CreatedAt) {
-			best = snap
-		}
+	if snap != nil {
+		return snap, nil
 	}
-	if best == nil {
-		return nil, ErrNoIndex
-	}
-	return best, nil
+	return nil, ErrNoIndex
 }
 
 func (e *localEngine) Callers(ctx context.Context, in CallersInput) (*CallersResult, error) {
@@ -1875,22 +1865,24 @@ func (e *localEngine) Explain(ctx context.Context, in ExplainInput) (*ExplainRes
 		res.Imports = nil
 	}
 
-	// Producer routes served by this symbol: handler_symbol == SYMBOL OR the
-	// route's handler file is one of the definition paths.
-	routes, err := e.store.ListRoutes(ctx, snap.ID, "producer")
-	if err != nil {
-		return nil, fmt.Errorf("engine: explain routes: %w", err)
-	}
 	servedLabels := map[string]bool{}
-	for _, r := range routes {
-		if metaStr(r.Metadata, "handler_symbol") == in.Name ||
-			(r.HandlerFile != "" && defPaths[r.HandlerFile]) {
-			res.ServedRoutes = append(res.ServedRoutes, ExplainRoute{
-				Method: r.Method, Path: r.PathPattern, HandlerFile: r.HandlerFile,
-			})
-			servedLabels[routeLabelEng(r.Method, r.PathPattern)] = true
-			if len(res.ServedRoutes) >= navCap {
-				break
+	if snap.RouteCount > 0 {
+		// Producer routes served by this symbol: handler_symbol == SYMBOL OR the
+		// route's handler file is one of the definition paths.
+		routes, err := e.store.ListRoutes(ctx, snap.ID, "producer")
+		if err != nil {
+			return nil, fmt.Errorf("engine: explain routes: %w", err)
+		}
+		for _, r := range routes {
+			if metaStr(r.Metadata, "handler_symbol") == in.Name ||
+				(r.HandlerFile != "" && defPaths[r.HandlerFile]) {
+				res.ServedRoutes = append(res.ServedRoutes, ExplainRoute{
+					Method: r.Method, Path: r.PathPattern, HandlerFile: r.HandlerFile,
+				})
+				servedLabels[routeLabelEng(r.Method, r.PathPattern)] = true
+				if len(res.ServedRoutes) >= navCap {
+					break
+				}
 			}
 		}
 	}

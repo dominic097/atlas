@@ -74,6 +74,9 @@ type StorageDriver interface {
 		newFileCount, newSymbolCount, newEdgeCount, newRouteCount int) error
 	UpdateSnapshotMetadata(ctx context.Context, snapshotID string, metadata graph.JSONBMap) error
 	LatestSnapshot(ctx context.Context, repoID string) (*graph.Snapshot, error)
+	// LatestSnapshotAny returns the newest snapshot across all repos visible in
+	// scope. An empty scope means all repos, matching ListRepos' semantics.
+	LatestSnapshotAny(ctx context.Context, scope string) (*graph.Snapshot, error)
 	ListSnapshots(ctx context.Context, repoID string, limit int) ([]graph.Snapshot, error)
 
 	// graph reads (feed search / impact / neighbors / path)
@@ -98,14 +101,16 @@ type StorageDriver interface {
 	// indexed graph reads (scale impact to the blast radius, not the whole repo)
 	//
 	// SymbolsByName returns symbols with an exact name match, using the
-	// (snapshot_id, name) index. SymbolsByPath does the same on path. Both feed
-	// the reverse-BFS seed/expansion so a query touches only the rows it needs.
+	// (snapshot_id, name, path, start_line) index. SymbolsByPath does the same on
+	// path. Both feed the reverse-BFS seed/expansion so a query touches only the
+	// rows it needs.
 	SymbolsByName(ctx context.Context, snapshotID, name string) ([]graph.CodeSymbol, error)
 	// SymbolsByNames is the batched form of SymbolsByName: it returns every symbol
 	// whose name is in the given set, in ONE chunked IN-list query (mirroring
 	// CallEdgesByToRefs) instead of one round-trip per name. It backs the impact
 	// reverse-BFS, which would otherwise issue thousands of one-name point queries
-	// against a hub symbol's blast radius. Uses idx_symbols_snapshot_name; no dedupe.
+	// against a hub symbol's blast radius. Uses idx_symbols_snapshot_name_path_line;
+	// no dedupe.
 	SymbolsByNames(ctx context.Context, snapshotID string, names []string) ([]graph.CodeSymbol, error)
 	SymbolsByPath(ctx context.Context, snapshotID, path string) ([]graph.CodeSymbol, error)
 	// SymbolsByIDs returns every symbol whose id is in the given set, served by the
@@ -116,16 +121,17 @@ type StorageDriver interface {
 	// symbol in the snapshot. Rows carry node_id + decoded metadata (no dedupe).
 	SymbolsByIDs(ctx context.Context, snapshotID string, ids []string) ([]graph.CodeSymbol, error)
 	// CallEdgesByToRefs returns every "calls" edge whose to_ref is in the given
-	// set, using the (snapshot_id, to_ref) index. The IN-list is chunked to stay
-	// under SQLite's bound-parameter limit; all matching edges are returned with
-	// Metadata populated (no dedupe).
+	// set, using the (snapshot_id, kind, to_ref) index. The IN-list is chunked to
+	// stay under SQLite's bound-parameter limit; all matching edges are returned
+	// with Metadata populated (no dedupe).
 	CallEdgesByToRefs(ctx context.Context, snapshotID string, toRefs []string) ([]graph.DependencyEdge, error)
 	// CallEdgesByFromSymbols returns every "calls" edge whose from_symbol is in the
-	// given set, using the (snapshot_id, from_symbol) index — the callees side, for
-	// the `symbol` op's outgoing-call context. Same chunking/Metadata semantics.
+	// given set, using the (snapshot_id, kind, from_symbol) index — the callees
+	// side, for the `symbol` op's outgoing-call context. Same chunking/Metadata
+	// semantics.
 	CallEdgesByFromSymbols(ctx context.Context, snapshotID string, fromSymbols []string) ([]graph.DependencyEdge, error)
 	// RefEdgesByToRefs returns every "references" (type-use) edge whose to_ref is in
-	// the given set, using the (snapshot_id, to_ref) index. It mirrors
+	// the given set, using the (snapshot_id, kind, to_ref) index. It mirrors
 	// CallEdgesByToRefs exactly but filters kind="references" instead of "calls", so
 	// `refs` can return TRUE type-use references alongside call-site callers. Same
 	// chunking/Metadata semantics (no dedupe).

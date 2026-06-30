@@ -5,11 +5,11 @@ package store
 // symbols-with-node_id, edges, routes) into native Postgres types: TEXT primary
 // keys, JSONB for the metadata blobs and the languages map, TEXT[] for file
 // imports, and TIMESTAMPTZ for timestamps. The index set mirrors the SQLite tier
-// exactly — (snapshot_id,name)/(snapshot_id,path) on symbols, (snapshot_id,to_ref)/
-// (snapshot_id,from_symbol) on edges, (repo_id,created_at DESC) on snapshots,
-// UNIQUE (repo_id,commit_sha) for snapshot idempotency, and UNIQUE
-// (scope,lower(full_name)) for the (scope, repo) upsert key — so the two drivers
-// serve identical query plans. Applied idempotently by Migrate (IF NOT EXISTS).
+// exactly — name/path-line and path on symbols, to_ref/from_symbol with call-kind
+// composites on edges, (repo_id,created_at DESC) on snapshots, UNIQUE
+// (repo_id,commit_sha) for snapshot idempotency, and UNIQUE (scope,lower(full_name))
+// for the (scope, repo) upsert key — so the two drivers serve identical query
+// plans. Applied idempotently by Migrate (IF NOT EXISTS).
 const schemaPostgres = `
 CREATE TABLE IF NOT EXISTS repos (
 	id              TEXT PRIMARY KEY,
@@ -40,6 +40,8 @@ CREATE TABLE IF NOT EXISTS snapshots (
 );
 CREATE INDEX IF NOT EXISTS idx_snapshots_repo_created
 	ON snapshots (repo_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_snapshots_created
+	ON snapshots (created_at DESC);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_snapshots_repo_commit
 	ON snapshots (repo_id, commit_sha);
 
@@ -71,7 +73,8 @@ CREATE TABLE IF NOT EXISTS symbols (
 	end_line    INTEGER NOT NULL DEFAULT 0,
 	metadata    JSONB NOT NULL DEFAULT '{}'::jsonb
 );
-CREATE INDEX IF NOT EXISTS idx_symbols_snapshot_name ON symbols (snapshot_id, name);
+CREATE INDEX IF NOT EXISTS idx_symbols_snapshot_name_path_line
+	ON symbols (snapshot_id, name, path, start_line);
 CREATE INDEX IF NOT EXISTS idx_symbols_snapshot_path ON symbols (snapshot_id, path);
 -- idx_symbols_node omitted: no query filters on node_id (see SQLite tier).
 
@@ -87,8 +90,10 @@ CREATE TABLE IF NOT EXISTS edges (
 	line        INTEGER NOT NULL DEFAULT 0,
 	metadata    JSONB NOT NULL DEFAULT '{}'::jsonb
 );
-CREATE INDEX IF NOT EXISTS idx_edges_snapshot_toref ON edges (snapshot_id, to_ref);
-CREATE INDEX IF NOT EXISTS idx_edges_snapshot_fromsymbol ON edges (snapshot_id, from_symbol);
+CREATE INDEX IF NOT EXISTS idx_edges_snapshot_kind_toref
+	ON edges (snapshot_id, kind, to_ref);
+CREATE INDEX IF NOT EXISTS idx_edges_snapshot_kind_fromsymbol
+	ON edges (snapshot_id, kind, from_symbol);
 CREATE INDEX IF NOT EXISTS idx_edges_snapshot_fromfile ON edges (snapshot_id, from_file);
 
 CREATE TABLE IF NOT EXISTS routes (

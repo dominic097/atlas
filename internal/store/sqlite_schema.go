@@ -43,6 +43,8 @@ CREATE TABLE IF NOT EXISTS snapshots (
 );
 CREATE INDEX IF NOT EXISTS idx_snapshots_repo_created
 	ON snapshots (repo_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_snapshots_created
+	ON snapshots (created_at DESC);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_snapshots_repo_commit
 	ON snapshots (repo_id, commit_sha);
 
@@ -76,7 +78,8 @@ CREATE TABLE IF NOT EXISTS symbols (
 	end_line    INTEGER NOT NULL DEFAULT 0,
 	metadata    TEXT NOT NULL DEFAULT '{}'
 );
-CREATE INDEX IF NOT EXISTS idx_symbols_snapshot_name ON symbols (snapshot_id, name);
+CREATE INDEX IF NOT EXISTS idx_symbols_snapshot_name_path_line
+	ON symbols (snapshot_id, name, path, start_line);
 CREATE INDEX IF NOT EXISTS idx_symbols_snapshot_path ON symbols (snapshot_id, path);
 -- idx_symbols_node (snapshot_id, node_id) intentionally omitted: no query filters
 -- on node_id (node_id is written + read as payload only, never a WHERE/JOIN key).
@@ -96,8 +99,10 @@ CREATE TABLE IF NOT EXISTS edges (
 	line        INTEGER NOT NULL DEFAULT 0,
 	metadata    TEXT NOT NULL DEFAULT '{}'
 );
-CREATE INDEX IF NOT EXISTS idx_edges_snapshot_toref ON edges (snapshot_id, to_ref);
-CREATE INDEX IF NOT EXISTS idx_edges_snapshot_fromsymbol ON edges (snapshot_id, from_symbol);
+CREATE INDEX IF NOT EXISTS idx_edges_snapshot_kind_toref
+	ON edges (snapshot_id, kind, to_ref);
+CREATE INDEX IF NOT EXISTS idx_edges_snapshot_kind_fromsymbol
+	ON edges (snapshot_id, kind, from_symbol);
 CREATE INDEX IF NOT EXISTS idx_edges_snapshot_fromfile ON edges (snapshot_id, from_file);
 
 CREATE TABLE IF NOT EXISTS routes (

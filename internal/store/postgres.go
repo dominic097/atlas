@@ -567,6 +567,32 @@ func (d *postgresDriver) LatestSnapshot(ctx context.Context, repoID string) (*gr
 	return &s, nil
 }
 
+func (d *postgresDriver) LatestSnapshotAny(ctx context.Context, scope string) (*graph.Snapshot, error) {
+	var row *sql.Row
+	if scope == "" {
+		row = d.db.QueryRowContext(ctx,
+			`SELECT `+snapshotCols+` FROM snapshots ORDER BY created_at DESC LIMIT 1`)
+	} else {
+		row = d.db.QueryRowContext(ctx,
+			`SELECT `+snapshotColsS+`
+			 FROM snapshots s
+			 JOIN repos r ON r.id = s.repo_id
+			 WHERE r.scope = $1
+			 ORDER BY s.created_at DESC
+			 LIMIT 1`,
+			scope,
+		)
+	}
+	s, err := scanSnapshotPG(row)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
+		return nil, fmt.Errorf("store: latest snapshot any: %w", err)
+	}
+	return &s, nil
+}
+
 func (d *postgresDriver) ListSnapshots(ctx context.Context, repoID string, limit int) ([]graph.Snapshot, error) {
 	if limit <= 0 || limit > 500 {
 		limit = 50
@@ -756,7 +782,8 @@ func (d *postgresDriver) StreamEdges(ctx context.Context, snapshotID string, bat
 }
 
 // SymbolsByName returns symbols whose name matches exactly, served by the
-// idx_symbols_snapshot_name index — the indexed seed for impact's reverse-BFS.
+// idx_symbols_snapshot_name_path_line index, which also satisfies the path/line
+// ordering used by explain and impact's reverse-BFS seed.
 func (d *postgresDriver) SymbolsByName(ctx context.Context, snapshotID, name string) ([]graph.CodeSymbol, error) {
 	rows, err := d.db.QueryContext(ctx, `
 		SELECT `+symbolCols+`
@@ -786,9 +813,9 @@ func (d *postgresDriver) SymbolsByName(ctx context.Context, snapshotID, name str
 const pgChunk = 1000
 
 // SymbolsByNames returns every symbol whose name is in `names`, served by
-// idx_symbols_snapshot_name. The IN-list is chunked so a large blast radius never
-// blows the bound-parameter limit; all matching rows are returned with node_id +
-// decoded metadata (no dedupe), exactly like SymbolsByName.
+// idx_symbols_snapshot_name_path_line. The IN-list is chunked so a large blast
+// radius never blows the bound-parameter limit; all matching rows are returned
+// with node_id + decoded metadata (no dedupe), exactly like SymbolsByName.
 func (d *postgresDriver) SymbolsByNames(ctx context.Context, snapshotID string, names []string) ([]graph.CodeSymbol, error) {
 	if len(names) == 0 {
 		return nil, nil
@@ -909,9 +936,9 @@ func (d *postgresDriver) SymbolsByIDs(ctx context.Context, snapshotID string, id
 }
 
 // CallEdgesByToRefs returns every "calls" edge whose to_ref is in toRefs, served
-// by idx_edges_snapshot_toref. The IN-list is chunked so a large blast radius
-// never blows the bound-parameter limit; all matching edges are returned with
-// Metadata populated (no dedupe).
+// by idx_edges_snapshot_kind_toref. The IN-list is chunked so a large blast
+// radius never blows the bound-parameter limit; all matching edges are returned
+// with Metadata populated (no dedupe).
 func (d *postgresDriver) CallEdgesByToRefs(ctx context.Context, snapshotID string, toRefs []string) ([]graph.DependencyEdge, error) {
 	return d.edgesIn(ctx, snapshotID, "calls", "to_ref", toRefs)
 }
@@ -921,7 +948,7 @@ func (d *postgresDriver) CallEdgesByFromSymbols(ctx context.Context, snapshotID 
 }
 
 // RefEdgesByToRefs returns every "references" (type-use) edge whose to_ref is in
-// toRefs, served by idx_edges_snapshot_toref. Identical to CallEdgesByToRefs
+// toRefs, served by idx_edges_snapshot_kind_toref. Identical to CallEdgesByToRefs
 // except for the kind filter, so `refs` returns true type-use references.
 func (d *postgresDriver) RefEdgesByToRefs(ctx context.Context, snapshotID string, toRefs []string) ([]graph.DependencyEdge, error) {
 	return d.edgesIn(ctx, snapshotID, "references", "to_ref", toRefs)
