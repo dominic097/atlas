@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-30T16:22:49.947Z",
-  "benchmarkGeneratedAt": "2026-06-30T16:22:49.947Z",
+  "generatedAt": "2026-06-30T17:37:40.737Z",
+  "benchmarkGeneratedAt": "2026-06-30T17:37:40.737Z",
   "scope": "Final pass over Atlas benchmark artifacts: core matrix against Graphify plus native SCIP/LSP tools, live language artifacts against Graphify plus language-specific native/proxy baselines, and public three-repo validation metadata.",
   "summary": {
     "coreLanguages": 7,
@@ -13,6 +13,8 @@
     "threeRepoValidated": 35,
     "threeRepoValidationPending": 1,
     "pendingCodeLanguages": [],
+    "publicRepoValidationHarness": true,
+    "publicRepoValidationWarnings": 34,
     "graphifyVersion": "graphifyy 0.8.49",
     "graphifyDispatchCount": 89,
     "detectorOnlyLanguages": [
@@ -199,7 +201,7 @@
         "equivalentRows": 4,
         "graphifyMissingRows": 0,
         "tokenRatio": 18.95,
-        "latencyRatio": 6.55
+        "latencyRatio": 6.44
       },
       {
         "language": "python",
@@ -219,7 +221,7 @@
         "equivalentRows": 3,
         "graphifyMissingRows": 0,
         "tokenRatio": 24.31,
-        "latencyRatio": 6.81
+        "latencyRatio": 6.63
       },
       {
         "language": "javascript",
@@ -239,7 +241,7 @@
         "equivalentRows": 3,
         "graphifyMissingRows": 1,
         "tokenRatio": 8.24,
-        "latencyRatio": 5.91
+        "latencyRatio": 5.74
       },
       {
         "language": "typescript",
@@ -259,15 +261,15 @@
         "equivalentRows": 3,
         "graphifyMissingRows": 1,
         "tokenRatio": 12.06,
-        "latencyRatio": 6.18
+        "latencyRatio": 5.95
       },
       {
         "language": "java",
         "nativeTools": [
           {
             "name": "scip-java",
-            "status": "missing",
-            "ok": false
+            "status": "ok",
+            "ok": true
           },
           {
             "name": "jdtls",
@@ -279,7 +281,7 @@
         "equivalentRows": 2,
         "graphifyMissingRows": 0,
         "tokenRatio": 21.4,
-        "latencyRatio": 7.49
+        "latencyRatio": 7.37
       },
       {
         "language": "c",
@@ -294,7 +296,7 @@
         "equivalentRows": 4,
         "graphifyMissingRows": 0,
         "tokenRatio": 33.5,
-        "latencyRatio": 7.25
+        "latencyRatio": 7.33
       },
       {
         "language": "cpp",
@@ -309,7 +311,7 @@
         "equivalentRows": 4,
         "graphifyMissingRows": 0,
         "tokenRatio": 11.85,
-        "latencyRatio": 8.11
+        "latencyRatio": 8.21
       }
     ],
     "nearParityValidationRows": [
@@ -458,18 +460,13 @@
   "stubsAndHallucinationAudit": {
     "foundDuringFinalPass": [
       "The UI previously carried a hard-coded native tool manifest; this final pass renders tool status/version from provenance data so missing tools are no longer shown as healthy.",
-      "scip-java is missing in this environment; Java still has a JDTLS baseline, and the missing SCIP adapter is reported instead of implied.",
+      "scip-java now resolves through the pinned bench/tools/scip-java-coursier launcher; Java is reported with both SCIP and JDTLS baselines present.",
+      "The committed public-repo validation harness regenerates data/public-repo-validation-manifest.* from raw live artifacts and fails when a code language lacks passing three-repo evidence.",
       "Objective-C validation can be inflated by vendored Pods if Atlas and the native counter use different dependency filters; the final validation excludes dependency folders for the validation count.",
       "CUDA host-function counters overcount the denominator for a CUDA-specific benchmark; the final validation labels and uses a CUDA-qualified __global__/__device__/__host__ function denominator."
     ],
     "notFound": "No published benchmark row in the final dataset is intentionally synthetic or sample-only. The weakest rows are labelled as detector-only or source-counter proxy rows rather than hidden.",
-    "missingAdapters": [
-      {
-        "tool": "scip-java",
-        "status": "missing",
-        "note": ""
-      }
-    ],
+    "missingAdapters": [],
     "generatedButNotSourceOfTruth": [
       {
         "language": "json",
@@ -479,12 +476,8 @@
   },
   "improvementTodos": [
     {
-      "priority": "P0",
-      "item": "Install or vendor a reproducible scip-java command and rerun the Java matrix with both SCIP and JDTLS present."
-    },
-    {
-      "priority": "P0",
-      "item": "Move the public-repo random validation harness into the repository so live multi-repo artifacts are reproducible from committed code, not only from raw JSON evidence."
+      "priority": "P1",
+      "item": "Promote the committed public-repo validation manifest harness from artifact verification to full remeasurement for every native/proxy counter."
     },
     {
       "priority": "P1",

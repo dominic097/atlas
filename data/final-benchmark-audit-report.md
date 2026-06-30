@@ -1,6 +1,6 @@
 # Atlas Final Benchmark Audit
 
-Generated: 2026-06-30T16:22:49.947Z
+Generated: 2026-06-30T17:37:40.737Z
 
 Final pass over Atlas benchmark artifacts: core matrix against Graphify plus native SCIP/LSP tools, live language artifacts against Graphify plus language-specific native/proxy baselines, and public three-repo validation metadata.
 
@@ -43,20 +43,21 @@ Low-risk live languages: astro, bash, csharp, dart, elixir, fortran, groovy, jul
 
 | Language | Native tools | Graphify | Equivalent rows | Graphify missing | Token ratio | Latency ratio |
 |---|---|---|--:|--:|--:|--:|
-| go | scip-go:ok, gopls:ok | ok | 4 | 0 | 18.95 | 6.55 |
-| python | scip-python:ok, pyright:ok | ok | 3 | 0 | 24.31 | 6.81 |
-| javascript | scip-typescript:ok, tsserver:ok | ok | 3 | 1 | 8.24 | 5.91 |
-| typescript | scip-typescript:ok, tsserver:ok | ok | 3 | 1 | 12.06 | 6.18 |
-| java | scip-java:missing, jdtls:ok | ok | 2 | 0 | 21.4 | 7.49 |
-| c | clangd:ok | ok | 4 | 0 | 33.5 | 7.25 |
-| cpp | clangd:ok | ok | 4 | 0 | 11.85 | 8.11 |
+| go | scip-go:ok, gopls:ok | ok | 4 | 0 | 18.95 | 6.44 |
+| python | scip-python:ok, pyright:ok | ok | 3 | 0 | 24.31 | 6.63 |
+| javascript | scip-typescript:ok, tsserver:ok | ok | 3 | 1 | 8.24 | 5.74 |
+| typescript | scip-typescript:ok, tsserver:ok | ok | 3 | 1 | 12.06 | 5.95 |
+| java | scip-java:ok, jdtls:ok | ok | 2 | 0 | 21.4 | 7.37 |
+| c | clangd:ok | ok | 4 | 0 | 33.5 | 7.33 |
+| cpp | clangd:ok | ok | 4 | 0 | 11.85 | 8.21 |
 
 ## Stubs And Hallucination Audit
 
 ### Found During Final Pass
 
 - The UI previously carried a hard-coded native tool manifest; this final pass renders tool status/version from provenance data so missing tools are no longer shown as healthy.
-- scip-java is missing in this environment; Java still has a JDTLS baseline, and the missing SCIP adapter is reported instead of implied.
+- scip-java now resolves through the pinned bench/tools/scip-java-coursier launcher; Java is reported with both SCIP and JDTLS baselines present.
+- The committed public-repo validation harness regenerates data/public-repo-validation-manifest.* from raw live artifacts and fails when a code language lacks passing three-repo evidence.
 - Objective-C validation can be inflated by vendored Pods if Atlas and the native counter use different dependency filters; the final validation excludes dependency folders for the validation count.
 - CUDA host-function counters overcount the denominator for a CUDA-specific benchmark; the final validation labels and uses a CUDA-qualified __global__/__device__/__host__ function denominator.
 
@@ -64,12 +65,11 @@ No hidden synthetic-row finding: No published benchmark row in the final dataset
 
 ### Missing Adapters
 
-- scip-java: missing
+- none
 
 ## Improvement Todos
 
-- P0: Install or vendor a reproducible scip-java command and rerun the Java matrix with both SCIP and JDTLS present.
-- P0: Move the public-repo random validation harness into the repository so live multi-repo artifacts are reproducible from committed code, not only from raw JSON evidence.
+- P1: Promote the committed public-repo validation manifest harness from artifact verification to full remeasurement for every native/proxy counter.
 - P1: Replace source-counter proxies for Apex, CUDA, Razor, BYOND, Blade, EJS, ETS, R, and structured/project surfaces with fuller compiler, LSP, tree-sitter, or parser-library denominators where available.
 - P1: Add precision checks that compare symbol names/kinds/locations, not only Atlas/native definition-count coverage ratios.
 - P1: Extend call-edge and receiver-type measurement for converted tree-sitter languages beyond definition coverage.

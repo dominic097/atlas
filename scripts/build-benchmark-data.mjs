@@ -30,6 +30,12 @@ function readJSON(file) {
   return JSON.parse(fs.readFileSync(path.join(benchDir, file), "utf8"));
 }
 
+function readDataJSON(file) {
+  const target = path.join(dataDir, file);
+  if (!fs.existsSync(target)) return null;
+  return JSON.parse(fs.readFileSync(target, "utf8"));
+}
+
 function round(value, digits = 2) {
   if (!Number.isFinite(value)) return null;
   return Number(value.toFixed(digits));
@@ -536,6 +542,8 @@ function buildFinalAuditReport(dataset) {
   const structuredLive = new Set(["json", "markdown"]);
   const liveCodeRows = dataset.liveBenchmarks.filter((row) => !structuredLive.has(row.language));
   const pendingCode = liveCodeRows.filter((row) => !row.multiRepoValidation?.passed).map((row) => row.language);
+  const publicValidation = dataset.publicRepoValidation || null;
+  const publicValidationPassed = Boolean(publicValidation?.summary?.passed);
   const missingCoreTools = (dataset.provenance.tools.core || [])
     .filter((tool) => tool.ok === false || tool.status === "missing")
     .map((tool) => ({
@@ -543,6 +551,7 @@ function buildFinalAuditReport(dataset) {
       status: tool.status,
       note: tool.note || tool.version || "",
     }));
+  const scipJavaMissing = missingCoreTools.some((tool) => tool.tool === "scip-java");
   const weakTruthRows = dataset.liveBenchmarks
     .filter((row) => classifyTruthRisk(row) !== "low")
     .map((row) => ({
@@ -578,6 +587,60 @@ function buildFinalAuditReport(dataset) {
     .sort((a, b) => Number(a.coverageRatio) - Number(b.coverageRatio))
     .slice(0, 20);
 
+  const foundDuringFinalPass = [
+    "The UI previously carried a hard-coded native tool manifest; this final pass renders tool status/version from provenance data so missing tools are no longer shown as healthy.",
+    scipJavaMissing
+      ? "scip-java is missing in this environment; Java still has a JDTLS baseline, and the missing SCIP adapter is reported instead of implied."
+      : "scip-java now resolves through the pinned bench/tools/scip-java-coursier launcher; Java is reported with both SCIP and JDTLS baselines present.",
+    publicValidationPassed
+      ? "The committed public-repo validation harness regenerates data/public-repo-validation-manifest.* from raw live artifacts and fails when a code language lacks passing three-repo evidence."
+      : "The public-repo validation harness is still missing or failing; multi-repo validation remains raw-artifact evidence only.",
+    "Objective-C validation can be inflated by vendored Pods if Atlas and the native counter use different dependency filters; the final validation excludes dependency folders for the validation count.",
+    "CUDA host-function counters overcount the denominator for a CUDA-specific benchmark; the final validation labels and uses a CUDA-qualified __global__/__device__/__host__ function denominator.",
+  ];
+  const improvementTodos = [
+    ...(scipJavaMissing
+      ? [
+          {
+            priority: "P0",
+            item: "Install or vendor a reproducible scip-java command and rerun the Java matrix with both SCIP and JDTLS present.",
+          },
+        ]
+      : []),
+    ...(!publicValidationPassed
+      ? [
+          {
+            priority: "P0",
+            item: "Move the public-repo random validation harness into the repository so live multi-repo artifacts are reproducible from committed code, not only from raw JSON evidence.",
+          },
+        ]
+      : []),
+    {
+      priority: "P1",
+      item: "Promote the committed public-repo validation manifest harness from artifact verification to full remeasurement for every native/proxy counter.",
+    },
+    {
+      priority: "P1",
+      item: "Replace source-counter proxies for Apex, CUDA, Razor, BYOND, Blade, EJS, ETS, R, and structured/project surfaces with fuller compiler, LSP, tree-sitter, or parser-library denominators where available.",
+    },
+    {
+      priority: "P1",
+      item: "Add precision checks that compare symbol names/kinds/locations, not only Atlas/native definition-count coverage ratios.",
+    },
+    {
+      priority: "P1",
+      item: "Extend call-edge and receiver-type measurement for converted tree-sitter languages beyond definition coverage.",
+    },
+    {
+      priority: "P2",
+      item: "Increase public-repo validation from 3 repos per language to a larger fixed sample for high-variance languages such as Objective-C, Razor, Apex, CUDA, and Swift.",
+    },
+    {
+      priority: "P2",
+      item: "Keep Graphify no-equivalent rows as saturation evidence, but separate detector-only language support from deterministic Graphify extractor support in all headlines.",
+    },
+  ];
+
   return {
     generatedAt: dataset.generatedAt,
     benchmarkGeneratedAt: dataset.generatedAt,
@@ -594,6 +657,8 @@ function buildFinalAuditReport(dataset) {
       threeRepoValidated: dataset.summary.live.threeRepoValidated,
       threeRepoValidationPending: dataset.summary.live.threeRepoValidationPending,
       pendingCodeLanguages: pendingCode,
+      publicRepoValidationHarness: publicValidationPassed,
+      publicRepoValidationWarnings: publicValidation?.summary?.warnings ?? null,
       graphifyVersion: dataset.provenance.graphify.version,
       graphifyDispatchCount: dataset.provenance.graphify.dispatchCount,
       detectorOnlyLanguages: dataset.provenance.graphify.detectorOnlyCodeExtensions,
@@ -618,47 +683,13 @@ function buildFinalAuditReport(dataset) {
       nearParityValidationRows: nearMisses,
     },
     stubsAndHallucinationAudit: {
-      foundDuringFinalPass: [
-        "The UI previously carried a hard-coded native tool manifest; this final pass renders tool status/version from provenance data so missing tools are no longer shown as healthy.",
-        "scip-java is missing in this environment; Java still has a JDTLS baseline, and the missing SCIP adapter is reported instead of implied.",
-        "Objective-C validation can be inflated by vendored Pods if Atlas and the native counter use different dependency filters; the final validation excludes dependency folders for the validation count.",
-        "CUDA host-function counters overcount the denominator for a CUDA-specific benchmark; the final validation labels and uses a CUDA-qualified __global__/__device__/__host__ function denominator.",
-      ],
+      foundDuringFinalPass,
       notFound:
         "No published benchmark row in the final dataset is intentionally synthetic or sample-only. The weakest rows are labelled as detector-only or source-counter proxy rows rather than hidden.",
       missingAdapters: missingCoreTools,
       generatedButNotSourceOfTruth: rejectedCandidates,
     },
-    improvementTodos: [
-      {
-        priority: "P0",
-        item: "Install or vendor a reproducible scip-java command and rerun the Java matrix with both SCIP and JDTLS present.",
-      },
-      {
-        priority: "P0",
-        item: "Move the public-repo random validation harness into the repository so live multi-repo artifacts are reproducible from committed code, not only from raw JSON evidence.",
-      },
-      {
-        priority: "P1",
-        item: "Replace source-counter proxies for Apex, CUDA, Razor, BYOND, Blade, EJS, ETS, R, and structured/project surfaces with fuller compiler, LSP, tree-sitter, or parser-library denominators where available.",
-      },
-      {
-        priority: "P1",
-        item: "Add precision checks that compare symbol names/kinds/locations, not only Atlas/native definition-count coverage ratios.",
-      },
-      {
-        priority: "P1",
-        item: "Extend call-edge and receiver-type measurement for converted tree-sitter languages beyond definition coverage.",
-      },
-      {
-        priority: "P2",
-        item: "Increase public-repo validation from 3 repos per language to a larger fixed sample for high-variance languages such as Objective-C, Razor, Apex, CUDA, and Swift.",
-      },
-      {
-        priority: "P2",
-        item: "Keep Graphify no-equivalent rows as saturation evidence, but separate detector-only language support from deterministic Graphify extractor support in all headlines.",
-      },
-    ],
+    improvementTodos,
   };
 }
 
@@ -745,6 +776,8 @@ function main() {
       { name: "benchmark-data.json", path: "data/benchmark-data.json" },
       { name: "tenx-gap-report.json", path: "data/tenx-gap-report.json" },
       { name: "tenx-gap-report.md", path: "data/tenx-gap-report.md" },
+      { name: "public-repo-validation-manifest.json", path: "data/public-repo-validation-manifest.json" },
+      { name: "public-repo-validation-manifest.md", path: "data/public-repo-validation-manifest.md" },
       { name: "final-benchmark-audit-report.json", path: "data/final-benchmark-audit-report.json" },
       { name: "final-benchmark-audit-report.md", path: "data/final-benchmark-audit-report.md" },
     ],
@@ -783,6 +816,7 @@ function main() {
     coreMatrix,
     liveBenchmarks,
     coverageAudit,
+    publicRepoValidation: readDataJSON("public-repo-validation-manifest.json"),
     saturation: saturationRows,
     caveats: [
       "Ratios are computed only where both Atlas and graphify returned comparable query rows.",
