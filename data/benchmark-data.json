@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T10:09:59.867Z",
+  "generatedAt": "2026-06-30T10:15:05.249Z",
   "sourceLabel": "Atlas benchmark JSON artifacts from bench/",
   "sourceArtifacts": [
     {
@@ -175,8 +175,8 @@
       "name": "LIVE_MARKDOWN_BENCHMARK.json",
       "source": "bench/LIVE_MARKDOWN_BENCHMARK.json",
       "path": "data/raw/LIVE_MARKDOWN_BENCHMARK.json",
-      "bytes": 16311,
-      "sha256": "5dfe7bd20c335db790a410221e57f6e3215354878dabc3885670d9aa9f245d48"
+      "bytes": 18549,
+      "sha256": "110e1055ae91981a2fa4488305d10d2a2270f364924082a7153bdf90478eba08"
     },
     {
       "name": "LIVE_OBJC_BENCHMARK.json",
@@ -637,9 +637,9 @@
       "parityLatency10x": 11,
       "parityTenX": 11,
       "detectorOnlyArtifacts": 3,
-      "threeRepoValidated": 2,
-      "threeRepoValidatedStrict10x": 2,
-      "threeRepoValidationPending": 34
+      "threeRepoValidated": 3,
+      "threeRepoValidatedStrict10x": 3,
+      "threeRepoValidationPending": 33
     },
     "coverage": {
       "graphifyRows": 39,
@@ -5878,24 +5878,56 @@
         "scope": "Full mdBook guide/src target; the markdown-it-py baseline covers 156 Markdown heading definitions, while Atlas also indexes 4 companion Rust definitions from the same guide source target. The TOML document symbol is reported separately and excluded from this code-target ratio."
       },
       "multiRepoValidation": {
-        "status": "missing",
+        "status": "passed",
         "minimumRepos": 3,
-        "repoCount": 0,
-        "passedRepoCount": 0,
-        "passed": false,
-        "minCoverageRatio": null,
-        "generatedAt": null,
-        "scope": "",
-        "repos": []
+        "repoCount": 3,
+        "passedRepoCount": 3,
+        "passed": true,
+        "minCoverageRatio": 1,
+        "generatedAt": "2026-06-30T10:14:31Z",
+        "scope": "Markdown parser validation uses three public documentation targets and an independent fence-marker-aware ATX heading counter. Companion Rust definitions are reported separately on the primary mdBook guide/src target.",
+        "repos": [
+          {
+            "repo": "https://github.com/rust-lang/mdBook",
+            "commit": "cb49cc5523e609a731f27dea1af4395a504815a5",
+            "targetPath": "/tmp/atlas-markdown-3repo-1782814471/mdbook/repo/guide/src",
+            "atlasDefinitions": 156,
+            "nativeDefinitions": 156,
+            "coverageRatio": 1,
+            "ok": true,
+            "note": "35 Markdown files counted; Atlas Markdown sections matched the native heading counter. Companion Rust definitions in target: 4; TOML symbols excluded: 1."
+          },
+          {
+            "repo": "https://github.com/vitejs/vite",
+            "commit": "8f925e2e496f4d313d860acb53880245b07ce6f7",
+            "targetPath": "/tmp/atlas-markdown-3repo-1782814471/vite/repo/docs",
+            "atlasDefinitions": 642,
+            "nativeDefinitions": 642,
+            "coverageRatio": 1,
+            "ok": true,
+            "note": "57 Markdown files counted; Atlas Markdown sections matched the native heading counter. Companion Rust definitions in target: 0; TOML symbols excluded: 0."
+          },
+          {
+            "repo": "https://github.com/pnpm/pnpm.io",
+            "commit": "aa7acf218a3a80aacdb5a23e5752f6585aa1dcdb",
+            "targetPath": "/tmp/atlas-markdown-3repo-1782814471/pnpm-io/repo/docs",
+            "atlasDefinitions": 792,
+            "nativeDefinitions": 792,
+            "coverageRatio": 1,
+            "ok": true,
+            "note": "117 Markdown files counted; Atlas Markdown sections matched the native heading counter. Companion Rust definitions in target: 0; TOML symbols excluded: 0."
+          }
+        ]
       },
       "optimization": {
         "cyclesRun": 4,
-        "stopReason": "Markdown live benchmark now exceeds the Markdown-only heading coverage proxy by reporting full guide/src code-target coverage: 156 Markdown heading definitions plus 4 companion Rust definitions, with six equivalent Markdown/Rust rows above the 10x token and latency targets.",
+        "stopReason": "Markdown live benchmark exceeds the Markdown-only heading coverage proxy by reporting mdBook guide/src code-target coverage: 156 Markdown heading definitions plus 4 companion Rust definitions; three public documentation targets validate exact Markdown heading coverage; query rows remain above 10x token and latency targets.",
         "cycleNotes": [
           "cycle 1: rust-lang/mdBook guide probe showed Atlas treated `#` lines inside fenced Rust/shell examples as real headings.",
           "cycle 2: after skipping fenced code blocks and tightening ATX heading parsing, Atlas/markdown-it-py section coverage reached 1.0 on the live docs slice.",
           "cycle 3: expanded the query set with companion Rust code-target rows (`count_words`, `WordcountConfig`) from the same guide/src target to verify the additional Atlas definitions are queryable.",
-          "cycle 4: refreshed the clean artifact with graphify-out excluded from Atlas indexing; Atlas indexes 160 Markdown+Rust code-target definitions versus markdown-it-py's 156 heading definitions, excluding TOML document symbols from the coverage ratio."
+          "cycle 4: refreshed the clean artifact with graphify-out excluded from Atlas indexing; Atlas indexes 160 Markdown+Rust code-target definitions versus markdown-it-py's 156 heading definitions, excluding TOML document symbols from the coverage ratio.",
+          "cycle 5: added three public Markdown documentation targets for validation: mdBook guide/src at the artifact commit, Vite docs, and pnpm docs; Atlas Markdown sections matched the independent fence-marker-aware heading counter on all three."
         ]
       },
       "querySummary": {
