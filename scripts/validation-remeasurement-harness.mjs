@@ -78,6 +78,10 @@ function nativeCommandTemplate(raw) {
 function rewriteCommittedHelperPath(command) {
   return command
     .replace(
+      "python3 <ejs template counter>",
+      "node scripts/native-baselines/ejs_stats.js"
+    )
+    .replace(
       "/tmp/atlas-live-powershell-powershellget/pwsh_stats.ps1",
       "scripts/native-baselines/pwsh_stats.ps1"
     )

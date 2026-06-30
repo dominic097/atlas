@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T18:36:40.033Z",
+  "generatedAt": "2026-06-30T18:43:25.338Z",
   "sourceLabel": "Atlas benchmark JSON artifacts from bench/",
   "sourceArtifacts": [
     {
@@ -10855,7 +10855,7 @@
   ],
   "publicRepoValidation": {
     "schemaVersion": 1,
-    "generatedAt": "2026-06-30T18:36:39.295Z",
+    "generatedAt": "2026-06-30T18:43:24.572Z",
     "source": "data/raw/LIVE_*_BENCHMARK.json",
     "harness": "scripts/public-repo-validation-harness.mjs",
     "summary": {
@@ -13976,7 +13976,7 @@
   },
   "validationRemeasurement": {
     "schemaVersion": 1,
-    "generatedAt": "2026-06-30T18:36:39.960Z",
+    "generatedAt": "2026-06-30T18:43:25.261Z",
     "source": "data/raw/LIVE_*_BENCHMARK.json",
     "harness": "scripts/validation-remeasurement-harness.mjs",
     "summary": {
@@ -13990,11 +13990,11 @@
       "atlasReplayReadyRows": 105,
       "graphifyReplayReadyRows": 105,
       "nativeRemeasurementCandidateRows": 105,
-      "nativeRemeasurementCandidateExecutableRows": 6,
+      "nativeRemeasurementCandidateExecutableRows": 9,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReadyArtifacts": 0,
-      "nativeCandidatePlaceholderRows": 81,
+      "nativeCandidatePlaceholderRows": 78,
       "nativeCandidateEphemeralHelperRows": 57,
       "proxyOrDetectorCodeArtifacts": 14,
       "warnings": 35,
@@ -15629,11 +15629,11 @@
         "atlasReplayReadyRows": 3,
         "graphifyReplayReadyRows": 3,
         "nativeRemeasurementCandidateRows": 3,
-        "nativeRemeasurementCandidateExecutableRows": 0,
+        "nativeRemeasurementCandidateExecutableRows": 3,
         "nativeRemeasurementReadyRows": 0,
         "fullRemeasurementReadyRows": 0,
         "fullRemeasurementReady": false,
-        "nativeCandidatePlaceholderRows": 3,
+        "nativeCandidatePlaceholderRows": 0,
         "nativeCandidateEphemeralHelperRows": 0,
         "minCoverageRatio": 1,
         "warnings": [
@@ -15643,7 +15643,6 @@
         "blockers": [
           "full_symbol_name_kind_location_sets_not_persisted",
           "graphify_detector_only_or_weak_proxy_truth",
-          "native_command_contains_placeholder",
           "native_or_proxy_remeasurement_command_not_recorded"
         ],
         "repos": [
@@ -15661,12 +15660,11 @@
             "atlasReplayReady": true,
             "graphifyReplayReady": true,
             "nativeRemeasurementCandidateReady": true,
-            "nativeRemeasurementCandidateExecutableReady": false,
+            "nativeRemeasurementCandidateExecutableReady": true,
             "nativeRemeasurementReady": false,
             "fullRemeasurementReady": false,
             "blockers": [
               "native_or_proxy_remeasurement_command_not_recorded",
-              "native_command_contains_placeholder",
               "graphify_detector_only_or_weak_proxy_truth",
               "full_symbol_name_kind_location_sets_not_persisted"
             ],
@@ -15680,11 +15678,9 @@
               "(cd work/ejs/01-aws-samples__eb-node-express-sample && uv tool run --from graphifyy graphify update .)"
             ],
             "nativeRemeasurementCandidateCommands": [
-              "python3 <ejs template counter> work/ejs/01-aws-samples__eb-node-express-sample"
+              "node scripts/native-baselines/ejs_stats.js work/ejs/01-aws-samples__eb-node-express-sample"
             ],
-            "nativeRemeasurementCandidateBlockers": [
-              "native_command_contains_placeholder"
-            ],
+            "nativeRemeasurementCandidateBlockers": [],
             "nativeRemeasurementCommands": []
           },
           {
@@ -15701,12 +15697,11 @@
             "atlasReplayReady": true,
             "graphifyReplayReady": true,
             "nativeRemeasurementCandidateReady": true,
-            "nativeRemeasurementCandidateExecutableReady": false,
+            "nativeRemeasurementCandidateExecutableReady": true,
             "nativeRemeasurementReady": false,
             "fullRemeasurementReady": false,
             "blockers": [
               "native_or_proxy_remeasurement_command_not_recorded",
-              "native_command_contains_placeholder",
               "graphify_detector_only_or_weak_proxy_truth",
               "full_symbol_name_kind_location_sets_not_persisted"
             ],
@@ -15720,11 +15715,9 @@
               "(cd work/ejs/02-ActiveCampaign__PactMaker && uv tool run --from graphifyy graphify update .)"
             ],
             "nativeRemeasurementCandidateCommands": [
-              "python3 <ejs template counter> work/ejs/02-ActiveCampaign__PactMaker"
+              "node scripts/native-baselines/ejs_stats.js work/ejs/02-ActiveCampaign__PactMaker"
             ],
-            "nativeRemeasurementCandidateBlockers": [
-              "native_command_contains_placeholder"
-            ],
+            "nativeRemeasurementCandidateBlockers": [],
             "nativeRemeasurementCommands": []
           },
           {
@@ -15741,12 +15734,11 @@
             "atlasReplayReady": true,
             "graphifyReplayReady": true,
             "nativeRemeasurementCandidateReady": true,
-            "nativeRemeasurementCandidateExecutableReady": false,
+            "nativeRemeasurementCandidateExecutableReady": true,
             "nativeRemeasurementReady": false,
             "fullRemeasurementReady": false,
             "blockers": [
               "native_or_proxy_remeasurement_command_not_recorded",
-              "native_command_contains_placeholder",
               "graphify_detector_only_or_weak_proxy_truth",
               "full_symbol_name_kind_location_sets_not_persisted"
             ],
@@ -15760,11 +15752,9 @@
               "(cd work/ejs/03-codemistic__HacktoberFest && uv tool run --from graphifyy graphify update .)"
             ],
             "nativeRemeasurementCandidateCommands": [
-              "python3 <ejs template counter> work/ejs/03-codemistic__HacktoberFest"
+              "node scripts/native-baselines/ejs_stats.js work/ejs/03-codemistic__HacktoberFest"
             ],
-            "nativeRemeasurementCandidateBlockers": [
-              "native_command_contains_placeholder"
-            ],
+            "nativeRemeasurementCandidateBlockers": [],
             "nativeRemeasurementCommands": []
           }
         ]
@@ -19580,7 +19570,7 @@
   },
   "precisionEvidence": {
     "schemaVersion": 1,
-    "generatedAt": "2026-06-30T18:36:39.460Z",
+    "generatedAt": "2026-06-30T18:43:24.740Z",
     "source": "data/raw/LIVE_*_BENCHMARK.json",
     "harness": "scripts/precision-evidence-harness.mjs",
     "summary": {
@@ -25697,7 +25687,7 @@
   },
   "callEdgeEvidence": {
     "schemaVersion": 1,
-    "generatedAt": "2026-06-30T18:36:39.630Z",
+    "generatedAt": "2026-06-30T18:43:24.907Z",
     "source": "data/raw/MATRIX_REPORT.json and data/raw/LIVE_*_BENCHMARK.json",
     "harness": "scripts/call-edge-evidence-harness.mjs",
     "summary": {
@@ -26302,7 +26292,7 @@
   },
   "graphifySupport": {
     "schemaVersion": 1,
-    "generatedAt": "2026-06-30T18:36:39.794Z",
+    "generatedAt": "2026-06-30T18:43:25.085Z",
     "source": "data/raw/GRAPHIFY_LANGUAGE_DISCOVERY.json and data/raw/LIVE_*_BENCHMARK.json",
     "harness": "scripts/graphify-support-harness.mjs",
     "summary": {
@@ -27300,10 +27290,10 @@
       "validationRemeasurementAtlasReplayReadyRows": 105,
       "validationRemeasurementGraphifyReplayReadyRows": 105,
       "validationRemeasurementNativeCandidateRows": 105,
-      "validationRemeasurementNativeCandidateExecutableRows": 6,
+      "validationRemeasurementNativeCandidateExecutableRows": 9,
       "validationRemeasurementNativeReadyRows": 0,
       "validationRemeasurementFullReadyArtifacts": 0,
-      "validationRemeasurementNativePlaceholderRows": 81,
+      "validationRemeasurementNativePlaceholderRows": 78,
       "validationRemeasurementNativeEphemeralHelperRows": 57,
       "validationRemeasurementProxyOrDetectorArtifacts": 14,
       "precisionEvidenceHarness": true,
