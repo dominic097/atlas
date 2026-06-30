@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T13:34:30.589Z",
+  "generatedAt": "2026-06-30T13:45:58.636Z",
   "sourceLabel": "Atlas benchmark JSON artifacts from bench/",
   "sourceArtifacts": [
     {
@@ -49,8 +49,8 @@
       "name": "LIVE_ASTRO_BENCHMARK.json",
       "source": "bench/LIVE_ASTRO_BENCHMARK.json",
       "path": "data/raw/LIVE_ASTRO_BENCHMARK.json",
-      "bytes": 28339,
-      "sha256": "cf37166715e0d5cf0574eb8cd96970b62cc86df04c2a4189e7a47f515f787d21"
+      "bytes": 31450,
+      "sha256": "3c72ecd94ad5088949da6008638c181e5872c5f5a071fbe9f7e2d580861083e3"
     },
     {
       "name": "LIVE_BASH_BENCHMARK.json",
@@ -112,8 +112,8 @@
       "name": "LIVE_EJS_BENCHMARK.json",
       "source": "bench/LIVE_EJS_BENCHMARK.json",
       "path": "data/raw/LIVE_EJS_BENCHMARK.json",
-      "bytes": 20868,
-      "sha256": "ad27af6a7cba303378a74f5744ae7ff4bc5c2f78e2d438140be17f9e10b00d0d"
+      "bytes": 24445,
+      "sha256": "cfa6bf9c75d6fc318c25e6852104f3555fbc91b67a50a0f175085fbd9622850b"
     },
     {
       "name": "LIVE_ELIXIR_BENCHMARK.json",
@@ -252,8 +252,8 @@
       "name": "LIVE_SVELTE_BENCHMARK.json",
       "source": "bench/LIVE_SVELTE_BENCHMARK.json",
       "path": "data/raw/LIVE_SVELTE_BENCHMARK.json",
-      "bytes": 17051,
-      "sha256": "34d4c5b6c6dd57e94e2240e91f0f9f02fce6a00c9a4b46e2ac6db4761b0f7d9d"
+      "bytes": 21714,
+      "sha256": "34bde717e93d0cda2e7bdbaa9fb408c409c3e2c3bb7e8f8e320201fcafaab76b"
     },
     {
       "name": "LIVE_SWIFT_BENCHMARK.json",
@@ -280,8 +280,8 @@
       "name": "LIVE_VUE_BENCHMARK.json",
       "source": "bench/LIVE_VUE_BENCHMARK.json",
       "path": "data/raw/LIVE_VUE_BENCHMARK.json",
-      "bytes": 22045,
-      "sha256": "a593959aa94483ebfa6a283df97a68524cbefe391318d2e1631ee98c23239ed9"
+      "bytes": 24950,
+      "sha256": "476cfe56499197ea75f656810e508ee6bc7613bfdc14668a4e0a9fe2497d12a1"
     },
     {
       "name": "LIVE_ZIG_BENCHMARK.json",
@@ -637,9 +637,9 @@
       "parityLatency10x": 0,
       "parityTenX": 0,
       "detectorOnlyArtifacts": 3,
-      "threeRepoValidated": 20,
-      "threeRepoValidatedStrict10x": 20,
-      "threeRepoValidationPending": 16
+      "threeRepoValidated": 24,
+      "threeRepoValidatedStrict10x": 24,
+      "threeRepoValidationPending": 12
     },
     "coverage": {
       "graphifyRows": 39,
@@ -2238,15 +2238,46 @@
         "scope": "Full Astro blog tutorial src code target; the @astrojs/compiler baseline covers .astro component/frontmatter declarations, while Atlas also indexes 5 companion JavaScript definitions in the same src target. Markdown sections are reported separately and are not included in the code-target ratio."
       },
       "multiRepoValidation": {
-        "status": "missing",
+        "status": "passed",
         "minimumRepos": 3,
-        "repoCount": 0,
-        "passedRepoCount": 0,
-        "passed": false,
-        "minCoverageRatio": null,
-        "generatedAt": null,
-        "scope": "",
-        "repos": []
+        "repoCount": 3,
+        "passedRepoCount": 3,
+        "passed": true,
+        "minCoverageRatio": 1,
+        "generatedAt": "2026-06-30T13:43:43Z",
+        "scope": "astro parser random public-repo validation uses the first three passing GitHub repos from a deterministic shuffled sample of public non-archived astro repos with 50..500 stars. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from @astrojs/compiler 4.0.0 + TypeScript AST, and Graphify was run on the same checkout as the comparison baseline.",
+        "repos": [
+          {
+            "repo": "https://github.com/cssninjaStudio/krypton",
+            "commit": "9826929fae84f21ee27dc5874be45084de953f72",
+            "targetPath": "/tmp/atlas-random-validation-web/work/astro/1-cssninjaStudio__krypton",
+            "atlasDefinitions": 46,
+            "nativeDefinitions": 46,
+            "coverageRatio": 1,
+            "ok": true,
+            "note": "cssninjaStudio/krypton: 14 astro files; @astrojs/compiler + TypeScript AST native counts {\"file_component\":14,\"component_tag\":24,\"function\":0,\"variable\":8,\"class\":0,\"interface\":0,\"type\":0,\"enum\":0}; Atlas counts {\"component\":38,\"variable\":8}; Graphify rebuilt 115 nodes and 121 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/natemoo-re/astro-remote",
+            "commit": "649f9e6bd118e69d2395e5ee604156d374185b59",
+            "targetPath": "/tmp/atlas-random-validation-web/work/astro/2-natemoo-re__astro-remote",
+            "atlasDefinitions": 57,
+            "nativeDefinitions": 47,
+            "coverageRatio": 1.2128,
+            "ok": true,
+            "note": "natemoo-re/astro-remote: 13 astro files; @astrojs/compiler + TypeScript AST native counts {\"file_component\":13,\"component_tag\":13,\"function\":0,\"variable\":19,\"class\":0,\"interface\":2,\"type\":0,\"enum\":0}; Atlas counts {\"component\":35,\"variable\":22}; Graphify rebuilt 188 nodes and 192 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/MaeWolff/astro-portfolio-template",
+            "commit": "c156b7c0bade58fd8f6409aefb5e78e85686633e",
+            "targetPath": "/tmp/atlas-random-validation-web/work/astro/3-MaeWolff__astro-portfolio-template",
+            "atlasDefinitions": 59,
+            "nativeDefinitions": 50,
+            "coverageRatio": 1.18,
+            "ok": true,
+            "note": "MaeWolff/astro-portfolio-template: 11 astro files; @astrojs/compiler + TypeScript AST native counts {\"file_component\":11,\"component_tag\":15,\"function\":1,\"variable\":16,\"class\":0,\"interface\":0,\"type\":7,\"enum\":0}; Atlas counts {\"component\":29,\"function\":1,\"variable\":29}; Graphify rebuilt 106 nodes and 121 edges on the same checkout."
+          }
+        ]
       },
       "optimization": {
         "cyclesRun": 3,
@@ -4191,15 +4222,46 @@
         "scope": "Express examples code target; the native EJS template counter covers 36 .ejs template/include definitions, while Atlas also indexes 46 companion JavaScript function/method definitions in the same examples target. JavaScript variables plus Markdown/text document symbols are reported separately and excluded from this code-target ratio."
       },
       "multiRepoValidation": {
-        "status": "missing",
+        "status": "passed",
         "minimumRepos": 3,
-        "repoCount": 0,
-        "passedRepoCount": 0,
-        "passed": false,
-        "minCoverageRatio": null,
-        "generatedAt": null,
-        "scope": "",
-        "repos": []
+        "repoCount": 3,
+        "passedRepoCount": 3,
+        "passed": true,
+        "minCoverageRatio": 1,
+        "generatedAt": "2026-06-30T13:43:43Z",
+        "scope": "ejs parser random public-repo validation uses the first three passing GitHub repos from a deterministic shuffled sample of public non-archived ejs repos with 50..500 stars. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from ejs 3.1.10 compile + template/include counter, and Graphify was run on the same checkout as the comparison baseline.",
+        "repos": [
+          {
+            "repo": "https://github.com/aws-samples/eb-node-express-sample",
+            "commit": "093dd30cf3897df8f9c3c3800a3cfbfe02a5777a",
+            "targetPath": "/tmp/atlas-random-validation-web/work/ejs/2-aws-samples__eb-node-express-sample",
+            "atlasDefinitions": 1,
+            "nativeDefinitions": 1,
+            "coverageRatio": 1,
+            "ok": true,
+            "note": "aws-samples/eb-node-express-sample: 1 ejs files; ejs compile + template/include counter native counts {\"template\":1,\"include\":0,\"function\":0,\"variable\":0}; Atlas counts {\"template\":1}; Graphify rebuilt 73 nodes and 110 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/ActiveCampaign/PactMaker",
+            "commit": "0a4d52295df7a4c3056280b7e8687987684ee1c5",
+            "targetPath": "/tmp/atlas-random-validation-web/work/ejs/4-ActiveCampaign__PactMaker",
+            "atlasDefinitions": 14,
+            "nativeDefinitions": 14,
+            "coverageRatio": 1,
+            "ok": true,
+            "note": "ActiveCampaign/PactMaker: 8 ejs files; ejs compile + template/include counter native counts {\"template\":8,\"include\":6,\"function\":0,\"variable\":0}; Atlas counts {\"include\":6,\"template\":8}; Graphify rebuilt 80 nodes and 77 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/codemistic/HacktoberFest",
+            "commit": "371100e1508ed228cce50b6c51b61beda0c1ad3e",
+            "targetPath": "/tmp/atlas-random-validation-web/work/ejs/5-codemistic__HacktoberFest",
+            "atlasDefinitions": 2,
+            "nativeDefinitions": 2,
+            "coverageRatio": 1,
+            "ok": true,
+            "note": "codemistic/HacktoberFest: 1 ejs files; ejs compile + template/include counter native counts {\"template\":1,\"include\":0,\"function\":0,\"variable\":1}; Atlas counts {\"template\":1,\"variable\":1}; Graphify rebuilt 28 nodes and 25 edges on the same checkout."
+          }
+        ]
       },
       "optimization": {
         "cyclesRun": 4,
@@ -8592,15 +8654,46 @@
         "scope": null
       },
       "multiRepoValidation": {
-        "status": "missing",
+        "status": "passed",
         "minimumRepos": 3,
-        "repoCount": 0,
-        "passedRepoCount": 0,
-        "passed": false,
-        "minCoverageRatio": null,
-        "generatedAt": null,
-        "scope": "",
-        "repos": []
+        "repoCount": 3,
+        "passedRepoCount": 3,
+        "passed": true,
+        "minCoverageRatio": 1.0476,
+        "generatedAt": "2026-06-30T13:43:43Z",
+        "scope": "svelte parser random public-repo validation uses the first three passing GitHub repos from a deterministic shuffled sample of public non-archived svelte repos with 50..500 stars. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from svelte/compiler 5.56.4 + TypeScript AST, and Graphify was run on the same checkout as the comparison baseline.",
+        "repos": [
+          {
+            "repo": "https://github.com/orefalo/svelte-splitpanes",
+            "commit": "7425e6a25cd53b87cf91d829c272e74b2b0546d9",
+            "targetPath": "/tmp/atlas-random-validation-web/work/svelte/2-orefalo__svelte-splitpanes",
+            "atlasDefinitions": 198,
+            "nativeDefinitions": 101,
+            "coverageRatio": 1.9604,
+            "ok": true,
+            "note": "orefalo/svelte-splitpanes: 49 svelte files; svelte/compiler + TypeScript AST native counts {\"function\":8,\"variable\":91,\"class\":0,\"interface\":2,\"type\":0,\"enum\":0}; Atlas counts {\"function\":198}; Graphify rebuilt 455 nodes and 434 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/agustinl/svelte-tags-input",
+            "commit": "5c8e7ff10deab4858a36da8bf71ab5942da5a390",
+            "targetPath": "/tmp/atlas-random-validation-web/work/svelte/5-agustinl__svelte-tags-input",
+            "atlasDefinitions": 39,
+            "nativeDefinitions": 28,
+            "coverageRatio": 1.3929,
+            "ok": true,
+            "note": "agustinl/svelte-tags-input: 2 svelte files; svelte/compiler + TypeScript AST native counts {\"function\":13,\"variable\":15,\"class\":0,\"interface\":0,\"type\":0,\"enum\":0}; Atlas counts {\"function\":39}; Graphify rebuilt 108 nodes and 110 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/Alia5/lovelace-expander-card",
+            "commit": "0899ce63fc6d3b0361e25932025df29abda31654",
+            "targetPath": "/tmp/atlas-random-validation-web/work/svelte/8-Alia5__lovelace-expander-card",
+            "atlasDefinitions": 22,
+            "nativeDefinitions": 21,
+            "coverageRatio": 1.0476,
+            "ok": true,
+            "note": "Alia5/lovelace-expander-card: 3 svelte files; svelte/compiler + TypeScript AST native counts {\"function\":0,\"variable\":21,\"class\":0,\"interface\":0,\"type\":0,\"enum\":0}; Atlas counts {\"function\":22}; Graphify rebuilt 111 nodes and 119 edges on the same checkout."
+          }
+        ]
       },
       "optimization": {
         "cyclesRun": 1,
@@ -9380,15 +9473,46 @@
         "scope": "Full vue-realworld src app target; the @vue/compiler-sfc baseline covers .vue SFC script declarations, while Atlas also indexes 42 companion JavaScript definitions in the same src target."
       },
       "multiRepoValidation": {
-        "status": "missing",
+        "status": "passed",
         "minimumRepos": 3,
-        "repoCount": 0,
-        "passedRepoCount": 0,
-        "passed": false,
-        "minCoverageRatio": null,
-        "generatedAt": null,
-        "scope": "",
-        "repos": []
+        "repoCount": 3,
+        "passedRepoCount": 3,
+        "passed": true,
+        "minCoverageRatio": 3.4167,
+        "generatedAt": "2026-06-30T13:43:43Z",
+        "scope": "vue parser random public-repo validation uses the first three passing GitHub repos from a deterministic shuffled sample of public non-archived vue repos with 50..500 stars. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from @vue/compiler-sfc 3.5.22 + TypeScript AST, and Graphify was run on the same checkout as the comparison baseline.",
+        "repos": [
+          {
+            "repo": "https://github.com/LiuXin-Developer/rightHouse",
+            "commit": "5d003ae3a5f5f12534cdf617ac11be86d3d9ca54",
+            "targetPath": "/tmp/atlas-random-validation-web/work/vue/1-LiuXin-Developer__rightHouse",
+            "atlasDefinitions": 969,
+            "nativeDefinitions": 211,
+            "coverageRatio": 4.5924,
+            "ok": true,
+            "note": "LiuXin-Developer/rightHouse: 257 vue files; @vue/compiler-sfc + TypeScript AST native counts {\"function\":2,\"variable\":209,\"class\":0,\"interface\":0,\"type\":0,\"enum\":0}; Atlas counts {\"function\":969}; Graphify rebuilt 3408 nodes and 3286 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/Tencent/tdesign-vue-starter",
+            "commit": "61bb51b304e018a4243489bcb48c28750f8aa535",
+            "targetPath": "/tmp/atlas-random-validation-web/work/vue/2-Tencent__tdesign-vue-starter",
+            "atlasDefinitions": 82,
+            "nativeDefinitions": 24,
+            "coverageRatio": 3.4167,
+            "ok": true,
+            "note": "Tencent/tdesign-vue-starter: 54 vue files; @vue/compiler-sfc + TypeScript AST native counts {\"function\":0,\"variable\":24,\"class\":0,\"interface\":0,\"type\":0,\"enum\":0}; Atlas counts {\"function\":82}; Graphify rebuilt 471 nodes and 481 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/powerdong/Music-player",
+            "commit": "c505e40c41a3c3b6040988df4d122e845f01e8cb",
+            "targetPath": "/tmp/atlas-random-validation-web/work/vue/3-powerdong__Music-player",
+            "atlasDefinitions": 294,
+            "nativeDefinitions": 6,
+            "coverageRatio": 49,
+            "ok": true,
+            "note": "powerdong/Music-player: 146 vue files; @vue/compiler-sfc + TypeScript AST native counts {\"function\":0,\"variable\":6,\"class\":0,\"interface\":0,\"type\":0,\"enum\":0}; Atlas counts {\"function\":294}; Graphify rebuilt 792 nodes and 719 edges on the same checkout."
+          }
+        ]
       },
       "optimization": {
         "cyclesRun": 3,

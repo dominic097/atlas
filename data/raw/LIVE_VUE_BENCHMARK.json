@@ -798,5 +798,46 @@
     "commit": "21d5334",
     "date": "2026-06-30T08:50:32Z",
     "measurement_note": "Clean warm-serve measurement from 25-sample medians with graphify-out moved out before Atlas index; Graphify comparison used `uv tool run --from graphifyy graphify explain <symbol>`. No Graphify sidecar was present during Atlas indexing."
+  },
+  "multi_repo_validation": {
+    "minimum_repos": 3,
+    "status": "passed",
+    "generated_at": "2026-06-30T13:43:43Z",
+    "scope": "vue parser random public-repo validation uses the first three passing GitHub repos from a deterministic shuffled sample of public non-archived vue repos with 50..500 stars. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from @vue/compiler-sfc 3.5.22 + TypeScript AST, and Graphify was run on the same checkout as the comparison baseline.",
+    "selection_method": "gh search repos --language Vue --stars 50..500 --archived=false --limit 80; size <= 8000; deterministic shuffled sample seed 2026-06-30-atlas-random-validation-web-v1; first 3 passing repos",
+    "measurement_order": "Atlas index after removing graphify-out, then language-specific compiler/parser counter, then graphify update for comparison metrics.",
+    "rejected_candidates": [],
+    "repos": [
+      {
+        "repo": "https://github.com/LiuXin-Developer/rightHouse",
+        "commit": "5d003ae3a5f5f12534cdf617ac11be86d3d9ca54",
+        "target_path": "/tmp/atlas-random-validation-web/work/vue/1-LiuXin-Developer__rightHouse",
+        "atlas_definitions": 969,
+        "native_definitions": 211,
+        "coverage_ratio": 4.5924,
+        "ok": true,
+        "note": "LiuXin-Developer/rightHouse: 257 vue files; @vue/compiler-sfc + TypeScript AST native counts {\"function\":2,\"variable\":209,\"class\":0,\"interface\":0,\"type\":0,\"enum\":0}; Atlas counts {\"function\":969}; Graphify rebuilt 3408 nodes and 3286 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/Tencent/tdesign-vue-starter",
+        "commit": "61bb51b304e018a4243489bcb48c28750f8aa535",
+        "target_path": "/tmp/atlas-random-validation-web/work/vue/2-Tencent__tdesign-vue-starter",
+        "atlas_definitions": 82,
+        "native_definitions": 24,
+        "coverage_ratio": 3.4167,
+        "ok": true,
+        "note": "Tencent/tdesign-vue-starter: 54 vue files; @vue/compiler-sfc + TypeScript AST native counts {\"function\":0,\"variable\":24,\"class\":0,\"interface\":0,\"type\":0,\"enum\":0}; Atlas counts {\"function\":82}; Graphify rebuilt 471 nodes and 481 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/powerdong/Music-player",
+        "commit": "c505e40c41a3c3b6040988df4d122e845f01e8cb",
+        "target_path": "/tmp/atlas-random-validation-web/work/vue/3-powerdong__Music-player",
+        "atlas_definitions": 294,
+        "native_definitions": 6,
+        "coverage_ratio": 49,
+        "ok": true,
+        "note": "powerdong/Music-player: 146 vue files; @vue/compiler-sfc + TypeScript AST native counts {\"function\":0,\"variable\":6,\"class\":0,\"interface\":0,\"type\":0,\"enum\":0}; Atlas counts {\"function\":294}; Graphify rebuilt 792 nodes and 719 edges on the same checkout."
+      }
+    ]
   }
 }

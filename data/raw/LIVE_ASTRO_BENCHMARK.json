@@ -1041,5 +1041,46 @@
     "commit": "21d5334",
     "date": "2026-06-30T08:50:32Z",
     "measurement_note": "Clean warm-serve measurement from 25-sample medians with graphify-out moved out before Atlas index; Graphify comparison used `uv tool run --from graphifyy graphify explain <symbol>`. No Graphify sidecar was present during Atlas indexing."
+  },
+  "multi_repo_validation": {
+    "minimum_repos": 3,
+    "status": "passed",
+    "generated_at": "2026-06-30T13:43:43Z",
+    "scope": "astro parser random public-repo validation uses the first three passing GitHub repos from a deterministic shuffled sample of public non-archived astro repos with 50..500 stars. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from @astrojs/compiler 4.0.0 + TypeScript AST, and Graphify was run on the same checkout as the comparison baseline.",
+    "selection_method": "gh search repos --language Astro --stars 50..500 --archived=false --limit 80; size <= 10000; deterministic shuffled sample seed 2026-06-30-atlas-random-validation-web-v1; first 3 passing repos",
+    "measurement_order": "Atlas index after removing graphify-out, then language-specific compiler/parser counter, then graphify update for comparison metrics.",
+    "rejected_candidates": [],
+    "repos": [
+      {
+        "repo": "https://github.com/cssninjaStudio/krypton",
+        "commit": "9826929fae84f21ee27dc5874be45084de953f72",
+        "target_path": "/tmp/atlas-random-validation-web/work/astro/1-cssninjaStudio__krypton",
+        "atlas_definitions": 46,
+        "native_definitions": 46,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "cssninjaStudio/krypton: 14 astro files; @astrojs/compiler + TypeScript AST native counts {\"file_component\":14,\"component_tag\":24,\"function\":0,\"variable\":8,\"class\":0,\"interface\":0,\"type\":0,\"enum\":0}; Atlas counts {\"component\":38,\"variable\":8}; Graphify rebuilt 115 nodes and 121 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/natemoo-re/astro-remote",
+        "commit": "649f9e6bd118e69d2395e5ee604156d374185b59",
+        "target_path": "/tmp/atlas-random-validation-web/work/astro/2-natemoo-re__astro-remote",
+        "atlas_definitions": 57,
+        "native_definitions": 47,
+        "coverage_ratio": 1.2128,
+        "ok": true,
+        "note": "natemoo-re/astro-remote: 13 astro files; @astrojs/compiler + TypeScript AST native counts {\"file_component\":13,\"component_tag\":13,\"function\":0,\"variable\":19,\"class\":0,\"interface\":2,\"type\":0,\"enum\":0}; Atlas counts {\"component\":35,\"variable\":22}; Graphify rebuilt 188 nodes and 192 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/MaeWolff/astro-portfolio-template",
+        "commit": "c156b7c0bade58fd8f6409aefb5e78e85686633e",
+        "target_path": "/tmp/atlas-random-validation-web/work/astro/3-MaeWolff__astro-portfolio-template",
+        "atlas_definitions": 59,
+        "native_definitions": 50,
+        "coverage_ratio": 1.18,
+        "ok": true,
+        "note": "MaeWolff/astro-portfolio-template: 11 astro files; @astrojs/compiler + TypeScript AST native counts {\"file_component\":11,\"component_tag\":15,\"function\":1,\"variable\":16,\"class\":0,\"interface\":0,\"type\":7,\"enum\":0}; Atlas counts {\"component\":29,\"function\":1,\"variable\":29}; Graphify rebuilt 106 nodes and 121 edges on the same checkout."
+      }
+    ]
   }
 }

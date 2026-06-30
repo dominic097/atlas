@@ -556,5 +556,92 @@
     "commit": "d882e08",
     "date": "2026-06-30T07:15:57Z",
     "measurement_note": "Query rows refreshed from nine-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+  },
+  "multi_repo_validation": {
+    "minimum_repos": 3,
+    "status": "passed",
+    "generated_at": "2026-06-30T13:43:43Z",
+    "scope": "svelte parser random public-repo validation uses the first three passing GitHub repos from a deterministic shuffled sample of public non-archived svelte repos with 50..500 stars. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from svelte/compiler 5.56.4 + TypeScript AST, and Graphify was run on the same checkout as the comparison baseline.",
+    "selection_method": "gh search repos --language Svelte --stars 50..500 --archived=false --limit 80; size <= 8000; deterministic shuffled sample seed 2026-06-30-atlas-random-validation-web-v1; first 3 passing repos",
+    "measurement_order": "Atlas index after removing graphify-out, then language-specific compiler/parser counter, then graphify update for comparison metrics.",
+    "rejected_candidates": [
+      {
+        "repo": "https://github.com/thomaskolmans/rsvp-reading",
+        "stage": "coverage",
+        "atlas_definitions": 68,
+        "native_definitions": 86,
+        "coverage_ratio": 0.7907,
+        "file_count": 6,
+        "note": "candidate did not satisfy Atlas/native coverage >= 1.0 for the selected definition surface"
+      },
+      {
+        "repo": "https://github.com/beyonk/svelte-mapbox",
+        "stage": "coverage",
+        "atlas_definitions": 48,
+        "native_definitions": 62,
+        "coverage_ratio": 0.7742,
+        "file_count": 9,
+        "note": "candidate did not satisfy Atlas/native coverage >= 1.0 for the selected definition surface"
+      },
+      {
+        "repo": "https://github.com/flekschas/svelte-simple-modal",
+        "stage": "coverage",
+        "atlas_definitions": 42,
+        "native_definitions": 66,
+        "coverage_ratio": 0.6364,
+        "file_count": 1,
+        "note": "candidate did not satisfy Atlas/native coverage >= 1.0 for the selected definition surface"
+      },
+      {
+        "repo": "https://github.com/ReVanced/revanced-website",
+        "stage": "coverage",
+        "atlas_definitions": 252,
+        "native_definitions": 286,
+        "coverage_ratio": 0.8811,
+        "file_count": 49,
+        "note": "candidate did not satisfy Atlas/native coverage >= 1.0 for the selected definition surface"
+      },
+      {
+        "repo": "https://github.com/joshnuss/svelte-stripe",
+        "stage": "coverage",
+        "atlas_definitions": 102,
+        "native_definitions": 195,
+        "coverage_ratio": 0.5231,
+        "file_count": 38,
+        "note": "candidate did not satisfy Atlas/native coverage >= 1.0 for the selected definition surface"
+      }
+    ],
+    "repos": [
+      {
+        "repo": "https://github.com/orefalo/svelte-splitpanes",
+        "commit": "7425e6a25cd53b87cf91d829c272e74b2b0546d9",
+        "target_path": "/tmp/atlas-random-validation-web/work/svelte/2-orefalo__svelte-splitpanes",
+        "atlas_definitions": 198,
+        "native_definitions": 101,
+        "coverage_ratio": 1.9604,
+        "ok": true,
+        "note": "orefalo/svelte-splitpanes: 49 svelte files; svelte/compiler + TypeScript AST native counts {\"function\":8,\"variable\":91,\"class\":0,\"interface\":2,\"type\":0,\"enum\":0}; Atlas counts {\"function\":198}; Graphify rebuilt 455 nodes and 434 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/agustinl/svelte-tags-input",
+        "commit": "5c8e7ff10deab4858a36da8bf71ab5942da5a390",
+        "target_path": "/tmp/atlas-random-validation-web/work/svelte/5-agustinl__svelte-tags-input",
+        "atlas_definitions": 39,
+        "native_definitions": 28,
+        "coverage_ratio": 1.3929,
+        "ok": true,
+        "note": "agustinl/svelte-tags-input: 2 svelte files; svelte/compiler + TypeScript AST native counts {\"function\":13,\"variable\":15,\"class\":0,\"interface\":0,\"type\":0,\"enum\":0}; Atlas counts {\"function\":39}; Graphify rebuilt 108 nodes and 110 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/Alia5/lovelace-expander-card",
+        "commit": "0899ce63fc6d3b0361e25932025df29abda31654",
+        "target_path": "/tmp/atlas-random-validation-web/work/svelte/8-Alia5__lovelace-expander-card",
+        "atlas_definitions": 22,
+        "native_definitions": 21,
+        "coverage_ratio": 1.0476,
+        "ok": true,
+        "note": "Alia5/lovelace-expander-card: 3 svelte files; svelte/compiler + TypeScript AST native counts {\"function\":0,\"variable\":21,\"class\":0,\"interface\":0,\"type\":0,\"enum\":0}; Atlas counts {\"function\":22}; Graphify rebuilt 111 nodes and 119 edges on the same checkout."
+      }
+    ]
   }
 }

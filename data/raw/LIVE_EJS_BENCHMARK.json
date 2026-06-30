@@ -744,5 +744,65 @@
     "commit": "21d5334",
     "date": "2026-06-30T08:50:32Z",
     "measurement_note": "Clean measurement from Express examples at commit 18e5985b8a9d5e8423db0a9121f22bdaecd5b120 with graphify-out removed before Atlas indexing; Graphify was rebuilt afterward only for comparison rows."
+  },
+  "multi_repo_validation": {
+    "minimum_repos": 3,
+    "status": "passed",
+    "generated_at": "2026-06-30T13:43:43Z",
+    "scope": "ejs parser random public-repo validation uses the first three passing GitHub repos from a deterministic shuffled sample of public non-archived ejs repos with 50..500 stars. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from ejs 3.1.10 compile + template/include counter, and Graphify was run on the same checkout as the comparison baseline.",
+    "selection_method": "gh search repos --language EJS --stars 50..500 --archived=false --limit 80; size <= 10000; deterministic shuffled sample seed 2026-06-30-atlas-random-validation-web-v1; first 3 passing repos",
+    "measurement_order": "Atlas index after removing graphify-out, then language-specific compiler/parser counter, then graphify update for comparison metrics.",
+    "rejected_candidates": [
+      {
+        "repo": "https://github.com/jeopardization/Zyklon",
+        "stage": "coverage",
+        "atlas_definitions": 4,
+        "native_definitions": 34,
+        "coverage_ratio": 0.1176,
+        "file_count": 4,
+        "note": "candidate did not satisfy Atlas/native coverage >= 1.0 for the selected definition surface"
+      },
+      {
+        "repo": "https://github.com/globalprivacycontrol/reference-server-express",
+        "stage": "coverage",
+        "atlas_definitions": 9,
+        "native_definitions": 11,
+        "coverage_ratio": 0.8182,
+        "file_count": 5,
+        "note": "candidate did not satisfy Atlas/native coverage >= 1.0 for the selected definition surface"
+      }
+    ],
+    "repos": [
+      {
+        "repo": "https://github.com/aws-samples/eb-node-express-sample",
+        "commit": "093dd30cf3897df8f9c3c3800a3cfbfe02a5777a",
+        "target_path": "/tmp/atlas-random-validation-web/work/ejs/2-aws-samples__eb-node-express-sample",
+        "atlas_definitions": 1,
+        "native_definitions": 1,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "aws-samples/eb-node-express-sample: 1 ejs files; ejs compile + template/include counter native counts {\"template\":1,\"include\":0,\"function\":0,\"variable\":0}; Atlas counts {\"template\":1}; Graphify rebuilt 73 nodes and 110 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/ActiveCampaign/PactMaker",
+        "commit": "0a4d52295df7a4c3056280b7e8687987684ee1c5",
+        "target_path": "/tmp/atlas-random-validation-web/work/ejs/4-ActiveCampaign__PactMaker",
+        "atlas_definitions": 14,
+        "native_definitions": 14,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "ActiveCampaign/PactMaker: 8 ejs files; ejs compile + template/include counter native counts {\"template\":8,\"include\":6,\"function\":0,\"variable\":0}; Atlas counts {\"include\":6,\"template\":8}; Graphify rebuilt 80 nodes and 77 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/codemistic/HacktoberFest",
+        "commit": "371100e1508ed228cce50b6c51b61beda0c1ad3e",
+        "target_path": "/tmp/atlas-random-validation-web/work/ejs/5-codemistic__HacktoberFest",
+        "atlas_definitions": 2,
+        "native_definitions": 2,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "codemistic/HacktoberFest: 1 ejs files; ejs compile + template/include counter native counts {\"template\":1,\"include\":0,\"function\":0,\"variable\":1}; Atlas counts {\"template\":1,\"variable\":1}; Graphify rebuilt 28 nodes and 25 edges on the same checkout."
+      }
+    ]
   }
 }
