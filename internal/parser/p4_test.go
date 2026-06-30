@@ -1,6 +1,9 @@
 package parser
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 // TestP4Symbols covers P4_16 top-level declaration extraction (github.com/p4lang):
 // parser/control/package, action/table, header/header_union/struct, enum/extern,
@@ -59,6 +62,12 @@ package V1Switch(MyParser p, MyIngress ig);
 	for name, kind := range want {
 		if got[name] != kind {
 			t.Errorf("P4 symbol %q: got kind %q, want %q", name, got[name], kind)
+		}
+	}
+	for _, s := range res.Symbols {
+		source, _ := s.Metadata["source"].(string)
+		if !strings.HasPrefix(source, "tree_sitter_p4") {
+			t.Errorf("P4 symbol %q source = %q, want tree_sitter_p4*", s.Name, source)
 		}
 	}
 	// Precision: `header X {` must not also fire the header_union rule (and vice
