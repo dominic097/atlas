@@ -335,7 +335,7 @@
     }
   },
   "coverage": {
-    "atlas_vs_byond_source_counter_definition_ratio": 1.0,
+    "atlas_vs_byond_source_counter_definition_ratio": 1,
     "atlas_byond_definition_symbols": 8874,
     "native_definitions": 8874
   },
@@ -478,5 +478,43 @@
         "No node matching '/mob/living/MobBump' found."
       ]
     }
-  ]
+  ],
+  "multi_repo_validation": {
+    "minimum_repos": 3,
+    "status": "passed",
+    "generated_at": "2026-06-30T11:04:14Z",
+    "scope": "BYOND parser validation uses three public DM code targets and an independent BYOND source counter for type, proc, and method declarations. BYOND document, map, icon, UI, Markdown, and text resource symbols are excluded from the validation denominator.",
+    "repos": [
+      {
+        "repo": "https://github.com/tgstation/tgstation",
+        "commit": "da0d9e08a0b3e9091c287a8aa733f463322e247f",
+        "target_path": "/private/tmp/atlas-remaining-3repo-validation/byond/1-tgstation/repo/code/modules/mob",
+        "atlas_definitions": 8874,
+        "native_definitions": 8874,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "614 BYOND files scanned; Atlas declaration counts {\"method\":6313,\"type\":2561} matched native declaration counts {\"type\":2561,\"method\":6313,\"proc\":0}. Non-declaration symbol counts: [[\"byond\",\"document\",2],[\"markdown\",\"section\",5],[\"text\",\"document\",1]]."
+      },
+      {
+        "repo": "https://github.com/goonstation/goonstation",
+        "commit": "54977b957b9cb26895407c527e8e643eeff1d8d0",
+        "target_path": "/private/tmp/atlas-remaining-3repo-validation/byond/2-goonstation/repo/code/modules/speech",
+        "atlas_definitions": 810,
+        "native_definitions": 810,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "192 BYOND files scanned; Atlas declaration counts {\"method\":449,\"type\":361} matched native declaration counts {\"type\":361,\"method\":449,\"proc\":0}. Non-declaration symbol counts: []."
+      },
+      {
+        "repo": "https://github.com/ParadiseSS13/Paradise",
+        "commit": "f9332f11bf0f3a3d98a0c6174630ce840d0eb44c",
+        "target_path": "/private/tmp/atlas-remaining-3repo-validation/byond/3-Paradise/repo/code/modules/mob",
+        "atlas_definitions": 8198,
+        "native_definitions": 8198,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "464 BYOND files scanned; Atlas declaration counts {\"method\":5377,\"type\":2821} matched native declaration counts {\"type\":2821,\"method\":5377,\"proc\":0}. Non-declaration symbol counts: [[\"byond\",\"document\",2],[\"markdown\",\"section\",6]]."
+      }
+    ]
+  }
 }

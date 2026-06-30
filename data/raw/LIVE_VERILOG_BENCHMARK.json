@@ -802,5 +802,43 @@
     "commit_full": "bf86a537b5c6b70df049a124191f83820b3c12c3",
     "date": "2026-06-30T10:49:35Z",
     "measurement_note": "Query rows refreshed from 13-sample medians against atlas serve format=plain using curl; Graphify rows measured through uv tool run after a clean graphify update. Atlas index was built before graphify-out existed in the target."
+  },
+  "multi_repo_validation": {
+    "minimum_repos": 3,
+    "status": "passed",
+    "generated_at": "2026-06-30T11:04:14Z",
+    "scope": "Verilog/SystemVerilog parser validation uses three public RTL targets and an independent tree-sitter-systemverilog definition counter for modules, packages, interfaces, classes, functions, tasks, programs, and checkers. tree-sitter parse-error counts are retained in notes; counted definitions matched Atlas.",
+    "repos": [
+      {
+        "repo": "https://github.com/lowRISC/ibex",
+        "commit": "022f084096baed0a9b5ebdf697ed2965f13e8ed8",
+        "target_path": "/private/tmp/atlas-remaining-3repo-validation/verilog/1-ibex/repo/rtl",
+        "atlas_definitions": 93,
+        "native_definitions": 93,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "30 HDL files checked; tree-sitter-systemverilog status partial with 10 parse error(s). Atlas counts {\"function\":63,\"module\":28,\"package\":2} and native counts {\"module\":28,\"interface\":0,\"package\":2,\"class\":0,\"function\":63,\"task\":0,\"program\":0,\"checker\":0}."
+      },
+      {
+        "repo": "https://github.com/YosysHQ/picorv32",
+        "commit": "87c89acc18994c8cf9a2311e871818e87d304568",
+        "target_path": "/private/tmp/atlas-remaining-3repo-validation/verilog/2-picorv32/repo/picosoc",
+        "atlas_definitions": 24,
+        "native_definitions": 24,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "10 HDL files checked; tree-sitter-systemverilog status partial with 3 parse error(s). Atlas counts {\"module\":13,\"task\":11} and native counts {\"module\":13,\"interface\":0,\"package\":0,\"class\":0,\"function\":0,\"task\":11,\"program\":0,\"checker\":0}."
+      },
+      {
+        "repo": "https://github.com/alexforencich/verilog-ethernet",
+        "commit": "77320a9471d19c7dd383914bc049e02d9f4f1ffb",
+        "target_path": "/private/tmp/atlas-remaining-3repo-validation/verilog/3-verilog-ethernet/repo/rtl",
+        "atlas_definitions": 114,
+        "native_definitions": 114,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "98 HDL files checked; tree-sitter-systemverilog status ok with 0 parse error(s). Atlas counts {\"function\":16,\"module\":98} and native counts {\"module\":98,\"interface\":0,\"package\":0,\"class\":0,\"function\":16,\"task\":0,\"program\":0,\"checker\":0}."
+      }
+    ]
   }
 }

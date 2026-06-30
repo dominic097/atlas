@@ -326,7 +326,7 @@
     }
   },
   "coverage": {
-    "atlas_vs_tree_sitter_julia_definition_ratio": 1.0,
+    "atlas_vs_tree_sitter_julia_definition_ratio": 1,
     "atlas_julia_definition_symbols": 310,
     "native_definitions": 310
   },
@@ -598,5 +598,43 @@
     "commit": "d882e08",
     "date": "2026-06-30T07:15:57Z",
     "measurement_note": "Query rows refreshed from 13-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+  },
+  "multi_repo_validation": {
+    "minimum_repos": 3,
+    "status": "passed",
+    "generated_at": "2026-06-30T11:04:14Z",
+    "scope": "Julia parser validation uses three public src targets and an independent tree-sitter-julia definition counter for modules, types, functions, macros, and constants. tree-sitter parse-error counts are retained in notes; counts still matched Atlas on each target.",
+    "repos": [
+      {
+        "repo": "https://github.com/JuliaIO/JSON.jl",
+        "commit": "e5ef310dece16746843753e4c3b44e868b917b64",
+        "target_path": "/private/tmp/atlas-remaining-3repo-validation/julia/1-JSON.jl/repo/src",
+        "atlas_definitions": 310,
+        "native_definitions": 310,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "6 Julia files checked; tree-sitter-julia status partial with 1 parse error(s). Atlas counts {\"constant\":26,\"function\":255,\"macro\":6,\"module\":2,\"type\":21} and native counts {\"module\":2,\"type\":21,\"function\":255,\"macro\":6,\"constant\":26}."
+      },
+      {
+        "repo": "https://github.com/JuliaData/DataFrames.jl",
+        "commit": "3924697ea6c02ac186a95b298a4e06b52e881b53",
+        "target_path": "/private/tmp/atlas-remaining-3repo-validation/julia/2-DataFrames.jl/repo/src",
+        "atlas_definitions": 1359,
+        "native_definitions": 1359,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "36 Julia files checked; tree-sitter-julia status partial with 1 parse error(s). Atlas counts {\"constant\":35,\"function\":1287,\"macro\":3,\"module\":1,\"type\":33} and native counts {\"module\":1,\"type\":33,\"function\":1287,\"macro\":3,\"constant\":35}."
+      },
+      {
+        "repo": "https://github.com/JuliaMath/SpecialFunctions.jl",
+        "commit": "02a51afd34c5bf0380192e8e2b1d9ce266cf5d9a",
+        "target_path": "/private/tmp/atlas-remaining-3repo-validation/julia/3-SpecialFunctions.jl/repo/src",
+        "atlas_definitions": 325,
+        "native_definitions": 325,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "13 Julia files checked; tree-sitter-julia status partial with 1 parse error(s). Atlas counts {\"constant\":30,\"function\":288,\"macro\":4,\"module\":1,\"type\":2} and native counts {\"module\":1,\"type\":2,\"function\":288,\"macro\":4,\"constant\":30}."
+      }
+    ]
   }
 }

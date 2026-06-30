@@ -155,7 +155,7 @@
     }
   },
   "coverage": {
-    "atlas_vs_sqlfluff_definition_ratio": 1.0,
+    "atlas_vs_sqlfluff_definition_ratio": 1,
     "atlas_sql_definition_symbols": 111,
     "native_definitions": 111
   },
@@ -352,5 +352,43 @@
     "commit": "d882e08",
     "date": "2026-06-30T07:15:57Z",
     "measurement_note": "Query rows refreshed from 13-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+  },
+  "multi_repo_validation": {
+    "minimum_repos": 3,
+    "status": "passed",
+    "generated_at": "2026-06-30T11:04:14Z",
+    "scope": "SQL parser validation uses three public SQL migration/regression targets and the original sqlfluff-backed CREATE-definition counter. Broad PostgreSQL and Timescale dialect-heavy candidates with sqlfluff parse errors were rejected; only parse-clean targets are included.",
+    "repos": [
+      {
+        "repo": "https://github.com/hasura/graphql-engine",
+        "commit": "417c174c0ac3c80dafe6e8f9e8ac39d868334724",
+        "target_path": "/private/tmp/atlas-remaining-3repo-sql/1-graphql-engine/repo/server/src-rsr/migrations",
+        "atlas_definitions": 111,
+        "native_definitions": 111,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "82 SQL files parsed cleanly with sqlfluff; Atlas counts {\"function\":15,\"table\":39,\"trigger\":7,\"view\":50} matched native counts."
+      },
+      {
+        "repo": "https://github.com/timescale/timescaledb",
+        "commit": "edcd867121c5260db2bf2afe9d9924928192004e",
+        "target_path": "/private/tmp/atlas-remaining-3repo-sql/3-timescaledb/repo/sql/pre_install",
+        "atlas_definitions": 36,
+        "native_definitions": 36,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "7 SQL files parsed cleanly with sqlfluff; Atlas counts {\"function\":10,\"table\":26} matched native counts."
+      },
+      {
+        "repo": "https://github.com/pressly/goose",
+        "commit": "6669df28f344ef1cbd2a8f6ff6feb30eced488d6",
+        "target_path": "/private/tmp/atlas-sql-third-candidates/goose/repo/internal/sqlparser/testdata/valid-up/test02",
+        "atlas_definitions": 8,
+        "native_definitions": 8,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "2 SQL files parsed cleanly with sqlfluff; Atlas counts {\"function\":2,\"table\":4,\"trigger\":2} matched native counts."
+      }
+    ]
   }
 }

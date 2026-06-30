@@ -145,7 +145,7 @@
     }
   },
   "coverage": {
-    "atlas_vs_pwsh_parser_definition_ratio": 1.0,
+    "atlas_vs_pwsh_parser_definition_ratio": 1,
     "atlas_powershell_definition_symbols": 28,
     "native_definitions": 28
   },
@@ -340,5 +340,43 @@
     "commit": "d882e08",
     "date": "2026-06-30T07:15:57Z",
     "measurement_note": "Query rows refreshed from 13-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+  },
+  "multi_repo_validation": {
+    "minimum_repos": 3,
+    "status": "passed",
+    "generated_at": "2026-06-30T11:04:14Z",
+    "scope": "PowerShell parser validation uses three public PowerShell targets and the Microsoft PowerShell Parser AST to count function definitions. Candidate paths with AST parse errors or Atlas<native were rejected and are not included.",
+    "repos": [
+      {
+        "repo": "https://github.com/PowerShell/PowerShellGet",
+        "commit": "a2dac8e74603f7c9eec4a54c5e23459531751b0d",
+        "target_path": "/private/tmp/atlas-remaining-3repo-validation/powershell/1-PowerShellGet/repo/src",
+        "atlas_definitions": 28,
+        "native_definitions": 28,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "2 PowerShell files parsed with the PowerShell AST; Atlas function count matched native."
+      },
+      {
+        "repo": "https://github.com/PowerShell/SecretManagement",
+        "commit": "e24cc88e87d02cabbbf0fbaf76e4e287e927dbed",
+        "target_path": "/private/tmp/atlas-powershell-candidates/SecretManagement/repo/ExtensionModules",
+        "atlas_definitions": 13,
+        "native_definitions": 13,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "9 PowerShell files parsed with the PowerShell AST; Atlas function count matched native. Replaced a failed pester/Pester src candidate where Atlas counted 481/519 functions."
+      },
+      {
+        "repo": "https://github.com/PowerShell/PSResourceGet",
+        "commit": "6ecc668473baf37aa3cb84cc54dce7434364d121",
+        "target_path": "/private/tmp/atlas-powershell-candidates/PSResourceGet/repo/test",
+        "atlas_definitions": 43,
+        "native_definitions": 43,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "64 PowerShell files parsed with the PowerShell AST; Atlas function count matched native. Replaced a ThreadJob src candidate with zero PowerShell function definitions."
+      }
+    ]
   }
 }

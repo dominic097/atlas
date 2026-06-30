@@ -311,7 +311,7 @@
     }
   },
   "coverage": {
-    "atlas_vs_r_source_counter_definition_ratio": 1.0,
+    "atlas_vs_r_source_counter_definition_ratio": 1,
     "atlas_r_definition_symbols": 3011,
     "native_definitions": 3011
   },
@@ -493,5 +493,43 @@
         "No node matching 'coord_cartesian' found."
       ]
     }
-  ]
+  ],
+  "multi_repo_validation": {
+    "minimum_repos": 3,
+    "status": "passed",
+    "generated_at": "2026-06-30T11:04:14Z",
+    "scope": "R parser validation uses three public R/ targets and a conservative independent source counter for function and type declarations. Atlas also indexes R variable declarations; variables are excluded from the validation denominator and remain reported in notes.",
+    "repos": [
+      {
+        "repo": "https://github.com/tidyverse/ggplot2",
+        "commit": "6870419aa6e106c3580c45c81d5b688cb31758bd",
+        "target_path": "/private/tmp/atlas-remaining-3repo-validation/r/1-ggplot2/repo/R",
+        "atlas_definitions": 3010,
+        "native_definitions": 1717,
+        "coverage_ratio": 1.7531,
+        "ok": true,
+        "note": "201 R files scanned; validation denominator counts functions/types {\"function\":1584,\"type\":133} while Atlas also reports 1293 variable symbols in {\"function\":1584,\"type\":133,\"variable\":1293}."
+      },
+      {
+        "repo": "https://github.com/r-lib/cli",
+        "commit": "86bdefe1eb23399499b40884f7fab84194283bc1",
+        "target_path": "/private/tmp/atlas-remaining-3repo-validation/r/2-cli/repo/R",
+        "atlas_definitions": 1270,
+        "native_definitions": 782,
+        "coverage_ratio": 1.624,
+        "ok": true,
+        "note": "74 R files scanned; validation denominator counts functions/types {\"function\":782,\"type\":0} while Atlas also reports 488 variable symbols in {\"function\":782,\"variable\":488}."
+      },
+      {
+        "repo": "https://github.com/tidyverse/dplyr",
+        "commit": "d5e94e7fa8fd4a5f79c1a707d1842216bb4c691f",
+        "target_path": "/private/tmp/atlas-remaining-3repo-validation/r/3-dplyr/repo/R",
+        "atlas_definitions": 1430,
+        "native_definitions": 890,
+        "coverage_ratio": 1.6067,
+        "ok": true,
+        "note": "106 R files scanned; validation denominator counts functions/types {\"function\":889,\"type\":1} while Atlas also reports 540 variable symbols in {\"function\":889,\"type\":1,\"variable\":540}."
+      }
+    ]
+  }
 }

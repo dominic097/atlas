@@ -1,24 +1,23 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T10:55:26.762Z",
+  "generatedAt": "2026-06-30T11:06:06.845Z",
   "source": "data/benchmark-data.json",
   "targetRatio": 10,
   "metricNote": "Token and latency are ratio targets. Coverage is a native-definition coverage ratio, so the honest accuracy target is >1.0 native coverage exceed, not a fabricated 10x accuracy multiplier.",
   "summary": {
     "liveLanguages": 36,
-    "parityLanguages": 8,
-    "coverageExceedLanguages": 28,
+    "parityLanguages": 7,
+    "coverageExceedLanguages": 29,
     "comparableLanguages": 33,
     "token10xComparable": 33,
     "latency10xComparable": 33,
     "performance10xComparable": 33,
-    "threeRepoValidated": 8,
-    "threeRepoValidatedStrict10x": 8
+    "threeRepoValidated": 17,
+    "threeRepoValidatedStrict10x": 10
   },
   "parityLanguages": [
     "byond",
     "dart",
-    "elixir",
     "ets",
     "julia",
     "powershell",
@@ -123,10 +122,10 @@
         "no_comparable_query_rows"
       ],
       "validation": {
-        "passed": false,
-        "repoCount": 0,
+        "passed": true,
+        "repoCount": 3,
         "minimumRepos": 3,
-        "minCoverageRatio": null
+        "minCoverageRatio": 1
       }
     },
     {
@@ -185,10 +184,10 @@
         "coverage_at_parity"
       ],
       "validation": {
-        "passed": false,
-        "repoCount": 0,
+        "passed": true,
+        "repoCount": 3,
         "minimumRepos": 3,
-        "minCoverageRatio": null
+        "minCoverageRatio": 1
       }
     },
     {
@@ -256,21 +255,19 @@
       "repo": "https://github.com/phoenixframework/phoenix",
       "commit": "9d3f1f63e00c92aafc8f015073969a2632c6879a",
       "artifact": "data/raw/LIVE_ELIXIR_BENCHMARK.json",
-      "coverageRatio": 1,
-      "coverageExceedsNative": false,
+      "coverageRatio": 1.0116,
+      "coverageExceedsNative": true,
       "equivalentRows": 5,
-      "tokenRatio": 84.9,
-      "latencyRatio": 11.78,
+      "tokenRatio": 31.1,
+      "latencyRatio": 16.24,
       "tokenGapTo10x": 1,
       "latencyGapTo10x": 1,
-      "blockers": [
-        "coverage_at_parity"
-      ],
+      "blockers": [],
       "validation": {
-        "passed": false,
-        "repoCount": 0,
+        "passed": true,
+        "repoCount": 3,
         "minimumRepos": 3,
-        "minCoverageRatio": null
+        "minCoverageRatio": 1
       }
     },
     {
@@ -290,10 +287,10 @@
         "no_comparable_query_rows"
       ],
       "validation": {
-        "passed": false,
-        "repoCount": 0,
+        "passed": true,
+        "repoCount": 3,
         "minimumRepos": 3,
-        "minCoverageRatio": null
+        "minCoverageRatio": 1
       }
     },
     {
@@ -372,10 +369,10 @@
         "coverage_at_parity"
       ],
       "validation": {
-        "passed": false,
-        "repoCount": 0,
+        "passed": true,
+        "repoCount": 3,
         "minimumRepos": 3,
-        "minCoverageRatio": null
+        "minCoverageRatio": 1
       }
     },
     {
@@ -514,10 +511,10 @@
         "coverage_at_parity"
       ],
       "validation": {
-        "passed": false,
-        "repoCount": 0,
+        "passed": true,
+        "repoCount": 3,
         "minimumRepos": 3,
-        "minCoverageRatio": null
+        "minCoverageRatio": 1
       }
     },
     {
@@ -537,10 +534,10 @@
         "no_comparable_query_rows"
       ],
       "validation": {
-        "passed": false,
-        "repoCount": 0,
+        "passed": true,
+        "repoCount": 3,
         "minimumRepos": 3,
-        "minCoverageRatio": null
+        "minCoverageRatio": 1.6067
       }
     },
     {
@@ -639,10 +636,10 @@
         "coverage_at_parity"
       ],
       "validation": {
-        "passed": false,
-        "repoCount": 0,
+        "passed": true,
+        "repoCount": 3,
         "minimumRepos": 3,
-        "minCoverageRatio": null
+        "minCoverageRatio": 1
       }
     },
     {
@@ -719,10 +716,10 @@
       "latencyGapTo10x": 1,
       "blockers": [],
       "validation": {
-        "passed": false,
-        "repoCount": 0,
+        "passed": true,
+        "repoCount": 3,
         "minimumRepos": 3,
-        "minCoverageRatio": null
+        "minCoverageRatio": 1
       }
     },
     {

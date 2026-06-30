@@ -184,7 +184,7 @@
     }
   },
   "coverage": {
-    "atlas_vs_tree_sitter_dart_definition_ratio": 1.0,
+    "atlas_vs_tree_sitter_dart_definition_ratio": 1,
     "atlas_dart_definition_symbols": 180,
     "native_definitions": 180
   },
@@ -439,5 +439,43 @@
     "commit": "d882e08",
     "date": "2026-06-30T07:15:57Z",
     "measurement_note": "Query rows refreshed from nine-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+  },
+  "multi_repo_validation": {
+    "minimum_repos": 3,
+    "status": "passed",
+    "generated_at": "2026-06-30T11:04:14Z",
+    "scope": "Dart parser validation uses three public Dart package lib targets and an independent tree-sitter-dart definition counter for types, functions, constructors, getters, setters, and typedefs.",
+    "repos": [
+      {
+        "repo": "https://github.com/dart-lang/http",
+        "commit": "5d94ef52582867e077bf41c3fa20fb8b1d1d834e",
+        "target_path": "/private/tmp/atlas-remaining-3repo-validation/dart/1-http/repo/pkgs/http/lib",
+        "atlas_definitions": 180,
+        "native_definitions": 180,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "27 Dart files parsed with tree-sitter-dart; Atlas counts {\"constructor\":30,\"function\":89,\"getter\":20,\"setter\":11,\"type\":28,\"typedef\":2} and native counts {\"type\":28,\"function\":89,\"constructor\":30,\"getter\":20,\"setter\":11,\"typedef\":2}."
+      },
+      {
+        "repo": "https://github.com/dart-lang/path",
+        "commit": "7e3d5d87220133ad9cc99f82e85a826011a62859",
+        "target_path": "/private/tmp/atlas-remaining-3repo-validation/dart/2-path/repo/lib",
+        "atlas_definitions": 180,
+        "native_definitions": 180,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "13 Dart files parsed with tree-sitter-dart; Atlas counts {\"constructor\":12,\"function\":136,\"getter\":20,\"type\":12} and native counts {\"type\":12,\"function\":136,\"constructor\":12,\"getter\":20,\"setter\":0,\"typedef\":0}."
+      },
+      {
+        "repo": "https://github.com/dart-lang/args",
+        "commit": "7a2dfb528768f0a2e5680f711dbfb948f1d6c255",
+        "target_path": "/private/tmp/atlas-remaining-3repo-validation/dart/3-args/repo/lib",
+        "atlas_definitions": 141,
+        "native_definitions": 141,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "12 Dart files parsed with tree-sitter-dart; Atlas counts {\"constructor\":11,\"function\":78,\"getter\":40,\"type\":12} and native counts {\"type\":12,\"function\":78,\"constructor\":11,\"getter\":40,\"setter\":0,\"typedef\":0}."
+      }
+    ]
   }
 }

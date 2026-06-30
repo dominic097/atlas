@@ -328,7 +328,7 @@
     }
   },
   "coverage": {
-    "atlas_vs_ets_source_counter_definition_ratio": 1.0,
+    "atlas_vs_ets_source_counter_definition_ratio": 1,
     "atlas_ets_definition_symbols": 153,
     "native_definitions": 153
   },
@@ -510,5 +510,43 @@
         "No node matching 'articleItemBuilder' found."
       ]
     }
-  ]
+  ],
+  "multi_repo_validation": {
+    "minimum_repos": 3,
+    "status": "passed",
+    "generated_at": "2026-06-30T11:04:14Z",
+    "scope": "ETS/ArkTS parser validation uses three public OpenHarmony ETS targets and an independent source counter for type, function, method, constructor, and variable declarations. File-level document symbols are excluded from the validation denominator.",
+    "repos": [
+      {
+        "repo": "https://github.com/openharmony/applications_app_samples",
+        "commit": "a826ab0e75fe51d028c1c5af58188e908736b53b",
+        "target_path": "/private/tmp/atlas-remaining-3repo-validation/ets/1-applications_app_samples/repo/code/ArkTS1.2/TabsSample/entry/src/main/ets",
+        "atlas_definitions": 153,
+        "native_definitions": 153,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "18 ETS files scanned; Atlas declaration counts {\"constructor\":4,\"method\":69,\"type\":20,\"variable\":60} matched native counts {\"type\":20,\"function\":0,\"method\":69,\"constructor\":4,\"variable\":60}. File-level document and companion TypeScript symbols, when present, are excluded from the validation ratio."
+      },
+      {
+        "repo": "https://github.com/openharmony/codelabs",
+        "commit": "eadb14174aa2c4e9a4d8622b50fd16748de57a9e",
+        "target_path": "/private/tmp/atlas-remaining-3repo-validation/ets/2-codelabs/repo/Ability/PagesRouter/entry/src/main/ets",
+        "atlas_definitions": 36,
+        "native_definitions": 36,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "5 ETS files scanned; Atlas declaration counts {\"constructor\":1,\"method\":10,\"type\":3,\"variable\":22} matched native counts {\"type\":3,\"function\":0,\"method\":10,\"constructor\":1,\"variable\":22}. File-level document and companion TypeScript symbols, when present, are excluded from the validation ratio."
+      },
+      {
+        "repo": "https://github.com/openharmony/applications_filepicker",
+        "commit": "5438caec93de79e5c7395887771d2e7a304bd861",
+        "target_path": "/private/tmp/atlas-remaining-3repo-validation/ets/3-applications_filepicker/repo/entry/src/main/ets",
+        "atlas_definitions": 875,
+        "native_definitions": 875,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "32 ETS files scanned; Atlas declaration counts {\"constructor\":9,\"function\":47,\"method\":206,\"type\":48,\"variable\":565} matched native counts {\"type\":48,\"function\":47,\"method\":206,\"constructor\":9,\"variable\":565}. File-level document and companion TypeScript symbols, when present, are excluded from the validation ratio."
+      }
+    ]
+  }
 }
