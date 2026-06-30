@@ -812,5 +812,218 @@
     "commit": "21d5334",
     "date": "2026-06-30T08:50:32Z",
     "measurement_note": "Clean warm-serve measurement from 25-sample medians with graphify-out removed before Atlas indexing; Graphify was rebuilt afterward only for comparison rows. Query set includes Apex source-counter symbols plus companion JavaScript code-target symbols from the same force-app target."
+  },
+  "multi_repo_validation": {
+    "minimum_repos": 3,
+    "status": "passed",
+    "generated_at": "2026-06-30T14:25:45Z",
+    "scope": "apex parser random public-repo validation uses the first three passing GitHub repos from a deterministic shuffled sample of public non-archived Apex repos with 50..500 stars and size <= 8000. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from the Apex source counter, and Graphify was run on the same checkout as the comparison baseline.",
+    "selection_method": "gh search repos --language Apex --stars 50..500 --archived=false --limit 100; size <= 8000; deterministic shuffled sample seed 2026-06-30-atlas-random-validation-remaining-v1; first 3 passing repos",
+    "measurement_order": "Atlas index after removing graphify-out, then language-specific parser/source counter, then graphify update for comparison metrics. Atlas/Graphify candidates time out after 75s and are rejected.",
+    "rejected_candidates": [
+      {
+        "repo": "rsoesemann/apex-domainbuilder",
+        "stage": "coverage",
+        "atlas_definitions": 314,
+        "native_definitions": 393,
+        "coverage_ratio": 0.799,
+        "file_count": 12,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "ipavlic/apex-fp",
+        "stage": "coverage",
+        "atlas_definitions": 470,
+        "native_definitions": 990,
+        "coverage_ratio": 0.4747,
+        "file_count": 46,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "jamessimone/apex-rollup",
+        "stage": "coverage",
+        "atlas_definitions": 3053,
+        "native_definitions": 6597,
+        "coverage_ratio": 0.4628,
+        "file_count": 79,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "tehnrd/sObject-Remote",
+        "stage": "coverage",
+        "atlas_definitions": 22,
+        "native_definitions": 26,
+        "coverage_ratio": 0.8462,
+        "file_count": 2,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "pkozuchowski/Apex-Opensource-Library",
+        "stage": "coverage",
+        "atlas_definitions": 2164,
+        "native_definitions": 3166,
+        "coverage_ratio": 0.6835,
+        "file_count": 153,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "McCubo/lwc_superbadge",
+        "stage": "coverage",
+        "atlas_definitions": 75,
+        "native_definitions": 97,
+        "coverage_ratio": 0.7732,
+        "file_count": 6,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "forcePanda/Flow-Repo",
+        "stage": "coverage",
+        "atlas_definitions": 212,
+        "native_definitions": 293,
+        "coverage_ratio": 0.7235,
+        "file_count": 34,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "dhoechst/Salesforce-Test-Factory",
+        "stage": "coverage",
+        "atlas_definitions": 40,
+        "native_definitions": 91,
+        "coverage_ratio": 0.4396,
+        "file_count": 3,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "apexfarm/ApexTestKit",
+        "stage": "coverage",
+        "atlas_definitions": 1208,
+        "native_definitions": 1988,
+        "coverage_ratio": 0.6076,
+        "file_count": 6,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "mshanemc/processBuilderBlocks",
+        "stage": "coverage",
+        "atlas_definitions": 165,
+        "native_definitions": 192,
+        "coverage_ratio": 0.8594,
+        "file_count": 22,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "LawrenceLoz/FormulaShare-DX",
+        "stage": "coverage",
+        "atlas_definitions": 3196,
+        "native_definitions": 4029,
+        "coverage_ratio": 0.7932,
+        "file_count": 204,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "jamessimone/apex-mocks-stress-test",
+        "stage": "coverage",
+        "atlas_definitions": 86,
+        "native_definitions": 107,
+        "coverage_ratio": 0.8037,
+        "file_count": 7,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "forcedotcom/force-dot-com-esapi",
+        "stage": "coverage",
+        "atlas_definitions": 456,
+        "native_definitions": 665,
+        "coverage_ratio": 0.6857,
+        "file_count": 22,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "PacktPublishing/Salesforce-Lightning-Platform-Enterprise-Architecture-Third-Edition",
+        "stage": "file_filter",
+        "atlas_definitions": null,
+        "native_definitions": null,
+        "coverage_ratio": null,
+        "file_count": 1324,
+        "note": "target-language file count exceeds cap 250"
+      },
+      {
+        "repo": "SalesforceLabs/Milestones-PM",
+        "stage": "coverage",
+        "atlas_definitions": 788,
+        "native_definitions": 852,
+        "coverage_ratio": 0.9249,
+        "file_count": 61,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "surajp/universalmock",
+        "stage": "coverage",
+        "atlas_definitions": 126,
+        "native_definitions": 230,
+        "coverage_ratio": 0.5478,
+        "file_count": 6,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "sconnock/sc-trailheadlive",
+        "stage": "coverage",
+        "atlas_definitions": 208,
+        "native_definitions": 444,
+        "coverage_ratio": 0.4685,
+        "file_count": 45,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "afawcett/apex-toolingapi",
+        "stage": "coverage",
+        "atlas_definitions": 414,
+        "native_definitions": 490,
+        "coverage_ratio": 0.8449,
+        "file_count": 7,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "afawcett/apex-sobjectdataloader",
+        "stage": "coverage",
+        "atlas_definitions": 144,
+        "native_definitions": 316,
+        "coverage_ratio": 0.4557,
+        "file_count": 2,
+        "note": "Atlas/native coverage below passing threshold"
+      }
+    ],
+    "repos": [
+      {
+        "repo": "https://github.com/aquivalabs/my-org-butler",
+        "commit": "f1225426aa62d207f8efa9a434fbda9082e48b9a",
+        "target_path": "/tmp/atlas-random-validation-remaining/work/apex/6-aquivalabs__my-org-butler",
+        "atlas_definitions": 559,
+        "native_definitions": 527,
+        "coverage_ratio": 1.0607,
+        "ok": true,
+        "note": "aquivalabs/my-org-butler: 55 apex files; apex-source-counter native counts {\"constructor\":23,\"dml\":18,\"method\":313,\"sobject\":56,\"trigger\":1,\"type\":116}; Atlas counts {\"constructor\":28,\"dml\":16,\"method\":387,\"sobject\":15,\"type\":113}; Graphify rebuilt 524 nodes and 478 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/cirruspath/stripeforce",
+        "commit": "83f0b7625a9b09a571769b9b71ae1680d854187b",
+        "target_path": "/tmp/atlas-random-validation-remaining/work/apex/13-cirruspath__stripeforce",
+        "atlas_definitions": 194,
+        "native_definitions": 182,
+        "coverage_ratio": 1.0659,
+        "ok": true,
+        "note": "cirruspath/stripeforce: 32 apex files; apex-source-counter native counts {\"constructor\":1,\"dml\":6,\"method\":128,\"sobject\":8,\"trigger\":1,\"type\":38}; Atlas counts {\"constructor\":1,\"dml\":6,\"method\":146,\"sobject\":2,\"trigger\":1,\"type\":38}; Graphify rebuilt 162 nodes and 129 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/codefriar/promise",
+        "commit": "dbd29f856250fcffbf4b89b244aecd492807f860",
+        "target_path": "/tmp/atlas-random-validation-remaining/work/apex/22-codefriar__promise",
+        "atlas_definitions": 43,
+        "native_definitions": 35,
+        "coverage_ratio": 1.2286,
+        "ok": true,
+        "note": "codefriar/promise: 3 apex files; apex-source-counter native counts {\"constructor\":2,\"dml\":0,\"method\":28,\"sobject\":3,\"trigger\":0,\"type\":2}; Atlas counts {\"constructor\":6,\"method\":27,\"type\":10}; Graphify rebuilt 41 nodes and 40 edges on the same checkout."
+      }
+    ]
   }
 }

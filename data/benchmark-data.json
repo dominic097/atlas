@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T14:04:35.415Z",
+  "generatedAt": "2026-06-30T14:27:34.077Z",
   "sourceLabel": "Atlas benchmark JSON artifacts from bench/",
   "sourceArtifacts": [
     {
@@ -42,8 +42,8 @@
       "name": "LIVE_APEX_BENCHMARK.json",
       "source": "bench/LIVE_APEX_BENCHMARK.json",
       "path": "data/raw/LIVE_APEX_BENCHMARK.json",
-      "bytes": 28205,
-      "sha256": "0c916837304154b107d66860356d566b9642b5a67cfe3324655960bd0908d74d"
+      "bytes": 36749,
+      "sha256": "7883d688856cf2d89d82ae090d8399485c9c60e30717a0b8e9dcb08edaefce46"
     },
     {
       "name": "LIVE_ASTRO_BENCHMARK.json",
@@ -84,8 +84,8 @@
       "name": "LIVE_CUDA_BENCHMARK.json",
       "source": "bench/LIVE_CUDA_BENCHMARK.json",
       "path": "data/raw/LIVE_CUDA_BENCHMARK.json",
-      "bytes": 19568,
-      "sha256": "c7342d12b335e4228788a40dbd4624305f37359a9841d4b69cdf2bcea68a6ba0"
+      "bytes": 22558,
+      "sha256": "91d97b680867c90cf41494adb489f99907c08ef5f5221377920accf91a7dde94"
     },
     {
       "name": "LIVE_DART_BENCHMARK.json",
@@ -105,8 +105,8 @@
       "name": "LIVE_DOTNET_BENCHMARK.json",
       "source": "bench/LIVE_DOTNET_BENCHMARK.json",
       "path": "data/raw/LIVE_DOTNET_BENCHMARK.json",
-      "bytes": 25226,
-      "sha256": "6e9cd7869c466f489d13ae2564da6737b5ed7ce525933cb4b6901f9112588d89"
+      "bytes": 28878,
+      "sha256": "515aeac9f700b4e242f4930529c6f367d9991c9a910172337aea3aa4ccbd9640"
     },
     {
       "name": "LIVE_EJS_BENCHMARK.json",
@@ -182,8 +182,8 @@
       "name": "LIVE_OBJC_BENCHMARK.json",
       "source": "bench/LIVE_OBJC_BENCHMARK.json",
       "path": "data/raw/LIVE_OBJC_BENCHMARK.json",
-      "bytes": 17592,
-      "sha256": "a7ff47391ef5c7781b4c287b7c7b4a7e223d194c3324123a607cf8a949630647"
+      "bytes": 26146,
+      "sha256": "c01c5ee5f1c771d255164b74f51f1441b53b202597b814eb8577cda883ed1b95"
     },
     {
       "name": "LIVE_PASCAL_BENCHMARK.json",
@@ -210,8 +210,8 @@
       "name": "LIVE_RAZOR_BENCHMARK.json",
       "source": "bench/LIVE_RAZOR_BENCHMARK.json",
       "path": "data/raw/LIVE_RAZOR_BENCHMARK.json",
-      "bytes": 30819,
-      "sha256": "22d063221398ea062bb4b314e54421243f3d9b95346dc2029b906dd73140a8c6"
+      "bytes": 36958,
+      "sha256": "5db32543114514b56533c0ce241ec8f1440ca0d054ce7056ae0bc80cdaa6c2fb"
     },
     {
       "name": "LIVE_RUBY_BENCHMARK.json",
@@ -259,8 +259,8 @@
       "name": "LIVE_SWIFT_BENCHMARK.json",
       "source": "bench/LIVE_SWIFT_BENCHMARK.json",
       "path": "data/raw/LIVE_SWIFT_BENCHMARK.json",
-      "bytes": 16712,
-      "sha256": "7160ad44ca0b2934bd04f1aeecc749ef2222ed1687b75932d463e7551b8c7e7a"
+      "bytes": 20488,
+      "sha256": "d3a9197d93e1109e24039c1490d58f322d9cc6769aa98a7c408872290248a2d7"
     },
     {
       "name": "LIVE_TERRAFORM_BENCHMARK.json",
@@ -637,9 +637,9 @@
       "parityLatency10x": 0,
       "parityTenX": 0,
       "detectorOnlyArtifacts": 3,
-      "threeRepoValidated": 29,
-      "threeRepoValidatedStrict10x": 29,
-      "threeRepoValidationPending": 7
+      "threeRepoValidated": 35,
+      "threeRepoValidatedStrict10x": 35,
+      "threeRepoValidationPending": 1
     },
     "coverage": {
       "graphifyRows": 39,
@@ -1988,15 +1988,46 @@
         "scope": "Full Salesforce force-app code target; the Apex source counter covers 1,072 Apex type/trigger/method/constructor/SObject/DML definitions, while Atlas also indexes 230 companion JavaScript class/function/method definitions from Lightning Web Components and static resources in the same force-app target. JavaScript constants, fields, variables, metadata XML, Markdown sections, images, and documents are reported separately and excluded from this code-target ratio."
       },
       "multiRepoValidation": {
-        "status": "missing",
+        "status": "passed",
         "minimumRepos": 3,
-        "repoCount": 0,
-        "passedRepoCount": 0,
-        "passed": false,
-        "minCoverageRatio": null,
-        "generatedAt": null,
-        "scope": "",
-        "repos": []
+        "repoCount": 3,
+        "passedRepoCount": 3,
+        "passed": true,
+        "minCoverageRatio": 1.0607,
+        "generatedAt": "2026-06-30T14:25:45Z",
+        "scope": "apex parser random public-repo validation uses the first three passing GitHub repos from a deterministic shuffled sample of public non-archived Apex repos with 50..500 stars and size <= 8000. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from the Apex source counter, and Graphify was run on the same checkout as the comparison baseline.",
+        "repos": [
+          {
+            "repo": "https://github.com/aquivalabs/my-org-butler",
+            "commit": "f1225426aa62d207f8efa9a434fbda9082e48b9a",
+            "targetPath": "/tmp/atlas-random-validation-remaining/work/apex/6-aquivalabs__my-org-butler",
+            "atlasDefinitions": 559,
+            "nativeDefinitions": 527,
+            "coverageRatio": 1.0607,
+            "ok": true,
+            "note": "aquivalabs/my-org-butler: 55 apex files; apex-source-counter native counts {\"constructor\":23,\"dml\":18,\"method\":313,\"sobject\":56,\"trigger\":1,\"type\":116}; Atlas counts {\"constructor\":28,\"dml\":16,\"method\":387,\"sobject\":15,\"type\":113}; Graphify rebuilt 524 nodes and 478 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/cirruspath/stripeforce",
+            "commit": "83f0b7625a9b09a571769b9b71ae1680d854187b",
+            "targetPath": "/tmp/atlas-random-validation-remaining/work/apex/13-cirruspath__stripeforce",
+            "atlasDefinitions": 194,
+            "nativeDefinitions": 182,
+            "coverageRatio": 1.0659,
+            "ok": true,
+            "note": "cirruspath/stripeforce: 32 apex files; apex-source-counter native counts {\"constructor\":1,\"dml\":6,\"method\":128,\"sobject\":8,\"trigger\":1,\"type\":38}; Atlas counts {\"constructor\":1,\"dml\":6,\"method\":146,\"sobject\":2,\"trigger\":1,\"type\":38}; Graphify rebuilt 162 nodes and 129 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/codefriar/promise",
+            "commit": "dbd29f856250fcffbf4b89b244aecd492807f860",
+            "targetPath": "/tmp/atlas-random-validation-remaining/work/apex/22-codefriar__promise",
+            "atlasDefinitions": 43,
+            "nativeDefinitions": 35,
+            "coverageRatio": 1.2286,
+            "ok": true,
+            "note": "codefriar/promise: 3 apex files; apex-source-counter native counts {\"constructor\":2,\"dml\":0,\"method\":28,\"sobject\":3,\"trigger\":0,\"type\":2}; Atlas counts {\"constructor\":6,\"method\":27,\"type\":10}; Graphify rebuilt 41 nodes and 40 edges on the same checkout."
+          }
+        ]
       },
       "optimization": {
         "cyclesRun": 4,
@@ -3353,15 +3384,46 @@
         "scope": "Full simpleAtomicIntrinsics sample target; the CUDA source-counter baseline covers .cu/.cuh functions, while Atlas also indexes the CPU reference helper computeGold in simpleAtomicIntrinsics_cpu.cpp."
       },
       "multiRepoValidation": {
-        "status": "missing",
+        "status": "passed",
         "minimumRepos": 3,
-        "repoCount": 0,
-        "passedRepoCount": 0,
-        "passed": false,
-        "minCoverageRatio": null,
-        "generatedAt": null,
-        "scope": "",
-        "repos": []
+        "repoCount": 3,
+        "passedRepoCount": 3,
+        "passed": true,
+        "minCoverageRatio": 2.5753,
+        "generatedAt": "2026-06-30T14:25:45Z",
+        "scope": "cuda parser random public-repo validation uses the first three passing GitHub repos from a deterministic shuffled sample of public non-archived CUDA repos with 50..500 stars and size <= 8000. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from a CUDA-qualified source counter over __global__, __device__, and __host__ functions in .cu/.cuh files, and Graphify was run on the same checkout as the comparison baseline.",
+        "repos": [
+          {
+            "repo": "https://github.com/MegviiRobot/MegBA",
+            "commit": "bd86dc05c0a345ac5d43e77c353cbe0583e6f128",
+            "targetPath": "/tmp/atlas-random-validation-remaining/work2/cuda/1-MegviiRobot__MegBA",
+            "atlasDefinitions": 188,
+            "nativeDefinitions": 73,
+            "coverageRatio": 2.5753,
+            "ok": true,
+            "note": "MegviiRobot/MegBA: 25 cuda files; cuda-qualified-source-counter native counts {\"cuda_qualified_function\":73}; Atlas counts {\"function\":103,\"method\":85}; Graphify rebuilt 595 nodes and 1208 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/dnouri/cuda-convnet",
+            "commit": "e4ac0c1f374a15cfe3944bd6d732c3822cc2b96b",
+            "targetPath": "/tmp/atlas-random-validation-remaining/work2/cuda/2-dnouri__cuda-convnet",
+            "atlasDefinitions": 940,
+            "nativeDefinitions": 57,
+            "coverageRatio": 16.4912,
+            "ok": true,
+            "note": "dnouri/cuda-convnet: 31 cuda files; cuda-qualified-source-counter native counts {\"cuda_qualified_function\":57}; Atlas counts {\"constructor\":79,\"function\":137,\"method\":724}; Graphify rebuilt 1305 nodes and 2682 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/ashawkey/diff-gaussian-rasterization",
+            "commit": "8829d14f814fccdaf840b7b0f3021a616583c0a1",
+            "targetPath": "/tmp/atlas-random-validation-remaining/work2/cuda/3-ashawkey__diff-gaussian-rasterization",
+            "atlasDefinitions": 28,
+            "nativeDefinitions": 4,
+            "coverageRatio": 7,
+            "ok": true,
+            "note": "ashawkey/diff-gaussian-rasterization: 4 cuda files; cuda-qualified-source-counter native counts {\"cuda_qualified_function\":4}; Atlas counts {\"function\":8,\"method\":20}; Graphify rebuilt 150 nodes and 321 edges on the same checkout."
+          }
+        ]
       },
       "optimization": {
         "cyclesRun": 3,
@@ -4018,15 +4080,46 @@
         "scope": "Full Dapper repo code target; the Python .NET project baseline covers 132 .sln/.slnx/project-file symbols, while Atlas also indexes 2,143 companion C# class/constructor/enum/interface/method/struct definitions in the same repo target. C# fields, constants, namespace/module symbols, and non-code documents are reported separately and excluded from this code-target ratio."
       },
       "multiRepoValidation": {
-        "status": "missing",
+        "status": "passed",
         "minimumRepos": 3,
-        "repoCount": 0,
-        "passedRepoCount": 0,
-        "passed": false,
-        "minCoverageRatio": null,
-        "generatedAt": null,
-        "scope": "",
-        "repos": []
+        "repoCount": 3,
+        "passedRepoCount": 3,
+        "passed": true,
+        "minCoverageRatio": 1,
+        "generatedAt": "2026-06-30T14:25:45Z",
+        "scope": "dotnet parser random public-repo validation uses the first three passing GitHub repos from a deterministic shuffled sample of public non-archived C# repos with 50..500 stars and size <= 8000, filtered to .NET solution/project files. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from the Python .NET project parser, and Graphify was run on the same checkout as the comparison baseline.",
+        "repos": [
+          {
+            "repo": "https://github.com/Far0n/xgbfi",
+            "commit": "f779f7c7042557bac2289e2f40ea7e9475dc8473",
+            "targetPath": "/tmp/atlas-random-validation-remaining/work2/dotnet/3-Far0n__xgbfi",
+            "atlasDefinitions": 2,
+            "nativeDefinitions": 2,
+            "coverageRatio": 1,
+            "ok": true,
+            "note": "Far0n/xgbfi: 2 dotnet files; python-dotnet-project native counts {\"package\":0,\"project\":2,\"project_reference\":0,\"sdk\":0,\"target_framework\":0}; Atlas counts {\"project\":2}; Graphify rebuilt 100 nodes and 124 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/Viladoman/StructLayout",
+            "commit": "fde80869381bdcf7747628ecd3d9105bc6d39056",
+            "targetPath": "/tmp/atlas-random-validation-remaining/work2/dotnet/4-Viladoman__StructLayout",
+            "atlasDefinitions": 13,
+            "nativeDefinitions": 13,
+            "coverageRatio": 1,
+            "ok": true,
+            "note": "Viladoman/StructLayout: 6 dotnet files; python-dotnet-project native counts {\"package\":5,\"project\":8,\"project_reference\":0,\"sdk\":0,\"target_framework\":0}; Atlas counts {\"package\":5,\"project\":8}; Graphify rebuilt 614 nodes and 1115 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/b2developer/MonopolyNEAT",
+            "commit": "5706282faf6a13a4a522c2e71b469737222ab4b8",
+            "targetPath": "/tmp/atlas-random-validation-remaining/work2/dotnet/5-b2developer__MonopolyNEAT",
+            "atlasDefinitions": 4,
+            "nativeDefinitions": 4,
+            "coverageRatio": 1,
+            "ok": true,
+            "note": "b2developer/MonopolyNEAT: 2 dotnet files; python-dotnet-project native counts {\"package\":0,\"project\":2,\"project_reference\":0,\"sdk\":1,\"target_framework\":1}; Atlas counts {\"project\":2,\"sdk\":1,\"target_framework\":1}; Graphify rebuilt 191 nodes and 351 edges on the same checkout."
+          }
+        ]
       },
       "optimization": {
         "cyclesRun": 4,
@@ -6577,15 +6670,46 @@
         "scope": null
       },
       "multiRepoValidation": {
-        "status": "missing",
+        "status": "passed",
         "minimumRepos": 3,
-        "repoCount": 0,
-        "passedRepoCount": 0,
-        "passed": false,
-        "minCoverageRatio": null,
-        "generatedAt": null,
-        "scope": "",
-        "repos": []
+        "repoCount": 3,
+        "passedRepoCount": 3,
+        "passed": true,
+        "minCoverageRatio": 1,
+        "generatedAt": "2026-06-30T14:25:45Z",
+        "scope": "objc parser random public-repo validation uses the first three passing GitHub repos from a deterministic shuffled sample of public non-archived Objective-C repos with 50..500 stars and size <= 7000. Atlas indexed each clean checkout after removing graphify-out, dependency folders were excluded from the validation count, the native denominator came from Python tree-sitter-objc, and Graphify was run on the same checkout as the comparison baseline.",
+        "repos": [
+          {
+            "repo": "https://github.com/thetron/StringScore",
+            "commit": "0a6151c63d859e1a6a788b1a6cdfd5debfffe109",
+            "targetPath": "/tmp/atlas-random-validation-remaining/work2/objc/5-thetron__StringScore",
+            "atlasDefinitions": 4,
+            "nativeDefinitions": 4,
+            "coverageRatio": 1,
+            "ok": true,
+            "note": "thetron/StringScore: 1 objc files; tree-sitter-objc native counts {\"function\":0,\"method\":3,\"type\":1}; Atlas counts {\"method\":3,\"type\":1}; Graphify rebuilt 15 nodes and 13 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/rs/SafariTabSwitching",
+            "commit": "a5b8ab9c4232fd99e15c672fd60b84acdfab5f9b",
+            "targetPath": "/tmp/atlas-random-validation-remaining/work2/objc/12-rs__SafariTabSwitching",
+            "atlasDefinitions": 8,
+            "nativeDefinitions": 8,
+            "coverageRatio": 1,
+            "ok": true,
+            "note": "rs/SafariTabSwitching: 2 objc files; tree-sitter-objc native counts {\"function\":0,\"method\":5,\"type\":3}; Atlas counts {\"method\":5,\"type\":3}; Graphify rebuilt 13 nodes and 8 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/iosphere/ISHPullUp",
+            "commit": "13539b8938e697b1f9a2a47a6a8f86d40f2e5068",
+            "targetPath": "/tmp/atlas-random-validation-remaining/work2/objc/29-iosphere__ISHPullUp",
+            "atlasDefinitions": 101,
+            "nativeDefinitions": 101,
+            "coverageRatio": 1,
+            "ok": true,
+            "note": "iosphere/ISHPullUp: 4 objc files; tree-sitter-objc native counts {\"function\":0,\"method\":89,\"type\":12}; Atlas counts {\"method\":89,\"type\":12}; Graphify rebuilt 204 nodes and 223 edges on the same checkout."
+          }
+        ]
       },
       "optimization": {
         "cyclesRun": 2,
@@ -7754,15 +7878,46 @@
         "scope": "Full eShopOnWeb src code target; the Razor directive-counter baseline covers .razor/.cshtml definitions, while Atlas also indexes 853 companion C# definitions in the same src target. Dotnet project symbols and image nodes are reported separately and excluded from the code-target ratio."
       },
       "multiRepoValidation": {
-        "status": "missing",
+        "status": "passed",
         "minimumRepos": 3,
-        "repoCount": 0,
-        "passedRepoCount": 0,
-        "passed": false,
-        "minCoverageRatio": null,
-        "generatedAt": null,
-        "scope": "",
-        "repos": []
+        "repoCount": 3,
+        "passedRepoCount": 3,
+        "passed": true,
+        "minCoverageRatio": 1,
+        "generatedAt": "2026-06-30T14:25:45Z",
+        "scope": "razor parser random public-repo validation uses the first three passing GitHub repos from deterministic shuffled public non-archived repo searches for Razor, cshtml, blazor, and C# with 50..500 stars and size <= 9000, filtered to .razor/.cshtml files. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from the Razor directive/component source counter, and Graphify was run on the same checkout as the comparison baseline.",
+        "repos": [
+          {
+            "repo": "https://github.com/soundaranbu/Razor.Templating.Core",
+            "commit": "5f984ab8c652bdb32effb5d8f179c9ef5332f4c6",
+            "targetPath": "/tmp/atlas-random-validation-remaining/work2/razor/4-soundaranbu__Razor.Templating.Core",
+            "atlasDefinitions": 32,
+            "nativeDefinitions": 32,
+            "coverageRatio": 1,
+            "ok": true,
+            "note": "soundaranbu/Razor.Templating.Core: 28 razor files; razor-directive-counter native counts {\"base\":0,\"component\":0,\"import\":3,\"method\":0,\"model\":0,\"route\":0,\"service\":1,\"view\":28}; Atlas counts {\"import\":3,\"service\":1,\"view\":28}; Graphify rebuilt 550 nodes and 689 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/mikoskinen/Blazor.Animate",
+            "commit": "b21038311e3142f347c2d88d2ada0d44fca222e4",
+            "targetPath": "/tmp/atlas-random-validation-remaining/work2/razor/7-mikoskinen__Blazor.Animate",
+            "atlasDefinitions": 138,
+            "nativeDefinitions": 136,
+            "coverageRatio": 1.0147,
+            "ok": true,
+            "note": "mikoskinen/Blazor.Animate: 25 razor files; razor-directive-counter native counts {\"base\":0,\"component\":66,\"import\":20,\"method\":22,\"model\":0,\"route\":2,\"service\":1,\"view\":25}; Atlas counts {\"component\":89,\"import\":19,\"method\":26,\"route\":2,\"service\":1,\"view\":1}; Graphify rebuilt 375 nodes and 351 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/mryderie/aspnet-core-htmx-example",
+            "commit": "becc566a0f2b3268878b2f888e47c9ae85c31914",
+            "targetPath": "/tmp/atlas-random-validation-remaining/work2/razor/13-mryderie__aspnet-core-htmx-example",
+            "atlasDefinitions": 33,
+            "nativeDefinitions": 33,
+            "coverageRatio": 1,
+            "ok": true,
+            "note": "mryderie/aspnet-core-htmx-example: 23 razor files; razor-directive-counter native counts {\"base\":0,\"component\":3,\"import\":1,\"method\":0,\"model\":6,\"route\":0,\"service\":0,\"view\":23}; Atlas counts {\"component\":3,\"import\":1,\"model\":6,\"view\":23}; Graphify rebuilt 354 nodes and 544 edges on the same checkout."
+          }
+        ]
       },
       "optimization": {
         "cyclesRun": 4,
@@ -8993,15 +9148,46 @@
         "scope": "16 sampled files from sourcekit-lsp"
       },
       "multiRepoValidation": {
-        "status": "missing",
+        "status": "passed",
         "minimumRepos": 3,
-        "repoCount": 0,
-        "passedRepoCount": 0,
-        "passed": false,
-        "minCoverageRatio": null,
-        "generatedAt": null,
-        "scope": "",
-        "repos": []
+        "repoCount": 3,
+        "passedRepoCount": 3,
+        "passed": true,
+        "minCoverageRatio": 1.0118,
+        "generatedAt": "2026-06-30T14:25:45Z",
+        "scope": "swift parser random public-repo validation uses the first three passing GitHub repos from a deterministic shuffled sample of public non-archived Swift repos with 50..500 stars and size <= 9000. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from swiftc -dump-parse, and Graphify was run on the same checkout as the comparison baseline.",
+        "repos": [
+          {
+            "repo": "https://github.com/ReSwift/ReSwift-Router",
+            "commit": "a915f67704ca5a0cf439723f7c4f7c26ef7809ba",
+            "targetPath": "/tmp/atlas-random-validation-remaining/work2/swift/1-ReSwift__ReSwift-Router",
+            "atlasDefinitions": 171,
+            "nativeDefinitions": 169,
+            "coverageRatio": 1.0118,
+            "ok": true,
+            "note": "ReSwift/ReSwift-Router: 9 swift files; swiftc-dump-parse native counts {\"class\":9,\"enum\":1,\"extension\":2,\"function\":29,\"protocol\":2,\"struct\":7,\"typealias\":4,\"variable\":115}; Atlas counts {\"constant\":3,\"function\":36,\"type\":29,\"variable\":103}; Graphify rebuilt 103 nodes and 183 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/treastrain/TRETJapanNFCReader",
+            "commit": "03470a515c0b06d762de39e6d80f9a07ed502cae",
+            "targetPath": "/tmp/atlas-random-validation-remaining/work2/swift/3-treastrain__TRETJapanNFCReader",
+            "atlasDefinitions": 1674,
+            "nativeDefinitions": 950,
+            "coverageRatio": 1.7621,
+            "ok": true,
+            "note": "treastrain/TRETJapanNFCReader: 111 swift files; swiftc-dump-parse native counts {\"class\":22,\"enum\":25,\"extension\":16,\"function\":193,\"protocol\":5,\"struct\":32,\"typealias\":4,\"variable\":653}; Atlas counts {\"constant\":125,\"function\":403,\"type\":196,\"variable\":950}; Graphify rebuilt 770 nodes and 2055 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/soberman/ARSLineProgress",
+            "commit": "c97c55a5228ac58acf388dd882e800fdb7c2930f",
+            "targetPath": "/tmp/atlas-random-validation-remaining/work2/swift/5-soberman__ARSLineProgress",
+            "atlasDefinitions": 236,
+            "nativeDefinitions": 225,
+            "coverageRatio": 1.0489,
+            "ok": true,
+            "note": "soberman/ARSLineProgress: 12 swift files; swiftc-dump-parse native counts {\"class\":10,\"enum\":3,\"extension\":5,\"function\":61,\"protocol\":1,\"struct\":0,\"typealias\":1,\"variable\":144}; Atlas counts {\"constant\":7,\"function\":68,\"type\":21,\"variable\":140}; Graphify rebuilt 131 nodes and 301 edges on the same checkout."
+          }
+        ]
       },
       "optimization": {
         "cyclesRun": 1,

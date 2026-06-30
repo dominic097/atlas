@@ -694,5 +694,46 @@
     "commit": "21d5334",
     "date": "2026-06-30T08:22:41Z",
     "measurement_note": "Clean warm-serve measurement from 25-sample medians with graphify-out moved out before Atlas index; Graphify comparison used `uv tool run --from graphifyy graphify explain <symbol>`. No Graphify sidecar was present during Atlas indexing."
+  },
+  "multi_repo_validation": {
+    "minimum_repos": 3,
+    "status": "passed",
+    "generated_at": "2026-06-30T14:25:45Z",
+    "scope": "cuda parser random public-repo validation uses the first three passing GitHub repos from a deterministic shuffled sample of public non-archived CUDA repos with 50..500 stars and size <= 8000. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from a CUDA-qualified source counter over __global__, __device__, and __host__ functions in .cu/.cuh files, and Graphify was run on the same checkout as the comparison baseline.",
+    "selection_method": "gh search repos --language CUDA --stars 50..500 --archived=false --limit 100; size <= 8000; deterministic shuffled sample seed 2026-06-30-atlas-random-validation-remaining-v1; first 3 passing repos with CUDA-qualified functions",
+    "measurement_order": "Atlas index after removing graphify-out, then language-specific parser/source counter, then graphify update for comparison metrics. Atlas/Graphify candidates time out after 75s and are rejected.",
+    "rejected_candidates": [],
+    "repos": [
+      {
+        "repo": "https://github.com/MegviiRobot/MegBA",
+        "commit": "bd86dc05c0a345ac5d43e77c353cbe0583e6f128",
+        "target_path": "/tmp/atlas-random-validation-remaining/work2/cuda/1-MegviiRobot__MegBA",
+        "atlas_definitions": 188,
+        "native_definitions": 73,
+        "coverage_ratio": 2.5753,
+        "ok": true,
+        "note": "MegviiRobot/MegBA: 25 cuda files; cuda-qualified-source-counter native counts {\"cuda_qualified_function\":73}; Atlas counts {\"function\":103,\"method\":85}; Graphify rebuilt 595 nodes and 1208 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/dnouri/cuda-convnet",
+        "commit": "e4ac0c1f374a15cfe3944bd6d732c3822cc2b96b",
+        "target_path": "/tmp/atlas-random-validation-remaining/work2/cuda/2-dnouri__cuda-convnet",
+        "atlas_definitions": 940,
+        "native_definitions": 57,
+        "coverage_ratio": 16.4912,
+        "ok": true,
+        "note": "dnouri/cuda-convnet: 31 cuda files; cuda-qualified-source-counter native counts {\"cuda_qualified_function\":57}; Atlas counts {\"constructor\":79,\"function\":137,\"method\":724}; Graphify rebuilt 1305 nodes and 2682 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/ashawkey/diff-gaussian-rasterization",
+        "commit": "8829d14f814fccdaf840b7b0f3021a616583c0a1",
+        "target_path": "/tmp/atlas-random-validation-remaining/work2/cuda/3-ashawkey__diff-gaussian-rasterization",
+        "atlas_definitions": 28,
+        "native_definitions": 4,
+        "coverage_ratio": 7,
+        "ok": true,
+        "note": "ashawkey/diff-gaussian-rasterization: 4 cuda files; cuda-qualified-source-counter native counts {\"cuda_qualified_function\":4}; Atlas counts {\"function\":8,\"method\":20}; Graphify rebuilt 150 nodes and 321 edges on the same checkout."
+      }
+    ]
   }
 }

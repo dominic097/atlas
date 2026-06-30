@@ -1097,5 +1097,137 @@
     "commit": "21d5334",
     "date": "2026-06-30T08:50:32Z",
     "measurement_note": "Clean warm-serve measurement from 25-sample medians with graphify-out moved out before Atlas index; Graphify comparison used `uv tool run --from graphifyy graphify explain <symbol>`. No Graphify sidecar was present during Atlas indexing."
+  },
+  "multi_repo_validation": {
+    "minimum_repos": 3,
+    "status": "passed",
+    "generated_at": "2026-06-30T14:25:45Z",
+    "scope": "razor parser random public-repo validation uses the first three passing GitHub repos from deterministic shuffled public non-archived repo searches for Razor, cshtml, blazor, and C# with 50..500 stars and size <= 9000, filtered to .razor/.cshtml files. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from the Razor directive/component source counter, and Graphify was run on the same checkout as the comparison baseline.",
+    "selection_method": "gh search repos for razor, cshtml, blazor, and C# --stars 50..500 --archived=false --limit 100 each; size <= 9000; deterministic shuffled sample seed 2026-06-30-atlas-random-validation-remaining-v1; filter for .razor/.cshtml files; first 3 passing repos",
+    "measurement_order": "Atlas index after removing graphify-out, then language-specific parser/source counter, then graphify update for comparison metrics. Atlas/Graphify candidates time out after 75s and are rejected.",
+    "rejected_candidates": [
+      {
+        "repo": "Nethereum/Nethereum.Templates.Metamask.Blazor",
+        "stage": "coverage",
+        "atlas_definitions": 153,
+        "native_definitions": 154,
+        "coverage_ratio": 0.9935,
+        "file_count": 14,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "gismofx/toast_ui.blazor_calendar",
+        "stage": "coverage",
+        "atlas_definitions": 51,
+        "native_definitions": 52,
+        "coverage_ratio": 0.9808,
+        "file_count": 12,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "staticwebdev/blazor-starter",
+        "stage": "coverage",
+        "atlas_definitions": 35,
+        "native_definitions": 36,
+        "coverage_ratio": 0.9722,
+        "file_count": 7,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "tscanlin/css-razor",
+        "stage": "file_filter",
+        "atlas_definitions": null,
+        "native_definitions": null,
+        "coverage_ratio": null,
+        "file_count": 0,
+        "note": "no ['.razor', '.cshtml'] files"
+      },
+      {
+        "repo": "gavilanch/BlazorMovies",
+        "stage": "file_filter",
+        "atlas_definitions": null,
+        "native_definitions": null,
+        "coverage_ratio": null,
+        "file_count": 1406,
+        "note": "target-language file count exceeds cap 180"
+      },
+      {
+        "repo": "mrpmorris/blazor-university",
+        "stage": "file_filter",
+        "atlas_definitions": null,
+        "native_definitions": null,
+        "coverage_ratio": null,
+        "file_count": 553,
+        "note": "target-language file count exceeds cap 180"
+      },
+      {
+        "repo": "Ninputer/VBF",
+        "stage": "file_filter",
+        "atlas_definitions": null,
+        "native_definitions": null,
+        "coverage_ratio": null,
+        "file_count": 0,
+        "note": "no ['.razor', '.cshtml'] files"
+      },
+      {
+        "repo": "GillCleeren/BethanysPieShopHR",
+        "stage": "coverage",
+        "atlas_definitions": 94,
+        "native_definitions": 95,
+        "coverage_ratio": 0.9895,
+        "file_count": 12,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "smstuebe/xamarin-fingerprint",
+        "stage": "file_filter",
+        "atlas_definitions": null,
+        "native_definitions": null,
+        "coverage_ratio": null,
+        "file_count": 0,
+        "note": "no ['.razor', '.cshtml'] files"
+      },
+      {
+        "repo": "nettitude/SharpSocks",
+        "stage": "file_filter",
+        "atlas_definitions": null,
+        "native_definitions": null,
+        "coverage_ratio": null,
+        "file_count": 0,
+        "note": "no ['.razor', '.cshtml'] files"
+      }
+    ],
+    "repos": [
+      {
+        "repo": "https://github.com/soundaranbu/Razor.Templating.Core",
+        "commit": "5f984ab8c652bdb32effb5d8f179c9ef5332f4c6",
+        "target_path": "/tmp/atlas-random-validation-remaining/work2/razor/4-soundaranbu__Razor.Templating.Core",
+        "atlas_definitions": 32,
+        "native_definitions": 32,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "soundaranbu/Razor.Templating.Core: 28 razor files; razor-directive-counter native counts {\"base\":0,\"component\":0,\"import\":3,\"method\":0,\"model\":0,\"route\":0,\"service\":1,\"view\":28}; Atlas counts {\"import\":3,\"service\":1,\"view\":28}; Graphify rebuilt 550 nodes and 689 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/mikoskinen/Blazor.Animate",
+        "commit": "b21038311e3142f347c2d88d2ada0d44fca222e4",
+        "target_path": "/tmp/atlas-random-validation-remaining/work2/razor/7-mikoskinen__Blazor.Animate",
+        "atlas_definitions": 138,
+        "native_definitions": 136,
+        "coverage_ratio": 1.0147,
+        "ok": true,
+        "note": "mikoskinen/Blazor.Animate: 25 razor files; razor-directive-counter native counts {\"base\":0,\"component\":66,\"import\":20,\"method\":22,\"model\":0,\"route\":2,\"service\":1,\"view\":25}; Atlas counts {\"component\":89,\"import\":19,\"method\":26,\"route\":2,\"service\":1,\"view\":1}; Graphify rebuilt 375 nodes and 351 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/mryderie/aspnet-core-htmx-example",
+        "commit": "becc566a0f2b3268878b2f888e47c9ae85c31914",
+        "target_path": "/tmp/atlas-random-validation-remaining/work2/razor/13-mryderie__aspnet-core-htmx-example",
+        "atlas_definitions": 33,
+        "native_definitions": 33,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "mryderie/aspnet-core-htmx-example: 23 razor files; razor-directive-counter native counts {\"base\":0,\"component\":3,\"import\":1,\"method\":0,\"model\":6,\"route\":0,\"service\":0,\"view\":23}; Atlas counts {\"component\":3,\"import\":1,\"model\":6,\"view\":23}; Graphify rebuilt 354 nodes and 544 edges on the same checkout."
+      }
+    ]
   }
 }

@@ -563,5 +563,227 @@
     "commit": "d882e08",
     "date": "2026-06-30T07:15:57Z",
     "measurement_note": "Query rows refreshed from nine-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+  },
+  "multi_repo_validation": {
+    "minimum_repos": 3,
+    "status": "passed",
+    "generated_at": "2026-06-30T14:25:45Z",
+    "scope": "objc parser random public-repo validation uses the first three passing GitHub repos from a deterministic shuffled sample of public non-archived Objective-C repos with 50..500 stars and size <= 7000. Atlas indexed each clean checkout after removing graphify-out, dependency folders were excluded from the validation count, the native denominator came from Python tree-sitter-objc, and Graphify was run on the same checkout as the comparison baseline.",
+    "selection_method": "gh search repos --language Objective-C --stars 50..500 --archived=false --limit 100; size <= 7000; deterministic shuffled sample seed 2026-06-30-atlas-random-validation-remaining-v1; skip dependency folders for the validation count; first 3 passing repos",
+    "measurement_order": "Atlas index after removing graphify-out, then language-specific parser/source counter, then graphify update for comparison metrics. Atlas/Graphify candidates time out after 75s and are rejected.",
+    "rejected_candidates": [
+      {
+        "repo": "TigerWf/WFCoretext",
+        "stage": "coverage",
+        "atlas_definitions": 531,
+        "native_definitions": 542,
+        "coverage_ratio": 0.9797,
+        "file_count": 54,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "justinmfischer/7blur",
+        "stage": "coverage",
+        "atlas_definitions": 61,
+        "native_definitions": 63,
+        "coverage_ratio": 0.9683,
+        "file_count": 10,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "Citrrus/MBContactPicker",
+        "stage": "coverage",
+        "atlas_definitions": 160,
+        "native_definitions": 161,
+        "coverage_ratio": 0.9938,
+        "file_count": 12,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "jpsim/JPSThumbnailAnnotation",
+        "stage": "coverage",
+        "atlas_definitions": 37,
+        "native_definitions": 38,
+        "coverage_ratio": 0.9737,
+        "file_count": 6,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "mattgemmell/MGTemplateEngine",
+        "stage": "coverage",
+        "atlas_definitions": 91,
+        "native_definitions": 92,
+        "coverage_ratio": 0.9891,
+        "file_count": 9,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "opa334/Choicy",
+        "stage": "coverage",
+        "atlas_definitions": 182,
+        "native_definitions": 199,
+        "coverage_ratio": 0.9146,
+        "file_count": 22,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "spicyShrimp/UINavigation-SXFixSpace",
+        "stage": "coverage",
+        "atlas_definitions": 46,
+        "native_definitions": 48,
+        "coverage_ratio": 0.9583,
+        "file_count": 5,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "SmileZXLee/ZXHookDetection",
+        "stage": "coverage",
+        "atlas_definitions": 81,
+        "native_definitions": 138,
+        "coverage_ratio": 0.587,
+        "file_count": 18,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "naoufal/react-native-activity-view",
+        "stage": "coverage",
+        "atlas_definitions": 10,
+        "native_definitions": 15,
+        "coverage_ratio": 0.6667,
+        "file_count": 4,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "naoufal/react-native-safari-view",
+        "stage": "coverage",
+        "atlas_definitions": 12,
+        "native_definitions": 16,
+        "coverage_ratio": 0.75,
+        "file_count": 4,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "andreamazz/UIView-Shake",
+        "stage": "coverage",
+        "atlas_definitions": 25,
+        "native_definitions": 26,
+        "coverage_ratio": 0.9615,
+        "file_count": 5,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "TeehanLax/UICollectionView-Spring-Demo",
+        "stage": "coverage",
+        "atlas_definitions": 17,
+        "native_definitions": 18,
+        "coverage_ratio": 0.9444,
+        "file_count": 4,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "d-ronnqvist/blogpost-codesample-PullToRefresh",
+        "stage": "coverage",
+        "atlas_definitions": 32,
+        "native_definitions": 33,
+        "coverage_ratio": 0.9697,
+        "file_count": 6,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "sibahota059/SPHChatCollectionView",
+        "stage": "coverage",
+        "atlas_definitions": 75,
+        "native_definitions": 77,
+        "coverage_ratio": 0.974,
+        "file_count": 11,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "Sephiroth87/Crayons",
+        "stage": "coverage",
+        "atlas_definitions": 116,
+        "native_definitions": 118,
+        "coverage_ratio": 0.9831,
+        "file_count": 19,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "EleTeam/Shop-iOS",
+        "stage": "coverage",
+        "atlas_definitions": 649,
+        "native_definitions": 650,
+        "coverage_ratio": 0.9985,
+        "file_count": 103,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "mavris/MMLanScan",
+        "stage": "coverage",
+        "atlas_definitions": 124,
+        "native_definitions": 128,
+        "coverage_ratio": 0.9688,
+        "file_count": 15,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "dongxinb/DBSphereTagCloud",
+        "stage": "coverage",
+        "atlas_definitions": 34,
+        "native_definitions": 35,
+        "coverage_ratio": 0.9714,
+        "file_count": 5,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "NeoTheCapt/aweme-algorithm",
+        "stage": "coverage",
+        "atlas_definitions": 1,
+        "native_definitions": 4,
+        "coverage_ratio": 0.25,
+        "file_count": 2,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "netyouli/WHCNetWorkKit",
+        "stage": "coverage",
+        "atlas_definitions": 441,
+        "native_definitions": 445,
+        "coverage_ratio": 0.991,
+        "file_count": 27,
+        "note": "Atlas/native coverage below passing threshold"
+      }
+    ],
+    "repos": [
+      {
+        "repo": "https://github.com/thetron/StringScore",
+        "commit": "0a6151c63d859e1a6a788b1a6cdfd5debfffe109",
+        "target_path": "/tmp/atlas-random-validation-remaining/work2/objc/5-thetron__StringScore",
+        "atlas_definitions": 4,
+        "native_definitions": 4,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "thetron/StringScore: 1 objc files; tree-sitter-objc native counts {\"function\":0,\"method\":3,\"type\":1}; Atlas counts {\"method\":3,\"type\":1}; Graphify rebuilt 15 nodes and 13 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/rs/SafariTabSwitching",
+        "commit": "a5b8ab9c4232fd99e15c672fd60b84acdfab5f9b",
+        "target_path": "/tmp/atlas-random-validation-remaining/work2/objc/12-rs__SafariTabSwitching",
+        "atlas_definitions": 8,
+        "native_definitions": 8,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "rs/SafariTabSwitching: 2 objc files; tree-sitter-objc native counts {\"function\":0,\"method\":5,\"type\":3}; Atlas counts {\"method\":5,\"type\":3}; Graphify rebuilt 13 nodes and 8 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/iosphere/ISHPullUp",
+        "commit": "13539b8938e697b1f9a2a47a6a8f86d40f2e5068",
+        "target_path": "/tmp/atlas-random-validation-remaining/work2/objc/29-iosphere__ISHPullUp",
+        "atlas_definitions": 101,
+        "native_definitions": 101,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "iosphere/ISHPullUp: 4 objc files; tree-sitter-objc native counts {\"function\":0,\"method\":89,\"type\":12}; Atlas counts {\"method\":89,\"type\":12}; Graphify rebuilt 204 nodes and 223 edges on the same checkout."
+      }
+    ]
   }
 }

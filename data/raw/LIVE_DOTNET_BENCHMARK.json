@@ -782,5 +782,65 @@
     "commit": "21d5334",
     "date": "2026-06-30T08:50:32Z",
     "measurement_note": "Clean warm-serve measurement from 25-sample medians with graphify-out removed before Atlas indexing; Graphify was rebuilt afterward only for comparison rows. Query set includes the original .NET project symbols plus companion C# code-target symbols."
+  },
+  "multi_repo_validation": {
+    "minimum_repos": 3,
+    "status": "passed",
+    "generated_at": "2026-06-30T14:25:45Z",
+    "scope": "dotnet parser random public-repo validation uses the first three passing GitHub repos from a deterministic shuffled sample of public non-archived C# repos with 50..500 stars and size <= 8000, filtered to .NET solution/project files. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from the Python .NET project parser, and Graphify was run on the same checkout as the comparison baseline.",
+    "selection_method": "gh search repos --language C# --stars 50..500 --archived=false --limit 100; size <= 8000; deterministic shuffled sample seed 2026-06-30-atlas-random-validation-remaining-v1; filter for .sln/.slnx/.csproj/.fsproj/.vbproj files; first 3 passing repos",
+    "measurement_order": "Atlas index after removing graphify-out, then language-specific parser/source counter, then graphify update for comparison metrics. Atlas/Graphify candidates time out after 75s and are rejected.",
+    "rejected_candidates": [
+      {
+        "repo": "PixeyeHQ/InspectorFoldoutGroup",
+        "stage": "file_filter",
+        "atlas_definitions": null,
+        "native_definitions": null,
+        "coverage_ratio": null,
+        "file_count": 0,
+        "note": "no ['.sln', '.slnx', '.csproj', '.fsproj', '.vbproj'] files"
+      },
+      {
+        "repo": "sienaiwun/TAA_Unity_URP",
+        "stage": "file_filter",
+        "atlas_definitions": null,
+        "native_definitions": null,
+        "coverage_ratio": null,
+        "file_count": 0,
+        "note": "no ['.sln', '.slnx', '.csproj', '.fsproj', '.vbproj'] files"
+      }
+    ],
+    "repos": [
+      {
+        "repo": "https://github.com/Far0n/xgbfi",
+        "commit": "f779f7c7042557bac2289e2f40ea7e9475dc8473",
+        "target_path": "/tmp/atlas-random-validation-remaining/work2/dotnet/3-Far0n__xgbfi",
+        "atlas_definitions": 2,
+        "native_definitions": 2,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "Far0n/xgbfi: 2 dotnet files; python-dotnet-project native counts {\"package\":0,\"project\":2,\"project_reference\":0,\"sdk\":0,\"target_framework\":0}; Atlas counts {\"project\":2}; Graphify rebuilt 100 nodes and 124 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/Viladoman/StructLayout",
+        "commit": "fde80869381bdcf7747628ecd3d9105bc6d39056",
+        "target_path": "/tmp/atlas-random-validation-remaining/work2/dotnet/4-Viladoman__StructLayout",
+        "atlas_definitions": 13,
+        "native_definitions": 13,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "Viladoman/StructLayout: 6 dotnet files; python-dotnet-project native counts {\"package\":5,\"project\":8,\"project_reference\":0,\"sdk\":0,\"target_framework\":0}; Atlas counts {\"package\":5,\"project\":8}; Graphify rebuilt 614 nodes and 1115 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/b2developer/MonopolyNEAT",
+        "commit": "5706282faf6a13a4a522c2e71b469737222ab4b8",
+        "target_path": "/tmp/atlas-random-validation-remaining/work2/dotnet/5-b2developer__MonopolyNEAT",
+        "atlas_definitions": 4,
+        "native_definitions": 4,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "b2developer/MonopolyNEAT: 2 dotnet files; python-dotnet-project native counts {\"package\":0,\"project\":2,\"project_reference\":0,\"sdk\":1,\"target_framework\":1}; Atlas counts {\"project\":2,\"sdk\":1,\"target_framework\":1}; Graphify rebuilt 191 nodes and 351 edges on the same checkout."
+      }
+    ]
   }
 }

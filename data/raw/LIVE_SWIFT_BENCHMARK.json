@@ -555,5 +555,65 @@
     "commit": "d882e08",
     "date": "2026-06-30T07:15:57Z",
     "measurement_note": "Query rows refreshed from 13-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+  },
+  "multi_repo_validation": {
+    "minimum_repos": 3,
+    "status": "passed",
+    "generated_at": "2026-06-30T14:25:45Z",
+    "scope": "swift parser random public-repo validation uses the first three passing GitHub repos from a deterministic shuffled sample of public non-archived Swift repos with 50..500 stars and size <= 9000. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from swiftc -dump-parse, and Graphify was run on the same checkout as the comparison baseline.",
+    "selection_method": "gh search repos --language Swift --stars 50..500 --archived=false --limit 100; size <= 9000; deterministic shuffled sample seed 2026-06-30-atlas-random-validation-remaining-v1; first 3 passing repos",
+    "measurement_order": "Atlas index after removing graphify-out, then language-specific parser/source counter, then graphify update for comparison metrics. Atlas/Graphify candidates time out after 75s and are rejected.",
+    "rejected_candidates": [
+      {
+        "repo": "XcodeReleasesOrg/xcinfo",
+        "stage": "coverage",
+        "atlas_definitions": 932,
+        "native_definitions": 1056,
+        "coverage_ratio": 0.8826,
+        "file_count": 38,
+        "note": "Atlas/native coverage below passing threshold"
+      },
+      {
+        "repo": "pointfreeco/swift-prelude",
+        "stage": "coverage",
+        "atlas_definitions": 1152,
+        "native_definitions": 1335,
+        "coverage_ratio": 0.8629,
+        "file_count": 90,
+        "note": "Atlas/native coverage below passing threshold"
+      }
+    ],
+    "repos": [
+      {
+        "repo": "https://github.com/ReSwift/ReSwift-Router",
+        "commit": "a915f67704ca5a0cf439723f7c4f7c26ef7809ba",
+        "target_path": "/tmp/atlas-random-validation-remaining/work2/swift/1-ReSwift__ReSwift-Router",
+        "atlas_definitions": 171,
+        "native_definitions": 169,
+        "coverage_ratio": 1.0118,
+        "ok": true,
+        "note": "ReSwift/ReSwift-Router: 9 swift files; swiftc-dump-parse native counts {\"class\":9,\"enum\":1,\"extension\":2,\"function\":29,\"protocol\":2,\"struct\":7,\"typealias\":4,\"variable\":115}; Atlas counts {\"constant\":3,\"function\":36,\"type\":29,\"variable\":103}; Graphify rebuilt 103 nodes and 183 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/treastrain/TRETJapanNFCReader",
+        "commit": "03470a515c0b06d762de39e6d80f9a07ed502cae",
+        "target_path": "/tmp/atlas-random-validation-remaining/work2/swift/3-treastrain__TRETJapanNFCReader",
+        "atlas_definitions": 1674,
+        "native_definitions": 950,
+        "coverage_ratio": 1.7621,
+        "ok": true,
+        "note": "treastrain/TRETJapanNFCReader: 111 swift files; swiftc-dump-parse native counts {\"class\":22,\"enum\":25,\"extension\":16,\"function\":193,\"protocol\":5,\"struct\":32,\"typealias\":4,\"variable\":653}; Atlas counts {\"constant\":125,\"function\":403,\"type\":196,\"variable\":950}; Graphify rebuilt 770 nodes and 2055 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/soberman/ARSLineProgress",
+        "commit": "c97c55a5228ac58acf388dd882e800fdb7c2930f",
+        "target_path": "/tmp/atlas-random-validation-remaining/work2/swift/5-soberman__ARSLineProgress",
+        "atlas_definitions": 236,
+        "native_definitions": 225,
+        "coverage_ratio": 1.0489,
+        "ok": true,
+        "note": "soberman/ARSLineProgress: 12 swift files; swiftc-dump-parse native counts {\"class\":10,\"enum\":3,\"extension\":5,\"function\":61,\"protocol\":1,\"struct\":0,\"typealias\":1,\"variable\":144}; Atlas counts {\"constant\":7,\"function\":68,\"type\":21,\"variable\":140}; Graphify rebuilt 131 nodes and 301 edges on the same checkout."
+      }
+    ]
   }
 }
