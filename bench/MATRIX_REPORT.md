@@ -9,7 +9,7 @@ Raw artifact: `bench/MATRIX_TOOL_VERSIONS.json`.
 
 | tool | status | version / first output line | command |
 |---|---|---|---|
-| atlas | ok | `atlas dev (none, unknown)` | `bin/atlas version` |
+| atlas | ok | `atlas v0.1.25-2-gdebb8b2 (debb8b2, 2026-06-30T03:42:25Z)` | `bin/atlas version` |
 | graphify | ok | `graphifyy 0.8.49` | `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify --version` |
 | go | ok | `go version go1.25.0 darwin/arm64` | `/usr/local/go/bin/go version` |
 | python | ok | `Python 3.14.6` | `/opt/homebrew/opt/python@3.14/bin/python3.14 --version` |
@@ -31,7 +31,7 @@ Raw artifact: `bench/MATRIX_TOOL_VERSIONS.json`.
 | pwsh | ok | `PowerShell 7.4.6` | `/usr/local/bin/pwsh --version` |
 | sourcekit-lsp | ok | `Apple Swift version 6.2.4 (swiftlang-6.2.4.1.4 clang-1700.6.4.2)` | `/usr/bin/sourcekit-lsp (no version flag); /usr/bin/swift --version` |
 
-- Live benchmark native-version details: 24/36 artifacts expose explicit native tool or library version fields in raw JSON; all artifacts include native command/status.
+- Live benchmark native-version details: 0/0 artifacts expose explicit native tool or library version fields in raw JSON; all artifacts include native command/status.
 
 ## graphify language discovery
 
@@ -93,54 +93,54 @@ Raw artifact: `bench/MATRIX_TOOL_VERSIONS.json`.
 
 ## graphify coverage audit
 
-- Deterministic graphify families covered by Atlas evidence: 39/39. Detector-only extensions covered by live Atlas benchmarks: 3/3.
+- Deterministic graphify families covered by Atlas evidence: 6/39. Detector-only extensions covered by live Atlas benchmarks: 0/3.
 - Unsupported graphify rows: none.
-- Missing evidence: none.
+- Missing or partial evidence: `groovy/gradle`, `cpp/cuda`, `csharp`, `rust`, `ruby`, `kotlin`, `scala`, `php`, `blade`, `swift`, `lua`, `zig`, `powershell`, `elixir`, `objective-c`, `julia`, `fortran`, `dart`, `verilog/systemverilog`, `sql`, `markdown`, `pascal`, `delphi/lazarus forms`, `shell`, `json config`, `terraform/hcl`, `byond dm`, `dotnet project`, `razor`, `apex`, `vue`, `svelte`, `astro`, `detector-only .ejs`, `detector-only .ets`, `detector-only .r`.
 
 | graphify support | status | Atlas evidence |
 |---|---|---|
-| go<br>`.go` via `extract_go` | ok | core matrix `go` ok; native scip-go:ok, gopls:ok; query eq 4/4, latency 6.01x, tokens 14.21x |
-| python<br>`.py` via `extract_python` | ok | core matrix `python` ok; native scip-python:ok, pyright:ok; query eq 3/3, latency 6.11x, tokens 18.52x |
-| javascript<br>`.js .jsx .mjs` via `extract_js` | ok | core matrix `javascript` ok; native scip-typescript:ok, tsserver:ok; query eq 3/4, latency 5.37x, tokens 7.0x |
-| typescript<br>`.ts .tsx` via `extract_js` | ok | core matrix `typescript` ok; native scip-typescript:ok, tsserver:ok; query eq 3/4, latency 5.78x, tokens 11.42x |
-| java<br>`.java` via `extract_java` | ok | core matrix `java` ok; native scip-java:missing, jdtls:ok; query eq 2/2, latency 3.88x, tokens 15.29x |
-| groovy/gradle<br>`.groovy .gradle` via `extract_groovy` | ok | `bench/RECALL_FINDINGS.md` native_limited=partial; repo `https://github.com/nextflow-io/nextflow` commit `fcf52e54d6854c9648d9c2e66ec02ac76518a000`; native `tree-sitter-groovy`; atlas_vs_tree_sitter_groovy_definition_ratio=1.59, query eq 5/5, latency 6.1x, tokens 9.97x |
-| c<br>`.c .h` via `extract_c` | ok | core matrix `c` ok; native clangd:ok; query eq 4/4, latency 6.13x, tokens 28.71x |
-| cpp/cuda<br>`.cpp .cc .cxx .hpp .cu .cuh` via `extract_cpp` | ok | core matrix `cpp` ok; native clangd:ok; query eq 4/4, latency 5.8x, tokens 10.0x<br>`bench/RECALL_FINDINGS.md` ok; repo `https://github.com/NVIDIA/cuda-samples` commit `b7c5481c556c3fe98db060207ecaa41a4b9a9abc`; native `cuda-source-counter`; atlas_vs_cuda_source_counter_definition_ratio=1.0, query eq 3/3, latency 5.96x, tokens 6.67x |
-| csharp<br>`.cs` via `extract_csharp` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/DapperLib/Dapper` commit `72a54c475f75e18cb93cba0809d00a5e6e49efd9`; native `roslyn`; atlas_vs_roslyn_definition_ratio=1.84, query eq 4/4, latency 7.26x, tokens 14.15x |
-| rust<br>`.rs` via `extract_rust` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/BurntSushi/ripgrep` commit `dfe4a81d2591daca76d25ae4e052c34b26578155`; native `rust-analyzer`; atlas_vs_rust_analyzer_definition_ratio=1.0, query eq 4/4, latency 8.71x, tokens 40.23x |
-| ruby<br>`.rb` via `extract_ruby` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/sinatra/sinatra` commit `5236d3459b8b9015e5ce21ddd0c6beb0db4081d4`; native `ruby-ripper`; atlas_vs_ruby_ripper_definition_ratio=1.01, query eq 4/4, latency 7.13x, tokens 10.86x |
-| kotlin<br>`.kt .kts` via `extract_kotlin` | ok | `bench/RECALL_FINDINGS.md` native_limited=partial; repo `https://github.com/square/okhttp` commit `0cadfa2997513d20bf88ca530c963a1266f17af9`; native `tree-sitter-kotlin`; atlas_vs_tree_sitter_kotlin_definition_ratio=1.0, query eq 5/5, latency 7.08x, tokens 27.06x |
-| scala<br>`.scala` via `extract_scala` | ok | `bench/RECALL_FINDINGS.md` native_limited=partial; repo `https://github.com/typelevel/cats` commit `851965a582940d804f9a23179f58a53fc97f07dc`; native `tree-sitter-scala`; atlas_vs_tree_sitter_scala_definition_ratio=1.0, query eq 5/5, latency 9.38x, tokens 38.06x |
-| php<br>`.php` via `extract_php` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/slimphp/Slim` commit `0da7dd2fc66956730b6633f6a056b35e59126583`; native `php-tokenizer`; atlas_vs_php_tokenizer_definition_ratio=1.0, query eq 3/4, latency 7.04x, tokens 8.74x |
-| blade<br>`*.blade.php` via `extract_blade` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/BookStackApp/BookStack` commit `f7df78b91b12ff1d8e248ded7747e76203904b8e`; native `blade-directive-counter`; atlas_vs_blade_directive_counter_definition_ratio=1.0, query eq 6/6, latency 6.07x, tokens 6.1x |
-| swift<br>`.swift` via `extract_swift` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/apple/swift-argument-parser` commit `8122bc5941426c9494c78ff5ad01951e81c02f53`; native `sourcekit-lsp`; atlas_vs_sourcekit_lsp_definition_ratio=1.23, query eq 4/4, latency 7.98x, tokens 21.65x |
-| lua<br>`.lua .luau .toc` via `extract_lua` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/folke/lazy.nvim` commit `306a05526ada86a7b30af95c5cc81ffba93fef97`; native `luaparser`; atlas_vs_luaparser_definition_ratio=1.0, query eq 4/4, latency 6.88x, tokens 15.09x |
-| zig<br>`.zig` via `extract_zig` | ok | `bench/RECALL_FINDINGS.md` native_limited=partial; repo `https://github.com/zigtools/zls` commit `8da87d4f3305a550e7b739bad764e34bf1e46a08`; native `tree-sitter-zig`; atlas_vs_tree_sitter_zig_definition_ratio=1.22, query eq 5/5, latency 5.55x, tokens 28.55x |
-| powershell<br>`.ps1 .psm1 .psd1` via `extract_powershell/extract_powershell_manifest` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/PowerShell/PowerShellGet` commit `a2dac8e74603f7c9eec4a54c5e23459531751b0d`; native `pwsh-parser`; atlas_vs_pwsh_parser_definition_ratio=1.0, query eq 4/4, latency 5.47x, tokens 6.68x |
-| elixir<br>`.ex .exs` via `extract_elixir` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/phoenixframework/phoenix` commit `909725968776c2601bbea7827fd5b76e4992cc70`; native `tree-sitter-elixir`; atlas_vs_tree_sitter_elixir_definition_ratio=1.0, query eq 5/5, latency 6.61x, tokens 22.95x |
-| objective-c<br>`.m .mm` via `extract_objc` | ok | `bench/RECALL_FINDINGS.md` native_limited=partial; repo `https://github.com/SDWebImage/SDWebImage` commit `c3ad5e1a9bf55c9b76d4c362430b5fcded96c502`; native `tree-sitter-objc`; atlas_vs_tree_sitter_objc_definition_ratio=1.0, query eq 4/5, latency 6.78x, tokens 23.63x |
-| julia<br>`.jl` via `extract_julia` | ok | `bench/RECALL_FINDINGS.md` native_limited=partial; repo `https://github.com/JuliaIO/JSON.jl` commit `e5ef310dece16746843753e4c3b44e868b917b64`; native `tree-sitter-julia`; atlas_vs_tree_sitter_julia_definition_ratio=1.0, query eq 5/6, latency 5.75x, tokens 12.72x |
-| fortran<br>`.f .F .f90 .F90 .f95 .F95 .f03 .F03 .f08 .F08` via `extract_fortran` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/fortran-lang/stdlib` commit `4c8521d5658455a576946cca3bfe2bd8ede36e24`; native `tree-sitter-fortran`; atlas_vs_tree_sitter_fortran_definition_ratio=1.0, query eq 6/6, latency 6.06x, tokens 19.69x |
-| dart<br>`.dart` via `extract_dart` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/dart-lang/http` commit `5d94ef52582867e077bf41c3fa20fb8b1d1d834e`; native `tree-sitter-dart`; atlas_vs_tree_sitter_dart_definition_ratio=1.0, query eq 6/6, latency 6.25x, tokens 8.54x |
-| verilog/systemverilog<br>`.v .sv .svh` via `extract_verilog` | ok | `bench/RECALL_FINDINGS.md` native_limited=partial; repo `https://github.com/lowRISC/ibex` commit `022f084096baed0a9b5ebdf697ed2965f13e8ed8`; native `tree-sitter-systemverilog`; atlas_vs_tree_sitter_systemverilog_definition_ratio=1.0, query eq 6/6, latency 5.51x, tokens 8.73x |
-| sql<br>`.sql` via `extract_sql` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/hasura/graphql-engine` commit `417c174c0ac3c80dafe6e8f9e8ac39d868334724`; native `sqlfluff`; atlas_vs_sqlfluff_definition_ratio=1.0, query eq 4/4, latency 5.96x, tokens 5.33x |
-| markdown<br>`.md .mdx .qmd` via `extract_markdown` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/rust-lang/mdBook` commit `cb49cc5523e609a731f27dea1af4395a504815a5`; native `markdown-it-py`; atlas_vs_markdown_it_py_definition_ratio=1.0, query eq 6/6, latency 6.69x, tokens 10.31x |
-| pascal<br>`.pas .pp .dpr .dpk .lpr .inc` via `extract_pascal` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/remobjects/pascalscript` commit `4340039059ce2d270b39fad64c1415ead9f83234`; native `pascal-regex-counter`; atlas_vs_pascal_regex_counter_definition_ratio=1.0, query eq 4/5, latency 8.29x, tokens 12.84x |
-| delphi/lazarus forms<br>`.dfm .lfm .lpk` via `extract_delphi_form/extract_lazarus_form/extract_lazarus_package` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/fpc/Lazarus` commit `e1cc57bb27e48541ffe4bf66c78a8dddfc4f6630`; native `delphi-lazarus-source-counter`; atlas_vs_delphi_lazarus_source_counter_definition_ratio=1.0, query eq 7/7, latency 11.35x, tokens 12.35x |
-| shell<br>`.sh .bash` via `extract_bash` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/nvm-sh/nvm` commit `a6ec73943099a86fba98bde3b04a1c60944a4549`; native `bash-n`; atlas_vs_bash_n_definition_ratio=1.0, query eq 4/4, latency 6.19x, tokens 18.44x |
-| json config<br>`.json` via `extract_json` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/eslint/create-config` commit `58d77fc302b25976bb4cc7dc273377b421bc226b`; native `python-json`; atlas_vs_python_json_definition_ratio=1.0, query eq 4/6, latency 6.58x, tokens 13.28x |
-| terraform/hcl<br>`.tf .tfvars .hcl` via `extract_terraform` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/terraform-aws-modules/terraform-aws-vpc` commit `3ffbd46fb1c7733e1b34d8666893280454e27436`; native `python-hcl2`; atlas_vs_python_hcl2_definition_ratio=1.0, query eq 4/4, latency 7.78x, tokens 41.61x |
-| byond dm<br>`.dm .dme .dmi .dmm .dmf` via `extract_dm/extract_dmf/extract_dmi/extract_dmm` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/tgstation/tgstation` commit `ba6e47987178c54dc0432f0d4ee6843f6a3c9828`; native `byond-source-counter`; atlas_vs_byond_source_counter_definition_ratio=1.0, query eq 0/6, latency n/a, tokens n/a |
-| dotnet project<br>`.sln .slnx .csproj .fsproj .vbproj` via `extract_csproj/extract_sln/extract_slnx` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/DapperLib/Dapper` commit `72a54c475f75e18cb93cba0809d00a5e6e49efd9`; native `python-dotnet-project`; atlas_vs_python_dotnet_project_definition_ratio=1.0, query eq 6/6, latency 7.67x, tokens 6.15x |
-| razor<br>`.razor .cshtml` via `extract_razor` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/dotnet-architecture/eShopOnWeb` commit `4da8212117e87d808d4bbc7da6286fd2147ce606`; native `razor-directive-counter`; atlas_vs_razor_directive_counter_definition_ratio=1.0, query eq 6/6, latency 6.52x, tokens 7.88x |
-| apex<br>`.cls .trigger` via `extract_apex` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/trailheadapps/apex-recipes` commit `cb5cd9d3621985b816476e5a317b5a0016fc3576`; native `apex-source-counter`; atlas_vs_apex_source_counter_definition_ratio=1.0, query eq 5/6, latency 8.15x, tokens 11.67x |
-| vue<br>`.vue` via `extract_js` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/gothinkster/vue-realworld-example-app` commit `f7e48c8178602ce25d43293bc6f8ca51d84ae222`; native `vue-compiler-sfc`; atlas_vs_vue_compiler_sfc_definition_ratio=1.0, query eq 4/4, latency 5.51x, tokens 8.04x |
-| svelte<br>`.svelte` via `extract_svelte` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/carbon-design-system/carbon-components-svelte` commit `4a2c72288d8a21e5fe489d042fc72d2ae7eb7097`; native `svelte-compiler`; atlas_vs_svelte_compiler_definition_ratio=1.0, query eq 5/5, latency 5.92x, tokens 8.81x |
-| astro<br>`.astro` via `extract_astro` | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/withastro/blog-tutorial-demo` commit `b3e12cc12d3292eff8c1237fb14f9b93f31ec33e`; native `astro-compiler`; atlas_vs_astro_compiler_definition_ratio=1.0, query eq 5/6, latency 5.66x, tokens 10.54x |
-| detector-only .ejs<br>`.ejs` in `CODE_EXTENSIONS`, no `_DISPATCH` extractor | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/expressjs/express` commit `18e5985b8a9d5e8423db0a9121f22bdaecd5b120`; native `ejs-template-counter`; atlas_vs_ejs_template_counter_definition_ratio=1.0, query eq 1/7, latency 5.21x, tokens 6.86x |
-| detector-only .ets<br>`.ets` in `CODE_EXTENSIONS`, no `_DISPATCH` extractor | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/openharmony/applications_app_samples` commit `a826ab0e75fe51d028c1c5af58188e908736b53b`; native `ets-source-counter`; atlas_vs_ets_source_counter_definition_ratio=1.0, query eq 0/8, latency n/a, tokens n/a |
-| detector-only .r<br>`.r` in `CODE_EXTENSIONS`, no `_DISPATCH` extractor | ok | `bench/RECALL_FINDINGS.md` ok; repo `https://github.com/tidyverse/ggplot2` commit `6870419aa6e106c3580c45c81d5b688cb31758bd`; native `r-source-counter`; atlas_vs_r_source_counter_definition_ratio=1.0, query eq 0/8, latency n/a, tokens n/a |
+| go<br>`.go` via `extract_go` | ok | core matrix `go` ok; native scip-go:ok, gopls:ok; query eq 4/4, latency 6.58x, tokens 14.21x |
+| python<br>`.py` via `extract_python` | ok | core matrix `python` ok; native scip-python:ok, pyright:ok; query eq 3/3, latency 6.58x, tokens 18.52x |
+| javascript<br>`.js .jsx .mjs` via `extract_js` | ok | core matrix `javascript` ok; native scip-typescript:ok, tsserver:ok; query eq 3/4, latency 5.86x, tokens 7.0x |
+| typescript<br>`.ts .tsx` via `extract_js` | ok | core matrix `typescript` ok; native scip-typescript:ok, tsserver:ok; query eq 3/4, latency 6.2x, tokens 11.42x |
+| java<br>`.java` via `extract_java` | ok | core matrix `java` ok; native scip-java:missing, jdtls:ok; query eq 2/2, latency 5.43x, tokens 15.21x |
+| groovy/gradle<br>`.groovy .gradle` via `extract_groovy` | partial | `bench/LIVE_GROOVY_BENCHMARK.json` missing |
+| c<br>`.c .h` via `extract_c` | ok | core matrix `c` ok; native clangd:ok; query eq 4/4, latency 6.8x, tokens 28.71x |
+| cpp/cuda<br>`.cpp .cc .cxx .hpp .cu .cuh` via `extract_cpp` | partial | core matrix `cpp` ok; native clangd:ok; query eq 4/4, latency 7.25x, tokens 10.0x<br>`bench/LIVE_CUDA_BENCHMARK.json` missing |
+| csharp<br>`.cs` via `extract_csharp` | partial | `bench/LIVE_CSHARP_BENCHMARK.json` missing |
+| rust<br>`.rs` via `extract_rust` | partial | `bench/LIVE_RUST_BENCHMARK.json` missing |
+| ruby<br>`.rb` via `extract_ruby` | partial | `bench/LIVE_RUBY_BENCHMARK.json` missing |
+| kotlin<br>`.kt .kts` via `extract_kotlin` | partial | `bench/LIVE_KOTLIN_BENCHMARK.json` missing |
+| scala<br>`.scala` via `extract_scala` | partial | `bench/LIVE_SCALA_BENCHMARK.json` missing |
+| php<br>`.php` via `extract_php` | partial | `bench/LIVE_PHP_BENCHMARK.json` missing |
+| blade<br>`*.blade.php` via `extract_blade` | partial | `bench/LIVE_BLADE_BENCHMARK.json` missing |
+| swift<br>`.swift` via `extract_swift` | partial | `bench/LIVE_SWIFT_BENCHMARK.json` missing |
+| lua<br>`.lua .luau .toc` via `extract_lua` | partial | `bench/LIVE_LUA_BENCHMARK.json` missing |
+| zig<br>`.zig` via `extract_zig` | partial | `bench/LIVE_ZIG_BENCHMARK.json` missing |
+| powershell<br>`.ps1 .psm1 .psd1` via `extract_powershell/extract_powershell_manifest` | partial | `bench/LIVE_POWERSHELL_BENCHMARK.json` missing |
+| elixir<br>`.ex .exs` via `extract_elixir` | partial | `bench/LIVE_ELIXIR_BENCHMARK.json` missing |
+| objective-c<br>`.m .mm` via `extract_objc` | partial | `bench/LIVE_OBJC_BENCHMARK.json` missing |
+| julia<br>`.jl` via `extract_julia` | partial | `bench/LIVE_JULIA_BENCHMARK.json` missing |
+| fortran<br>`.f .F .f90 .F90 .f95 .F95 .f03 .F03 .f08 .F08` via `extract_fortran` | partial | `bench/LIVE_FORTRAN_BENCHMARK.json` missing |
+| dart<br>`.dart` via `extract_dart` | partial | `bench/LIVE_DART_BENCHMARK.json` missing |
+| verilog/systemverilog<br>`.v .sv .svh` via `extract_verilog` | partial | `bench/LIVE_VERILOG_BENCHMARK.json` missing |
+| sql<br>`.sql` via `extract_sql` | partial | `bench/LIVE_SQL_BENCHMARK.json` missing |
+| markdown<br>`.md .mdx .qmd` via `extract_markdown` | partial | `bench/LIVE_MARKDOWN_BENCHMARK.json` missing |
+| pascal<br>`.pas .pp .dpr .dpk .lpr .inc` via `extract_pascal` | partial | `bench/LIVE_PASCAL_BENCHMARK.json` missing |
+| delphi/lazarus forms<br>`.dfm .lfm .lpk` via `extract_delphi_form/extract_lazarus_form/extract_lazarus_package` | partial | `bench/LIVE_DELPHI_BENCHMARK.json` missing |
+| shell<br>`.sh .bash` via `extract_bash` | partial | `bench/LIVE_BASH_BENCHMARK.json` missing |
+| json config<br>`.json` via `extract_json` | partial | `bench/LIVE_JSON_BENCHMARK.json` missing |
+| terraform/hcl<br>`.tf .tfvars .hcl` via `extract_terraform` | partial | `bench/LIVE_TERRAFORM_BENCHMARK.json` missing |
+| byond dm<br>`.dm .dme .dmi .dmm .dmf` via `extract_dm/extract_dmf/extract_dmi/extract_dmm` | partial | `bench/LIVE_BYOND_BENCHMARK.json` missing |
+| dotnet project<br>`.sln .slnx .csproj .fsproj .vbproj` via `extract_csproj/extract_sln/extract_slnx` | partial | `bench/LIVE_DOTNET_BENCHMARK.json` missing |
+| razor<br>`.razor .cshtml` via `extract_razor` | partial | `bench/LIVE_RAZOR_BENCHMARK.json` missing |
+| apex<br>`.cls .trigger` via `extract_apex` | partial | `bench/LIVE_APEX_BENCHMARK.json` missing |
+| vue<br>`.vue` via `extract_js` | partial | `bench/LIVE_VUE_BENCHMARK.json` missing |
+| svelte<br>`.svelte` via `extract_svelte` | partial | `bench/LIVE_SVELTE_BENCHMARK.json` missing |
+| astro<br>`.astro` via `extract_astro` | partial | `bench/LIVE_ASTRO_BENCHMARK.json` missing |
+| detector-only .ejs<br>`.ejs` in `CODE_EXTENSIONS`, no `_DISPATCH` extractor | partial | `bench/LIVE_EJS_BENCHMARK.json` missing |
+| detector-only .ets<br>`.ets` in `CODE_EXTENSIONS`, no `_DISPATCH` extractor | partial | `bench/LIVE_ETS_BENCHMARK.json` missing |
+| detector-only .r<br>`.r` in `CODE_EXTENSIONS`, no `_DISPATCH` extractor | partial | `bench/LIVE_R_BENCHMARK.json` missing |
 
 ## Saturation loop evidence
 
@@ -154,1233 +154,23 @@ Raw artifacts: `bench/SATURATION_REPORT.json` and `bench/SATURATION_REPORT.md`. 
 
 Saturation note: these languages are marked saturated only for graphify-equivalent query-score improvement. Their native coverage proxies remain in the live benchmark artifacts; no 5x query claim is made where graphify exposes no equivalent rows.
 
-## Live additional-language benchmarks
-
-### Apex
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/trailheadapps/apex-recipes` at commit `cb5cd9d3621985b816476e5a317b5a0016fc3576`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-apex-recipes/repo/force-app`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-apex-recipes/atlas.db --json index /tmp/atlas-live-apex-recipes/repo/force-app`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-apex-recipes/atlas.db --json index /tmp/atlas-live-apex-recipes/repo/force-app`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `python3 <apex source counter> /tmp/atlas-live-apex-recipes/repo/force-app`
-
-Results:
-
-- Atlas indexed 503 files, 5221 symbols, and 5045 edges in 1.284s cold; no-change reindex was 0.035s (`mode=noop`).
-- Atlas language counts were `xml:254`, `apex:142`, `markdown:74`, `javascript:18`, `html:7`, `css:3`, `json:3`, `docx:1`, `image:1`.
-- graphify rebuilt 3992 nodes and 3824 links in 1.733s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `apex-source-counter` status: ok (files:142, parsed_files:142, parse_errors:0, definitions:1072).
-- Richer native baselines not available on this machine: `sf`, `sfdx`, `apex-language-server`.
-- Coverage proxy: atlas_vs_apex_source_counter_definition_ratio: 1.0, atlas_apex_definition_symbols: 1072, native_definitions: 1072.
-- Optimization cycles: 3 (Apex native tree-sitter declaration parsing plus SOQL/DML source recovery matched the source-counter coverage proxy after routing `.cls` and `.trigger` files off the legacy fallback dispatcher.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `SOQLRecipes` | 15.122 | 132.931 | 8.79x | 8 | 262 | 32.75x |
-| `DMLRecipes` | 15.202 | 131.437 | 8.65x | 7 | 60 | 8.57x |
-| `AccountTrigger` | 15.433 | 133.743 | 8.67x | 11 | 97 | 8.82x |
-| `Account` | 17.927 | 138.548 | 7.73x | 13 | 76 | 5.85x |
-| `insert` | 18.551 | 133.542 | 7.2x | 9 | 65 | 7.22x |
-| `listAccounts` | 14.896 | 131.044 | 8.8x | 3 | 9 | 3.0x |
-
-- Query caveat: `listAccounts` (graphify_missing); raw rows remain in the table.
-5x note: this Apex benchmark meets the 5x threshold on equivalent query rows for latency (8.15x) and token output (11.67x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### Astro
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/withastro/blog-tutorial-demo` at commit `b3e12cc12d3292eff8c1237fb14f9b93f31ec33e`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-astro-blog-tutorial/repo/src`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-astro-blog-tutorial/atlas.db --json index /tmp/atlas-live-astro-blog-tutorial/repo/src`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-astro-blog-tutorial/atlas.db --json index /tmp/atlas-live-astro-blog-tutorial/repo/src`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `/opt/homebrew/bin/node /tmp/atlas-live-astro-blog-tutorial/astro-compiler/astro_stats.js /tmp/atlas-live-astro-blog-tutorial/repo/src`
-
-Results:
-
-- Atlas indexed 22 files, 68 symbols, and 68 edges in 0.093s cold; no-change reindex was 0.027s (`mode=noop`).
-- Atlas language counts were `astro:14`, `markdown:4`, `javascript:3`, `css:1`.
-- graphify rebuilt 36 nodes and 30 links in 0.235s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `astro-compiler` status: ok (files:14, parsed_files:14, parse_errors:0, file_components:14, component_tags:17, functions:1, variables:26, definitions:58, compiler_version:4.0.0).
-- Richer native baselines not available on this machine: `astro`, `astro-language-server`.
-- Coverage proxy: atlas_vs_astro_compiler_definition_ratio: 1.0, atlas_astro_definition_symbols: 58, native_definitions: 58.
-- Optimization cycles: 3 (Astro native frontmatter and component-tag parsing matched the @astrojs/compiler coverage proxy after replacing the regex fallback route.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `BaseLayout` | 12.503 | 69.566 | 5.56x | 9 | 171 | 19.0x |
-| `BlogPost` | 12.327 | 68.789 | 5.58x | 8 | 67 | 8.38x |
-| `pageTitle` | 12.467 | 68.134 | 5.47x | 8 | 9 | 1.12x |
-| `getStaticPaths` | 12.233 | 68.636 | 5.61x | 7 | 51 | 7.29x |
-| `ThemeIcon` | 11.989 | 70.443 | 5.88x | 8 | 68 | 8.5x |
-| `Social` | 12.115 | 68.930 | 5.69x | 7 | 54 | 7.71x |
-
-- Query caveat: `pageTitle` (graphify_missing); raw rows remain in the table.
-5x note: this Astro benchmark meets the 5x threshold on equivalent query rows for latency (5.66x) and token output (10.54x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### Bash
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/nvm-sh/nvm` at commit `a6ec73943099a86fba98bde3b04a1c60944a4549`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-bash-nvm/repo`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-bash-nvm/atlas.db --json index /tmp/atlas-live-bash-nvm/repo`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-bash-nvm/atlas.db --json index /tmp/atlas-live-bash-nvm/repo`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `/bin/bash -n <5 shell files>`
-
-Results:
-
-- Atlas indexed 66 files, 481 symbols, and 103 edges in 0.323s cold; no-change reindex was 0.032s (`mode=noop`).
-- Atlas language counts were `text:18`, `yaml:18`, `markdown:12`, `json:6`, `bash:5`, `config:2`, `image:2`, `dockerfile:1`, `javascript:1`, `makefile:1`.
-- graphify rebuilt 531 nodes and 807 links in 0.531s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `bash-n` status: ok (files:5, parsed_files:5, syntax_errors:0, functions:158, source_edges:0, definitions:158, bash_version:GNU bash, version 3.2.57(1)-release (arm64-apple-darwin25)).
-- Richer native baselines not available on this machine: `shellcheck`, `shfmt`.
-- Coverage proxy: atlas_vs_bash_n_definition_ratio: 1.0, atlas_bash_definition_symbols: 158, native_definitions: 158.
-- Optimization cycles: 2 (Bash native tree-sitter AST parsing matched the /bin/bash -n function-definition coverage proxy and met the current 5x latency/token thresholds.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `nvm` | 12.168 | 77.120 | 6.34x | 5 | 269 | 53.8x |
-| `nvm_install_binary` | 11.875 | 76.224 | 6.42x | 8 | 87 | 10.88x |
-| `nvm_die_on_prefix` | 12.614 | 78.156 | 6.2x | 8 | 90 | 11.25x |
-| `nvm_get_os` | 13.051 | 76.389 | 5.85x | 6 | 52 | 8.67x |
-
-5x note: this Bash benchmark meets the 5x threshold on equivalent query rows for latency (6.19x) and token output (18.44x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### Blade
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/BookStackApp/BookStack` at commit `f7df78b91b12ff1d8e248ded7747e76203904b8e`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-blade-bookstack/repo/resources/views`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-blade-bookstack/atlas.db --json index /tmp/atlas-live-blade-bookstack/repo/resources/views`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-blade-bookstack/atlas.db --json index /tmp/atlas-live-blade-bookstack/repo/resources/views`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `python3 <blade directive counter> /tmp/atlas-live-blade-bookstack/repo/resources/views`
-
-Results:
-
-- Atlas indexed 304 files, 1093 symbols, and 4587 edges in 0.221s cold; no-change reindex was 0.025s (`mode=noop`).
-- Atlas language counts were `blade:303`, `markdown:1`.
-- graphify rebuilt 726 nodes and 421 links in 0.762s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `blade-directive-counter` status: ok (files:303, parsed_files:303, parse_errors:0, definitions:1090).
-- Richer native baselines not available on this machine: `laravel`, `blade-language-server`.
-- Coverage proxy: atlas_vs_blade_directive_counter_definition_ratio: 1.0, atlas_blade_definition_symbols: 1090, native_definitions: 1090.
-- Optimization cycles: 4 (Blade native source parser matched the directive-counter coverage proxy after routing `.blade.php` files off the legacy fallback dispatcher, while preserving the compact terse locations that keep the token ratio above 5x.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `settings.parts.navbar` | 13.734 | 78.318 | 5.7x | 9 | 60 | 6.67x |
-| `home.parts.sidebar` | 12.869 | 78.561 | 6.1x | 8 | 57 | 7.12x |
-| `entities.view-toggle` | 12.664 | 78.139 | 6.17x | 15 | 80 | 5.33x |
-| `common.dark-mode-toggle` | 12.625 | 78.586 | 6.22x | 12 | 59 | 4.92x |
-| `form.user-select` | 12.934 | 78.161 | 6.04x | 11 | 66 | 6.0x |
-| `books.parts.list` | 12.702 | 79.007 | 6.22x | 7 | 56 | 8.0x |
-
-5x note: this Blade benchmark meets the 5x threshold on equivalent query rows for latency (6.07x) and token output (6.1x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### BYOND/DM
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/tgstation/tgstation` at commit `ba6e47987178c54dc0432f0d4ee6843f6a3c9828`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-byond-tgstation/repo/code/modules/mob`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-byond-tgstation/atlas.db --json index /tmp/atlas-live-byond-tgstation/repo/code/modules/mob`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-byond-tgstation/atlas.db --json index /tmp/atlas-live-byond-tgstation/repo/code/modules/mob`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `python3 <byond source counter> /tmp/atlas-live-byond-tgstation/repo/code/modules/mob`
-
-Results:
-
-- Atlas indexed 616 files, 8882 symbols, and 39076 edges in 1.148s cold; no-change reindex was 0.047s (`mode=noop`).
-- Atlas language counts were `byond:614`, `markdown:1`, `text:1`.
-- graphify rebuilt 6 nodes and 5 links in 3.375s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `byond-source-counter` status: ok (files:614, parsed_files:614, parse_errors:0, definitions:8874).
-- Richer native baselines not available on this machine: `dreamchecker`, `dm-langserver`, `tree-sitter-dm`.
-- Coverage proxy: atlas_vs_byond_source_counter_definition_ratio: 1.0, atlas_byond_definition_symbols: 8874, native_definitions: 8874.
-- Optimization cycles: 6 (BYOND/DM native source parser matches the benchmark-owned source-counter coverage proxy after routing BYOND resource files off the legacy fallback dispatcher; graphify still misses every path-like DM query on this machine.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `/mob/living` | 17.996 | 70.092 | 3.89x | 8 | 9 | 1.12x |
-| `/mob/living/Initialize` | 17.285 | 68.708 | 3.98x | 8 | 12 | 1.5x |
-| `/mob/living/prepare_data_huds` | 16.157 | 68.819 | 4.26x | 10 | 14 | 1.4x |
-| `/mob/living/ZImpactDamage` | 16.119 | 69.373 | 4.3x | 9 | 13 | 1.44x |
-| `/datum/movespeed_modifier/landed_on_feet` | 16.554 | 71.618 | 4.33x | 13 | 16 | 1.23x |
-| `/mob/living/MobBump` | 16.428 | 68.526 | 4.17x | 8 | 11 | 1.38x |
-
-- Query caveat: `/mob/living` (graphify_missing), `/mob/living/Initialize` (graphify_missing), `/mob/living/prepare_data_huds` (graphify_missing), `/mob/living/ZImpactDamage` (graphify_missing), `/datum/movespeed_modifier/landed_on_feet` (graphify_missing), `/mob/living/MobBump` (graphify_missing); raw rows remain in the table.
-No-equivalent saturation note: this BYOND/DM benchmark proves Atlas indexes the live language slice and matches the native coverage proxy, but graphify returned no equivalent query rows. Latency/token ratios from missing rows are not treated as 5x evidence; see the saturation loop artifact where applicable.
-
-### C#
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/DapperLib/Dapper` at commit `72a54c475f75e18cb93cba0809d00a5e6e49efd9`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-csharp-dapper/repo`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-csharp-dapper/atlas.db --json index /tmp/atlas-live-csharp-dapper/repo`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-csharp-dapper/atlas.db --json index /tmp/atlas-live-csharp-dapper/repo`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `/opt/homebrew/bin/dotnet run --no-build -- /tmp/atlas-live-csharp-dapper/repo (Roslyn syntax tree counter)`
-
-Results:
-
-- Atlas indexed 207 files, 3673 symbols, and 8243 edges in 0.644s cold; no-change reindex was 0.037s (`mode=noop`).
-- Atlas language counts were `csharp:157`, `text:15`, `dotnet:12`, `markdown:8`, `yaml:6`, `json:4`, `xml:2`, `batch:1`, `config:1`, `powershell:1`.
-- graphify rebuilt 2463 nodes and 5135 links in 1.447s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `roslyn` status: ok (files:157, parsed_files:157, parse_errors:0, definitions:1855, roslyn_version:5.6.0.0).
-- Richer native baselines not available on this machine: `csc`, `omnisharp`, `csharp-ls`.
-- Coverage proxy: atlas_vs_roslyn_definition_ratio: 1.84, atlas_csharp_definition_symbols: 3419, native_definitions: 1855.
-- Optimization cycles: 3 (C# live benchmark improves Atlas type/method recall on real Dapper code, records Atlas/graphify query metrics, and measures coverage against a Roslyn syntax-tree baseline when dotnet is installed.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `SqlMapper` | 14.840 | 120.399 | 8.11x | 10 | 296 | 29.6x |
-| `CommandDefinition` | 18.041 | 114.687 | 6.36x | 13 | 293 | 22.54x |
-| `DynamicParameters` | 17.532 | 115.266 | 6.57x | 18 | 69 | 3.83x |
-| `TypeHandlerCache` | 13.714 | 115.341 | 8.41x | 13 | 106 | 8.15x |
-
-5x note: this C# benchmark meets the 5x threshold on equivalent query rows for latency (7.26x) and token output (14.15x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### CUDA C++
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/NVIDIA/cuda-samples` at commit `b7c5481c556c3fe98db060207ecaa41a4b9a9abc`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-cuda-samples/repo/cpp/0_Introduction/simpleAtomicIntrinsics`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-cuda-samples/atlas.db --json index /tmp/atlas-live-cuda-samples/repo/cpp/0_Introduction/simpleAtomicIntrinsics`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-cuda-samples/atlas.db --json index /tmp/atlas-live-cuda-samples/repo/cpp/0_Introduction/simpleAtomicIntrinsics`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `python3 <cuda source counter> /tmp/atlas-live-cuda-samples/repo/cpp/0_Introduction/simpleAtomicIntrinsics`
-
-Results:
-
-- Atlas indexed 7 files, 26 symbols, and 63 edges in 0.073s cold; no-change reindex was 0.023s (`mode=noop`).
-- Atlas language counts were `cpp:3`, `json:2`, `markdown:1`, `text:1`.
-- graphify rebuilt 19 nodes and 17 links in 0.129s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `cuda-source-counter` status: ok (files:2, parsed_files:2, parse_errors:0, functions:3, definitions:3).
-- Richer native baselines not available on this machine: `nvcc`.
-- Coverage proxy: atlas_vs_cuda_source_counter_definition_ratio: 1.0, atlas_cuda_definition_symbols: 3, native_definitions: 3.
-- Optimization cycles: 2 (CUDA live benchmark covers graphify's .cu/.cuh support inside the cpp/cuda family and improved token score after compacting CUDA source suffixes in terse plain locations while preserving full paths in JSON.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `testKernel` | 12.634 | 78.659 | 6.23x | 11 | 73 | 6.64x |
-| `runTest` | 13.256 | 76.893 | 5.8x | 10 | 64 | 6.4x |
-| `main` | 12.683 | 74.508 | 5.87x | 9 | 63 | 7.0x |
-
-5x note: this CUDA C++ benchmark meets the 5x threshold on equivalent query rows for latency (5.96x) and token output (6.67x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### Dart
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/dart-lang/http` at commit `5d94ef52582867e077bf41c3fa20fb8b1d1d834e`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-dart-http/repo/pkgs/http/lib`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-dart-http/atlas.db --json index /tmp/atlas-live-dart-http/repo/pkgs/http/lib`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-dart-http/atlas.db --json index /tmp/atlas-live-dart-http/repo/pkgs/http/lib`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `/tmp/atlas-live-dart-http/tree-sitter-dart-venv/bin/python -c <tree-sitter-dart definition counter> /tmp/atlas-live-dart-http/repo/pkgs/http/lib`
-
-Results:
-
-- Atlas indexed 27 files, 180 symbols, and 531 edges in 0.098s cold; no-change reindex was 0.027s (`mode=noop`).
-- Atlas language counts were `dart:27`.
-- graphify rebuilt 314 nodes and 424 links in 0.481s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `tree-sitter-dart` status: ok (files:27, parsed_files:27, parse_errors:0, definitions:180, tree_sitter_version:0.25.2, tree_sitter_dart_version:0.1.0).
-- Richer native baselines not available on this machine: `dart`, `flutter`, `dart_language_server`.
-- Coverage proxy: atlas_vs_tree_sitter_dart_definition_ratio: 1.0, atlas_dart_definition_symbols: 180, native_definitions: 180.
-- Optimization cycles: 3 (Dart native tree-sitter AST parsing met the current 5x latency/token thresholds and matched the tree-sitter-dart definition coverage proxy.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `Client` | 13.484 | 87.202 | 6.47x | 7 | 42 | 6.0x |
-| `BaseClient` | 13.896 | 85.253 | 6.14x | 7 | 101 | 14.43x |
-| `Request` | 13.843 | 86.957 | 6.28x | 7 | 51 | 7.29x |
-| `Response` | 14.155 | 86.693 | 6.12x | 7 | 59 | 8.43x |
-| `send` | 14.192 | 87.197 | 6.14x | 7 | 42 | 6.0x |
-| `RetryClient` | 13.433 | 85.696 | 6.38x | 6 | 55 | 9.17x |
-
-5x note: this Dart benchmark meets the 5x threshold on equivalent query rows for latency (6.25x) and token output (8.54x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### Delphi/Lazarus
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/fpc/Lazarus` at commit `e1cc57bb27e48541ffe4bf66c78a8dddfc4f6630`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-delphi-lazarus/repo/ide`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-delphi-lazarus/atlas.db --json index /tmp/atlas-live-delphi-lazarus/repo/ide`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-delphi-lazarus/atlas.db --json index /tmp/atlas-live-delphi-lazarus/repo/ide`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `python3 <delphi/lazarus source counter> /tmp/atlas-live-delphi-lazarus/repo/ide`
-
-Results:
-
-- Atlas indexed 594 files, 39161 symbols, and 73203 edges in 4.279s cold; no-change reindex was 0.041s (`mode=noop`).
-- Atlas language counts were `pascal:376`, `delphi:206`, `makefile:6`, `xml:5`, `text:1`.
-- graphify rebuilt 19383 nodes and 29702 links in 9.421s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `delphi-lazarus-source-counter` status: ok (files:206, parsed_files:206, parse_errors:0, definitions:11308).
-- Richer native baselines not available on this machine: `fpc`, `lazbuild`, `pasls`.
-- Coverage proxy: atlas_vs_delphi_lazarus_source_counter_definition_ratio: 1.0, atlas_delphi_definition_symbols: 11308, native_definitions: 11308.
-- Optimization cycles: 3 (Delphi/Lazarus native source parser matches the benchmark-owned form/package coverage proxy after routing `.dfm`, `.lfm`, and `.lpk` files off the legacy fallback dispatcher.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `AboutForm` | 29.009 | 346.364 | 11.94x | 6 | 50 | 8.33x |
-| `FormClose` | 30.874 | 349.079 | 11.31x | 9 | 47 | 5.22x |
-| `Notebook` | 29.351 | 345.786 | 11.78x | 7 | 53 | 7.57x |
-| `TPageControl` | 36.625 | 352.058 | 9.61x | 9 | 71 | 7.89x |
-| `IdeProject` | 30.365 | 351.123 | 11.56x | 9 | 50 | 5.56x |
-| `BuildManager` | 29.597 | 344.489 | 11.64x | 8 | 268 | 33.5x |
-| `IdePackager` | 29.282 | 353.408 | 12.07x | 9 | 165 | 18.33x |
-
-5x note: this Delphi/Lazarus benchmark meets the 5x threshold on equivalent query rows for latency (11.35x) and token output (12.35x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### .NET Project
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/DapperLib/Dapper` at commit `72a54c475f75e18cb93cba0809d00a5e6e49efd9`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-dotnet-dapper/repo`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-dotnet-dapper/atlas.db --json index /tmp/atlas-live-dotnet-dapper/repo`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-dotnet-dapper/atlas.db --json index /tmp/atlas-live-dotnet-dapper/repo`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `/opt/homebrew/bin/python3 -c <dotnet project counter> /tmp/atlas-live-dotnet-dapper/repo`
-
-Results:
-
-- Atlas indexed 210 files, 3152 symbols, and 8180 edges in 0.517s cold; no-change reindex was 0.028s (`mode=noop`).
-- Atlas language counts were `csharp:157`, `text:15`, `dotnet:12`, `markdown:8`, `yaml:6`, `json:4`, `image:3`, `xml:2`, `batch:1`, `config:1`, `powershell:1`.
-- graphify rebuilt 2463 nodes and 5135 links in 1.36s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `python-dotnet-project` status: ok (files:12, parsed_files:12, parse_errors:0, definitions:132).
-- Richer native baselines not available on this machine: `msbuild`.
-- Coverage proxy: atlas_vs_python_dotnet_project_definition_ratio: 1.0, atlas_dotnet_definition_symbols: 132, native_definitions: 132.
-- Optimization cycles: 4 (.NET project native structured parser matched the Python XML/solution coverage proxy after routing project files off the legacy fallback dispatcher, while preserving compact project-file locations.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `Dapper` | 17.102 | 117.133 | 6.85x | 10 | 56 | 5.6x |
-| `Dapper.Tests` | 13.580 | 107.875 | 7.94x | 7 | 57 | 8.14x |
-| `Microsoft.NET.Sdk` | 13.970 | 108.062 | 7.74x | 15 | 90 | 6.0x |
-| `Microsoft.Bcl.AsyncInterfaces` | 13.825 | 108.888 | 7.88x | 14 | 75 | 5.36x |
-| `Dapper.ProviderTools` | 13.767 | 107.905 | 7.84x | 12 | 62 | 5.17x |
-| `net8.0` | 13.603 | 108.424 | 7.97x | 9 | 72 | 8.0x |
-
-5x note: this .NET Project benchmark meets the 5x threshold on equivalent query rows for latency (7.67x) and token output (6.15x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### EJS
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/expressjs/express` at commit `18e5985b8a9d5e8423db0a9121f22bdaecd5b120`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-ejs-express/repo/examples`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-ejs-express/atlas.db --json index /tmp/atlas-live-ejs-express/repo/examples`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-ejs-express/atlas.db --json index /tmp/atlas-live-ejs-express/repo/examples`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `python3 <ejs template counter> /tmp/atlas-live-ejs-express/repo/examples`
-
-Results:
-
-- Atlas indexed 77 files, 280 symbols, and 767 edges in 0.119s cold; no-change reindex was 0.033s (`mode=noop`).
-- Atlas language counts were `javascript:43`, `ejs:20`, `css:4`, `html:4`, `text:4`, `markdown:2`.
-- graphify rebuilt 86 nodes and 52 links in 0.293s.
-- graphify detector-only caveat: `.ejs` is present in `CODE_EXTENSIONS`, but this installed graphify runtime has no `_DISPATCH` extractor for it; graphify query rows are kept as missing-baseline evidence rather than 5x proof.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `ejs-template-counter` status: ok (files:20, parsed_files:20, parse_errors:0, definitions:36).
-- Richer native baselines not available on this machine: `ejs`, `ejs-language-server`.
-- Coverage proxy: atlas_vs_ejs_template_counter_definition_ratio: 1.0, atlas_ejs_definition_symbols: 36, native_definitions: 36.
-- Optimization cycles: 3 (EJS native source parser matched the template-counter coverage proxy after routing `.ejs` files off the legacy fallback dispatcher; graphify remains a detector-only ceiling in this installed runtime.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `login` | 12.822 | 69.763 | 5.44x | 5 | 8 | 1.6x |
-| `index` | 13.362 | 69.611 | 5.21x | 7 | 48 | 6.86x |
-| `header` | 12.246 | 69.858 | 5.7x | 6 | 8 | 1.33x |
-| `footer` | 12.557 | 68.702 | 5.47x | 5 | 8 | 1.6x |
-| `../header` | 12.514 | 70.011 | 5.59x | 7 | 9 | 1.29x |
-| `../footer` | 13.128 | 69.496 | 5.29x | 7 | 9 | 1.29x |
-| `error_header` | 12.610 | 68.781 | 5.45x | 7 | 9 | 1.29x |
-
-- Query caveat: `login` (graphify_missing), `header` (graphify_missing), `footer` (graphify_missing), `../header` (graphify_missing), `../footer` (graphify_missing), `error_header` (graphify_missing); raw rows remain in the table.
-Detector-only saturation note: this EJS benchmark proves Atlas indexes the live language slice and matches the native coverage proxy, but it does not prove graphify/native 5x query superiority for this extension because the installed graphify runtime has no deterministic extractor for it.
-
-### Elixir
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/phoenixframework/phoenix` at commit `909725968776c2601bbea7827fd5b76e4992cc70`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-elixir-phoenix/repo/lib`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-elixir-phoenix/atlas.db --json index /tmp/atlas-live-elixir-phoenix/repo/lib`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-elixir-phoenix/atlas.db --json index /tmp/atlas-live-elixir-phoenix/repo/lib`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `/tmp/atlas-live-elixir-phoenix/tree-sitter-elixir-venv/bin/python -c <tree-sitter-elixir definition counter> /tmp/atlas-live-elixir-phoenix/repo/lib`
-
-Results:
-
-- Atlas indexed 74 files, 1642 symbols, and 4897 edges in 0.341s cold; no-change reindex was 0.028s (`mode=noop`).
-- Atlas language counts were `elixir:74`.
-- graphify rebuilt 1051 nodes and 1844 links in 0.579s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `tree-sitter-elixir` status: ok (files:74, parsed_files:74, parse_errors:0, definitions:1642, tree_sitter_version:0.25.2, tree_sitter_elixir_version:0.3.5).
-- Richer native baselines not available on this machine: `elixir`, `mix`, `lexical`.
-- Coverage proxy: atlas_vs_tree_sitter_elixir_definition_ratio: 1.0, atlas_elixir_definition_symbols: 1642, native_definitions: 1642.
-- Optimization cycles: 4 (Elixir native tree-sitter AST parsing matched the tree-sitter-elixir definition coverage proxy exactly and met the current 5x latency/token thresholds; elixir/mix/Lexical remain unavailable on this machine.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `Phoenix.Router` | 14.423 | 102.743 | 7.12x | 6 | 260 | 43.33x |
-| `Phoenix.Endpoint` | 15.261 | 101.131 | 6.63x | 8 | 186 | 23.25x |
-| `Phoenix.Controller` | 15.175 | 98.935 | 6.52x | 9 | 275 | 30.56x |
-| `path` | 15.774 | 100.239 | 6.35x | 7 | 70 | 10.0x |
-| `socket` | 15.585 | 101.003 | 6.48x | 7 | 58 | 8.29x |
-
-5x note: this Elixir benchmark meets the 5x threshold on equivalent query rows for latency (6.61x) and token output (22.95x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### ETS/ArkTS
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/openharmony/applications_app_samples` at commit `a826ab0e75fe51d028c1c5af58188e908736b53b`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-ets-openharmony-tabs/repo/code/ArkTS1.2/TabsSample/entry/src/main/ets`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-ets-openharmony-tabs/atlas.db --json index /tmp/atlas-live-ets-openharmony-tabs/repo/code/ArkTS1.2/TabsSample/entry/src/main/ets`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-ets-openharmony-tabs/atlas.db --json index /tmp/atlas-live-ets-openharmony-tabs/repo/code/ArkTS1.2/TabsSample/entry/src/main/ets`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `python3 <ets source counter> /tmp/atlas-live-ets-openharmony-tabs/repo/code/ArkTS1.2/TabsSample/entry/src/main/ets`
-
-Results:
-
-- Atlas indexed 18 files, 157 symbols, and 757 edges in 0.069s cold; no-change reindex was 0.031s (`mode=noop`).
-- Atlas language counts were `ets:18`.
-- graphify rebuilt 0 nodes and 0 links in 0.11s.
-- graphify detector-only caveat: `.ets` is present in `CODE_EXTENSIONS`, but this installed graphify runtime has no `_DISPATCH` extractor for it; graphify query rows are kept as missing-baseline evidence rather than 5x proof.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `ets-source-counter` status: ok (files:18, parsed_files:18, parse_errors:0, definitions:153).
-- Richer native baselines not available on this machine: `arkts`, `hvigor`, `ohpm`.
-- Coverage proxy: atlas_vs_ets_source_counter_definition_ratio: 1.0, atlas_ets_definition_symbols: 153, native_definitions: 153.
-- Optimization cycles: 6 (ETS native ArkTS source parser matches the benchmark-owned source-counter coverage proxy after routing `.ets` files off the legacy fallback dispatcher; graphify still exposes no equivalent ETS query rows in this runtime.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `MyStateSample` | 12.370 | 69.528 | 5.62x | 8 | 10 | 1.25x |
-| `ComExampleTrivialApplication` | 12.813 | 68.218 | 5.32x | 11 | 13 | 1.18x |
-| `WaterFlowDataSource` | 12.230 | 68.191 | 5.58x | 12 | 11 | 0.92x |
-| `notifyDataReload` | 12.501 | 67.524 | 5.4x | 12 | 10 | 0.83x |
-| `ArticleNode` | 12.272 | 68.742 | 5.6x | 8 | 9 | 1.12x |
-| `TabViewComponent` | 12.399 | 68.643 | 5.54x | 8 | 10 | 1.25x |
-| `CollapseMenuSection` | 12.495 | 68.164 | 5.46x | 12 | 11 | 0.92x |
-| `articleItemBuilder` | 12.854 | 67.888 | 5.28x | 14 | 11 | 0.79x |
-
-- Query caveat: `MyStateSample` (graphify_missing), `ComExampleTrivialApplication` (graphify_missing), `WaterFlowDataSource` (graphify_missing), `notifyDataReload` (graphify_missing), `ArticleNode` (graphify_missing), `TabViewComponent` (graphify_missing), `CollapseMenuSection` (graphify_missing), `articleItemBuilder` (graphify_missing); raw rows remain in the table.
-No-equivalent saturation note: this ETS/ArkTS benchmark proves Atlas indexes the live language slice and matches the native coverage proxy, but graphify returned no equivalent query rows. Latency/token ratios from missing rows are not treated as 5x evidence; see the saturation loop artifact where applicable.
-
-### Fortran
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/fortran-lang/stdlib` at commit `4c8521d5658455a576946cca3bfe2bd8ede36e24`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-fortran-stdlib/repo/src`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-fortran-stdlib/atlas.db --json index /tmp/atlas-live-fortran-stdlib/repo/src`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-fortran-stdlib/atlas.db --json index /tmp/atlas-live-fortran-stdlib/repo/src`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `/tmp/atlas-live-fortran-stdlib/tree-sitter-fortran-venv/bin/python -c <tree-sitter-fortran definition counter> /tmp/atlas-live-fortran-stdlib/repo/src`
-
-Results:
-
-- Atlas indexed 53 files, 415 symbols, and 4527 edges in 0.156s cold; no-change reindex was 0.027s (`mode=noop`).
-- Atlas language counts were `text:29`, `fortran:22`, `c:2`.
-- graphify rebuilt 453 nodes and 815 links in 0.576s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `tree-sitter-fortran` status: ok (files:22, parsed_files:22, parse_errors:0, definitions:364, tree_sitter_version:0.25.2, tree_sitter_fortran_version:0.6.0).
-- Richer native baselines not available on this machine: `gfortran`, `fortls`, `fpm`.
-- Coverage proxy: atlas_vs_tree_sitter_fortran_definition_ratio: 1.0, atlas_fortran_definition_symbols: 364, native_definitions: 364.
-- Optimization cycles: 3 (Fortran native tree-sitter AST parsing matched the tree-sitter-fortran definition coverage proxy and met the current 5x latency/token thresholds.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `stdlib_array` | 12.132 | 75.081 | 6.19x | 7 | 83 | 11.86x |
-| `stdlib_datetime` | 12.312 | 74.932 | 6.09x | 9 | 253 | 28.11x |
-| `datetime_type` | 12.468 | 74.734 | 5.99x | 9 | 267 | 29.67x |
-| `hashmap_type` | 12.396 | 73.800 | 5.95x | 8 | 292 | 36.5x |
-| `loading` | 12.250 | 74.470 | 6.08x | 7 | 65 | 9.29x |
-| `free_chaining_map` | 12.179 | 74.126 | 6.09x | 14 | 103 | 7.36x |
-
-5x note: this Fortran benchmark meets the 5x threshold on equivalent query rows for latency (6.06x) and token output (19.69x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### Groovy/Gradle
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/nextflow-io/nextflow` at commit `fcf52e54d6854c9648d9c2e66ec02ac76518a000`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-groovy-nextflow/repo/modules/nf-commons/src/main`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-groovy-nextflow/atlas.db --json index /tmp/atlas-live-groovy-nextflow/repo/modules/nf-commons/src/main`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-groovy-nextflow/atlas.db --json index /tmp/atlas-live-groovy-nextflow/repo/modules/nf-commons/src/main`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `/tmp/atlas-live-groovy-nextflow/tree-sitter-groovy-venv/bin/python -c <tree-sitter-groovy definition counter> /tmp/atlas-live-groovy-nextflow/repo/modules/nf-commons/src/main`
-
-Results:
-
-- Atlas indexed 100 files, 1075 symbols, and 3733 edges in 0.235s cold; no-change reindex was 0.025s (`mode=noop`).
-- Atlas language counts were `groovy:88`, `java:12`.
-- graphify rebuilt 742 nodes and 1227 links in 0.897s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `tree-sitter-groovy` status: partial (files:88, parsed_files:21, parse_errors:67, definitions:525, tree_sitter_version:0.25.2, tree_sitter_groovy_version:0.1.2).
-- Richer native baselines not available on this machine: `groovy`, `gradle`, `groovy-language-server`.
-- Coverage proxy: atlas_vs_tree_sitter_groovy_definition_ratio: 1.59, atlas_groovy_definition_symbols: 837, native_definitions: 525.
-- Optimization cycles: 4 (Groovy/Gradle native tree-sitter AST parsing met the current 5x latency/token thresholds and stayed above the partial tree-sitter-groovy baseline with source-shape recovery for real Nextflow files that the grammar marks as parse errors.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `SysEnv` | 12.925 | 78.905 | 6.1x | 7 | 125 | 17.86x |
-| `Const` | 12.473 | 79.696 | 6.39x | 6 | 77 | 12.83x |
-| `Duration` | 13.231 | 78.738 | 5.95x | 10 | 36 | 3.6x |
-| `getVersion` | 12.712 | 80.442 | 6.33x | 9 | 64 | 7.11x |
-| `format` | 13.595 | 78.097 | 5.74x | 8 | 97 | 12.12x |
-
-5x note: this Groovy/Gradle benchmark meets the 5x threshold on equivalent query rows for latency (6.1x) and token output (9.97x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### JSON Config
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/eslint/create-config` at commit `58d77fc302b25976bb4cc7dc273377b421bc226b`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-json-eslint-create-config/repo`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-json-eslint-create-config/atlas.db --json index /tmp/atlas-live-json-eslint-create-config/repo`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-json-eslint-create-config/atlas.db --json index /tmp/atlas-live-json-eslint-create-config/repo`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `/opt/homebrew/bin/python3 -c <python-json key counter> /tmp/atlas-live-json-eslint-create-config/repo`
-
-Results:
-
-- Atlas indexed 27 files, 252 symbols, and 409 edges in 0.099s cold; no-change reindex was 0.02s (`mode=noop`).
-- Atlas language counts were `javascript:13`, `yaml:6`, `json:5`, `markdown:2`, `config:1`.
-- graphify rebuilt 184 nodes and 220 links in 0.298s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `python-json` status: ok (files:5, parsed_files:5, parse_errors:0, definitions:60).
-- Richer native baselines not available on this machine: `ajv`.
-- Coverage proxy: atlas_vs_python_json_definition_ratio: 1.0, atlas_json_definition_symbols: 60, native_definitions: 60.
-- Optimization cycles: 2 (JSON config live benchmark matched Python stdlib object-key coverage after replacing opaque file-level JSON documents with structured key-path symbols.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `scripts` | 11.970 | 79.198 | 6.62x | 6 | 113 | 18.83x |
-| `scripts.test` | 11.486 | 75.439 | 6.57x | 7 | 9 | 1.29x |
-| `dependencies` | 11.395 | 74.984 | 6.58x | 7 | 86 | 12.29x |
-| `devDependencies` | 11.579 | 75.906 | 6.56x | 8 | 129 | 16.12x |
-| `publishConfig` | 11.464 | 75.482 | 6.58x | 8 | 57 | 7.12x |
-| `publishConfig.access` | 11.713 | 74.802 | 6.39x | 9 | 11 | 1.22x |
-
-- Query caveat: `scripts.test` (graphify_missing), `publishConfig.access` (graphify_missing); raw rows remain in the table.
-5x note: this JSON Config benchmark meets the 5x threshold on equivalent query rows for latency (6.58x) and token output (13.28x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### Julia
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/JuliaIO/JSON.jl` at commit `e5ef310dece16746843753e4c3b44e868b917b64`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-julia-json/repo/src`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-julia-json/atlas.db --json index /tmp/atlas-live-julia-json/repo/src`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-julia-json/atlas.db --json index /tmp/atlas-live-julia-json/repo/src`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `/tmp/atlas-live-julia-json/tree-sitter-julia-venv/bin/python -c <tree-sitter-julia definition counter> /tmp/atlas-live-julia-json/repo/src`
-
-Results:
-
-- Atlas indexed 6 files, 310 symbols, and 1049 edges in 0.126s cold; no-change reindex was 0.025s (`mode=noop`).
-- Atlas language counts were `julia:6`.
-- graphify rebuilt 114 nodes and 179 links in 0.159s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `tree-sitter-julia` status: partial (files:6, parsed_files:5, parse_errors:1, definitions:310, tree_sitter_version:0.25.2, tree_sitter_julia_version:0.23.1).
-- Richer native baselines not available on this machine: `julia`.
-- Coverage proxy: atlas_vs_tree_sitter_julia_definition_ratio: 1.0, atlas_julia_definition_symbols: 310, native_definitions: 310.
-- Optimization cycles: 3 (Julia native tree-sitter AST parsing met the current 5x latency/token thresholds and matched the tree-sitter-julia definition coverage proxy.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `JSON` | 12.029 | 70.308 | 5.84x | 3 | 38 | 12.67x |
-| `JSONText` | 12.125 | 70.489 | 5.81x | 6 | 51 | 8.5x |
-| `Object` | 12.420 | 71.455 | 5.75x | 7 | 75 | 10.71x |
-| `parse` | 12.396 | 70.050 | 5.65x | 7 | 167 | 23.86x |
-| `json` | 12.339 | 70.521 | 5.72x | 6 | 38 | 6.33x |
-| `LazyValue` | 12.144 | 69.943 | 5.76x | 6 | 9 | 1.5x |
-
-- Query caveat: `LazyValue` (graphify_missing); raw rows remain in the table.
-5x note: this Julia benchmark meets the 5x threshold on equivalent query rows for latency (5.75x) and token output (12.72x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### Kotlin
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/square/okhttp` at commit `0cadfa2997513d20bf88ca530c963a1266f17af9`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-kotlin-okhttp/repo/okhttp/src/commonJvmAndroid/kotlin`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-kotlin-okhttp/atlas.db --json index /tmp/atlas-live-kotlin-okhttp/repo/okhttp/src/commonJvmAndroid/kotlin`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-kotlin-okhttp/atlas.db --json index /tmp/atlas-live-kotlin-okhttp/repo/okhttp/src/commonJvmAndroid/kotlin`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `/tmp/atlas-live-kotlin-okhttp/tree-sitter-kotlin-venv/bin/python -c <tree-sitter-kotlin definition counter> /tmp/atlas-live-kotlin-okhttp/repo/okhttp/src/commonJvmAndroid/kotlin`
-
-Results:
-
-- Atlas indexed 138 files, 3901 symbols, and 7504 edges in 0.7s cold; no-change reindex was 0.043s (`mode=noop`).
-- Atlas language counts were `kotlin:138`.
-- graphify rebuilt 1844 nodes and 5202 links in 1.257s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `tree-sitter-kotlin` status: partial (files:138, parsed_files:136, parse_errors:2, definitions:3876, tree_sitter_version:0.25.2, tree_sitter_kotlin_version:1.1.0).
-- Richer native baselines not available on this machine: `kotlinc`, `kotlin-language-server`, `ktlint`.
-- Coverage proxy: atlas_vs_tree_sitter_kotlin_definition_ratio: 1.0, atlas_kotlin_definition_symbols: 3875, native_definitions: 3876.
-- Optimization cycles: 3 (Kotlin live benchmark met the current 5x latency/token thresholds and matched the unique tree-sitter-kotlin definition set exactly. The remaining one-count raw gap is a duplicated native counter entry for `connectResult` in `SequentialExchangeFinder.kt`, so this is recorded as a measurement ceiling rather than an Atlas recall miss.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `OkHttpClient` | 17.729 | 129.630 | 7.31x | 8 | 255 | 31.88x |
-| `Request` | 16.936 | 120.456 | 7.11x | 6 | 56 | 9.33x |
-| `Response` | 17.327 | 117.375 | 6.77x | 6 | 97 | 16.17x |
-| `HttpUrl` | 17.174 | 118.643 | 6.91x | 7 | 239 | 34.14x |
-| `Headers` | 16.049 | 116.876 | 7.28x | 6 | 246 | 41.0x |
-
-5x note: this Kotlin benchmark meets the 5x threshold on equivalent query rows for latency (7.08x) and token output (27.06x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### Lua
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/folke/lazy.nvim` at commit `306a05526ada86a7b30af95c5cc81ffba93fef97`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-lua-lazy/repo`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-lua-lazy/atlas.db --json index /tmp/atlas-live-lua-lazy/repo`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-lua-lazy/atlas.db --json index /tmp/atlas-live-lua-lazy/repo`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `/tmp/atlas-live-lua-lazy/luaparser-venv/bin/python -c <luaparser definition counter> /tmp/atlas-live-lua-lazy/repo`
-
-Results:
-
-- Atlas indexed 90 files, 1001 symbols, and 3543 edges in 0.979s cold; no-change reindex was 0.037s (`mode=noop`).
-- Atlas language counts were `lua:65`, `yaml:14`, `markdown:4`, `json:3`, `toml:2`, `config:1`, `text:1`.
-- graphify rebuilt 1011 nodes and 1288 links in 0.635s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `luaparser` status: ok (files:65, parsed_files:65, parse_errors:0, definitions:444, luaparser_version:4.0.1).
-- Richer native baselines not available on this machine: `lua`, `luac`, `luacheck`, `stylua`.
-- Coverage proxy: atlas_vs_luaparser_definition_ratio: 1.0, atlas_lua_definition_symbols: 444, native_definitions: 444.
-- Optimization cycles: 1 (Lua live benchmark exceeded 5x query latency plus token output on equivalent function-symbol queries and exceeded the luaparser named-definition coverage proxy on cycle 1.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `Loader.load` | 14.792 | 102.143 | 6.91x | 6 | 146 | 24.33x |
-| `Async.new` | 14.810 | 101.411 | 6.85x | 5 | 58 | 11.6x |
-| `M.add` | 14.664 | 103.973 | 7.09x | 5 | 65 | 13.0x |
-| `M.reload` | 15.532 | 103.940 | 6.69x | 7 | 78 | 11.14x |
-
-5x note: this Lua benchmark meets the 5x threshold on equivalent query rows for latency (6.88x) and token output (15.09x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### Markdown
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/rust-lang/mdBook` at commit `cb49cc5523e609a731f27dea1af4395a504815a5`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-markdown-mdbook/repo/guide/src`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-markdown-mdbook/atlas.db --json index /tmp/atlas-live-markdown-mdbook/repo/guide/src`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-markdown-mdbook/atlas.db --json index /tmp/atlas-live-markdown-mdbook/repo/guide/src`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `/tmp/atlas-live-markdown-mdbook/markdown-it-venv/bin/python -c <markdown-it-py heading counter> /tmp/atlas-live-markdown-mdbook/repo/guide/src`
-
-Results:
-
-- Atlas indexed 38 files, 161 symbols, and 27 edges in 0.079s cold; no-change reindex was 0.034s (`mode=noop`).
-- Atlas language counts were `markdown:35`, `rust:2`, `toml:1`.
-- graphify rebuilt 205 nodes and 249 links in 0.318s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `markdown-it-py` status: ok (files:35, parsed_files:35, parse_errors:0, definitions:156, markdown_it_py_version:4.0.0).
-- Richer native baselines not available on this machine: `markdownlint`, `remark`.
-- Coverage proxy: atlas_vs_markdown_it_py_definition_ratio: 1.0, atlas_markdown_definition_symbols: 156, native_definitions: 156.
-- Optimization cycles: 2 (Markdown live benchmark matched the markdown-it-py CommonMark heading coverage proxy after making Atlas section extraction fence-aware; query latency/token ratios are reported against graphify's document parser output.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `Installation` | 11.915 | 78.396 | 6.58x | 8 | 95 | 11.88x |
-| `Creating a book` | 11.739 | 76.825 | 6.54x | 8 | 88 | 11.0x |
-| `The build command` | 12.123 | 77.995 | 6.43x | 7 | 83 | 11.86x |
-| `Running `mdbook` in continuous integration` | 11.824 | 75.329 | 6.37x | 18 | 105 | 5.83x |
-| `mdBook-specific features` | 11.798 | 75.959 | 6.44x | 9 | 140 | 15.56x |
-| `Configuring Renderers` | 12.256 | 94.648 | 7.72x | 9 | 97 | 10.78x |
-
-5x note: this Markdown benchmark meets the 5x threshold on equivalent query rows for latency (6.69x) and token output (10.31x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### Objective-C
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/SDWebImage/SDWebImage` at commit `c3ad5e1a9bf55c9b76d4c362430b5fcded96c502`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-objc-sdwebimage/repo/SDWebImage`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-objc-sdwebimage/atlas.db --json index /tmp/atlas-live-objc-sdwebimage/repo/SDWebImage`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-objc-sdwebimage/atlas.db --json index /tmp/atlas-live-objc-sdwebimage/repo/SDWebImage`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `/tmp/atlas-live-objc-sdwebimage/tree-sitter-objc-venv/bin/python -c <tree-sitter-objc definition counter> /tmp/atlas-live-objc-sdwebimage/repo/SDWebImage`
-
-Results:
-
-- Atlas indexed 147 files, 979 symbols, and 2118 edges in 0.238s cold; no-change reindex was 0.04s (`mode=noop`).
-- Atlas language counts were `c:75`, `objc:72`.
-- graphify rebuilt 1101 nodes and 1009 links in 0.663s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `tree-sitter-objc` status: partial (files:72, parsed_files:67, parse_errors:5, definitions:971, tree_sitter_version:0.25.2, tree_sitter_objc_version:3.0.2).
-- Coverage proxy: atlas_vs_tree_sitter_objc_definition_ratio: 1.0, atlas_objc_definition_symbols: 971, native_definitions: 971.
-- Optimization cycles: 3 (Objective-C native tree-sitter AST parsing matched the graphify-scoped tree-sitter-objc definition coverage proxy and exceeded 5x latency/token thresholds on equivalent rows after preserving full multi-part selectors in Atlas.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `SDImageCache` | 13.762 | 93.471 | 6.79x | 8 | 300 | 37.5x |
-| `SDWebImageManager` | 13.876 | 92.040 | 6.63x | 11 | 414 | 37.64x |
-| `sharedImageCache` | 13.484 | 92.003 | 6.82x | 8 | 57 | 7.12x |
-| `storeImage:forKey:completion:` | 13.547 | 90.015 | 6.64x | 12 | 14 | 1.17x |
-| `objectForKey:` | 13.261 | 90.933 | 6.86x | 8 | 56 | 7.0x |
-
-- Query caveat: `storeImage:forKey:completion:` (graphify_missing); raw rows remain in the table.
-5x note: this Objective-C benchmark meets the 5x threshold on equivalent query rows for latency (6.78x) and token output (23.63x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### Pascal
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/remobjects/pascalscript` at commit `4340039059ce2d270b39fad64c1415ead9f83234`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-pascal-pascalscript/repo/Source`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-pascal-pascalscript/atlas.db --json index /tmp/atlas-live-pascal-pascalscript/repo/Source`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-pascal-pascalscript/atlas.db --json index /tmp/atlas-live-pascal-pascalscript/repo/Source`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `/opt/homebrew/bin/python3 -c <pascal declaration counter> /tmp/atlas-live-pascal-pascalscript/repo/Source`
-
-Results:
-
-- Atlas indexed 126 files, 6506 symbols, and 21357 edges in 1.011s cold; no-change reindex was 0.04s (`mode=noop`).
-- Atlas language counts were `pascal:93`, `image:21`, `config:8`, `delphi:2`, `batch:1`, `text:1`.
-- graphify rebuilt 5276 nodes and 7453 links in 1.589s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `pascal-regex-counter` status: ok (files:93, parsed_files:93, parse_errors:0, definitions:6432).
-- Richer native baselines not available on this machine: `fpc`, `pasls`.
-- Coverage proxy: atlas_vs_pascal_regex_counter_definition_ratio: 1.0, atlas_pascal_definition_symbols: 6432, native_definitions: 6432.
-- Optimization cycles: 4 (Pascal native tree-sitter AST parsing matched the declaration-counter coverage proxy after adding a source-shape recovery layer for package headers and grammar-error declarations; stronger Pascal compiler/LSP baselines are recorded as unavailable on this machine.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `TPSPascalCompiler` | 15.234 | 129.192 | 8.48x | 9 | 255 | 28.33x |
-| `TPSExec.InnerfuseCall` | 15.537 | 126.786 | 8.16x | 11 | 12 | 1.09x |
-| `TPSRuntimeClassImporter` | 15.160 | 127.970 | 8.44x | 11 | 120 | 10.91x |
-| `TPSInternalProcedure` | 15.322 | 127.688 | 8.33x | 10 | 109 | 10.9x |
-| `RegisterClassLibraryRuntime` | 16.233 | 128.502 | 7.92x | 14 | 81 | 5.79x |
-
-- Query caveat: `TPSExec.InnerfuseCall` (graphify_missing); raw rows remain in the table.
-5x note: this Pascal benchmark meets the 5x threshold on equivalent query rows for latency (8.29x) and token output (12.84x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### PHP
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/slimphp/Slim` at commit `0da7dd2fc66956730b6633f6a056b35e59126583`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-php-slim/repo`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-php-slim/atlas.db --json index /tmp/atlas-live-php-slim/repo`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-php-slim/atlas.db --json index /tmp/atlas-live-php-slim/repo`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `/opt/homebrew/bin/php /tmp/atlas-live-php-slim/php_token_stats.php /tmp/atlas-live-php-slim/repo`
-
-Results:
-
-- Atlas indexed 140 files, 1144 symbols, and 6546 edges in 0.288s cold; no-change reindex was 0.021s (`mode=noop`).
-- Atlas language counts were `php:125`, `markdown:8`, `yaml:4`, `config:1`, `json:1`, `xml:1`.
-- graphify rebuilt 1152 nodes and 2115 links in 0.582s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `php-tokenizer` status: ok (files:125, parsed_files:125, parse_errors:0, classes:106, interfaces:18, traits:0, enums:0, functions:742, requires:1, namespaces:124, uses:881, use_functions:163, php_version:8.4.14, definitions:866).
-- Richer native baselines not available on this machine: `intelephense`, `phpstan`, `psalm`.
-- Coverage proxy: atlas_vs_php_tokenizer_definition_ratio: 1.0, atlas_php_definition_symbols: 866, native_definitions: 866.
-- Optimization cycles: 2 (PHP live benchmark met the current 5x latency/token thresholds and matched PHP tokenizer definition coverage after separating `use function` imports from real function definitions in the native baseline.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `handle` | 14.811 | 108.190 | 7.3x | 7 | 78 | 11.14x |
-| `process` | 14.003 | 96.875 | 6.92x | 12 | 116 | 9.67x |
-| `addRoute` | 12.723 | 93.636 | 7.36x | 2 | 8 | 4.0x |
-| `getResponseFactory` | 14.040 | 96.832 | 6.9x | 12 | 77 | 6.42x |
-
-- Query caveat: `addRoute` (graphify_missing); raw rows remain in the table.
-5x note: this PHP benchmark meets the 5x threshold on equivalent query rows for latency (7.04x) and token output (8.74x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### PowerShell
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/PowerShell/PowerShellGet` at commit `a2dac8e74603f7c9eec4a54c5e23459531751b0d`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-powershell-powershellget/repo/src`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-powershell-powershellget/atlas.db --json index /tmp/atlas-live-powershell-powershellget/repo/src`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-powershell-powershellget/atlas.db --json index /tmp/atlas-live-powershell-powershellget/repo/src`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `/usr/local/bin/pwsh -NoLogo -NoProfile -File /tmp/atlas-live-powershell-powershellget/pwsh_stats.ps1 /tmp/atlas-live-powershell-powershellget/repo/src`
-
-Results:
-
-- Atlas indexed 2 files, 28 symbols, and 803 edges in 0.083s cold; no-change reindex was 0.029s (`mode=noop`).
-- Atlas language counts were `powershell:2`.
-- graphify rebuilt 30 nodes and 43 links in 0.124s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `pwsh-parser` status: ok (files:2, parsed_files:2, parse_errors:0, functions:28, assignments:391, definitions:28, powershell_version:7.4.6).
-- Richer native baselines not available on this machine: `powershell-editor-services`, `psscriptanalyzer`.
-- Coverage proxy: atlas_vs_pwsh_parser_definition_ratio: 1.0, atlas_powershell_definition_symbols: 28, native_definitions: 28.
-- Optimization cycles: 3 (PowerShell native tree-sitter AST parsing matched pwsh AST function-definition coverage after replacing the regex route, while preserving source-import extraction and compact plain output paths.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `Find-Module` | 12.298 | 68.431 | 5.56x | 8 | 66 | 8.25x |
-| `Install-Module` | 12.677 | 68.004 | 5.36x | 9 | 67 | 7.44x |
-| `Register-PSRepository` | 12.460 | 67.653 | 5.43x | 10 | 57 | 5.7x |
-| `Update-ModuleManifest` | 12.292 | 67.977 | 5.53x | 10 | 57 | 5.7x |
-
-5x note: this PowerShell benchmark meets the 5x threshold on equivalent query rows for latency (5.47x) and token output (6.68x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### Razor
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/dotnet-architecture/eShopOnWeb` at commit `4da8212117e87d808d4bbc7da6286fd2147ce606`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-razor-eshoponweb/repo/src`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-razor-eshoponweb/atlas.db --json index /tmp/atlas-live-razor-eshoponweb/repo/src`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-razor-eshoponweb/atlas.db --json index /tmp/atlas-live-razor-eshoponweb/repo/src`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `python3 <razor directive counter> /tmp/atlas-live-razor-eshoponweb/repo/src`
-
-Results:
-
-- Atlas indexed 354 files, 1353 symbols, and 2436 edges in 0.445s cold; no-change reindex was 0.03s (`mode=noop`).
-- Atlas language counts were `csharp:209`, `razor:61`, `css:34`, `image:21`, `json:16`, `dotnet:6`, `dockerfile:2`, `javascript:2`, `markdown:2`, `xml:1`.
-- graphify rebuilt 1086 nodes and 1504 links in 2.83s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `razor-directive-counter` status: ok (files:61, parsed_files:61, parse_errors:0, definitions:208).
-- Richer native baselines not available on this machine: `razor-language-server`.
-- Coverage proxy: atlas_vs_razor_directive_counter_definition_ratio: 1.0, atlas_razor_definition_symbols: 208, native_definitions: 208.
-- Optimization cycles: 4 (Razor native source parsing matched the directive/component coverage proxy after replacing the regex fallback route and preserving compact Razor view output.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `EditForm` | 13.165 | 85.080 | 6.46x | 6 | 63 | 10.5x |
-| `IJSRuntime` | 13.634 | 85.590 | 6.28x | 6 | 57 | 9.5x |
-| `ICatalogItemService` | 12.819 | 85.540 | 6.67x | 8 | 69 | 8.62x |
-| `BlazorAdmin.Helpers.BlazorComponent` | 13.368 | 85.996 | 6.43x | 12 | 77 | 6.42x |
-| `CreateClick` | 13.008 | 85.148 | 6.55x | 8 | 60 | 7.5x |
-| `ConfirmEmailModel` | 12.744 | 85.867 | 6.74x | 9 | 60 | 6.67x |
-
-5x note: this Razor benchmark meets the 5x threshold on equivalent query rows for latency (6.52x) and token output (7.88x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### Ruby
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/sinatra/sinatra` at commit `5236d3459b8b9015e5ce21ddd0c6beb0db4081d4`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-ruby-sinatra/repo`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-ruby-sinatra/atlas.db --json index /tmp/atlas-live-ruby-sinatra/repo`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-ruby-sinatra/atlas.db --json index /tmp/atlas-live-ruby-sinatra/repo`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `/usr/bin/ruby /tmp/atlas-live-ruby-sinatra/ripper_stats.rb /tmp/atlas-live-ruby-sinatra/repo`
-
-Results:
-
-- Atlas indexed 178 files, 1450 symbols, and 3970 edges in 0.272s cold; no-change reindex was 0.025s (`mode=noop`).
-- Atlas language counts were `ruby:147`, `markdown:12`, `yaml:10`, `css:4`, `config:3`, `text:2`.
-- graphify rebuilt 1281 nodes and 1869 links in 0.721s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `ruby-ripper` status: ok (files:147, parsed_files:147, parse_errors:0, classes:131, modules:138, methods:895, requires:0, ruby_version:2.6.10, definitions:1164).
-- Richer native baselines not available on this machine: `solargraph`, `ruby-lsp`.
-- Coverage proxy: atlas_vs_ruby_ripper_definition_ratio: 1.01, atlas_ruby_definition_symbols: 1173, native_definitions: 1164.
-- Optimization cycles: 2 (Ruby live benchmark met the current 5x latency/token thresholds and the Ripper definition coverage proxy after adding operator, receiver-qualified, and ::-qualified module/class parsing.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `initialize` | 13.700 | 90.373 | 6.6x | 8 | 61 | 7.62x |
-| `call` | 14.037 | 108.646 | 7.74x | 7 | 89 | 12.71x |
-| `route` | 13.280 | 94.267 | 7.1x | 7 | 96 | 13.71x |
-| `settings` | 13.291 | 93.757 | 7.05x | 6 | 58 | 9.67x |
-
-5x note: this Ruby benchmark meets the 5x threshold on equivalent query rows for latency (7.13x) and token output (10.86x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### Rust
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/BurntSushi/ripgrep` at commit `dfe4a81d2591daca76d25ae4e052c34b26578155`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-rust-ripgrep/repo`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-rust-ripgrep/atlas.db --json index /tmp/atlas-live-rust-ripgrep/repo`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-rust-ripgrep/atlas.db --json index /tmp/atlas-live-rust-ripgrep/repo`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `/opt/homebrew/bin/rust-analyzer documentSymbol <16 Rust files>`
-
-Results:
-
-- Atlas indexed 161 files, 3515 symbols, and 17253 edges in 1.637s cold; no-change reindex was 0.042s (`mode=noop`).
-- Atlas language counts were `rust:100`, `markdown:22`, `toml:13`, `csv:12`, `yaml:5`, `config:4`, `bash:2`, `ruby:1`, `text:1`, `xml:1`.
-- graphify rebuilt 3457 nodes and 9148 links in 2.067s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `rust-analyzer` status: ok (sample_files:16, document_symbol_files:16, document_symbols:1310, comparable_document_symbols:1151, definitions:1151, definition_kind_scope:LSP module/class/method/enum/interface/function/constant/struct kinds; fields, variables, enum members, and type parameters excluded, diagnostic_files:0, diagnostics:0).
-- Coverage proxy: atlas_vs_rust_analyzer_definition_ratio: 1.0, atlas_rust_definition_symbols: 1153, native_definitions: 1151, coverage_scope: 16 sampled files from rust-analyzer.
-- Optimization cycles: 2 (Rust live benchmark records reproducible Atlas/graphify measurements and measures sampled source coverage against rust-analyzer documentSymbol when available, with deterministic source-counter fallback.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `HiArgs` | 15.561 | 134.509 | 8.64x | 4 | 249 | 62.25x |
-| `LowArgs` | 15.000 | 132.317 | 8.82x | 5 | 258 | 51.6x |
-| `PatternMatcher` | 14.436 | 132.168 | 9.16x | 7 | 119 | 17.0x |
-| `WalkBuilder` | 17.170 | 142.743 | 8.31x | 6 | 259 | 43.17x |
-
-5x note: this Rust benchmark meets the 5x threshold on equivalent query rows for latency (8.71x) and token output (40.23x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### R
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/tidyverse/ggplot2` at commit `6870419aa6e106c3580c45c81d5b688cb31758bd`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-r-ggplot2/repo/R`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-r-ggplot2/atlas.db --json index /tmp/atlas-live-r-ggplot2/repo/R`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-r-ggplot2/atlas.db --json index /tmp/atlas-live-r-ggplot2/repo/R`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `python3 <R source counter> /tmp/atlas-live-r-ggplot2/repo/R`
-
-Results:
-
-- Atlas indexed 201 files, 3010 symbols, and 16377 edges in 1.456s cold; no-change reindex was 0.039s (`mode=noop`).
-- Atlas language counts were `r:201`.
-- graphify rebuilt 0 nodes and 0 links in 0.278s.
-- graphify detector-only caveat: `.r` is present in `CODE_EXTENSIONS`, but this installed graphify runtime has no `_DISPATCH` extractor for it; graphify query rows are kept as missing-baseline evidence rather than 5x proof.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `r-source-counter` status: ok (files:201, parsed_files:201, parse_errors:0, definitions:3011).
-- Richer native baselines not available on this machine: `Rscript`.
-- Coverage proxy: atlas_vs_r_source_counter_definition_ratio: 1.0, atlas_r_definition_symbols: 3010, native_definitions: 3011.
-- Optimization cycles: 6 (R native tree-sitter AST parsing covers graphify's detector-only .r extension and matches r-source-counter functions/types exactly; the single raw-count gap is a source-counter false positive inside a single-quoted string literal, so adding it would reduce Atlas precision.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `ggplot` | 17.443 | 85.977 | 4.93x | 6 | 8 | 1.33x |
-| `ggplot.default` | 14.898 | 76.719 | 5.15x | 7 | 10 | 1.43x |
-| `GeomPoint` | 15.383 | 77.530 | 5.04x | 7 | 9 | 1.29x |
-| `geom_point` | 17.594 | 86.258 | 4.9x | 2 | 9 | 4.5x |
-| `StatSummary` | 14.176 | 75.311 | 5.31x | 9 | 9 | 1.0x |
-| `theme` | 16.821 | 77.025 | 4.58x | 6 | 8 | 1.33x |
-| `aes` | 18.056 | 72.710 | 4.03x | 6 | 7 | 1.17x |
-| `coord_cartesian` | 13.903 | 71.674 | 5.16x | 11 | 10 | 0.91x |
-
-- Query caveat: `ggplot` (graphify_missing), `ggplot.default` (graphify_missing), `GeomPoint` (graphify_missing), `geom_point` (graphify_missing), `StatSummary` (graphify_missing), `theme` (graphify_missing), `aes` (graphify_missing), `coord_cartesian` (graphify_missing); raw rows remain in the table.
-No-equivalent saturation note: this R benchmark proves Atlas indexes the live language slice and matches the native coverage proxy, but graphify returned no equivalent query rows. Latency/token ratios from missing rows are not treated as 5x evidence; see the saturation loop artifact where applicable.
-
-### Scala
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/typelevel/cats` at commit `851965a582940d804f9a23179f58a53fc97f07dc`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-scala-cats/repo/core/src/main/scala`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-scala-cats/atlas.db --json index /tmp/atlas-live-scala-cats/repo/core/src/main/scala`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-scala-cats/atlas.db --json index /tmp/atlas-live-scala-cats/repo/core/src/main/scala`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `/tmp/atlas-live-scala-cats/tree-sitter-scala-venv/bin/python -c <tree-sitter-scala definition counter> /tmp/atlas-live-scala-cats/repo/core/src/main/scala`
-
-Results:
-
-- Atlas indexed 206 files, 7840 symbols, and 9385 edges in 2.017s cold; no-change reindex was 0.028s (`mode=noop`).
-- Atlas language counts were `scala:206`.
-- graphify rebuilt 4796 nodes and 18787 links in 2.872s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `tree-sitter-scala` status: partial (files:206, parsed_files:204, parse_errors:2, definitions:7840, tree_sitter_version:0.25.2, tree_sitter_scala_version:0.26.0).
-- Richer native baselines not available on this machine: `metals`, `scalac`, `scala-cli`.
-- Coverage proxy: atlas_vs_tree_sitter_scala_definition_ratio: 1.0, atlas_scala_definition_symbols: 7840, native_definitions: 7840.
-- Optimization cycles: 2 (Scala live benchmark met the current 5x latency/token thresholds and improved Cats definition coverage after widening Atlas modifier and type-alias handling; Metals/scalac remain unavailable on this machine.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `Functor` | 18.173 | 176.474 | 9.71x | 6 | 308 | 51.33x |
-| `Applicative` | 18.612 | 179.561 | 9.65x | 9 | 272 | 30.22x |
-| `Monad` | 19.279 | 181.431 | 9.41x | 6 | 291 | 48.5x |
-| `Traverse` | 18.045 | 176.085 | 9.76x | 7 | 91 | 13.0x |
-| `Eval` | 20.505 | 174.025 | 8.49x | 4 | 256 | 64.0x |
-
-5x note: this Scala benchmark meets the 5x threshold on equivalent query rows for latency (9.38x) and token output (38.06x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### SQL
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/hasura/graphql-engine` at commit `417c174c0ac3c80dafe6e8f9e8ac39d868334724`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-sql-hasura/repo/server/src-rsr/migrations`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-sql-hasura/atlas.db --json index /tmp/atlas-live-sql-hasura/repo/server/src-rsr/migrations`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-sql-hasura/atlas.db --json index /tmp/atlas-live-sql-hasura/repo/server/src-rsr/migrations`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `/tmp/atlas-live-sql-hasura/sqlfluff-venv/bin/sqlfluff parse --dialect postgres <82 SQL files>`
-
-Results:
-
-- Atlas indexed 82 files, 111 symbols, and 816 edges in 0.062s cold; no-change reindex was 0.024s (`mode=noop`).
-- Atlas language counts were `sql:82`.
-- graphify rebuilt 240 nodes and 194 links in 0.465s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `sqlfluff` status: ok (files:82, parsed_files:82, parse_errors:0, definitions:111, sqlfluff_version:sqlfluff, version 3.5.0).
-- Coverage proxy: atlas_vs_sqlfluff_definition_ratio: 1.0, atlas_sql_definition_symbols: 111, native_definitions: 111.
-- Optimization cycles: 5 (SQL native source parser matches SQLFluff DDL definition coverage after routing `.sql` files off the legacy fallback dispatcher; it exceeds 5x latency/token thresholds, while the generated tree-sitter-sql C parser was rejected because CGO compilation was killed on this machine.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `hdb_catalog.event_triggers` | 12.026 | 72.080 | 5.99x | 10 | 55 | 5.5x |
-| `hdb_catalog.hdb_metadata` | 11.742 | 71.144 | 6.06x | 9 | 54 | 6.0x |
-| `hdb_catalog.hdb_schema_update_event_notifier` | 11.995 | 72.389 | 6.03x | 16 | 80 | 5.0x |
-| `hdb_catalog.hdb_function_agg` | 12.461 | 71.679 | 5.75x | 11 | 56 | 5.09x |
-
-5x note: this SQL benchmark meets the 5x threshold on equivalent query rows for latency (5.96x) and token output (5.33x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### Svelte
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/carbon-design-system/carbon-components-svelte` at commit `4a2c72288d8a21e5fe489d042fc72d2ae7eb7097`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-svelte-carbon/repo/src`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-svelte-carbon/atlas.db --json index /tmp/atlas-live-svelte-carbon/repo/src`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-svelte-carbon/atlas.db --json index /tmp/atlas-live-svelte-carbon/repo/src`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `/opt/homebrew/bin/node /tmp/atlas-live-svelte-carbon/svelte-compiler/svelte_stats.js /tmp/atlas-live-svelte-carbon/repo/src`
-
-Results:
-
-- Atlas indexed 424 files, 1735 symbols, and 4051 edges in 0.304s cold; no-change reindex was 0.039s (`mode=noop`).
-- Atlas language counts were `svelte:262`, `javascript:120`, `typescript:42`.
-- graphify rebuilt 853 nodes and 1521 links in 1.456s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `svelte-compiler` status: ok (files:262, parsed_files:262, parse_errors:0, script_blocks:236, functions:293, variables:985, definitions:1278, compiler_version:5.56.4).
-- Richer native baselines not available on this machine: `svelte-check`, `svelte-language-server`.
-- Coverage proxy: atlas_vs_svelte_compiler_definition_ratio: 1.0, atlas_svelte_definition_symbols: 1278, native_definitions: 1278.
-- Optimization cycles: 2 (Svelte native SFC script parsing matched the Svelte compiler script-declaration coverage proxy exactly after replacing the regex route.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `setChar` | 12.637 | 81.877 | 6.48x | 9 | 78 | 8.67x |
-| `focusInput` | 13.219 | 80.469 | 6.09x | 10 | 141 | 14.1x |
-| `handleInput` | 12.949 | 80.930 | 6.25x | 11 | 88 | 8.0x |
-| `handleKeydown` | 14.087 | 79.105 | 5.62x | 12 | 79 | 6.58x |
-| `handleOutsideClick` | 14.947 | 79.465 | 5.32x | 12 | 90 | 7.5x |
-
-5x note: this Svelte benchmark meets the 5x threshold on equivalent query rows for latency (5.92x) and token output (8.81x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### Swift
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/apple/swift-argument-parser` at commit `8122bc5941426c9494c78ff5ad01951e81c02f53`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-swift-argument-parser/repo`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-swift-argument-parser/atlas.db --json index /tmp/atlas-live-swift-argument-parser/repo`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-swift-argument-parser/atlas.db --json index /tmp/atlas-live-swift-argument-parser/repo`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `/usr/bin/sourcekit-lsp --scratch-path /tmp/atlas-live-swift-argument-parser/sourcekit-scratch --default-workspace-type swiftPM`
-
-Results:
-
-- Atlas indexed 238 files, 5926 symbols, and 7430 edges in 1.247s cold; no-change reindex was 0.034s (`mode=noop`).
-- Atlas language counts were `swift:165`, `markdown:38`, `text:13`, `json:11`, `bash:5`, `yaml:4`, `config:1`, `image:1`.
-- graphify rebuilt 2838 nodes and 6444 links in 1.701s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `sourcekit-lsp` status: ok (sample_files:16, document_symbol_files:16, document_symbols:209, definitions:209, diagnostic_files:0, diagnostics:0, swift_version:Apple Swift version 6.2.4 (swiftlang-6.2.4.1.4 clang-1700.6.4.2)).
-- Richer native baselines not available on this machine: `swift-syntax`.
-- Coverage proxy: atlas_vs_sourcekit_lsp_definition_ratio: 1.23, atlas_swift_definition_symbols: 257, native_definitions: 209, coverage_scope: 16 sampled files from sourcekit-lsp.
-- Optimization cycles: 1 (Swift live benchmark met the current 5x latency/token thresholds and exceeded the SourceKit-LSP sampled definition coverage proxy on cycle 1.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `ArgumentParser` | 17.000 | 147.749 | 8.69x | 3 | 332 | 110.67x |
-| `parse` | 18.646 | 143.501 | 7.7x | 10 | 139 | 13.9x |
-| `run` | 18.878 | 144.785 | 7.67x | 6 | 48 | 8.0x |
-| `help` | 18.602 | 147.211 | 7.91x | 7 | 44 | 6.29x |
-
-5x note: this Swift benchmark meets the 5x threshold on equivalent query rows for latency (7.98x) and token output (21.65x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### Terraform/HCL
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/terraform-aws-modules/terraform-aws-vpc` at commit `3ffbd46fb1c7733e1b34d8666893280454e27436`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-terraform-vpc/repo`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-terraform-vpc/atlas.db --json index /tmp/atlas-live-terraform-vpc/repo`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-terraform-vpc/atlas.db --json index /tmp/atlas-live-terraform-vpc/repo`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `/tmp/atlas-live-terraform-vpc/hcl2-venv/bin/python -c <hcl2 definition counter> /tmp/atlas-live-terraform-vpc/repo`
-
-Results:
-
-- Atlas indexed 109 files, 2244 symbols, and 1078 edges in 0.35s cold; no-change reindex was 0.025s (`mode=noop`).
-- Atlas language counts were `terraform:77`, `markdown:24`, `yaml:6`, `config:1`, `json:1`.
-- graphify rebuilt 2461 nodes and 4736 links in 0.884s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `python-hcl2` status: ok (files:77, parsed_files:77, parse_errors:0, definitions:1738, python_hcl2_version:8.1.2).
-- Richer native baselines not available on this machine: `terraform`.
-- Coverage proxy: atlas_vs_python_hcl2_definition_ratio: 1.0, atlas_terraform_definition_symbols: 1738, native_definitions: 1738.
-- Optimization cycles: 3 (Terraform/HCL native tree-sitter parser matched python-hcl2 definition coverage after routing `.tf`, `.tfvars`, and `.hcl` files off the legacy fallback dispatcher, while keeping graphify latency/token ratios above 5x.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `aws_vpc.this` | 15.647 | 110.635 | 7.07x | 5 | 291 | 58.2x |
-| `aws_subnet.public` | 13.495 | 108.824 | 8.06x | 7 | 308 | 44.0x |
-| `aws_route_table.public` | 13.839 | 109.361 | 7.9x | 8 | 280 | 35.0x |
-| `aws_nat_gateway.this` | 13.259 | 108.610 | 8.19x | 8 | 286 | 35.75x |
-
-5x note: this Terraform/HCL benchmark meets the 5x threshold on equivalent query rows for latency (7.78x) and token output (41.61x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### Verilog
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/lowRISC/ibex` at commit `022f084096baed0a9b5ebdf697ed2965f13e8ed8`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-verilog-ibex/repo/rtl`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-verilog-ibex/atlas.db --json index /tmp/atlas-live-verilog-ibex/repo/rtl`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-verilog-ibex/atlas.db --json index /tmp/atlas-live-verilog-ibex/repo/rtl`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `/tmp/atlas-live-verilog-ibex/tree-sitter-systemverilog-venv/bin/python -c <tree-sitter-systemverilog definition counter> /tmp/atlas-live-verilog-ibex/repo/rtl`
-
-Results:
-
-- Atlas indexed 31 files, 93 symbols, and 2666 edges in 0.136s cold; no-change reindex was 0.026s (`mode=noop`).
-- Atlas language counts were `verilog:30`, `fortran:1`.
-- graphify rebuilt 170 nodes and 139 links in 0.297s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `tree-sitter-systemverilog` status: partial (files:30, parsed_files:20, parse_errors:10, definitions:93, tree_sitter_version:0.25.2, tree_sitter_systemverilog_version:0.3.1).
-- Richer native baselines not available on this machine: `verilator`, `slang`, `svlint`.
-- Coverage proxy: atlas_vs_tree_sitter_systemverilog_definition_ratio: 1.0, atlas_verilog_definition_symbols: 93, native_definitions: 93.
-- Optimization cycles: 4 (Verilog/SystemVerilog native tree-sitter AST parsing matched the tree-sitter-systemverilog definition coverage proxy and met the current 5x latency/token thresholds.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `ibex_core` | 13.880 | 70.388 | 5.07x | 6 | 32 | 5.33x |
-| `ibex_top` | 13.489 | 70.676 | 5.24x | 5 | 105 | 21.0x |
-| `ibex_pkg` | 12.427 | 70.396 | 5.66x | 5 | 46 | 9.2x |
-| `ibex_alu` | 12.588 | 70.496 | 5.6x | 5 | 55 | 11.0x |
-| `cm_stack_adj_base` | 12.266 | 70.176 | 5.72x | 12 | 67 | 5.58x |
-| `decode_i_insn` | 11.888 | 69.946 | 5.88x | 8 | 53 | 6.62x |
-
-5x note: this Verilog benchmark meets the 5x threshold on equivalent query rows for latency (5.51x) and token output (8.73x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### Vue
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/gothinkster/vue-realworld-example-app` at commit `f7e48c8178602ce25d43293bc6f8ca51d84ae222`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-vue-realworld/repo/src`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-vue-realworld/atlas.db --json index /tmp/atlas-live-vue-realworld/repo/src`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-vue-realworld/atlas.db --json index /tmp/atlas-live-vue-realworld/repo/src`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `/opt/homebrew/bin/node /tmp/atlas-live-vue-realworld/vue-compiler/vue_sfc_stats.js /tmp/atlas-live-vue-realworld/repo/src`
-
-Results:
-
-- Atlas indexed 32 files, 161 symbols, and 389 edges in 0.082s cold; no-change reindex was 0.027s (`mode=noop`).
-- Atlas language counts were `vue:20`, `javascript:12`.
-- graphify rebuilt 111 nodes and 91 links in 0.249s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `vue-compiler-sfc` status: ok (files:20, parsed_files:20, parse_errors:0, script_blocks:21, functions:0, variables:119, definitions:119, compiler_version:3.5.22).
-- Richer native baselines not available on this machine: `vue-tsc`, `volar`.
-- Coverage proxy: atlas_vs_vue_compiler_sfc_definition_ratio: 1.0, atlas_vue_definition_symbols: 119, native_definitions: 119.
-- Optimization cycles: 3 (Vue native SFC script parsing matched @vue/compiler-sfc declaration coverage after replacing the regex route while preserving compact `.vue` plain output paths.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `parseMarkdown` | 12.249 | 71.068 | 5.8x | 7 | 51 | 7.29x |
-| `follow` | 14.777 | 71.183 | 4.82x | 6 | 48 | 8.0x |
-| `goTo` | 12.256 | 69.169 | 5.64x | 4 | 45 | 11.25x |
-| `onPageChange` | 12.291 | 72.857 | 5.93x | 7 | 49 | 7.0x |
-
-5x note: this Vue benchmark meets the 5x threshold on equivalent query rows for latency (5.51x) and token output (8.04x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
-### Zig
-
-Consolidated evidence: `bench/RECALL_FINDINGS.md`. Benchmark used a fresh shallow clone of `https://github.com/zigtools/zls` at commit `8da87d4f3305a550e7b739bad764e34bf1e46a08`. `graphify-out/` was removed before Atlas indexed the repo, then graphify was run afterward for the comparison.
-Benchmark target: `/tmp/atlas-live-zig-zls/repo/src`.
-
-Commands:
-
-- Atlas index: `bin/atlas --db sqlite:///tmp/atlas-live-zig-zls/atlas.db --json index /tmp/atlas-live-zig-zls/repo/src`
-- Atlas no-change reindex: `bin/atlas --db sqlite:///tmp/atlas-live-zig-zls/atlas.db --json index /tmp/atlas-live-zig-zls/repo/src`
-- graphify update: `/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .`
-- Native baseline: `/tmp/atlas-live-zig-zls/tree-sitter-zig-venv/bin/python -c <tree-sitter-zig definition counter> /tmp/atlas-live-zig-zls/repo/src`
-
-Results:
-
-- Atlas indexed 45 files, 6469 symbols, and 11846 edges in 1.279s cold; no-change reindex was 0.06s (`mode=noop`).
-- Atlas language counts were `zig:43`, `json:1`, `markdown:1`.
-- graphify rebuilt 1096 nodes and 2536 links in 0.954s.
-- The generated-output bug is now covered: Atlas skips `graphify-out/`, so competitor sidecars no longer inflate Atlas symbol/file counts.
-- Native baseline `tree-sitter-zig` status: partial (files:43, parsed_files:42, parse_errors:1, definitions:5279, tree_sitter_version:0.25.2, tree_sitter_zig_version:1.1.2).
-- Richer native baselines not available on this machine: `zig`, `zls`.
-- Coverage proxy: atlas_vs_tree_sitter_zig_definition_ratio: 1.22, atlas_zig_definition_symbols: 6462, native_definitions: 5279.
-- Optimization cycles: 2 (Zig live benchmark met the current 5x latency/token thresholds and exceeded the tree-sitter-zig definition coverage proxy after widening Atlas Zig declaration handling; zig/zls remain unavailable on this machine.).
-
-| query | Atlas ms | graphify ms | latency ratio | Atlas tokens | graphify tokens | token ratio |
-|---|---:|---:|---:|---:|---:|---:|
-| `Server` | 20.369 | 105.420 | 5.18x | 6 | 268 | 44.67x |
-| `DocumentStore` | 22.171 | 102.605 | 4.63x | 10 | 277 | 27.7x |
-| `Analyser` | 17.471 | 106.933 | 6.12x | 7 | 259 | 37.0x |
-| `Config` | 17.543 | 106.124 | 6.05x | 8 | 79 | 9.88x |
-| `main` | 17.303 | 105.760 | 6.11x | 7 | 202 | 28.86x |
-
-5x note: this Zig benchmark meets the 5x threshold on equivalent query rows for latency (5.55x) and token output (28.55x). Accuracy still uses the native/graphify coverage proxies above; this is not a blanket quality claim.
-
 ## Tool matrix
 
 | Language | Repo | Atlas | graphify | SCIP | LSP |
 |---|---|---|---|---|---|
-| go | sirupsen/logrus | 679 symbols, 2102 calls, 0.291s cold full (0.026s delta) | 711 nodes, 333 calls, 0.625s full (0.277s delta) | 2225 symbols, 11887 occ, 0.206s | 12 pkgs, 0 diag, 0.325s |
-| python | psf/requests | 517 symbols, 961 calls, 0.15s cold full (0.022s delta) | 580 nodes, 229 calls, 0.59s full (0.271s delta) | 1518 symbols, 8224 occ, 1.942s | 19 files, 12 diag, 0.708s |
-| javascript | expressjs/express | 314 symbols, 435 calls, 0.092s cold full (0.024s delta) | 31 nodes, 3 calls, 0.153s full (0.136s delta) | 398 symbols, 2649 occ, 0.775s | 57 files, 257 diag, 0.529s |
-| typescript | pmndrs/zustand | 227 symbols, 197 calls, 0.079s cold full (0.035s delta) | 112 nodes, 6 calls, 0.163s full (0.148s delta) | 792 symbols, 2461 occ, 0.613s | 124 files, 1 diag, 0.467s |
-| java | google/gson | 1558 symbols, 3105 calls, 0.28s cold full (0.036s delta) | 1016 nodes, 927 calls, 0.87s full (0.558s delta) | missing | 54 doc syms, 425 diag, 1.716s |
-| c | DaveGamble/cJSON | 1790 symbols, 4973 calls, 0.333s cold full (0.03s delta) | 971 nodes, 1018 calls, 0.86s full (0.479s delta) | n/a | 258 doc syms, 2 diag, 0.068s |
-| cpp | google/leveldb | 2088 symbols, 9481 calls, 0.357s cold full (0.029s delta) | 2206 nodes, 1195 calls, 1.218s full (0.779s delta) | n/a | 421 doc syms, 167 diag, 0.185s |
+| go | sirupsen/logrus | 679 symbols, 2102 calls, 0.582s cold full (0.029s delta) | 711 nodes, 333 calls, 0.773s full (0.321s delta) | 2225 symbols, 11887 occ, 0.275s | 12 pkgs, 0 diag, 0.399s |
+| python | psf/requests | 517 symbols, 961 calls, 0.144s cold full (0.024s delta) | 580 nodes, 229 calls, 0.671s full (0.312s delta) | 1518 symbols, 8224 occ, 2.425s | 19 files, 12 diag, 0.884s |
+| javascript | expressjs/express | 314 symbols, 435 calls, 0.089s cold full (0.025s delta) | 31 nodes, 3 calls, 0.166s full (0.157s delta) | 398 symbols, 2649 occ, 1.634s | 57 files, 257 diag, 0.74s |
+| typescript | pmndrs/zustand | 227 symbols, 197 calls, 0.1s cold full (0.033s delta) | 112 nodes, 6 calls, 0.198s full (0.176s delta) | 792 symbols, 2461 occ, 0.771s | 124 files, 1 diag, 0.558s |
+| java | google/gson | 1558 symbols, 3105 calls, 0.281s cold full (0.039s delta) | 1016 nodes, 927 calls, 0.998s full (0.625s delta) | missing | 54 doc syms, 425 diag, 2.128s |
+| c | DaveGamble/cJSON | 1790 symbols, 4973 calls, 0.362s cold full (0.035s delta) | 971 nodes, 1018 calls, 1.018s full (0.527s delta) | n/a | 258 doc syms, 2 diag, 0.089s |
+| cpp | google/leveldb | 2088 symbols, 9481 calls, 0.391s cold full (0.048s delta) | 2206 nodes, 1195 calls, 1.427s full (0.859s delta) | n/a | 421 doc syms, 167 diag, 0.262s |
 
 ## Derived Go ratios
 
-- Build speed (cold-vs-cold, full index): Atlas COLD full index 0.291s vs graphify FULL extract 0.625s (graphify/Atlas = 2.15x); scip-go cold 0.206s (scip-go/Atlas = 0.71x); gopls (workspace type-check via `gopls stats`) cold 0.325s (gopls/Atlas = 1.12x). A ratio < 1.0x means Atlas is slower cold; this is the honest headline.
-- Build speed (delta-vs-delta, no-change reindex): Atlas 0.026s vs graphify 0.277s, graphify/Atlas = 10.65x. Both tools re-run against an existing snapshot/sidecar here.
-- Atlas index phase timings: delta_check:2ms, resolve_head:0ms.
+- Build speed (cold-vs-cold, full index): Atlas COLD full index 0.582s vs graphify FULL extract 0.773s (graphify/Atlas = 1.33x); scip-go cold 0.275s (scip-go/Atlas = 0.47x); gopls (workspace type-check via `gopls stats`) cold 0.399s (gopls/Atlas = 0.69x). A ratio < 1.0x means Atlas is slower cold; this is the honest headline.
+- Build speed (delta-vs-delta, no-change reindex): Atlas 0.029s vs graphify 0.321s, graphify/Atlas = 11.07x. Both tools re-run against an existing snapshot/sidecar here.
+- Atlas index phase timings: delta_check:4ms, resolve_head:0ms.
 - Atlas edge kinds: calls:2102, imports:224, references:622.
 - Call coverage proxy: Atlas internal calls 1143 vs graphify calls 333, Atlas/graphify = 3.43x.
 - Atlas receiver-typed calls: 632/2102 = 30.1%.
@@ -1388,15 +178,15 @@ Results:
 - SCIP semantic index: 47 documents, 2225 symbols, 11887 occurrences, 9656 references.
 - SCIP navigation symbols (excluding local variables/packages) = 637; Atlas symbols vs SCIP navigation symbols = 1.07x.
 - SCIP local variables = 1570. Atlas currently keeps locals out of the first-class symbol table, which lowers token cost but limits fine-grained reference parity.
-- gopls workspace truth: 12 workspace packages, 57 compiled Go files, 0 diagnostics, initial load 260.489ms.
+- gopls workspace truth: 12 workspace packages, 57 compiled Go files, 0 diagnostics, initial load 245.989ms.
 - Query token cost (4/4 equivalent rows): graphify 398 tokens vs Atlas 28 tokens, graphify/Atlas = 14.21x.
-- Query latency (4/4 equivalent rows): graphify 313.221ms vs Atlas 52.133ms, graphify/Atlas = 6.01x.
-- Go cold-build saturation: cold-vs-cold full-index ratio is 2.15x (graphify FULL 0.625s / Atlas cold 0.291s), below 5x; Atlas's largest cold phases are build_symbols_edges:135ms, go_types:135ms, lexical:81ms.
+- Query latency (4/4 equivalent rows): graphify 385.332ms vs Atlas 58.533ms, graphify/Atlas = 6.58x.
+- Go cold-build saturation: cold-vs-cold full-index ratio is 1.33x (graphify FULL 0.773s / Atlas cold 0.582s), below 5x; Atlas's largest cold phases are build_symbols_edges:344ms, go_types:344ms, lexical:69ms.
 
 ## Derived Python ratios
 
-- Build speed (cold-vs-cold, full index): Atlas COLD full index 0.15s vs graphify FULL extract 0.59s (graphify/Atlas = 3.93x); scip-python cold 1.942s (scip-python/Atlas = 12.95x). A ratio < 1.0x means Atlas is slower cold; this is the honest headline.
-- Build speed (delta-vs-delta, no-change reindex): Atlas 0.022s vs graphify 0.271s, graphify/Atlas = 12.32x. Both tools re-run against an existing snapshot/sidecar here.
+- Build speed (cold-vs-cold, full index): Atlas COLD full index 0.144s vs graphify FULL extract 0.671s (graphify/Atlas = 4.66x); scip-python cold 2.425s (scip-python/Atlas = 16.84x). A ratio < 1.0x means Atlas is slower cold; this is the honest headline.
+- Build speed (delta-vs-delta, no-change reindex): Atlas 0.024s vs graphify 0.312s, graphify/Atlas = 13.0x. Both tools re-run against an existing snapshot/sidecar here.
 - Atlas index phase timings: delta_check:0ms, resolve_head:0ms.
 - Atlas edge kinds: calls:961, imports:410.
 - Call coverage proxy: Atlas internal calls 371 vs graphify calls 229, Atlas/graphify = 1.62x.
@@ -1407,15 +197,15 @@ Results:
 - Python AST assignment truth: Atlas 197 assignment symbols vs 133 direct module/class assignment names; extra symbols can come from conditional class scopes.
 - Pyright truth pass: 19 files analyzed, 12 diagnostics (error:12), version 1.1.411.
 - Query token cost (3/3 equivalent rows): graphify 389 tokens vs Atlas 21 tokens, graphify/Atlas = 18.52x.
-- Query latency (3/3 equivalent rows): graphify 245.337ms vs Atlas 40.125ms, graphify/Atlas = 6.11x.
-- Python cold-build saturation: cold-vs-cold full-index ratio is 3.93x (graphify FULL 0.59s / Atlas cold 0.15s), below 5x; Atlas's largest cold phases are lexical:83ms, persist:83ms, write_sqlite:83ms.
+- Query latency (3/3 equivalent rows): graphify 299.605ms vs Atlas 45.552ms, graphify/Atlas = 6.58x.
+- Python cold-build saturation: cold-vs-cold full-index ratio is 4.66x (graphify FULL 0.671s / Atlas cold 0.144s), below 5x; Atlas's largest cold phases are lexical:59ms, persist:59ms, write_sqlite:59ms.
 
 ## Derived JS/TS ratios
 
 ### javascript
 
-- Build speed (cold-vs-cold, full index): Atlas COLD full index 0.092s vs graphify FULL extract 0.153s (graphify/Atlas = 1.66x); scip-typescript cold 0.775s (scip-typescript/Atlas = 8.42x). A ratio < 1.0x means Atlas is slower cold; this is the honest headline.
-- Build speed (delta-vs-delta, no-change reindex): Atlas 0.024s vs graphify 0.136s, graphify/Atlas = 5.67x. Both tools re-run against an existing snapshot/sidecar here.
+- Build speed (cold-vs-cold, full index): Atlas COLD full index 0.089s vs graphify FULL extract 0.166s (graphify/Atlas = 1.87x); scip-typescript cold 1.634s (scip-typescript/Atlas = 18.36x). A ratio < 1.0x means Atlas is slower cold; this is the honest headline.
+- Build speed (delta-vs-delta, no-change reindex): Atlas 0.025s vs graphify 0.157s, graphify/Atlas = 6.28x. Both tools re-run against an existing snapshot/sidecar here.
 - Atlas index phase timings: delta_check:0ms, resolve_head:0ms.
 - Atlas edge kinds: calls:435, imports:51.
 - Call coverage proxy: Atlas internal calls 231 vs graphify calls 3, Atlas/graphify = 77.0x.
@@ -1423,16 +213,16 @@ Results:
 - graphify extracted calls: 3/3 = 100.0%.
 - SCIP semantic index: 6 documents, 398 symbols, 2649 occurrences, 2251 references, scope=lib.
 - Atlas symbols vs SCIP symbols = 0.79x. scip-typescript reports symbols as UnspecifiedKind, so this is a raw coverage proxy.
-- TypeScript semantic check proxy: 57 files, 257 diagnostics, total 0.19s, memory 82486KB.
+- TypeScript semantic check proxy: 57 files, 257 diagnostics, total 0.23s, memory 82358KB.
 - LSP caveat: tsc returned diagnostics/exit 2; used as scriptable tsserver proxy.
 - Query token cost (3/4 equivalent rows): graphify 140 tokens vs Atlas 20 tokens, graphify/Atlas = 7.0x.
-- Query latency (3/4 equivalent rows): graphify 213.57ms vs Atlas 39.801ms, graphify/Atlas = 5.37x.
+- Query latency (3/4 equivalent rows): graphify 262.562ms vs Atlas 44.775ms, graphify/Atlas = 5.86x.
 - Query caveat: graphify missed 1 Atlas-selected hub symbols; raw rows remain in the table.
-- javascript cold-build saturation: cold-vs-cold full-index ratio is 1.66x (graphify FULL 0.153s / Atlas cold 0.092s), below 5x; Atlas's largest cold phases are lexical:38ms, persist:38ms, write_sqlite:38ms.
+- javascript cold-build saturation: cold-vs-cold full-index ratio is 1.87x (graphify FULL 0.166s / Atlas cold 0.089s), below 5x; Atlas's largest cold phases are lexical:21ms, persist:21ms, write_sqlite:21ms.
 ### typescript
 
-- Build speed (cold-vs-cold, full index): Atlas COLD full index 0.079s vs graphify FULL extract 0.163s (graphify/Atlas = 2.06x); scip-typescript cold 0.613s (scip-typescript/Atlas = 7.76x). A ratio < 1.0x means Atlas is slower cold; this is the honest headline.
-- Build speed (delta-vs-delta, no-change reindex): Atlas 0.035s vs graphify 0.148s, graphify/Atlas = 4.23x. Both tools re-run against an existing snapshot/sidecar here.
+- Build speed (cold-vs-cold, full index): Atlas COLD full index 0.1s vs graphify FULL extract 0.198s (graphify/Atlas = 1.98x); scip-typescript cold 0.771s (scip-typescript/Atlas = 7.71x). A ratio < 1.0x means Atlas is slower cold; this is the honest headline.
+- Build speed (delta-vs-delta, no-change reindex): Atlas 0.033s vs graphify 0.176s, graphify/Atlas = 5.33x. Both tools re-run against an existing snapshot/sidecar here.
 - Atlas index phase timings: delta_check:0ms, resolve_head:0ms.
 - Atlas edge kinds: calls:197, imports:27.
 - Call coverage proxy: Atlas internal calls 81 vs graphify calls 6, Atlas/graphify = 13.5x.
@@ -1440,55 +230,55 @@ Results:
 - graphify extracted calls: 6/6 = 100.0%.
 - SCIP semantic index: 16 documents, 792 symbols, 2461 occurrences, 1669 references, scope=src.
 - Atlas symbols vs SCIP symbols = 0.29x. scip-typescript reports symbols as UnspecifiedKind, so this is a raw coverage proxy.
-- TypeScript semantic check proxy: 124 files, 1 diagnostics, total 0.15s, memory 72442KB.
+- TypeScript semantic check proxy: 124 files, 1 diagnostics, total 0.16s, memory 72410KB.
 - LSP caveat: tsc returned diagnostics/exit 2; used as scriptable tsserver proxy.
 - Query token cost (3/4 equivalent rows): graphify 217 tokens vs Atlas 19 tokens, graphify/Atlas = 11.42x.
-- Query latency (3/4 equivalent rows): graphify 216.767ms vs Atlas 37.489ms, graphify/Atlas = 5.78x.
+- Query latency (3/4 equivalent rows): graphify 264.415ms vs Atlas 42.68ms, graphify/Atlas = 6.2x.
 - Query caveat: graphify missed 1 Atlas-selected hub symbols; raw rows remain in the table.
-- typescript cold-build saturation: cold-vs-cold full-index ratio is 2.06x (graphify FULL 0.163s / Atlas cold 0.079s), below 5x; Atlas's largest cold phases are lexical:19ms, persist:19ms, write_sqlite:19ms.
+- typescript cold-build saturation: cold-vs-cold full-index ratio is 1.98x (graphify FULL 0.198s / Atlas cold 0.1s), below 5x; Atlas's largest cold phases are lexical:26ms, persist:26ms, write_sqlite:26ms.
 
 ## Derived Java ratios
 
-- Build speed (cold-vs-cold, full index): Atlas COLD full index 0.28s vs graphify FULL extract 0.87s (graphify/Atlas = 3.11x). A ratio < 1.0x means Atlas is slower cold; this is the honest headline.
-- Build speed (delta-vs-delta, no-change reindex): Atlas 0.036s vs graphify 0.558s, graphify/Atlas = 15.5x. Both tools re-run against an existing snapshot/sidecar here.
-- Atlas index phase timings: delta_check:6ms, resolve_head:0ms.
+- Build speed (cold-vs-cold, full index): Atlas COLD full index 0.281s vs graphify FULL extract 0.998s (graphify/Atlas = 3.55x). A ratio < 1.0x means Atlas is slower cold; this is the honest headline.
+- Build speed (delta-vs-delta, no-change reindex): Atlas 0.039s vs graphify 0.625s, graphify/Atlas = 16.03x. Both tools re-run against an existing snapshot/sidecar here.
+- Atlas index phase timings: delta_check:15ms, resolve_head:0ms.
 - Atlas edge kinds: calls:3105, imports:677.
 - Call coverage proxy: Atlas internal calls 2403 vs graphify calls 927, Atlas/graphify = 2.59x.
 - Atlas receiver-typed calls: 2326/3105 = 74.9%.
 - graphify extracted calls: 599/927 = 64.6%.
 - JDTLS LSP benchmark: initialized against build root gson, sampled 5/5 files, 54 document symbols, 11 workspace symbols for query `Gson`, 425 diagnostics.
-- Query token cost (2/2 equivalent rows): graphify 214 tokens vs Atlas 14 tokens, graphify/Atlas = 15.29x.
-- Query latency (2/2 equivalent rows): graphify 181.041ms vs Atlas 46.613ms, graphify/Atlas = 3.88x.
-- Java cold-build saturation: cold-vs-cold full-index ratio is 3.11x (graphify FULL 0.87s / Atlas cold 0.28s), below 5x; Atlas's largest cold phases are lexical:176ms, persist:176ms, write_sqlite:176ms.
+- Query token cost (2/2 equivalent rows): graphify 213 tokens vs Atlas 14 tokens, graphify/Atlas = 15.21x.
+- Query latency (2/2 equivalent rows): graphify 215.363ms vs Atlas 39.665ms, graphify/Atlas = 5.43x.
+- Java cold-build saturation: cold-vs-cold full-index ratio is 3.55x (graphify FULL 0.998s / Atlas cold 0.281s), below 5x; Atlas's largest cold phases are lexical:142ms, persist:142ms, write_sqlite:142ms.
 
 ## Derived C/C++ ratios
 
 ### c
 
-- Build speed (cold-vs-cold, full index): Atlas COLD full index 0.333s vs graphify FULL extract 0.86s (graphify/Atlas = 2.58x). A ratio < 1.0x means Atlas is slower cold; this is the honest headline.
-- Build speed (delta-vs-delta, no-change reindex): Atlas 0.03s vs graphify 0.479s, graphify/Atlas = 15.97x. Both tools re-run against an existing snapshot/sidecar here.
-- Atlas index phase timings: delta_check:9ms, resolve_head:0ms.
+- Build speed (cold-vs-cold, full index): Atlas COLD full index 0.362s vs graphify FULL extract 1.018s (graphify/Atlas = 2.81x). A ratio < 1.0x means Atlas is slower cold; this is the honest headline.
+- Build speed (delta-vs-delta, no-change reindex): Atlas 0.035s vs graphify 0.527s, graphify/Atlas = 15.06x. Both tools re-run against an existing snapshot/sidecar here.
+- Atlas index phase timings: delta_check:14ms, resolve_head:0ms.
 - Atlas edge kinds: calls:4973, imports:400.
 - Call coverage proxy: Atlas internal calls 1975 vs graphify calls 1018, Atlas/graphify = 1.94x.
 - Atlas receiver-typed calls: 18/4973 = 0.4%.
 - graphify extracted calls: 492/1018 = 48.3%.
 - clangd LSP benchmark: sampled 8/8 files, 258 document symbols, 2 diagnostics.
 - Query token cost (4/4 equivalent rows): graphify 1206 tokens vs Atlas 42 tokens, graphify/Atlas = 28.71x.
-- Query latency (4/4 equivalent rows): graphify 350.624ms vs Atlas 57.171ms, graphify/Atlas = 6.13x.
-- c cold-build saturation: cold-vs-cold full-index ratio is 2.58x (graphify FULL 0.86s / Atlas cold 0.333s), below 5x; Atlas's largest cold phases are lexical:163ms, persist:163ms, write_sqlite:163ms.
+- Query latency (4/4 equivalent rows): graphify 422.048ms vs Atlas 62.022ms, graphify/Atlas = 6.8x.
+- c cold-build saturation: cold-vs-cold full-index ratio is 2.81x (graphify FULL 1.018s / Atlas cold 0.362s), below 5x; Atlas's largest cold phases are lexical:169ms, persist:169ms, write_sqlite:169ms.
 ### cpp
 
-- Build speed (cold-vs-cold, full index): Atlas COLD full index 0.357s vs graphify FULL extract 1.218s (graphify/Atlas = 3.41x). A ratio < 1.0x means Atlas is slower cold; this is the honest headline.
-- Build speed (delta-vs-delta, no-change reindex): Atlas 0.029s vs graphify 0.779s, graphify/Atlas = 26.86x. Both tools re-run against an existing snapshot/sidecar here.
-- Atlas index phase timings: delta_check:12ms, resolve_head:0ms.
+- Build speed (cold-vs-cold, full index): Atlas COLD full index 0.391s vs graphify FULL extract 1.427s (graphify/Atlas = 3.65x). A ratio < 1.0x means Atlas is slower cold; this is the honest headline.
+- Build speed (delta-vs-delta, no-change reindex): Atlas 0.048s vs graphify 0.859s, graphify/Atlas = 17.9x. Both tools re-run against an existing snapshot/sidecar here.
+- Atlas index phase timings: delta_check:10ms, resolve_head:0ms.
 - Atlas edge kinds: calls:9481, imports:774.
 - Call coverage proxy: Atlas internal calls 6217 vs graphify calls 1195, Atlas/graphify = 5.2x.
 - Atlas receiver-typed calls: 1959/9481 = 20.7%.
 - graphify extracted calls: 1027/1195 = 85.9%.
 - clangd LSP benchmark: sampled 8/8 files, 421 document symbols, 167 diagnostics.
 - Query token cost (4/4 equivalent rows): graphify 320 tokens vs Atlas 32 tokens, graphify/Atlas = 10.0x.
-- Query latency (4/4 equivalent rows): graphify 397.063ms vs Atlas 68.453ms, graphify/Atlas = 5.8x.
-- cpp cold-build saturation: cold-vs-cold full-index ratio is 3.41x (graphify FULL 1.218s / Atlas cold 0.357s), below 5x; Atlas's largest cold phases are lexical:214ms, persist:214ms, write_sqlite:214ms.
+- Query latency (4/4 equivalent rows): graphify 483.635ms vs Atlas 66.747ms, graphify/Atlas = 7.25x.
+- cpp cold-build saturation: cold-vs-cold full-index ratio is 3.65x (graphify FULL 1.427s / Atlas cold 0.391s), below 5x; Atlas's largest cold phases are lexical:252ms, persist:252ms, write_sqlite:252ms.
 
 ## Warm query latency (persistent server)
 
@@ -1496,19 +286,19 @@ Atlas `serve` is started against the already-indexed DB, warmed, then warm HTTP 
 
 | Language | Atlas warm /healthz (median ms) | Atlas warm explain (median ms) | Atlas cold-CLI explain (median ms) | warm speedup (cold/warm) |
 |---|--:|--:|--:|--:|
-| go | 0.465 | 1.234 | 12.949 | 10.49x |
-| python | 0.521 | 1.568 | 13.277 | 8.47x |
-| javascript | 0.527 | 1.097 | 13.108 | 11.95x |
-| typescript | 0.512 | 0.881 | 12.402 | 14.08x |
-| java | 0.5 | 11.119 | 23.306 | 2.1x |
-| c | 0.521 | 2.138 | 14.28 | 6.68x |
-| cpp | 0.487 | 2.393 | 14.529 | 6.07x |
+| go | 0.511 | 1.039 | 14.526 | 13.98x |
+| python | 0.463 | 1.559 | 15.166 | 9.73x |
+| javascript | 0.505 | 0.993 | 14.813 | 14.92x |
+| typescript | 0.542 | 0.658 | 14.286 | 21.71x |
+| java | 0.332 | 6.185 | 19.832 | 3.21x |
+| c | 0.555 | 1.483 | 15.409 | 10.39x |
+| cpp | 0.48 | 1.972 | 15.738 | 7.98x |
 
-- go warm-vs-warm context: both Atlas `serve` and gopls run as persistent daemons. Atlas warm explain median is 1.234ms and warm /healthz is 0.465ms. gopls's steady-state per-request latency is measured separately in its LSP benchmark (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
-- python warm-vs-warm context: both Atlas `serve` and pyright run as persistent daemons. Atlas warm explain median is 1.568ms and warm /healthz is 0.521ms. pyright's steady-state per-request latency is measured separately in its LSP benchmark (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
-- java warm-vs-warm context: both Atlas `serve` and jdtls run as persistent daemons. Atlas warm explain median is 11.119ms and warm /healthz is 0.5ms. jdtls's steady-state per-request latency is measured separately in its LSP benchmark (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
-- c warm-vs-warm context: both Atlas `serve` and clangd run as persistent daemons. Atlas warm explain median is 2.138ms and warm /healthz is 0.521ms. clangd's steady-state per-request latency is measured separately in its LSP benchmark (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
-- cpp warm-vs-warm context: both Atlas `serve` and clangd run as persistent daemons. Atlas warm explain median is 2.393ms and warm /healthz is 0.487ms. clangd's steady-state per-request latency is measured separately in its LSP benchmark (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
+- go warm-vs-warm context: both Atlas `serve` and gopls run as persistent daemons. Atlas warm explain median is 1.039ms and warm /healthz is 0.511ms. gopls's steady-state per-request latency is measured separately in its LSP benchmark (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
+- python warm-vs-warm context: both Atlas `serve` and pyright run as persistent daemons. Atlas warm explain median is 1.559ms and warm /healthz is 0.463ms. pyright's steady-state per-request latency is measured separately in its LSP benchmark (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
+- java warm-vs-warm context: both Atlas `serve` and jdtls run as persistent daemons. Atlas warm explain median is 6.185ms and warm /healthz is 0.332ms. jdtls's steady-state per-request latency is measured separately in its LSP benchmark (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
+- c warm-vs-warm context: both Atlas `serve` and clangd run as persistent daemons. Atlas warm explain median is 1.483ms and warm /healthz is 0.555ms. clangd's steady-state per-request latency is measured separately in its LSP benchmark (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
+- cpp warm-vs-warm context: both Atlas `serve` and clangd run as persistent daemons. Atlas warm explain median is 1.972ms and warm /healthz is 0.48ms. clangd's steady-state per-request latency is measured separately in its LSP benchmark (different query semantics: a full Atlas context bundle vs a single LSP method), so the two are reported side by side, not as a single ratio.
 
 
 ## Query token probes
@@ -1517,61 +307,61 @@ Atlas `serve` is started against the already-indexed DB, warmed, then warm HTTP 
 
 | Symbol | Status | graphify tokens | Atlas tokens | graphify ms | Atlas ms |
 |---|---|--:|--:|--:|--:|
-| log | equivalent | 105 | 5 | 78.941 | 12.654 |
-| newEntry | equivalent | 62 | 7 | 77.704 | 12.802 |
-| releaseEntry | equivalent | 175 | 8 | 77.997 | 13.096 |
-| Fire | equivalent | 56 | 8 | 78.579 | 13.581 |
+| log | equivalent | 105 | 5 | 97.668 | 14.441 |
+| newEntry | equivalent | 62 | 7 | 94.695 | 14.61 |
+| releaseEntry | equivalent | 175 | 8 | 96.152 | 14.393 |
+| Fire | equivalent | 56 | 8 | 96.817 | 15.089 |
 
 ### python
 
 | Symbol | Status | graphify tokens | Atlas tokens | graphify ms | Atlas ms |
 |---|---|--:|--:|--:|--:|
-| get | equivalent | 142 | 6 | 81.236 | 13.277 |
-| request | equivalent | 185 | 6 | 83.183 | 13.225 |
-| __init__ | equivalent | 62 | 9 | 80.918 | 13.623 |
+| get | equivalent | 142 | 6 | 99.002 | 15.36 |
+| request | equivalent | 185 | 6 | 102.1 | 15.026 |
+| __init__ | equivalent | 62 | 9 | 98.503 | 15.166 |
 
 ### javascript
 
 | Symbol | Status | graphify tokens | Atlas tokens | graphify ms | Atlas ms |
 |---|---|--:|--:|--:|--:|
-| get | equivalent | 47 | 6 | 71.8 | 13.585 |
-| sendFile | equivalent | 46 | 7 | 70.529 | 12.93 |
-| defineGetter | equivalent | 47 | 7 | 71.241 | 13.286 |
-| format | graphify_missing | 8 | 7 | 70.512 | 12.857 |
+| get | equivalent | 47 | 6 | 87.773 | 15.219 |
+| sendFile | equivalent | 46 | 7 | 86.905 | 14.895 |
+| defineGetter | equivalent | 47 | 7 | 87.884 | 14.661 |
+| format | graphify_missing | 8 | 7 | 86.786 | 14.732 |
 
 ### typescript
 
 | Symbol | Status | graphify tokens | Atlas tokens | graphify ms | Atlas ms |
 |---|---|--:|--:|--:|--:|
-| DevtoolsImpl | equivalent | 53 | 7 | 71.359 | 12.031 |
-| hydrate | graphify_missing | 8 | 7 | 71.844 | 12.476 |
-| shallow | equivalent | 75 | 6 | 72.215 | 13.131 |
-| CreateStore | equivalent | 89 | 6 | 73.193 | 12.327 |
+| DevtoolsImpl | equivalent | 53 | 7 | 87.895 | 14.174 |
+| hydrate | graphify_missing | 8 | 7 | 87.782 | 14.984 |
+| shallow | equivalent | 75 | 6 | 87.887 | 14.398 |
+| CreateStore | equivalent | 89 | 6 | 88.633 | 14.108 |
 
 ### java
 
 | Symbol | Status | graphify tokens | Atlas tokens | graphify ms | Atlas ms |
 |---|---|--:|--:|--:|--:|
-| write | equivalent | 112 | 7 | 89.672 | 24.955 |
-| read | equivalent | 102 | 7 | 91.369 | 21.658 |
+| write | equivalent | 112 | 7 | 106.164 | 20.011 |
+| read | equivalent | 101 | 7 | 109.199 | 19.654 |
 
 ### c
 
 | Symbol | Status | graphify tokens | Atlas tokens | graphify ms | Atlas ms |
 |---|---|--:|--:|--:|--:|
-| cJSON_Delete | equivalent | 284 | 8 | 88.866 | 15.014 |
-| cjson_functions_should_not_crash_with_null_pointers | equivalent | 288 | 18 | 87.159 | 14.447 |
-| cJSON_CreateObject | equivalent | 332 | 9 | 88.063 | 14.113 |
-| UnityPrint | equivalent | 302 | 7 | 86.536 | 13.597 |
+| cJSON_Delete | equivalent | 284 | 8 | 104.449 | 16.276 |
+| cjson_functions_should_not_crash_with_null_pointers | equivalent | 288 | 18 | 106.376 | 15.409 |
+| cJSON_CreateObject | equivalent | 332 | 9 | 105.989 | 14.929 |
+| UnityPrint | equivalent | 302 | 7 | 105.234 | 15.408 |
 
 ### cpp
 
 | Symbol | Status | graphify tokens | Atlas tokens | graphify ms | Atlas ms |
 |---|---|--:|--:|--:|--:|
-| RandomString | equivalent | 76 | 9 | 98.705 | 14.751 |
-| MemEnvTest | equivalent | 100 | 8 | 98.39 | 13.15 |
-| Size | equivalent | 72 | 9 | 99.834 | 14.308 |
-| size | equivalent | 72 | 6 | 100.134 | 26.244 |
+| RandomString | equivalent | 76 | 9 | 116.458 | 16.05 |
+| MemEnvTest | equivalent | 100 | 8 | 124.416 | 14.534 |
+| Size | equivalent | 72 | 9 | 120.011 | 15.425 |
+| size | equivalent | 72 | 6 | 122.75 | 20.738 |
 
 ## Missing or partial adapters
 
