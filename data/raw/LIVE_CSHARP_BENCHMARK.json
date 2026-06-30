@@ -574,5 +574,46 @@
     "commit": "d882e08",
     "date": "2026-06-30T07:15:57Z",
     "measurement_note": "Query rows refreshed from 13-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+  },
+  "multi_repo_validation": {
+    "minimum_repos": 3,
+    "status": "passed",
+    "generated_at": "2026-06-30T14:01:36Z",
+    "scope": "csharp parser random public-repo validation uses the first three passing GitHub repos from a deterministic shuffled sample of public non-archived C# repos with 50..500 stars and size <= 5000. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from Python tree-sitter-csharp binding, and Graphify was run on the same checkout as the comparison baseline.",
+    "selection_method": "gh search repos --language C# --stars 50..500 --archived=false --limit 100; size <= 5000; deterministic shuffled sample seed 2026-06-30-atlas-random-validation-tags-v3-tight; first 3 passing repos",
+    "measurement_order": "Atlas index after removing graphify-out, then language-specific Python tree-sitter counter, then graphify update for comparison metrics. Atlas/Graphify candidates time out after 75s and are rejected.",
+    "rejected_candidates": [],
+    "repos": [
+      {
+        "repo": "https://github.com/Ceiridge/Chrome-Developer-Mode-Extension-Warning-Patcher",
+        "commit": "936977542ecfb025b784cd457fcbfd7dffbe5f5c",
+        "target_path": "/tmp/atlas-random-validation-tags/work-tight/csharp/1-Ceiridge__Chrome-Developer-Mode-Extension-Warning-Patcher",
+        "atlas_definitions": 139,
+        "native_definitions": 112,
+        "coverage_ratio": 1.2411,
+        "ok": true,
+        "note": "Ceiridge/Chrome-Developer-Mode-Extension-Warning-Patcher: 32 csharp files; tree-sitter-csharp native counts {\"class\":31,\"constructor\":22,\"interface\":1,\"method\":58}; Atlas counts {\"class\":31,\"constructor\":22,\"field\":17,\"interface\":1,\"method\":58,\"module\":10}; Graphify rebuilt 289 nodes and 389 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/Viladoman/StructLayout",
+        "commit": "fde80869381bdcf7747628ecd3d9105bc6d39056",
+        "target_path": "/tmp/atlas-random-validation-tags/work-tight/csharp/2-Viladoman__StructLayout",
+        "atlas_definitions": 545,
+        "native_definitions": 336,
+        "coverage_ratio": 1.622,
+        "ok": true,
+        "note": "Viladoman/StructLayout: 32 csharp files; tree-sitter-csharp native counts {\"class\":54,\"constructor\":19,\"enum\":12,\"interface\":1,\"method\":250}; Atlas counts {\"class\":54,\"constant\":70,\"constructor\":19,\"enum\":12,\"field\":112,\"interface\":1,\"method\":250,\"module\":27}; Graphify rebuilt 614 nodes and 1115 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/b2developer/MonopolyNEAT",
+        "commit": "5706282faf6a13a4a522c2e71b469737222ab4b8",
+        "target_path": "/tmp/atlas-random-validation-tags/work-tight/csharp/3-b2developer__MonopolyNEAT",
+        "atlas_definitions": 234,
+        "native_definitions": 176,
+        "coverage_ratio": 1.3295,
+        "ok": true,
+        "note": "b2developer/MonopolyNEAT: 15 csharp files; tree-sitter-csharp native counts {\"class\":22,\"constructor\":18,\"enum\":11,\"method\":125}; Atlas counts {\"class\":22,\"constant\":45,\"constructor\":18,\"enum\":11,\"method\":125,\"module\":13}; Graphify rebuilt 191 nodes and 351 edges on the same checkout."
+      }
+    ]
   }
 }

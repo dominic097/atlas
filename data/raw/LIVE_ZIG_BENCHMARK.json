@@ -542,5 +542,46 @@
     "commit": "d882e08",
     "date": "2026-06-30T07:15:57Z",
     "measurement_note": "Query rows refreshed from nine-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+  },
+  "multi_repo_validation": {
+    "minimum_repos": 3,
+    "status": "passed",
+    "generated_at": "2026-06-30T14:01:36Z",
+    "scope": "zig parser random public-repo validation uses the first three passing GitHub repos from a deterministic shuffled sample of public non-archived Zig repos with 50..500 stars and size <= 5000. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from Python tree-sitter-zig binding, and Graphify was run on the same checkout as the comparison baseline.",
+    "selection_method": "gh search repos --language Zig --stars 50..500 --archived=false --limit 100; size <= 5000; deterministic shuffled sample seed 2026-06-30-atlas-random-validation-tags-v3-tight; first 3 passing repos",
+    "measurement_order": "Atlas index after removing graphify-out, then language-specific Python tree-sitter counter, then graphify update for comparison metrics. Atlas/Graphify candidates time out after 75s and are rejected.",
+    "rejected_candidates": [],
+    "repos": [
+      {
+        "repo": "https://github.com/norma-core/gremlin.zig",
+        "commit": "fa7fab721fa403b8d2b7957e0c59dbe232fde9fc",
+        "target_path": "/tmp/atlas-random-validation-tags/work-tight/zig/1-norma-core__gremlin.zig",
+        "atlas_definitions": 2331,
+        "native_definitions": 946,
+        "coverage_ratio": 2.4641,
+        "ok": true,
+        "note": "norma-core/gremlin.zig: 58 zig files; tree-sitter-zig native counts {\"constant\":401,\"function\":474,\"type\":71}; Atlas counts {\"constant\":1786,\"function\":474,\"type\":71}; Graphify rebuilt 596 nodes and 872 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/jamii/focus",
+        "commit": "4aee7dda8bea2cbcb766a8eb78711d42fcd62761",
+        "target_path": "/tmp/atlas-random-validation-tags/work-tight/zig/2-jamii__focus",
+        "atlas_definitions": 1624,
+        "native_definitions": 769,
+        "coverage_ratio": 2.1118,
+        "ok": true,
+        "note": "jamii/focus: 29 zig files; tree-sitter-zig native counts {\"constant\":349,\"function\":340,\"type\":80}; Atlas counts {\"constant\":1215,\"function\":340,\"type\":69}; Graphify rebuilt 393 nodes and 650 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/Validark/Accelerated-Zig-Parser",
+        "commit": "8782a1924573641dc1f4a146afd530bf47838987",
+        "target_path": "/tmp/atlas-random-validation-tags/work-tight/zig/3-Validark__Accelerated-Zig-Parser",
+        "atlas_definitions": 941,
+        "native_definitions": 200,
+        "coverage_ratio": 4.705,
+        "ok": true,
+        "note": "Validark/Accelerated-Zig-Parser: 3 zig files; tree-sitter-zig native counts {\"constant\":39,\"function\":159,\"type\":2}; Atlas counts {\"constant\":761,\"function\":159,\"type\":21}; Graphify rebuilt 71 nodes and 97 edges on the same checkout."
+      }
+    ]
   }
 }

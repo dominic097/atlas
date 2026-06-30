@@ -550,5 +550,46 @@
     "commit": "d882e08",
     "date": "2026-06-30T07:15:57Z",
     "measurement_note": "Query rows refreshed from nine-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+  },
+  "multi_repo_validation": {
+    "minimum_repos": 3,
+    "status": "passed",
+    "generated_at": "2026-06-30T14:01:36Z",
+    "scope": "kotlin parser random public-repo validation uses the first three passing GitHub repos from a deterministic shuffled sample of public non-archived Kotlin repos with 50..500 stars and size <= 5000. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from Python tree-sitter-kotlin binding, and Graphify was run on the same checkout as the comparison baseline.",
+    "selection_method": "gh search repos --language Kotlin --stars 50..500 --archived=false --limit 100; size <= 5000; deterministic shuffled sample seed 2026-06-30-atlas-random-validation-tags-v3-tight; first 3 passing repos",
+    "measurement_order": "Atlas index after removing graphify-out, then language-specific Python tree-sitter counter, then graphify update for comparison metrics. Atlas/Graphify candidates time out after 75s and are rejected.",
+    "rejected_candidates": [],
+    "repos": [
+      {
+        "repo": "https://github.com/gothinkster/kotlin-spring-realworld-example-app",
+        "commit": "848c29e3abfe1bd72001cc7d7a3227aebec96e9b",
+        "target_path": "/tmp/atlas-random-validation-tags/work-tight/kotlin/1-gothinkster__kotlin-spring-realworld-example-app",
+        "atlas_definitions": 188,
+        "native_definitions": 140,
+        "coverage_ratio": 1.3429,
+        "ok": true,
+        "note": "gothinkster/kotlin-spring-realworld-example-app: 43 kotlin files; tree-sitter-kotlin native counts {\"function\":77,\"type\":44,\"variable\":19}; Atlas counts {\"function\":77,\"type\":44,\"variable\":67}; Graphify rebuilt 203 nodes and 357 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/VKCOM/vk-android-sdk",
+        "commit": "a0da7abf54acac8910fae43f0a189cc163cb9694",
+        "target_path": "/tmp/atlas-random-validation-tags/work-tight/kotlin/2-VKCOM__vk-android-sdk",
+        "atlas_definitions": 10150,
+        "native_definitions": 5604,
+        "coverage_ratio": 1.8112,
+        "ok": true,
+        "note": "VKCOM/vk-android-sdk: 1966 kotlin files; tree-sitter-kotlin native counts {\"function\":1233,\"type\":2677,\"variable\":1694}; Atlas counts {\"constant\":4104,\"function\":1233,\"type\":2677,\"variable\":2136}; Graphify rebuilt 5997 nodes and 9593 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/husaynhakeem/android-face-detector",
+        "commit": "a8162ac724d1a439b9e2040c33cd2a1e69ae657a",
+        "target_path": "/tmp/atlas-random-validation-tags/work-tight/kotlin/3-husaynhakeem__android-face-detector",
+        "atlas_definitions": 67,
+        "native_definitions": 44,
+        "coverage_ratio": 1.5227,
+        "ok": true,
+        "note": "husaynhakeem/android-face-detector: 6 kotlin files; tree-sitter-kotlin native counts {\"function\":21,\"type\":7,\"variable\":16}; Atlas counts {\"constant\":2,\"function\":21,\"type\":7,\"variable\":37}; Graphify rebuilt 55 nodes and 71 edges on the same checkout."
+      }
+    ]
   }
 }

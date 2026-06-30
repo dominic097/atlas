@@ -373,5 +373,46 @@
     "commit": "1760d93",
     "date": "2026-06-30T06:52:54Z",
     "measurement_note": "Atlas query rows refreshed from five-sample medians after terse explain count fast path; graphify rows retained as the saved comparison baseline."
+  },
+  "multi_repo_validation": {
+    "minimum_repos": 3,
+    "status": "passed",
+    "generated_at": "2026-06-30T14:01:36Z",
+    "scope": "scala parser random public-repo validation uses the first three passing GitHub repos from a deterministic shuffled sample of public non-archived Scala repos with 50..500 stars and size <= 5000. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from Python tree-sitter-scala binding, and Graphify was run on the same checkout as the comparison baseline.",
+    "selection_method": "gh search repos --language Scala --stars 50..500 --archived=false --limit 100; size <= 5000; deterministic shuffled sample seed 2026-06-30-atlas-random-validation-tags-v3-tight; first 3 passing repos",
+    "measurement_order": "Atlas index after removing graphify-out, then language-specific Python tree-sitter counter, then graphify update for comparison metrics. Atlas/Graphify candidates time out after 75s and are rejected.",
+    "rejected_candidates": [],
+    "repos": [
+      {
+        "repo": "https://github.com/spirom/LearningSpark",
+        "commit": "8498a592e2bf6bbce8fc29dc6d7a0850a38a72f5",
+        "target_path": "/tmp/atlas-random-validation-tags/work-tight/scala/1-spirom__LearningSpark",
+        "atlas_definitions": 881,
+        "native_definitions": 370,
+        "coverage_ratio": 2.3811,
+        "ok": true,
+        "note": "spirom/LearningSpark: 75 scala files; tree-sitter-scala native counts {\"function\":201,\"type\":135,\"variable\":34}; Atlas counts {\"function\":201,\"type\":138,\"variable\":542}; Graphify rebuilt 566 nodes and 1065 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/Eliah-Lakhin/papa-carlo",
+        "commit": "d65c3e63dfd1d3b9721fbfa4297f475829423c96",
+        "target_path": "/tmp/atlas-random-validation-tags/work-tight/scala/2-Eliah-Lakhin__papa-carlo",
+        "atlas_definitions": 800,
+        "native_definitions": 564,
+        "coverage_ratio": 1.4184,
+        "ok": true,
+        "note": "Eliah-Lakhin/papa-carlo: 55 scala files; tree-sitter-scala native counts {\"function\":298,\"type\":85,\"variable\":181}; Atlas counts {\"function\":306,\"type\":85,\"variable\":409}; Graphify rebuilt 450 nodes and 922 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/xerial/larray",
+        "commit": "400d23241f5050dc06f724b4fee7a485b1688bf9",
+        "target_path": "/tmp/atlas-random-validation-tags/work-tight/scala/3-xerial__larray",
+        "atlas_definitions": 1237,
+        "native_definitions": 751,
+        "coverage_ratio": 1.6471,
+        "ok": true,
+        "note": "xerial/larray: 36 scala files; tree-sitter-scala native counts {\"function\":577,\"type\":102,\"variable\":72}; Atlas counts {\"function\":596,\"type\":105,\"variable\":536}; Graphify rebuilt 856 nodes and 2050 edges on the same checkout."
+      }
+    ]
   }
 }

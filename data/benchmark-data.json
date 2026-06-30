@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T13:45:58.636Z",
+  "generatedAt": "2026-06-30T14:04:35.415Z",
   "sourceLabel": "Atlas benchmark JSON artifacts from bench/",
   "sourceArtifacts": [
     {
@@ -77,8 +77,8 @@
       "name": "LIVE_CSHARP_BENCHMARK.json",
       "source": "bench/LIVE_CSHARP_BENCHMARK.json",
       "path": "data/raw/LIVE_CSHARP_BENCHMARK.json",
-      "bytes": 16923,
-      "sha256": "03050888497f846fd1cb8256792556726b716237f4a498efa93d77758cff4c92"
+      "bytes": 20185,
+      "sha256": "830702f918ae51c9511833555ef52dba093d1ea88ca047704d138a581bf5ebe6"
     },
     {
       "name": "LIVE_CUDA_BENCHMARK.json",
@@ -140,8 +140,8 @@
       "name": "LIVE_GROOVY_BENCHMARK.json",
       "source": "bench/LIVE_GROOVY_BENCHMARK.json",
       "path": "data/raw/LIVE_GROOVY_BENCHMARK.json",
-      "bytes": 18223,
-      "sha256": "8440fee5c1767ffbc048bc55b118e90f67752010497a45845d7df10e284fbf4b"
+      "bytes": 21191,
+      "sha256": "75b73fee3e9392e88fb7559575107a47a783000e33fbea279ff8592e4b6b4a70"
     },
     {
       "name": "LIVE_JSON_BENCHMARK.json",
@@ -161,8 +161,8 @@
       "name": "LIVE_KOTLIN_BENCHMARK.json",
       "source": "bench/LIVE_KOTLIN_BENCHMARK.json",
       "path": "data/raw/LIVE_KOTLIN_BENCHMARK.json",
-      "bytes": 16930,
-      "sha256": "fa3af2d64033a70bb46945cd21c66735a080f8b2671ef4edc1974ca7df160983"
+      "bytes": 20013,
+      "sha256": "c3682674a8148a97c4bb30610b39c42e995519982a2538edc6eb87adef7a97f6"
     },
     {
       "name": "LIVE_LUA_BENCHMARK.json",
@@ -238,8 +238,8 @@
       "name": "LIVE_SCALA_BENCHMARK.json",
       "source": "bench/LIVE_SCALA_BENCHMARK.json",
       "path": "data/raw/LIVE_SCALA_BENCHMARK.json",
-      "bytes": 11798,
-      "sha256": "f7456b0c1b9389e4c937541a9fb3a27e566e204f05722e776f429cb0c2c9a349"
+      "bytes": 14705,
+      "sha256": "95dfd73fb2a6e35549ff255f36fc9ac5b5a359d78384f00df39cb8d8c1e2ec45"
     },
     {
       "name": "LIVE_SQL_BENCHMARK.json",
@@ -287,8 +287,8 @@
       "name": "LIVE_ZIG_BENCHMARK.json",
       "source": "bench/LIVE_ZIG_BENCHMARK.json",
       "path": "data/raw/LIVE_ZIG_BENCHMARK.json",
-      "bytes": 16261,
-      "sha256": "3a61f988930095717929d3f56caf97f95127fb47316a7a132a3322f86347ffc8"
+      "bytes": 19159,
+      "sha256": "b26cf517321166d213f9c5d363ba8274951524d3cb34c62fafe7fbda10d9c7af"
     }
   ],
   "provenance": {
@@ -637,9 +637,9 @@
       "parityLatency10x": 0,
       "parityTenX": 0,
       "detectorOnlyArtifacts": 3,
-      "threeRepoValidated": 24,
-      "threeRepoValidatedStrict10x": 24,
-      "threeRepoValidationPending": 12
+      "threeRepoValidated": 29,
+      "threeRepoValidatedStrict10x": 29,
+      "threeRepoValidationPending": 7
     },
     "coverage": {
       "graphifyRows": 39,
@@ -3145,15 +3145,46 @@
         "scope": null
       },
       "multiRepoValidation": {
-        "status": "missing",
+        "status": "passed",
         "minimumRepos": 3,
-        "repoCount": 0,
-        "passedRepoCount": 0,
-        "passed": false,
-        "minCoverageRatio": null,
-        "generatedAt": null,
-        "scope": "",
-        "repos": []
+        "repoCount": 3,
+        "passedRepoCount": 3,
+        "passed": true,
+        "minCoverageRatio": 1.2411,
+        "generatedAt": "2026-06-30T14:01:36Z",
+        "scope": "csharp parser random public-repo validation uses the first three passing GitHub repos from a deterministic shuffled sample of public non-archived C# repos with 50..500 stars and size <= 5000. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from Python tree-sitter-csharp binding, and Graphify was run on the same checkout as the comparison baseline.",
+        "repos": [
+          {
+            "repo": "https://github.com/Ceiridge/Chrome-Developer-Mode-Extension-Warning-Patcher",
+            "commit": "936977542ecfb025b784cd457fcbfd7dffbe5f5c",
+            "targetPath": "/tmp/atlas-random-validation-tags/work-tight/csharp/1-Ceiridge__Chrome-Developer-Mode-Extension-Warning-Patcher",
+            "atlasDefinitions": 139,
+            "nativeDefinitions": 112,
+            "coverageRatio": 1.2411,
+            "ok": true,
+            "note": "Ceiridge/Chrome-Developer-Mode-Extension-Warning-Patcher: 32 csharp files; tree-sitter-csharp native counts {\"class\":31,\"constructor\":22,\"interface\":1,\"method\":58}; Atlas counts {\"class\":31,\"constructor\":22,\"field\":17,\"interface\":1,\"method\":58,\"module\":10}; Graphify rebuilt 289 nodes and 389 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/Viladoman/StructLayout",
+            "commit": "fde80869381bdcf7747628ecd3d9105bc6d39056",
+            "targetPath": "/tmp/atlas-random-validation-tags/work-tight/csharp/2-Viladoman__StructLayout",
+            "atlasDefinitions": 545,
+            "nativeDefinitions": 336,
+            "coverageRatio": 1.622,
+            "ok": true,
+            "note": "Viladoman/StructLayout: 32 csharp files; tree-sitter-csharp native counts {\"class\":54,\"constructor\":19,\"enum\":12,\"interface\":1,\"method\":250}; Atlas counts {\"class\":54,\"constant\":70,\"constructor\":19,\"enum\":12,\"field\":112,\"interface\":1,\"method\":250,\"module\":27}; Graphify rebuilt 614 nodes and 1115 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/b2developer/MonopolyNEAT",
+            "commit": "5706282faf6a13a4a522c2e71b469737222ab4b8",
+            "targetPath": "/tmp/atlas-random-validation-tags/work-tight/csharp/3-b2developer__MonopolyNEAT",
+            "atlasDefinitions": 234,
+            "nativeDefinitions": 176,
+            "coverageRatio": 1.3295,
+            "ok": true,
+            "note": "b2developer/MonopolyNEAT: 15 csharp files; tree-sitter-csharp native counts {\"class\":22,\"constructor\":18,\"enum\":11,\"method\":125}; Atlas counts {\"class\":22,\"constant\":45,\"constructor\":18,\"enum\":11,\"method\":125,\"module\":13}; Graphify rebuilt 191 nodes and 351 edges on the same checkout."
+          }
+        ]
       },
       "optimization": {
         "cyclesRun": 3,
@@ -5201,15 +5232,46 @@
         "scope": null
       },
       "multiRepoValidation": {
-        "status": "missing",
+        "status": "passed",
         "minimumRepos": 3,
-        "repoCount": 0,
-        "passedRepoCount": 0,
-        "passed": false,
-        "minCoverageRatio": null,
-        "generatedAt": null,
-        "scope": "",
-        "repos": []
+        "repoCount": 3,
+        "passedRepoCount": 3,
+        "passed": true,
+        "minCoverageRatio": 1.0857,
+        "generatedAt": "2026-06-30T14:01:36Z",
+        "scope": "groovy parser random public-repo validation uses the first three passing GitHub repos from a deterministic shuffled sample of public non-archived Groovy repos with 50..500 stars and size <= 5000. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from Python tree-sitter-groovy binding, and Graphify was run on the same checkout as the comparison baseline.",
+        "repos": [
+          {
+            "repo": "https://github.com/jvoegele/gradle-android-plugin",
+            "commit": "2063680c8d2a777aa1311b1865d299c8aa65d5be",
+            "targetPath": "/tmp/atlas-random-validation-tags/work-tight/groovy/1-jvoegele__gradle-android-plugin",
+            "atlasDefinitions": 195,
+            "nativeDefinitions": 124,
+            "coverageRatio": 1.5726,
+            "ok": true,
+            "note": "jvoegele/gradle-android-plugin: 50 groovy files; tree-sitter-groovy native counts {\"class\":30,\"function\":2,\"interface\":1,\"method\":91}; Atlas counts {\"class\":44,\"interface\":1,\"method\":146,\"task\":4}; Graphify rebuilt 205 nodes and 205 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/allegro/json-avro-converter",
+            "commit": "ad871e8a497003a90da1ff523b18d96e4afbf5c7",
+            "targetPath": "/tmp/atlas-random-validation-tags/work-tight/groovy/2-allegro__json-avro-converter",
+            "atlasDefinitions": 38,
+            "nativeDefinitions": 35,
+            "coverageRatio": 1.0857,
+            "ok": true,
+            "note": "allegro/json-avro-converter: 20 groovy files; tree-sitter-groovy native counts {\"class\":11,\"method\":24}; Atlas counts {\"class\":16,\"method\":22}; Graphify rebuilt 416 nodes and 912 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/jaredsburrows/gradle-license-plugin",
+            "commit": "062bcdcdbc88325f62b3d5e92cf0a1ed57af37a7",
+            "targetPath": "/tmp/atlas-random-validation-tags/work-tight/groovy/3-jaredsburrows__gradle-license-plugin",
+            "atlasDefinitions": 18,
+            "nativeDefinitions": 10,
+            "coverageRatio": 1.8,
+            "ok": true,
+            "note": "jaredsburrows/gradle-license-plugin: 12 groovy files; tree-sitter-groovy native counts {\"class\":3,\"method\":7}; Atlas counts {\"class\":9,\"method\":8,\"task\":1}; Graphify rebuilt 269 nodes and 454 edges on the same checkout."
+          }
+        ]
       },
       "optimization": {
         "cyclesRun": 3,
@@ -5856,15 +5918,46 @@
         "scope": null
       },
       "multiRepoValidation": {
-        "status": "missing",
+        "status": "passed",
         "minimumRepos": 3,
-        "repoCount": 0,
-        "passedRepoCount": 0,
-        "passed": false,
-        "minCoverageRatio": null,
-        "generatedAt": null,
-        "scope": "",
-        "repos": []
+        "repoCount": 3,
+        "passedRepoCount": 3,
+        "passed": true,
+        "minCoverageRatio": 1.3429,
+        "generatedAt": "2026-06-30T14:01:36Z",
+        "scope": "kotlin parser random public-repo validation uses the first three passing GitHub repos from a deterministic shuffled sample of public non-archived Kotlin repos with 50..500 stars and size <= 5000. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from Python tree-sitter-kotlin binding, and Graphify was run on the same checkout as the comparison baseline.",
+        "repos": [
+          {
+            "repo": "https://github.com/gothinkster/kotlin-spring-realworld-example-app",
+            "commit": "848c29e3abfe1bd72001cc7d7a3227aebec96e9b",
+            "targetPath": "/tmp/atlas-random-validation-tags/work-tight/kotlin/1-gothinkster__kotlin-spring-realworld-example-app",
+            "atlasDefinitions": 188,
+            "nativeDefinitions": 140,
+            "coverageRatio": 1.3429,
+            "ok": true,
+            "note": "gothinkster/kotlin-spring-realworld-example-app: 43 kotlin files; tree-sitter-kotlin native counts {\"function\":77,\"type\":44,\"variable\":19}; Atlas counts {\"function\":77,\"type\":44,\"variable\":67}; Graphify rebuilt 203 nodes and 357 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/VKCOM/vk-android-sdk",
+            "commit": "a0da7abf54acac8910fae43f0a189cc163cb9694",
+            "targetPath": "/tmp/atlas-random-validation-tags/work-tight/kotlin/2-VKCOM__vk-android-sdk",
+            "atlasDefinitions": 10150,
+            "nativeDefinitions": 5604,
+            "coverageRatio": 1.8112,
+            "ok": true,
+            "note": "VKCOM/vk-android-sdk: 1966 kotlin files; tree-sitter-kotlin native counts {\"function\":1233,\"type\":2677,\"variable\":1694}; Atlas counts {\"constant\":4104,\"function\":1233,\"type\":2677,\"variable\":2136}; Graphify rebuilt 5997 nodes and 9593 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/husaynhakeem/android-face-detector",
+            "commit": "a8162ac724d1a439b9e2040c33cd2a1e69ae657a",
+            "targetPath": "/tmp/atlas-random-validation-tags/work-tight/kotlin/3-husaynhakeem__android-face-detector",
+            "atlasDefinitions": 67,
+            "nativeDefinitions": 44,
+            "coverageRatio": 1.5227,
+            "ok": true,
+            "note": "husaynhakeem/android-face-detector: 6 kotlin files; tree-sitter-kotlin native counts {\"function\":21,\"type\":7,\"variable\":16}; Atlas counts {\"constant\":2,\"function\":21,\"type\":7,\"variable\":37}; Graphify rebuilt 55 nodes and 71 edges on the same checkout."
+          }
+        ]
       },
       "optimization": {
         "cyclesRun": 2,
@@ -8275,15 +8368,46 @@
         "scope": null
       },
       "multiRepoValidation": {
-        "status": "missing",
+        "status": "passed",
         "minimumRepos": 3,
-        "repoCount": 0,
-        "passedRepoCount": 0,
-        "passed": false,
-        "minCoverageRatio": null,
-        "generatedAt": null,
-        "scope": "",
-        "repos": []
+        "repoCount": 3,
+        "passedRepoCount": 3,
+        "passed": true,
+        "minCoverageRatio": 1.4184,
+        "generatedAt": "2026-06-30T14:01:36Z",
+        "scope": "scala parser random public-repo validation uses the first three passing GitHub repos from a deterministic shuffled sample of public non-archived Scala repos with 50..500 stars and size <= 5000. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from Python tree-sitter-scala binding, and Graphify was run on the same checkout as the comparison baseline.",
+        "repos": [
+          {
+            "repo": "https://github.com/spirom/LearningSpark",
+            "commit": "8498a592e2bf6bbce8fc29dc6d7a0850a38a72f5",
+            "targetPath": "/tmp/atlas-random-validation-tags/work-tight/scala/1-spirom__LearningSpark",
+            "atlasDefinitions": 881,
+            "nativeDefinitions": 370,
+            "coverageRatio": 2.3811,
+            "ok": true,
+            "note": "spirom/LearningSpark: 75 scala files; tree-sitter-scala native counts {\"function\":201,\"type\":135,\"variable\":34}; Atlas counts {\"function\":201,\"type\":138,\"variable\":542}; Graphify rebuilt 566 nodes and 1065 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/Eliah-Lakhin/papa-carlo",
+            "commit": "d65c3e63dfd1d3b9721fbfa4297f475829423c96",
+            "targetPath": "/tmp/atlas-random-validation-tags/work-tight/scala/2-Eliah-Lakhin__papa-carlo",
+            "atlasDefinitions": 800,
+            "nativeDefinitions": 564,
+            "coverageRatio": 1.4184,
+            "ok": true,
+            "note": "Eliah-Lakhin/papa-carlo: 55 scala files; tree-sitter-scala native counts {\"function\":298,\"type\":85,\"variable\":181}; Atlas counts {\"function\":306,\"type\":85,\"variable\":409}; Graphify rebuilt 450 nodes and 922 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/xerial/larray",
+            "commit": "400d23241f5050dc06f724b4fee7a485b1688bf9",
+            "targetPath": "/tmp/atlas-random-validation-tags/work-tight/scala/3-xerial__larray",
+            "atlasDefinitions": 1237,
+            "nativeDefinitions": 751,
+            "coverageRatio": 1.6471,
+            "ok": true,
+            "note": "xerial/larray: 36 scala files; tree-sitter-scala native counts {\"function\":577,\"type\":102,\"variable\":72}; Atlas counts {\"function\":596,\"type\":105,\"variable\":536}; Graphify rebuilt 856 nodes and 2050 edges on the same checkout."
+          }
+        ]
       },
       "optimization": {
         "cyclesRun": 2,
@@ -9686,15 +9810,46 @@
         "scope": null
       },
       "multiRepoValidation": {
-        "status": "missing",
+        "status": "passed",
         "minimumRepos": 3,
-        "repoCount": 0,
-        "passedRepoCount": 0,
-        "passed": false,
-        "minCoverageRatio": null,
-        "generatedAt": null,
-        "scope": "",
-        "repos": []
+        "repoCount": 3,
+        "passedRepoCount": 3,
+        "passed": true,
+        "minCoverageRatio": 2.1118,
+        "generatedAt": "2026-06-30T14:01:36Z",
+        "scope": "zig parser random public-repo validation uses the first three passing GitHub repos from a deterministic shuffled sample of public non-archived Zig repos with 50..500 stars and size <= 5000. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from Python tree-sitter-zig binding, and Graphify was run on the same checkout as the comparison baseline.",
+        "repos": [
+          {
+            "repo": "https://github.com/norma-core/gremlin.zig",
+            "commit": "fa7fab721fa403b8d2b7957e0c59dbe232fde9fc",
+            "targetPath": "/tmp/atlas-random-validation-tags/work-tight/zig/1-norma-core__gremlin.zig",
+            "atlasDefinitions": 2331,
+            "nativeDefinitions": 946,
+            "coverageRatio": 2.4641,
+            "ok": true,
+            "note": "norma-core/gremlin.zig: 58 zig files; tree-sitter-zig native counts {\"constant\":401,\"function\":474,\"type\":71}; Atlas counts {\"constant\":1786,\"function\":474,\"type\":71}; Graphify rebuilt 596 nodes and 872 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/jamii/focus",
+            "commit": "4aee7dda8bea2cbcb766a8eb78711d42fcd62761",
+            "targetPath": "/tmp/atlas-random-validation-tags/work-tight/zig/2-jamii__focus",
+            "atlasDefinitions": 1624,
+            "nativeDefinitions": 769,
+            "coverageRatio": 2.1118,
+            "ok": true,
+            "note": "jamii/focus: 29 zig files; tree-sitter-zig native counts {\"constant\":349,\"function\":340,\"type\":80}; Atlas counts {\"constant\":1215,\"function\":340,\"type\":69}; Graphify rebuilt 393 nodes and 650 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/Validark/Accelerated-Zig-Parser",
+            "commit": "8782a1924573641dc1f4a146afd530bf47838987",
+            "targetPath": "/tmp/atlas-random-validation-tags/work-tight/zig/3-Validark__Accelerated-Zig-Parser",
+            "atlasDefinitions": 941,
+            "nativeDefinitions": 200,
+            "coverageRatio": 4.705,
+            "ok": true,
+            "note": "Validark/Accelerated-Zig-Parser: 3 zig files; tree-sitter-zig native counts {\"constant\":39,\"function\":159,\"type\":2}; Atlas counts {\"constant\":761,\"function\":159,\"type\":21}; Graphify rebuilt 71 nodes and 97 edges on the same checkout."
+          }
+        ]
       },
       "optimization": {
         "cyclesRun": 2,

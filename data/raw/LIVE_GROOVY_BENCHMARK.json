@@ -588,5 +588,46 @@
     "commit": "d882e08",
     "date": "2026-06-30T07:15:57Z",
     "measurement_note": "Query rows refreshed from nine-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+  },
+  "multi_repo_validation": {
+    "minimum_repos": 3,
+    "status": "passed",
+    "generated_at": "2026-06-30T14:01:36Z",
+    "scope": "groovy parser random public-repo validation uses the first three passing GitHub repos from a deterministic shuffled sample of public non-archived Groovy repos with 50..500 stars and size <= 5000. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from Python tree-sitter-groovy binding, and Graphify was run on the same checkout as the comparison baseline.",
+    "selection_method": "gh search repos --language Groovy --stars 50..500 --archived=false --limit 100; size <= 5000; deterministic shuffled sample seed 2026-06-30-atlas-random-validation-tags-v3-tight; first 3 passing repos",
+    "measurement_order": "Atlas index after removing graphify-out, then language-specific Python tree-sitter counter, then graphify update for comparison metrics. Atlas/Graphify candidates time out after 75s and are rejected.",
+    "rejected_candidates": [],
+    "repos": [
+      {
+        "repo": "https://github.com/jvoegele/gradle-android-plugin",
+        "commit": "2063680c8d2a777aa1311b1865d299c8aa65d5be",
+        "target_path": "/tmp/atlas-random-validation-tags/work-tight/groovy/1-jvoegele__gradle-android-plugin",
+        "atlas_definitions": 195,
+        "native_definitions": 124,
+        "coverage_ratio": 1.5726,
+        "ok": true,
+        "note": "jvoegele/gradle-android-plugin: 50 groovy files; tree-sitter-groovy native counts {\"class\":30,\"function\":2,\"interface\":1,\"method\":91}; Atlas counts {\"class\":44,\"interface\":1,\"method\":146,\"task\":4}; Graphify rebuilt 205 nodes and 205 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/allegro/json-avro-converter",
+        "commit": "ad871e8a497003a90da1ff523b18d96e4afbf5c7",
+        "target_path": "/tmp/atlas-random-validation-tags/work-tight/groovy/2-allegro__json-avro-converter",
+        "atlas_definitions": 38,
+        "native_definitions": 35,
+        "coverage_ratio": 1.0857,
+        "ok": true,
+        "note": "allegro/json-avro-converter: 20 groovy files; tree-sitter-groovy native counts {\"class\":11,\"method\":24}; Atlas counts {\"class\":16,\"method\":22}; Graphify rebuilt 416 nodes and 912 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/jaredsburrows/gradle-license-plugin",
+        "commit": "062bcdcdbc88325f62b3d5e92cf0a1ed57af37a7",
+        "target_path": "/tmp/atlas-random-validation-tags/work-tight/groovy/3-jaredsburrows__gradle-license-plugin",
+        "atlas_definitions": 18,
+        "native_definitions": 10,
+        "coverage_ratio": 1.8,
+        "ok": true,
+        "note": "jaredsburrows/gradle-license-plugin: 12 groovy files; tree-sitter-groovy native counts {\"class\":3,\"method\":7}; Atlas counts {\"class\":9,\"method\":8,\"task\":1}; Graphify rebuilt 269 nodes and 454 edges on the same checkout."
+      }
+    ]
   }
 }

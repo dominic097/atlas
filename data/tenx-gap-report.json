@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T13:45:58.636Z",
+  "generatedAt": "2026-06-30T14:04:35.415Z",
   "source": "data/benchmark-data.json",
   "targetRatio": 10,
   "metricNote": "Token and latency are ratio targets. Coverage is a native-definition coverage ratio, so the honest accuracy target is >1.0 native coverage exceed, not a fabricated 10x accuracy multiplier.",
@@ -12,8 +12,8 @@
     "token10xComparable": 36,
     "latency10xComparable": 36,
     "performance10xComparable": 36,
-    "threeRepoValidated": 24,
-    "threeRepoValidatedStrict10x": 24
+    "threeRepoValidated": 29,
+    "threeRepoValidatedStrict10x": 29
   },
   "parityLanguages": [],
   "live": [
@@ -131,10 +131,10 @@
       "latencyGapTo10x": 1,
       "blockers": [],
       "validation": {
-        "passed": false,
-        "repoCount": 0,
+        "passed": true,
+        "repoCount": 3,
         "minimumRepos": 3,
-        "minCoverageRatio": null
+        "minCoverageRatio": 1.2411
       }
     },
     {
@@ -311,10 +311,10 @@
       "latencyGapTo10x": 1,
       "blockers": [],
       "validation": {
-        "passed": false,
-        "repoCount": 0,
+        "passed": true,
+        "repoCount": 3,
         "minimumRepos": 3,
-        "minCoverageRatio": null
+        "minCoverageRatio": 1.0857
       }
     },
     {
@@ -371,10 +371,10 @@
       "latencyGapTo10x": 1,
       "blockers": [],
       "validation": {
-        "passed": false,
-        "repoCount": 0,
+        "passed": true,
+        "repoCount": 3,
         "minimumRepos": 3,
-        "minCoverageRatio": null
+        "minCoverageRatio": 1.3429
       }
     },
     {
@@ -591,10 +591,10 @@
       "latencyGapTo10x": 1,
       "blockers": [],
       "validation": {
-        "passed": false,
-        "repoCount": 0,
+        "passed": true,
+        "repoCount": 3,
         "minimumRepos": 3,
-        "minCoverageRatio": null
+        "minCoverageRatio": 1.4184
       }
     },
     {
@@ -731,10 +731,10 @@
       "latencyGapTo10x": 1,
       "blockers": [],
       "validation": {
-        "passed": false,
-        "repoCount": 0,
+        "passed": true,
+        "repoCount": 3,
         "minimumRepos": 3,
-        "minCoverageRatio": null
+        "minCoverageRatio": 2.1118
       }
     }
   ],
