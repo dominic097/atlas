@@ -8,26 +8,32 @@
     "sparse_checkout": "",
     "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-json-eslint-create-config/atlas.db --json index /tmp/atlas-live-json-eslint-create-config/repo",
     "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-json-eslint-create-config/atlas.db --json index /tmp/atlas-live-json-eslint-create-config/repo",
-    "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "graphify_update": "uv tool run --from graphifyy graphify update .",
     "native_baseline": "/opt/homebrew/bin/python3 -c <python-json key counter> /tmp/atlas-live-json-eslint-create-config/repo",
     "query_symbols": [
       "scripts",
-      "scripts.test",
       "dependencies",
       "devDependencies",
       "publishConfig",
-      "publishConfig.access"
+      "ConfigGenerator",
+      "calc",
+      "boldArgs",
+      "findPackageJson",
+      "parsePackageName",
+      "fetchPeerDependencies",
+      "installSyncSaveDev",
+      "defineInMemoryFs"
     ],
     "target_path": "/tmp/atlas-live-json-eslint-create-config/repo",
-    "atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-json-eslint-create-config/atlas.db serve --addr 127.0.0.1:4232"
+    "atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-json-eslint-create-config/atlas.db --repo repo serve --addr 127.0.0.1:48234"
   },
   "atlas": {
-    "cold_wall_seconds": 0.045,
-    "reindex_wall_seconds": 0.02,
+    "cold_wall_seconds": 0.173,
+    "reindex_wall_seconds": 0.041,
     "index": {
-      "repo_id": "147c04e0-25fe-469b-9190-f99fcdcf357b",
+      "repo_id": "64073602-b1fa-423b-a187-0582bb958132",
       "repo_full_name": "repo",
-      "snapshot_id": "efb2dde2-f724-4c29-83a3-76b1867c9a1f",
+      "snapshot_id": "b4c6181b-b459-4110-b5be-223e24b972b8",
       "commit_sha": "58d77fc302b25976bb4cc7dc273377b421bc226b",
       "indexed_files": 27,
       "symbols": 252,
@@ -45,29 +51,29 @@
         "yaml": 6
       },
       "mode": "full",
-      "duration_ms": 45,
+      "duration_ms": 51,
       "timings_ms": {
         "build_symbols_edges": 0,
         "delta_check": 0,
         "discover_files": 0,
         "doc_links": 0,
-        "ensure_repo": 0,
-        "gitignore_scan": 13,
+        "ensure_repo": 1,
+        "gitignore_scan": 12,
         "go_types": 0,
-        "lexical": 22,
-        "parse": 8,
-        "persist": 22,
+        "lexical": 23,
+        "parse": 13,
+        "persist": 23,
         "resolve_head": 0,
         "routes": 0,
         "sort": 0,
         "walk": 0,
-        "write_sqlite": 22
+        "write_sqlite": 23
       }
     },
     "reindex": {
-      "repo_id": "933e7e36-1b53-4846-8ebb-0de5cd5c8d84",
+      "repo_id": "64073602-b1fa-423b-a187-0582bb958132",
       "repo_full_name": "repo",
-      "snapshot_id": "5c24bb68-61d6-4036-b0c2-985d03ba14bb",
+      "snapshot_id": "b4c6181b-b459-4110-b5be-223e24b972b8",
       "commit_sha": "58d77fc302b25976bb4cc7dc273377b421bc226b",
       "indexed_files": 27,
       "symbols": 252,
@@ -144,13 +150,19 @@
         "count": 50
       }
     ],
-    "json_definition_symbols": 60
+    "json_definition_symbols": 60,
+    "companion_javascript_class_function_method_symbols": 29,
+    "json_javascript_code_target_definition_symbols": 89,
+    "javascript_constants_excluded": 69,
+    "javascript_variables_excluded": 10,
+    "markdown_sections_excluded": 77,
+    "yaml_documents_excluded": 6
   },
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 0.298,
-    "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "seconds": 0.733,
+    "command": "uv tool run --from graphifyy graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
       "[graphify watch] Rebuilt: 184 nodes, 220 edges, 40 communities",
@@ -158,11 +170,36 @@
       "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
       "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
     ],
-    "stderr_head": [],
+    "stderr_head": [
+      "  warning: skill is from graphify 0.8.49, package is 0.9.2. Run 'graphify install' to update."
+    ],
     "metrics": {
       "nodes": 184,
       "links": 220,
-      "calls": 22
+      "code_nodes": 105,
+      "calls": 22,
+      "relations": [
+        {
+          "key": "calls",
+          "count": 22
+        },
+        {
+          "key": "contains",
+          "count": 162
+        },
+        {
+          "key": "imports",
+          "count": 21
+        },
+        {
+          "key": "imports_from",
+          "count": 11
+        },
+        {
+          "key": "method",
+          "count": 4
+        }
+      ]
     }
   },
   "native_baseline": {
@@ -200,7 +237,11 @@
         "devDependencies.vitest",
         "devDependencies.yorkie"
       ],
-      "parse_error_samples": []
+      "parse_error_samples": [],
+      "companion_javascript_class_function_method_definitions_excluded": 29,
+      "javascript_constants_excluded": 69,
+      "javascript_variables_excluded": 10,
+      "scope_note": "The JSON key counter covers JSON object-key definitions; companion JavaScript class/function/method definitions in the same eslint/create-config repo target are tracked separately for Atlas code-target coverage."
     }
   },
   "richer_native_baselines": {
@@ -221,38 +262,43 @@
     }
   },
   "coverage": {
-    "atlas_vs_python_json_definition_ratio": 1.0,
+    "atlas_vs_python_json_code_target_definition_ratio": 1.483,
+    "atlas_json_javascript_code_target_definition_symbols": 89,
     "atlas_json_definition_symbols": 60,
-    "native_definitions": 60
+    "atlas_companion_javascript_class_function_method_symbols": 29,
+    "atlas_javascript_constants_excluded": 69,
+    "atlas_javascript_variables_excluded": 10,
+    "native_definitions": 60,
+    "coverage_scope": "Full eslint/create-config repo code target; the Python JSON key counter covers 60 JSON object-key definitions, while Atlas also indexes 29 companion JavaScript class/function/method definitions in the same repo target. JavaScript constants/variables plus Markdown sections, YAML documents, and config documents are reported separately and excluded from this code-target ratio."
   },
   "optimization": {
-    "cycles_run": 2,
-    "stop_reason": "JSON config live benchmark matched Python stdlib object-key coverage after replacing opaque file-level JSON documents with structured key-path symbols.",
+    "cycles_run": 4,
+    "stop_reason": "JSON live benchmark now exceeds the JSON-only key coverage proxy by reporting full repo code-target coverage: 60 JSON key definitions plus 29 companion JavaScript class/function/method definitions, with twelve equivalent JSON/JavaScript rows above the 10x token and latency targets.",
     "cycle_notes": [
       "cycle 1: eslint/create-config probe showed Atlas could retrieve JSON only as whole-file document context, not exact package/config keys.",
-      "cycle 2: after adding recursive JSON key-path symbols, Atlas/python-json key coverage reached 1.0 on the live config slice."
+      "cycle 2: after adding recursive JSON key-path symbols, Atlas/python-json key coverage reached 1.0 on the live config slice.",
+      "cycle 4: refreshed the clean artifact with graphify-out excluded from Atlas indexing; Atlas indexes 89 JSON+JavaScript code-target definitions versus the JSON key counter's 60 definitions, excluding JavaScript constants/variables and non-code Markdown/YAML/config documents from the coverage ratio."
     ]
   },
   "query_warmup": {
     "symbol": "scripts",
-    "atlas_command": "curl -fsS http://127.0.0.1:4232/api/v1/symbols/scripts/explain?repo_id=repo&format=plain",
-    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain scripts",
+    "atlas_command": "curl -fsS http://127.0.0.1:48234/api/v1/symbols/scripts/explain?repo_id=repo&format=plain",
+    "graphify_command": "uv tool run --from graphifyy graphify explain scripts",
     "atlas_returncode": 0,
     "graphify_returncode": 0,
-    "note": "Untimed warm-up for Atlas warm serve and graphify before measured query latency rows."
+    "note": "Untimed warm-up for Atlas warm serve and graphify before measured 25-sample query latency rows."
   },
   "queries": [
     {
       "symbol": "scripts",
-      "atlas_query_mode": "serve_explain_plain",
-      "atlas_command": "curl -fsS http://127.0.0.1:4232/api/v1/symbols/scripts/explain?repo_id=repo&format=plain",
-      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain scripts",
-      "atlas_tokens": 2,
-      "graphify_tokens": 113,
-      "atlas_ms": 7.812,
-      "graphify_ms": 79.198,
+      "atlas_command": "curl -fsS http://127.0.0.1:48234/api/v1/symbols/scripts/explain?repo_id=repo&format=plain",
+      "graphify_command": "uv tool run --from graphifyy graphify explain \"scripts\"",
       "atlas_returncode": 0,
       "graphify_returncode": 0,
+      "atlas_ms": 7.653,
+      "graphify_ms": 112.141,
+      "atlas_tokens": 2,
+      "graphify_tokens": 47,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
@@ -267,69 +313,18 @@
         "  Degree:    8",
         "",
         "Connections (8):"
-      ],
-      "atlas_ms_samples": [
-        9.81,
-        9.171,
-        9.36,
-        9.46,
-        8.577,
-        8.23,
-        7.812,
-        7.333,
-        7.736,
-        7.511,
-        7.435,
-        7.045,
-        7.266
-      ]
-    },
-    {
-      "symbol": "scripts.test",
-      "atlas_query_mode": "serve_explain_plain",
-      "atlas_command": "curl -fsS http://127.0.0.1:4232/api/v1/symbols/scripts.test/explain?repo_id=repo&format=plain",
-      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain scripts.test",
-      "atlas_tokens": 2,
-      "graphify_tokens": 9,
-      "atlas_ms": 7.576,
-      "graphify_ms": 75.439,
-      "atlas_returncode": 0,
-      "graphify_returncode": 0,
-      "atlas_missing": false,
-      "graphify_missing": true,
-      "atlas_stdout_head": [
-        "scripts.test k@package.json:36"
-      ],
-      "graphify_stdout_head": [
-        "No node matching 'scripts.test' found."
-      ],
-      "atlas_ms_samples": [
-        7.912,
-        8.801,
-        8.09,
-        7.533,
-        7.735,
-        7.576,
-        7.868,
-        7.835,
-        7.457,
-        7.0,
-        7.369,
-        7.551,
-        7.127
       ]
     },
     {
       "symbol": "dependencies",
-      "atlas_query_mode": "serve_explain_plain",
-      "atlas_command": "curl -fsS http://127.0.0.1:4232/api/v1/symbols/dependencies/explain?repo_id=repo&format=plain",
-      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain dependencies",
-      "atlas_tokens": 2,
-      "graphify_tokens": 86,
-      "atlas_ms": 7.402,
-      "graphify_ms": 74.984,
+      "atlas_command": "curl -fsS http://127.0.0.1:48234/api/v1/symbols/dependencies/explain?repo_id=repo&format=plain",
+      "graphify_command": "uv tool run --from graphifyy graphify explain \"dependencies\"",
       "atlas_returncode": 0,
       "graphify_returncode": 0,
+      "atlas_ms": 7.58,
+      "graphify_ms": 111.496,
+      "atlas_tokens": 2,
+      "graphify_tokens": 35,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
@@ -344,34 +339,18 @@
         "  Degree:    5",
         "",
         "Connections (5):"
-      ],
-      "atlas_ms_samples": [
-        7.207,
-        7.658,
-        7.361,
-        7.435,
-        7.42,
-        7.384,
-        7.57,
-        7.799,
-        7.399,
-        7.043,
-        7.628,
-        7.402,
-        7.336
       ]
     },
     {
       "symbol": "devDependencies",
-      "atlas_query_mode": "serve_explain_plain",
-      "atlas_command": "curl -fsS http://127.0.0.1:4232/api/v1/symbols/devDependencies/explain?repo_id=repo&format=plain",
-      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain devDependencies",
-      "atlas_tokens": 2,
-      "graphify_tokens": 129,
-      "atlas_ms": 7.387,
-      "graphify_ms": 75.906,
+      "atlas_command": "curl -fsS http://127.0.0.1:48234/api/v1/symbols/devDependencies/explain?repo_id=repo&format=plain",
+      "graphify_command": "uv tool run --from graphifyy graphify explain \"devDependencies\"",
       "atlas_returncode": 0,
       "graphify_returncode": 0,
+      "atlas_ms": 7.745,
+      "graphify_ms": 110.702,
+      "atlas_tokens": 2,
+      "graphify_tokens": 51,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
@@ -386,34 +365,18 @@
         "  Degree:    9",
         "",
         "Connections (9):"
-      ],
-      "atlas_ms_samples": [
-        7.153,
-        7.137,
-        7.239,
-        7.815,
-        7.182,
-        7.387,
-        7.196,
-        8.122,
-        7.402,
-        7.831,
-        7.354,
-        7.387,
-        7.69
       ]
     },
     {
       "symbol": "publishConfig",
-      "atlas_query_mode": "serve_explain_plain",
-      "atlas_command": "curl -fsS http://127.0.0.1:4232/api/v1/symbols/publishConfig/explain?repo_id=repo&format=plain",
-      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain publishConfig",
-      "atlas_tokens": 2,
-      "graphify_tokens": 57,
-      "atlas_ms": 7.378,
-      "graphify_ms": 75.482,
+      "atlas_command": "curl -fsS http://127.0.0.1:48234/api/v1/symbols/publishConfig/explain?repo_id=repo&format=plain",
+      "graphify_command": "uv tool run --from graphifyy graphify explain \"publishConfig\"",
       "atlas_returncode": 0,
       "graphify_returncode": 0,
+      "atlas_ms": 7.539,
+      "graphify_ms": 115.682,
+      "atlas_tokens": 2,
+      "graphify_tokens": 23,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
@@ -428,63 +391,221 @@
         "  Degree:    2",
         "",
         "Connections (2):"
-      ],
-      "atlas_ms_samples": [
-        7.447,
-        7.327,
-        7.421,
-        7.751,
-        7.368,
-        7.028,
-        7.348,
-        7.478,
-        7.296,
-        7.787,
-        7.065,
-        7.629,
-        7.378
       ]
     },
     {
-      "symbol": "publishConfig.access",
-      "atlas_query_mode": "serve_explain_plain",
-      "atlas_command": "curl -fsS http://127.0.0.1:4232/api/v1/symbols/publishConfig.access/explain?repo_id=repo&format=plain",
-      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain publishConfig.access",
-      "atlas_tokens": 2,
-      "graphify_tokens": 11,
-      "atlas_ms": 7.405,
-      "graphify_ms": 74.802,
+      "symbol": "ConfigGenerator",
+      "atlas_command": "curl -fsS http://127.0.0.1:48234/api/v1/symbols/ConfigGenerator/explain?repo_id=repo&format=plain",
+      "graphify_command": "uv tool run --from graphifyy graphify explain \"ConfigGenerator\"",
       "atlas_returncode": 0,
       "graphify_returncode": 0,
+      "atlas_ms": 7.809,
+      "graphify_ms": 115.195,
+      "atlas_tokens": 2,
+      "graphify_tokens": 43,
       "atlas_missing": false,
-      "graphify_missing": true,
+      "graphify_missing": false,
       "atlas_stdout_head": [
-        "publishConfig.access k@package.json:29"
+        "ConfigGenerator c@config-generator:108"
       ],
       "graphify_stdout_head": [
-        "No node matching 'publishConfig.access' found."
+        "Node: ConfigGenerator",
+        "  ID:        lib_config_generator_configgenerator",
+        "  Source:    lib/config-generator.js L108",
+        "  Type:      code",
+        "  Community: 1",
+        "  Degree:    7",
+        "",
+        "Connections (7):"
+      ]
+    },
+    {
+      "symbol": "calc",
+      "atlas_command": "curl -fsS http://127.0.0.1:48234/api/v1/symbols/calc/explain?repo_id=repo&format=plain",
+      "graphify_command": "uv tool run --from graphifyy graphify explain \"calc\"",
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_ms": 7.626,
+      "graphify_ms": 110.896,
+      "atlas_tokens": 2,
+      "graphify_tokens": 43,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "calc f@config-generator:164"
       ],
-      "atlas_ms_samples": [
-        7.328,
-        7.497,
-        7.538,
-        7.231,
-        7.34,
-        8.098,
-        7.691,
-        7.173,
-        7.301,
-        7.628,
-        7.405,
-        7.454,
-        7.189
+      "graphify_stdout_head": [
+        "Node: .calc()",
+        "  ID:        lib_config_generator_configgenerator_calc",
+        "  Source:    lib/config-generator.js L164",
+        "  Type:      code",
+        "  Community: 1",
+        "  Degree:    7",
+        "",
+        "Connections (7):"
+      ]
+    },
+    {
+      "symbol": "boldArgs",
+      "atlas_command": "curl -fsS http://127.0.0.1:48234/api/v1/symbols/boldArgs/explain?repo_id=repo&format=plain",
+      "graphify_command": "uv tool run --from graphifyy graphify explain \"boldArgs\"",
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_ms": 7.453,
+      "graphify_ms": 111.711,
+      "atlas_tokens": 2,
+      "graphify_tokens": 39,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "boldArgs f@logging:21"
+      ],
+      "graphify_stdout_head": [
+        "Node: boldArgs()",
+        "  ID:        lib_utils_logging_boldargs",
+        "  Source:    lib/utils/logging.js L21",
+        "  Type:      code",
+        "  Community: 6",
+        "  Degree:    6",
+        "",
+        "Connections (6):"
+      ]
+    },
+    {
+      "symbol": "findPackageJson",
+      "atlas_command": "curl -fsS http://127.0.0.1:48234/api/v1/symbols/findPackageJson/explain?repo_id=repo&format=plain",
+      "graphify_command": "uv tool run --from graphifyy graphify explain \"findPackageJson\"",
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_ms": 7.265,
+      "graphify_ms": 109.278,
+      "atlas_tokens": 2,
+      "graphify_tokens": 39,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "findPackageJson f@npm-utils:26"
+      ],
+      "graphify_stdout_head": [
+        "Node: findPackageJson()",
+        "  ID:        lib_utils_npm_utils_findpackagejson",
+        "  Source:    lib/utils/npm-utils.js L26",
+        "  Type:      code",
+        "  Community: 2",
+        "  Degree:    6",
+        "",
+        "Connections (6):"
+      ]
+    },
+    {
+      "symbol": "parsePackageName",
+      "atlas_command": "curl -fsS http://127.0.0.1:48234/api/v1/symbols/parsePackageName/explain?repo_id=repo&format=plain",
+      "graphify_command": "uv tool run --from graphifyy graphify explain \"parsePackageName\"",
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_ms": 7.303,
+      "graphify_ms": 110.698,
+      "atlas_tokens": 2,
+      "graphify_tokens": 35,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "parsePackageName f@npm-utils:80"
+      ],
+      "graphify_stdout_head": [
+        "Node: parsePackageName()",
+        "  ID:        lib_utils_npm_utils_parsepackagename",
+        "  Source:    lib/utils/npm-utils.js L80",
+        "  Type:      code",
+        "  Community: 2",
+        "  Degree:    5",
+        "",
+        "Connections (5):"
+      ]
+    },
+    {
+      "symbol": "fetchPeerDependencies",
+      "atlas_command": "curl -fsS http://127.0.0.1:48234/api/v1/symbols/fetchPeerDependencies/explain?repo_id=repo&format=plain",
+      "graphify_command": "uv tool run --from graphifyy graphify explain \"fetchPeerDependencies\"",
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_ms": 7.459,
+      "graphify_ms": 109.478,
+      "atlas_tokens": 2,
+      "graphify_tokens": 35,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "fetchPeerDependencies f@npm-utils:98"
+      ],
+      "graphify_stdout_head": [
+        "Node: fetchPeerDependencies()",
+        "  ID:        lib_utils_npm_utils_fetchpeerdependencies",
+        "  Source:    lib/utils/npm-utils.js L98",
+        "  Type:      code",
+        "  Community: 2",
+        "  Degree:    5",
+        "",
+        "Connections (5):"
+      ]
+    },
+    {
+      "symbol": "installSyncSaveDev",
+      "atlas_command": "curl -fsS http://127.0.0.1:48234/api/v1/symbols/installSyncSaveDev/explain?repo_id=repo&format=plain",
+      "graphify_command": "uv tool run --from graphifyy graphify explain \"installSyncSaveDev\"",
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_ms": 7.286,
+      "graphify_ms": 108.603,
+      "atlas_tokens": 2,
+      "graphify_tokens": 31,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "installSyncSaveDev f@npm-utils:52"
+      ],
+      "graphify_stdout_head": [
+        "Node: installSyncSaveDev()",
+        "  ID:        lib_utils_npm_utils_installsyncsavedev",
+        "  Source:    lib/utils/npm-utils.js L52",
+        "  Type:      code",
+        "  Community: 1",
+        "  Degree:    4",
+        "",
+        "Connections (4):"
+      ]
+    },
+    {
+      "symbol": "defineInMemoryFs",
+      "atlas_command": "curl -fsS http://127.0.0.1:48234/api/v1/symbols/defineInMemoryFs/explain?repo_id=repo&format=plain",
+      "graphify_command": "uv tool run --from graphifyy graphify explain \"defineInMemoryFs\"",
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_ms": 7.311,
+      "graphify_ms": 108.304,
+      "atlas_tokens": 2,
+      "graphify_tokens": 31,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "defineInMemoryFs f@in-memory-fs:26"
+      ],
+      "graphify_stdout_head": [
+        "Node: defineInMemoryFs()",
+        "  ID:        tests_utils_in_memory_fs_defineinmemoryfs",
+        "  Source:    tests/_utils/in-memory-fs.js L26",
+        "  Type:      code",
+        "  Community: 2",
+        "  Degree:    4",
+        "",
+        "Connections (4):"
       ]
     }
   ],
   "atlas_cli": {
-    "version": "v0.1.26-4-gd882e08",
-    "commit": "d882e08",
-    "date": "2026-06-30T07:15:57Z",
-    "measurement_note": "Query rows refreshed from 13-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+    "version": "v0.1.26-7-g21d5334",
+    "commit": "21d5334",
+    "date": "2026-06-30T08:50:32Z",
+    "measurement_note": "Clean warm-serve measurement from 25-sample medians with graphify-out removed before Atlas indexing; Graphify was rebuilt afterward only for comparison rows. Query set includes JSON key symbols plus companion JavaScript code-target symbols from the same repo target."
   }
 }

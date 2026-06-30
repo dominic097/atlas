@@ -109,6 +109,37 @@ function nativeSummary(nativeBaseline = {}) {
   };
 }
 
+function validationSummary(validation = {}) {
+  const repos = Array.isArray(validation.repos) ? validation.repos : [];
+  const minimumRepos = Number(validation.minimum_repos) || 3;
+  const coverageRatios = repos
+    .map((repo) => Number(repo.coverage_ratio))
+    .filter((ratio) => Number.isFinite(ratio));
+  const minCoverageRatio = coverageRatios.length ? Math.min(...coverageRatios) : null;
+  const passedRepos = repos.filter((repo) => repo.ok !== false && Number(repo.coverage_ratio) >= 1.0 - COVERAGE_EPSILON);
+  const passed = repos.length >= minimumRepos && passedRepos.length >= minimumRepos;
+  return {
+    status: validation.status || (passed ? "passed" : repos.length ? "partial" : "missing"),
+    minimumRepos,
+    repoCount: repos.length,
+    passedRepoCount: passedRepos.length,
+    passed,
+    minCoverageRatio: round(minCoverageRatio, 4),
+    generatedAt: validation.generated_at || null,
+    scope: validation.scope || "",
+    repos: repos.map((repo) => ({
+      repo: repo.repo,
+      commit: repo.commit || null,
+      targetPath: repo.target_path || "",
+      atlasDefinitions: repo.atlas_definitions ?? null,
+      nativeDefinitions: repo.native_definitions ?? null,
+      coverageRatio: repo.coverage_ratio ?? null,
+      ok: repo.ok !== false,
+      note: repo.note || "",
+    })),
+  };
+}
+
 function artifactPath(file) {
   return `data/raw/${file}`;
 }
@@ -249,6 +280,7 @@ function buildLiveBenchmarks(artifactFiles) {
         native: nativeSummary(row.native_baseline || {}),
         richerNativeBaselines: row.richer_native_baselines || {},
         coverage: coverageSummary(row.coverage || {}),
+        multiRepoValidation: validationSummary(row.multi_repo_validation || {}),
         optimization: {
           cyclesRun: row.optimization?.cycles_run ?? null,
           stopReason: row.optimization?.stop_reason || "",
@@ -353,6 +385,7 @@ function aggregateLive(liveBenchmarks) {
   const parity = coverageRows.filter((row) => row.coverage.ratio <= 1.0 + COVERAGE_EPSILON);
   const exceed = coverageRows.filter((row) => row.coverage.ratio > 1.0 + COVERAGE_EPSILON);
   const parityComparable = parity.filter((row) => row.querySummary.equivalentRows > 0);
+  const validationPassed = liveBenchmarks.filter((row) => row.multiRepoValidation?.passed);
   return {
     artifacts: liveBenchmarks.length,
     withComparableRows: comparable.length,
@@ -371,6 +404,9 @@ function aggregateLive(liveBenchmarks) {
     parityLatency10x: parityComparable.filter((row) => row.querySummary.latency10x).length,
     parityTenX: parityComparable.filter((row) => row.querySummary.pass10x).length,
     detectorOnlyArtifacts: liveBenchmarks.filter((row) => row.detectorOnly).length,
+    threeRepoValidated: validationPassed.length,
+    threeRepoValidatedStrict10x: validationPassed.filter((row) => row.tenX?.strict10x).length,
+    threeRepoValidationPending: liveBenchmarks.length - validationPassed.length,
   };
 }
 
@@ -388,6 +424,12 @@ function buildTenXGap(dataset) {
     tokenGapTo10x: row.querySummary?.tokenGapTo10x ?? null,
     latencyGapTo10x: row.querySummary?.latencyGapTo10x ?? null,
     blockers: row.tenX?.blockers ?? [],
+    validation: {
+      passed: Boolean(row.multiRepoValidation?.passed),
+      repoCount: row.multiRepoValidation?.repoCount ?? 0,
+      minimumRepos: row.multiRepoValidation?.minimumRepos ?? 3,
+      minCoverageRatio: row.multiRepoValidation?.minCoverageRatio ?? null,
+    },
   }));
   const parity = live.filter((row) => typeof row.coverageRatio === "number" && row.coverageRatio <= 1.0 + COVERAGE_EPSILON);
   const comparable = live.filter((row) => row.equivalentRows > 0 && row.tokenRatio != null && row.latencyRatio != null);
@@ -408,6 +450,8 @@ function buildTenXGap(dataset) {
       performance10xComparable: comparable.filter(
         (row) => Number(row.tokenRatio) >= TEN_X_TARGET && Number(row.latencyRatio) >= TEN_X_TARGET
       ).length,
+      threeRepoValidated: live.filter((row) => row.validation.passed).length,
+      threeRepoValidatedStrict10x: live.filter((row) => row.validation.passed && row.coverageExceedsNative).length,
     },
     parityLanguages: parity.map((row) => row.language),
     live,
@@ -435,6 +479,8 @@ function renderTenXGapMarkdown(report) {
   lines.push(`- Token >=10x comparable: ${report.summary.token10xComparable}`);
   lines.push(`- Latency >=10x comparable: ${report.summary.latency10xComparable}`);
   lines.push(`- Token+latency >=10x comparable: ${report.summary.performance10xComparable}`);
+  lines.push(`- Minimum 3-repo validated: ${report.summary.threeRepoValidated}`);
+  lines.push(`- Minimum 3-repo validated and coverage-exceed: ${report.summary.threeRepoValidatedStrict10x}`);
   lines.push("", "## Biggest Latency Gaps", "");
   lines.push("| Language | latencyRatio | improvement to 10x | tokenRatio | blockers |");
   lines.push("|---|--:|--:|--:|---|");

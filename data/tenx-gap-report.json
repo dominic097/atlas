@@ -1,17 +1,19 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T09:48:26.075Z",
+  "generatedAt": "2026-06-30T09:57:35.543Z",
   "source": "data/benchmark-data.json",
   "targetRatio": 10,
   "metricNote": "Token and latency are ratio targets. Coverage is a native-definition coverage ratio, so the honest accuracy target is >1.0 native coverage exceed, not a fabricated 10x accuracy multiplier.",
   "summary": {
     "liveLanguages": 36,
-    "parityLanguages": 18,
-    "coverageExceedLanguages": 18,
+    "parityLanguages": 17,
+    "coverageExceedLanguages": 19,
     "comparableLanguages": 33,
     "token10xComparable": 33,
     "latency10xComparable": 33,
-    "performance10xComparable": 33
+    "performance10xComparable": 33,
+    "threeRepoValidated": 0,
+    "threeRepoValidatedStrict10x": 0
   },
   "parityLanguages": [
     "bash",
@@ -22,7 +24,6 @@
     "elixir",
     "ets",
     "fortran",
-    "json",
     "julia",
     "markdown",
     "pascal",
@@ -46,7 +47,13 @@
       "latencyRatio": 26.82,
       "tokenGapTo10x": 1,
       "latencyGapTo10x": 1,
-      "blockers": []
+      "blockers": [],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "astro",
@@ -60,7 +67,13 @@
       "latencyRatio": 13.54,
       "tokenGapTo10x": 1,
       "latencyGapTo10x": 1,
-      "blockers": []
+      "blockers": [],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "bash",
@@ -76,7 +89,13 @@
       "latencyGapTo10x": 1,
       "blockers": [
         "coverage_at_parity"
-      ]
+      ],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "blade",
@@ -92,7 +111,13 @@
       "latencyGapTo10x": 1,
       "blockers": [
         "coverage_at_parity"
-      ]
+      ],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "byond",
@@ -109,7 +134,13 @@
       "blockers": [
         "coverage_at_parity",
         "no_comparable_query_rows"
-      ]
+      ],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "csharp",
@@ -123,7 +154,13 @@
       "latencyRatio": 16.18,
       "tokenGapTo10x": 1,
       "latencyGapTo10x": 1,
-      "blockers": []
+      "blockers": [],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "cuda",
@@ -137,7 +174,13 @@
       "latencyRatio": 209.55,
       "tokenGapTo10x": 1,
       "latencyGapTo10x": 1,
-      "blockers": []
+      "blockers": [],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "dart",
@@ -153,7 +196,13 @@
       "latencyGapTo10x": 1,
       "blockers": [
         "coverage_at_parity"
-      ]
+      ],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "delphi",
@@ -169,7 +218,13 @@
       "latencyGapTo10x": 1,
       "blockers": [
         "coverage_at_parity"
-      ]
+      ],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "dotnet",
@@ -183,7 +238,13 @@
       "latencyRatio": 21,
       "tokenGapTo10x": 1,
       "latencyGapTo10x": 1,
-      "blockers": []
+      "blockers": [],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "ejs",
@@ -197,7 +258,13 @@
       "latencyRatio": 149.12,
       "tokenGapTo10x": 1,
       "latencyGapTo10x": 1,
-      "blockers": []
+      "blockers": [],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "elixir",
@@ -213,7 +280,13 @@
       "latencyGapTo10x": 1,
       "blockers": [
         "coverage_at_parity"
-      ]
+      ],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "ets",
@@ -230,7 +303,13 @@
       "blockers": [
         "coverage_at_parity",
         "no_comparable_query_rows"
-      ]
+      ],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "fortran",
@@ -246,7 +325,13 @@
       "latencyGapTo10x": 1,
       "blockers": [
         "coverage_at_parity"
-      ]
+      ],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "groovy",
@@ -260,23 +345,33 @@
       "latencyRatio": 11.79,
       "tokenGapTo10x": 1,
       "latencyGapTo10x": 1,
-      "blockers": []
+      "blockers": [],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "json",
       "repo": "https://github.com/eslint/create-config",
       "commit": "58d77fc302b25976bb4cc7dc273377b421bc226b",
       "artifact": "data/raw/LIVE_JSON_BENCHMARK.json",
-      "coverageRatio": 1,
-      "coverageExceedsNative": false,
-      "equivalentRows": 4,
-      "tokenRatio": 48.13,
-      "latencyRatio": 10.19,
+      "coverageRatio": 1.483,
+      "coverageExceedsNative": true,
+      "equivalentRows": 12,
+      "tokenRatio": 18.83,
+      "latencyRatio": 14.82,
       "tokenGapTo10x": 1,
       "latencyGapTo10x": 1,
-      "blockers": [
-        "coverage_at_parity"
-      ]
+      "blockers": [],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "julia",
@@ -292,7 +387,13 @@
       "latencyGapTo10x": 1,
       "blockers": [
         "coverage_at_parity"
-      ]
+      ],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "kotlin",
@@ -306,7 +407,13 @@
       "latencyRatio": 13.19,
       "tokenGapTo10x": 1,
       "latencyGapTo10x": 1,
-      "blockers": []
+      "blockers": [],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "lua",
@@ -320,7 +427,13 @@
       "latencyRatio": 12.13,
       "tokenGapTo10x": 1,
       "latencyGapTo10x": 1,
-      "blockers": []
+      "blockers": [],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "markdown",
@@ -336,7 +449,13 @@
       "latencyGapTo10x": 1,
       "blockers": [
         "coverage_at_parity"
-      ]
+      ],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "objc",
@@ -350,7 +469,13 @@
       "latencyRatio": 11.88,
       "tokenGapTo10x": 1,
       "latencyGapTo10x": 1,
-      "blockers": []
+      "blockers": [],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "pascal",
@@ -366,7 +491,13 @@
       "latencyGapTo10x": 1,
       "blockers": [
         "coverage_at_parity"
-      ]
+      ],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "php",
@@ -382,7 +513,13 @@
       "latencyGapTo10x": 1,
       "blockers": [
         "coverage_at_parity"
-      ]
+      ],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "powershell",
@@ -398,7 +535,13 @@
       "latencyGapTo10x": 1,
       "blockers": [
         "coverage_at_parity"
-      ]
+      ],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "r",
@@ -415,7 +558,13 @@
       "blockers": [
         "coverage_at_parity",
         "no_comparable_query_rows"
-      ]
+      ],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "razor",
@@ -429,7 +578,13 @@
       "latencyRatio": 16.74,
       "tokenGapTo10x": 1,
       "latencyGapTo10x": 1,
-      "blockers": []
+      "blockers": [],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "ruby",
@@ -443,7 +598,13 @@
       "latencyRatio": 13.49,
       "tokenGapTo10x": 1,
       "latencyGapTo10x": 1,
-      "blockers": []
+      "blockers": [],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "rust",
@@ -457,7 +618,13 @@
       "latencyRatio": 13.35,
       "tokenGapTo10x": 1,
       "latencyGapTo10x": 1,
-      "blockers": []
+      "blockers": [],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "scala",
@@ -471,7 +638,13 @@
       "latencyRatio": 10.45,
       "tokenGapTo10x": 1,
       "latencyGapTo10x": 1,
-      "blockers": []
+      "blockers": [],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "sql",
@@ -487,7 +660,13 @@
       "latencyGapTo10x": 1,
       "blockers": [
         "coverage_at_parity"
-      ]
+      ],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "svelte",
@@ -501,7 +680,13 @@
       "latencyRatio": 11.61,
       "tokenGapTo10x": 1,
       "latencyGapTo10x": 1,
-      "blockers": []
+      "blockers": [],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "swift",
@@ -515,7 +700,13 @@
       "latencyRatio": 18.99,
       "tokenGapTo10x": 1,
       "latencyGapTo10x": 1,
-      "blockers": []
+      "blockers": [],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "terraform",
@@ -531,7 +722,13 @@
       "latencyGapTo10x": 1,
       "blockers": [
         "coverage_at_parity"
-      ]
+      ],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "verilog",
@@ -547,7 +744,13 @@
       "latencyGapTo10x": 1,
       "blockers": [
         "coverage_at_parity"
-      ]
+      ],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "vue",
@@ -561,7 +764,13 @@
       "latencyRatio": 14.04,
       "tokenGapTo10x": 1,
       "latencyGapTo10x": 1,
-      "blockers": []
+      "blockers": [],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     },
     {
       "language": "zig",
@@ -575,7 +784,13 @@
       "latencyRatio": 12.06,
       "tokenGapTo10x": 1,
       "latencyGapTo10x": 1,
-      "blockers": []
+      "blockers": [],
+      "validation": {
+        "passed": false,
+        "repoCount": 0,
+        "minimumRepos": 3,
+        "minCoverageRatio": null
+      }
     }
   ],
   "biggestLatencyGaps": [],
