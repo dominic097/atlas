@@ -1,24 +1,21 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T12:09:25.227Z",
+  "generatedAt": "2026-06-30T12:21:57.591Z",
   "source": "data/benchmark-data.json",
   "targetRatio": 10,
   "metricNote": "Token and latency are ratio targets. Coverage is a native-definition coverage ratio, so the honest accuracy target is >1.0 native coverage exceed, not a fabricated 10x accuracy multiplier.",
   "summary": {
     "liveLanguages": 36,
-    "parityLanguages": 2,
-    "coverageExceedLanguages": 34,
+    "parityLanguages": 0,
+    "coverageExceedLanguages": 36,
     "comparableLanguages": 34,
     "token10xComparable": 34,
     "latency10xComparable": 34,
     "performance10xComparable": 34,
     "threeRepoValidated": 17,
-    "threeRepoValidatedStrict10x": 15
+    "threeRepoValidatedStrict10x": 17
   },
-  "parityLanguages": [
-    "ets",
-    "r"
-  ],
+  "parityLanguages": [],
   "live": [
     {
       "language": "apex",
@@ -265,22 +262,21 @@
       "repo": "https://github.com/openharmony/applications_app_samples",
       "commit": "a826ab0e75fe51d028c1c5af58188e908736b53b",
       "artifact": "data/raw/LIVE_ETS_BENCHMARK.json",
-      "coverageRatio": 1,
-      "coverageExceedsNative": false,
+      "coverageRatio": 1.0523,
+      "coverageExceedsNative": true,
       "equivalentRows": 0,
       "tokenRatio": null,
       "latencyRatio": null,
       "tokenGapTo10x": null,
       "latencyGapTo10x": null,
       "blockers": [
-        "coverage_at_parity",
         "no_comparable_query_rows"
       ],
       "validation": {
         "passed": true,
         "repoCount": 3,
         "minimumRepos": 3,
-        "minCoverageRatio": 1
+        "minCoverageRatio": 1.0229
       }
     },
     {
@@ -508,15 +504,14 @@
       "repo": "https://github.com/tidyverse/ggplot2",
       "commit": "6870419aa6e106c3580c45c81d5b688cb31758bd",
       "artifact": "data/raw/LIVE_R_BENCHMARK.json",
-      "coverageRatio": 1,
-      "coverageExceedsNative": false,
+      "coverageRatio": 1.7531,
+      "coverageExceedsNative": true,
       "equivalentRows": 0,
       "tokenRatio": null,
       "latencyRatio": null,
       "tokenGapTo10x": null,
       "latencyGapTo10x": null,
       "blockers": [
-        "coverage_at_parity",
         "no_comparable_query_rows"
       ],
       "validation": {

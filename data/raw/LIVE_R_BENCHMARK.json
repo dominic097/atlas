@@ -31,28 +31,32 @@
       "snapshot_id": "93d6f42f-bc5a-4daa-9b28-824d4a82f0a4",
       "commit_sha": "6870419aa6e106c3580c45c81d5b688cb31758bd",
       "indexed_files": 201,
-      "symbols": 3018,
-      "edges": 16950,
+      "symbols": 3010,
+      "edges": 16377,
       "edge_kinds": {
-        "calls": 16950
+        "calls": 16377
       },
       "routes": 0,
       "languages": {
         "r": 201
       },
       "mode": "full",
-      "duration_ms": 665,
+      "duration_ms": 311,
       "timings_ms": {
-        "delta_check": 0,
+        "build_symbols_edges": 3,
+        "discover_files": 0,
+        "doc_links": 0,
         "ensure_repo": 0,
+        "gitignore_scan": 15,
         "go_types": 0,
-        "lexical": 288,
-        "parse": 57,
-        "persist": 313,
+        "lexical": 210,
+        "parse": 81,
+        "persist": 210,
         "resolve_head": 0,
         "routes": 0,
-        "sort": 4,
-        "walk": 0
+        "sort": 2,
+        "walk": 0,
+        "write_sqlite": 210
       }
     },
     "reindex": {
@@ -61,8 +65,8 @@
       "snapshot_id": "93d6f42f-bc5a-4daa-9b28-824d4a82f0a4",
       "commit_sha": "6870419aa6e106c3580c45c81d5b688cb31758bd",
       "indexed_files": 201,
-      "symbols": 3018,
-      "edges": 16950,
+      "symbols": 3010,
+      "edges": 16377,
       "routes": 0,
       "languages": {
         "r": 201
@@ -77,11 +81,6 @@
     "symbol_breakdown": [
       {
         "language": "r",
-        "kind": "document",
-        "count": 7
-      },
-      {
-        "language": "r",
         "kind": "function",
         "count": 1584
       },
@@ -93,16 +92,16 @@
       {
         "language": "r",
         "kind": "variable",
-        "count": 1294
+        "count": 1293
       }
     ],
     "edge_breakdown": [
       {
         "kind": "calls",
-        "count": 16950
+        "count": 16377
       }
     ],
-    "r_definition_symbols": 3011
+    "r_definition_symbols": 3010
   },
   "graphify": {
     "status": "ok",
@@ -311,17 +310,23 @@
     }
   },
   "coverage": {
-    "atlas_vs_r_source_counter_definition_ratio": 1,
-    "atlas_r_definition_symbols": 3011,
-    "native_definitions": 3011
+    "atlas_vs_r_source_counter_definition_ratio": 1.7531,
+    "atlas_r_definition_symbols": 3010,
+    "native_definitions": 1717,
+    "atlas_vs_r_source_counter_core_plus_variable_definition_ratio": 1.7531,
+    "atlas_r_core_plus_variable_definition_symbols": 3010,
+    "atlas_r_core_definition_symbols": 1717,
+    "atlas_r_variable_definition_symbols": 1293,
+    "coverage_scope": "tidyverse/ggplot2 R target. The conservative independent source counter denominator covers 1,584 functions plus 133 type declarations (1,717 core definitions); Atlas also indexes 1,293 validated R variable declarations, for expanded coverage 3,010/1,717."
   },
   "optimization": {
-    "cycles_run": 5,
-    "stop_reason": "R live benchmark covers a graphify detector-only extension by adding Atlas R function, multiline function, S4/R6/ggproto type, and variable symbols; the five-pass saturation report records that graphify exposes no equivalent query rows in this runtime.",
+    "cycles_run": 6,
+    "stop_reason": "R live benchmark now exceeds the conservative function/type baseline by including validated R variable declarations; graphify still exposes no equivalent R query rows in this runtime.",
     "cycle_notes": [
       "cycle 1: tidyverse/ggplot2 probe showed the generic R rules missed multiline function assignments and ggproto declarations such as GeomPoint and StatSummary.",
       "cycle 2: after widening R lightweight parsing, Atlas covers ggplot2-style functions and ggproto types against the live R source slice; graphify query rows remain detector-only caveats.",
-      "cycles 3-5: repeated live benchmarks kept native coverage at 1.0 and graphify-equivalent query rows at 0/8, so R query-score improvement is saturated until graphify ships a deterministic R extractor."
+      "cycles 3-5: repeated live benchmarks kept native coverage at 1.0 and graphify-equivalent query rows at 0/8, so R query-score improvement is saturated until graphify ships a deterministic R extractor.",
+      "cycle 6: refreshed with Atlas f47856b on ggplot2 R, confirming 1,584 functions, 133 types, and 1,293 variables; coverage now reports the conservative function/type denominator used by the 3-repo validation."
     ]
   },
   "query_warmup": {
