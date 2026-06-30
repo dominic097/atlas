@@ -373,6 +373,7 @@ function HeroReadout({ data }) {
   // native roster (matches the explorer's all-filter). A LANGUAGE count, kept
   // deliberately distinct from the 39/39 comparable-deterministic-row denominator.
   const nativeLangCount = core.languages + liveLangs;
+  const derivedCount = data.derivedArtifacts?.length || 0;
   return (
     <section
       id="hero"
@@ -489,7 +490,7 @@ function HeroReadout({ data }) {
             <StatTick label="Coverage split" value={`${parityCoverage} + ${exceedCoverage}`} sub="parity + exceed in live ladder" />
             <StatTick label="10x target" value={`${liveSummary.tenXComparable}/${liveSummary.withComparableRows}`} sub="token+latency comparable live" />
             <StatTick label="Tools benchmarked" value={toolCount} sub="incl. SCIP / LSP / graphify" />
-            <StatTick label="Evidence" value={data.sourceArtifacts.length + 2} sub="artifacts + 10x gap reports" />
+            <StatTick label="Evidence" value={data.sourceArtifacts.length + derivedCount} sub="raw + derived artifacts" />
           </div>
 
           <div className="mt-9 flex flex-wrap gap-3">
@@ -501,6 +502,9 @@ function HeroReadout({ data }) {
             </a>
             <a href="data/tenx-gap-report.md" download data-source-artifact className="btn btn-ghost focusring" style={{ textDecoration: "none" }}>
               10x gap report <Download className="h-4 w-4" aria-hidden />
+            </a>
+            <a href="data/final-benchmark-audit-report.md" download data-source-artifact className="btn btn-ghost focusring" style={{ textDecoration: "none" }}>
+              Final audit <Download className="h-4 w-4" aria-hidden />
             </a>
           </div>
         </div>
@@ -767,19 +771,50 @@ function VsGraphify({ data }) {
 
 /* ====================== VS NATIVE — COVERAGE SCATTER ==================== */
 
-const TOOL_MANIFEST = [
-  ["scip-go", "0.2.7"],
-  ["scip-python", "0.6.6"],
-  ["scip-typescript", "0.4.0"],
-  ["scip-java", "0.12.3"],
-  ["gopls", "v0.22.0"],
-  ["pyright", "1.1.411"],
-  ["tsc", "5.9.3"],
-  ["jdtls", "1.58.0"],
-  ["clangd", "17.0.0"],
-  ["rust-analyzer", "0.0.0"],
-  ["sourcekit-lsp", "6.2.4"],
+const NATIVE_TOOL_ORDER = [
+  "scip-go",
+  "scip-python",
+  "scip-typescript",
+  "scip-java",
+  "gopls",
+  "pyright",
+  "tsc",
+  "jdtls",
+  "clangd",
+  "rust-analyzer",
+  "sourcekit-lsp",
+  "dotnet",
+  "ruby",
+  "php",
+  "pwsh",
 ];
+
+function toolStatusColor(tool) {
+  if (tool.ok) return "var(--success)";
+  if (tool.status === "missing") return "var(--danger)";
+  return "var(--warning)";
+}
+
+function toolVersionLabel(tool) {
+  if (!tool) return "unknown";
+  return tool.version || tool.status || "unknown";
+}
+
+function buildNativeToolManifest(data) {
+  const byName = new Map();
+  for (const tool of data.provenance.tools.core || []) {
+    if (NATIVE_TOOL_ORDER.includes(tool.tool)) byName.set(tool.tool, tool);
+  }
+  for (const tool of data.provenance.tools.liveBenchmarkTools || []) {
+    if (!byName.has(tool.tool)) byName.set(tool.tool, tool);
+  }
+  return [...byName.values()].sort((a, b) => {
+    const ai = NATIVE_TOOL_ORDER.indexOf(a.tool);
+    const bi = NATIVE_TOOL_ORDER.indexOf(b.tool);
+    if (ai !== -1 || bi !== -1) return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi);
+    return a.tool.localeCompare(b.tool);
+  });
+}
 
 /* The native-parity LADDER — ONE unified visual.
    A single horizontal coverage-ratio axis (×1.0 → ×1.84). The ×1.0 spine is
@@ -864,17 +899,17 @@ function NativeParityLadder({ data }) {
           ladder is a per-LANGUAGE visual (parity column + standout bars), so the
           headline counts languages; the deterministic-row figure is reported
           separately in the hero to avoid mixing denominators. */}
-      <div className="mb-5 flex flex-wrap items-center gap-x-6 gap-y-2">
-        <div className="flex items-baseline gap-2">
+      <div className="mb-5 flex min-w-0 flex-wrap items-center gap-x-6 gap-y-2">
+        <div className="flex min-w-0 flex-wrap items-baseline gap-2">
           <span className="num" style={{ fontSize: 26, fontWeight: 600, color: "var(--success)" }}>
             {atParity.length + standouts.length}/{atParity.length + standouts.length}
           </span>
           <span style={{ fontSize: 13, color: "var(--muted)" }}>live languages at or above native parity</span>
         </div>
-        <span className="mono" style={{ fontSize: 12, color: "var(--faint)" }}>
+        <span className="mono min-w-0" style={{ fontSize: 12, color: "var(--faint)", maxWidth: "100%", overflowWrap: "anywhere" }}>
           {atParity.length} at parity · {standouts.length} exceed · none below ×1.0 · {data.summary.coverage.detectorOnlyRowsCovered} detector-only
         </span>
-        <span className="mono" style={{ fontSize: 12, color: "var(--primary)" }}>
+        <span className="mono min-w-0" style={{ fontSize: 12, color: "var(--primary)", maxWidth: "100%", overflowWrap: "anywhere" }}>
           {coreTotal} core + {liveTotal} live ladder = {nativeTotal} total native languages
         </span>
       </div>
@@ -1159,6 +1194,7 @@ function VsNative({ data }) {
   // matrix instead, so live + core = the full native roster the hero counts.
   const liveLangs = data.summary.live.artifacts;
   const coreLangs = data.summary.core.languages;
+  const toolManifest = useMemo(() => buildNativeToolManifest(data), [data]);
   return (
     <section id="vs-native" data-testid="vs-native" className="shell py-16" aria-labelledby="vsn-title">
       <SectionHeader
@@ -1187,31 +1223,32 @@ function VsNative({ data }) {
 
       <TenXTargetReadout data={data} />
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1.55fr)_minmax(260px,0.9fr)]">
+      <div className="grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1.55fr)_minmax(260px,0.9fr)]">
         <div className="panel min-w-0 p-5 sm:p-6">
           <NativeParityLadder data={data} />
         </div>
-        <div className="panel p-5 sm:p-6">
+        <div className="panel min-w-0 p-5 sm:p-6">
           <div className="kicker">Native baselines</div>
-          <ul className="mt-4 flex flex-col gap-2.5" aria-label="Native tool manifest">
-            {TOOL_MANIFEST.map(([tool, version]) => (
+          <ul className="mt-4 flex min-w-0 flex-col gap-2.5" aria-label="Native tool manifest">
+            {toolManifest.map((tool) => (
               <li
-                key={tool}
-                className="grid items-center gap-3"
-                style={{ gridTemplateColumns: "minmax(0,1fr) auto 6px" }}
+                key={tool.tool}
+                className="grid min-w-0 items-center gap-3"
+                style={{ gridTemplateColumns: "minmax(0,0.72fr) minmax(0,1.28fr) 6px" }}
               >
                 <span className="num truncate" style={{ fontSize: 12.5, color: "var(--text)" }}>
-                  {tool}
+                  {tool.tool}
                 </span>
                 <span
-                  className="num tnum"
-                  style={{ fontSize: 12, color: "var(--muted)", textAlign: "right", fontVariantNumeric: "tabular-nums" }}
+                  className="num tnum min-w-0"
+                  style={{ fontSize: 12, color: "var(--muted)", textAlign: "right", fontVariantNumeric: "tabular-nums", overflowWrap: "anywhere" }}
+                  title={tool.note || tool.command || toolVersionLabel(tool)}
                 >
-                  {version}
+                  {toolVersionLabel(tool)}
                 </span>
                 <span
-                  style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--success)" }}
-                  aria-label="ok"
+                  style={{ width: 6, height: 6, borderRadius: "50%", background: toolStatusColor(tool) }}
+                  aria-label={tool.status || (tool.ok ? "ok" : "unknown")}
                 />
               </li>
             ))}
@@ -1229,12 +1266,18 @@ function VsNative({ data }) {
 /* ===================== NOT COMPARABLE — FAULT LANE ===================== */
 
 function NotComparable({ data }) {
+  const saturatedRows = data.saturation || [];
+  const saturatedNames = saturatedRows.map((row) => langLabel(row.language)).join(", ");
   return (
     <section id="not-comparable" data-testid="not-comparable" className="shell py-16" aria-labelledby="nc-title">
-      <SectionHeader id="nc-title" kicker="Honesty · the edge of our scope" title="Where Atlas doesn’t claim an efficiency win">
-        Three languages — BYOND, ETS and R — held native coverage ≥ 1.0 across five iterations, but produced no
-        comparable query rows to score a token or latency ratio against (graphify happened to return no equivalent
-        either). Rather than fold them into an average, Atlas reports them plainly as not comparable.
+      <SectionHeader
+        id="nc-title"
+        kicker="Honesty · the edge of our scope"
+        title={saturatedRows.length ? "Where Atlas doesn’t claim an efficiency win" : "No current zero-equivalent Graphify rows"}
+      >
+        {saturatedRows.length
+          ? `${saturatedNames} held native coverage at or above 1.0 across repeated iterations but produced no comparable query rows, so no token or latency ratio is claimed.`
+          : "The final benchmark pass has at least one Graphify-equivalent query row for every live language. Historical no-equivalent saturation rows are not folded into current headline ratios."}
       </SectionHeader>
 
       <div
@@ -1247,7 +1290,21 @@ function NotComparable({ data }) {
       </div>
 
       <div data-testid="fault-lane" className="grid gap-4 lg:grid-cols-3">
-        {data.saturation.map((row) => (
+        {saturatedRows.length === 0 && (
+          <div className="panel p-5 lg:col-span-3" style={{ borderColor: "rgba(82,217,139,0.35)" }}>
+            <div className="kicker" style={{ color: "var(--success)" }}>current final pass</div>
+            <p className="mt-3" style={{ fontSize: 13, lineHeight: 1.5, color: "var(--muted)" }}>
+              `SATURATION_REPORT.json` is still published for auditability, but it now records no active zero-equivalent
+              saturation rows. Detector-only and source-counter proxy caveats remain in the final audit report.
+            </p>
+            <div className="mt-4">
+              <SourceLink href="data/raw/SATURATION_REPORT.json" download>
+                <Download className="h-3 w-3" aria-hidden /> SATURATION_REPORT.json
+              </SourceLink>
+            </div>
+          </div>
+        )}
+        {saturatedRows.map((row) => (
           <div key={row.language} className="panel flex flex-col p-5" style={{ borderColor: "rgba(242,180,58,0.35)" }}>
             <div className="flex items-baseline justify-between">
               <span className="font-semibold" style={{ fontSize: 16 }}>
@@ -1547,6 +1604,9 @@ function Install() {
             <SourceLink href="data/tenx-gap-report.md" download>
               <Download className="h-3 w-3" aria-hidden /> tenx-gap-report.md
             </SourceLink>
+            <SourceLink href="data/final-benchmark-audit-report.md" download>
+              <Download className="h-3 w-3" aria-hidden /> final audit report
+            </SourceLink>
           </div>
         </div>
         <div className="mt-4">
@@ -1555,6 +1615,7 @@ function Install() {
               "curl -LO https://aziron-ai.github.io/atlas/data/benchmark-data.json",
               "curl -LO https://aziron-ai.github.io/atlas/data/raw/MATRIX_REPORT.json",
               "curl -LO https://aziron-ai.github.io/atlas/data/tenx-gap-report.md",
+              "curl -LO https://aziron-ai.github.io/atlas/data/final-benchmark-audit-report.md",
             ]}
           />
         </div>
@@ -1568,7 +1629,21 @@ function Install() {
 function Evidence({ data }) {
   const featured = ["benchmark-data.json", "MATRIX_REPORT.json"];
   const tools = useMemo(() => {
-    const wanted = ["atlas", "graphify", "scip-go", "gopls", "pyright", "tsc", "clangd", "rust-analyzer", "sourcekit-lsp"];
+    const wanted = [
+      "atlas",
+      "graphify",
+      "scip-go",
+      "scip-python",
+      "scip-typescript",
+      "scip-java",
+      "gopls",
+      "pyright",
+      "tsc",
+      "jdtls",
+      "clangd",
+      "rust-analyzer",
+      "sourcekit-lsp",
+    ];
     return data.provenance.tools.core.filter((t) => wanted.includes(t.tool));
   }, [data]);
 
@@ -1599,6 +1674,9 @@ function Evidence({ data }) {
         <a href="data/tenx-gap-report.md" download data-source-artifact data-testid="download-link" className="btn btn-ghost focusring" style={{ textDecoration: "none" }}>
           <Download className="h-4 w-4" aria-hidden /> tenx-gap-report.md
         </a>
+        <a href="data/final-benchmark-audit-report.md" download data-source-artifact data-testid="download-link" className="btn btn-ghost focusring" style={{ textDecoration: "none" }}>
+          <Download className="h-4 w-4" aria-hidden /> final audit report
+        </a>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
@@ -1606,7 +1684,13 @@ function Evidence({ data }) {
         <div className="panel min-w-0 p-5">
           <div className="kicker mb-4">Source artifacts · {data.sourceArtifacts.length}</div>
           <div className="tablewrap" style={{ maxHeight: 480, overflowY: "auto" }}>
-            <table className="dtable" style={{ minWidth: 460 }}>
+            <table className="dtable dtable-compact">
+              <colgroup>
+                <col style={{ width: "46%" }} />
+                <col style={{ width: "17%" }} />
+                <col style={{ width: "24%" }} />
+                <col style={{ width: "13%" }} />
+              </colgroup>
               <thead>
                 <tr>
                   <th>artifact</th>
@@ -1662,8 +1746,8 @@ function Evidence({ data }) {
             {tools.map((t) => (
               <li key={t.tool} className="flex items-center justify-between gap-3">
                 <span style={{ color: "var(--muted)" }}>{t.tool}</span>
-                <span className="truncate" style={{ color: "var(--text)", maxWidth: 180, textAlign: "right" }} title={t.version}>
-                  {t.version}
+                <span className="truncate" style={{ color: t.ok ? "var(--text)" : "var(--danger)", maxWidth: 180, textAlign: "right" }} title={t.note || t.version || t.status}>
+                  {toolVersionLabel(t)}
                 </span>
               </li>
             ))}

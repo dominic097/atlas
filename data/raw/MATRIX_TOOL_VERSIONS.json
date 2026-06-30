@@ -1,5 +1,5 @@
 {
-  "generated_at_unix": 1782793506,
+  "generated_at_unix": 1782835896,
   "platform": {
     "system": "Darwin",
     "release": "25.5.0",
@@ -11,14 +11,14 @@
       "tool": "atlas",
       "status": "ok",
       "ok": true,
-      "command": "/tmp/atlas_now version",
-      "version": "atlas dev (none, unknown)",
+      "command": "/Users/damirdarasu/workspace/Aziron/aziron-atlas/bin/atlas version",
+      "version": "atlas v0.1.26-17-gf47856b (f47856b, 2026-06-30T16:10:13Z)",
       "stdout": [],
       "stderr": [
-        "atlas dev (none, unknown)"
+        "atlas v0.1.26-17-gf47856b (f47856b, 2026-06-30T16:10:13Z)"
       ],
       "exit_code": 0,
-      "seconds": 0.013
+      "seconds": 0.014
     },
     {
       "tool": "graphify",
@@ -33,20 +33,20 @@
       "exit_code": 0,
       "seconds": 0.039,
       "discovered_version": "graphifyy 0.8.49",
-      "binary": "/Users/damirdarasu/.local/bin/graphify"
+      "binary": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify"
     },
     {
       "tool": "go",
       "status": "ok",
       "ok": true,
       "command": "/usr/local/go/bin/go version",
-      "version": "go version go1.24.3 darwin/arm64",
+      "version": "go version go1.25.0 darwin/arm64",
       "stdout": [
-        "go version go1.24.3 darwin/arm64"
+        "go version go1.25.0 darwin/arm64"
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.028
+      "seconds": 0.061
     },
     {
       "tool": "python",
@@ -65,7 +65,7 @@
       "tool": "java",
       "status": "ok",
       "ok": true,
-      "command": "/opt/homebrew/opt/openjdk@17/bin/java -version",
+      "command": "/usr/bin/java -version",
       "version": "openjdk version \"17.0.18\" 2026-01-20",
       "stdout": [],
       "stderr": [
@@ -74,7 +74,7 @@
         "OpenJDK 64-Bit Server VM Homebrew (build 17.0.18+0, mixed mode, sharing)"
       ],
       "exit_code": 0,
-      "seconds": 0.682
+      "seconds": 0.495
     },
     {
       "tool": "maven",
@@ -85,13 +85,13 @@
       "stdout": [
         "Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)",
         "Maven home: /opt/homebrew/Cellar/maven/3.9.16/libexec",
-        "Java version: 25.0.2, vendor: Homebrew, runtime: /opt/homebrew/Cellar/openjdk/25.0.2/libexec/openjdk.jdk/Contents/Home",
+        "Java version: 17.0.18, vendor: Homebrew, runtime: /opt/homebrew/Cellar/openjdk@17/17.0.18/libexec/openjdk.jdk/Contents/Home",
         "Default locale: en_US, platform encoding: UTF-8",
         "OS name: \"mac os x\", version: \"26.5.1\", arch: \"aarch64\", family: \"mac\""
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.623
+      "seconds": 0.375
     },
     {
       "tool": "scip-go",
@@ -104,7 +104,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.07
+      "seconds": 0.101
     },
     {
       "tool": "scip-python",
@@ -117,20 +117,20 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.124
+      "seconds": 0.163
     },
     {
       "tool": "scip-typescript",
       "status": "ok",
       "ok": true,
-      "command": "/Users/damirdarasu/.nvm/versions/node/v23.10.0/bin/npx --yes -p @sourcegraph/scip-typescript scip-typescript --version",
+      "command": "/tmp/atlas-bench-tools/node_modules/.bin/scip-typescript --version",
       "version": "0.4.0",
       "stdout": [
         "0.4.0"
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.707
+      "seconds": 0.149
     },
     {
       "tool": "scip-java",
@@ -153,7 +153,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.104
+      "seconds": 0.095
     },
     {
       "tool": "pyright",
@@ -166,20 +166,20 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.093
+      "seconds": 0.122
     },
     {
       "tool": "tsc",
       "status": "ok",
       "ok": true,
-      "command": "/Users/damirdarasu/.nvm/versions/node/v23.10.0/bin/npx --yes -p typescript tsc --version",
+      "command": "/tmp/atlas-bench-tools/node_modules/.bin/tsc --version",
       "version": "Version 6.0.3",
       "stdout": [
         "Version 6.0.3"
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.412
+      "seconds": 0.068
     },
     {
       "tool": "jdtls",
@@ -205,7 +205,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.014
+      "seconds": 0.011
     },
     {
       "tool": "rust-analyzer",
@@ -218,7 +218,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.02
+      "seconds": 0.028
     },
     {
       "tool": "dotnet",
@@ -231,7 +231,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.207
+      "seconds": 0.241
     },
     {
       "tool": "ruby",
@@ -244,7 +244,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.014
+      "seconds": 0.023
     },
     {
       "tool": "php",
@@ -261,7 +261,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.265
+      "seconds": 0.277
     },
     {
       "tool": "pwsh",
@@ -274,7 +274,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.444
+      "seconds": 0.396
     },
     {
       "tool": "sourcekit-lsp",
@@ -290,7 +290,7 @@
         "swift-driver version: 1.127.15"
       ],
       "exit_code": 0,
-      "seconds": 0.399,
+      "seconds": 0.122,
       "binary": "/usr/bin/sourcekit-lsp",
       "note": "sourcekit-lsp has no version flag in this toolchain; Swift toolchain version is recorded as the closest reproducible native version."
     }

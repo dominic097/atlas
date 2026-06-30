@@ -357,13 +357,12 @@ function ExplorerControls({
         </div>
       </div>
 
-      {/* filter chips — horizontally scrollable on mobile, no wrap-pile */}
+      {/* filter chips stay in the normal page flow on mobile so they cannot widen the document. */}
       <div
         data-testid="lx-filters"
         role="group"
         aria-label="Filter languages"
-        className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0"
-        style={{ WebkitOverflowScrolling: "touch" }}
+        className="flex max-w-full flex-wrap gap-2 pb-1"
       >
         {CHIPS.map(([key, label]) => {
           const active = filter === key;

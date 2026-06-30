@@ -197,6 +197,10 @@
     min-width: 880px;
     font-size: 13px;
   }
+  .dtable-compact {
+    min-width: 0;
+    table-layout: fixed;
+  }
   .dtable th {
     @apply sticky top-0 z-10;
     background: var(--surface-raised);
@@ -214,6 +218,25 @@
     border-top: 1px solid var(--line);
     vertical-align: top;
     color: var(--text);
+  }
+  .dtable-compact td,
+  .dtable-compact th {
+    padding: 10px 9px;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  @media (max-width: 639px) {
+    .dtable-compact {
+      font-size: 11px;
+    }
+    .dtable-compact th {
+      font-size: 10px;
+      letter-spacing: 0.04em;
+    }
+    .dtable-compact td,
+    .dtable-compact th {
+      padding: 9px 7px;
+    }
   }
   .dtable tbody tr:nth-child(even) td {
     background: rgba(255, 255, 255, 0.018);

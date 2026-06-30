@@ -501,6 +501,222 @@ function renderTenXGapMarkdown(report) {
   return `${lines.join("\n")}\n`;
 }
 
+function collectLiveBenchmarkTools(liveBenchmarks, manifestTools = []) {
+  const tools = new Map();
+  for (const tool of manifestTools) {
+    if (!tool?.tool && !tool?.name) continue;
+    tools.set(tool.tool || tool.name, tool);
+  }
+  for (const row of liveBenchmarks) {
+    const native = row.native || {};
+    if (native.tool && !tools.has(native.tool)) {
+      tools.set(native.tool, {
+        tool: native.tool,
+        status: native.status || (native.ok ? "ok" : "unknown"),
+        ok: Boolean(native.ok),
+        version: native.command || native.status || "",
+        note: native.diagnostics || "",
+      });
+    }
+  }
+  return [...tools.values()].sort((a, b) => String(a.tool || "").localeCompare(String(b.tool || "")));
+}
+
+function classifyTruthRisk(row) {
+  const tool = String(row.native?.tool || "").toLowerCase();
+  if (["json", "markdown"].includes(row.language)) return "structured";
+  if (row.detectorOnly || ["ejs", "ets", "r"].includes(row.language)) return "high";
+  if (tool.includes("source-counter") || tool.includes("directive-counter") || tool.includes("counter")) return "medium";
+  if (!row.multiRepoValidation?.passed) return "medium";
+  if (Number(row.coverage?.ratio) > 5) return "medium";
+  return "low";
+}
+
+function buildFinalAuditReport(dataset) {
+  const structuredLive = new Set(["json", "markdown"]);
+  const liveCodeRows = dataset.liveBenchmarks.filter((row) => !structuredLive.has(row.language));
+  const pendingCode = liveCodeRows.filter((row) => !row.multiRepoValidation?.passed).map((row) => row.language);
+  const missingCoreTools = (dataset.provenance.tools.core || [])
+    .filter((tool) => tool.ok === false || tool.status === "missing")
+    .map((tool) => ({
+      tool: tool.tool,
+      status: tool.status,
+      note: tool.note || tool.version || "",
+    }));
+  const weakTruthRows = dataset.liveBenchmarks
+    .filter((row) => classifyTruthRisk(row) !== "low")
+    .map((row) => ({
+      language: row.language,
+      nativeTool: row.native?.tool || "",
+      risk: classifyTruthRisk(row),
+      detectorOnly: Boolean(row.detectorOnly),
+      coverageRatio: row.coverage?.ratio ?? null,
+      validationPassed: Boolean(row.multiRepoValidation?.passed),
+      minValidationCoverage: row.multiRepoValidation?.minCoverageRatio ?? null,
+      reason:
+        ["json", "markdown"].includes(row.language)
+          ? "Structured artifact, not a code-parser ground-truth row; keep separate from regex-language completion claims."
+          : row.detectorOnly
+          ? "Graphify detector-only/source-counter proxy; weaker than a deterministic Graphify extractor and native compiler/LSP truth."
+          : String(row.native?.tool || "").includes("counter")
+            ? "Scriptable source-counter proxy rather than a full compiler/LSP/SCIP truth source."
+            : !row.multiRepoValidation?.passed
+              ? "Missing minimum three-repo public validation."
+              : "Atlas counts a wider code-target surface than the native denominator; inspect scope before treating the ratio as precision.",
+    }));
+  const rejectedCandidates = dataset.liveBenchmarks
+    .flatMap((row) => (row.multiRepoValidation?.repos || []).length ? [] : [{ language: row.language, rejected: [] }]);
+  const nearMisses = dataset.liveBenchmarks
+    .flatMap((row) => (row.multiRepoValidation?.repos || []).map((repo) => ({
+      language: row.language,
+      repo: repo.repo,
+      coverageRatio: repo.coverageRatio,
+      atlasDefinitions: repo.atlasDefinitions,
+      nativeDefinitions: repo.nativeDefinitions,
+    })))
+    .filter((row) => Number(row.coverageRatio) <= 1.01)
+    .sort((a, b) => Number(a.coverageRatio) - Number(b.coverageRatio))
+    .slice(0, 20);
+
+  return {
+    generatedAt: dataset.generatedAt,
+    benchmarkGeneratedAt: dataset.generatedAt,
+    scope:
+      "Final pass over Atlas benchmark artifacts: core matrix against Graphify plus native SCIP/LSP tools, live language artifacts against Graphify plus language-specific native/proxy baselines, and public three-repo validation metadata.",
+    summary: {
+      coreLanguages: dataset.summary.core.languages,
+      liveArtifacts: dataset.summary.live.artifacts,
+      liveCodeLanguages: liveCodeRows.length,
+      structuredLiveArtifacts: dataset.liveBenchmarks.length - liveCodeRows.length,
+      totalCodeLanguageSurfaces: dataset.summary.core.languages + liveCodeRows.length,
+      strict10x: dataset.summary.live.strict10x,
+      strict10xArtifacts: dataset.summary.live.artifacts,
+      threeRepoValidated: dataset.summary.live.threeRepoValidated,
+      threeRepoValidationPending: dataset.summary.live.threeRepoValidationPending,
+      pendingCodeLanguages: pendingCode,
+      graphifyVersion: dataset.provenance.graphify.version,
+      graphifyDispatchCount: dataset.provenance.graphify.dispatchCount,
+      detectorOnlyLanguages: dataset.provenance.graphify.detectorOnlyCodeExtensions,
+    },
+    groundTruthCloseness: {
+      statement:
+        "Coverage ratios prove Atlas produced at least as many definitions as the selected independent denominator for that scoped benchmark. They do not by themselves prove precision, complete call-edge recall, or semantic equivalence across all repos.",
+      lowRiskLiveLanguages: dataset.liveBenchmarks
+        .filter((row) => classifyTruthRisk(row) === "low")
+        .map((row) => row.language)
+        .sort(),
+      weakOrProxyTruthRows: weakTruthRows,
+      coreMatrix: dataset.coreMatrix.map((row) => ({
+        language: row.language,
+        nativeTools: row.nativeTools.map((tool) => ({ name: tool.name, status: tool.status, ok: tool.ok })),
+        graphifyOk: row.graphify.ok,
+        equivalentRows: row.querySummary.equivalentRows,
+        graphifyMissingRows: row.querySummary.graphifyMissing,
+        tokenRatio: row.querySummary.tokenRatio,
+        latencyRatio: row.querySummary.latencyRatio,
+      })),
+      nearParityValidationRows: nearMisses,
+    },
+    stubsAndHallucinationAudit: {
+      foundDuringFinalPass: [
+        "The UI previously carried a hard-coded native tool manifest; this final pass renders tool status/version from provenance data so missing tools are no longer shown as healthy.",
+        "scip-java is missing in this environment; Java still has a JDTLS baseline, and the missing SCIP adapter is reported instead of implied.",
+        "Objective-C validation can be inflated by vendored Pods if Atlas and the native counter use different dependency filters; the final validation excludes dependency folders for the validation count.",
+        "CUDA host-function counters overcount the denominator for a CUDA-specific benchmark; the final validation labels and uses a CUDA-qualified __global__/__device__/__host__ function denominator.",
+      ],
+      notFound:
+        "No published benchmark row in the final dataset is intentionally synthetic or sample-only. The weakest rows are labelled as detector-only or source-counter proxy rows rather than hidden.",
+      missingAdapters: missingCoreTools,
+      generatedButNotSourceOfTruth: rejectedCandidates,
+    },
+    improvementTodos: [
+      {
+        priority: "P0",
+        item: "Install or vendor a reproducible scip-java command and rerun the Java matrix with both SCIP and JDTLS present.",
+      },
+      {
+        priority: "P0",
+        item: "Move the public-repo random validation harness into the repository so live multi-repo artifacts are reproducible from committed code, not only from raw JSON evidence.",
+      },
+      {
+        priority: "P1",
+        item: "Replace source-counter proxies for Apex, CUDA, Razor, BYOND, Blade, EJS, ETS, R, and structured/project surfaces with fuller compiler, LSP, tree-sitter, or parser-library denominators where available.",
+      },
+      {
+        priority: "P1",
+        item: "Add precision checks that compare symbol names/kinds/locations, not only Atlas/native definition-count coverage ratios.",
+      },
+      {
+        priority: "P1",
+        item: "Extend call-edge and receiver-type measurement for converted tree-sitter languages beyond definition coverage.",
+      },
+      {
+        priority: "P2",
+        item: "Increase public-repo validation from 3 repos per language to a larger fixed sample for high-variance languages such as Objective-C, Razor, Apex, CUDA, and Swift.",
+      },
+      {
+        priority: "P2",
+        item: "Keep Graphify no-equivalent rows as saturation evidence, but separate detector-only language support from deterministic Graphify extractor support in all headlines.",
+      },
+    ],
+  };
+}
+
+function renderFinalAuditMarkdown(report) {
+  const lines = [];
+  lines.push("# Atlas Final Benchmark Audit", "");
+  lines.push(`Generated: ${report.generatedAt}`, "");
+  lines.push(report.scope, "");
+  lines.push("## Summary", "");
+  lines.push(`- Core matrix languages: ${report.summary.coreLanguages}`);
+  lines.push(`- Live code/parser languages: ${report.summary.liveCodeLanguages}`);
+  lines.push(`- Total code language surfaces: ${report.summary.totalCodeLanguageSurfaces}`);
+  lines.push(`- Live artifacts: ${report.summary.liveArtifacts}`);
+  lines.push(`- Strict 10x live artifacts: ${report.summary.strict10x}/${report.summary.strict10xArtifacts}`);
+  lines.push(`- Three-repo validated live artifacts: ${report.summary.threeRepoValidated}`);
+  lines.push(`- Pending code languages: ${report.summary.pendingCodeLanguages.length ? report.summary.pendingCodeLanguages.join(", ") : "none"}`);
+  lines.push(`- Graphify: ${report.summary.graphifyVersion}, dispatch count ${report.summary.graphifyDispatchCount}`);
+  lines.push("", "## Ground Truth Closeness", "");
+  lines.push(report.groundTruthCloseness.statement, "");
+  lines.push(`Low-risk live languages: ${report.groundTruthCloseness.lowRiskLiveLanguages.join(", ") || "none"}.`, "");
+  lines.push("### Weak Or Proxy Truth Rows", "");
+  lines.push("| Language | Native tool | Risk | Coverage | Min validation coverage | Reason |");
+  lines.push("|---|---|---|--:|--:|---|");
+  for (const row of report.groundTruthCloseness.weakOrProxyTruthRows) {
+    lines.push(
+      `| ${row.language} | ${row.nativeTool} | ${row.risk} | ${row.coverageRatio ?? "n/a"} | ${row.minValidationCoverage ?? "n/a"} | ${row.reason} |`
+    );
+  }
+  lines.push("", "### Core Matrix", "");
+  lines.push("| Language | Native tools | Graphify | Equivalent rows | Graphify missing | Token ratio | Latency ratio |");
+  lines.push("|---|---|---|--:|--:|--:|--:|");
+  for (const row of report.groundTruthCloseness.coreMatrix) {
+    lines.push(
+      `| ${row.language} | ${row.nativeTools.map((tool) => `${tool.name}:${tool.status}`).join(", ")} | ${row.graphifyOk ? "ok" : "not ok"} | ${row.equivalentRows} | ${row.graphifyMissingRows} | ${row.tokenRatio ?? "n/a"} | ${row.latencyRatio ?? "n/a"} |`
+    );
+  }
+  lines.push("", "## Stubs And Hallucination Audit", "");
+  lines.push("### Found During Final Pass", "");
+  for (const item of report.stubsAndHallucinationAudit.foundDuringFinalPass) {
+    lines.push(`- ${item}`);
+  }
+  lines.push("", `No hidden synthetic-row finding: ${report.stubsAndHallucinationAudit.notFound}`, "");
+  lines.push("### Missing Adapters", "");
+  if (report.stubsAndHallucinationAudit.missingAdapters.length) {
+    for (const item of report.stubsAndHallucinationAudit.missingAdapters) {
+      lines.push(`- ${item.tool}: ${item.status}${item.note ? ` - ${item.note}` : ""}`);
+    }
+  } else {
+    lines.push("- none");
+  }
+  lines.push("", "## Improvement Todos", "");
+  for (const todo of report.improvementTodos) {
+    lines.push(`- ${todo.priority}: ${todo.item}`);
+  }
+  lines.push("");
+  return `${lines.join("\n")}\n`;
+}
+
 function main() {
   for (const file of required) {
     if (!fs.existsSync(path.join(benchDir, file))) {
@@ -516,6 +732,7 @@ function main() {
   const graphifyDiscovery = readJSON("GRAPHIFY_LANGUAGE_DISCOVERY.json");
   const coreMatrix = buildCoreMatrix(matrix);
   const liveBenchmarks = buildLiveBenchmarks(artifacts.map((artifact) => artifact.name));
+  const liveBenchmarkTools = collectLiveBenchmarkTools(liveBenchmarks, toolVersions.live_benchmark_tools || []);
   const coverageAudit = buildCoverageAudit(graphifyDiscovery, liveBenchmarks);
   const saturationRows = buildSaturation(saturation);
 
@@ -524,6 +741,13 @@ function main() {
     generatedAt: new Date().toISOString(),
     sourceLabel: "Atlas benchmark JSON artifacts from bench/",
     sourceArtifacts: artifacts,
+    derivedArtifacts: [
+      { name: "benchmark-data.json", path: "data/benchmark-data.json" },
+      { name: "tenx-gap-report.json", path: "data/tenx-gap-report.json" },
+      { name: "tenx-gap-report.md", path: "data/tenx-gap-report.md" },
+      { name: "final-benchmark-audit-report.json", path: "data/final-benchmark-audit-report.json" },
+      { name: "final-benchmark-audit-report.md", path: "data/final-benchmark-audit-report.md" },
+    ],
     provenance: {
       toolManifestGeneratedAt: isoFromUnix(toolVersions.generated_at_unix),
       saturationGeneratedAt: isoFromUnix(saturation.generated_at_unix),
@@ -537,9 +761,9 @@ function main() {
       },
       tools: {
         coreCount: (toolVersions.core_tools || []).length,
-        liveBenchmarkCount: (toolVersions.live_benchmark_tools || []).length,
+        liveBenchmarkCount: liveBenchmarkTools.length,
         core: toolVersions.core_tools || [],
-        liveBenchmarkTools: toolVersions.live_benchmark_tools || [],
+        liveBenchmarkTools,
       },
     },
     summary: {
@@ -562,17 +786,27 @@ function main() {
     saturation: saturationRows,
     caveats: [
       "Ratios are computed only where both Atlas and graphify returned comparable query rows.",
-      "BYOND, ETS, and R have saturation evidence with zero graphify-equivalent query rows; no latency/token ratio is claimed for those rows.",
+      saturationRows.length
+        ? `${saturationRows.map((row) => row.language).join(", ")} have saturation evidence with zero graphify-equivalent query rows; no latency/token ratio is claimed for those rows.`
+        : "The final pass has no live language with zero graphify-equivalent query rows; historical saturation rows are superseded by the refreshed live artifacts.",
       "Timings are one-machine benchmark snapshots, not production guarantees.",
       "Atlas and graphify expose different graph models, so coverage and precision fields are shown separately.",
       "10x target fields are strict for token and latency ratios; coverage is reported as native-definition parity/exceed and is not converted into a fabricated 10x accuracy multiplier.",
     ],
+  };
+  const finalAudit = buildFinalAuditReport(dataset);
+  dataset.finalAudit = {
+    markdownPath: "data/final-benchmark-audit-report.md",
+    jsonPath: "data/final-benchmark-audit-report.json",
+    summary: finalAudit.summary,
   };
 
   fs.writeFileSync(path.join(dataDir, "benchmark-data.json"), `${JSON.stringify(dataset, null, 2)}\n`);
   const tenXGap = buildTenXGap(dataset);
   fs.writeFileSync(path.join(dataDir, "tenx-gap-report.json"), `${JSON.stringify(tenXGap, null, 2)}\n`);
   fs.writeFileSync(path.join(dataDir, "tenx-gap-report.md"), renderTenXGapMarkdown(tenXGap));
+  fs.writeFileSync(path.join(dataDir, "final-benchmark-audit-report.json"), `${JSON.stringify(finalAudit, null, 2)}\n`);
+  fs.writeFileSync(path.join(dataDir, "final-benchmark-audit-report.md"), renderFinalAuditMarkdown(finalAudit));
   console.log(`Wrote data/benchmark-data.json and tenx gap reports from ${artifacts.length} JSON artifacts`);
 }
 

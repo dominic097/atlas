@@ -1,0 +1,510 @@
+{
+  "generatedAt": "2026-06-30T16:22:49.947Z",
+  "benchmarkGeneratedAt": "2026-06-30T16:22:49.947Z",
+  "scope": "Final pass over Atlas benchmark artifacts: core matrix against Graphify plus native SCIP/LSP tools, live language artifacts against Graphify plus language-specific native/proxy baselines, and public three-repo validation metadata.",
+  "summary": {
+    "coreLanguages": 7,
+    "liveArtifacts": 36,
+    "liveCodeLanguages": 34,
+    "structuredLiveArtifacts": 2,
+    "totalCodeLanguageSurfaces": 41,
+    "strict10x": 36,
+    "strict10xArtifacts": 36,
+    "threeRepoValidated": 35,
+    "threeRepoValidationPending": 1,
+    "pendingCodeLanguages": [],
+    "graphifyVersion": "graphifyy 0.8.49",
+    "graphifyDispatchCount": 89,
+    "detectorOnlyLanguages": [
+      ".ejs",
+      ".ets",
+      ".r"
+    ]
+  },
+  "groundTruthCloseness": {
+    "statement": "Coverage ratios prove Atlas produced at least as many definitions as the selected independent denominator for that scoped benchmark. They do not by themselves prove precision, complete call-edge recall, or semantic equivalence across all repos.",
+    "lowRiskLiveLanguages": [
+      "astro",
+      "bash",
+      "csharp",
+      "dart",
+      "elixir",
+      "fortran",
+      "groovy",
+      "julia",
+      "kotlin",
+      "lua",
+      "objc",
+      "php",
+      "powershell",
+      "ruby",
+      "rust",
+      "scala",
+      "sql",
+      "svelte",
+      "swift",
+      "terraform",
+      "verilog",
+      "vue",
+      "zig"
+    ],
+    "weakOrProxyTruthRows": [
+      {
+        "language": "apex",
+        "nativeTool": "apex-source-counter",
+        "risk": "medium",
+        "detectorOnly": false,
+        "coverageRatio": 1.215,
+        "validationPassed": true,
+        "minValidationCoverage": 1.0607,
+        "reason": "Scriptable source-counter proxy rather than a full compiler/LSP/SCIP truth source."
+      },
+      {
+        "language": "blade",
+        "nativeTool": "blade-directive-counter",
+        "risk": "medium",
+        "detectorOnly": false,
+        "coverageRatio": 1.0028,
+        "validationPassed": true,
+        "minValidationCoverage": 1.0121,
+        "reason": "Scriptable source-counter proxy rather than a full compiler/LSP/SCIP truth source."
+      },
+      {
+        "language": "byond",
+        "nativeTool": "byond-source-counter",
+        "risk": "medium",
+        "detectorOnly": false,
+        "coverageRatio": 1.2311,
+        "validationPassed": true,
+        "minValidationCoverage": 1,
+        "reason": "Scriptable source-counter proxy rather than a full compiler/LSP/SCIP truth source."
+      },
+      {
+        "language": "cuda",
+        "nativeTool": "cuda-source-counter",
+        "risk": "medium",
+        "detectorOnly": false,
+        "coverageRatio": 1.3333,
+        "validationPassed": true,
+        "minValidationCoverage": 2.5753,
+        "reason": "Scriptable source-counter proxy rather than a full compiler/LSP/SCIP truth source."
+      },
+      {
+        "language": "delphi",
+        "nativeTool": "delphi-lazarus-source-counter",
+        "risk": "medium",
+        "detectorOnly": false,
+        "coverageRatio": 3.4626,
+        "validationPassed": true,
+        "minValidationCoverage": 1,
+        "reason": "Scriptable source-counter proxy rather than a full compiler/LSP/SCIP truth source."
+      },
+      {
+        "language": "dotnet",
+        "nativeTool": "python-dotnet-project",
+        "risk": "medium",
+        "detectorOnly": false,
+        "coverageRatio": 17.235,
+        "validationPassed": true,
+        "minValidationCoverage": 1,
+        "reason": "Atlas counts a wider code-target surface than the native denominator; inspect scope before treating the ratio as precision."
+      },
+      {
+        "language": "ejs",
+        "nativeTool": "ejs-template-counter",
+        "risk": "high",
+        "detectorOnly": true,
+        "coverageRatio": 2.278,
+        "validationPassed": true,
+        "minValidationCoverage": 1,
+        "reason": "Graphify detector-only/source-counter proxy; weaker than a deterministic Graphify extractor and native compiler/LSP truth."
+      },
+      {
+        "language": "ets",
+        "nativeTool": "ets-source-counter",
+        "risk": "high",
+        "detectorOnly": true,
+        "coverageRatio": 1.0523,
+        "validationPassed": true,
+        "minValidationCoverage": 1.0229,
+        "reason": "Graphify detector-only/source-counter proxy; weaker than a deterministic Graphify extractor and native compiler/LSP truth."
+      },
+      {
+        "language": "json",
+        "nativeTool": "python-json",
+        "risk": "structured",
+        "detectorOnly": false,
+        "coverageRatio": 1.483,
+        "validationPassed": false,
+        "minValidationCoverage": null,
+        "reason": "Structured artifact, not a code-parser ground-truth row; keep separate from regex-language completion claims."
+      },
+      {
+        "language": "markdown",
+        "nativeTool": "markdown-it-py",
+        "risk": "structured",
+        "detectorOnly": false,
+        "coverageRatio": 1.026,
+        "validationPassed": true,
+        "minValidationCoverage": 1,
+        "reason": "Structured artifact, not a code-parser ground-truth row; keep separate from regex-language completion claims."
+      },
+      {
+        "language": "pascal",
+        "nativeTool": "pascal-regex-counter",
+        "risk": "medium",
+        "detectorOnly": false,
+        "coverageRatio": 1.0067,
+        "validationPassed": true,
+        "minValidationCoverage": 1.21,
+        "reason": "Scriptable source-counter proxy rather than a full compiler/LSP/SCIP truth source."
+      },
+      {
+        "language": "r",
+        "nativeTool": "r-source-counter",
+        "risk": "high",
+        "detectorOnly": true,
+        "coverageRatio": 1.7531,
+        "validationPassed": true,
+        "minValidationCoverage": 1.6067,
+        "reason": "Graphify detector-only/source-counter proxy; weaker than a deterministic Graphify extractor and native compiler/LSP truth."
+      },
+      {
+        "language": "razor",
+        "nativeTool": "razor-directive-counter",
+        "risk": "medium",
+        "detectorOnly": false,
+        "coverageRatio": 5.101,
+        "validationPassed": true,
+        "minValidationCoverage": 1,
+        "reason": "Scriptable source-counter proxy rather than a full compiler/LSP/SCIP truth source."
+      }
+    ],
+    "coreMatrix": [
+      {
+        "language": "go",
+        "nativeTools": [
+          {
+            "name": "scip-go",
+            "status": "ok",
+            "ok": true
+          },
+          {
+            "name": "gopls",
+            "status": "ok",
+            "ok": true
+          }
+        ],
+        "graphifyOk": true,
+        "equivalentRows": 4,
+        "graphifyMissingRows": 0,
+        "tokenRatio": 18.95,
+        "latencyRatio": 6.55
+      },
+      {
+        "language": "python",
+        "nativeTools": [
+          {
+            "name": "scip-python",
+            "status": "ok",
+            "ok": true
+          },
+          {
+            "name": "pyright",
+            "status": "ok",
+            "ok": true
+          }
+        ],
+        "graphifyOk": true,
+        "equivalentRows": 3,
+        "graphifyMissingRows": 0,
+        "tokenRatio": 24.31,
+        "latencyRatio": 6.81
+      },
+      {
+        "language": "javascript",
+        "nativeTools": [
+          {
+            "name": "scip-typescript",
+            "status": "ok",
+            "ok": true
+          },
+          {
+            "name": "tsserver",
+            "status": "ok",
+            "ok": true
+          }
+        ],
+        "graphifyOk": true,
+        "equivalentRows": 3,
+        "graphifyMissingRows": 1,
+        "tokenRatio": 8.24,
+        "latencyRatio": 5.91
+      },
+      {
+        "language": "typescript",
+        "nativeTools": [
+          {
+            "name": "scip-typescript",
+            "status": "ok",
+            "ok": true
+          },
+          {
+            "name": "tsserver",
+            "status": "ok",
+            "ok": true
+          }
+        ],
+        "graphifyOk": true,
+        "equivalentRows": 3,
+        "graphifyMissingRows": 1,
+        "tokenRatio": 12.06,
+        "latencyRatio": 6.18
+      },
+      {
+        "language": "java",
+        "nativeTools": [
+          {
+            "name": "scip-java",
+            "status": "missing",
+            "ok": false
+          },
+          {
+            "name": "jdtls",
+            "status": "ok",
+            "ok": true
+          }
+        ],
+        "graphifyOk": true,
+        "equivalentRows": 2,
+        "graphifyMissingRows": 0,
+        "tokenRatio": 21.4,
+        "latencyRatio": 7.49
+      },
+      {
+        "language": "c",
+        "nativeTools": [
+          {
+            "name": "clangd",
+            "status": "ok",
+            "ok": true
+          }
+        ],
+        "graphifyOk": true,
+        "equivalentRows": 4,
+        "graphifyMissingRows": 0,
+        "tokenRatio": 33.5,
+        "latencyRatio": 7.25
+      },
+      {
+        "language": "cpp",
+        "nativeTools": [
+          {
+            "name": "clangd",
+            "status": "ok",
+            "ok": true
+          }
+        ],
+        "graphifyOk": true,
+        "equivalentRows": 4,
+        "graphifyMissingRows": 0,
+        "tokenRatio": 11.85,
+        "latencyRatio": 8.11
+      }
+    ],
+    "nearParityValidationRows": [
+      {
+        "language": "astro",
+        "repo": "https://github.com/cssninjaStudio/krypton",
+        "coverageRatio": 1,
+        "atlasDefinitions": 46,
+        "nativeDefinitions": 46
+      },
+      {
+        "language": "bash",
+        "repo": "https://github.com/nvm-sh/nvm",
+        "coverageRatio": 1,
+        "atlasDefinitions": 158,
+        "nativeDefinitions": 158
+      },
+      {
+        "language": "bash",
+        "repo": "https://github.com/rbenv/rbenv",
+        "coverageRatio": 1,
+        "atlasDefinitions": 12,
+        "nativeDefinitions": 12
+      },
+      {
+        "language": "bash",
+        "repo": "https://github.com/pyenv/pyenv",
+        "coverageRatio": 1,
+        "atlasDefinitions": 36,
+        "nativeDefinitions": 36
+      },
+      {
+        "language": "byond",
+        "repo": "https://github.com/tgstation/tgstation",
+        "coverageRatio": 1,
+        "atlasDefinitions": 8874,
+        "nativeDefinitions": 8874
+      },
+      {
+        "language": "byond",
+        "repo": "https://github.com/goonstation/goonstation",
+        "coverageRatio": 1,
+        "atlasDefinitions": 810,
+        "nativeDefinitions": 810
+      },
+      {
+        "language": "byond",
+        "repo": "https://github.com/ParadiseSS13/Paradise",
+        "coverageRatio": 1,
+        "atlasDefinitions": 8198,
+        "nativeDefinitions": 8198
+      },
+      {
+        "language": "delphi",
+        "repo": "https://github.com/fpc/Lazarus",
+        "coverageRatio": 1,
+        "atlasDefinitions": 11308,
+        "nativeDefinitions": 11308
+      },
+      {
+        "language": "delphi",
+        "repo": "https://github.com/transmission-remote-gui/transgui",
+        "coverageRatio": 1,
+        "atlasDefinitions": 1460,
+        "nativeDefinitions": 1460
+      },
+      {
+        "language": "delphi",
+        "repo": "https://github.com/castle-engine/castle-engine",
+        "coverageRatio": 1,
+        "atlasDefinitions": 2429,
+        "nativeDefinitions": 2429
+      },
+      {
+        "language": "dotnet",
+        "repo": "https://github.com/Far0n/xgbfi",
+        "coverageRatio": 1,
+        "atlasDefinitions": 2,
+        "nativeDefinitions": 2
+      },
+      {
+        "language": "dotnet",
+        "repo": "https://github.com/Viladoman/StructLayout",
+        "coverageRatio": 1,
+        "atlasDefinitions": 13,
+        "nativeDefinitions": 13
+      },
+      {
+        "language": "dotnet",
+        "repo": "https://github.com/b2developer/MonopolyNEAT",
+        "coverageRatio": 1,
+        "atlasDefinitions": 4,
+        "nativeDefinitions": 4
+      },
+      {
+        "language": "ejs",
+        "repo": "https://github.com/aws-samples/eb-node-express-sample",
+        "coverageRatio": 1,
+        "atlasDefinitions": 1,
+        "nativeDefinitions": 1
+      },
+      {
+        "language": "ejs",
+        "repo": "https://github.com/ActiveCampaign/PactMaker",
+        "coverageRatio": 1,
+        "atlasDefinitions": 14,
+        "nativeDefinitions": 14
+      },
+      {
+        "language": "ejs",
+        "repo": "https://github.com/codemistic/HacktoberFest",
+        "coverageRatio": 1,
+        "atlasDefinitions": 2,
+        "nativeDefinitions": 2
+      },
+      {
+        "language": "elixir",
+        "repo": "https://github.com/phoenixframework/phoenix",
+        "coverageRatio": 1,
+        "atlasDefinitions": 1642,
+        "nativeDefinitions": 1642
+      },
+      {
+        "language": "elixir",
+        "repo": "https://github.com/elixir-plug/plug",
+        "coverageRatio": 1,
+        "atlasDefinitions": 909,
+        "nativeDefinitions": 909
+      },
+      {
+        "language": "elixir",
+        "repo": "https://github.com/elixir-ecto/ecto",
+        "coverageRatio": 1,
+        "atlasDefinitions": 2725,
+        "nativeDefinitions": 2725
+      },
+      {
+        "language": "fortran",
+        "repo": "https://github.com/fortran-lang/stdlib",
+        "coverageRatio": 1,
+        "atlasDefinitions": 364,
+        "nativeDefinitions": 364
+      }
+    ]
+  },
+  "stubsAndHallucinationAudit": {
+    "foundDuringFinalPass": [
+      "The UI previously carried a hard-coded native tool manifest; this final pass renders tool status/version from provenance data so missing tools are no longer shown as healthy.",
+      "scip-java is missing in this environment; Java still has a JDTLS baseline, and the missing SCIP adapter is reported instead of implied.",
+      "Objective-C validation can be inflated by vendored Pods if Atlas and the native counter use different dependency filters; the final validation excludes dependency folders for the validation count.",
+      "CUDA host-function counters overcount the denominator for a CUDA-specific benchmark; the final validation labels and uses a CUDA-qualified __global__/__device__/__host__ function denominator."
+    ],
+    "notFound": "No published benchmark row in the final dataset is intentionally synthetic or sample-only. The weakest rows are labelled as detector-only or source-counter proxy rows rather than hidden.",
+    "missingAdapters": [
+      {
+        "tool": "scip-java",
+        "status": "missing",
+        "note": ""
+      }
+    ],
+    "generatedButNotSourceOfTruth": [
+      {
+        "language": "json",
+        "rejected": []
+      }
+    ]
+  },
+  "improvementTodos": [
+    {
+      "priority": "P0",
+      "item": "Install or vendor a reproducible scip-java command and rerun the Java matrix with both SCIP and JDTLS present."
+    },
+    {
+      "priority": "P0",
+      "item": "Move the public-repo random validation harness into the repository so live multi-repo artifacts are reproducible from committed code, not only from raw JSON evidence."
+    },
+    {
+      "priority": "P1",
+      "item": "Replace source-counter proxies for Apex, CUDA, Razor, BYOND, Blade, EJS, ETS, R, and structured/project surfaces with fuller compiler, LSP, tree-sitter, or parser-library denominators where available."
+    },
+    {
+      "priority": "P1",
+      "item": "Add precision checks that compare symbol names/kinds/locations, not only Atlas/native definition-count coverage ratios."
+    },
+    {
+      "priority": "P1",
+      "item": "Extend call-edge and receiver-type measurement for converted tree-sitter languages beyond definition coverage."
+    },
+    {
+      "priority": "P2",
+      "item": "Increase public-repo validation from 3 repos per language to a larger fixed sample for high-variance languages such as Objective-C, Razor, Apex, CUDA, and Swift."
+    },
+    {
+      "priority": "P2",
+      "item": "Keep Graphify no-equivalent rows as saturation evidence, but separate detector-only language support from deterministic Graphify extractor support in all headlines."
+    }
+  ]
+}
