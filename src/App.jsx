@@ -833,6 +833,8 @@ function NativeParityLadder({ data }) {
   const model = useMemo(() => buildParityModel(data), [data]);
   const { atParity, standouts, maxRatio, maxDefs, minRatio } = model;
   const liveTotal = atParity.length + standouts.length;
+  const coreTotal = data.summary.core.languages;
+  const nativeTotal = coreTotal + liveTotal;
 
   // ---- one shared horizontal ratio scale, used by BOTH zones --------------
   // Domain starts a hair below 1.0 so the spine has air to its left; it ends a
@@ -871,6 +873,9 @@ function NativeParityLadder({ data }) {
         </div>
         <span className="mono" style={{ fontSize: 12, color: "var(--faint)" }}>
           {atParity.length} at parity · {standouts.length} exceed · none below ×1.0 · {data.summary.coverage.detectorOnlyRowsCovered} detector-only
+        </span>
+        <span className="mono" style={{ fontSize: 12, color: "var(--primary)" }}>
+          {coreTotal} core + {liveTotal} live ladder = {nativeTotal} total native languages
         </span>
       </div>
 
@@ -927,7 +932,7 @@ function NativeParityLadder({ data }) {
                 {atParity.length}/{liveTotal}
               </span>
               <span className="mono mt-1" style={{ fontSize: 10.5, color: "var(--muted)" }}>
-                live languages
+                of {liveTotal} live ladder
               </span>
               <span className="mono mt-3 mb-2" style={{ fontSize: 10, color: "var(--faint)" }}>
                 {expanded ? "hide roster ▴" : "show roster ▾"}
