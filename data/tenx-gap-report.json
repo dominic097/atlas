@@ -1,22 +1,21 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T10:38:32.558Z",
+  "generatedAt": "2026-06-30T10:41:25.133Z",
   "source": "data/benchmark-data.json",
   "targetRatio": 10,
   "metricNote": "Token and latency are ratio targets. Coverage is a native-definition coverage ratio, so the honest accuracy target is >1.0 native coverage exceed, not a fabricated 10x accuracy multiplier.",
   "summary": {
     "liveLanguages": 36,
-    "parityLanguages": 10,
-    "coverageExceedLanguages": 26,
+    "parityLanguages": 9,
+    "coverageExceedLanguages": 27,
     "comparableLanguages": 33,
     "token10xComparable": 33,
     "latency10xComparable": 33,
     "performance10xComparable": 33,
-    "threeRepoValidated": 7,
-    "threeRepoValidatedStrict10x": 7
+    "threeRepoValidated": 8,
+    "threeRepoValidatedStrict10x": 8
   },
   "parityLanguages": [
-    "blade",
     "byond",
     "dart",
     "elixir",
@@ -93,21 +92,19 @@
       "repo": "https://github.com/BookStackApp/BookStack",
       "commit": "f7df78b91b12ff1d8e248ded7747e76203904b8e",
       "artifact": "data/raw/LIVE_BLADE_BENCHMARK.json",
-      "coverageRatio": 1,
-      "coverageExceedsNative": false,
+      "coverageRatio": 1.0028,
+      "coverageExceedsNative": true,
       "equivalentRows": 6,
       "tokenRatio": 31.5,
       "latencyRatio": 12.36,
       "tokenGapTo10x": 1,
       "latencyGapTo10x": 1,
-      "blockers": [
-        "coverage_at_parity"
-      ],
+      "blockers": [],
       "validation": {
-        "passed": false,
-        "repoCount": 0,
+        "passed": true,
+        "repoCount": 3,
         "minimumRepos": 3,
-        "minCoverageRatio": null
+        "minCoverageRatio": 1.0121
       }
     },
     {
