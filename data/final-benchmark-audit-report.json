@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-30T18:50:20.258Z",
-  "benchmarkGeneratedAt": "2026-06-30T18:50:20.258Z",
+  "generatedAt": "2026-06-30T19:01:50.517Z",
+  "benchmarkGeneratedAt": "2026-06-30T19:01:50.517Z",
   "scope": "Final pass over Atlas benchmark artifacts: core matrix against Graphify plus native SCIP/LSP tools, live language artifacts against Graphify plus language-specific native/proxy baselines, and public three-repo validation metadata.",
   "summary": {
     "coreLanguages": 7,
@@ -20,10 +20,10 @@
     "validationRemeasurementAtlasReplayReadyRows": 105,
     "validationRemeasurementGraphifyReplayReadyRows": 105,
     "validationRemeasurementNativeCandidateRows": 105,
-    "validationRemeasurementNativeCandidateExecutableRows": 12,
+    "validationRemeasurementNativeCandidateExecutableRows": 15,
     "validationRemeasurementNativeReadyRows": 0,
     "validationRemeasurementFullReadyArtifacts": 0,
-    "validationRemeasurementNativePlaceholderRows": 75,
+    "validationRemeasurementNativePlaceholderRows": 72,
     "validationRemeasurementNativeEphemeralHelperRows": 57,
     "validationRemeasurementProxyOrDetectorArtifacts": 14,
     "precisionEvidenceHarness": true,
@@ -522,7 +522,7 @@
     "validationRemeasurement": {
       "statement": "The validation remeasurement manifest audits replay readiness for public validation rows. It proves pinned Atlas and Graphify replay commands can be reconstructed, but it does not execute native/proxy counters unless executable per-repo native commands are present in the artifacts.",
       "manifest": {
-        "generatedAt": "2026-06-30T18:50:11.006Z",
+        "generatedAt": "2026-06-30T19:01:50.442Z",
         "summary": {
           "artifacts": 36,
           "codeArtifacts": 34,
@@ -534,11 +534,11 @@
           "atlasReplayReadyRows": 105,
           "graphifyReplayReadyRows": 105,
           "nativeRemeasurementCandidateRows": 105,
-          "nativeRemeasurementCandidateExecutableRows": 12,
+          "nativeRemeasurementCandidateExecutableRows": 15,
           "nativeRemeasurementReadyRows": 0,
           "fullRemeasurementReadyRows": 0,
           "fullRemeasurementReadyArtifacts": 0,
-          "nativeCandidatePlaceholderRows": 75,
+          "nativeCandidatePlaceholderRows": 72,
           "nativeCandidateEphemeralHelperRows": 57,
           "proxyOrDetectorCodeArtifacts": 14,
           "warnings": 35,
@@ -956,11 +956,10 @@
             "atlasReplayReadyRows": 3,
             "graphifyReplayReadyRows": 3,
             "nativeRemeasurementCandidateRows": 3,
-            "nativeRemeasurementCandidateExecutableRows": 0,
+            "nativeRemeasurementCandidateExecutableRows": 3,
             "nativeRemeasurementReadyRows": 0,
             "blockers": [
               "full_symbol_name_kind_location_sets_not_persisted",
-              "native_command_contains_placeholder",
               "native_or_proxy_remeasurement_command_not_recorded",
               "proxy_denominator_not_full_semantic_truth"
             ]

@@ -90,6 +90,10 @@ function rewriteCommittedHelperPath(command) {
       "python3 scripts/native-baselines/dotnet_project_stats.py"
     )
     .replace(
+      "python3 <razor directive counter>",
+      "python3 scripts/native-baselines/razor_stats.py"
+    )
+    .replace(
       "/tmp/atlas-live-powershell-powershellget/pwsh_stats.ps1",
       "scripts/native-baselines/pwsh_stats.ps1"
     )

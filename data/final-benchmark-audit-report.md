@@ -1,6 +1,6 @@
 # Atlas Final Benchmark Audit
 
-Generated: 2026-06-30T18:50:20.258Z
+Generated: 2026-06-30T19:01:50.517Z
 
 Final pass over Atlas benchmark artifacts: core matrix against Graphify plus native SCIP/LSP tools, live language artifacts against Graphify plus language-specific native/proxy baselines, and public three-repo validation metadata.
 
@@ -18,10 +18,10 @@ Final pass over Atlas benchmark artifacts: core matrix against Graphify plus nat
 - Atlas replay-ready validation rows: 105
 - Graphify replay-ready validation rows: 105
 - Native/proxy command candidate validation rows: 105
-- Native/proxy candidate executable validation rows: 12
+- Native/proxy candidate executable validation rows: 15
 - Native/proxy command-ready validation rows: 0
 - Full remeasurement-ready artifacts: 0
-- Native command candidates with placeholders: 75
+- Native command candidates with placeholders: 72
 - Native command candidates with ephemeral helper paths: 57
 - Precision evidence harness: present
 - Precision sampled name/location artifacts: 32
@@ -53,9 +53,9 @@ Low-risk live languages: astro, csharp, fortran, groovy, julia, kotlin, lua, obj
 
 The validation remeasurement manifest audits replay readiness for public validation rows. It proves pinned Atlas and Graphify replay commands can be reconstructed, but it does not execute native/proxy counters unless executable per-repo native commands are present in the artifacts.
 
-Manifest: data/validation-remeasurement-manifest.md, generated 2026-06-30T18:50:11.006Z.
-Repo rows: 105; Atlas replay-ready: 105; Graphify replay-ready: 105; native/proxy command candidates: 105; candidate-executable: 12; native/proxy command-ready: 0.
-Full remeasurement-ready artifacts: 0; candidates with placeholders: 75; candidates with ephemeral helper paths: 57; proxy or detector-only code artifacts: 14.
+Manifest: data/validation-remeasurement-manifest.md, generated 2026-06-30T19:01:50.442Z.
+Repo rows: 105; Atlas replay-ready: 105; Graphify replay-ready: 105; native/proxy command candidates: 105; candidate-executable: 15; native/proxy command-ready: 0.
+Full remeasurement-ready artifacts: 0; candidates with placeholders: 72; candidates with ephemeral helper paths: 57; proxy or detector-only code artifacts: 14.
 
 | Language | Tool class | Risk | Repos | Atlas replay | Graphify replay | Native candidates | Candidate executable | Native ready | Blockers |
 |---|---|---|--:|--:|--:|--:|--:|--:|---|
@@ -83,7 +83,7 @@ Full remeasurement-ready artifacts: 0; candidates with placeholders: 75; candida
 | pascal | source-counter-proxy | medium | 3 | 3 | 3 | 3 | 0 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
 | php | parser-library-baseline | low | 3 | 3 | 3 | 3 | 0 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded |
 | powershell | parser-library-baseline | low | 3 | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded |
-| razor | source-counter-proxy | medium | 3 | 3 | 3 | 3 | 0 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
+| razor | source-counter-proxy | medium | 3 | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
 | ruby | parser-library-baseline | low | 3 | 3 | 3 | 3 | 0 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded |
 | rust | compiler-or-lsp-baseline | low | 3 | 3 | 3 | 3 | 0 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_command_uses_unexpanded_file_list, native_or_proxy_remeasurement_command_not_recorded |
 | r | graphify-detector-only-proxy | high | 3 | 3 | 3 | 3 | 0 | 0 | full_symbol_name_kind_location_sets_not_persisted, graphify_detector_only_or_weak_proxy_truth, native_command_contains_placeholder, native_or_proxy_remeasurement_command_not_recorded |

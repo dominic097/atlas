@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T18:50:20.258Z",
+  "generatedAt": "2026-06-30T19:01:50.517Z",
   "sourceLabel": "Atlas benchmark JSON artifacts from bench/",
   "sourceArtifacts": [
     {
@@ -13976,7 +13976,7 @@
   },
   "validationRemeasurement": {
     "schemaVersion": 1,
-    "generatedAt": "2026-06-30T18:50:11.006Z",
+    "generatedAt": "2026-06-30T19:01:50.442Z",
     "source": "data/raw/LIVE_*_BENCHMARK.json",
     "harness": "scripts/validation-remeasurement-harness.mjs",
     "summary": {
@@ -13990,11 +13990,11 @@
       "atlasReplayReadyRows": 105,
       "graphifyReplayReadyRows": 105,
       "nativeRemeasurementCandidateRows": 105,
-      "nativeRemeasurementCandidateExecutableRows": 12,
+      "nativeRemeasurementCandidateExecutableRows": 15,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReadyArtifacts": 0,
-      "nativeCandidatePlaceholderRows": 75,
+      "nativeCandidatePlaceholderRows": 72,
       "nativeCandidateEphemeralHelperRows": 57,
       "proxyOrDetectorCodeArtifacts": 14,
       "warnings": 35,
@@ -17693,11 +17693,11 @@
         "atlasReplayReadyRows": 3,
         "graphifyReplayReadyRows": 3,
         "nativeRemeasurementCandidateRows": 3,
-        "nativeRemeasurementCandidateExecutableRows": 0,
+        "nativeRemeasurementCandidateExecutableRows": 3,
         "nativeRemeasurementReadyRows": 0,
         "fullRemeasurementReadyRows": 0,
         "fullRemeasurementReady": false,
-        "nativeCandidatePlaceholderRows": 3,
+        "nativeCandidatePlaceholderRows": 0,
         "nativeCandidateEphemeralHelperRows": 0,
         "minCoverageRatio": 1,
         "warnings": [
@@ -17706,7 +17706,6 @@
         "errors": [],
         "blockers": [
           "full_symbol_name_kind_location_sets_not_persisted",
-          "native_command_contains_placeholder",
           "native_or_proxy_remeasurement_command_not_recorded",
           "proxy_denominator_not_full_semantic_truth"
         ],
@@ -17725,12 +17724,11 @@
             "atlasReplayReady": true,
             "graphifyReplayReady": true,
             "nativeRemeasurementCandidateReady": true,
-            "nativeRemeasurementCandidateExecutableReady": false,
+            "nativeRemeasurementCandidateExecutableReady": true,
             "nativeRemeasurementReady": false,
             "fullRemeasurementReady": false,
             "blockers": [
               "native_or_proxy_remeasurement_command_not_recorded",
-              "native_command_contains_placeholder",
               "proxy_denominator_not_full_semantic_truth",
               "full_symbol_name_kind_location_sets_not_persisted"
             ],
@@ -17744,11 +17742,9 @@
               "(cd work/razor/01-soundaranbu__Razor.Templating.Core && uv tool run --from graphifyy graphify update .)"
             ],
             "nativeRemeasurementCandidateCommands": [
-              "python3 <razor directive counter> work/razor/01-soundaranbu__Razor.Templating.Core"
+              "python3 scripts/native-baselines/razor_stats.py work/razor/01-soundaranbu__Razor.Templating.Core"
             ],
-            "nativeRemeasurementCandidateBlockers": [
-              "native_command_contains_placeholder"
-            ],
+            "nativeRemeasurementCandidateBlockers": [],
             "nativeRemeasurementCommands": []
           },
           {
@@ -17765,12 +17761,11 @@
             "atlasReplayReady": true,
             "graphifyReplayReady": true,
             "nativeRemeasurementCandidateReady": true,
-            "nativeRemeasurementCandidateExecutableReady": false,
+            "nativeRemeasurementCandidateExecutableReady": true,
             "nativeRemeasurementReady": false,
             "fullRemeasurementReady": false,
             "blockers": [
               "native_or_proxy_remeasurement_command_not_recorded",
-              "native_command_contains_placeholder",
               "proxy_denominator_not_full_semantic_truth",
               "full_symbol_name_kind_location_sets_not_persisted"
             ],
@@ -17784,11 +17779,9 @@
               "(cd work/razor/02-mikoskinen__Blazor.Animate && uv tool run --from graphifyy graphify update .)"
             ],
             "nativeRemeasurementCandidateCommands": [
-              "python3 <razor directive counter> work/razor/02-mikoskinen__Blazor.Animate"
+              "python3 scripts/native-baselines/razor_stats.py work/razor/02-mikoskinen__Blazor.Animate"
             ],
-            "nativeRemeasurementCandidateBlockers": [
-              "native_command_contains_placeholder"
-            ],
+            "nativeRemeasurementCandidateBlockers": [],
             "nativeRemeasurementCommands": []
           },
           {
@@ -17805,12 +17798,11 @@
             "atlasReplayReady": true,
             "graphifyReplayReady": true,
             "nativeRemeasurementCandidateReady": true,
-            "nativeRemeasurementCandidateExecutableReady": false,
+            "nativeRemeasurementCandidateExecutableReady": true,
             "nativeRemeasurementReady": false,
             "fullRemeasurementReady": false,
             "blockers": [
               "native_or_proxy_remeasurement_command_not_recorded",
-              "native_command_contains_placeholder",
               "proxy_denominator_not_full_semantic_truth",
               "full_symbol_name_kind_location_sets_not_persisted"
             ],
@@ -17824,11 +17816,9 @@
               "(cd work/razor/03-mryderie__aspnet-core-htmx-example && uv tool run --from graphifyy graphify update .)"
             ],
             "nativeRemeasurementCandidateCommands": [
-              "python3 <razor directive counter> work/razor/03-mryderie__aspnet-core-htmx-example"
+              "python3 scripts/native-baselines/razor_stats.py work/razor/03-mryderie__aspnet-core-htmx-example"
             ],
-            "nativeRemeasurementCandidateBlockers": [
-              "native_command_contains_placeholder"
-            ],
+            "nativeRemeasurementCandidateBlockers": [],
             "nativeRemeasurementCommands": []
           }
         ]
@@ -27280,10 +27270,10 @@
       "validationRemeasurementAtlasReplayReadyRows": 105,
       "validationRemeasurementGraphifyReplayReadyRows": 105,
       "validationRemeasurementNativeCandidateRows": 105,
-      "validationRemeasurementNativeCandidateExecutableRows": 12,
+      "validationRemeasurementNativeCandidateExecutableRows": 15,
       "validationRemeasurementNativeReadyRows": 0,
       "validationRemeasurementFullReadyArtifacts": 0,
-      "validationRemeasurementNativePlaceholderRows": 75,
+      "validationRemeasurementNativePlaceholderRows": 72,
       "validationRemeasurementNativeEphemeralHelperRows": 57,
       "validationRemeasurementProxyOrDetectorArtifacts": 14,
       "precisionEvidenceHarness": true,
