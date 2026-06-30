@@ -37,7 +37,7 @@ test.describe("Atlas — The Benchmark Instrument", () => {
       // hero headline + ratios
       await expect(page.getByTestId("hero")).toBeVisible();
       await expect(
-        page.getByRole("heading", { name: /smallest useful picture of a codebase/i })
+        page.getByRole("heading", { name: /reads a sentence, not the whole file/i })
       ).toBeVisible();
       await expect(page.getByTestId("ratio-tokens")).toBeVisible();
       await expect(page.getByTestId("ratio-latency")).toBeVisible();

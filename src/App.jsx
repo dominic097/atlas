@@ -39,6 +39,8 @@ function shortSha(v) {
 }
 function langLabel(v) {
   if (v === "cpp") return "C++";
+  if (v === "javascript") return "JavaScript";
+  if (v === "typescript") return "TypeScript";
   if (v === "objc") return "Objective-C";
   if (v === "csharp") return "C#";
   if (v === "ejs") return "EJS";
@@ -290,7 +292,6 @@ function ConsoleBar({ data, active }) {
 function HeroReadout({ data }) {
   const core = data.summary.core;
   const liveLangs = data.summary.live.artifacts;
-  const detectorOnly = data.summary.live.detectorOnlyArtifacts;
   // Atlas's OWN per-query response size, straight from coreMatrix atlasTokens —
   // the hero identity. graphify's ratio is a supporting comparison, not this.
   const atlasTokensList = data.coreMatrix.map((r) => r.querySummary.atlasTokens).filter((v) => v != null);
@@ -313,6 +314,25 @@ function HeroReadout({ data }) {
   // graphify-anchored `graphifyRows`; read the new name with a back-compat fallback.
   const cov = data.summary.coverage;
   const comparableRows = cov.comparableRows ?? cov.graphifyRows;
+  // Per-query answer-size spread, derived from coreMatrix atlasTokens so the
+  // inline annotation can never drift from the figure: median + the language
+  // that owns each end of the 14–42 range.
+  const sortedTokens = [...atlasTokensList].sort((a, b) => a - b);
+  const tokMedian = sortedTokens.length
+    ? sortedTokens.length % 2
+      ? sortedTokens[(sortedTokens.length - 1) / 2]
+      : Math.round((sortedTokens[sortedTokens.length / 2 - 1] + sortedTokens[sortedTokens.length / 2]) / 2)
+    : tokMin;
+  const tokMinLang = data.coreMatrix.find((r) => r.querySummary.atlasTokens === tokMin)?.language;
+  const tokMaxLang = data.coreMatrix.find((r) => r.querySummary.atlasTokens === tokMax)?.language;
+  // The row that ACTUALLY owns the fastest cold index — its symbol/edge caption
+  // must come from this row, not a hardcoded language. (Go cold-indexes far
+  // slower than the fastest slice, so a fixed Go caption mislabels the figure.)
+  const fastestRow = data.coreMatrix.find((r) => r.atlas.metrics.cold_seconds === fastestIndex);
+  // Every benchmarked language is natively parsed: core matrix + live = the full
+  // native roster (matches the explorer's all-filter). A LANGUAGE count, kept
+  // deliberately distinct from the 39/39 comparable-deterministic-row denominator.
+  const nativeLangCount = core.languages + liveLangs;
   return (
     <section
       id="hero"
@@ -332,65 +352,71 @@ function HeroReadout({ data }) {
             className="mt-4 max-w-2xl text-balance font-semibold"
             style={{ fontSize: "clamp(34px,5vw,56px)", lineHeight: 1.02, letterSpacing: "-0.025em" }}
           >
-            Atlas gives developers and coding agents the smallest useful picture of a codebase.
+            Your agent reads a sentence, not the whole file.
           </h1>
           <p className="mt-5 max-w-xl" style={{ fontSize: 15, lineHeight: 1.6, color: "var(--muted)" }}>
-            A code-intelligence engine that indexes a repo into a local symbol/call graph and hands any developer or
-            SDLC agent — coding, refactoring, debugging, review — the exact slice they need over CLI, MCP and SDK. No
-            model in the loop, so it stays deterministic and your code never leaves the machine.
+            Atlas indexes a repo into a local symbol and call graph, then answers any context query — a symbol&rsquo;s
+            definition, callers, callees and imports — in a couple dozen tokens. That precise slice goes to your coding,
+            refactoring, debugging or review agent over CLI, MCP or SDK. No whole-file dumps flooding the context window,
+            no model in the loop, no code leaving the machine.
           </p>
 
-          {/* Atlas's OWN headline: the response size it hands an agent + how fast
-              it indexes + how broadly it matches native coverage. */}
-          <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2">
-            <div className="min-w-0">
-              <div className="kicker">Per context query</div>
-              <div className="mt-2 flex items-baseline gap-2">
-                <span
-                  data-testid="ratio-tokens"
-                  className="mono tnum"
-                  aria-label={`${tokMin} to ${tokMax} response tokens per context query`}
-                  style={{ fontSize: "clamp(40px,5.5vw,68px)", lineHeight: 0.95, letterSpacing: "-0.03em", fontWeight: 600, color: "var(--primary)" }}
-                >
-                  {tokMin}–{tokMax}
-                </span>
-                <span className="mono" style={{ fontSize: 14, color: "var(--muted)" }}>tok</span>
-              </div>
-              <div className="mono mt-1" style={{ fontSize: 12, color: "var(--faint)" }}>
-                response tokens Atlas hands the agent · per query
-              </div>
+          {/* PRIMARY — the answer size Atlas hands an agent, the hero's center of
+              gravity. Full width, dominant, with the self-referential anchor that
+              finally gives the 14–42 figure meaning, plus the measured spread. */}
+          <div className="mt-10 min-w-0">
+            <div className="kicker">The whole answer · per context query</div>
+            <div className="mt-2 flex items-baseline gap-2.5">
+              <span
+                data-testid="ratio-tokens"
+                className="mono tnum"
+                aria-label={`${tokMin} to ${tokMax} response tokens per context query`}
+                style={{ fontSize: "clamp(46px,7vw,82px)", lineHeight: 0.92, letterSpacing: "-0.035em", fontWeight: 600, color: "var(--primary)" }}
+              >
+                {tokMin}–{tokMax}
+              </span>
+              <span className="mono" style={{ fontSize: 16, color: "var(--muted)" }}>tok</span>
             </div>
-            <div className="min-w-0">
-              <div className="kicker">Cold index</div>
-              <div className="mt-2 flex items-baseline gap-2">
-                <span
-                  data-testid="ratio-latency"
-                  className="mono tnum"
-                  aria-label={`fastest cold index ${fastestIndex} seconds`}
-                  style={{ fontSize: "clamp(40px,5.5vw,68px)", lineHeight: 0.95, letterSpacing: "-0.03em", fontWeight: 600, color: "var(--secondary)" }}
-                >
-                  {fastestIndex.toFixed(2)}
-                </span>
-                <span className="mono" style={{ fontSize: 14, color: "var(--muted)" }}>s</span>
-              </div>
-              <div className="mono mt-1" style={{ fontSize: 12, color: "var(--faint)" }}>
-                fastest cold index · {num(data.coreMatrix.find((r) => r.language === "go")?.atlas.metrics.symbols)} symbols, {num(data.coreMatrix.find((r) => r.language === "go")?.atlas.metrics.edges)} edges (Go)
-              </div>
+            <p className="mt-2.5 max-w-lg" style={{ fontSize: 13.5, lineHeight: 1.5, color: "var(--text)" }}>
+              One symbol&rsquo;s full neighborhood — defs, callers, callees, imports — in fewer tokens than this sentence.
+            </p>
+            <div className="mono mt-1.5" style={{ fontSize: 11.5, color: "var(--faint)", letterSpacing: "0.01em" }}>
+              median {tokMedian} · {langLabel(tokMinLang)} floor {tokMin} · {langLabel(tokMaxLang)} ceiling {tokMax}
             </div>
           </div>
 
-          {/* native-parity headline — Atlas standing WITH native indexers.
-              Two distinct facts, not one mixed denominator: every live language
-              sits at/above parity, AND every comparable deterministic row does. */}
+          {/* SECONDARY — cold index that stands the answers up. Caption derived
+              from the row that ACTUALLY owns the fastest index, never hardcoded. */}
+          <div className="mt-8 min-w-0">
+            <div className="kicker">Cold index · ready to answer</div>
+            <div className="mt-2 flex items-baseline gap-2">
+              <span
+                data-testid="ratio-latency"
+                className="mono tnum"
+                aria-label={`fastest cold index ${fastestIndex} seconds`}
+                style={{ fontSize: "clamp(34px,4.5vw,54px)", lineHeight: 0.95, letterSpacing: "-0.03em", fontWeight: 600, color: "var(--secondary)" }}
+              >
+                {fastestIndex.toFixed(2)}
+              </span>
+              <span className="mono" style={{ fontSize: 14, color: "var(--muted)" }}>s</span>
+            </div>
+            <div className="mono mt-1" style={{ fontSize: 12, color: "var(--faint)" }}>
+              fastest cold index · {num(fastestRow?.atlas.metrics.symbols)} symbols, {num(fastestRow?.atlas.metrics.edges)} edges ({langLabel(fastestRow?.language)})
+            </div>
+          </div>
+
+          {/* ALL-NATIVE breadth — one story, no core/live/detector split. The
+              language count and the comparable-row count are kept as two clearly
+              distinct denominators, never blurred into one. */}
           <div className="mt-7 hairline" style={{ paddingTop: 18 }}>
-            <p className="max-w-xl" style={{ fontSize: 13, lineHeight: 1.5, color: "var(--text)" }}>
-              <span className="num" style={{ color: "var(--success)", fontWeight: 600 }}>
-                {parityLangs}/{liveCovered}
-              </span>{" "}
-              live languages meet or beat native SCIP/LSP definition coverage — none below ×1.0; across{" "}
-              <span className="num" style={{ color: "var(--success)", fontWeight: 600 }}>
-                {cov.deterministicRowsCovered}/{comparableRows}
-              </span>{" "}
+            <p className="max-w-xl" style={{ fontSize: 13, lineHeight: 1.55, color: "var(--text)" }}>
+              All{" "}
+              <span className="num" style={{ color: "var(--success)", fontWeight: 600 }}>{nativeLangCount}</span>{" "}
+              languages parsed natively — real tree-sitter / compiler AST or a dedicated native source parser, zero regex
+              or smoke fallback.{" "}
+              <span className="num" style={{ color: "var(--success)", fontWeight: 600 }}>{parityLangs}/{liveCovered}</span>{" "}
+              live languages meet or beat native SCIP/LSP definition coverage — none below ×1.0 — across{" "}
+              <span className="num" style={{ color: "var(--success)", fontWeight: 600 }}>{cov.deterministicRowsCovered}/{comparableRows}</span>{" "}
               comparable deterministic rows.
             </p>
           </div>
@@ -405,11 +431,12 @@ function HeroReadout({ data }) {
               vs graphify
             </span>
             <span style={{ fontSize: 13, color: "var(--muted)" }}>
-              <span className="num" style={{ color: "var(--primary)", fontWeight: 600 }}>{core.tokenRatio.toFixed(2)}×</span> fewer tokens ·{" "}
+              the same answer,{" "}
+              <span className="num" style={{ color: "var(--primary)", fontWeight: 600 }}>{core.tokenRatio.toFixed(2)}×</span> lighter ·{" "}
               <span className="num" style={{ color: "var(--secondary)", fontWeight: 600 }}>{core.latencyRatio.toFixed(2)}×</span> faster
             </span>
             <span className="mono" style={{ fontSize: 11, color: "var(--faint)" }}>
-              the closest portable code-graph tool · 1 of {toolCount} benchmarked
+              1 of {toolCount} tools benchmarked · over {core.equivalentRows} comparable query rows
             </span>
           </div>
 
@@ -418,15 +445,15 @@ function HeroReadout({ data }) {
             className="mt-7 grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-4"
             style={{ borderTop: "1px solid var(--line)", paddingTop: 20 }}
           >
-            <StatTick label="Languages" value={`${core.languages} core · ${liveLangs} live`} sub={`${detectorOnly} detector-only`} />
-            <StatTick label="Native parity" value={`${cov.deterministicRowsCovered}/${comparableRows}`} sub="comparable rows ≥ native" />
+            <StatTick label="Languages" value={`${nativeLangCount} native`} sub="tree-sitter · compiler AST · zero fallback" />
+            <StatTick label="Native parity" value={`${cov.deterministicRowsCovered}/${comparableRows}`} sub="comparable rows ≥ native SCIP/LSP" />
             <StatTick label="Tools benchmarked" value={toolCount} sub="incl. SCIP / LSP / graphify" />
             <StatTick label="Evidence" value={data.sourceArtifacts.length} sub="downloadable artifacts" />
           </div>
 
           <div className="mt-9 flex flex-wrap gap-3">
-            <a href="#vs-native" className="btn btn-primary focusring" style={{ textDecoration: "none" }}>
-              See the coverage <ArrowRight className="h-4 w-4" aria-hidden />
+            <a href="#vs-graphify" className="btn btn-primary focusring" style={{ textDecoration: "none" }}>
+              See the proof <ArrowRight className="h-4 w-4" aria-hidden />
             </a>
             <a href="data/benchmark-data.json" download data-source-artifact className="btn btn-ghost focusring" style={{ textDecoration: "none" }}>
               Download evidence <Download className="h-4 w-4" aria-hidden />
