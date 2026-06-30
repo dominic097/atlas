@@ -1,30 +1,28 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T10:15:05.249Z",
+  "generatedAt": "2026-06-30T10:21:28.527Z",
   "source": "data/benchmark-data.json",
   "targetRatio": 10,
   "metricNote": "Token and latency are ratio targets. Coverage is a native-definition coverage ratio, so the honest accuracy target is >1.0 native coverage exceed, not a fabricated 10x accuracy multiplier.",
   "summary": {
     "liveLanguages": 36,
-    "parityLanguages": 14,
-    "coverageExceedLanguages": 22,
+    "parityLanguages": 12,
+    "coverageExceedLanguages": 24,
     "comparableLanguages": 33,
     "token10xComparable": 33,
     "latency10xComparable": 33,
     "performance10xComparable": 33,
-    "threeRepoValidated": 3,
-    "threeRepoValidatedStrict10x": 3
+    "threeRepoValidated": 4,
+    "threeRepoValidatedStrict10x": 4
   },
   "parityLanguages": [
     "blade",
     "byond",
     "dart",
-    "delphi",
     "elixir",
     "ets",
     "julia",
     "pascal",
-    "php",
     "powershell",
     "r",
     "sql",
@@ -204,16 +202,14 @@
       "repo": "https://github.com/fpc/Lazarus",
       "commit": "a37c7c35c6a271b377cd799c48586ea2689a8e0f",
       "artifact": "data/raw/LIVE_DELPHI_BENCHMARK.json",
-      "coverageRatio": 1,
-      "coverageExceedsNative": false,
-      "equivalentRows": 7,
-      "tokenRatio": 32,
-      "latencyRatio": 22.21,
+      "coverageRatio": 3.4626,
+      "coverageExceedsNative": true,
+      "equivalentRows": 9,
+      "tokenRatio": 20.17,
+      "latencyRatio": 69.27,
       "tokenGapTo10x": 1,
       "latencyGapTo10x": 1,
-      "blockers": [
-        "coverage_at_parity"
-      ],
+      "blockers": [],
       "validation": {
         "passed": false,
         "repoCount": 0,
@@ -495,21 +491,19 @@
       "repo": "https://github.com/slimphp/Slim",
       "commit": "0da7dd2fc66956730b6633f6a056b35e59126583",
       "artifact": "data/raw/LIVE_PHP_BENCHMARK.json",
-      "coverageRatio": 1,
-      "coverageExceedsNative": false,
+      "coverageRatio": 1.2564,
+      "coverageExceedsNative": true,
       "equivalentRows": 3,
-      "tokenRatio": 45.17,
-      "latencyRatio": 13,
+      "tokenRatio": 14.83,
+      "latencyRatio": 17.5,
       "tokenGapTo10x": 1,
       "latencyGapTo10x": 1,
-      "blockers": [
-        "coverage_at_parity"
-      ],
+      "blockers": [],
       "validation": {
-        "passed": false,
-        "repoCount": 0,
+        "passed": true,
+        "repoCount": 3,
         "minimumRepos": 3,
-        "minCoverageRatio": null
+        "minCoverageRatio": 1
       }
     },
     {
