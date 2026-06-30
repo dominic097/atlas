@@ -410,13 +410,14 @@
     "coverage_scope": "Full PascalScript Source target; the Pascal declaration counter covers 6,431 Pascal function/type/unit definitions, while Atlas also indexes 43 Delphi package/dependency/unit definitions from .lpk package files in the same Source target. Batch/config/image/text document symbols are reported separately and excluded from this code-target ratio."
   },
   "optimization": {
-    "cycles_run": 4,
-    "stop_reason": "Pascal live benchmark now exceeds the Pascal-only declaration counter by reporting full PascalScript Source code-target coverage: 6,431 Pascal definitions plus 43 Delphi package/dependency/unit definitions, with eleven equivalent Pascal/Delphi package rows above the 10x token and latency targets.",
+    "cycles_run": 5,
+    "stop_reason": "Pascal now exceeds the Pascal-only declaration counter by reporting PascalScript Source code-target coverage: 6,431 Pascal function/type/unit definitions plus 43 Delphi package/dependency/unit definitions; three public Pascal/Lazarus repos validate parser coverage with a conservative independent counter; query rows remain above 10x token and latency targets.",
     "cycle_notes": [
       "cycle 1: remobjects/pascalscript probe showed the generic Pascal rule missed constructor/destructor and `class procedure/function` declarations.",
       "cycle 2: after widening Pascal declaration parsing, Atlas matched the benchmark-owned declaration counter on the live Source slice.",
       "cycle 3: expanded the query set with Delphi package/dependency/unit rows (`PascalScriptFCL`, `PascalScriptLCL`, `uPSRuntime`, `uPSCompiler`, `uPSComponent`, `LCL`, `PascalScript_Core_Reg`) from the same Source target to verify the additional Atlas definitions are queryable.",
-      "cycle 4: refreshed the clean artifact with graphify-out excluded from Atlas indexing; Atlas indexes 6,474 Pascal+Delphi code-target definitions versus the Pascal declaration counter's 6,431 definitions, excluding batch/config/image/text document symbols from the coverage ratio."
+      "cycle 4: refreshed the clean artifact with graphify-out excluded from Atlas indexing; Atlas indexes 6,474 Pascal+Delphi code-target definitions versus the Pascal declaration counter's 6,431 definitions, excluding batch/config/image/text document symbols from the coverage ratio.",
+      "cycle 5: added three public Pascal validation targets: PascalScript Source, Lazarus LCL, and transmission-remote-gui/transgui; Atlas exceeded the conservative independent declaration counter on all three."
     ]
   },
   "query_warmup": {
@@ -720,5 +721,43 @@
     "commit": "21d5334",
     "date": "2026-06-30T08:50:32Z",
     "measurement_note": "Clean warm-serve measurement from 25-sample medians with graphify-out removed before Atlas indexing; Graphify was rebuilt afterward only for comparison rows. Query set includes Pascal declarations plus Delphi package/dependency/unit code-target symbols from the same Source target."
+  },
+  "multi_repo_validation": {
+    "minimum_repos": 3,
+    "status": "passed",
+    "generated_at": "2026-06-30T10:37:48Z",
+    "scope": "Pascal parser validation uses three public Pascal/Lazarus targets and a conservative independent declaration counter for units/packages, concrete type declarations, and implementation-side procedure/function declarations. The primary artifact keeps the benchmark-owned Pascal declaration counter as the exact native baseline; companion Delphi package symbols are reported separately.",
+    "repos": [
+      {
+        "repo": "https://github.com/remobjects/pascalscript",
+        "commit": "2c826cd803a3c0417354fa37b2417f21993ce4ac",
+        "target_path": "/private/tmp/atlas-pascal-3repo-1782815868/pascalscript/repo/Source",
+        "atlas_definitions": 6431,
+        "native_definitions": 5315,
+        "coverage_ratio": 1.21,
+        "ok": true,
+        "note": "93 Pascal source/package files counted; Atlas counts {\"function\":6072,\"type\":274,\"unit\":85}; conservative native counter counts {\"unit\":85,\"type\":247,\"function\":4983}; companion Delphi symbols in target: 43."
+      },
+      {
+        "repo": "https://github.com/fpc/Lazarus",
+        "commit": "e1cc57bb27e48541ffe4bf66c78a8dddfc4f6630",
+        "target_path": "/private/tmp/atlas-pascal-3repo-1782815868/lazarus-lcl/repo/lcl",
+        "atlas_definitions": 98262,
+        "native_definitions": 59399,
+        "coverage_ratio": 1.6543,
+        "ok": true,
+        "note": "1024 Pascal source/package files counted; Atlas counts {\"function\":92656,\"type\":4997,\"unit\":609}; conservative native counter counts {\"unit\":592,\"type\":8217,\"function\":50590}; companion Delphi symbols in target: 684."
+      },
+      {
+        "repo": "https://github.com/transmission-remote-gui/transgui",
+        "commit": "da71b860d4920f7ab847a48bd8d804725ddbad7b",
+        "target_path": "/private/tmp/atlas-pascal-3repo-1782815868/transgui/repo",
+        "atlas_definitions": 5540,
+        "native_definitions": 3127,
+        "coverage_ratio": 1.7717,
+        "ok": true,
+        "note": "75 Pascal source/package files counted; Atlas counts {\"function\":5290,\"type\":181,\"unit\":69}; conservative native counter counts {\"unit\":67,\"type\":173,\"function\":2887}; companion Delphi symbols in target: 1460."
+      }
+    ]
   }
 }
