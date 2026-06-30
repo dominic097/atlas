@@ -409,9 +409,9 @@
       "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-delphi-lazarus/atlas.db --format plain --repo ide explain AboutForm",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain AboutForm",
-      "atlas_tokens": 6,
+      "atlas_tokens": 2,
       "graphify_tokens": 50,
-      "atlas_ms": 36.756,
+      "atlas_ms": 14.894,
       "graphify_ms": 357.847,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
@@ -429,6 +429,13 @@
         "  Degree:    1",
         "",
         "Connections (1):"
+      ],
+      "atlas_ms_samples": [
+        15.128,
+        14.761,
+        14.777,
+        14.894,
+        14.947
       ]
     },
     {
@@ -436,9 +443,9 @@
       "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-delphi-lazarus/atlas.db --format plain --repo ide explain FormClose",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain FormClose",
-      "atlas_tokens": 9,
+      "atlas_tokens": 4,
       "graphify_tokens": 47,
-      "atlas_ms": 38.859,
+      "atlas_ms": 16.306,
       "graphify_ms": 357.931,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
@@ -456,6 +463,13 @@
         "  Degree:    1",
         "",
         "Connections (1):"
+      ],
+      "atlas_ms_samples": [
+        16.528,
+        16.306,
+        16.0,
+        16.329,
+        16.17
       ]
     },
     {
@@ -463,9 +477,9 @@
       "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-delphi-lazarus/atlas.db --format plain --repo ide explain Notebook",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Notebook",
-      "atlas_tokens": 7,
+      "atlas_tokens": 3,
       "graphify_tokens": 53,
-      "atlas_ms": 37.102,
+      "atlas_ms": 15.025,
       "graphify_ms": 351.196,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
@@ -483,6 +497,13 @@
         "  Degree:    1",
         "",
         "Connections (1):"
+      ],
+      "atlas_ms_samples": [
+        14.93,
+        14.742,
+        15.025,
+        15.37,
+        15.486
       ]
     },
     {
@@ -490,9 +511,9 @@
       "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-delphi-lazarus/atlas.db --format plain --repo ide explain TPageControl",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain TPageControl",
-      "atlas_tokens": 9,
+      "atlas_tokens": 4,
       "graphify_tokens": 71,
-      "atlas_ms": 45.704,
+      "atlas_ms": 15.983,
       "graphify_ms": 355.692,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
@@ -510,6 +531,13 @@
         "  Degree:    3",
         "",
         "Connections (3):"
+      ],
+      "atlas_ms_samples": [
+        15.659,
+        15.35,
+        16.347,
+        15.983,
+        16.383
       ]
     },
     {
@@ -517,9 +545,9 @@
       "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-delphi-lazarus/atlas.db --format plain --repo ide explain IdeProject",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain IdeProject",
-      "atlas_tokens": 9,
+      "atlas_tokens": 3,
       "graphify_tokens": 50,
-      "atlas_ms": 36.465,
+      "atlas_ms": 16.628,
       "graphify_ms": 355.333,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
@@ -537,6 +565,13 @@
         "  Degree:    1",
         "",
         "Connections (1):"
+      ],
+      "atlas_ms_samples": [
+        16.49,
+        16.396,
+        16.628,
+        16.74,
+        17.351
       ]
     },
     {
@@ -544,9 +579,9 @@
       "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-delphi-lazarus/atlas.db --format plain --repo ide explain BuildManager",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain BuildManager",
-      "atlas_tokens": 8,
+      "atlas_tokens": 3,
       "graphify_tokens": 268,
-      "atlas_ms": 36.586,
+      "atlas_ms": 16.453,
       "graphify_ms": 359.216,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
@@ -564,6 +599,13 @@
         "  Degree:    18",
         "",
         "Connections (18):"
+      ],
+      "atlas_ms_samples": [
+        16.453,
+        16.293,
+        16.119,
+        16.62,
+        16.597
       ]
     },
     {
@@ -571,9 +613,9 @@
       "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-delphi-lazarus/atlas.db --format plain --repo ide explain IdePackager",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain IdePackager",
-      "atlas_tokens": 9,
+      "atlas_tokens": 3,
       "graphify_tokens": 165,
-      "atlas_ms": 37.451,
+      "atlas_ms": 16.714,
       "graphify_ms": 350.304,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
@@ -591,7 +633,20 @@
         "  Degree:    10",
         "",
         "Connections (10):"
+      ],
+      "atlas_ms_samples": [
+        16.939,
+        16.665,
+        18.659,
+        16.046,
+        16.714
       ]
     }
-  ]
+  ],
+  "atlas_cli": {
+    "version": "v0.1.26-3-g1760d93",
+    "commit": "1760d93",
+    "date": "2026-06-30T06:52:54Z",
+    "measurement_note": "Atlas query rows refreshed from five-sample medians after terse explain count fast path; graphify rows retained as the saved comparison baseline."
+  }
 }

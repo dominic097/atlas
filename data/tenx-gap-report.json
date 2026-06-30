@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T05:44:08.091Z",
+  "generatedAt": "2026-06-30T06:56:05.045Z",
   "source": "data/benchmark-data.json",
   "targetRatio": 10,
   "metricNote": "Token and latency are ratio targets. Coverage is a native-definition coverage ratio, so the honest accuracy target is >1.0 native coverage exceed, not a fabricated 10x accuracy multiplier.",
@@ -10,8 +10,8 @@
     "coverageExceedLanguages": 7,
     "comparableLanguages": 33,
     "token10xComparable": 20,
-    "latency10xComparable": 0,
-    "performance10xComparable": 0
+    "latency10xComparable": 2,
+    "performance10xComparable": 2
   },
   "parityLanguages": [
     "apex",
@@ -191,13 +191,12 @@
       "coverageRatio": 1,
       "coverageExceedsNative": false,
       "equivalentRows": 7,
-      "tokenRatio": 12.35,
-      "latencyRatio": 9.25,
+      "tokenRatio": 32,
+      "latencyRatio": 22.21,
       "tokenGapTo10x": 1,
-      "latencyGapTo10x": 1.08,
+      "latencyGapTo10x": 1,
       "blockers": [
-        "coverage_at_parity",
-        "latency_ratio_below_10x"
+        "coverage_at_parity"
       ]
     },
     {
@@ -533,13 +532,12 @@
       "coverageRatio": 1,
       "coverageExceedsNative": false,
       "equivalentRows": 5,
-      "tokenRatio": 38.06,
-      "latencyRatio": 9.16,
+      "tokenRatio": 67.67,
+      "latencyRatio": 10.45,
       "tokenGapTo10x": 1,
-      "latencyGapTo10x": 1.09,
+      "latencyGapTo10x": 1,
       "blockers": [
-        "coverage_at_parity",
-        "latency_ratio_below_10x"
+        "coverage_at_parity"
       ]
     },
     {

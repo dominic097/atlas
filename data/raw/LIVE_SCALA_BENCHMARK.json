@@ -202,9 +202,9 @@
       "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-scala-cats/atlas.db --format plain --repo scala explain Functor",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Functor",
-      "atlas_tokens": 6,
+      "atlas_tokens": 3,
       "graphify_tokens": 308,
-      "atlas_ms": 15.963,
+      "atlas_ms": 14.756,
       "graphify_ms": 159.231,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
@@ -222,6 +222,13 @@
         "  Degree:    90",
         "",
         "Connections (90):"
+      ],
+      "atlas_ms_samples": [
+        15.942,
+        14.756,
+        14.447,
+        14.341,
+        14.778
       ]
     },
     {
@@ -229,16 +236,16 @@
       "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-scala-cats/atlas.db --format plain --repo scala explain Applicative",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Applicative",
-      "atlas_tokens": 9,
+      "atlas_tokens": 4,
       "graphify_tokens": 272,
-      "atlas_ms": 16.96,
+      "atlas_ms": 16.489,
       "graphify_ms": 160.201,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Applicative t@Applicative:39 df2 d1"
+        "Applicative t@Applicative:39 df2 d7"
       ],
       "graphify_stdout_head": [
         "Node: Applicative",
@@ -249,6 +256,13 @@
         "  Degree:    40",
         "",
         "Connections (40):"
+      ],
+      "atlas_ms_samples": [
+        15.983,
+        16.489,
+        17.281,
+        21.93,
+        16.166
       ]
     },
     {
@@ -256,16 +270,16 @@
       "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-scala-cats/atlas.db --format plain --repo scala explain Monad",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Monad",
-      "atlas_tokens": 6,
+      "atlas_tokens": 4,
       "graphify_tokens": 291,
-      "atlas_ms": 19.039,
+      "atlas_ms": 14.757,
       "graphify_ms": 160.094,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Monad t@Monad:33 df2 c1 d2"
+        "Monad t@Monad:33 df2 c1"
       ],
       "graphify_stdout_head": [
         "Node: Monad",
@@ -276,6 +290,13 @@
         "  Degree:    55",
         "",
         "Connections (55):"
+      ],
+      "atlas_ms_samples": [
+        14.849,
+        14.637,
+        15.438,
+        14.757,
+        14.641
       ]
     },
     {
@@ -283,16 +304,16 @@
       "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-scala-cats/atlas.db --format plain --repo scala explain Traverse",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Traverse",
-      "atlas_tokens": 7,
+      "atlas_tokens": 4,
       "graphify_tokens": 91,
-      "atlas_ms": 17.335,
+      "atlas_ms": 15.574,
       "graphify_ms": 158.165,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Traverse t@Traverse:40 df2 d1"
+        "Traverse t@Traverse:40 df2 d5"
       ],
       "graphify_stdout_head": [
         "Node: traverse()",
@@ -303,6 +324,13 @@
         "  Degree:    6",
         "",
         "Connections (6):"
+      ],
+      "atlas_ms_samples": [
+        15.617,
+        15.176,
+        15.574,
+        15.826,
+        15.325
       ]
     },
     {
@@ -310,9 +338,9 @@
       "atlas_query_mode": "explain",
       "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-scala-cats/atlas.db --format plain --repo scala explain Eval",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Eval",
-      "atlas_tokens": 4,
+      "atlas_tokens": 3,
       "graphify_tokens": 256,
-      "atlas_ms": 17.964,
+      "atlas_ms": 14.929,
       "graphify_ms": 161.45,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
@@ -330,7 +358,20 @@
         "  Degree:    153",
         "",
         "Connections (153):"
+      ],
+      "atlas_ms_samples": [
+        14.774,
+        14.832,
+        15.045,
+        14.929,
+        15.054
       ]
     }
-  ]
+  ],
+  "atlas_cli": {
+    "version": "v0.1.26-3-g1760d93",
+    "commit": "1760d93",
+    "date": "2026-06-30T06:52:54Z",
+    "measurement_note": "Atlas query rows refreshed from five-sample medians after terse explain count fast path; graphify rows retained as the saved comparison baseline."
+  }
 }
