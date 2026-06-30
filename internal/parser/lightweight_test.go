@@ -1917,7 +1917,11 @@ func TestParseByondDefinitions(t *testing.T) {
 
 /mob/living
 	name = "living mob"
+	var/health = 100
+	var/list/status_effects
+	VAR_FINAL/incapacitated = NONE
 	Initialize(mapload)
+		var/local_damage = 1
 		if(mapload)
 			update_transform()
 	proc/prepare_data_huds()
@@ -1946,6 +1950,9 @@ proc/global_helper()
 	}
 	for name, kind := range map[string]string{
 		"/mob/living":                              "type",
+		"/mob/living/health":                       "variable",
+		"/mob/living/status_effects":               "variable",
+		"/mob/living/incapacitated":                "variable",
 		"/mob/living/Initialize":                   "method",
 		"/mob/living/prepare_data_huds":            "method",
 		"/mob/living/Destroy":                      "method",
@@ -1959,7 +1966,7 @@ proc/global_helper()
 			t.Fatalf("missing BYOND %s %q; symbols=%+v", kind, name, res.Symbols)
 		}
 	}
-	for _, unexpected := range []string{"if", "update_transform", "/mob/living/commented_out"} {
+	for _, unexpected := range []string{"if", "update_transform", "local_damage", "/mob/living/local_damage", "/mob/living/commented_out"} {
 		if findSymbol(res.Symbols, unexpected) != nil {
 			t.Fatalf("unexpected BYOND false-positive %q; symbols=%+v", unexpected, res.Symbols)
 		}

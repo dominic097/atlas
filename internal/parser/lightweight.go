@@ -929,6 +929,10 @@ func parseByondDM(path, text string) ([]symbolDraft, []string) {
 			continue
 		}
 		owner := typeStack[len(typeStack)-1].path
+		if variableName, ok := byondVariableName(trimmed); ok {
+			add("variable", owner+"/"+variableName, lineNo, "byond_dm_member_variable")
+			continue
+		}
 		if match := byondRelativeProcRe.FindStringSubmatch(trimmed); len(match) > 0 {
 			addMethod(owner, match[2], lineNo, "byond_dm_relative_proc")
 			continue
@@ -1071,6 +1075,40 @@ func byondAbsoluteTypePath(line string) (string, bool) {
 func byondExcludedOwnerPath(path string) bool {
 	path = byondNormalizePath(path)
 	return path == "" || strings.HasSuffix(path, "/var") || strings.Contains(path, "/var/")
+}
+
+func byondVariableName(line string) (string, bool) {
+	lhs := strings.TrimSpace(strings.SplitN(line, "=", 2)[0])
+	lower := strings.ToLower(lhs)
+	switch {
+	case strings.HasPrefix(lower, "var/"):
+		return byondLeafIdentifier(lhs)
+	case strings.HasPrefix(lhs, "VAR_") && strings.Contains(lhs, "/"):
+		return byondLeafIdentifier(lhs)
+	default:
+		return "", false
+	}
+}
+
+func byondLeafIdentifier(path string) (string, bool) {
+	path = strings.TrimSpace(path)
+	if path == "" || strings.ContainsAny(path, " ()[]{}") {
+		return "", false
+	}
+	parts := strings.Split(path, "/")
+	if len(parts) == 0 {
+		return "", false
+	}
+	name := parts[len(parts)-1]
+	if name == "" || byondControlWords[strings.ToLower(name)] {
+		return "", false
+	}
+	for i, r := range name {
+		if !(r == '_' || r >= 'A' && r <= 'Z' || r >= 'a' && r <= 'z' || i > 0 && r >= '0' && r <= '9') {
+			return "", false
+		}
+	}
+	return name, true
 }
 
 func byondNormalizePath(path string) string {
