@@ -1,6 +1,6 @@
 # Public Repo Validation Manifest
 
-Generated: 2026-06-30T18:09:48.637Z
+Generated: 2026-06-30T18:23:18.382Z
 
 This manifest is regenerated from committed `data/raw/LIVE_*_BENCHMARK.json` artifacts by `scripts/public-repo-validation-harness.mjs`.
 It validates the recorded public-repo evidence and preserves clone/checkout replay commands for every pinned validation repo.

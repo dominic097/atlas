@@ -532,7 +532,16 @@ function classifyTruthRisk(row) {
   const tool = String(row.native?.tool || "").toLowerCase();
   if (["json", "markdown"].includes(row.language)) return "structured";
   if (row.detectorOnly || ["ejs", "ets", "r"].includes(row.language)) return "high";
-  if (tool.includes("source-counter") || tool.includes("directive-counter") || tool.includes("counter")) return "medium";
+  if (
+    tool.includes("source-counter") ||
+    tool.includes("directive-counter") ||
+    tool.includes("template-counter") ||
+    tool.includes("regex-counter") ||
+    tool.includes("counter") ||
+    tool.includes("proxy") ||
+    tool.includes("project") ||
+    tool === "bash-n"
+  ) return "medium";
   if (!row.multiRepoValidation?.passed) return "medium";
   if (Number(row.coverage?.ratio) > 5) return "medium";
   return "low";
@@ -544,6 +553,9 @@ function buildFinalAuditReport(dataset) {
   const pendingCode = liveCodeRows.filter((row) => !row.multiRepoValidation?.passed).map((row) => row.language);
   const publicValidation = dataset.publicRepoValidation || null;
   const publicValidationPassed = Boolean(publicValidation?.summary?.passed);
+  const validationRemeasurement = dataset.validationRemeasurement || null;
+  const validationRemeasurementPassed = Boolean(validationRemeasurement?.summary?.passed);
+  const validationRemeasurementSummary = validationRemeasurement?.summary || {};
   const precisionEvidence = dataset.precisionEvidence || null;
   const precisionEvidencePassed = Boolean(precisionEvidence?.summary?.passed);
   const precisionSummary = precisionEvidence?.summary || {};
@@ -619,6 +631,9 @@ function buildFinalAuditReport(dataset) {
     publicValidationPassed
       ? "The committed public-repo validation harness regenerates data/public-repo-validation-manifest.* from raw live artifacts and fails when a code language lacks passing three-repo evidence."
       : "The public-repo validation harness is still missing or failing; multi-repo validation remains raw-artifact evidence only.",
+    validationRemeasurementPassed
+      ? "The committed validation remeasurement readiness harness regenerates data/validation-remeasurement-manifest.* and separates Atlas/Graphify replay-ready validation rows from native/proxy rows that still lack executable per-repo commands."
+      : "The validation remeasurement readiness harness is still missing or failing; replay readiness remains inferred from the public-repo validation manifest.",
     precisionEvidencePassed
       ? "The committed precision-evidence harness regenerates data/precision-evidence-manifest.* from raw live artifacts and separates sampled symbol/location evidence from weaker kind-count-only rows."
       : "The precision-evidence harness is still missing or failing; precision remains described only by coverage and validation notes.",
@@ -650,11 +665,13 @@ function buildFinalAuditReport(dataset) {
       : []),
     {
       priority: "P1",
-      item: "Promote the committed public-repo validation manifest harness from artifact verification to full remeasurement for every native/proxy counter.",
+      item: validationRemeasurementPassed
+        ? "Implement execution mode for validation remeasurement: the readiness manifest proves pinned Atlas/Graphify replay rows, but native/proxy counters still need executable per-repo commands and persisted output sets."
+        : "Promote the committed public-repo validation manifest harness from artifact verification to full remeasurement for every native/proxy counter.",
     },
     {
       priority: "P1",
-      item: "Replace source-counter proxies for Apex, CUDA, Razor, BYOND, Blade, EJS, ETS, R, and structured/project surfaces with fuller compiler, LSP, tree-sitter, or parser-library denominators where available.",
+      item: "Replace the source-counter, proxy, detector-only, and structured/project denominators listed in the weak-truth table with fuller compiler, LSP, tree-sitter, or parser-library denominators where available.",
     },
     {
       priority: "P1",
@@ -700,6 +717,13 @@ function buildFinalAuditReport(dataset) {
       pendingCodeLanguages: pendingCode,
       publicRepoValidationHarness: publicValidationPassed,
       publicRepoValidationWarnings: publicValidation?.summary?.warnings ?? null,
+      validationRemeasurementHarness: validationRemeasurementPassed,
+      validationRemeasurementRepoRows: validationRemeasurementSummary.repoRows ?? null,
+      validationRemeasurementAtlasReplayReadyRows: validationRemeasurementSummary.atlasReplayReadyRows ?? null,
+      validationRemeasurementGraphifyReplayReadyRows: validationRemeasurementSummary.graphifyReplayReadyRows ?? null,
+      validationRemeasurementNativeReadyRows: validationRemeasurementSummary.nativeRemeasurementReadyRows ?? null,
+      validationRemeasurementFullReadyArtifacts: validationRemeasurementSummary.fullRemeasurementReadyArtifacts ?? null,
+      validationRemeasurementProxyOrDetectorArtifacts: validationRemeasurementSummary.proxyOrDetectorCodeArtifacts ?? null,
       precisionEvidenceHarness: precisionEvidencePassed,
       precisionNameLocationArtifacts: precisionSummary.sampledNameLocationArtifacts ?? null,
       precisionKindCountOnlyArtifacts: precisionSummary.kindCountOnlyArtifacts ?? null,
@@ -748,6 +772,28 @@ function buildFinalAuditReport(dataset) {
         latencyRatio: row.querySummary.latencyRatio,
       })),
       nearParityValidationRows: nearMisses,
+      validationRemeasurement: {
+        statement:
+          "The validation remeasurement manifest audits replay readiness for public validation rows. It proves pinned Atlas and Graphify replay commands can be reconstructed, but it does not execute native/proxy counters unless executable per-repo native commands are present in the artifacts.",
+        manifest: validationRemeasurement
+          ? {
+              generatedAt: validationRemeasurement.generatedAt,
+              summary: validationRemeasurementSummary,
+              blockers: (validationRemeasurement.languages || [])
+                .filter((row) => !row.fullRemeasurementReady)
+                .map((row) => ({
+                  language: row.language,
+                  toolClass: row.toolClass,
+                  risk: row.risk,
+                  repoCount: row.repoCount,
+                  atlasReplayReadyRows: row.atlasReplayReadyRows,
+                  graphifyReplayReadyRows: row.graphifyReplayReadyRows,
+                  nativeRemeasurementReadyRows: row.nativeRemeasurementReadyRows,
+                  blockers: row.blockers || [],
+                })),
+            }
+          : null,
+      },
       precisionEvidence: {
         statement:
           "The precision manifest is an artifact-level audit of what the raw benchmark JSON can prove today: sampled query rows with matching symbol names and locations, native-vs-Atlas kind-count maps, or count-only gaps. It is not a full 99% precision oracle.",
@@ -817,6 +863,12 @@ function renderFinalAuditMarkdown(report) {
   lines.push(`- Strict 10x live artifacts: ${report.summary.strict10x}/${report.summary.strict10xArtifacts}`);
   lines.push(`- Three-repo validated live artifacts: ${report.summary.threeRepoValidated}`);
   lines.push(`- Pending code languages: ${report.summary.pendingCodeLanguages.length ? report.summary.pendingCodeLanguages.join(", ") : "none"}`);
+  lines.push(`- Validation remeasurement harness: ${report.summary.validationRemeasurementHarness ? "present" : "missing"}`);
+  lines.push(`- Validation repo rows: ${report.summary.validationRemeasurementRepoRows ?? "n/a"}`);
+  lines.push(`- Atlas replay-ready validation rows: ${report.summary.validationRemeasurementAtlasReplayReadyRows ?? "n/a"}`);
+  lines.push(`- Graphify replay-ready validation rows: ${report.summary.validationRemeasurementGraphifyReplayReadyRows ?? "n/a"}`);
+  lines.push(`- Native/proxy command-ready validation rows: ${report.summary.validationRemeasurementNativeReadyRows ?? "n/a"}`);
+  lines.push(`- Full remeasurement-ready artifacts: ${report.summary.validationRemeasurementFullReadyArtifacts ?? "n/a"}`);
   lines.push(`- Precision evidence harness: ${report.summary.precisionEvidenceHarness ? "present" : "missing"}`);
   lines.push(`- Precision sampled name/location artifacts: ${report.summary.precisionNameLocationArtifacts ?? "n/a"}`);
   lines.push(`- Precision kind-count-only artifacts: ${report.summary.precisionKindCountOnlyArtifacts ?? "n/a"}`);
@@ -839,6 +891,29 @@ function renderFinalAuditMarkdown(report) {
   lines.push("", "## Ground Truth Closeness", "");
   lines.push(report.groundTruthCloseness.statement, "");
   lines.push(`Low-risk live languages: ${report.groundTruthCloseness.lowRiskLiveLanguages.join(", ") || "none"}.`, "");
+  lines.push("### Validation Remeasurement Readiness", "");
+  lines.push(report.groundTruthCloseness.validationRemeasurement.statement, "");
+  if (report.groundTruthCloseness.validationRemeasurement.manifest) {
+    const manifest = report.groundTruthCloseness.validationRemeasurement.manifest;
+    lines.push(`Manifest: data/validation-remeasurement-manifest.md, generated ${manifest.generatedAt}.`);
+    lines.push(
+      `Repo rows: ${manifest.summary.repoRows}; Atlas replay-ready: ${manifest.summary.atlasReplayReadyRows}; Graphify replay-ready: ${manifest.summary.graphifyReplayReadyRows}; native/proxy command-ready: ${manifest.summary.nativeRemeasurementReadyRows}.`
+    );
+    lines.push(
+      `Full remeasurement-ready artifacts: ${manifest.summary.fullRemeasurementReadyArtifacts}; proxy or detector-only code artifacts: ${manifest.summary.proxyOrDetectorCodeArtifacts}.`
+    );
+    lines.push("");
+    lines.push("| Language | Tool class | Risk | Repos | Atlas replay | Graphify replay | Native ready | Blockers |");
+    lines.push("|---|---|---|--:|--:|--:|--:|---|");
+    for (const row of manifest.blockers) {
+      lines.push(
+        `| ${row.language} | ${row.toolClass} | ${row.risk} | ${row.repoCount} | ${row.atlasReplayReadyRows} | ${row.graphifyReplayReadyRows} | ${row.nativeRemeasurementReadyRows} | ${row.blockers.join(", ") || "none"} |`
+      );
+    }
+  } else {
+    lines.push("Manifest: missing.");
+  }
+  lines.push("");
   lines.push("### Precision Evidence", "");
   lines.push(report.groundTruthCloseness.precisionEvidence.statement, "");
   if (report.groundTruthCloseness.precisionEvidence.manifest) {
@@ -986,6 +1061,8 @@ function main() {
       { name: "tenx-gap-report.md", path: "data/tenx-gap-report.md" },
       { name: "public-repo-validation-manifest.json", path: "data/public-repo-validation-manifest.json" },
       { name: "public-repo-validation-manifest.md", path: "data/public-repo-validation-manifest.md" },
+      { name: "validation-remeasurement-manifest.json", path: "data/validation-remeasurement-manifest.json" },
+      { name: "validation-remeasurement-manifest.md", path: "data/validation-remeasurement-manifest.md" },
       { name: "precision-evidence-manifest.json", path: "data/precision-evidence-manifest.json" },
       { name: "precision-evidence-manifest.md", path: "data/precision-evidence-manifest.md" },
       { name: "call-edge-evidence-manifest.json", path: "data/call-edge-evidence-manifest.json" },
@@ -1031,6 +1108,7 @@ function main() {
     liveBenchmarks,
     coverageAudit,
     publicRepoValidation: readDataJSON("public-repo-validation-manifest.json"),
+    validationRemeasurement: readDataJSON("validation-remeasurement-manifest.json"),
     precisionEvidence: readDataJSON("precision-evidence-manifest.json"),
     callEdgeEvidence: readDataJSON("call-edge-evidence-manifest.json"),
     graphifySupport: readDataJSON("graphify-support-manifest.json"),
@@ -1042,6 +1120,7 @@ function main() {
         : "The final pass has no live language with zero graphify-equivalent query rows; historical saturation rows are superseded by the refreshed live artifacts.",
       "Timings are one-machine benchmark snapshots, not production guarantees.",
       "Atlas and graphify expose different graph models, so coverage and precision fields are shown separately.",
+      "The validation remeasurement manifest records replay readiness; it does not claim full native/proxy remeasurement unless executable per-repo native commands are present.",
       "The precision evidence manifest records sampled symbol/location matches and validation kind-count maps when raw artifacts expose them; it does not claim full precision for rows that remain count-only or proxy-denominator based.",
       "The call-edge evidence manifest records core receiver-typed calls and live call counts when raw artifacts expose them; it does not claim live receiver-type coverage where no receiver metric exists.",
       "The Graphify support manifest separates deterministic extractor support from detector-only extension support; sampled Graphify no-equivalent rows are reported separately from Atlas/native coverage.",

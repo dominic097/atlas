@@ -9,6 +9,7 @@
     "validate:graphify-support": "node scripts/graphify-support-harness.mjs",
     "validate:public-repos": "node scripts/public-repo-validation-harness.mjs",
     "validate:precision": "node scripts/precision-evidence-harness.mjs",
+    "validate:remeasurement": "node scripts/validation-remeasurement-harness.mjs",
     "test:site": "playwright test tests/benchmark-site.spec.js --reporter=line"
   },
   "repository": {
