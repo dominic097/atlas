@@ -1,4 +1,7 @@
-# graphify update . (cwd=/tmp/langbench/cpp)
+# git clone https://github.com/google/leveldb
+
+
+# graphify update . (cwd=/tmp/atlas-graphify-vs-atlas-final/cpp)
 Re-extracting code files in . (no LLM needed)...
   AST extraction: 100/140 uncached files (71%) [14 workers]
   AST extraction: 140/140 files (100%) [14 workers]
@@ -8,18 +11,18 @@ Code graph updated. For doc/paper/image changes run /graphify --update in your A
 Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction.
 
 
-# atlas index /tmp/langbench/cpp
+# atlas index /tmp/atlas-graphify-vs-atlas-final/cpp
 {
-  "repo_id": "a62227bb-b563-4f6f-8043-c2b91cd8e292",
+  "repo_id": "55b1fe39-a191-413c-8028-7df71d5baf1c",
   "repo_full_name": "cpp",
-  "snapshot_id": "1e0da75e-c1bd-4190-b908-ebee2c9d10d8",
+  "snapshot_id": "01992a9b-24ab-472d-a045-bf861982197d",
   "commit_sha": "7ee830d02b623e8ffe0b95d59a74db1e58da04c5",
-  "indexed_files": 288,
-  "symbols": 370,
-  "edges": 10119,
+  "indexed_files": 144,
+  "symbols": 2088,
+  "edges": 10255,
   "edge_kinds": {
-    "calls": 9537,
-    "imports": 582
+    "calls": 9481,
+    "imports": 774
   },
   "routes": 0,
   "languages": {
@@ -27,20 +30,39 @@ Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction.
     "config": 1,
     "cpp": 76,
     "html": 1,
-    "json": 143,
-    "markdown": 8,
+    "markdown": 7,
     "text": 1,
     "yaml": 1
   },
   "mode": "full",
-  "duration_ms": 592
+  "duration_ms": 266,
+  "timings_ms": {
+    "build_symbols_edges": 2,
+    "delta_check": 0,
+    "discover_files": 0,
+    "doc_links": 0,
+    "ensure_repo": 0,
+    "gitignore_scan": 13,
+    "go_types": 0,
+    "lexical": 171,
+    "parse": 77,
+    "persist": 171,
+    "resolve_head": 0,
+    "routes": 0,
+    "sort": 2,
+    "walk": 0,
+    "write_sqlite": 171
+  }
 }
+atlas index: starting path=/tmp/atlas-graphify-vs-atlas-final/cpp db=sqlite:///tmp/atlas-graphify-vs-atlas-final/cpp.db
+atlas index: done repo=cpp mode=full files=144 symbols=2088 edges=10255 routes=0 duration=266ms
+atlas index: timings build_symbols_edges=2ms delta_check=0ms discover_files=0ms doc_links=0ms ensure_repo=0ms gitignore_scan=13ms go_types=0ms lexical=171ms parse=77ms persist=171ms resolve_head=0ms routes=0ms sort=2ms walk=0ms write_sqlite=171ms
 
 
-# explain ExecErrorCheck: graphify=78tok atlas_terse=65tok
+# explain RandomString: graphify=76tok atlas_terse=7tok
 
-# explain CheckEqual: graphify=84tok atlas_terse=61tok
+# explain MemEnvTest: graphify=100tok atlas_terse=8tok
 
-# explain Free: graphify=61tok atlas_terse=43tok
+# explain Size: graphify=72tok atlas_terse=7tok
 
-# explain main: graphify=66tok atlas_terse=157tok
+# explain size: graphify=72tok atlas_terse=5tok

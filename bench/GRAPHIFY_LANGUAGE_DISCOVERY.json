@@ -252,7 +252,7 @@
   ],
   "runtime_error": "",
   "help_command_count": 148,
-  "python": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/python3",
+  "python": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/python",
   "extract_source": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/lib/python3.12/site-packages/graphify/extract.py",
   "detect_source": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/lib/python3.12/site-packages/graphify/detect.py",
   "dispatch": [

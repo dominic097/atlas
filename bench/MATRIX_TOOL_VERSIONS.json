@@ -1,5 +1,5 @@
 {
-  "generated_at_unix": 1782791339,
+  "generated_at_unix": 1782835896,
   "platform": {
     "system": "Darwin",
     "release": "25.5.0",
@@ -11,14 +11,14 @@
       "tool": "atlas",
       "status": "ok",
       "ok": true,
-      "command": "bin/atlas version",
-      "version": "atlas v0.1.25-2-gdebb8b2 (debb8b2, 2026-06-30T03:42:25Z)",
+      "command": "/Users/damirdarasu/workspace/Aziron/aziron-atlas/bin/atlas version",
+      "version": "atlas v0.1.26-17-gf47856b (f47856b, 2026-06-30T16:10:13Z)",
       "stdout": [],
       "stderr": [
-        "atlas v0.1.25-2-gdebb8b2 (debb8b2, 2026-06-30T03:42:25Z)"
+        "atlas v0.1.26-17-gf47856b (f47856b, 2026-06-30T16:10:13Z)"
       ],
       "exit_code": 0,
-      "seconds": 0.013
+      "seconds": 0.014
     },
     {
       "tool": "graphify",
@@ -31,7 +31,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.038,
+      "seconds": 0.039,
       "discovered_version": "graphifyy 0.8.49",
       "binary": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify"
     },
@@ -46,7 +46,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.063
+      "seconds": 0.061
     },
     {
       "tool": "python",
@@ -59,7 +59,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.012
+      "seconds": 0.011
     },
     {
       "tool": "java",
@@ -74,7 +74,7 @@
         "OpenJDK 64-Bit Server VM Homebrew (build 17.0.18+0, mixed mode, sharing)"
       ],
       "exit_code": 0,
-      "seconds": 0.09
+      "seconds": 0.495
     },
     {
       "tool": "maven",
@@ -91,7 +91,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.487
+      "seconds": 0.375
     },
     {
       "tool": "scip-go",
@@ -104,7 +104,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.11
+      "seconds": 0.101
     },
     {
       "tool": "scip-python",
@@ -117,20 +117,20 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.17
+      "seconds": 0.163
     },
     {
       "tool": "scip-typescript",
       "status": "ok",
       "ok": true,
-      "command": "/opt/homebrew/bin/npx --yes -p @sourcegraph/scip-typescript scip-typescript --version",
+      "command": "/tmp/atlas-bench-tools/node_modules/.bin/scip-typescript --version",
       "version": "0.4.0",
       "stdout": [
         "0.4.0"
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.878
+      "seconds": 0.149
     },
     {
       "tool": "scip-java",
@@ -166,20 +166,20 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.163
+      "seconds": 0.122
     },
     {
       "tool": "tsc",
       "status": "ok",
       "ok": true,
-      "command": "/opt/homebrew/bin/npx --yes -p typescript tsc --version",
-      "version": "Version 5.9.3",
+      "command": "/tmp/atlas-bench-tools/node_modules/.bin/tsc --version",
+      "version": "Version 6.0.3",
       "stdout": [
-        "Version 5.9.3"
+        "Version 6.0.3"
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.331
+      "seconds": 0.068
     },
     {
       "tool": "jdtls",
@@ -205,7 +205,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.014
+      "seconds": 0.011
     },
     {
       "tool": "rust-analyzer",
@@ -218,7 +218,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.02
+      "seconds": 0.028
     },
     {
       "tool": "dotnet",
@@ -231,7 +231,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.196
+      "seconds": 0.241
     },
     {
       "tool": "ruby",
@@ -244,7 +244,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.011
+      "seconds": 0.023
     },
     {
       "tool": "php",
@@ -261,7 +261,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.111
+      "seconds": 0.277
     },
     {
       "tool": "pwsh",
@@ -274,7 +274,7 @@
       ],
       "stderr": [],
       "exit_code": 0,
-      "seconds": 0.401
+      "seconds": 0.396
     },
     {
       "tool": "sourcekit-lsp",
@@ -290,7 +290,7 @@
         "swift-driver version: 1.127.15"
       ],
       "exit_code": 0,
-      "seconds": 0.096,
+      "seconds": 0.122,
       "binary": "/usr/bin/sourcekit-lsp",
       "note": "sourcekit-lsp has no version flag in this toolchain; Swift toolchain version is recorded as the closest reproducible native version."
     }

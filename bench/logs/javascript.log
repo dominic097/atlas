@@ -1,4 +1,7 @@
-# graphify update . (cwd=/tmp/langbench/javascript/lib)
+# git clone https://github.com/expressjs/express
+
+
+# graphify update . (cwd=/tmp/atlas-graphify-vs-atlas-final/javascript/lib)
 Re-extracting code files in . (no LLM needed)...
 [graphify watch] Rebuilt: 28 nodes, 37 edges, 5 communities
 [graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out
@@ -6,34 +9,52 @@ Code graph updated. For doc/paper/image changes run /graphify --update in your A
 Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction.
 
 
-# atlas index /tmp/langbench/javascript/lib
+# atlas index /tmp/atlas-graphify-vs-atlas-final/javascript/lib
 {
-  "repo_id": "c0944230-d3f3-4b45-81f0-820c933627ee",
+  "repo_id": "9aad60db-dbaf-437e-9dcb-d9ec3ce8adae",
   "repo_full_name": "lib",
-  "snapshot_id": "d701333e-aaf0-4d69-a145-6c2c62159910",
+  "snapshot_id": "190f2871-4b36-4808-af11-2fb88abcff44",
   "commit_sha": "18e5985b8a9d5e8423db0a9121f22bdaecd5b120",
-  "indexed_files": 11,
-  "symbols": 92,
-  "edges": 435,
+  "indexed_files": 6,
+  "symbols": 312,
+  "edges": 486,
   "edge_kinds": {
-    "calls": 435
+    "calls": 435,
+    "imports": 51
   },
   "routes": 1,
   "languages": {
-    "html": 1,
-    "javascript": 6,
-    "json": 3,
-    "markdown": 1
+    "javascript": 6
   },
   "mode": "full",
-  "duration_ms": 67
+  "duration_ms": 60,
+  "timings_ms": {
+    "build_symbols_edges": 0,
+    "delta_check": 0,
+    "discover_files": 0,
+    "doc_links": 0,
+    "ensure_repo": 0,
+    "gitignore_scan": 12,
+    "go_types": 0,
+    "lexical": 24,
+    "parse": 22,
+    "persist": 24,
+    "resolve_head": 0,
+    "routes": 0,
+    "sort": 0,
+    "walk": 0,
+    "write_sqlite": 24
+  }
 }
+atlas index: starting path=/tmp/atlas-graphify-vs-atlas-final/javascript/lib db=sqlite:///tmp/atlas-graphify-vs-atlas-final/javascript.db
+atlas index: done repo=lib mode=full files=6 symbols=312 edges=486 routes=1 duration=60ms
+atlas index: timings build_symbols_edges=0ms delta_check=0ms discover_files=0ms doc_links=0ms ensure_repo=0ms gitignore_scan=12ms go_types=0ms lexical=24ms parse=22ms persist=24ms resolve_head=0ms routes=0ms sort=0ms walk=0ms write_sqlite=24ms
 
 
-# explain defineGetter: graphify=47tok atlas_terse=52tok
+# explain get: graphify=47tok atlas_terse=5tok
 
-# explain resolve: graphify=61tok atlas_terse=38tok
+# explain sendFile: graphify=46tok atlas_terse=6tok
 
-# explain sendFile: graphify=46tok atlas_terse=43tok
+# explain defineGetter: graphify=47tok atlas_terse=6tok
 
-# explain acceptParams: graphify=56tok atlas_terse=28tok
+# explain format: graphify=8tok atlas_terse=6tok

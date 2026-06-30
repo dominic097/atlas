@@ -1,24 +1,27 @@
-# graphify update . (cwd=/tmp/langbench/go)
+# git clone https://github.com/sirupsen/logrus
+
+
+# graphify update . (cwd=/tmp/atlas-graphify-vs-atlas-final/go)
 Re-extracting code files in . (no LLM needed)...
-[graphify watch] Rebuilt: 696 nodes, 1219 edges, 42 communities
+[graphify watch] Rebuilt: 711 nodes, 1244 edges, 51 communities
 [graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out
 Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.
 Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction.
 
 
-# atlas index /tmp/langbench/go
+# atlas index /tmp/atlas-graphify-vs-atlas-final/go
 {
-  "repo_id": "5ec2e252-550a-4fa1-9329-5feaca421438",
+  "repo_id": "1bc1c324-9c0c-4d93-838c-8ce6e0b34914",
   "repo_full_name": "go",
-  "snapshot_id": "a1d4846f-c743-4c45-a25e-c68923ae2cbc",
-  "commit_sha": "fdc99501531e1c26d4b759cdb80db3ba74ed94c8",
-  "indexed_files": 115,
-  "symbols": 633,
-  "edges": 2989,
+  "snapshot_id": "f7efa60b-1e85-4c11-8886-f2c253f2cc3e",
+  "commit_sha": "a23d315dfebb6de47d18c92c8ae1430736a60b0c",
+  "indexed_files": 57,
+  "symbols": 679,
+  "edges": 2948,
   "edge_kinds": {
-    "calls": 2081,
-    "imports": 223,
-    "references": 685
+    "calls": 2102,
+    "imports": 224,
+    "references": 622
   },
   "routes": 2,
   "languages": {
@@ -26,20 +29,38 @@ Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction.
     "go": 47,
     "gomod": 1,
     "gosum": 1,
-    "html": 1,
-    "json": 56,
-    "markdown": 5,
+    "markdown": 4,
     "yaml": 3
   },
   "mode": "full",
-  "duration_ms": 806
+  "duration_ms": 723,
+  "timings_ms": {
+    "build_symbols_edges": 590,
+    "delta_check": 0,
+    "discover_files": 0,
+    "doc_links": 0,
+    "ensure_repo": 0,
+    "gitignore_scan": 57,
+    "go_types": 589,
+    "lexical": 56,
+    "parse": 18,
+    "persist": 56,
+    "resolve_head": 0,
+    "routes": 0,
+    "sort": 0,
+    "walk": 0,
+    "write_sqlite": 56
+  }
 }
+atlas index: starting path=/tmp/atlas-graphify-vs-atlas-final/go db=sqlite:///tmp/atlas-graphify-vs-atlas-final/go.db
+atlas index: done repo=go mode=full files=57 symbols=679 edges=2948 routes=2 duration=723ms
+atlas index: timings build_symbols_edges=590ms delta_check=0ms discover_files=0ms doc_links=0ms ensure_repo=0ms gitignore_scan=57ms go_types=589ms lexical=56ms parse=18ms persist=56ms resolve_head=0ms routes=0ms sort=0ms walk=0ms write_sqlite=56ms
 
 
-# explain log: graphify=96tok atlas_terse=83tok
+# explain log: graphify=105tok atlas_terse=4tok
 
-# explain newEntry: graphify=62tok atlas_terse=75tok
+# explain newEntry: graphify=62tok atlas_terse=5tok
 
-# explain releaseEntry: graphify=175tok atlas_terse=76tok
+# explain releaseEntry: graphify=175tok atlas_terse=6tok
 
-# explain Log: graphify=96tok atlas_terse=96tok
+# explain Fire: graphify=55tok atlas_terse=6tok

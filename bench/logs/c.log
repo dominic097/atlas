@@ -1,4 +1,7 @@
-# graphify update . (cwd=/tmp/langbench/c)
+# git clone https://github.com/DaveGamble/cJSON
+
+
+# graphify update . (cwd=/tmp/atlas-graphify-vs-atlas-final/c)
 Re-extracting code files in . (no LLM needed)...
 [graphify watch] Rebuilt: 971 nodes, 2148 edges, 82 communities
 [graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out
@@ -6,41 +9,62 @@ Code graph updated. For doc/paper/image changes run /graphify --update in your A
 Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction.
 
 
-# atlas index /tmp/langbench/c
+# atlas index /tmp/atlas-graphify-vs-atlas-final/c
 {
-  "repo_id": "00c06d28-2245-47ae-8221-8e327c6c332b",
+  "repo_id": "2623347c-cf99-4df3-9637-0c2a43e5dcfb",
   "repo_full_name": "c",
-  "snapshot_id": "25960b09-986d-469f-a72d-a58885d9f7cd",
+  "snapshot_id": "8d303080-6d96-4672-9853-37d19f0b7356",
   "commit_sha": "fb16e5cf358798aabb049655975cde8427101056",
-  "indexed_files": 254,
-  "symbols": 1449,
-  "edges": 4757,
+  "indexed_files": 178,
+  "symbols": 1790,
+  "edges": 5373,
   "edge_kinds": {
-    "calls": 4417,
-    "imports": 340
+    "calls": 4973,
+    "imports": 400
   },
   "routes": 0,
   "languages": {
     "bash": 3,
     "c": 99,
     "config": 4,
-    "html": 1,
-    "json": 95,
+    "json": 4,
     "makefile": 5,
-    "markdown": 13,
+    "markdown": 12,
+    "pdf": 1,
     "python": 2,
+    "ruby": 16,
     "text": 9,
     "yaml": 23
   },
   "mode": "full",
-  "duration_ms": 571
+  "duration_ms": 263,
+  "timings_ms": {
+    "build_symbols_edges": 2,
+    "delta_check": 0,
+    "discover_files": 1,
+    "doc_links": 0,
+    "ensure_repo": 0,
+    "gitignore_scan": 13,
+    "go_types": 0,
+    "lexical": 119,
+    "parse": 125,
+    "persist": 119,
+    "resolve_head": 0,
+    "routes": 0,
+    "sort": 1,
+    "walk": 1,
+    "write_sqlite": 119
+  }
 }
+atlas index: starting path=/tmp/atlas-graphify-vs-atlas-final/c db=sqlite:///tmp/atlas-graphify-vs-atlas-final/c.db
+atlas index: done repo=c mode=full files=178 symbols=1790 edges=5373 routes=0 duration=263ms
+atlas index: timings build_symbols_edges=2ms delta_check=0ms discover_files=1ms doc_links=0ms ensure_repo=0ms gitignore_scan=13ms go_types=0ms lexical=119ms parse=125ms persist=119ms resolve_head=0ms routes=0ms sort=1ms walk=1ms write_sqlite=119ms
 
 
-# explain cJSON_Delete: graphify=284tok atlas_terse=131tok
+# explain cJSON_Delete: graphify=284tok atlas_terse=6tok
 
-# explain cjson_functions_should_not_crash_with_null_pointers: graphify=288tok atlas_terse=146tok
+# explain cjson_functions_should_not_crash_with_null_pointers: graphify=288tok atlas_terse=17tok
 
-# explain cJSON_CreateObject: graphify=332tok atlas_terse=165tok
+# explain cJSON_CreateObject: graphify=332tok atlas_terse=8tok
 
-# explain UnityPrint: graphify=302tok atlas_terse=120tok
+# explain UnityPrint: graphify=302tok atlas_terse=5tok
