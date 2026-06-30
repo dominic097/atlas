@@ -82,6 +82,14 @@ function rewriteCommittedHelperPath(command) {
       "node scripts/native-baselines/ejs_stats.js"
     )
     .replace(
+      "/opt/homebrew/bin/python3 -c <dotnet project counter>",
+      "python3 scripts/native-baselines/dotnet_project_stats.py"
+    )
+    .replace(
+      "python3 <dotnet project counter>",
+      "python3 scripts/native-baselines/dotnet_project_stats.py"
+    )
+    .replace(
       "/tmp/atlas-live-powershell-powershellget/pwsh_stats.ps1",
       "scripts/native-baselines/pwsh_stats.ps1"
     )

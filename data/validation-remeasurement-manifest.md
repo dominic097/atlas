@@ -1,6 +1,6 @@
 # Validation Remeasurement Readiness Manifest
 
-Generated: 2026-06-30T18:43:25.261Z
+Generated: 2026-06-30T18:50:11.006Z
 
 This manifest is regenerated from committed `data/raw/LIVE_*_BENCHMARK.json` artifacts by `scripts/validation-remeasurement-harness.mjs`.
 It is a readiness audit, not a full remeasurement run: Atlas and Graphify replay commands are generated from pinned repo/commit/target rows, while native/proxy counters are marked ready only when the validation row stores an executable native replay command.
@@ -16,10 +16,10 @@ It is a readiness audit, not a full remeasurement run: Atlas and Graphify replay
 - Atlas replay-ready rows: 105
 - Graphify replay-ready rows: 105
 - Native/proxy command candidate rows: 105
-- Native/proxy candidate executable rows: 9
+- Native/proxy candidate executable rows: 12
 - Native/proxy remeasurement command-ready rows: 0
 - Full remeasurement-ready artifacts: 0
-- Native candidates with placeholders: 78
+- Native candidates with placeholders: 75
 - Native candidates with ephemeral helper paths: 57
 - Proxy or detector-only code artifacts: 14
 - Warnings: 35
@@ -38,7 +38,7 @@ It is a readiness audit, not a full remeasurement run: Atlas and Graphify replay
 | cuda | source-counter-proxy | medium | passed | 3/3 | 3 | 3 | 3 | 0 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
 | dart | tree-sitter-baseline | low | passed | 3/3 | 3 | 3 | 3 | 0 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded |
 | delphi | source-counter-proxy | medium | passed | 3/3 | 3 | 3 | 3 | 0 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
-| dotnet | scope-proxy | medium | passed | 3/3 | 3 | 3 | 3 | 0 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
+| dotnet | scope-proxy | medium | passed | 3/3 | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
 | ejs | graphify-detector-only-proxy | high | passed | 3/3 | 3 | 3 | 3 | 3 | 0 | full_symbol_name_kind_location_sets_not_persisted, graphify_detector_only_or_weak_proxy_truth, native_or_proxy_remeasurement_command_not_recorded |
 | elixir | scope-proxy | medium | passed | 3/3 | 3 | 3 | 3 | 0 | 0 | full_symbol_name_kind_location_sets_not_persisted, native_command_contains_placeholder, native_command_uses_ephemeral_helper_path, native_or_proxy_remeasurement_command_not_recorded, proxy_denominator_not_full_semantic_truth |
 | ets | graphify-detector-only-proxy | high | passed | 3/3 | 3 | 3 | 3 | 0 | 0 | full_symbol_name_kind_location_sets_not_persisted, graphify_detector_only_or_weak_proxy_truth, native_command_contains_placeholder, native_or_proxy_remeasurement_command_not_recorded |

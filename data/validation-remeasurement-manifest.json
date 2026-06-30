@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T18:43:25.261Z",
+  "generatedAt": "2026-06-30T18:50:11.006Z",
   "source": "data/raw/LIVE_*_BENCHMARK.json",
   "harness": "scripts/validation-remeasurement-harness.mjs",
   "summary": {
@@ -14,11 +14,11 @@
     "atlasReplayReadyRows": 105,
     "graphifyReplayReadyRows": 105,
     "nativeRemeasurementCandidateRows": 105,
-    "nativeRemeasurementCandidateExecutableRows": 9,
+    "nativeRemeasurementCandidateExecutableRows": 12,
     "nativeRemeasurementReadyRows": 0,
     "fullRemeasurementReadyRows": 0,
     "fullRemeasurementReadyArtifacts": 0,
-    "nativeCandidatePlaceholderRows": 78,
+    "nativeCandidatePlaceholderRows": 75,
     "nativeCandidateEphemeralHelperRows": 57,
     "proxyOrDetectorCodeArtifacts": 14,
     "warnings": 35,
@@ -1496,11 +1496,11 @@
       "atlasReplayReadyRows": 3,
       "graphifyReplayReadyRows": 3,
       "nativeRemeasurementCandidateRows": 3,
-      "nativeRemeasurementCandidateExecutableRows": 0,
+      "nativeRemeasurementCandidateExecutableRows": 3,
       "nativeRemeasurementReadyRows": 0,
       "fullRemeasurementReadyRows": 0,
       "fullRemeasurementReady": false,
-      "nativeCandidatePlaceholderRows": 3,
+      "nativeCandidatePlaceholderRows": 0,
       "nativeCandidateEphemeralHelperRows": 0,
       "minCoverageRatio": 1,
       "warnings": [
@@ -1509,7 +1509,6 @@
       "errors": [],
       "blockers": [
         "full_symbol_name_kind_location_sets_not_persisted",
-        "native_command_contains_placeholder",
         "native_or_proxy_remeasurement_command_not_recorded",
         "proxy_denominator_not_full_semantic_truth"
       ],
@@ -1528,12 +1527,11 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
-          "nativeRemeasurementCandidateExecutableReady": false,
+          "nativeRemeasurementCandidateExecutableReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
-            "native_command_contains_placeholder",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -1547,11 +1545,9 @@
             "(cd work/dotnet/01-Far0n__xgbfi && uv tool run --from graphifyy graphify update .)"
           ],
           "nativeRemeasurementCandidateCommands": [
-            "/opt/homebrew/bin/python3 -c <dotnet project counter> work/dotnet/01-Far0n__xgbfi"
+            "python3 scripts/native-baselines/dotnet_project_stats.py work/dotnet/01-Far0n__xgbfi"
           ],
-          "nativeRemeasurementCandidateBlockers": [
-            "native_command_contains_placeholder"
-          ],
+          "nativeRemeasurementCandidateBlockers": [],
           "nativeRemeasurementCommands": []
         },
         {
@@ -1568,12 +1564,11 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
-          "nativeRemeasurementCandidateExecutableReady": false,
+          "nativeRemeasurementCandidateExecutableReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
-            "native_command_contains_placeholder",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -1587,11 +1582,9 @@
             "(cd work/dotnet/02-Viladoman__StructLayout && uv tool run --from graphifyy graphify update .)"
           ],
           "nativeRemeasurementCandidateCommands": [
-            "/opt/homebrew/bin/python3 -c <dotnet project counter> work/dotnet/02-Viladoman__StructLayout"
+            "python3 scripts/native-baselines/dotnet_project_stats.py work/dotnet/02-Viladoman__StructLayout"
           ],
-          "nativeRemeasurementCandidateBlockers": [
-            "native_command_contains_placeholder"
-          ],
+          "nativeRemeasurementCandidateBlockers": [],
           "nativeRemeasurementCommands": []
         },
         {
@@ -1608,12 +1601,11 @@
           "atlasReplayReady": true,
           "graphifyReplayReady": true,
           "nativeRemeasurementCandidateReady": true,
-          "nativeRemeasurementCandidateExecutableReady": false,
+          "nativeRemeasurementCandidateExecutableReady": true,
           "nativeRemeasurementReady": false,
           "fullRemeasurementReady": false,
           "blockers": [
             "native_or_proxy_remeasurement_command_not_recorded",
-            "native_command_contains_placeholder",
             "proxy_denominator_not_full_semantic_truth",
             "full_symbol_name_kind_location_sets_not_persisted"
           ],
@@ -1627,11 +1619,9 @@
             "(cd work/dotnet/03-b2developer__MonopolyNEAT && uv tool run --from graphifyy graphify update .)"
           ],
           "nativeRemeasurementCandidateCommands": [
-            "/opt/homebrew/bin/python3 -c <dotnet project counter> work/dotnet/03-b2developer__MonopolyNEAT"
+            "python3 scripts/native-baselines/dotnet_project_stats.py work/dotnet/03-b2developer__MonopolyNEAT"
           ],
-          "nativeRemeasurementCandidateBlockers": [
-            "native_command_contains_placeholder"
-          ],
+          "nativeRemeasurementCandidateBlockers": [],
           "nativeRemeasurementCommands": []
         }
       ]
