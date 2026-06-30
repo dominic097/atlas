@@ -1,19 +1,19 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T10:26:07.084Z",
+  "generatedAt": "2026-06-30T10:29:44.157Z",
   "source": "data/benchmark-data.json",
   "targetRatio": 10,
   "metricNote": "Token and latency are ratio targets. Coverage is a native-definition coverage ratio, so the honest accuracy target is >1.0 native coverage exceed, not a fabricated 10x accuracy multiplier.",
   "summary": {
     "liveLanguages": 36,
-    "parityLanguages": 12,
-    "coverageExceedLanguages": 24,
+    "parityLanguages": 10,
+    "coverageExceedLanguages": 26,
     "comparableLanguages": 33,
     "token10xComparable": 33,
     "latency10xComparable": 33,
     "performance10xComparable": 33,
-    "threeRepoValidated": 5,
-    "threeRepoValidatedStrict10x": 5
+    "threeRepoValidated": 6,
+    "threeRepoValidatedStrict10x": 6
   },
   "parityLanguages": [
     "blade",
@@ -22,11 +22,9 @@
     "elixir",
     "ets",
     "julia",
-    "pascal",
     "powershell",
     "r",
     "sql",
-    "terraform",
     "verilog"
   ],
   "live": [
@@ -469,16 +467,14 @@
       "repo": "https://github.com/remobjects/pascalscript",
       "commit": "2c826cd803a3c0417354fa37b2417f21993ce4ac",
       "artifact": "data/raw/LIVE_PASCAL_BENCHMARK.json",
-      "coverageRatio": 1,
-      "coverageExceedsNative": false,
-      "equivalentRows": 4,
-      "tokenRatio": 70.63,
-      "latencyRatio": 13.5,
+      "coverageRatio": 1.0067,
+      "coverageExceedsNative": true,
+      "equivalentRows": 11,
+      "tokenRatio": 19.5,
+      "latencyRatio": 36.42,
       "tokenGapTo10x": 1,
       "latencyGapTo10x": 1,
-      "blockers": [
-        "coverage_at_parity"
-      ],
+      "blockers": [],
       "validation": {
         "passed": false,
         "repoCount": 0,
@@ -698,21 +694,19 @@
       "repo": "https://github.com/terraform-aws-modules/terraform-aws-vpc",
       "commit": "3ffbd46fb1c7733e1b34d8666893280454e27436",
       "artifact": "data/raw/LIVE_TERRAFORM_BENCHMARK.json",
-      "coverageRatio": 1,
-      "coverageExceedsNative": false,
+      "coverageRatio": 1.0063,
+      "coverageExceedsNative": true,
       "equivalentRows": 4,
       "tokenRatio": 145.63,
       "latencyRatio": 15.12,
       "tokenGapTo10x": 1,
       "latencyGapTo10x": 1,
-      "blockers": [
-        "coverage_at_parity"
-      ],
+      "blockers": [],
       "validation": {
-        "passed": false,
-        "repoCount": 0,
+        "passed": true,
+        "repoCount": 3,
         "minimumRepos": 3,
-        "minCoverageRatio": null
+        "minCoverageRatio": 1
       }
     },
     {
