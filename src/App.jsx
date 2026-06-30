@@ -882,7 +882,7 @@ function NativeParityLadder({ data }) {
                 {atParity.length}
               </span>
               <span className="mono mt-1" style={{ fontSize: 10.5, color: "var(--muted)" }}>
-                languages
+                of {atParity.length + standouts.length} live
               </span>
               <span className="mono mt-3 mb-2" style={{ fontSize: 10, color: "var(--faint)" }}>
                 {expanded ? "hide roster ▴" : "show roster ▾"}
@@ -1056,6 +1056,11 @@ function NativeParityLadder({ data }) {
 }
 
 function VsNative({ data }) {
+  // The ladder's universe is the LIVE languages (each has a native SCIP/LSP
+  // coverage ratio). The core languages are benchmarked head-to-head in the
+  // matrix instead, so live + core = the full native roster the hero counts.
+  const liveLangs = data.summary.live.artifacts;
+  const coreLangs = data.summary.core.languages;
   return (
     <section id="vs-native" data-testid="vs-native" className="shell py-16" aria-labelledby="vsn-title">
       <SectionHeader
@@ -1064,7 +1069,9 @@ function VsNative({ data }) {
         title="Atlas meets or beats native definition coverage, language by language"
       >
         Coverage is Atlas definitions ÷ the best native indexer for each language — no graphify on this axis.
-        The ×1.0 spine is native parity: every benchmarked language sits on it or to its right.
+        The ×1.0 spine is native parity: each of the {liveLangs} live languages here sits on it or to its right. The
+        other {coreLangs} of Atlas&rsquo;s {liveLangs + coreLangs} natively-parsed languages are benchmarked
+        head-to-head in the comparison matrix.
       </SectionHeader>
 
       {/* peer-framed standfirst — native indexers are the bar Atlas stands with */}
