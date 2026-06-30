@@ -159,15 +159,14 @@ test.describe("Atlas — The Benchmark Instrument", () => {
     await page.getByTestId("lx-chip-not-comparable").click();
     await page.getByTestId("lx-view-table").click();
     const table = page.getByTestId("lx-table");
-    await expect(table).toContainText("Byond");
-    await expect(table).toContainText("ETS");
-    // R row label is "R"; assert via its repo too
-    await expect(table).toContainText("tidyverse/ggplot2");
+    const notComparable = data.liveBenchmarks.filter((r) => r.querySummary.tokenRatio == null);
+    for (const row of notComparable) {
+      const label = row.language === "r" ? row.repo.replace(/^https:\/\/github\.com\//, "") : row.language.toUpperCase();
+      await expect(table).toContainText(label);
+    }
     await expect(table).toContainText("not comparable");
-    // exactly the 3 saturated rows, none folded into a win
-    await expect(page.getByTestId("lx-row")).toHaveCount(
-      data.liveBenchmarks.filter((r) => r.querySummary.tokenRatio == null).length
-    );
+    // exactly the saturated rows, none folded into a win
+    await expect(page.getByTestId("lx-row")).toHaveCount(notComparable.length);
   });
 
   test("graphify token/latency toggle re-binds the same chart", async ({ page }) => {

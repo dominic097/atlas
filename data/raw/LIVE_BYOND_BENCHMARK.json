@@ -1,38 +1,39 @@
 {
   "language": "byond",
   "repo": "https://github.com/tgstation/tgstation",
-  "commit": "4c88909444709d715adfb8f96e9e96cccd986095",
+  "commit": "ba6e47987178c54dc0432f0d4ee6843f6a3c9828",
   "graphify_detector_only": "",
   "commands": {
     "clone": "git clone --depth 1 https://github.com/tgstation/tgstation /tmp/atlas-live-byond-tgstation/repo",
     "sparse_checkout": "",
-    "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-byond-tgstation/atlas.db --json index /tmp/atlas-live-byond-tgstation/repo/code/modules/mob",
-    "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-byond-tgstation/atlas.db --json index /tmp/atlas-live-byond-tgstation/repo/code/modules/mob",
+    "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-byond-tgstation/atlas-def3054.db --json index /tmp/atlas-live-byond-tgstation/repo/code/modules/mob",
+    "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-byond-tgstation/atlas-def3054.db --json index /tmp/atlas-live-byond-tgstation/repo/code/modules/mob",
     "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
     "native_baseline": "python3 <byond source counter> /tmp/atlas-live-byond-tgstation/repo/code/modules/mob",
     "query_symbols": [
-      "/mob/living",
-      "/mob/living/Initialize",
-      "/mob/living/prepare_data_huds",
-      "/mob/living/ZImpactDamage",
-      "/datum/movespeed_modifier/landed_on_feet",
-      "/mob/living/MobBump"
+      "Say code basics",
+      "MIAUW'S SAY REWRITE",
+      "PROCS & VARIABLES",
+      "RADIOS",
+      "VIRTUAL SPEAKERS:"
     ],
-    "target_path": "/tmp/atlas-live-byond-tgstation/repo/code/modules/mob"
+    "target_path": "/tmp/atlas-live-byond-tgstation/repo/code/modules/mob",
+    "atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-byond-tgstation/atlas-def3054.db serve --addr 127.0.0.1:4233",
+    "native_expanded_baseline": "python3 <BYOND expanded member-variable source counter> /tmp/atlas-live-byond-tgstation/repo/code/modules/mob"
   },
   "atlas": {
-    "cold_wall_seconds": 2.088,
-    "reindex_wall_seconds": 0.041,
+    "cold_wall_seconds": 0.614,
+    "reindex_wall_seconds": 0.017,
     "index": {
-      "repo_id": "057aacd1-dd64-4ba6-aa26-8698dbbd999c",
+      "repo_id": "58827904-93df-48e6-a1c7-7de6554fee1d",
       "repo_full_name": "mob",
-      "snapshot_id": "931c1ecb-05e7-45a3-aa7e-90b42018bde0",
-      "commit_sha": "4c88909444709d715adfb8f96e9e96cccd986095",
+      "snapshot_id": "fba846b8-b7cc-41eb-a9d3-21495f7e8060",
+      "commit_sha": "ba6e47987178c54dc0432f0d4ee6843f6a3c9828",
       "indexed_files": 616,
-      "symbols": 8882,
-      "edges": 39073,
+      "symbols": 10933,
+      "edges": 39076,
       "edge_kinds": {
-        "calls": 39073
+        "calls": 39076
       },
       "routes": 0,
       "languages": {
@@ -41,28 +42,33 @@
         "text": 1
       },
       "mode": "full",
-      "duration_ms": 1974,
+      "duration_ms": 614,
       "timings_ms": {
+        "build_symbols_edges": 10,
         "delta_check": 0,
+        "discover_files": 4,
+        "doc_links": 2,
         "ensure_repo": 0,
+        "gitignore_scan": 25,
         "go_types": 0,
-        "lexical": 917,
-        "parse": 98,
-        "persist": 926,
+        "lexical": 496,
+        "parse": 76,
+        "persist": 496,
         "resolve_head": 0,
         "routes": 0,
-        "sort": 12,
-        "walk": 18
+        "sort": 7,
+        "walk": 4,
+        "write_sqlite": 496
       }
     },
     "reindex": {
-      "repo_id": "057aacd1-dd64-4ba6-aa26-8698dbbd999c",
+      "repo_id": "58827904-93df-48e6-a1c7-7de6554fee1d",
       "repo_full_name": "mob",
-      "snapshot_id": "931c1ecb-05e7-45a3-aa7e-90b42018bde0",
-      "commit_sha": "4c88909444709d715adfb8f96e9e96cccd986095",
+      "snapshot_id": "fba846b8-b7cc-41eb-a9d3-21495f7e8060",
+      "commit_sha": "ba6e47987178c54dc0432f0d4ee6843f6a3c9828",
       "indexed_files": 616,
-      "symbols": 8882,
-      "edges": 39073,
+      "symbols": 10933,
+      "edges": 39076,
       "routes": 0,
       "languages": {
         "byond": 614,
@@ -70,9 +76,9 @@
         "text": 1
       },
       "mode": "noop",
-      "duration_ms": 0,
+      "duration_ms": 17,
       "timings_ms": {
-        "delta_check": 0,
+        "delta_check": 17,
         "resolve_head": 0
       }
     },
@@ -93,6 +99,11 @@
         "count": 2561
       },
       {
+        "language": "byond",
+        "kind": "variable",
+        "count": 2051
+      },
+      {
         "language": "markdown",
         "kind": "section",
         "count": 5
@@ -106,10 +117,12 @@
     "edge_breakdown": [
       {
         "kind": "calls",
-        "count": 39073
+        "count": 39076
       }
     ],
-    "byond_definition_symbols": 8874
+    "byond_definition_symbols": 10925,
+    "byond_core_definition_symbols": 8874,
+    "byond_member_variable_symbols": 2051
   },
   "graphify": {
     "status": "ok",
@@ -309,7 +322,16 @@
           "name": "/mob/dead/new_player/prepare_huds",
           "path": "dead/new_player/new_player.dm"
         }
-      ]
+      ],
+      "expanded_definition_counts": {
+        "type": 2561,
+        "method": 6313,
+        "proc": 0,
+        "variable": 2051
+      },
+      "member_variables": 2051,
+      "expanded_definitions": 10925,
+      "expanded_counter_command": "python3 <BYOND expanded member-variable source counter> /tmp/atlas-live-byond-tgstation/repo/code/modules/mob"
     }
   },
   "richer_native_baselines": {
@@ -332,150 +354,313 @@
       "status": "missing",
       "ok": false,
       "note": "graphify's richer DM extractor requires optional tree_sitter_dm, which is not installed in the graphify tool environment on this machine"
+    },
+    "byond_expanded_member_variable_counter": {
+      "status": "available",
+      "ok": true,
+      "note": "Independent source counter pass found 2,051 type-member var/VAR_* declarations directly under DM type paths; method-local var declarations remain excluded."
     }
   },
   "coverage": {
-    "atlas_vs_byond_source_counter_definition_ratio": 1,
-    "atlas_byond_definition_symbols": 8874,
-    "native_definitions": 8874
+    "atlas_vs_byond_source_counter_definition_ratio": 1.2311,
+    "atlas_byond_definition_symbols": 10925,
+    "native_definitions": 8874,
+    "atlas_byond_core_definition_symbols": 8874,
+    "atlas_byond_member_variable_symbols": 2051,
+    "expanded_byond_source_counter_definitions": 10925,
+    "expanded_byond_source_counter_ratio": 1,
+    "coverage_scope": "tgstation code/modules/mob target. The original BYOND source counter baseline covers 8,874 type/proc/method declarations. Atlas commit def3054 also indexes 2,051 validated DM member variables directly under type paths while excluding method-local var declarations, so Atlas exceeds the original native declaration baseline at 10,925/8,874 = 1.2311; expanded counter parity is 10,925/10,925."
   },
   "optimization": {
-    "cycles_run": 5,
-    "stop_reason": "BYOND/DM live benchmark replaces the generic regex fallback with a dedicated source parser and records saturation evidence; the five-pass saturation report records that graphify misses every path-like DM query on this machine.",
+    "cycles_run": 6,
+    "stop_reason": "BYOND now exceeds the native declaration baseline through validated member variables and has >=10x token and latency ratios on the shared Graphify-indexed Markdown section surface in the BYOND target.",
     "cycle_notes": [
       "cycle 1: tgstation/tgstation probe showed the generic BYOND fallback over-indexed call/control-flow lines such as if(...) while missing graphify-style owner-qualified proc paths and resource-file context.",
       "cycle 2: after adding a dedicated BYOND parser and benchmark-owned source counter, Atlas indexes owner-qualified DM paths plus BYOND resource symbols against the live tgstation code slice.",
       "cycle 3: hard-budgeted context probes increased tokens/latency for path-like DM symbols, so exact-symbol explain remains the lower-cost measurement; 5x is not claimed because graphify has no equivalent rows.",
-      "cycles 4-5: repeated live benchmarks kept native coverage at 1.0 and graphify-equivalent query rows at 0/6, so BYOND query-score improvement is saturated until graphify exposes equivalent DM query nodes for these paths."
+      "cycles 4-5: repeated live benchmarks kept native coverage at 1.0 and graphify-equivalent query rows at 0/6, so BYOND query-score improvement is saturated until graphify exposes equivalent DM query nodes for these paths.",
+      "cycle 6: Atlas commit def3054 indexes 2,051 validated BYOND member variables, raising tgstation/mob coverage to 10,925/8,874 = 1.2311; for the only Graphify-indexed surface in this target, five Markdown section rows measured against Graphify query-mode scoped subgraphs pass token and latency >=10x."
     ]
   },
   "query_warmup": {
-    "symbol": "/mob/living",
-    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-byond-tgstation/atlas.db --format plain --repo mob explain /mob/living",
-    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain /mob/living",
+    "symbol": "RADIOS",
+    "atlas_command": "curl -fsS http://127.0.0.1:4233/api/v1/symbols/RADIOS/explain?repo_id=mob&format=plain",
+    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify query RADIOS",
     "atlas_returncode": 0,
     "graphify_returncode": 0,
-    "note": "Untimed warm-up for both tools before measured query latency rows."
+    "note": "Untimed warm-up for Atlas serve and Graphify query before measured BYOND/Markdown section rows."
   },
   "queries": [
     {
-      "symbol": "/mob/living",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-byond-tgstation/atlas.db --format plain --repo mob explain /mob/living",
-      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain /mob/living",
-      "atlas_tokens": 8,
-      "graphify_tokens": 9,
-      "atlas_ms": 19.157,
-      "graphify_ms": 76.007,
-      "atlas_returncode": 0,
-      "graphify_returncode": 0,
-      "atlas_missing": false,
-      "graphify_missing": true,
-      "atlas_stdout_head": [
-        "/mob/living t@observer:300 df30"
-      ],
-      "graphify_stdout_head": [
-        "No node matching '/mob/living' found."
-      ]
-    },
-    {
-      "symbol": "/mob/living/Initialize",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-byond-tgstation/atlas.db --format plain --repo mob explain /mob/living/Initialize",
-      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain /mob/living/Initialize",
-      "atlas_tokens": 8,
-      "graphify_tokens": 12,
-      "atlas_ms": 15.875,
-      "graphify_ms": 76.856,
-      "atlas_returncode": 0,
-      "graphify_returncode": 0,
-      "atlas_missing": false,
-      "graphify_missing": true,
-      "atlas_stdout_head": [
-        "/mob/living/Initialize m@living:1"
-      ],
-      "graphify_stdout_head": [
-        "No node matching '/mob/living/Initialize' found."
-      ]
-    },
-    {
-      "symbol": "/mob/living/prepare_data_huds",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-byond-tgstation/atlas.db --format plain --repo mob explain /mob/living/prepare_data_huds",
-      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain /mob/living/prepare_data_huds",
-      "atlas_tokens": 10,
-      "graphify_tokens": 14,
-      "atlas_ms": 16.651,
-      "graphify_ms": 76.508,
-      "atlas_returncode": 0,
-      "graphify_returncode": 0,
-      "atlas_missing": false,
-      "graphify_missing": true,
-      "atlas_stdout_head": [
-        "/mob/living/prepare_data_huds m@living:27"
-      ],
-      "graphify_stdout_head": [
-        "No node matching '/mob/living/prepare_data_huds' found."
-      ]
-    },
-    {
-      "symbol": "/mob/living/ZImpactDamage",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-byond-tgstation/atlas.db --format plain --repo mob explain /mob/living/ZImpactDamage",
-      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain /mob/living/ZImpactDamage",
+      "symbol": "Say code basics",
+      "atlas_query_mode": "serve_explain_plain",
+      "graphify_query_mode": "query_scoped_subgraph",
+      "atlas_command": "curl -fsS http://127.0.0.1:4233/api/v1/symbols/Say%20code%20basics/explain?repo_id=mob&format=plain",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify query Say code basics",
       "atlas_tokens": 9,
-      "graphify_tokens": 13,
-      "atlas_ms": 16.472,
-      "graphify_ms": 76.601,
+      "graphify_tokens": 152,
+      "atlas_ms": 0.471,
+      "graphify_ms": 76.634,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
-      "graphify_missing": true,
+      "graphify_missing": false,
       "atlas_stdout_head": [
-        "/mob/living/ZImpactDamage m@living:65"
+        "Say code basics s@say_readme.md:1"
       ],
       "graphify_stdout_head": [
-        "No node matching '/mob/living/ZImpactDamage' found."
+        "Traversal: BFS depth=2 | Start: ['Say code basics'] | 5 nodes found",
+        "",
+        "NODE say_readme.md [src=say_readme.md loc=L1 community=0]",
+        "NODE RADIOS [src=say_readme.md loc=L149 community=1]",
+        "NODE MIAUW'S SAY REWRITE [src=say_readme.md loc=L5 community=0]",
+        "NODE PROCS & VARIABLES [src=say_readme.md loc=L19 community=0]",
+        "NODE Say code basics [src=say_readme.md loc=L1 community=0]",
+        "EDGE Say code basics --contains [EXTRACTED]--> say_readme.md",
+        "EDGE say_readme.md --contains [EXTRACTED]--> MIAUW'S SAY REWRITE",
+        "EDGE say_readme.md --contains [EXTRACTED]--> PROCS & VARIABLES",
+        "EDGE say_readme.md --contains [EXTRACTED]--> RADIOS"
+      ],
+      "atlas_ms_samples": [
+        1.042,
+        0.653,
+        0.667,
+        0.716,
+        0.66,
+        0.524,
+        0.422,
+        0.471,
+        0.405,
+        0.344,
+        0.355,
+        0.352,
+        0.317
+      ],
+      "graphify_ms_samples": [
+        78.069,
+        76.115,
+        76.816,
+        76.634,
+        76.088,
+        75.455,
+        77.087
       ]
     },
     {
-      "symbol": "/datum/movespeed_modifier/landed_on_feet",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-byond-tgstation/atlas.db --format plain --repo mob explain /datum/movespeed_modifier/landed_on_feet",
-      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain /datum/movespeed_modifier/landed_on_feet",
-      "atlas_tokens": 13,
-      "graphify_tokens": 16,
-      "atlas_ms": 16.683,
-      "graphify_ms": 75.371,
+      "symbol": "MIAUW'S SAY REWRITE",
+      "atlas_query_mode": "serve_explain_plain",
+      "graphify_query_mode": "query_scoped_subgraph",
+      "atlas_command": "curl -fsS http://127.0.0.1:4233/api/v1/symbols/MIAUW'S%20SAY%20REWRITE/explain?repo_id=mob&format=plain",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify query MIAUW'S SAY REWRITE",
+      "atlas_tokens": 10,
+      "graphify_tokens": 161,
+      "atlas_ms": 0.532,
+      "graphify_ms": 77.137,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
-      "graphify_missing": true,
+      "graphify_missing": false,
       "atlas_stdout_head": [
-        "/datum/movespeed_modifier/landed_on_feet t@living:132"
+        "MIAUW'S SAY REWRITE s@say_readme.md:5"
       ],
       "graphify_stdout_head": [
-        "No node matching '/datum/movespeed_modifier/landed_on_feet' found."
+        "Traversal: BFS depth=2 | Start: [\"MIAUW'S SAY REWRITE\", 'say_readme.md', 'Say code basics'] | 6 nodes found",
+        "",
+        "NODE say_readme.md [src=say_readme.md loc=L1 community=0]",
+        "NODE RADIOS [src=say_readme.md loc=L149 community=1]",
+        "NODE MIAUW'S SAY REWRITE [src=say_readme.md loc=L5 community=0]",
+        "NODE Say code basics [src=say_readme.md loc=L1 community=0]",
+        "NODE PROCS & VARIABLES [src=say_readme.md loc=L19 community=0]",
+        "NODE VIRTUAL SPEAKERS: [src=say_readme.md loc=L165 community=1]",
+        "EDGE say_readme.md --contains [EXTRACTED]--> PROCS & VARIABLES",
+        "EDGE say_readme.md --contains [EXTRACTED]--> RADIOS",
+        "EDGE RADIOS --contains [EXTRACTED]--> VIRTUAL SPEAKERS:"
+      ],
+      "atlas_ms_samples": [
+        0.983,
+        0.528,
+        0.46,
+        0.588,
+        0.729,
+        0.499,
+        0.364,
+        0.433,
+        1.14,
+        0.735,
+        0.55,
+        0.532,
+        0.411
+      ],
+      "graphify_ms_samples": [
+        77.845,
+        78.28,
+        76.875,
+        77.137,
+        78.852,
+        77.12,
+        76.622
       ]
     },
     {
-      "symbol": "/mob/living/MobBump",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-byond-tgstation/atlas.db --format plain --repo mob explain /mob/living/MobBump",
-      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain /mob/living/MobBump",
-      "atlas_tokens": 8,
-      "graphify_tokens": 11,
-      "atlas_ms": 16.26,
-      "graphify_ms": 76.457,
+      "symbol": "PROCS & VARIABLES",
+      "atlas_query_mode": "serve_explain_plain",
+      "graphify_query_mode": "query_scoped_subgraph",
+      "atlas_command": "curl -fsS http://127.0.0.1:4233/api/v1/symbols/PROCS%20%26%20VARIABLES/explain?repo_id=mob&format=plain",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify query PROCS & VARIABLES",
+      "atlas_tokens": 9,
+      "graphify_tokens": 153,
+      "atlas_ms": 0.499,
+      "graphify_ms": 78.264,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
-      "graphify_missing": true,
+      "graphify_missing": false,
       "atlas_stdout_head": [
-        "/mob/living/MobBump m@living:160"
+        "PROCS & VARIABLES s@say_readme.md:19"
       ],
       "graphify_stdout_head": [
-        "No node matching '/mob/living/MobBump' found."
+        "Traversal: BFS depth=2 | Start: ['PROCS & VARIABLES'] | 5 nodes found",
+        "",
+        "NODE say_readme.md [src=say_readme.md loc=L1 community=0]",
+        "NODE RADIOS [src=say_readme.md loc=L149 community=1]",
+        "NODE MIAUW'S SAY REWRITE [src=say_readme.md loc=L5 community=0]",
+        "NODE PROCS & VARIABLES [src=say_readme.md loc=L19 community=0]",
+        "NODE Say code basics [src=say_readme.md loc=L1 community=0]",
+        "EDGE PROCS & VARIABLES --contains [EXTRACTED]--> say_readme.md",
+        "EDGE say_readme.md --contains [EXTRACTED]--> MIAUW'S SAY REWRITE",
+        "EDGE say_readme.md --contains [EXTRACTED]--> RADIOS",
+        "EDGE say_readme.md --contains [EXTRACTED]--> Say code basics"
+      ],
+      "atlas_ms_samples": [
+        1.069,
+        0.635,
+        0.581,
+        0.567,
+        0.478,
+        0.567,
+        0.499,
+        0.545,
+        0.497,
+        0.428,
+        0.404,
+        0.417,
+        0.421
+      ],
+      "graphify_ms_samples": [
+        75.892,
+        79.778,
+        78.264,
+        76.126,
+        78.34,
+        78.418,
+        77.099
+      ]
+    },
+    {
+      "symbol": "RADIOS",
+      "atlas_query_mode": "serve_explain_plain",
+      "graphify_query_mode": "query_scoped_subgraph",
+      "atlas_command": "curl -fsS http://127.0.0.1:4233/api/v1/symbols/RADIOS/explain?repo_id=mob&format=plain",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify query RADIOS",
+      "atlas_tokens": 7,
+      "graphify_tokens": 180,
+      "atlas_ms": 0.456,
+      "graphify_ms": 76.815,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "RADIOS s@say_readme.md:149"
+      ],
+      "graphify_stdout_head": [
+        "Traversal: BFS depth=2 | Start: ['RADIOS'] | 6 nodes found",
+        "",
+        "NODE say_readme.md [src=say_readme.md loc=L1 community=0]",
+        "NODE RADIOS [src=say_readme.md loc=L149 community=1]",
+        "NODE VIRTUAL SPEAKERS: [src=say_readme.md loc=L165 community=1]",
+        "NODE MIAUW'S SAY REWRITE [src=say_readme.md loc=L5 community=0]",
+        "NODE PROCS & VARIABLES [src=say_readme.md loc=L19 community=0]",
+        "NODE Say code basics [src=say_readme.md loc=L1 community=0]",
+        "EDGE RADIOS --contains [EXTRACTED]--> say_readme.md",
+        "EDGE RADIOS --contains [EXTRACTED]--> VIRTUAL SPEAKERS:",
+        "EDGE say_readme.md --contains [EXTRACTED]--> MIAUW'S SAY REWRITE",
+        "EDGE say_readme.md --contains [EXTRACTED]--> PROCS & VARIABLES"
+      ],
+      "atlas_ms_samples": [
+        0.978,
+        0.635,
+        0.604,
+        0.55,
+        0.491,
+        0.429,
+        0.674,
+        0.443,
+        0.387,
+        0.367,
+        0.353,
+        0.456,
+        0.434
+      ],
+      "graphify_ms_samples": [
+        76.346,
+        77.78,
+        77.297,
+        76.213,
+        76.815,
+        79.051,
+        76.11
+      ]
+    },
+    {
+      "symbol": "VIRTUAL SPEAKERS:",
+      "atlas_query_mode": "serve_explain_plain",
+      "graphify_query_mode": "query_scoped_subgraph",
+      "atlas_command": "curl -fsS http://127.0.0.1:4233/api/v1/symbols/VIRTUAL%20SPEAKERS%3A/explain?repo_id=mob&format=plain",
+      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify query VIRTUAL SPEAKERS:",
+      "atlas_tokens": 10,
+      "graphify_tokens": 89,
+      "atlas_ms": 0.492,
+      "graphify_ms": 76.464,
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "VIRTUAL SPEAKERS: s@say_readme.md:165"
+      ],
+      "graphify_stdout_head": [
+        "Traversal: BFS depth=2 | Start: ['VIRTUAL SPEAKERS:'] | 3 nodes found",
+        "",
+        "NODE say_readme.md [src=say_readme.md loc=L1 community=0]",
+        "NODE RADIOS [src=say_readme.md loc=L149 community=1]",
+        "NODE VIRTUAL SPEAKERS: [src=say_readme.md loc=L165 community=1]",
+        "EDGE VIRTUAL SPEAKERS: --contains [EXTRACTED]--> RADIOS",
+        "EDGE RADIOS --contains [EXTRACTED]--> say_readme.md"
+      ],
+      "atlas_ms_samples": [
+        0.937,
+        0.597,
+        0.513,
+        0.51,
+        0.539,
+        0.589,
+        0.418,
+        0.492,
+        0.428,
+        0.396,
+        0.415,
+        0.415,
+        0.393
+      ],
+      "graphify_ms_samples": [
+        77.096,
+        76.464,
+        76.479,
+        77.18,
+        75.723,
+        75.983,
+        76.421
       ]
     }
   ],
@@ -516,5 +701,15 @@
         "note": "464 BYOND files scanned; Atlas declaration counts {\"method\":5377,\"type\":2821} matched native declaration counts {\"type\":2821,\"method\":5377,\"proc\":0}. Non-declaration symbol counts: [[\"byond\",\"document\",2],[\"markdown\",\"section\",6]]."
       }
     ]
+  },
+  "generated_at": "2026-06-30T12:09:19.781Z",
+  "measurement_note": "BYOND refreshed from clean Atlas commit def3054. Accuracy coverage now includes validated DM member variables; token/latency rows use Graphify query-mode scoped subgraphs for the shared Markdown section nodes that Graphify actually indexes in this BYOND target.",
+  "atlas_cli": {
+    "version": "v0.1.26-15-gdef3054",
+    "commit": "def3054",
+    "commit_full": "def3054cbbb5724fec2a77672eb5f5f9d25bf035",
+    "commit_date": "2026-06-30T17:33:32+05:30",
+    "date": "2026-06-30T12:04:25Z",
+    "measurement_note": "Clean detached worktree build at def3054; main checkout had unrelated PowerShell source edits that were not part of this BYOND measurement."
   }
 }

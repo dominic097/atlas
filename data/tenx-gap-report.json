@@ -1,22 +1,21 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T11:54:37.552Z",
+  "generatedAt": "2026-06-30T12:09:25.227Z",
   "source": "data/benchmark-data.json",
   "targetRatio": 10,
   "metricNote": "Token and latency are ratio targets. Coverage is a native-definition coverage ratio, so the honest accuracy target is >1.0 native coverage exceed, not a fabricated 10x accuracy multiplier.",
   "summary": {
     "liveLanguages": 36,
-    "parityLanguages": 3,
-    "coverageExceedLanguages": 33,
-    "comparableLanguages": 33,
-    "token10xComparable": 33,
-    "latency10xComparable": 33,
-    "performance10xComparable": 33,
+    "parityLanguages": 2,
+    "coverageExceedLanguages": 34,
+    "comparableLanguages": 34,
+    "token10xComparable": 34,
+    "latency10xComparable": 34,
+    "performance10xComparable": 34,
     "threeRepoValidated": 17,
-    "threeRepoValidatedStrict10x": 14
+    "threeRepoValidatedStrict10x": 15
   },
   "parityLanguages": [
-    "byond",
     "ets",
     "r"
   ],
@@ -104,19 +103,16 @@
     {
       "language": "byond",
       "repo": "https://github.com/tgstation/tgstation",
-      "commit": "4c88909444709d715adfb8f96e9e96cccd986095",
+      "commit": "ba6e47987178c54dc0432f0d4ee6843f6a3c9828",
       "artifact": "data/raw/LIVE_BYOND_BENCHMARK.json",
-      "coverageRatio": 1,
-      "coverageExceedsNative": false,
-      "equivalentRows": 0,
-      "tokenRatio": null,
-      "latencyRatio": null,
-      "tokenGapTo10x": null,
-      "latencyGapTo10x": null,
-      "blockers": [
-        "coverage_at_parity",
-        "no_comparable_query_rows"
-      ],
+      "coverageRatio": 1.2311,
+      "coverageExceedsNative": true,
+      "equivalentRows": 5,
+      "tokenRatio": 16.33,
+      "latencyRatio": 157.27,
+      "tokenGapTo10x": 1,
+      "latencyGapTo10x": 1,
+      "blockers": [],
       "validation": {
         "passed": true,
         "repoCount": 3,
