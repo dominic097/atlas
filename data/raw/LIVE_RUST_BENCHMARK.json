@@ -16,21 +16,22 @@
       "PatternMatcher",
       "WalkBuilder"
     ],
-    "target_path": "/tmp/atlas-live-rust-ripgrep/repo"
+    "target_path": "/tmp/atlas-live-rust-ripgrep/repo",
+    "atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-rust-ripgrep/atlas.db serve --addr 127.0.0.1:4190"
   },
   "atlas": {
-    "cold_wall_seconds": 1.637,
+    "cold_wall_seconds": 0.474,
     "reindex_wall_seconds": 0.042,
     "index": {
-      "repo_id": "f170c9dc-ef8d-499f-aec6-2e3f34ac3b3e",
+      "repo_id": "73f3b52a-2bdc-429b-8102-e890e72084af",
       "repo_full_name": "repo",
-      "snapshot_id": "76dd324a-d642-4676-9c0e-f00cf8e82db5",
+      "snapshot_id": "81d0c5c7-533a-45bf-b4c7-9d22e17bfbf3",
       "commit_sha": "dfe4a81d2591daca76d25ae4e052c34b26578155",
       "indexed_files": 161,
-      "symbols": 3515,
-      "edges": 17253,
+      "symbols": 5920,
+      "edges": 16722,
       "edge_kinds": {
-        "calls": 16336,
+        "calls": 15805,
         "imports": 917
       },
       "routes": 0,
@@ -47,28 +48,33 @@
         "yaml": 5
       },
       "mode": "full",
-      "duration_ms": 887,
+      "duration_ms": 474,
       "timings_ms": {
+        "build_symbols_edges": 4,
         "delta_check": 0,
-        "ensure_repo": 0,
+        "discover_files": 2,
+        "doc_links": 0,
+        "ensure_repo": 1,
+        "gitignore_scan": 17,
         "go_types": 0,
-        "lexical": 380,
-        "parse": 238,
-        "persist": 259,
+        "lexical": 332,
+        "parse": 115,
+        "persist": 332,
         "resolve_head": 0,
         "routes": 0,
-        "sort": 5,
-        "walk": 1
+        "sort": 3,
+        "walk": 2,
+        "write_sqlite": 332
       }
     },
     "reindex": {
-      "repo_id": "f170c9dc-ef8d-499f-aec6-2e3f34ac3b3e",
+      "repo_id": "73f3b52a-2bdc-429b-8102-e890e72084af",
       "repo_full_name": "repo",
-      "snapshot_id": "76dd324a-d642-4676-9c0e-f00cf8e82db5",
+      "snapshot_id": "81d0c5c7-533a-45bf-b4c7-9d22e17bfbf3",
       "commit_sha": "dfe4a81d2591daca76d25ae4e052c34b26578155",
       "indexed_files": 161,
-      "symbols": 3515,
-      "edges": 17253,
+      "symbols": 5920,
+      "edges": 16722,
       "routes": 0,
       "languages": {
         "bash": 2,
@@ -83,9 +89,9 @@
         "yaml": 5
       },
       "mode": "noop",
-      "duration_ms": 0,
+      "duration_ms": null,
       "timings_ms": {
-        "delta_check": 0,
+        "delta_check": null,
         "resolve_head": 0
       }
     },
@@ -127,23 +133,38 @@
       },
       {
         "language": "rust",
-        "kind": "constant",
-        "count": 91
+        "kind": "class",
+        "count": 412
       },
       {
         "language": "rust",
-        "kind": "document",
-        "count": 6
+        "kind": "constant",
+        "count": 65
       },
       {
         "language": "rust",
         "kind": "function",
-        "count": 2751
+        "count": 2744
       },
       {
         "language": "rust",
-        "kind": "type",
-        "count": 544
+        "kind": "interface",
+        "count": 7
+      },
+      {
+        "language": "rust",
+        "kind": "macro",
+        "count": 36
+      },
+      {
+        "language": "rust",
+        "kind": "method",
+        "count": 2415
+      },
+      {
+        "language": "rust",
+        "kind": "module",
+        "count": 118
       },
       {
         "language": "text",
@@ -169,7 +190,7 @@
     "edge_breakdown": [
       {
         "kind": "calls",
-        "count": 16336
+        "count": 15805
       },
       {
         "kind": "imports",
@@ -289,28 +310,28 @@
   },
   "query_warmup": {
     "symbol": "HiArgs",
-    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-rust-ripgrep/atlas.db --format plain --repo repo explain HiArgs",
+    "atlas_command": "curl -fsS http://127.0.0.1:4190/api/v1/symbols/HiArgs/explain?repo_id=repo&format=plain",
     "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain HiArgs",
     "atlas_returncode": 0,
     "graphify_returncode": 0,
-    "note": "Untimed warm-up for both tools before measured query latency rows."
+    "note": "Untimed warm-up for Atlas warm serve and graphify before measured query latency rows."
   },
   "queries": [
     {
       "symbol": "HiArgs",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-rust-ripgrep/atlas.db --format plain --repo repo explain HiArgs",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4190/api/v1/symbols/HiArgs/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain HiArgs",
-      "atlas_tokens": 4,
+      "atlas_tokens": 2,
       "graphify_tokens": 249,
-      "atlas_ms": 15.561,
+      "atlas_ms": 10.144,
       "graphify_ms": 134.509,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "HiArgs t@hiargs:36"
+        "HiArgs c@hiargs:36"
       ],
       "graphify_stdout_head": [
         "Node: HiArgs",
@@ -321,23 +342,34 @@
         "  Degree:    57",
         "",
         "Connections (57):"
+      ],
+      "atlas_ms_samples": [
+        10.144,
+        10.386,
+        9.257,
+        10.144,
+        10.126,
+        11.714,
+        11.636,
+        9.984,
+        10.182
       ]
     },
     {
       "symbol": "LowArgs",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-rust-ripgrep/atlas.db --format plain --repo repo explain LowArgs",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4190/api/v1/symbols/LowArgs/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain LowArgs",
-      "atlas_tokens": 5,
+      "atlas_tokens": 2,
       "graphify_tokens": 258,
-      "atlas_ms": 15.0,
+      "atlas_ms": 9.609,
       "graphify_ms": 132.317,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "LowArgs t@lowargs:33"
+        "LowArgs c@lowargs:33"
       ],
       "graphify_stdout_head": [
         "Node: LowArgs",
@@ -348,23 +380,34 @@
         "  Degree:    145",
         "",
         "Connections (145):"
+      ],
+      "atlas_ms_samples": [
+        11.452,
+        10.416,
+        9.568,
+        9.609,
+        8.589,
+        10.67,
+        9.058,
+        10.67,
+        9.478
       ]
     },
     {
       "symbol": "PatternMatcher",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-rust-ripgrep/atlas.db --format plain --repo repo explain PatternMatcher",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4190/api/v1/symbols/PatternMatcher/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain PatternMatcher",
-      "atlas_tokens": 7,
+      "atlas_tokens": 2,
       "graphify_tokens": 119,
-      "atlas_ms": 14.436,
+      "atlas_ms": 10.441,
       "graphify_ms": 132.168,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "PatternMatcher t@search:193 d1"
+        "PatternMatcher c@search:193"
       ],
       "graphify_stdout_head": [
         "Node: PatternMatcher",
@@ -375,23 +418,34 @@
         "  Degree:    7",
         "",
         "Connections (7):"
+      ],
+      "atlas_ms_samples": [
+        12.696,
+        10.397,
+        9.093,
+        10.86,
+        10.441,
+        9.786,
+        11.137,
+        9.096,
+        11.027
       ]
     },
     {
       "symbol": "WalkBuilder",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-rust-ripgrep/atlas.db --format plain --repo repo explain WalkBuilder",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4190/api/v1/symbols/WalkBuilder/explain?repo_id=repo&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain WalkBuilder",
-      "atlas_tokens": 6,
+      "atlas_tokens": 2,
       "graphify_tokens": 259,
-      "atlas_ms": 17.17,
+      "atlas_ms": 10.383,
       "graphify_ms": 142.743,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "WalkBuilder t@walk:483 d1"
+        "WalkBuilder c@walk:483"
       ],
       "graphify_stdout_head": [
         "Node: WalkBuilder",
@@ -402,7 +456,24 @@
         "  Degree:    48",
         "",
         "Connections (48):"
+      ],
+      "atlas_ms_samples": [
+        10.515,
+        10.013,
+        13.718,
+        10.948,
+        9.991,
+        10.383,
+        11.8,
+        10.307,
+        10.351
       ]
     }
-  ]
+  ],
+  "atlas_cli": {
+    "version": "v0.1.26-4-gd882e08",
+    "commit": "d882e08",
+    "date": "2026-06-30T07:15:57Z",
+    "measurement_note": "Query rows refreshed from nine-sample medians against atlas serve format=plain using curl; graphify rows retained as the saved comparison baseline."
+  }
 }

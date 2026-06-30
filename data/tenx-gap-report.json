@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T07:18:35.929Z",
+  "generatedAt": "2026-06-30T07:25:41.787Z",
   "source": "data/benchmark-data.json",
   "targetRatio": 10,
   "metricNote": "Token and latency are ratio targets. Coverage is a native-definition coverage ratio, so the honest accuracy target is >1.0 native coverage exceed, not a fabricated 10x accuracy multiplier.",
@@ -10,8 +10,8 @@
     "coverageExceedLanguages": 7,
     "comparableLanguages": 33,
     "token10xComparable": 21,
-    "latency10xComparable": 3,
-    "performance10xComparable": 3
+    "latency10xComparable": 6,
+    "performance10xComparable": 6
   },
   "parityLanguages": [
     "apex",
@@ -53,13 +53,12 @@
       "coverageRatio": 1,
       "coverageExceedsNative": false,
       "equivalentRows": 5,
-      "tokenRatio": 11.67,
-      "latencyRatio": 8.52,
+      "tokenRatio": 56,
+      "latencyRatio": 14,
       "tokenGapTo10x": 1,
-      "latencyGapTo10x": 1.17,
+      "latencyGapTo10x": 1,
       "blockers": [
-        "coverage_at_parity",
-        "latency_ratio_below_10x"
+        "coverage_at_parity"
       ]
     },
     {
@@ -409,13 +408,12 @@
       "coverageRatio": 1,
       "coverageExceedsNative": false,
       "equivalentRows": 4,
-      "tokenRatio": 12.84,
-      "latencyRatio": 8.33,
+      "tokenRatio": 70.63,
+      "latencyRatio": 13.5,
       "tokenGapTo10x": 1,
-      "latencyGapTo10x": 1.2,
+      "latencyGapTo10x": 1,
       "blockers": [
-        "coverage_at_parity",
-        "latency_ratio_below_10x"
+        "coverage_at_parity"
       ]
     },
     {
@@ -513,13 +511,12 @@
       "coverageRatio": 1,
       "coverageExceedsNative": false,
       "equivalentRows": 4,
-      "tokenRatio": 40.23,
-      "latencyRatio": 8.71,
+      "tokenRatio": 110.63,
+      "latencyRatio": 13.35,
       "tokenGapTo10x": 1,
-      "latencyGapTo10x": 1.15,
+      "latencyGapTo10x": 1,
       "blockers": [
-        "coverage_at_parity",
-        "latency_ratio_below_10x"
+        "coverage_at_parity"
       ]
     },
     {

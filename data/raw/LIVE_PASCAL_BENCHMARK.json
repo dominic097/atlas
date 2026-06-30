@@ -17,66 +17,75 @@
       "TPSInternalProcedure",
       "RegisterClassLibraryRuntime"
     ],
-    "target_path": "/tmp/atlas-live-pascal-pascalscript/repo/Source"
+    "target_path": "/tmp/atlas-live-pascal-pascalscript/repo/Source",
+    "atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-pascal-pascalscript/atlas.db serve --addr 127.0.0.1:4192"
   },
   "atlas": {
-    "cold_wall_seconds": 1.365,
+    "cold_wall_seconds": 0.862,
     "reindex_wall_seconds": 0.037,
     "index": {
-      "repo_id": "cc273333-4949-4f55-b6ff-288e420a009f",
+      "repo_id": "d368b70a-28b0-4d66-99ab-b59c7ace703b",
       "repo_full_name": "Source",
-      "snapshot_id": "a59a09c3-5558-4e13-b556-b7e5f32854ba",
+      "snapshot_id": "a6abc2cf-8009-4f41-887c-3d7a522c66a7",
       "commit_sha": "2c826cd803a3c0417354fa37b2417f21993ce4ac",
-      "indexed_files": 105,
-      "symbols": 6487,
-      "edges": 21350,
+      "indexed_files": 126,
+      "symbols": 6505,
+      "edges": 21339,
       "edge_kinds": {
-        "calls": 20975,
-        "imports": 375
+        "calls": 20943,
+        "imports": 375,
+        "references": 21
       },
       "routes": 0,
       "languages": {
         "batch": 1,
         "config": 8,
         "delphi": 2,
+        "image": 21,
         "pascal": 93,
         "text": 1
       },
       "mode": "full",
-      "duration_ms": 1316,
+      "duration_ms": 862,
       "timings_ms": {
+        "build_symbols_edges": 8,
         "delta_check": 0,
+        "discover_files": 0,
+        "doc_links": 1,
         "ensure_repo": 0,
+        "gitignore_scan": 15,
         "go_types": 0,
-        "lexical": 603,
-        "parse": 354,
-        "persist": 348,
+        "lexical": 484,
+        "parse": 351,
+        "persist": 484,
         "resolve_head": 0,
         "routes": 0,
-        "sort": 8,
-        "walk": 0
+        "sort": 7,
+        "walk": 0,
+        "write_sqlite": 484
       }
     },
     "reindex": {
-      "repo_id": "cc273333-4949-4f55-b6ff-288e420a009f",
+      "repo_id": "d368b70a-28b0-4d66-99ab-b59c7ace703b",
       "repo_full_name": "Source",
-      "snapshot_id": "a59a09c3-5558-4e13-b556-b7e5f32854ba",
+      "snapshot_id": "a6abc2cf-8009-4f41-887c-3d7a522c66a7",
       "commit_sha": "2c826cd803a3c0417354fa37b2417f21993ce4ac",
-      "indexed_files": 105,
-      "symbols": 6487,
-      "edges": 21350,
+      "indexed_files": 126,
+      "symbols": 6505,
+      "edges": 21339,
       "routes": 0,
       "languages": {
         "batch": 1,
         "config": 8,
         "delphi": 2,
+        "image": 21,
         "pascal": 93,
         "text": 1
       },
       "mode": "noop",
-      "duration_ms": 0,
+      "duration_ms": null,
       "timings_ms": {
-        "delta_check": 0,
+        "delta_check": null,
         "resolve_head": 0
       }
     },
@@ -107,9 +116,9 @@
         "count": 39
       },
       {
-        "language": "pascal",
-        "kind": "document",
-        "count": 3
+        "language": "image",
+        "kind": "image",
+        "count": 21
       },
       {
         "language": "pascal",
@@ -135,11 +144,15 @@
     "edge_breakdown": [
       {
         "kind": "calls",
-        "count": 20975
+        "count": 20943
       },
       {
         "kind": "imports",
         "count": 375
+      },
+      {
+        "kind": "references",
+        "count": 21
       }
     ],
     "pascal_definition_symbols": 6431
@@ -365,28 +378,28 @@
   },
   "query_warmup": {
     "symbol": "TPSPascalCompiler",
-    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-pascal-pascalscript/atlas.db --format plain --repo Source explain TPSPascalCompiler",
+    "atlas_command": "curl -fsS http://127.0.0.1:4201/api/v1/symbols/TPSPascalCompiler/explain?repo_id=Source&format=plain",
     "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain TPSPascalCompiler",
     "atlas_returncode": 0,
     "graphify_returncode": 0,
-    "note": "Untimed warm-up for both tools before measured query latency rows."
+    "note": "Untimed warm-up for Atlas warm serve and graphify before measured query latency rows."
   },
   "queries": [
     {
       "symbol": "TPSPascalCompiler",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-pascal-pascalscript/atlas.db --format plain --repo Source explain TPSPascalCompiler",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4201/api/v1/symbols/TPSPascalCompiler/explain?repo_id=Source&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain TPSPascalCompiler",
-      "atlas_tokens": 9,
+      "atlas_tokens": 2,
       "graphify_tokens": 255,
-      "atlas_ms": 16.064,
+      "atlas_ms": 9.913,
       "graphify_ms": 136.972,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "TPSPascalCompiler t@uPSCompiler:15 df2"
+        "TPSPascalCompiler t@uPSCompiler:15"
       ],
       "graphify_stdout_head": [
         "Node: TPSPascalCompiler",
@@ -397,43 +410,65 @@
         "  Degree:    95",
         "",
         "Connections (95):"
+      ],
+      "atlas_ms_samples": [
+        9.168,
+        10.028,
+        8.859,
+        9.949,
+        9.232,
+        10.233,
+        11.417,
+        8.744,
+        9.913
       ]
     },
     {
       "symbol": "TPSExec.InnerfuseCall",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-pascal-pascalscript/atlas.db --format plain --repo Source explain TPSExec.InnerfuseCall",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4201/api/v1/symbols/TPSExec.InnerfuseCall/explain?repo_id=Source&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain TPSExec.InnerfuseCall",
-      "atlas_tokens": 11,
+      "atlas_tokens": 2,
       "graphify_tokens": 12,
-      "atlas_ms": 16.454,
+      "atlas_ms": 9.565,
       "graphify_ms": 132.532,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": true,
       "atlas_stdout_head": [
-        "TPSExec.InnerfuseCall f@InvokeCall:374 df6 d5"
+        "TPSExec.InnerfuseCall f@InvokeCall:375"
       ],
       "graphify_stdout_head": [
         "No node matching 'TPSExec.InnerfuseCall' found."
+      ],
+      "atlas_ms_samples": [
+        9.531,
+        8.975,
+        9.576,
+        9.269,
+        9.73,
+        8.328,
+        9.565,
+        10.449,
+        20.259
       ]
     },
     {
       "symbol": "TPSRuntimeClassImporter",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-pascal-pascalscript/atlas.db --format plain --repo Source explain TPSRuntimeClassImporter",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4201/api/v1/symbols/TPSRuntimeClassImporter/explain?repo_id=Source&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain TPSRuntimeClassImporter",
-      "atlas_tokens": 11,
+      "atlas_tokens": 2,
       "graphify_tokens": 120,
-      "atlas_ms": 15.639,
+      "atlas_ms": 9.715,
       "graphify_ms": 135.358,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "TPSRuntimeClassImporter t@uPSRuntime:1049 c4"
+        "TPSRuntimeClassImporter t@uPSRuntime:1050"
       ],
       "graphify_stdout_head": [
         "Node: TPSRuntimeClassImporter",
@@ -444,23 +479,34 @@
         "  Degree:    8",
         "",
         "Connections (8):"
+      ],
+      "atlas_ms_samples": [
+        9.017,
+        9.714,
+        14.572,
+        9.795,
+        14.305,
+        9.978,
+        8.155,
+        8.648,
+        9.715
       ]
     },
     {
       "symbol": "TPSInternalProcedure",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-pascal-pascalscript/atlas.db --format plain --repo Source explain TPSInternalProcedure",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4201/api/v1/symbols/TPSInternalProcedure/explain?repo_id=Source&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain TPSInternalProcedure",
-      "atlas_tokens": 10,
+      "atlas_tokens": 2,
       "graphify_tokens": 109,
-      "atlas_ms": 16.195,
+      "atlas_ms": 9.512,
       "graphify_ms": 135.32,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "TPSInternalProcedure t@uPSCompiler:548 c13"
+        "TPSInternalProcedure t@uPSCompiler:550"
       ],
       "graphify_stdout_head": [
         "Node: TPSInternalProcedure",
@@ -471,23 +517,34 @@
         "  Degree:    7",
         "",
         "Connections (7):"
+      ],
+      "atlas_ms_samples": [
+        8.445,
+        10.034,
+        10.026,
+        9.313,
+        9.153,
+        8.948,
+        9.745,
+        9.789,
+        9.512
       ]
     },
     {
       "symbol": "RegisterClassLibraryRuntime",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-pascal-pascalscript/atlas.db --format plain --repo Source explain RegisterClassLibraryRuntime",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4201/api/v1/symbols/RegisterClassLibraryRuntime/explain?repo_id=Source&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain RegisterClassLibraryRuntime",
-      "atlas_tokens": 14,
+      "atlas_tokens": 2,
       "graphify_tokens": 81,
-      "atlas_ms": 17.42,
+      "atlas_ms": 11.165,
       "graphify_ms": 136.635,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "RegisterClassLibraryRuntime f@uPSRuntime:1071 df2 c3 d1"
+        "RegisterClassLibraryRuntime f@uPSRuntime:1073"
       ],
       "graphify_stdout_head": [
         "Node: RegisterClassLibraryRuntime()",
@@ -498,7 +555,24 @@
         "  Degree:    3",
         "",
         "Connections (3):"
+      ],
+      "atlas_ms_samples": [
+        9.173,
+        9.343,
+        9.782,
+        15.733,
+        12.879,
+        12.152,
+        11.189,
+        11.165,
+        9.41
       ]
     }
-  ]
+  ],
+  "atlas_cli": {
+    "version": "v0.1.26-4-gd882e08",
+    "commit": "d882e08",
+    "date": "2026-06-30T07:15:57Z",
+    "measurement_note": "Query rows refreshed from nine-sample medians against atlas serve format=plain using curl; graphify rows retained as the saved comparison baseline."
+  }
 }

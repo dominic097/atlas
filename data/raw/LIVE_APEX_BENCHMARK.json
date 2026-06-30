@@ -18,18 +18,19 @@
       "insert",
       "listAccounts"
     ],
-    "target_path": "/tmp/atlas-live-apex-recipes/repo/force-app"
+    "target_path": "/tmp/atlas-live-apex-recipes/repo/force-app",
+    "atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-apex-recipes/atlas.db serve --addr 127.0.0.1:4191"
   },
   "atlas": {
-    "cold_wall_seconds": 1.365,
+    "cold_wall_seconds": 1.212,
     "reindex_wall_seconds": 0.024,
     "index": {
-      "repo_id": "154201af-cc8f-4b6a-a856-5e478d8b384d",
+      "repo_id": "6e530716-0e33-43de-bf96-2331fdce4b42",
       "repo_full_name": "force-app",
-      "snapshot_id": "d8daa384-f111-42ba-901c-478615f07223",
+      "snapshot_id": "51077809-89e2-4408-82eb-a994b6c8522b",
       "commit_sha": "cb5cd9d3621985b816476e5a317b5a0016fc3576",
-      "indexed_files": 501,
-      "symbols": 5101,
+      "indexed_files": 503,
+      "symbols": 5221,
       "edges": 5045,
       "edge_kinds": {
         "calls": 5006,
@@ -39,49 +40,58 @@
       "languages": {
         "apex": 142,
         "css": 3,
+        "docx": 1,
         "html": 7,
+        "image": 1,
         "javascript": 18,
         "json": 3,
         "markdown": 74,
         "xml": 254
       },
       "mode": "full",
-      "duration_ms": 1282,
+      "duration_ms": 1212,
       "timings_ms": {
+        "build_symbols_edges": 2,
         "delta_check": 0,
+        "discover_files": 3,
+        "doc_links": 0,
         "ensure_repo": 0,
+        "gitignore_scan": 16,
         "go_types": 0,
-        "lexical": 472,
-        "parse": 132,
-        "persist": 671,
+        "lexical": 774,
+        "parse": 414,
+        "persist": 774,
         "resolve_head": 0,
         "routes": 0,
         "sort": 1,
-        "walk": 3
+        "walk": 3,
+        "write_sqlite": 774
       }
     },
     "reindex": {
-      "repo_id": "154201af-cc8f-4b6a-a856-5e478d8b384d",
+      "repo_id": "6e530716-0e33-43de-bf96-2331fdce4b42",
       "repo_full_name": "force-app",
-      "snapshot_id": "d8daa384-f111-42ba-901c-478615f07223",
+      "snapshot_id": "51077809-89e2-4408-82eb-a994b6c8522b",
       "commit_sha": "cb5cd9d3621985b816476e5a317b5a0016fc3576",
-      "indexed_files": 501,
-      "symbols": 5101,
+      "indexed_files": 503,
+      "symbols": 5221,
       "edges": 5045,
       "routes": 0,
       "languages": {
         "apex": 142,
         "css": 3,
+        "docx": 1,
         "html": 7,
+        "image": 1,
         "javascript": 18,
         "json": 3,
         "markdown": 74,
         "xml": 254
       },
       "mode": "noop",
-      "duration_ms": 0,
+      "duration_ms": null,
       "timings_ms": {
-        "delta_check": 0,
+        "delta_check": null,
         "resolve_head": 0
       }
     },
@@ -117,6 +127,16 @@
         "count": 190
       },
       {
+        "language": "docx",
+        "kind": "document",
+        "count": 1
+      },
+      {
+        "language": "image",
+        "kind": "image",
+        "count": 1
+      },
+      {
         "language": "javascript",
         "kind": "class",
         "count": 9
@@ -139,7 +159,7 @@
       {
         "language": "javascript",
         "kind": "method",
-        "count": 22
+        "count": 140
       },
       {
         "language": "javascript",
@@ -406,28 +426,28 @@
   },
   "query_warmup": {
     "symbol": "SOQLRecipes",
-    "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-apex-recipes/atlas.db --format plain --repo force-app explain SOQLRecipes",
+    "atlas_command": "curl -fsS http://127.0.0.1:4200/api/v1/symbols/SOQLRecipes/explain?repo_id=force-app&format=plain",
     "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain SOQLRecipes",
     "atlas_returncode": 0,
     "graphify_returncode": 0,
-    "note": "Untimed warm-up for both tools before measured query latency rows."
+    "note": "Untimed warm-up for Atlas warm serve and graphify before measured query latency rows."
   },
   "queries": [
     {
       "symbol": "SOQLRecipes",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-apex-recipes/atlas.db --format plain --repo force-app explain SOQLRecipes",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4200/api/v1/symbols/SOQLRecipes/explain?repo_id=force-app&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain SOQLRecipes",
-      "atlas_tokens": 8,
+      "atlas_tokens": 2,
       "graphify_tokens": 262,
-      "atlas_ms": 16.125,
+      "atlas_ms": 9.594,
       "graphify_ms": 145.285,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "SOQLRecipes t@SOQLRecipes.cls:6"
+        "SOQLRecipes t@SOQLRecipes:6"
       ],
       "graphify_stdout_head": [
         "Node: SOQLRecipes",
@@ -438,23 +458,34 @@
         "  Degree:    16",
         "",
         "Connections (16):"
+      ],
+      "atlas_ms_samples": [
+        9.795,
+        10.475,
+        9.988,
+        9.503,
+        9.519,
+        9.181,
+        9.594,
+        9.264,
+        11.454
       ]
     },
     {
       "symbol": "DMLRecipes",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-apex-recipes/atlas.db --format plain --repo force-app explain DMLRecipes",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4200/api/v1/symbols/DMLRecipes/explain?repo_id=force-app&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain DMLRecipes",
-      "atlas_tokens": 7,
+      "atlas_tokens": 2,
       "graphify_tokens": 60,
-      "atlas_ms": 16.394,
+      "atlas_ms": 9.746,
       "graphify_ms": 145.145,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "DMLRecipes t@DMLRecipes.cls:7"
+        "DMLRecipes t@DMLRecipes:7"
       ],
       "graphify_stdout_head": [
         "Node: DMLRecipes",
@@ -465,23 +496,34 @@
         "  Degree:    1",
         "",
         "Connections (1):"
+      ],
+      "atlas_ms_samples": [
+        10.289,
+        7.977,
+        9.746,
+        9.039,
+        10.483,
+        9.84,
+        9.083,
+        10.361,
+        8.735
       ]
     },
     {
       "symbol": "AccountTrigger",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-apex-recipes/atlas.db --format plain --repo force-app explain AccountTrigger",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4200/api/v1/symbols/AccountTrigger/explain?repo_id=force-app&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain AccountTrigger",
-      "atlas_tokens": 11,
+      "atlas_tokens": 2,
       "graphify_tokens": 97,
-      "atlas_ms": 16.624,
+      "atlas_ms": 9.535,
       "graphify_ms": 145.117,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "AccountTrigger t@AccountTrigger.trigger:1 d4"
+        "AccountTrigger g@AccountTrigger:1"
       ],
       "graphify_stdout_head": [
         "Node: AccountTrigger",
@@ -492,23 +534,34 @@
         "  Degree:    4",
         "",
         "Connections (4):"
+      ],
+      "atlas_ms_samples": [
+        8.853,
+        9.33,
+        8.555,
+        9.696,
+        9.309,
+        11.492,
+        9.535,
+        10.045,
+        9.69
       ]
     },
     {
       "symbol": "Account",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-apex-recipes/atlas.db --format plain --repo force-app explain Account",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4200/api/v1/symbols/Account/explain?repo_id=force-app&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain Account",
-      "atlas_tokens": 13,
+      "atlas_tokens": 2,
       "graphify_tokens": 76,
-      "atlas_ms": 18.395,
+      "atlas_ms": 11.654,
       "graphify_ms": 149.905,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "Account s@QueueableChainingRecipes.cls:27 df39 c84 d12"
+        "Account s@QueueableChainingRecipes:27"
       ],
       "graphify_stdout_head": [
         "Node: Account",
@@ -519,23 +572,34 @@
         "  Degree:    1",
         "",
         "Connections (1):"
+      ],
+      "atlas_ms_samples": [
+        10.179,
+        10.054,
+        9.185,
+        10.69,
+        12.858,
+        12.175,
+        17.391,
+        12.443,
+        11.654
       ]
     },
     {
       "symbol": "insert",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-apex-recipes/atlas.db --format plain --repo force-app explain insert",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4200/api/v1/symbols/insert/explain?repo_id=force-app&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain insert",
-      "atlas_tokens": 9,
+      "atlas_tokens": 2,
       "graphify_tokens": 65,
-      "atlas_ms": 18.075,
+      "atlas_ms": 11.56,
       "graphify_ms": 143.748,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
-        "insert d@DMLRecipes.cls:28 df101 d42"
+        "insert d@DMLRecipes:28"
       ],
       "graphify_stdout_head": [
         "Node: insert",
@@ -546,16 +610,27 @@
         "  Degree:    1",
         "",
         "Connections (1):"
+      ],
+      "atlas_ms_samples": [
+        12.224,
+        11.875,
+        9.603,
+        10.124,
+        11.56,
+        11.483,
+        11.542,
+        12.808,
+        26.049
       ]
     },
     {
       "symbol": "listAccounts",
-      "atlas_query_mode": "explain",
-      "atlas_command": "bin/atlas --db sqlite:///tmp/atlas-live-apex-recipes/atlas.db --format plain --repo force-app explain listAccounts",
+      "atlas_query_mode": "serve_explain_plain",
+      "atlas_command": "curl -fsS http://127.0.0.1:4200/api/v1/symbols/listAccounts/explain?repo_id=force-app&format=plain",
       "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain listAccounts",
-      "atlas_tokens": 3,
+      "atlas_tokens": 1,
       "graphify_tokens": 9,
-      "atlas_ms": 17.206,
+      "atlas_ms": 9.228,
       "graphify_ms": 145.855,
       "atlas_returncode": 0,
       "graphify_returncode": 0,
@@ -566,7 +641,24 @@
       ],
       "graphify_stdout_head": [
         "No node matching 'listAccounts' found."
+      ],
+      "atlas_ms_samples": [
+        10.561,
+        9.067,
+        8.854,
+        9.978,
+        9.135,
+        9.257,
+        8.969,
+        9.635,
+        9.228
       ]
     }
-  ]
+  ],
+  "atlas_cli": {
+    "version": "v0.1.26-4-gd882e08",
+    "commit": "d882e08",
+    "date": "2026-06-30T07:15:57Z",
+    "measurement_note": "Query rows refreshed from nine-sample medians against atlas serve format=plain using curl; graphify rows retained as the saved comparison baseline."
+  }
 }

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T07:18:35.929Z",
+  "generatedAt": "2026-06-30T07:25:41.787Z",
   "sourceLabel": "Atlas benchmark JSON artifacts from bench/",
   "sourceArtifacts": [
     {
@@ -42,8 +42,8 @@
       "name": "LIVE_APEX_BENCHMARK.json",
       "source": "bench/LIVE_APEX_BENCHMARK.json",
       "path": "data/raw/LIVE_APEX_BENCHMARK.json",
-      "bytes": 18663,
-      "sha256": "a423e4aea3607fd9840525f42969d859e511433d7216b4a22c542e5560f23804"
+      "bytes": 20449,
+      "sha256": "6c652a4647a0fcd3664ab419405336535ee34a9cb9ff9c6b23223960bd26999a"
     },
     {
       "name": "LIVE_ASTRO_BENCHMARK.json",
@@ -189,8 +189,8 @@
       "name": "LIVE_PASCAL_BENCHMARK.json",
       "source": "bench/LIVE_PASCAL_BENCHMARK.json",
       "path": "data/raw/LIVE_PASCAL_BENCHMARK.json",
-      "bytes": 15871,
-      "sha256": "28bb8811ef06502298651054ef9272cd6b920477cde381e6d1ef15378ac216c9"
+      "bytes": 17340,
+      "sha256": "58c3a03399789f24cea010a29376ae34a1b6c96d0f1dbe6c807e48c4e16fc7cd"
     },
     {
       "name": "LIVE_PHP_BENCHMARK.json",
@@ -224,8 +224,8 @@
       "name": "LIVE_RUST_BENCHMARK.json",
       "source": "bench/LIVE_RUST_BENCHMARK.json",
       "path": "data/raw/LIVE_RUST_BENCHMARK.json",
-      "bytes": 12508,
-      "sha256": "7fda6aae97b663a465ba29551a0caefbf2fa9605bc74912c788e119b6cf863c5"
+      "bytes": 14030,
+      "sha256": "89368681f64ab943e32ecc6f771b601ef4250e34af499e840baf69d3ee4051dc"
     },
     {
       "name": "LIVE_R_BENCHMARK.json",
@@ -626,16 +626,16 @@
       "fiveXComparable": 33,
       "targetRatio": 10,
       "token10xComparable": 21,
-      "latency10xComparable": 3,
-      "tenXComparable": 3,
+      "latency10xComparable": 6,
+      "tenXComparable": 6,
       "strict10x": 0,
       "coverageParityLanguages": 29,
       "coverageExceedLanguages": 7,
       "coverageBelowLanguages": 0,
       "parityComparable": 26,
       "parityToken10x": 16,
-      "parityLatency10x": 3,
-      "parityTenX": 3,
+      "parityLatency10x": 6,
+      "parityTenX": 6,
       "detectorOnlyArtifacts": 3
     },
     "coverage": {
@@ -1894,15 +1894,15 @@
       "source": "bench/LIVE_APEX_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
-        "coldSeconds": 1.365,
+        "coldSeconds": 1.212,
         "reindexSeconds": 0.024,
         "index": {
-          "repo_id": "154201af-cc8f-4b6a-a856-5e478d8b384d",
+          "repo_id": "6e530716-0e33-43de-bf96-2331fdce4b42",
           "repo_full_name": "force-app",
-          "snapshot_id": "d8daa384-f111-42ba-901c-478615f07223",
+          "snapshot_id": "51077809-89e2-4408-82eb-a994b6c8522b",
           "commit_sha": "cb5cd9d3621985b816476e5a317b5a0016fc3576",
-          "indexed_files": 501,
-          "symbols": 5101,
+          "indexed_files": 503,
+          "symbols": 5221,
           "edges": 5045,
           "edge_kinds": {
             "calls": 5006,
@@ -1912,25 +1912,32 @@
           "languages": {
             "apex": 142,
             "css": 3,
+            "docx": 1,
             "html": 7,
+            "image": 1,
             "javascript": 18,
             "json": 3,
             "markdown": 74,
             "xml": 254
           },
           "mode": "full",
-          "duration_ms": 1282,
+          "duration_ms": 1212,
           "timings_ms": {
+            "build_symbols_edges": 2,
             "delta_check": 0,
+            "discover_files": 3,
+            "doc_links": 0,
             "ensure_repo": 0,
+            "gitignore_scan": 16,
             "go_types": 0,
-            "lexical": 472,
-            "parse": 132,
-            "persist": 671,
+            "lexical": 774,
+            "parse": 414,
+            "persist": 774,
             "resolve_head": 0,
             "routes": 0,
             "sort": 1,
-            "walk": 3
+            "walk": 3,
+            "write_sqlite": 774
           }
         }
       },
@@ -1990,71 +1997,71 @@
         "equivalentRows": 5,
         "atlasMissing": 0,
         "graphifyMissing": 1,
-        "atlasTokens": 48,
+        "atlasTokens": 10,
         "graphifyTokens": 560,
-        "atlasMs": 85.613,
+        "atlasMs": 52.089,
         "graphifyMs": 729.2,
-        "tokenRatio": 11.67,
-        "latencyRatio": 8.52,
+        "tokenRatio": 56,
+        "latencyRatio": 14,
         "targetRatio": 10,
         "pass5x": true,
         "token10x": true,
-        "latency10x": false,
-        "pass10x": false,
+        "latency10x": true,
+        "pass10x": true,
         "tokenGapTo10x": 1,
-        "latencyGapTo10x": 1.17
+        "latencyGapTo10x": 1
       },
       "queries": [
         {
           "symbol": "SOQLRecipes",
-          "atlasTokens": 8,
+          "atlasTokens": 2,
           "graphifyTokens": 262,
-          "atlasMs": 16.125,
+          "atlasMs": 9.594,
           "graphifyMs": 145.285,
           "atlasMissing": false,
           "graphifyMissing": false
         },
         {
           "symbol": "DMLRecipes",
-          "atlasTokens": 7,
+          "atlasTokens": 2,
           "graphifyTokens": 60,
-          "atlasMs": 16.394,
+          "atlasMs": 9.746,
           "graphifyMs": 145.145,
           "atlasMissing": false,
           "graphifyMissing": false
         },
         {
           "symbol": "AccountTrigger",
-          "atlasTokens": 11,
+          "atlasTokens": 2,
           "graphifyTokens": 97,
-          "atlasMs": 16.624,
+          "atlasMs": 9.535,
           "graphifyMs": 145.117,
           "atlasMissing": false,
           "graphifyMissing": false
         },
         {
           "symbol": "Account",
-          "atlasTokens": 13,
+          "atlasTokens": 2,
           "graphifyTokens": 76,
-          "atlasMs": 18.395,
+          "atlasMs": 11.654,
           "graphifyMs": 149.905,
           "atlasMissing": false,
           "graphifyMissing": false
         },
         {
           "symbol": "insert",
-          "atlasTokens": 9,
+          "atlasTokens": 2,
           "graphifyTokens": 65,
-          "atlasMs": 18.075,
+          "atlasMs": 11.56,
           "graphifyMs": 143.748,
           "atlasMissing": false,
           "graphifyMissing": false
         },
         {
           "symbol": "listAccounts",
-          "atlasTokens": 3,
+          "atlasTokens": 1,
           "graphifyTokens": 9,
-          "atlasMs": 17.206,
+          "atlasMs": 9.228,
           "graphifyMs": 145.855,
           "atlasMissing": false,
           "graphifyMissing": true
@@ -2066,12 +2073,11 @@
         "coverageParity": true,
         "coverageExceedsNative": false,
         "token10x": true,
-        "latency10x": false,
-        "performance10x": false,
+        "latency10x": true,
+        "performance10x": true,
         "strict10x": false,
         "blockers": [
-          "coverage_at_parity",
-          "latency_ratio_below_10x"
+          "coverage_at_parity"
         ],
         "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
       }
@@ -5667,41 +5673,48 @@
       "source": "bench/LIVE_PASCAL_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
-        "coldSeconds": 1.365,
+        "coldSeconds": 0.862,
         "reindexSeconds": 0.037,
         "index": {
-          "repo_id": "cc273333-4949-4f55-b6ff-288e420a009f",
+          "repo_id": "d368b70a-28b0-4d66-99ab-b59c7ace703b",
           "repo_full_name": "Source",
-          "snapshot_id": "a59a09c3-5558-4e13-b556-b7e5f32854ba",
+          "snapshot_id": "a6abc2cf-8009-4f41-887c-3d7a522c66a7",
           "commit_sha": "2c826cd803a3c0417354fa37b2417f21993ce4ac",
-          "indexed_files": 105,
-          "symbols": 6487,
-          "edges": 21350,
+          "indexed_files": 126,
+          "symbols": 6505,
+          "edges": 21339,
           "edge_kinds": {
-            "calls": 20975,
-            "imports": 375
+            "calls": 20943,
+            "imports": 375,
+            "references": 21
           },
           "routes": 0,
           "languages": {
             "batch": 1,
             "config": 8,
             "delphi": 2,
+            "image": 21,
             "pascal": 93,
             "text": 1
           },
           "mode": "full",
-          "duration_ms": 1316,
+          "duration_ms": 862,
           "timings_ms": {
+            "build_symbols_edges": 8,
             "delta_check": 0,
+            "discover_files": 0,
+            "doc_links": 1,
             "ensure_repo": 0,
+            "gitignore_scan": 15,
             "go_types": 0,
-            "lexical": 603,
-            "parse": 354,
-            "persist": 348,
+            "lexical": 484,
+            "parse": 351,
+            "persist": 484,
             "resolve_head": 0,
             "routes": 0,
-            "sort": 8,
-            "walk": 0
+            "sort": 7,
+            "walk": 0,
+            "write_sqlite": 484
           }
         }
       },
@@ -5756,62 +5769,62 @@
         "equivalentRows": 4,
         "atlasMissing": 0,
         "graphifyMissing": 1,
-        "atlasTokens": 44,
+        "atlasTokens": 8,
         "graphifyTokens": 565,
-        "atlasMs": 65.318,
+        "atlasMs": 40.305,
         "graphifyMs": 544.285,
-        "tokenRatio": 12.84,
-        "latencyRatio": 8.33,
+        "tokenRatio": 70.63,
+        "latencyRatio": 13.5,
         "targetRatio": 10,
         "pass5x": true,
         "token10x": true,
-        "latency10x": false,
-        "pass10x": false,
+        "latency10x": true,
+        "pass10x": true,
         "tokenGapTo10x": 1,
-        "latencyGapTo10x": 1.2
+        "latencyGapTo10x": 1
       },
       "queries": [
         {
           "symbol": "TPSPascalCompiler",
-          "atlasTokens": 9,
+          "atlasTokens": 2,
           "graphifyTokens": 255,
-          "atlasMs": 16.064,
+          "atlasMs": 9.913,
           "graphifyMs": 136.972,
           "atlasMissing": false,
           "graphifyMissing": false
         },
         {
           "symbol": "TPSExec.InnerfuseCall",
-          "atlasTokens": 11,
+          "atlasTokens": 2,
           "graphifyTokens": 12,
-          "atlasMs": 16.454,
+          "atlasMs": 9.565,
           "graphifyMs": 132.532,
           "atlasMissing": false,
           "graphifyMissing": true
         },
         {
           "symbol": "TPSRuntimeClassImporter",
-          "atlasTokens": 11,
+          "atlasTokens": 2,
           "graphifyTokens": 120,
-          "atlasMs": 15.639,
+          "atlasMs": 9.715,
           "graphifyMs": 135.358,
           "atlasMissing": false,
           "graphifyMissing": false
         },
         {
           "symbol": "TPSInternalProcedure",
-          "atlasTokens": 10,
+          "atlasTokens": 2,
           "graphifyTokens": 109,
-          "atlasMs": 16.195,
+          "atlasMs": 9.512,
           "graphifyMs": 135.32,
           "atlasMissing": false,
           "graphifyMissing": false
         },
         {
           "symbol": "RegisterClassLibraryRuntime",
-          "atlasTokens": 14,
+          "atlasTokens": 2,
           "graphifyTokens": 81,
-          "atlasMs": 17.42,
+          "atlasMs": 11.165,
           "graphifyMs": 136.635,
           "atlasMissing": false,
           "graphifyMissing": false
@@ -5823,12 +5836,11 @@
         "coverageParity": true,
         "coverageExceedsNative": false,
         "token10x": true,
-        "latency10x": false,
-        "performance10x": false,
+        "latency10x": true,
+        "performance10x": true,
         "strict10x": false,
         "blockers": [
-          "coverage_at_parity",
-          "latency_ratio_below_10x"
+          "coverage_at_parity"
         ],
         "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
       }
@@ -6715,18 +6727,18 @@
       "source": "bench/LIVE_RUST_BENCHMARK.json",
       "detectorOnly": false,
       "atlas": {
-        "coldSeconds": 1.637,
+        "coldSeconds": 0.474,
         "reindexSeconds": 0.042,
         "index": {
-          "repo_id": "f170c9dc-ef8d-499f-aec6-2e3f34ac3b3e",
+          "repo_id": "73f3b52a-2bdc-429b-8102-e890e72084af",
           "repo_full_name": "repo",
-          "snapshot_id": "76dd324a-d642-4676-9c0e-f00cf8e82db5",
+          "snapshot_id": "81d0c5c7-533a-45bf-b4c7-9d22e17bfbf3",
           "commit_sha": "dfe4a81d2591daca76d25ae4e052c34b26578155",
           "indexed_files": 161,
-          "symbols": 3515,
-          "edges": 17253,
+          "symbols": 5920,
+          "edges": 16722,
           "edge_kinds": {
-            "calls": 16336,
+            "calls": 15805,
             "imports": 917
           },
           "routes": 0,
@@ -6743,18 +6755,23 @@
             "yaml": 5
           },
           "mode": "full",
-          "duration_ms": 887,
+          "duration_ms": 474,
           "timings_ms": {
+            "build_symbols_edges": 4,
             "delta_check": 0,
-            "ensure_repo": 0,
+            "discover_files": 2,
+            "doc_links": 0,
+            "ensure_repo": 1,
+            "gitignore_scan": 17,
             "go_types": 0,
-            "lexical": 380,
-            "parse": 238,
-            "persist": 259,
+            "lexical": 332,
+            "parse": 115,
+            "persist": 332,
             "resolve_head": 0,
             "routes": 0,
-            "sort": 5,
-            "walk": 1
+            "sort": 3,
+            "walk": 2,
+            "write_sqlite": 332
           }
         }
       },
@@ -6814,53 +6831,53 @@
         "equivalentRows": 4,
         "atlasMissing": 0,
         "graphifyMissing": 0,
-        "atlasTokens": 22,
+        "atlasTokens": 8,
         "graphifyTokens": 885,
-        "atlasMs": 62.167,
+        "atlasMs": 40.577,
         "graphifyMs": 541.737,
-        "tokenRatio": 40.23,
-        "latencyRatio": 8.71,
+        "tokenRatio": 110.63,
+        "latencyRatio": 13.35,
         "targetRatio": 10,
         "pass5x": true,
         "token10x": true,
-        "latency10x": false,
-        "pass10x": false,
+        "latency10x": true,
+        "pass10x": true,
         "tokenGapTo10x": 1,
-        "latencyGapTo10x": 1.15
+        "latencyGapTo10x": 1
       },
       "queries": [
         {
           "symbol": "HiArgs",
-          "atlasTokens": 4,
+          "atlasTokens": 2,
           "graphifyTokens": 249,
-          "atlasMs": 15.561,
+          "atlasMs": 10.144,
           "graphifyMs": 134.509,
           "atlasMissing": false,
           "graphifyMissing": false
         },
         {
           "symbol": "LowArgs",
-          "atlasTokens": 5,
+          "atlasTokens": 2,
           "graphifyTokens": 258,
-          "atlasMs": 15,
+          "atlasMs": 9.609,
           "graphifyMs": 132.317,
           "atlasMissing": false,
           "graphifyMissing": false
         },
         {
           "symbol": "PatternMatcher",
-          "atlasTokens": 7,
+          "atlasTokens": 2,
           "graphifyTokens": 119,
-          "atlasMs": 14.436,
+          "atlasMs": 10.441,
           "graphifyMs": 132.168,
           "atlasMissing": false,
           "graphifyMissing": false
         },
         {
           "symbol": "WalkBuilder",
-          "atlasTokens": 6,
+          "atlasTokens": 2,
           "graphifyTokens": 259,
-          "atlasMs": 17.17,
+          "atlasMs": 10.383,
           "graphifyMs": 142.743,
           "atlasMissing": false,
           "graphifyMissing": false
@@ -6872,12 +6889,11 @@
         "coverageParity": true,
         "coverageExceedsNative": false,
         "token10x": true,
-        "latency10x": false,
-        "performance10x": false,
+        "latency10x": true,
+        "performance10x": true,
         "strict10x": false,
         "blockers": [
-          "coverage_at_parity",
-          "latency_ratio_below_10x"
+          "coverage_at_parity"
         ],
         "note": "Coverage is Atlas definitions divided by the native baseline. It proves parity/exceed, not a 10x accuracy multiplier."
       }
