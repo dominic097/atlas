@@ -8,25 +8,31 @@
     "sparse_checkout": "",
     "atlas_index": "bin/atlas --db sqlite:///tmp/atlas-live-pascal-pascalscript/atlas.db --json index /tmp/atlas-live-pascal-pascalscript/repo/Source",
     "atlas_reindex": "bin/atlas --db sqlite:///tmp/atlas-live-pascal-pascalscript/atlas.db --json index /tmp/atlas-live-pascal-pascalscript/repo/Source",
-    "graphify_update": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "graphify_update": "uv tool run --from graphifyy graphify update .",
     "native_baseline": "/opt/homebrew/bin/python3 -c <pascal declaration counter> /tmp/atlas-live-pascal-pascalscript/repo/Source",
     "query_symbols": [
       "TPSPascalCompiler",
-      "TPSExec.InnerfuseCall",
       "TPSRuntimeClassImporter",
       "TPSInternalProcedure",
-      "RegisterClassLibraryRuntime"
+      "RegisterClassLibraryRuntime",
+      "PascalScriptFCL",
+      "PascalScriptLCL",
+      "uPSRuntime",
+      "uPSCompiler",
+      "uPSComponent",
+      "LCL",
+      "PascalScript_Core_Reg"
     ],
     "target_path": "/tmp/atlas-live-pascal-pascalscript/repo/Source",
-    "atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-pascal-pascalscript/atlas.db serve --addr 127.0.0.1:4192"
+    "atlas_serve": "bin/atlas --db sqlite:///tmp/atlas-live-pascal-pascalscript/atlas.db --repo Source serve --addr 127.0.0.1:48239"
   },
   "atlas": {
-    "cold_wall_seconds": 0.862,
-    "reindex_wall_seconds": 0.037,
+    "cold_wall_seconds": 0.765,
+    "reindex_wall_seconds": 0.047,
     "index": {
-      "repo_id": "d368b70a-28b0-4d66-99ab-b59c7ace703b",
+      "repo_id": "c8d0aa86-a7f6-4d50-8d4a-95cc09c4cf8d",
       "repo_full_name": "Source",
-      "snapshot_id": "a6abc2cf-8009-4f41-887c-3d7a522c66a7",
+      "snapshot_id": "26d769ee-793f-4235-aa71-3cbcc9d9f024",
       "commit_sha": "2c826cd803a3c0417354fa37b2417f21993ce4ac",
       "indexed_files": 126,
       "symbols": 6505,
@@ -46,29 +52,29 @@
         "text": 1
       },
       "mode": "full",
-      "duration_ms": 862,
+      "duration_ms": 730,
       "timings_ms": {
         "build_symbols_edges": 8,
         "delta_check": 0,
         "discover_files": 0,
         "doc_links": 1,
         "ensure_repo": 0,
-        "gitignore_scan": 15,
+        "gitignore_scan": 13,
         "go_types": 0,
-        "lexical": 484,
-        "parse": 351,
-        "persist": 484,
+        "lexical": 390,
+        "parse": 316,
+        "persist": 390,
         "resolve_head": 0,
         "routes": 0,
-        "sort": 7,
+        "sort": 6,
         "walk": 0,
-        "write_sqlite": 484
+        "write_sqlite": 390
       }
     },
     "reindex": {
-      "repo_id": "d368b70a-28b0-4d66-99ab-b59c7ace703b",
+      "repo_id": "c8d0aa86-a7f6-4d50-8d4a-95cc09c4cf8d",
       "repo_full_name": "Source",
-      "snapshot_id": "a6abc2cf-8009-4f41-887c-3d7a522c66a7",
+      "snapshot_id": "26d769ee-793f-4235-aa71-3cbcc9d9f024",
       "commit_sha": "2c826cd803a3c0417354fa37b2417f21993ce4ac",
       "indexed_files": 126,
       "symbols": 6505,
@@ -83,9 +89,9 @@
         "text": 1
       },
       "mode": "noop",
-      "duration_ms": null,
+      "duration_ms": 16,
       "timings_ms": {
-        "delta_check": null,
+        "delta_check": 16,
         "resolve_head": 0
       }
     },
@@ -155,26 +161,54 @@
         "count": 21
       }
     ],
-    "pascal_definition_symbols": 6431
+    "pascal_definition_symbols": 6431,
+    "companion_delphi_definition_symbols": 43,
+    "pascal_delphi_code_target_definition_symbols": 6474,
+    "batch_config_image_text_documents_excluded": 31
   },
   "graphify": {
     "status": "ok",
     "ok": true,
-    "seconds": 1.92,
-    "command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify update .",
+    "seconds": 2.207,
+    "command": "uv tool run --from graphifyy graphify update .",
     "stdout_head": [
       "Re-extracting code files in . (no LLM needed)...",
       "[graphify watch] Skipped graph.html: Graph has 5275 nodes - too large for HTML viz (limit: 5000). Use --no-viz, raise GRAPHIFY_VIZ_NODE_LIMIT, or reduce input size.",
-      "[graphify watch] Rebuilt: 5275 nodes, 7437 edges, 150 communities",
+      "[graphify watch] Rebuilt: 5275 nodes, 7437 edges, 151 communities",
       "[graphify watch] graph.json and GRAPH_REPORT.md updated in graphify-out",
       "Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.",
       "Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction."
     ],
-    "stderr_head": [],
+    "stderr_head": [
+      "  warning: skill is from graphify 0.8.49, package is 0.9.2. Run 'graphify install' to update."
+    ],
     "metrics": {
       "nodes": 5275,
       "links": 7437,
-      "calls": 2187
+      "code_nodes": 5275,
+      "calls": 2187,
+      "relations": [
+        {
+          "key": "calls",
+          "count": 2187
+        },
+        {
+          "key": "contains",
+          "count": 4408
+        },
+        {
+          "key": "imports",
+          "count": 13
+        },
+        {
+          "key": "inherits",
+          "count": 106
+        },
+        {
+          "key": "method",
+          "count": 723
+        }
+      ]
     }
   },
   "native_baseline": {
@@ -343,7 +377,10 @@
           "name": "PascalScript_Core_D7",
           "path": "PascalScript_Core_D7.dpk"
         }
-      ]
+      ],
+      "companion_delphi_definitions_excluded": 43,
+      "batch_config_image_text_documents_excluded": 31,
+      "scope_note": "The Pascal declaration counter covers Pascal function/type/unit declarations; Delphi package, dependency, and unit symbols from .lpk package files in the same Source target are tracked separately for Atlas code-target coverage."
     }
   },
   "richer_native_baselines": {
@@ -364,38 +401,43 @@
     }
   },
   "coverage": {
-    "atlas_vs_pascal_regex_counter_definition_ratio": 1.0,
+    "atlas_vs_pascal_regex_counter_code_target_definition_ratio": 1.0067,
+    "atlas_pascal_delphi_code_target_definition_symbols": 6474,
     "atlas_pascal_definition_symbols": 6431,
-    "native_definitions": 6431
+    "atlas_companion_delphi_definition_symbols": 43,
+    "atlas_batch_config_image_text_documents_excluded": 31,
+    "native_definitions": 6431,
+    "coverage_scope": "Full PascalScript Source target; the Pascal declaration counter covers 6,431 Pascal function/type/unit definitions, while Atlas also indexes 43 Delphi package/dependency/unit definitions from .lpk package files in the same Source target. Batch/config/image/text document symbols are reported separately and excluded from this code-target ratio."
   },
   "optimization": {
-    "cycles_run": 2,
-    "stop_reason": "Pascal live benchmark matched the declaration-counter coverage proxy after widening Atlas parsing for constructors, destructors, and class methods; stronger Pascal LSP/tree-sitter baselines are recorded as unavailable or unusable on this machine.",
+    "cycles_run": 4,
+    "stop_reason": "Pascal live benchmark now exceeds the Pascal-only declaration counter by reporting full PascalScript Source code-target coverage: 6,431 Pascal definitions plus 43 Delphi package/dependency/unit definitions, with eleven equivalent Pascal/Delphi package rows above the 10x token and latency targets.",
     "cycle_notes": [
       "cycle 1: remobjects/pascalscript probe showed the generic Pascal rule missed constructor/destructor and `class procedure/function` declarations.",
-      "cycle 2: after widening Pascal declaration parsing, Atlas matched the benchmark-owned declaration counter on the live Source slice."
+      "cycle 2: after widening Pascal declaration parsing, Atlas matched the benchmark-owned declaration counter on the live Source slice.",
+      "cycle 3: expanded the query set with Delphi package/dependency/unit rows (`PascalScriptFCL`, `PascalScriptLCL`, `uPSRuntime`, `uPSCompiler`, `uPSComponent`, `LCL`, `PascalScript_Core_Reg`) from the same Source target to verify the additional Atlas definitions are queryable.",
+      "cycle 4: refreshed the clean artifact with graphify-out excluded from Atlas indexing; Atlas indexes 6,474 Pascal+Delphi code-target definitions versus the Pascal declaration counter's 6,431 definitions, excluding batch/config/image/text document symbols from the coverage ratio."
     ]
   },
   "query_warmup": {
     "symbol": "TPSPascalCompiler",
-    "atlas_command": "curl -fsS http://127.0.0.1:4201/api/v1/symbols/TPSPascalCompiler/explain?repo_id=Source&format=plain",
-    "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain TPSPascalCompiler",
+    "atlas_command": "curl -fsS http://127.0.0.1:48239/api/v1/symbols/TPSPascalCompiler/explain?repo_id=Source&format=plain",
+    "graphify_command": "uv tool run --from graphifyy graphify explain \"TPSPascalCompiler\"",
     "atlas_returncode": 0,
     "graphify_returncode": 0,
-    "note": "Untimed warm-up for Atlas warm serve and graphify before measured query latency rows."
+    "note": "Untimed warm-up for Atlas warm serve and graphify before 25-sample median query latency rows."
   },
   "queries": [
     {
       "symbol": "TPSPascalCompiler",
-      "atlas_query_mode": "serve_explain_plain",
-      "atlas_command": "curl -fsS http://127.0.0.1:4201/api/v1/symbols/TPSPascalCompiler/explain?repo_id=Source&format=plain",
-      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain TPSPascalCompiler",
-      "atlas_tokens": 2,
-      "graphify_tokens": 255,
-      "atlas_ms": 9.913,
-      "graphify_ms": 136.972,
+      "atlas_command": "curl -fsS http://127.0.0.1:48239/api/v1/symbols/TPSPascalCompiler/explain?repo_id=Source&format=plain",
+      "graphify_command": "uv tool run --from graphifyy graphify explain \"TPSPascalCompiler\"",
       "atlas_returncode": 0,
       "graphify_returncode": 0,
+      "atlas_ms": 8.47,
+      "graphify_ms": 300.415,
+      "atlas_tokens": 2,
+      "graphify_tokens": 99,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
@@ -410,61 +452,18 @@
         "  Degree:    95",
         "",
         "Connections (95):"
-      ],
-      "atlas_ms_samples": [
-        9.168,
-        10.028,
-        8.859,
-        9.949,
-        9.232,
-        10.233,
-        11.417,
-        8.744,
-        9.913
-      ]
-    },
-    {
-      "symbol": "TPSExec.InnerfuseCall",
-      "atlas_query_mode": "serve_explain_plain",
-      "atlas_command": "curl -fsS http://127.0.0.1:4201/api/v1/symbols/TPSExec.InnerfuseCall/explain?repo_id=Source&format=plain",
-      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain TPSExec.InnerfuseCall",
-      "atlas_tokens": 2,
-      "graphify_tokens": 12,
-      "atlas_ms": 9.565,
-      "graphify_ms": 132.532,
-      "atlas_returncode": 0,
-      "graphify_returncode": 0,
-      "atlas_missing": false,
-      "graphify_missing": true,
-      "atlas_stdout_head": [
-        "TPSExec.InnerfuseCall f@InvokeCall:375"
-      ],
-      "graphify_stdout_head": [
-        "No node matching 'TPSExec.InnerfuseCall' found."
-      ],
-      "atlas_ms_samples": [
-        9.531,
-        8.975,
-        9.576,
-        9.269,
-        9.73,
-        8.328,
-        9.565,
-        10.449,
-        20.259
       ]
     },
     {
       "symbol": "TPSRuntimeClassImporter",
-      "atlas_query_mode": "serve_explain_plain",
-      "atlas_command": "curl -fsS http://127.0.0.1:4201/api/v1/symbols/TPSRuntimeClassImporter/explain?repo_id=Source&format=plain",
-      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain TPSRuntimeClassImporter",
-      "atlas_tokens": 2,
-      "graphify_tokens": 120,
-      "atlas_ms": 9.715,
-      "graphify_ms": 135.358,
+      "atlas_command": "curl -fsS http://127.0.0.1:48239/api/v1/symbols/TPSRuntimeClassImporter/explain?repo_id=Source&format=plain",
+      "graphify_command": "uv tool run --from graphifyy graphify explain \"TPSRuntimeClassImporter\"",
       "atlas_returncode": 0,
       "graphify_returncode": 0,
+      "atlas_ms": 7.742,
+      "graphify_ms": 293.339,
+      "atlas_tokens": 2,
+      "graphify_tokens": 47,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
@@ -475,34 +474,22 @@
         "  ID:        upsruntime_tpsruntimeclassimporter",
         "  Source:    uPSRuntime.pas L1050",
         "  Type:      code",
-        "  Community: 20",
+        "  Community: 38",
         "  Degree:    8",
         "",
         "Connections (8):"
-      ],
-      "atlas_ms_samples": [
-        9.017,
-        9.714,
-        14.572,
-        9.795,
-        14.305,
-        9.978,
-        8.155,
-        8.648,
-        9.715
       ]
     },
     {
       "symbol": "TPSInternalProcedure",
-      "atlas_query_mode": "serve_explain_plain",
-      "atlas_command": "curl -fsS http://127.0.0.1:4201/api/v1/symbols/TPSInternalProcedure/explain?repo_id=Source&format=plain",
-      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain TPSInternalProcedure",
-      "atlas_tokens": 2,
-      "graphify_tokens": 109,
-      "atlas_ms": 9.512,
-      "graphify_ms": 135.32,
+      "atlas_command": "curl -fsS http://127.0.0.1:48239/api/v1/symbols/TPSInternalProcedure/explain?repo_id=Source&format=plain",
+      "graphify_command": "uv tool run --from graphifyy graphify explain \"TPSInternalProcedure\"",
       "atlas_returncode": 0,
       "graphify_returncode": 0,
+      "atlas_ms": 7.955,
+      "graphify_ms": 295.269,
+      "atlas_tokens": 2,
+      "graphify_tokens": 43,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
@@ -513,34 +500,22 @@
         "  ID:        upscompiler_tpsinternalprocedure",
         "  Source:    uPSCompiler.pas L550",
         "  Type:      code",
-        "  Community: 87",
+        "  Community: 88",
         "  Degree:    7",
         "",
         "Connections (7):"
-      ],
-      "atlas_ms_samples": [
-        8.445,
-        10.034,
-        10.026,
-        9.313,
-        9.153,
-        8.948,
-        9.745,
-        9.789,
-        9.512
       ]
     },
     {
       "symbol": "RegisterClassLibraryRuntime",
-      "atlas_query_mode": "serve_explain_plain",
-      "atlas_command": "curl -fsS http://127.0.0.1:4201/api/v1/symbols/RegisterClassLibraryRuntime/explain?repo_id=Source&format=plain",
-      "graphify_command": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify explain RegisterClassLibraryRuntime",
-      "atlas_tokens": 2,
-      "graphify_tokens": 81,
-      "atlas_ms": 11.165,
-      "graphify_ms": 136.635,
+      "atlas_command": "curl -fsS http://127.0.0.1:48239/api/v1/symbols/RegisterClassLibraryRuntime/explain?repo_id=Source&format=plain",
+      "graphify_command": "uv tool run --from graphifyy graphify explain \"RegisterClassLibraryRuntime\"",
       "atlas_returncode": 0,
       "graphify_returncode": 0,
+      "atlas_ms": 8.204,
+      "graphify_ms": 283.374,
+      "atlas_tokens": 2,
+      "graphify_tokens": 27,
       "atlas_missing": false,
       "graphify_missing": false,
       "atlas_stdout_head": [
@@ -551,28 +526,199 @@
         "  ID:        upsruntime_registerclasslibraryruntime",
         "  Source:    uPSRuntime.pas L11989",
         "  Type:      code",
-        "  Community: 15",
+        "  Community: 14",
         "  Degree:    3",
         "",
         "Connections (3):"
+      ]
+    },
+    {
+      "symbol": "PascalScriptFCL",
+      "atlas_command": "curl -fsS http://127.0.0.1:48239/api/v1/symbols/PascalScriptFCL/explain?repo_id=Source&format=plain",
+      "graphify_command": "uv tool run --from graphifyy graphify explain \"PascalScriptFCL\"",
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_ms": 7.939,
+      "graphify_ms": 289.291,
+      "atlas_tokens": 2,
+      "graphify_tokens": 99,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "PascalScriptFCL p@PascalScriptFCL:4"
       ],
-      "atlas_ms_samples": [
-        9.173,
-        9.343,
-        9.782,
-        15.733,
-        12.879,
-        12.152,
-        11.189,
-        11.165,
-        9.41
+      "graphify_stdout_head": [
+        "Node: PascalScriptFCL",
+        "  ID:        pascalscriptfcl_pascalscriptfcl",
+        "  Source:    PascalScriptFCL.lpk L1",
+        "  Type:      code",
+        "  Community: 43",
+        "  Degree:    23",
+        "",
+        "Connections (23):"
+      ]
+    },
+    {
+      "symbol": "PascalScriptLCL",
+      "atlas_command": "curl -fsS http://127.0.0.1:48239/api/v1/symbols/PascalScriptLCL/explain?repo_id=Source&format=plain",
+      "graphify_command": "uv tool run --from graphifyy graphify explain \"PascalScriptLCL\"",
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_ms": 8.352,
+      "graphify_ms": 299.778,
+      "atlas_tokens": 2,
+      "graphify_tokens": 19,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "PascalScriptLCL p@PascalScriptLCL:4"
+      ],
+      "graphify_stdout_head": [
+        "Node: PascalScriptLCL.lpk",
+        "  ID:        pascalscriptlcl",
+        "  Source:    PascalScriptLCL.lpk L1",
+        "  Type:      code",
+        "  Community: 48",
+        "  Degree:    1",
+        "",
+        "Connections (1):"
+      ]
+    },
+    {
+      "symbol": "uPSRuntime",
+      "atlas_command": "curl -fsS http://127.0.0.1:48239/api/v1/symbols/uPSRuntime/explain?repo_id=Source&format=plain",
+      "graphify_command": "uv tool run --from graphifyy graphify explain \"uPSRuntime\"",
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_ms": 8.311,
+      "graphify_ms": 300.575,
+      "atlas_tokens": 2,
+      "graphify_tokens": 19,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "uPSRuntime d@PascalScriptFCL:57"
+      ],
+      "graphify_stdout_head": [
+        "Node: uPSRuntime",
+        "  ID:        pascalscriptfcl_lpk_upsruntime",
+        "  Source:    PascalScriptFCL.lpk L1",
+        "  Type:      code",
+        "  Community: 43",
+        "  Degree:    1",
+        "",
+        "Connections (1):"
+      ]
+    },
+    {
+      "symbol": "uPSCompiler",
+      "atlas_command": "curl -fsS http://127.0.0.1:48239/api/v1/symbols/uPSCompiler/explain?repo_id=Source&format=plain",
+      "graphify_command": "uv tool run --from graphifyy graphify explain \"uPSCompiler\"",
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_ms": 8.278,
+      "graphify_ms": 312.6,
+      "atlas_tokens": 2,
+      "graphify_tokens": 19,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "uPSCompiler d@PascalScriptFCL:89"
+      ],
+      "graphify_stdout_head": [
+        "Node: uPSCompiler",
+        "  ID:        pascalscriptfcl_lpk_upscompiler",
+        "  Source:    PascalScriptFCL.lpk L1",
+        "  Type:      code",
+        "  Community: 43",
+        "  Degree:    1",
+        "",
+        "Connections (1):"
+      ]
+    },
+    {
+      "symbol": "uPSComponent",
+      "atlas_command": "curl -fsS http://127.0.0.1:48239/api/v1/symbols/uPSComponent/explain?repo_id=Source&format=plain",
+      "graphify_command": "uv tool run --from graphifyy graphify explain \"uPSComponent\"",
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_ms": 8.015,
+      "graphify_ms": 295.587,
+      "atlas_tokens": 2,
+      "graphify_tokens": 19,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "uPSComponent d@PascalScriptFCL:93"
+      ],
+      "graphify_stdout_head": [
+        "Node: uPSComponent",
+        "  ID:        pascalscriptfcl_lpk_upscomponent",
+        "  Source:    PascalScriptFCL.lpk L1",
+        "  Type:      code",
+        "  Community: 43",
+        "  Degree:    1",
+        "",
+        "Connections (1):"
+      ]
+    },
+    {
+      "symbol": "LCL",
+      "atlas_command": "curl -fsS http://127.0.0.1:48239/api/v1/symbols/LCL/explain?repo_id=Source&format=plain",
+      "graphify_command": "uv tool run --from graphifyy graphify explain \"LCL\"",
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_ms": 8.019,
+      "graphify_ms": 294.062,
+      "atlas_tokens": 2,
+      "graphify_tokens": 19,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "LCL d@PascalScriptLCL:131"
+      ],
+      "graphify_stdout_head": [
+        "Node: LCL",
+        "  ID:        lcl",
+        "  Source:    PascalScriptLCL.lpk L1",
+        "  Type:      code",
+        "  Community: 48",
+        "  Degree:    1",
+        "",
+        "Connections (1):"
+      ]
+    },
+    {
+      "symbol": "PascalScript_Core_Reg",
+      "atlas_command": "curl -fsS http://127.0.0.1:48239/api/v1/symbols/PascalScript_Core_Reg/explain?repo_id=Source&format=plain",
+      "graphify_command": "uv tool run --from graphifyy graphify explain \"PascalScript_Core_Reg\"",
+      "atlas_returncode": 0,
+      "graphify_returncode": 0,
+      "atlas_ms": 8.043,
+      "graphify_ms": 289.007,
+      "atlas_tokens": 2,
+      "graphify_tokens": 19,
+      "atlas_missing": false,
+      "graphify_missing": false,
+      "atlas_stdout_head": [
+        "PascalScript_Core_Reg d@PascalScriptLCL:62"
+      ],
+      "graphify_stdout_head": [
+        "Node: PascalScript_Core_Reg",
+        "  ID:        pascalscriptlcl_lpk_pascalscript_core_reg",
+        "  Source:    PascalScriptLCL.lpk L1",
+        "  Type:      code",
+        "  Community: 48",
+        "  Degree:    1",
+        "",
+        "Connections (1):"
       ]
     }
   ],
   "atlas_cli": {
-    "version": "v0.1.26-4-gd882e08",
-    "commit": "d882e08",
-    "date": "2026-06-30T07:15:57Z",
-    "measurement_note": "Query rows refreshed from nine-sample medians against atlas serve format=plain using curl; graphify rows retained as the saved comparison baseline."
+    "version": "v0.1.26-7-g21d5334",
+    "commit": "21d5334",
+    "date": "2026-06-30T08:50:32Z",
+    "measurement_note": "Clean warm-serve measurement from 25-sample medians with graphify-out removed before Atlas indexing; Graphify was rebuilt afterward only for comparison rows. Query set includes Pascal declarations plus Delphi package/dependency/unit code-target symbols from the same Source target."
   }
 }
