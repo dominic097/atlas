@@ -1892,9 +1892,7 @@ func (e *localEngine) Explain(ctx context.Context, in ExplainInput) (*ExplainRes
 
 	servedLabels := map[string]bool{}
 	if snap.RouteCount > 0 {
-		// Producer routes served by this symbol: handler_symbol == SYMBOL OR the
-		// route's handler file is one of the definition paths.
-		routes, err := e.store.ListRoutes(ctx, snap.ID, "producer")
+		routes, err := e.routesForExplain(ctx, snap.ID, in.Name, defPaths, in.CountsOnly)
 		if err != nil {
 			return nil, fmt.Errorf("engine: explain routes: %w", err)
 		}
@@ -1937,6 +1935,24 @@ func (e *localEngine) Explain(ctx context.Context, in ExplainInput) (*ExplainRes
 		}
 	}
 	return res, nil
+}
+
+func (e *localEngine) routesForExplain(ctx context.Context, snapshotID, name string, defPaths map[string]bool, countsOnly bool) ([]graph.Route, error) {
+	// Producer routes served by this symbol: handler_symbol == SYMBOL OR the
+	// route's handler file is one of the definition paths. Plain/counts explain
+	// only renders counts, so use the targeted store path when available.
+	if countsOnly {
+		if fast, ok := e.store.(interface {
+			RoutesForSymbol(context.Context, string, string, []string) ([]graph.Route, error)
+		}); ok {
+			paths := make([]string, 0, len(defPaths))
+			for path := range defPaths {
+				paths = append(paths, path)
+			}
+			return fast.RoutesForSymbol(ctx, snapshotID, name, paths)
+		}
+	}
+	return e.store.ListRoutes(ctx, snapshotID, "producer")
 }
 
 func (e *localEngine) explainDefs(ctx context.Context, snap *graph.Snapshot, in ExplainInput) ([]graph.CodeSymbol, int, error) {

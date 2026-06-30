@@ -51,8 +51,14 @@ func TestIndexedQueries(t *testing.T) {
 		{ID: "file-app", SnapshotID: snapID, Path: "app.go", Language: "go", Imports: []string{"context", "fmt"}},
 		{ID: "file-engine", SnapshotID: snapID, Path: "engine.go", Language: "go", Imports: []string{"net/http"}},
 	}
+	routes := []graph.Route{
+		{ID: "route-symbol", SnapshotID: snapID, Method: "GET", PathPattern: "/tasks", HandlerFile: "handler.go", Role: "producer", Metadata: graph.JSONBMap{"handler_symbol": "addTask"}},
+		{ID: "route-file", SnapshotID: snapID, Method: "POST", PathPattern: "/tasks", HandlerFile: "engine.go", Role: "producer"},
+		{ID: "route-consumer", SnapshotID: snapID, Method: "GET", PathPattern: "/external", HandlerFile: "engine.go", Role: "consumer"},
+		{ID: "route-other", SnapshotID: snapID, Method: "GET", PathPattern: "/other", HandlerFile: "other.go", Role: "producer", Metadata: graph.JSONBMap{"handler_symbol": "otherTask"}},
+	}
 
-	if err := d.SaveSnapshot(ctx, snap, files, symbols, edges, nil); err != nil {
+	if err := d.SaveSnapshot(ctx, snap, files, symbols, edges, routes); err != nil {
 		t.Fatalf("SaveSnapshot: %v", err)
 	}
 
@@ -121,6 +127,30 @@ func TestIndexedQueries(t *testing.T) {
 	}
 	if len(emptyFiles) != 0 {
 		t.Errorf("FilesByPaths(nil): got %d, want 0", len(emptyFiles))
+	}
+
+	routeReader, ok := d.(interface {
+		RoutesForSymbol(context.Context, string, string, []string) ([]graph.Route, error)
+	})
+	if !ok {
+		t.Fatal("sqlite driver does not expose RoutesForSymbol")
+	}
+	matchedRoutes, err := routeReader.RoutesForSymbol(ctx, snapID, "addTask", []string{"engine.go"})
+	if err != nil {
+		t.Fatalf("RoutesForSymbol: %v", err)
+	}
+	if len(matchedRoutes) != 2 {
+		t.Fatalf("RoutesForSymbol: got %d routes, want 2 (%+v)", len(matchedRoutes), matchedRoutes)
+	}
+	routePaths := map[string]bool{}
+	for _, route := range matchedRoutes {
+		routePaths[route.PathPattern] = true
+		if route.Role != "producer" {
+			t.Errorf("RoutesForSymbol returned non-producer route: %+v", route)
+		}
+	}
+	if !routePaths["/tasks"] {
+		t.Errorf("RoutesForSymbol missing /tasks route: %+v", matchedRoutes)
 	}
 
 	// CallEdgesByToRefs: index hit returns the edge with metadata; a ref not in

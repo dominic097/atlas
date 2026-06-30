@@ -1517,6 +1517,52 @@ func (d *sqliteDriver) ListRoutes(ctx context.Context, snapshotID, role string) 
 	return out, rows.Err()
 }
 
+// RoutesForSymbol returns producer routes served by symbolName or by one of its
+// defining files, without materializing every route in the snapshot.
+func (d *sqliteDriver) RoutesForSymbol(ctx context.Context, snapshotID, symbolName string, defPaths []string) ([]graph.Route, error) {
+	defPaths = uniqueNonEmpty(defPaths)
+	args := []any{snapshotID, symbolName}
+	handlerPredicate := ""
+	if len(defPaths) > 0 {
+		placeholders := strings.Repeat("?,", len(defPaths))
+		placeholders = placeholders[:len(placeholders)-1]
+		handlerPredicate = ` OR handler_file IN (` + placeholders + `)`
+		for _, path := range defPaths {
+			args = append(args, path)
+		}
+	}
+	const cols = `id, snapshot_id, repo_full_name, method, path_pattern, handler_file, role, source, confidence, metadata`
+	rows, err := d.db.QueryContext(ctx, `SELECT `+cols+`
+		FROM routes
+		WHERE snapshot_id = (SELECT sid FROM snapshots WHERE id = ?)
+			AND role = 'producer'
+			AND (json_extract(metadata, '$.handler_symbol') = ?`+handlerPredicate+`)
+		ORDER BY method, path_pattern`, args...)
+	if err != nil {
+		return nil, fmt.Errorf("store: routes for symbol: %w", err)
+	}
+	defer rows.Close()
+
+	var out []graph.Route
+	for rows.Next() {
+		var (
+			rt     graph.Route
+			sidDis int64
+			meta   sql.NullString
+		)
+		if err := rows.Scan(&rt.ID, &sidDis, &rt.RepoFullName, &rt.Method, &rt.PathPattern,
+			&rt.HandlerFile, &rt.Role, &rt.Source, &rt.Confidence, &meta); err != nil {
+			return nil, fmt.Errorf("store: scan route: %w", err)
+		}
+		rt.SnapshotID = snapshotID
+		if rt.Metadata, err = unmarshalJSONMap(meta.String); err != nil {
+			return nil, fmt.Errorf("store: unmarshal route metadata: %w", err)
+		}
+		out = append(out, rt)
+	}
+	return out, rows.Err()
+}
+
 // ListFiles returns the indexed file rows of a snapshot (path/language/imports).
 func (d *sqliteDriver) ListFiles(ctx context.Context, snapshotID string) ([]graph.File, error) {
 	rows, err := d.db.QueryContext(ctx,

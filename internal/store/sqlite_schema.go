@@ -118,6 +118,8 @@ CREATE TABLE IF NOT EXISTS routes (
 	metadata       TEXT NOT NULL DEFAULT '{}'
 );
 CREATE INDEX IF NOT EXISTS idx_routes_snapshot_role ON routes (snapshot_id, role);
+CREATE INDEX IF NOT EXISTS idx_routes_snapshot_role_handler_file
+	ON routes (snapshot_id, role, handler_file);
 
 CREATE TABLE IF NOT EXISTS coverage (
 	id             TEXT PRIMARY KEY,
