@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T12:32:31.444Z",
+  "generatedAt": "2026-06-30T13:34:30.589Z",
   "sourceLabel": "Atlas benchmark JSON artifacts from bench/",
   "sourceArtifacts": [
     {
@@ -168,8 +168,8 @@
       "name": "LIVE_LUA_BENCHMARK.json",
       "source": "bench/LIVE_LUA_BENCHMARK.json",
       "path": "data/raw/LIVE_LUA_BENCHMARK.json",
-      "bytes": 15031,
-      "sha256": "de913ab969ac5ab76939affb9cfa819c68f0939801eb3400a7d75f17c5d26e08"
+      "bytes": 17597,
+      "sha256": "102eee2db14e435d91f2ba3cb4a7f4f953008244c542ebd5554d511589db649f"
     },
     {
       "name": "LIVE_MARKDOWN_BENCHMARK.json",
@@ -217,15 +217,15 @@
       "name": "LIVE_RUBY_BENCHMARK.json",
       "source": "bench/LIVE_RUBY_BENCHMARK.json",
       "path": "data/raw/LIVE_RUBY_BENCHMARK.json",
-      "bytes": 15328,
-      "sha256": "3153ff1665cca888f4b87581fa11c7634efc95ba613d8b1aea59696672cb4952"
+      "bytes": 17934,
+      "sha256": "3332c1acfb90e20a802c5ad50069a1edbbc24df4c9ee951346af406d69f25ff9"
     },
     {
       "name": "LIVE_RUST_BENCHMARK.json",
       "source": "bench/LIVE_RUST_BENCHMARK.json",
       "path": "data/raw/LIVE_RUST_BENCHMARK.json",
-      "bytes": 14033,
-      "sha256": "7cb933bb9fb9a2ac6906482c30b0f48d34aa0432fcf19db9baf8b1c0bae5098d"
+      "bytes": 17085,
+      "sha256": "b9593e691a79a22d4093fa035022663f4e89b4843f319772661ffc2cdf934d76"
     },
     {
       "name": "LIVE_R_BENCHMARK.json",
@@ -637,9 +637,9 @@
       "parityLatency10x": 0,
       "parityTenX": 0,
       "detectorOnlyArtifacts": 3,
-      "threeRepoValidated": 17,
-      "threeRepoValidatedStrict10x": 17,
-      "threeRepoValidationPending": 19
+      "threeRepoValidated": 20,
+      "threeRepoValidatedStrict10x": 20,
+      "threeRepoValidationPending": 16
     },
     "coverage": {
       "graphifyRows": 39,
@@ -5989,15 +5989,46 @@
         "scope": null
       },
       "multiRepoValidation": {
-        "status": "missing",
+        "status": "passed",
         "minimumRepos": 3,
-        "repoCount": 0,
-        "passedRepoCount": 0,
-        "passed": false,
-        "minCoverageRatio": null,
-        "generatedAt": null,
-        "scope": "",
-        "repos": []
+        "repoCount": 3,
+        "passedRepoCount": 3,
+        "passed": true,
+        "minCoverageRatio": 1,
+        "generatedAt": "2026-06-30T13:33:45Z",
+        "scope": "lua parser random public-repo validation uses three GitHub repos selected by a deterministic random sample from 50 public non-archived lua repos with 50..500 stars and size <= 5000. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from luaparser 4.0.1, and Graphify was run on the same checkout as the comparison baseline.",
+        "repos": [
+          {
+            "repo": "https://github.com/pandoc-scholar/pandoc-scholar",
+            "commit": "40870982b42a9928c6cde4638b0e80a0bc894546",
+            "targetPath": "/tmp/atlas-random-validation/work/lua/1-pandoc-scholar__pandoc-scholar",
+            "atlasDefinitions": 169,
+            "nativeDefinitions": 169,
+            "coverageRatio": 1,
+            "ok": true,
+            "note": "pandoc-scholar/pandoc-scholar: luaparser native counts {\"function\":51,\"local_function\":109,\"assigned_function\":9}; Atlas counts {\"function\":169}; Graphify rebuilt 303 nodes and 362 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/Kaixhin/Autoencoders",
+            "commit": "21fcbd01024699180fc068665d831a04f306d354",
+            "targetPath": "/tmp/atlas-random-validation/work/lua/2-Kaixhin__Autoencoders",
+            "atlasDefinitions": 33,
+            "nativeDefinitions": 2,
+            "coverageRatio": 16.5,
+            "ok": true,
+            "note": "Kaixhin/Autoencoders: luaparser native counts {\"function\":0,\"local_function\":0,\"assigned_function\":2}; Atlas counts {\"function\":33}; Graphify rebuilt 42 nodes and 24 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/sunjon/Shade.nvim",
+            "commit": "4286b5abc47d62d0c9ffb22a4f388b7bf2ac2461",
+            "targetPath": "/tmp/atlas-random-validation/work/lua/3-sunjon__Shade.nvim",
+            "atlasDefinitions": 23,
+            "nativeDefinitions": 23,
+            "coverageRatio": 1,
+            "ok": true,
+            "note": "sunjon/Shade.nvim: luaparser native counts {\"function\":0,\"local_function\":13,\"assigned_function\":10}; Atlas counts {\"function\":23}; Graphify rebuilt 21 nodes and 29 edges on the same checkout."
+          }
+        ]
       },
       "optimization": {
         "cyclesRun": 1,
@@ -7763,15 +7794,46 @@
         "scope": null
       },
       "multiRepoValidation": {
-        "status": "missing",
+        "status": "passed",
         "minimumRepos": 3,
-        "repoCount": 0,
-        "passedRepoCount": 0,
-        "passed": false,
-        "minCoverageRatio": null,
-        "generatedAt": null,
-        "scope": "",
-        "repos": []
+        "repoCount": 3,
+        "passedRepoCount": 3,
+        "passed": true,
+        "minCoverageRatio": 1,
+        "generatedAt": "2026-06-30T13:33:45Z",
+        "scope": "ruby parser random public-repo validation uses three GitHub repos selected by a deterministic random sample from 50 public non-archived ruby repos with 50..500 stars and size <= 5000. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from Ruby Ripper, and Graphify was run on the same checkout as the comparison baseline.",
+        "repos": [
+          {
+            "repo": "https://github.com/tpope/hookup",
+            "commit": "3bca3fef5177de45bbdaa6caee063dd252ae9050",
+            "targetPath": "/tmp/atlas-random-validation/work/ruby/1-tpope__hookup",
+            "atlasDefinitions": 28,
+            "nativeDefinitions": 28,
+            "coverageRatio": 1,
+            "ok": true,
+            "note": "tpope/hookup: ruby-ripper native counts {\"class\":4,\"singleton_method\":1,\"method\":23}; Atlas counts {\"class\":4,\"method\":24}; Graphify rebuilt 28 nodes and 38 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/mailgun/mailgun-ruby",
+            "commit": "bb69b98a8bc34bfd44713bbecebd17319d0d4697",
+            "targetPath": "/tmp/atlas-random-validation/work/ruby/2-mailgun__mailgun-ruby",
+            "atlasDefinitions": 325,
+            "nativeDefinitions": 311,
+            "coverageRatio": 1.045,
+            "ok": true,
+            "note": "mailgun/mailgun-ruby: ruby-ripper native counts {\"method\":236,\"module\":33,\"class\":35,\"singleton_method\":7}; Atlas counts {\"class\":35,\"method\":257,\"module\":33}; Graphify rebuilt 429 nodes and 556 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/BerlinVagrant/vagrant-dns",
+            "commit": "57dee3fc45c40fb286c218f667435eae84666905",
+            "targetPath": "/tmp/atlas-random-validation/work/ruby/3-BerlinVagrant__vagrant-dns",
+            "atlasDefinitions": 116,
+            "nativeDefinitions": 116,
+            "coverageRatio": 1,
+            "ok": true,
+            "note": "BerlinVagrant/vagrant-dns: ruby-ripper native counts {\"module\":24,\"class\":13,\"singleton_method\":7,\"method\":72}; Atlas counts {\"class\":13,\"method\":79,\"module\":24}; Graphify rebuilt 166 nodes and 213 edges on the same checkout."
+          }
+        ]
       },
       "optimization": {
         "cyclesRun": 2,
@@ -7951,15 +8013,46 @@
         "scope": "16 sampled files from rust-analyzer"
       },
       "multiRepoValidation": {
-        "status": "missing",
+        "status": "passed",
         "minimumRepos": 3,
-        "repoCount": 0,
-        "passedRepoCount": 0,
-        "passed": false,
-        "minCoverageRatio": null,
-        "generatedAt": null,
-        "scope": "",
-        "repos": []
+        "repoCount": 3,
+        "passedRepoCount": 3,
+        "passed": true,
+        "minCoverageRatio": 1.4076,
+        "generatedAt": "2026-06-30T13:33:45Z",
+        "scope": "rust parser random public-repo validation uses three GitHub repos selected by a deterministic random sample from 50 public non-archived rust repos with 50..500 stars and size <= 5000. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from rust-analyzer symbols, and Graphify was run on the same checkout as the comparison baseline.",
+        "repos": [
+          {
+            "repo": "https://github.com/Taaitaaiger/jlrs",
+            "commit": "2297a23438ade895605619bd658510c67a239102",
+            "targetPath": "/tmp/atlas-random-validation/work/rust/1-Taaitaaiger__jlrs",
+            "atlasDefinitions": 7152,
+            "nativeDefinitions": 5081,
+            "coverageRatio": 1.4076,
+            "ok": true,
+            "note": "Taaitaaiger/jlrs: rust-analyzer symbols native counts {\"Function\":1994,\"Module\":388,\"Struct\":452,\"Const\":96,\"TypeAlias\":505,\"Method\":1291,\"Static\":149,\"Enum\":45,\"Trait\":106,\"Macro\":55}; Atlas counts {\"class\":966,\"constant\":96,\"function\":2964,\"interface\":106,\"macro\":55,\"method\":2577,\"module\":388}; Graphify rebuilt 4446 nodes and 11573 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/rust-windowing/softbuffer",
+            "commit": "840683cfce68a04d20cfb75b2976d009d3ba77d8",
+            "targetPath": "/tmp/atlas-random-validation/work/rust/2-rust-windowing__softbuffer",
+            "atlasDefinitions": 715,
+            "nativeDefinitions": 475,
+            "coverageRatio": 1.5053,
+            "ok": true,
+            "note": "rust-windowing/softbuffer: rust-analyzer symbols native counts {\"Module\":41,\"Function\":119,\"Struct\":58,\"Method\":209,\"TypeAlias\":24,\"Enum\":10,\"Trait\":5,\"Const\":7,\"Macro\":1,\"Static\":1}; Atlas counts {\"class\":89,\"constant\":7,\"function\":313,\"interface\":5,\"macro\":1,\"method\":259,\"module\":41}; Graphify rebuilt 592 nodes and 1544 edges on the same checkout."
+          },
+          {
+            "repo": "https://github.com/rapidfuzz/strsim-rs",
+            "commit": "dacc84c0dc61eff0ee0ff66962bcf2e17018ad26",
+            "targetPath": "/tmp/atlas-random-validation/work/rust/3-rapidfuzz__strsim-rs",
+            "atlasDefinitions": 249,
+            "nativeDefinitions": 148,
+            "coverageRatio": 1.6824,
+            "ok": true,
+            "note": "rapidfuzz/strsim-rs: rust-analyzer symbols native counts {\"Macro\":2,\"Function\":127,\"Enum\":1,\"Method\":9,\"TypeAlias\":3,\"Struct\":5,\"Module\":1}; Atlas counts {\"class\":9,\"function\":136,\"macro\":2,\"method\":101,\"module\":1}; Graphify rebuilt 232 nodes and 293 edges on the same checkout."
+          }
+        ]
       },
       "optimization": {
         "cyclesRun": 2,

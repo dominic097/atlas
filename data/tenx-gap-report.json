@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T12:32:31.444Z",
+  "generatedAt": "2026-06-30T13:34:30.589Z",
   "source": "data/benchmark-data.json",
   "targetRatio": 10,
   "metricNote": "Token and latency are ratio targets. Coverage is a native-definition coverage ratio, so the honest accuracy target is >1.0 native coverage exceed, not a fabricated 10x accuracy multiplier.",
@@ -12,8 +12,8 @@
     "token10xComparable": 36,
     "latency10xComparable": 36,
     "performance10xComparable": 36,
-    "threeRepoValidated": 17,
-    "threeRepoValidatedStrict10x": 17
+    "threeRepoValidated": 20,
+    "threeRepoValidatedStrict10x": 20
   },
   "parityLanguages": [],
   "live": [
@@ -391,10 +391,10 @@
       "latencyGapTo10x": 1,
       "blockers": [],
       "validation": {
-        "passed": false,
-        "repoCount": 0,
+        "passed": true,
+        "repoCount": 3,
         "minimumRepos": 3,
-        "minCoverageRatio": null
+        "minCoverageRatio": 1
       }
     },
     {
@@ -551,10 +551,10 @@
       "latencyGapTo10x": 1,
       "blockers": [],
       "validation": {
-        "passed": false,
-        "repoCount": 0,
+        "passed": true,
+        "repoCount": 3,
         "minimumRepos": 3,
-        "minCoverageRatio": null
+        "minCoverageRatio": 1
       }
     },
     {
@@ -571,10 +571,10 @@
       "latencyGapTo10x": 1,
       "blockers": [],
       "validation": {
-        "passed": false,
-        "repoCount": 0,
+        "passed": true,
+        "repoCount": 3,
         "minimumRepos": 3,
-        "minCoverageRatio": null
+        "minCoverageRatio": 1.4076
       }
     },
     {

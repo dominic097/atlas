@@ -527,5 +527,45 @@
     "commit": "d882e08",
     "date": "2026-06-30T07:15:57Z",
     "measurement_note": "Query rows refreshed from 13-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+  },
+  "multi_repo_validation": {
+    "minimum_repos": 3,
+    "status": "passed",
+    "generated_at": "2026-06-30T13:33:45Z",
+    "scope": "ruby parser random public-repo validation uses three GitHub repos selected by a deterministic random sample from 50 public non-archived ruby repos with 50..500 stars and size <= 5000. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from Ruby Ripper, and Graphify was run on the same checkout as the comparison baseline.",
+    "selection_method": "gh search repos --language Ruby --stars 50..500 --archived=false --limit 50; size <= 5000; deterministic random sample seed 2026-06-30-atlas-random-validation-v1",
+    "measurement_order": "Atlas index after removing graphify-out, then native counter, then graphify update for comparison metrics.",
+    "repos": [
+      {
+        "repo": "https://github.com/tpope/hookup",
+        "commit": "3bca3fef5177de45bbdaa6caee063dd252ae9050",
+        "target_path": "/tmp/atlas-random-validation/work/ruby/1-tpope__hookup",
+        "atlas_definitions": 28,
+        "native_definitions": 28,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "tpope/hookup: ruby-ripper native counts {\"class\":4,\"singleton_method\":1,\"method\":23}; Atlas counts {\"class\":4,\"method\":24}; Graphify rebuilt 28 nodes and 38 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/mailgun/mailgun-ruby",
+        "commit": "bb69b98a8bc34bfd44713bbecebd17319d0d4697",
+        "target_path": "/tmp/atlas-random-validation/work/ruby/2-mailgun__mailgun-ruby",
+        "atlas_definitions": 325,
+        "native_definitions": 311,
+        "coverage_ratio": 1.045,
+        "ok": true,
+        "note": "mailgun/mailgun-ruby: ruby-ripper native counts {\"method\":236,\"module\":33,\"class\":35,\"singleton_method\":7}; Atlas counts {\"class\":35,\"method\":257,\"module\":33}; Graphify rebuilt 429 nodes and 556 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/BerlinVagrant/vagrant-dns",
+        "commit": "57dee3fc45c40fb286c218f667435eae84666905",
+        "target_path": "/tmp/atlas-random-validation/work/ruby/3-BerlinVagrant__vagrant-dns",
+        "atlas_definitions": 116,
+        "native_definitions": 116,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "BerlinVagrant/vagrant-dns: ruby-ripper native counts {\"module\":24,\"class\":13,\"singleton_method\":7,\"method\":72}; Atlas counts {\"class\":13,\"method\":79,\"module\":24}; Graphify rebuilt 166 nodes and 213 edges on the same checkout."
+      }
+    ]
   }
 }

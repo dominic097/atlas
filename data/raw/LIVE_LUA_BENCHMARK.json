@@ -514,5 +514,45 @@
     "commit": "d882e08",
     "date": "2026-06-30T07:15:57Z",
     "measurement_note": "Query rows refreshed from nine-sample medians against atlas serve format=plain using curl; Graphify rows retained as the saved comparison baseline."
+  },
+  "multi_repo_validation": {
+    "minimum_repos": 3,
+    "status": "passed",
+    "generated_at": "2026-06-30T13:33:45Z",
+    "scope": "lua parser random public-repo validation uses three GitHub repos selected by a deterministic random sample from 50 public non-archived lua repos with 50..500 stars and size <= 5000. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from luaparser 4.0.1, and Graphify was run on the same checkout as the comparison baseline.",
+    "selection_method": "gh search repos --language Lua --stars 50..500 --archived=false --limit 50; size <= 5000; deterministic random sample seed 2026-06-30-atlas-random-validation-v1",
+    "measurement_order": "Atlas index after removing graphify-out, then native counter, then graphify update for comparison metrics.",
+    "repos": [
+      {
+        "repo": "https://github.com/pandoc-scholar/pandoc-scholar",
+        "commit": "40870982b42a9928c6cde4638b0e80a0bc894546",
+        "target_path": "/tmp/atlas-random-validation/work/lua/1-pandoc-scholar__pandoc-scholar",
+        "atlas_definitions": 169,
+        "native_definitions": 169,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "pandoc-scholar/pandoc-scholar: luaparser native counts {\"function\":51,\"local_function\":109,\"assigned_function\":9}; Atlas counts {\"function\":169}; Graphify rebuilt 303 nodes and 362 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/Kaixhin/Autoencoders",
+        "commit": "21fcbd01024699180fc068665d831a04f306d354",
+        "target_path": "/tmp/atlas-random-validation/work/lua/2-Kaixhin__Autoencoders",
+        "atlas_definitions": 33,
+        "native_definitions": 2,
+        "coverage_ratio": 16.5,
+        "ok": true,
+        "note": "Kaixhin/Autoencoders: luaparser native counts {\"function\":0,\"local_function\":0,\"assigned_function\":2}; Atlas counts {\"function\":33}; Graphify rebuilt 42 nodes and 24 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/sunjon/Shade.nvim",
+        "commit": "4286b5abc47d62d0c9ffb22a4f388b7bf2ac2461",
+        "target_path": "/tmp/atlas-random-validation/work/lua/3-sunjon__Shade.nvim",
+        "atlas_definitions": 23,
+        "native_definitions": 23,
+        "coverage_ratio": 1,
+        "ok": true,
+        "note": "sunjon/Shade.nvim: luaparser native counts {\"function\":0,\"local_function\":13,\"assigned_function\":10}; Atlas counts {\"function\":23}; Graphify rebuilt 21 nodes and 29 edges on the same checkout."
+      }
+    ]
   }
 }

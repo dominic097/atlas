@@ -1,6 +1,6 @@
 # Atlas 10x Gap Report
 
-Generated: 2026-06-30T12:32:31.444Z
+Generated: 2026-06-30T13:34:30.589Z
 
 Token and latency are ratio targets. Coverage is a native-definition coverage ratio, so the honest accuracy target is >1.0 native coverage exceed, not a fabricated 10x accuracy multiplier.
 
@@ -13,8 +13,8 @@ Token and latency are ratio targets. Coverage is a native-definition coverage ra
 - Token >=10x comparable: 36
 - Latency >=10x comparable: 36
 - Token+latency >=10x comparable: 36
-- Minimum 3-repo validated: 17
-- Minimum 3-repo validated and coverage-exceed: 17
+- Minimum 3-repo validated: 20
+- Minimum 3-repo validated and coverage-exceed: 20
 
 ## Biggest Latency Gaps
 

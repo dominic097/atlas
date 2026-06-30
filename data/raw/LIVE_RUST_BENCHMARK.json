@@ -475,5 +475,45 @@
     "commit": "d882e08",
     "date": "2026-06-30T07:15:57Z",
     "measurement_note": "Query rows refreshed from nine-sample medians against atlas serve format=plain using curl; graphify rows retained as the saved comparison baseline."
+  },
+  "multi_repo_validation": {
+    "minimum_repos": 3,
+    "status": "passed",
+    "generated_at": "2026-06-30T13:33:45Z",
+    "scope": "rust parser random public-repo validation uses three GitHub repos selected by a deterministic random sample from 50 public non-archived rust repos with 50..500 stars and size <= 5000. Atlas indexed each clean checkout after removing graphify-out, the native denominator came from rust-analyzer symbols, and Graphify was run on the same checkout as the comparison baseline.",
+    "selection_method": "gh search repos --language Rust --stars 50..500 --archived=false --limit 50; size <= 5000; deterministic random sample seed 2026-06-30-atlas-random-validation-v1",
+    "measurement_order": "Atlas index after removing graphify-out, then native counter, then graphify update for comparison metrics.",
+    "repos": [
+      {
+        "repo": "https://github.com/Taaitaaiger/jlrs",
+        "commit": "2297a23438ade895605619bd658510c67a239102",
+        "target_path": "/tmp/atlas-random-validation/work/rust/1-Taaitaaiger__jlrs",
+        "atlas_definitions": 7152,
+        "native_definitions": 5081,
+        "coverage_ratio": 1.4076,
+        "ok": true,
+        "note": "Taaitaaiger/jlrs: rust-analyzer symbols native counts {\"Function\":1994,\"Module\":388,\"Struct\":452,\"Const\":96,\"TypeAlias\":505,\"Method\":1291,\"Static\":149,\"Enum\":45,\"Trait\":106,\"Macro\":55}; Atlas counts {\"class\":966,\"constant\":96,\"function\":2964,\"interface\":106,\"macro\":55,\"method\":2577,\"module\":388}; Graphify rebuilt 4446 nodes and 11573 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/rust-windowing/softbuffer",
+        "commit": "840683cfce68a04d20cfb75b2976d009d3ba77d8",
+        "target_path": "/tmp/atlas-random-validation/work/rust/2-rust-windowing__softbuffer",
+        "atlas_definitions": 715,
+        "native_definitions": 475,
+        "coverage_ratio": 1.5053,
+        "ok": true,
+        "note": "rust-windowing/softbuffer: rust-analyzer symbols native counts {\"Module\":41,\"Function\":119,\"Struct\":58,\"Method\":209,\"TypeAlias\":24,\"Enum\":10,\"Trait\":5,\"Const\":7,\"Macro\":1,\"Static\":1}; Atlas counts {\"class\":89,\"constant\":7,\"function\":313,\"interface\":5,\"macro\":1,\"method\":259,\"module\":41}; Graphify rebuilt 592 nodes and 1544 edges on the same checkout."
+      },
+      {
+        "repo": "https://github.com/rapidfuzz/strsim-rs",
+        "commit": "dacc84c0dc61eff0ee0ff66962bcf2e17018ad26",
+        "target_path": "/tmp/atlas-random-validation/work/rust/3-rapidfuzz__strsim-rs",
+        "atlas_definitions": 249,
+        "native_definitions": 148,
+        "coverage_ratio": 1.6824,
+        "ok": true,
+        "note": "rapidfuzz/strsim-rs: rust-analyzer symbols native counts {\"Macro\":2,\"Function\":127,\"Enum\":1,\"Method\":9,\"TypeAlias\":3,\"Struct\":5,\"Module\":1}; Atlas counts {\"class\":9,\"function\":136,\"macro\":2,\"method\":101,\"module\":1}; Graphify rebuilt 232 nodes and 293 edges on the same checkout."
+      }
+    ]
   }
 }
