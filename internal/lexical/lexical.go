@@ -46,7 +46,7 @@ const (
 	// nameBoost ranks a name-field match above signature/doc/path matches.
 	nameBoost = 3.0
 
-	indexBatchSize = 256
+	indexBatchSize = 1024
 )
 
 // registerOnce guards the global bleve registry registration of the code
