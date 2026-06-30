@@ -70,6 +70,8 @@ func verilogDefinitionDraft(n *tree_sitter.Node, content []byte) (symbolDraft, b
 		kind = "program"
 	case "checker_declaration":
 		kind = "checker"
+	case "type_declaration":
+		kind = "type"
 	default:
 		return symbolDraft{}, false
 	}
@@ -92,6 +94,9 @@ func verilogFirstIdentifier(n *tree_sitter.Node, content []byte) string {
 		return ""
 	}
 	if child := n.ChildByFieldName("name"); child != nil {
+		return verilogIdentifierName(child, content)
+	}
+	if child := n.ChildByFieldName("type_name"); child != nil {
 		return verilogIdentifierName(child, content)
 	}
 	for i := uint(0); i < n.ChildCount(); i++ {

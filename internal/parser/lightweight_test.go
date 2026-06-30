@@ -641,6 +641,14 @@ end program stdlib_driver
 func TestParseVerilogSystemVerilogDefinitions(t *testing.T) {
 	res, err := Parse("repo", "org/repo", "rtl/ibex_core.sv", "", []byte(`
 package ibex_pkg;
+  typedef enum logic [1:0] {
+    Idle,
+    Busy
+  } state_e;
+  typedef struct packed {
+    logic [31:0] addr;
+  } bus_req_t;
+  typedef logic [31:0] word_t;
   class config_obj;
   endclass
   function automatic logic [6:0] cm_stack_adj_base(input logic [3:0] rlist);
@@ -664,6 +672,9 @@ endmodule
 	}
 	for name, kind := range map[string]string{
 		"ibex_pkg":          "package",
+		"state_e":           "type",
+		"bus_req_t":         "type",
+		"word_t":            "type",
 		"config_obj":        "class",
 		"cm_stack_adj_base": "function",
 		"bus_if":            "interface",
@@ -681,6 +692,11 @@ endmodule
 	}
 	if symbols := symbolsNamedKind(res.Symbols, "decode_i_insn", "function"); len(symbols) != 1 {
 		t.Fatalf("decode_i_insn symbols = %+v, want exactly one definition", symbols)
+	}
+	for _, name := range []string{"state_e", "bus_req_t", "word_t"} {
+		if symbols := symbolsNamedKind(res.Symbols, name, "type"); len(symbols) != 1 {
+			t.Fatalf("%s symbols = %+v, want exactly one typedef definition", name, symbols)
+		}
 	}
 }
 
