@@ -333,6 +333,9 @@ func TestParsePowerShellNativeDefinitions(t *testing.T) {
 using module './lib/common.psm1'
 Import-Module -Name Pester
 $moduleSetting = 'enabled'
+$script:cacheRoot = @{}
+$obj.Prop = 1
+& { $blockLocal = $true }
 
 function Invoke-Install {
   $localOnly = $true
@@ -362,6 +365,7 @@ class Installer {
 		"Installer":      "class",
 		"Run":            "method",
 		"moduleSetting":  "variable",
+		"cacheRoot":      "variable",
 	}
 	for name, kind := range want {
 		if len(symbolsNamedKind(res.Symbols, name, kind)) == 0 {
@@ -373,6 +377,11 @@ class Installer {
 	}
 	if findSymbol(res.Symbols, "localOnly") != nil {
 		t.Fatalf("function-local PowerShell assignment was indexed: %+v", res.Symbols)
+	}
+	for _, rejected := range []string{"obj", "blockLocal"} {
+		if findSymbol(res.Symbols, rejected) != nil {
+			t.Fatalf("non-definition PowerShell assignment %q was indexed: %+v", rejected, res.Symbols)
+		}
 	}
 	for _, wantImport := range []string{"./lib/common.psm1", "Pester"} {
 		if !containsString(res.Imports, wantImport) {
