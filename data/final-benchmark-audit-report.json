@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-01T05:39:57.345Z",
-  "benchmarkGeneratedAt": "2026-07-01T05:39:57.345Z",
+  "generatedAt": "2026-07-01T05:45:43.071Z",
+  "benchmarkGeneratedAt": "2026-07-01T05:45:43.071Z",
   "scope": "Final pass over Atlas benchmark artifacts: supported-language fixture sweep for every parser.Supported family, public-repo matrix artifacts against Graphify plus native SCIP/LSP tools, live language artifacts against Graphify plus language-specific native/proxy baselines, and public three-repo validation metadata.",
   "summary": {
     "coreLanguages": 7,
@@ -66,9 +66,9 @@
     "supportedFixturePrecision100": 39,
     "supportedFixtureExact": 36,
     "supportedGraphifySupport": {
-      "detector_only": 2,
+      "detector_only": 3,
       "deterministic": 40,
-      "unsupported": 22
+      "unsupported": 21
     },
     "supportedNativeBaselineStatus": {
       "missing": 42,
@@ -1782,7 +1782,7 @@
     },
     "supportedLanguageBenchmark": {
       "statement": "The supported-language fixture sweep proves every Atlas-supported parser family can be indexed and compared against Graphify/runtime support plus local native/tool availability. It is fixture evidence, not a public-repo semantic oracle.",
-      "generatedAt": "2026-07-01T05:34:56Z",
+      "generatedAt": "2026-07-01T05:45:14Z",
       "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
       "summary": {
         "atlas_ok": 64,
@@ -1798,13 +1798,13 @@
         ],
         "graphify_dispatch_count": 89,
         "graphify_status": {
-          "ok": 42,
-          "unsupported": 22
+          "ok": 43,
+          "unsupported": 21
         },
         "graphify_support": {
-          "detector_only": 2,
+          "detector_only": 3,
           "deterministic": 40,
-          "unsupported": 22
+          "unsupported": 21
         },
         "graphify_version": "graphifyy 0.8.49",
         "native_baseline_status": {
@@ -2144,8 +2144,8 @@
           "category": "code",
           "oracleRecall": 1,
           "oraclePrecision": 1,
-          "graphifyStatus": "unsupported",
-          "graphifySupport": "unsupported",
+          "graphifyStatus": "ok",
+          "graphifySupport": "detector_only",
           "nativeStatus": "missing",
           "missingSymbols": [],
           "extraSymbols": []
@@ -2498,7 +2498,7 @@
   },
   "stubsAndHallucinationAudit": {
     "foundDuringFinalPass": [
-      "The supported-language fixture sweep now records 64 parser.Supported families, with Atlas indexing 64/64; Graphify is {\"detector_only\":2,\"deterministic\":40,\"unsupported\":22} and native/tool status is {\"missing\":42,\"ok\":22}.",
+      "The supported-language fixture sweep now records 64 parser.Supported families, with Atlas indexing 64/64; Graphify is {\"detector_only\":3,\"deterministic\":40,\"unsupported\":21} and native/tool status is {\"missing\":42,\"ok\":22}.",
       "The UI previously carried a hard-coded native tool manifest; this final pass renders tool status/version from provenance data so missing tools are no longer shown as healthy.",
       "scip-java now resolves through the pinned bench/tools/scip-java-coursier launcher; Java is reported with both SCIP and JDTLS baselines present.",
       "The committed public-repo validation harness regenerates data/public-repo-validation-manifest.* from raw live artifacts and fails when a code language lacks passing three-repo evidence.",

@@ -1,6 +1,6 @@
 # Atlas Supported-Language Benchmark
 
-Generated: 2026-07-01T05:34:56Z
+Generated: 2026-07-01T05:45:14Z
 
 This is the language-complete fixture sweep for every `parser.Supported` Atlas family. It is not the old 7-language matrix and it does not use a core-language subset.
 
@@ -12,8 +12,8 @@ This is the language-complete fixture sweep for every `parser.Supported` Atlas f
 - Fixture-oracle 100% recall rows: 43/62
 - Fixture-oracle 100% precision rows: 39/62
 - Exact fixture-oracle rows: 36/62
-- Graphify support: {'deterministic': 40, 'detector_only': 2, 'unsupported': 22}
-- Graphify run status: {'ok': 42, 'unsupported': 22}
+- Graphify support: {'deterministic': 40, 'detector_only': 3, 'unsupported': 21}
+- Graphify run status: {'ok': 43, 'unsupported': 21}
 - Native/tool baseline status: {'ok': 22, 'missing': 42}
 - Graphify runtime: graphifyy 0.8.49 (`_DISPATCH` entries: 89)
 
@@ -55,7 +55,7 @@ This is the language-complete fixture sweep for every `parser.Supported` Atlas f
 | astro | template | 1/4/1/0 | 1.0 | 0.5 | deterministic/ok nodes=3 calls=0 | astro parser proxy:missing | extra: App, BaseLayout |
 | ejs | template | 1/2/0/0 | 0.5 | 0.5 | detector_only/ok nodes=0 calls=0 | ejs compiler:missing | missing: partials/header; extra: view |
 | ets | code | 1/4/3/2 | 1.0 | 1.0 | detector_only/ok nodes=0 calls=0 | arkts parser candidate:missing | ok |
-| r | code | 1/2/3/1 | 1.0 | 1.0 | unsupported/unsupported | R parser candidate:missing | ok |
+| r | code | 1/2/3/1 | 1.0 | 1.0 | detector_only/ok nodes=0 calls=0 | R parser candidate:missing | ok |
 | p4 | code | 1/4/0/0 | 1.0 | 0.75 | unsupported/unsupported | p4 parser candidate:missing | extra: start |
 | csharp | code | 1/3/1/1 | 1.0 | 1.0 | deterministic/ok nodes=4 calls=1 | csharp compiler/lsp candidate:missing | ok |
 | groovy | code | 1/3/2/1 | 1.0 | 1.0 | deterministic/ok nodes=4 calls=1 | groovy parser candidate:missing | ok |
@@ -142,7 +142,6 @@ This is the language-complete fixture sweep for every `parser.Supported` Atlas f
 | P1 | ejs | native_baseline_missing | No executable local native/tool baseline was found for ejs; fixture oracle and Atlas/Graphify slots are still recorded. |
 | P1 | ets | native_baseline_missing | No executable local native/tool baseline was found for ets; fixture oracle and Atlas/Graphify slots are still recorded. |
 | P1 | r | native_baseline_missing | No executable local native/tool baseline was found for r; fixture oracle and Atlas/Graphify slots are still recorded. |
-| P2 | r | graphify_unsupported | not present in Graphify detector/dispatch runtime |
 | P2 | p4 | fixture_oracle_precision_review | start |
 | P1 | p4 | native_baseline_missing | No executable local native/tool baseline was found for p4; fixture oracle and Atlas/Graphify slots are still recorded. |
 | P2 | p4 | graphify_unsupported | not present in Graphify detector/dispatch runtime |

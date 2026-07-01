@@ -1,6 +1,6 @@
 # Atlas Final Benchmark Audit
 
-Generated: 2026-07-01T05:39:57.345Z
+Generated: 2026-07-01T05:45:43.071Z
 
 Final pass over Atlas benchmark artifacts: supported-language fixture sweep for every parser.Supported family, public-repo matrix artifacts against Graphify plus native SCIP/LSP tools, live language artifacts against Graphify plus language-specific native/proxy baselines, and public three-repo validation metadata.
 
@@ -47,7 +47,7 @@ Final pass over Atlas benchmark artifacts: supported-language fixture sweep for 
 - Supported fixture 100% recall: 43/62
 - Supported fixture 100% precision: 39/62
 - Supported fixture exact rows: 36/62
-- Supported Graphify support: {"detector_only":2,"deterministic":40,"unsupported":22}
+- Supported Graphify support: {"detector_only":3,"deterministic":40,"unsupported":21}
 - Supported native/tool status: {"missing":42,"ok":22}
 
 ## Ground Truth Closeness
@@ -192,8 +192,8 @@ Detector-only extensions:
 
 The supported-language fixture sweep proves every Atlas-supported parser family can be indexed and compared against Graphify/runtime support plus local native/tool availability. It is fixture evidence, not a public-repo semantic oracle.
 
-Artifact: data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json, generated 2026-07-01T05:34:56Z.
-Families: 64; Atlas ok: 64/64; Graphify support: {"detector_only":2,"deterministic":40,"unsupported":22}; native/tool status: {"missing":42,"ok":22}.
+Artifact: data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json, generated 2026-07-01T05:45:14Z.
+Families: 64; Atlas ok: 64/64; Graphify support: {"detector_only":3,"deterministic":40,"unsupported":21}; native/tool status: {"missing":42,"ok":22}.
 Fixture oracle: recall 100% 43/62; precision 100% 39/62; exact 36/62.
 
 | Language | Category | Recall | Precision | Graphify | Native/tool | Missing | Extra |
@@ -223,7 +223,7 @@ Fixture oracle: recall 100% 43/62; precision 100% 39/62; exact 36/62.
 | astro | template | 1 | 0.5 | deterministic/ok | missing | none | App, BaseLayout |
 | ejs | template | 0.5 | 0.5 | detector_only/ok | missing | partials/header | view |
 | ets | code | 1 | 1 | detector_only/ok | missing | none | none |
-| r | code | 1 | 1 | unsupported/unsupported | missing | none | none |
+| r | code | 1 | 1 | detector_only/ok | missing | none | none |
 | p4 | code | 1 | 0.75 | unsupported/unsupported | missing | none | start |
 | csharp | code | 1 | 1 | deterministic/ok | missing | none | none |
 | groovy | code | 1 | 1 | deterministic/ok | missing | none | none |
@@ -288,7 +288,7 @@ Fixture oracle: recall 100% 43/62; precision 100% 39/62; exact 36/62.
 
 ### Found During Final Pass
 
-- The supported-language fixture sweep now records 64 parser.Supported families, with Atlas indexing 64/64; Graphify is {"detector_only":2,"deterministic":40,"unsupported":22} and native/tool status is {"missing":42,"ok":22}.
+- The supported-language fixture sweep now records 64 parser.Supported families, with Atlas indexing 64/64; Graphify is {"detector_only":3,"deterministic":40,"unsupported":21} and native/tool status is {"missing":42,"ok":22}.
 - The UI previously carried a hard-coded native tool manifest; this final pass renders tool status/version from provenance data so missing tools are no longer shown as healthy.
 - scip-java now resolves through the pinned bench/tools/scip-java-coursier launcher; Java is reported with both SCIP and JDTLS baselines present.
 - The committed public-repo validation harness regenerates data/public-repo-validation-manifest.* from raw live artifacts and fails when a code language lacks passing three-repo evidence.
