@@ -22,6 +22,9 @@ const required = [
   "MATRIX_TOOL_VERSIONS.json",
   "GRAPHIFY_LANGUAGE_DISCOVERY.json",
 ];
+const optional = [
+  "SUPPORTED_LANGUAGE_BENCHMARK.json",
+];
 
 const TEN_X_TARGET = 10;
 const COVERAGE_EPSILON = 0.0001;
@@ -156,7 +159,8 @@ function publicSource(file) {
 
 function copyRawArtifacts() {
   const live = fs.readdirSync(benchDir).filter((file) => /^LIVE_.*_BENCHMARK\.json$/.test(file)).sort();
-  const files = [...required, ...live];
+  const availableOptional = optional.filter((file) => fs.existsSync(path.join(benchDir, file)));
+  const files = [...required, ...live, ...availableOptional];
   if (benchDir === rawDir) {
     return files.map((file) => {
       const source = path.join(benchDir, file);
@@ -185,6 +189,52 @@ function copyRawArtifacts() {
       sha256: sha256(source),
     };
   });
+}
+
+function buildSupportedLanguageBenchmark() {
+  const file = "SUPPORTED_LANGUAGE_BENCHMARK.json";
+  if (!fs.existsSync(path.join(benchDir, file))) return null;
+  const raw = readJSON(file);
+  return {
+    schemaVersion: raw.schema_version || 1,
+    generatedAt: raw.generated_at || null,
+    durationSeconds: raw.duration_seconds ?? null,
+    artifact: artifactPath(file),
+    source: publicSource(file),
+    summary: raw.summary || {},
+    platform: raw.platform || {},
+    atlasBinary: raw.atlas_binary || "",
+    graphifyBinary: raw.graphify_binary || "",
+    rows: (raw.results || []).map((row) => ({
+      language: row.language,
+      category: row.category,
+      fixturePath: row.fixture_path,
+      artifact: artifactPath(file),
+      source: publicSource(file),
+      atlas: {
+        status: row.atlas?.status || "unknown",
+        ok: Boolean(row.atlas?.ok),
+        seconds: row.atlas?.seconds ?? null,
+        metrics: row.atlas?.metrics || {},
+      },
+      graphify: {
+        status: row.graphify?.status || "unknown",
+        ok: Boolean(row.graphify?.ok),
+        support: row.graphify?.support || {},
+        metrics: row.graphify?.metrics || {},
+      },
+      native: {
+        tool: row.native_baseline?.tool || "",
+        status: row.native_baseline?.status || "unknown",
+        ok: Boolean(row.native_baseline?.ok),
+        toolClass: row.native_baseline?.tool_class || "",
+        metrics: row.native_baseline?.metrics || {},
+        note: row.native_baseline?.note || "",
+      },
+      oracle: row.fixture_oracle || {},
+    })),
+    improvementAreas: raw.improvement_areas || [],
+  };
 }
 
 function buildCoreMatrix(matrix) {
@@ -550,6 +600,8 @@ function classifyTruthRisk(row) {
 function buildFinalAuditReport(dataset) {
   const structuredLive = new Set(["json", "markdown"]);
   const liveCodeRows = dataset.liveBenchmarks.filter((row) => !structuredLive.has(row.language));
+  const supportedBenchmark = dataset.supportedLanguageBenchmark || null;
+  const supportedSummary = supportedBenchmark?.summary || {};
   const pendingCode = liveCodeRows.filter((row) => !row.multiRepoValidation?.passed).map((row) => row.language);
   const publicValidation = dataset.publicRepoValidation || null;
   const publicValidationPassed = Boolean(publicValidation?.summary?.passed);
@@ -624,6 +676,9 @@ function buildFinalAuditReport(dataset) {
     .slice(0, 20);
 
   const foundDuringFinalPass = [
+    supportedBenchmark
+      ? `The supported-language fixture sweep now records ${supportedSummary.supported_languages} parser.Supported families, with Atlas indexing ${supportedSummary.atlas_ok}/${supportedSummary.supported_languages}; Graphify is ${JSON.stringify(supportedSummary.graphify_support)} and native/tool status is ${JSON.stringify(supportedSummary.native_baseline_status)}.`
+      : "The supported-language fixture sweep artifact is not present; all-supported-family coverage is not represented in this website build.",
     "The UI previously carried a hard-coded native tool manifest; this final pass renders tool status/version from provenance data so missing tools are no longer shown as healthy.",
     scipJavaMissing
       ? "scip-java is missing in this environment; Java still has a JDTLS baseline, and the missing SCIP adapter is reported instead of implied."
@@ -673,6 +728,14 @@ function buildFinalAuditReport(dataset) {
       priority: "P1",
       item: "Replace the source-counter, proxy, detector-only, and structured/project denominators listed in the weak-truth table with fuller compiler, LSP, tree-sitter, or parser-library denominators where available.",
     },
+    ...(supportedBenchmark
+      ? [
+          {
+            priority: "P1",
+            item: `Close supported-family fixture gaps: ${supportedSummary.fixture_oracle_recall_100}/${supportedSummary.fixture_oracle_rows} rows have 100% fixture recall, ${supportedSummary.fixture_oracle_precision_100}/${supportedSummary.fixture_oracle_rows} have 100% fixture precision, and ${supportedSummary.native_baseline_status?.missing ?? "n/a"} rows still lack an executable local native/tool baseline.`,
+          },
+        ]
+      : []),
     {
       priority: "P1",
       item: precisionEvidencePassed
@@ -703,7 +766,7 @@ function buildFinalAuditReport(dataset) {
     generatedAt: dataset.generatedAt,
     benchmarkGeneratedAt: dataset.generatedAt,
     scope:
-      "Final pass over Atlas benchmark artifacts: core matrix against Graphify plus native SCIP/LSP tools, live language artifacts against Graphify plus language-specific native/proxy baselines, and public three-repo validation metadata.",
+      "Final pass over Atlas benchmark artifacts: supported-language fixture sweep for every parser.Supported family, public-repo matrix artifacts against Graphify plus native SCIP/LSP tools, live language artifacts against Graphify plus language-specific native/proxy baselines, and public three-repo validation metadata.",
     summary: {
       coreLanguages: dataset.summary.core.languages,
       liveArtifacts: dataset.summary.live.artifacts,
@@ -757,6 +820,14 @@ function buildFinalAuditReport(dataset) {
       graphifyVersion: dataset.provenance.graphify.version,
       graphifyDispatchCount: dataset.provenance.graphify.dispatchCount,
       detectorOnlyLanguages: dataset.provenance.graphify.detectorOnlyCodeExtensions,
+      supportedFamilies: supportedSummary.supported_languages ?? null,
+      supportedAtlasOk: supportedSummary.atlas_ok ?? null,
+      supportedFixtureOracleRows: supportedSummary.fixture_oracle_rows ?? null,
+      supportedFixtureRecall100: supportedSummary.fixture_oracle_recall_100 ?? null,
+      supportedFixturePrecision100: supportedSummary.fixture_oracle_precision_100 ?? null,
+      supportedFixtureExact: supportedSummary.fixture_oracle_exact ?? null,
+      supportedGraphifySupport: supportedSummary.graphify_support ?? null,
+      supportedNativeBaselineStatus: supportedSummary.native_baseline_status ?? null,
     },
     groundTruthCloseness: {
       statement:
@@ -844,6 +915,33 @@ function buildFinalAuditReport(dataset) {
             }
           : null,
       },
+      supportedLanguageBenchmark: supportedBenchmark
+        ? {
+            statement:
+              "The supported-language fixture sweep proves every Atlas-supported parser family can be indexed and compared against Graphify/runtime support plus local native/tool availability. It is fixture evidence, not a public-repo semantic oracle.",
+            generatedAt: supportedBenchmark.generatedAt,
+            artifact: supportedBenchmark.artifact,
+            summary: supportedSummary,
+            gapRows: (supportedBenchmark.rows || [])
+              .filter((row) =>
+                (row.oracle?.missing_symbols || []).length ||
+                (row.oracle?.extra_symbol_names_sample || []).length ||
+                row.native?.status === "missing" ||
+                row.graphify?.status === "unsupported"
+              )
+              .map((row) => ({
+                language: row.language,
+                category: row.category,
+                oracleRecall: row.oracle?.recall ?? null,
+                oraclePrecision: row.oracle?.precision ?? null,
+                graphifyStatus: row.graphify?.status,
+                graphifySupport: row.graphify?.support?.support,
+                nativeStatus: row.native?.status,
+                missingSymbols: row.oracle?.missing_symbols || [],
+                extraSymbols: row.oracle?.extra_symbol_names_sample || [],
+              })),
+          }
+        : null,
     },
     stubsAndHallucinationAudit: {
       foundDuringFinalPass,
@@ -898,6 +996,13 @@ function renderFinalAuditMarkdown(report) {
   lines.push(`- Graphify live detector-only artifacts: ${report.summary.graphifyLiveDetectorOnlyArtifacts ?? "n/a"}`);
   lines.push(`- Graphify sampled equivalent rows: ${report.summary.graphifyEquivalentRows ?? "n/a"}/${report.summary.graphifyQueryRows ?? "n/a"}`);
   lines.push(`- Graphify: ${report.summary.graphifyVersion}, dispatch count ${report.summary.graphifyDispatchCount}`);
+  lines.push(`- Atlas supported parser families: ${report.summary.supportedFamilies ?? "n/a"}`);
+  lines.push(`- Supported-family Atlas ok: ${report.summary.supportedAtlasOk ?? "n/a"}/${report.summary.supportedFamilies ?? "n/a"}`);
+  lines.push(`- Supported fixture 100% recall: ${report.summary.supportedFixtureRecall100 ?? "n/a"}/${report.summary.supportedFixtureOracleRows ?? "n/a"}`);
+  lines.push(`- Supported fixture 100% precision: ${report.summary.supportedFixturePrecision100 ?? "n/a"}/${report.summary.supportedFixtureOracleRows ?? "n/a"}`);
+  lines.push(`- Supported fixture exact rows: ${report.summary.supportedFixtureExact ?? "n/a"}/${report.summary.supportedFixtureOracleRows ?? "n/a"}`);
+  lines.push(`- Supported Graphify support: ${JSON.stringify(report.summary.supportedGraphifySupport ?? {})}`);
+  lines.push(`- Supported native/tool status: ${JSON.stringify(report.summary.supportedNativeBaselineStatus ?? {})}`);
   lines.push("", "## Ground Truth Closeness", "");
   lines.push(report.groundTruthCloseness.statement, "");
   lines.push(`Low-risk live languages: ${report.groundTruthCloseness.lowRiskLiveLanguages.join(", ") || "none"}.`, "");
@@ -1003,6 +1108,29 @@ function renderFinalAuditMarkdown(report) {
     lines.push("Manifest: missing.");
   }
   lines.push("");
+  lines.push("### Supported-Language Fixture Sweep", "");
+  if (report.groundTruthCloseness.supportedLanguageBenchmark) {
+    const supported = report.groundTruthCloseness.supportedLanguageBenchmark;
+    lines.push(supported.statement, "");
+    lines.push(`Artifact: ${supported.artifact}, generated ${supported.generatedAt}.`);
+    lines.push(
+      `Families: ${supported.summary.supported_languages}; Atlas ok: ${supported.summary.atlas_ok}/${supported.summary.supported_languages}; Graphify support: ${JSON.stringify(supported.summary.graphify_support)}; native/tool status: ${JSON.stringify(supported.summary.native_baseline_status)}.`
+    );
+    lines.push(
+      `Fixture oracle: recall 100% ${supported.summary.fixture_oracle_recall_100}/${supported.summary.fixture_oracle_rows}; precision 100% ${supported.summary.fixture_oracle_precision_100}/${supported.summary.fixture_oracle_rows}; exact ${supported.summary.fixture_oracle_exact}/${supported.summary.fixture_oracle_rows}.`
+    );
+    lines.push("");
+    lines.push("| Language | Category | Recall | Precision | Graphify | Native/tool | Missing | Extra |");
+    lines.push("|---|---|--:|--:|---|---|---|---|");
+    for (const row of supported.gapRows.slice(0, 80)) {
+      lines.push(
+        `| ${row.language} | ${row.category} | ${row.oracleRecall ?? "n/a"} | ${row.oraclePrecision ?? "n/a"} | ${row.graphifySupport || "n/a"}/${row.graphifyStatus || "n/a"} | ${row.nativeStatus || "n/a"} | ${(row.missingSymbols || []).join(", ") || "none"} | ${(row.extraSymbols || []).slice(0, 5).join(", ") || "none"} |`
+      );
+    }
+  } else {
+    lines.push("Artifact: missing.");
+  }
+  lines.push("");
   lines.push("### Weak Or Proxy Truth Rows", "");
   lines.push("| Language | Native tool | Risk | Coverage | Min validation coverage | Reason |");
   lines.push("|---|---|---|--:|--:|---|");
@@ -1059,6 +1187,7 @@ function main() {
   const liveBenchmarkTools = collectLiveBenchmarkTools(liveBenchmarks, toolVersions.live_benchmark_tools || []);
   const coverageAudit = buildCoverageAudit(graphifyDiscovery, liveBenchmarks);
   const saturationRows = buildSaturation(saturation);
+  const supportedLanguageBenchmark = buildSupportedLanguageBenchmark();
 
   const dataset = {
     schemaVersion: 1,
@@ -1113,9 +1242,23 @@ function main() {
         iterationsRequested: saturation.iterations_requested,
         noComparableRows: saturationRows.filter((row) => row.saturated).length,
       },
+      supported: supportedLanguageBenchmark
+        ? {
+            families: supportedLanguageBenchmark.summary.supported_languages,
+            atlasOk: supportedLanguageBenchmark.summary.atlas_ok,
+            fixtureOracleRows: supportedLanguageBenchmark.summary.fixture_oracle_rows,
+            fixtureOracleRecall100: supportedLanguageBenchmark.summary.fixture_oracle_recall_100,
+            fixtureOraclePrecision100: supportedLanguageBenchmark.summary.fixture_oracle_precision_100,
+            fixtureOracleExact: supportedLanguageBenchmark.summary.fixture_oracle_exact,
+            graphifySupport: supportedLanguageBenchmark.summary.graphify_support,
+            graphifyStatus: supportedLanguageBenchmark.summary.graphify_status,
+            nativeBaselineStatus: supportedLanguageBenchmark.summary.native_baseline_status,
+          }
+        : null,
     },
     coreMatrix,
     liveBenchmarks,
+    supportedLanguageBenchmark,
     coverageAudit,
     publicRepoValidation: readDataJSON("public-repo-validation-manifest.json"),
     validationRemeasurement: readDataJSON("validation-remeasurement-manifest.json"),
@@ -1135,6 +1278,9 @@ function main() {
       "The call-edge evidence manifest records core receiver-typed calls and live call counts when raw artifacts expose them; it does not claim live receiver-type coverage where no receiver metric exists.",
       "The Graphify support manifest separates deterministic extractor support from detector-only extension support; sampled Graphify no-equivalent rows are reported separately from Atlas/native coverage.",
       "10x target fields are strict for token and latency ratios; coverage is reported as native-definition parity/exceed and is not converted into a fabricated 10x accuracy multiplier.",
+      supportedLanguageBenchmark
+        ? "The supported-language fixture sweep covers every parser.Supported family, including structured and binary document families. It is compatibility evidence and does not replace public-repo semantic ground truth."
+        : "No supported-language fixture sweep artifact was present in this data build.",
     ],
   };
   const finalAudit = buildFinalAuditReport(dataset);

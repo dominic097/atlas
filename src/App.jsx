@@ -329,6 +329,9 @@ function ConsoleBar({ data, active }) {
 function HeroReadout({ data }) {
   const core = data.summary.core;
   const liveLangs = data.summary.live.artifacts;
+  const supported = data.summary.supported || {};
+  const supportedFamilies = supported.families ?? core.languages + liveLangs;
+  const supportedAtlasOk = supported.atlasOk ?? supportedFamilies;
   const liveSummary = data.summary.live;
   const parityCoverage = liveSummary.coverageParityLanguages ?? 0;
   const exceedCoverage = liveSummary.coverageExceedLanguages ?? 0;
@@ -369,10 +372,9 @@ function HeroReadout({ data }) {
   // must come from this row, not a hardcoded language. (Go cold-indexes far
   // slower than the fastest slice, so a fixed Go caption mislabels the figure.)
   const fastestRow = data.coreMatrix.find((r) => r.atlas.metrics.cold_seconds === fastestIndex);
-  // Every benchmarked language is natively parsed: core matrix + live = the full
-  // native roster (matches the explorer's all-filter). A LANGUAGE count, kept
-  // deliberately distinct from the 39/39 comparable-deterministic-row denominator.
-  const nativeLangCount = core.languages + liveLangs;
+  // The supported-family count comes from parser.Supported fixture evidence.
+  // Public-repo matrix/live artifacts remain separate, stronger evidence tiers.
+  const nativeLangCount = supportedFamilies;
   const derivedCount = data.derivedArtifacts?.length || 0;
   return (
     <section
@@ -453,8 +455,8 @@ function HeroReadout({ data }) {
             <p className="max-w-xl" style={{ fontSize: 13, lineHeight: 1.55, color: "var(--text)" }}>
               All{" "}
               <span className="num" style={{ color: "var(--success)", fontWeight: 600 }}>{nativeLangCount}</span>{" "}
-              benchmarked languages parsed natively — {core.languages} core matrix + {liveLangs} live ladder, zero regex
-              or smoke fallback. The live ladder is {parityCoverage} exactly at parity + {exceedCoverage} above native;{" "}
+              Atlas-supported parser families have live fixture evidence — Atlas indexed {supportedAtlasOk}/{supportedFamilies}, with zero hidden regex
+              fallback. The public-repo ladder remains {parityCoverage} exactly at parity + {exceedCoverage} above native;{" "}
               <span className="num" style={{ color: "var(--success)", fontWeight: 600 }}>{parityLangs}/{liveCovered}</span>{" "}
               live languages are ≥ ×1.0 across{" "}
               <span className="num" style={{ color: "var(--success)", fontWeight: 600 }}>{cov.deterministicRowsCovered}/{comparableRows}</span>{" "}
@@ -486,7 +488,7 @@ function HeroReadout({ data }) {
             className="mt-7 grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-5"
             style={{ borderTop: "1px solid var(--line)", paddingTop: 20 }}
           >
-            <StatTick label="Languages" value={`${nativeLangCount} native`} sub={`${core.languages} core + ${liveLangs} live · zero fallback`} />
+            <StatTick label="Languages" value={`${nativeLangCount} supported`} sub={`${supportedAtlasOk}/${supportedFamilies} Atlas fixture ok`} />
             <StatTick label="Coverage split" value={`${parityCoverage} + ${exceedCoverage}`} sub="parity + exceed in live ladder" />
             <StatTick label="10x target" value={`${liveSummary.tenXComparable}/${liveSummary.withComparableRows}`} sub="token+latency comparable live" />
             <StatTick label="Tools benchmarked" value={toolCount} sub="incl. SCIP / LSP / graphify" />
@@ -505,6 +507,9 @@ function HeroReadout({ data }) {
             </a>
             <a href="data/final-benchmark-audit-report.md" download data-source-artifact className="btn btn-ghost focusring" style={{ textDecoration: "none" }}>
               Final audit <Download className="h-4 w-4" aria-hidden />
+            </a>
+            <a href="data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json" download data-source-artifact className="btn btn-ghost focusring" style={{ textDecoration: "none" }}>
+              Supported sweep <Download className="h-4 w-4" aria-hidden />
             </a>
             <a href="data/public-repo-validation-manifest.md" download data-source-artifact className="btn btn-ghost focusring" style={{ textDecoration: "none" }}>
               Validation manifest <Download className="h-4 w-4" aria-hidden />
@@ -884,7 +889,8 @@ function NativeParityLadder({ data }) {
   const { atParity, standouts, maxRatio, maxDefs, minRatio } = model;
   const liveTotal = atParity.length + standouts.length;
   const coreTotal = data.summary.core.languages;
-  const nativeTotal = coreTotal + liveTotal;
+  const publicRepoTotal = coreTotal + liveTotal;
+  const supportedTotal = data.summary.supported?.families ?? publicRepoTotal;
 
   // ---- one shared horizontal ratio scale, used by BOTH zones --------------
   // Domain starts a hair below 1.0 so the spine has air to its left; it ends a
@@ -925,7 +931,7 @@ function NativeParityLadder({ data }) {
           {atParity.length} at parity · {standouts.length} exceed · none below ×1.0 · {data.summary.coverage.detectorOnlyRowsCovered} detector-only
         </span>
         <span className="mono min-w-0" style={{ fontSize: 12, color: "var(--primary)", maxWidth: "100%", overflowWrap: "anywhere" }}>
-          {coreTotal} core + {liveTotal} live ladder = {nativeTotal} total native languages
+          {supportedTotal} supported families · {publicRepoTotal} public-repo code surfaces
         </span>
       </div>
 
@@ -1204,11 +1210,11 @@ function TenXTargetReadout({ data }) {
 }
 
 function VsNative({ data }) {
-  // The ladder's universe is the LIVE languages (each has a native SCIP/LSP
-  // coverage ratio). The core languages are benchmarked head-to-head in the
-  // matrix instead, so live + core = the full native roster the hero counts.
+  // The ladder's universe is the LIVE public-repo rows with native/proxy
+  // coverage ratios. The supported-family fixture sweep is broader and lives in
+  // data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json.
   const liveLangs = data.summary.live.artifacts;
-  const coreLangs = data.summary.core.languages;
+  const supportedLangs = data.summary.supported?.families ?? liveLangs;
   const toolManifest = useMemo(() => buildNativeToolManifest(data), [data]);
   return (
     <section id="vs-native" data-testid="vs-native" className="shell py-16" aria-labelledby="vsn-title">
@@ -1217,10 +1223,9 @@ function VsNative({ data }) {
         kicker="Coverage · alongside native SCIP / LSP"
         title="Atlas meets or beats native definition coverage, language by language"
       >
-        Coverage is Atlas definitions ÷ the best native indexer for each language — no graphify on this axis.
+        Coverage is Atlas definitions ÷ the best native indexer for each public-repo row — no graphify on this axis.
         The ×1.0 spine is native parity: each of the {liveLangs} live languages here sits on it or to its right. The
-        other {coreLangs} of Atlas&rsquo;s {liveLangs + coreLangs} natively-parsed languages are benchmarked
-        head-to-head in the comparison matrix.
+        broader supported-family sweep covers {supportedLangs} Atlas parser families in the raw evidence bundle.
       </SectionHeader>
 
       {/* peer-framed standfirst — native indexers are the bar Atlas stands with */}

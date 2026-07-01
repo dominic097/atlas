@@ -23,6 +23,14 @@ const parityComparableRows = parityRows.filter(
 );
 const parityToken10 = parityComparableRows.filter((r) => r.querySummary.tokenRatio >= 10).length;
 const parityLatency10 = parityComparableRows.filter((r) => r.querySummary.latencyRatio >= 10).length;
+const publicLanguageIds = new Set([
+  ...data.coreMatrix.map((r) => r.language),
+  ...data.liveBenchmarks.map((r) => r.language),
+]);
+const supportedOnlyRows = (data.supportedLanguageBenchmark?.rows || []).filter(
+  (r) => !publicLanguageIds.has(r.language)
+);
+const explorerRowCount = data.coreMatrix.length + data.liveBenchmarks.length + supportedOnlyRows.length;
 
 // The 5 install commands that must appear VERBATIM under #install.
 const INSTALL_COMMANDS = [
@@ -112,9 +120,9 @@ test.describe("Atlas — The Benchmark Instrument", () => {
       await expect(page.getByTestId("matrix")).toBeVisible();
       await expect(page.getByTestId("lx-explorer")).toBeVisible();
       await expect(page.getByTestId("lx-view-toggle")).toBeVisible();
-      // 43 languages benchmarked, surfaced as the all-filter count
+      // Supported-family fixture rows are included alongside public-repo evidence rows.
       await expect(page.getByTestId("lx-chip-all")).toContainText(
-        String(data.coreMatrix.length + data.liveBenchmarks.length)
+        String(explorerRowCount)
       );
       await expect(page.getByTestId("evidence")).toBeVisible();
       await expect(page.getByTestId("provenance")).toContainText(data.provenance.graphify.version);
@@ -158,7 +166,11 @@ test.describe("Atlas — The Benchmark Instrument", () => {
     // the unified explorer: filter to not-comparable, then read them in the table
     await page.getByTestId("lx-chip-not-comparable").click();
     await page.getByTestId("lx-view-table").click();
-    const notComparable = data.liveBenchmarks.filter((r) => r.querySummary.tokenRatio == null);
+    const notComparable = [
+      ...data.liveBenchmarks.filter((r) => r.querySummary.tokenRatio == null),
+      ...supportedOnlyRows,
+      ...data.coreMatrix.filter((r) => r.querySummary.tokenRatio == null),
+    ];
     if (notComparable.length === 0) {
       await expect(page.getByTestId("lx-empty")).toContainText("No languages match");
       await expect(page.getByTestId("lx-row")).toHaveCount(0);
@@ -167,11 +179,10 @@ test.describe("Atlas — The Benchmark Instrument", () => {
 
     const table = page.getByTestId("lx-table");
     for (const row of notComparable) {
-      const label = row.language === "r" ? row.repo.replace(/^https:\/\/github\.com\//, "") : row.language.toUpperCase();
-      await expect(table).toContainText(label);
+      await expect(table).toContainText(row.language);
     }
     await expect(table).toContainText("not comparable");
-    // exactly the saturated rows, none folded into a win
+    // exactly the non-comparable rows, none folded into a win
     await expect(page.getByTestId("lx-row")).toHaveCount(notComparable.length);
   });
 

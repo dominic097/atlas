@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-06-30T19:52:50.403Z",
-  "benchmarkGeneratedAt": "2026-06-30T19:52:50.403Z",
-  "scope": "Final pass over Atlas benchmark artifacts: core matrix against Graphify plus native SCIP/LSP tools, live language artifacts against Graphify plus language-specific native/proxy baselines, and public three-repo validation metadata.",
+  "generatedAt": "2026-07-01T05:39:57.345Z",
+  "benchmarkGeneratedAt": "2026-07-01T05:39:57.345Z",
+  "scope": "Final pass over Atlas benchmark artifacts: supported-language fixture sweep for every parser.Supported family, public-repo matrix artifacts against Graphify plus native SCIP/LSP tools, live language artifacts against Graphify plus language-specific native/proxy baselines, and public three-repo validation metadata.",
   "summary": {
     "coreLanguages": 7,
     "liveArtifacts": 36,
@@ -58,7 +58,22 @@
       ".ejs",
       ".ets",
       ".r"
-    ]
+    ],
+    "supportedFamilies": 64,
+    "supportedAtlasOk": 64,
+    "supportedFixtureOracleRows": 62,
+    "supportedFixtureRecall100": 43,
+    "supportedFixturePrecision100": 39,
+    "supportedFixtureExact": 36,
+    "supportedGraphifySupport": {
+      "detector_only": 2,
+      "deterministic": 40,
+      "unsupported": 22
+    },
+    "supportedNativeBaselineStatus": {
+      "missing": 42,
+      "ok": 22
+    }
   },
   "groundTruthCloseness": {
     "statement": "Coverage ratios prove Atlas produced at least as many definitions as the selected independent denominator for that scoped benchmark. They do not by themselves prove precision, complete call-edge recall, or semantic equivalence across all repos.",
@@ -1764,10 +1779,726 @@
           }
         ]
       }
+    },
+    "supportedLanguageBenchmark": {
+      "statement": "The supported-language fixture sweep proves every Atlas-supported parser family can be indexed and compared against Graphify/runtime support plus local native/tool availability. It is fixture evidence, not a public-repo semantic oracle.",
+      "generatedAt": "2026-07-01T05:34:56Z",
+      "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+      "summary": {
+        "atlas_ok": 64,
+        "atlas_ok_ratio": 1,
+        "fixture_oracle_exact": 36,
+        "fixture_oracle_precision_100": 39,
+        "fixture_oracle_recall_100": 43,
+        "fixture_oracle_rows": 62,
+        "graphify_detector_only_extensions": [
+          ".ejs",
+          ".ets",
+          ".r"
+        ],
+        "graphify_dispatch_count": 89,
+        "graphify_status": {
+          "ok": 42,
+          "unsupported": 22
+        },
+        "graphify_support": {
+          "detector_only": 2,
+          "deterministic": 40,
+          "unsupported": 22
+        },
+        "graphify_version": "graphifyy 0.8.49",
+        "native_baseline_status": {
+          "missing": 42,
+          "ok": 22
+        },
+        "supported_languages": 64
+      },
+      "gapRows": [
+        {
+          "language": "typescript",
+          "category": "code",
+          "oracleRecall": 1,
+          "oraclePrecision": 0.8,
+          "graphifyStatus": "ok",
+          "graphifySupport": "deterministic",
+          "nativeStatus": "ok",
+          "missingSymbols": [],
+          "extraSymbols": [
+            "constructor"
+          ]
+        },
+        {
+          "language": "kotlin",
+          "category": "code",
+          "oracleRecall": 1,
+          "oraclePrecision": 1,
+          "graphifyStatus": "ok",
+          "graphifySupport": "deterministic",
+          "nativeStatus": "missing",
+          "missingSymbols": [],
+          "extraSymbols": []
+        },
+        {
+          "language": "scala",
+          "category": "code",
+          "oracleRecall": 1,
+          "oraclePrecision": 1,
+          "graphifyStatus": "ok",
+          "graphifySupport": "deterministic",
+          "nativeStatus": "missing",
+          "missingSymbols": [],
+          "extraSymbols": []
+        },
+        {
+          "language": "swift",
+          "category": "code",
+          "oracleRecall": 1,
+          "oraclePrecision": 1,
+          "graphifyStatus": "ok",
+          "graphifySupport": "deterministic",
+          "nativeStatus": "missing",
+          "missingSymbols": [],
+          "extraSymbols": []
+        },
+        {
+          "language": "lua",
+          "category": "code",
+          "oracleRecall": 0.5,
+          "oraclePrecision": 0.5,
+          "graphifyStatus": "ok",
+          "graphifySupport": "deterministic",
+          "nativeStatus": "missing",
+          "missingSymbols": [
+            "run"
+          ],
+          "extraSymbols": [
+            "M.run"
+          ]
+        },
+        {
+          "language": "zig",
+          "category": "code",
+          "oracleRecall": 1,
+          "oraclePrecision": 0.6,
+          "graphifyStatus": "ok",
+          "graphifySupport": "deterministic",
+          "nativeStatus": "missing",
+          "missingSymbols": [],
+          "extraSymbols": [
+            "_",
+            "std"
+          ]
+        },
+        {
+          "language": "elixir",
+          "category": "code",
+          "oracleRecall": 1,
+          "oraclePrecision": 1,
+          "graphifyStatus": "ok",
+          "graphifySupport": "deterministic",
+          "nativeStatus": "missing",
+          "missingSymbols": [],
+          "extraSymbols": []
+        },
+        {
+          "language": "objc",
+          "category": "code",
+          "oracleRecall": 0.6667,
+          "oraclePrecision": 1,
+          "graphifyStatus": "ok",
+          "graphifySupport": "deterministic",
+          "nativeStatus": "missing",
+          "missingSymbols": [
+            "helper"
+          ],
+          "extraSymbols": []
+        },
+        {
+          "language": "julia",
+          "category": "code",
+          "oracleRecall": 1,
+          "oraclePrecision": 1,
+          "graphifyStatus": "ok",
+          "graphifySupport": "deterministic",
+          "nativeStatus": "missing",
+          "missingSymbols": [],
+          "extraSymbols": []
+        },
+        {
+          "language": "fortran",
+          "category": "code",
+          "oracleRecall": 1,
+          "oraclePrecision": 1,
+          "graphifyStatus": "ok",
+          "graphifySupport": "deterministic",
+          "nativeStatus": "missing",
+          "missingSymbols": [],
+          "extraSymbols": []
+        },
+        {
+          "language": "dart",
+          "category": "code",
+          "oracleRecall": 1,
+          "oraclePrecision": 1,
+          "graphifyStatus": "ok",
+          "graphifySupport": "deterministic",
+          "nativeStatus": "missing",
+          "missingSymbols": [],
+          "extraSymbols": []
+        },
+        {
+          "language": "verilog",
+          "category": "code",
+          "oracleRecall": 1,
+          "oraclePrecision": 1,
+          "graphifyStatus": "ok",
+          "graphifySupport": "deterministic",
+          "nativeStatus": "missing",
+          "missingSymbols": [],
+          "extraSymbols": []
+        },
+        {
+          "language": "pascal",
+          "category": "code",
+          "oracleRecall": 0.6667,
+          "oraclePrecision": 0.6667,
+          "graphifyStatus": "ok",
+          "graphifySupport": "deterministic",
+          "nativeStatus": "missing",
+          "missingSymbols": [
+            "TWorker"
+          ],
+          "extraSymbols": [
+            "TWorker.Run"
+          ]
+        },
+        {
+          "language": "delphi",
+          "category": "code",
+          "oracleRecall": 1,
+          "oraclePrecision": 0.5,
+          "graphifyStatus": "ok",
+          "graphifySupport": "deterministic",
+          "nativeStatus": "missing",
+          "missingSymbols": [],
+          "extraSymbols": [
+            "TButton",
+            "TMainForm"
+          ]
+        },
+        {
+          "language": "terraform",
+          "category": "code",
+          "oracleRecall": 1,
+          "oraclePrecision": 1,
+          "graphifyStatus": "ok",
+          "graphifySupport": "deterministic",
+          "nativeStatus": "missing",
+          "missingSymbols": [],
+          "extraSymbols": []
+        },
+        {
+          "language": "byond",
+          "category": "code",
+          "oracleRecall": 0.25,
+          "oraclePrecision": 0.3333,
+          "graphifyStatus": "ok",
+          "graphifySupport": "deterministic",
+          "nativeStatus": "missing",
+          "missingSymbols": [
+            "health",
+            "helper",
+            "run"
+          ],
+          "extraSymbols": [
+            "/proc",
+            "/proc/helper"
+          ]
+        },
+        {
+          "language": "dotnet",
+          "category": "project",
+          "oracleRecall": 1,
+          "oraclePrecision": 0.5,
+          "graphifyStatus": "ok",
+          "graphifySupport": "deterministic",
+          "nativeStatus": "missing",
+          "missingSymbols": [],
+          "extraSymbols": [
+            "Microsoft.NET.Sdk",
+            "Sample"
+          ]
+        },
+        {
+          "language": "razor",
+          "category": "template",
+          "oracleRecall": 0.5,
+          "oraclePrecision": 0.25,
+          "graphifyStatus": "ok",
+          "graphifySupport": "deterministic",
+          "nativeStatus": "missing",
+          "missingSymbols": [
+            "counter"
+          ],
+          "extraSymbols": [
+            "/counter",
+            "Counter",
+            "Microsoft.AspNetCore.Components"
+          ]
+        },
+        {
+          "language": "apex",
+          "category": "code",
+          "oracleRecall": 1,
+          "oraclePrecision": 0.6667,
+          "graphifyStatus": "ok",
+          "graphifySupport": "deterministic",
+          "nativeStatus": "missing",
+          "missingSymbols": [],
+          "extraSymbols": [
+            "Account"
+          ]
+        },
+        {
+          "language": "blade",
+          "category": "template",
+          "oracleRecall": 0.5,
+          "oraclePrecision": 0.3333,
+          "graphifyStatus": "ok",
+          "graphifySupport": "deterministic",
+          "nativeStatus": "missing",
+          "missingSymbols": [
+            "foreach"
+          ],
+          "extraSymbols": [
+            "layouts.app",
+            "view"
+          ]
+        },
+        {
+          "language": "vue",
+          "category": "template",
+          "oracleRecall": 1,
+          "oraclePrecision": 1,
+          "graphifyStatus": "ok",
+          "graphifySupport": "deterministic",
+          "nativeStatus": "missing",
+          "missingSymbols": [],
+          "extraSymbols": []
+        },
+        {
+          "language": "svelte",
+          "category": "template",
+          "oracleRecall": 0.5,
+          "oraclePrecision": 1,
+          "graphifyStatus": "ok",
+          "graphifySupport": "deterministic",
+          "nativeStatus": "missing",
+          "missingSymbols": [
+            "name"
+          ],
+          "extraSymbols": []
+        },
+        {
+          "language": "astro",
+          "category": "template",
+          "oracleRecall": 1,
+          "oraclePrecision": 0.5,
+          "graphifyStatus": "ok",
+          "graphifySupport": "deterministic",
+          "nativeStatus": "missing",
+          "missingSymbols": [],
+          "extraSymbols": [
+            "App",
+            "BaseLayout"
+          ]
+        },
+        {
+          "language": "ejs",
+          "category": "template",
+          "oracleRecall": 0.5,
+          "oraclePrecision": 0.5,
+          "graphifyStatus": "ok",
+          "graphifySupport": "detector_only",
+          "nativeStatus": "missing",
+          "missingSymbols": [
+            "partials/header"
+          ],
+          "extraSymbols": [
+            "view"
+          ]
+        },
+        {
+          "language": "ets",
+          "category": "code",
+          "oracleRecall": 1,
+          "oraclePrecision": 1,
+          "graphifyStatus": "ok",
+          "graphifySupport": "detector_only",
+          "nativeStatus": "missing",
+          "missingSymbols": [],
+          "extraSymbols": []
+        },
+        {
+          "language": "r",
+          "category": "code",
+          "oracleRecall": 1,
+          "oraclePrecision": 1,
+          "graphifyStatus": "unsupported",
+          "graphifySupport": "unsupported",
+          "nativeStatus": "missing",
+          "missingSymbols": [],
+          "extraSymbols": []
+        },
+        {
+          "language": "p4",
+          "category": "code",
+          "oracleRecall": 1,
+          "oraclePrecision": 0.75,
+          "graphifyStatus": "unsupported",
+          "graphifySupport": "unsupported",
+          "nativeStatus": "missing",
+          "missingSymbols": [],
+          "extraSymbols": [
+            "start"
+          ]
+        },
+        {
+          "language": "csharp",
+          "category": "code",
+          "oracleRecall": 1,
+          "oraclePrecision": 1,
+          "graphifyStatus": "ok",
+          "graphifySupport": "deterministic",
+          "nativeStatus": "missing",
+          "missingSymbols": [],
+          "extraSymbols": []
+        },
+        {
+          "language": "groovy",
+          "category": "code",
+          "oracleRecall": 1,
+          "oraclePrecision": 1,
+          "graphifyStatus": "ok",
+          "graphifySupport": "deterministic",
+          "nativeStatus": "missing",
+          "missingSymbols": [],
+          "extraSymbols": []
+        },
+        {
+          "language": "html",
+          "category": "markup",
+          "oracleRecall": null,
+          "oraclePrecision": null,
+          "graphifyStatus": "unsupported",
+          "graphifySupport": "unsupported",
+          "nativeStatus": "missing",
+          "missingSymbols": [],
+          "extraSymbols": []
+        },
+        {
+          "language": "css",
+          "category": "style",
+          "oracleRecall": null,
+          "oraclePrecision": null,
+          "graphifyStatus": "unsupported",
+          "graphifySupport": "unsupported",
+          "nativeStatus": "missing",
+          "missingSymbols": [],
+          "extraSymbols": []
+        },
+        {
+          "language": "markdown",
+          "category": "structured",
+          "oracleRecall": 1,
+          "oraclePrecision": 1,
+          "graphifyStatus": "ok",
+          "graphifySupport": "deterministic",
+          "nativeStatus": "missing",
+          "missingSymbols": [],
+          "extraSymbols": []
+        },
+        {
+          "language": "mdx",
+          "category": "structured",
+          "oracleRecall": 1,
+          "oraclePrecision": 1,
+          "graphifyStatus": "ok",
+          "graphifySupport": "deterministic",
+          "nativeStatus": "missing",
+          "missingSymbols": [],
+          "extraSymbols": []
+        },
+        {
+          "language": "yaml",
+          "category": "structured",
+          "oracleRecall": 0,
+          "oraclePrecision": 0,
+          "graphifyStatus": "unsupported",
+          "graphifySupport": "unsupported",
+          "nativeStatus": "missing",
+          "missingSymbols": [
+            "name",
+            "port",
+            "service"
+          ],
+          "extraSymbols": [
+            "config.yaml"
+          ]
+        },
+        {
+          "language": "proto",
+          "category": "structured",
+          "oracleRecall": 0.6667,
+          "oraclePrecision": 1,
+          "graphifyStatus": "unsupported",
+          "graphifySupport": "unsupported",
+          "nativeStatus": "ok",
+          "missingSymbols": [
+            "Run"
+          ],
+          "extraSymbols": []
+        },
+        {
+          "language": "toml",
+          "category": "structured",
+          "oracleRecall": 0,
+          "oraclePrecision": 0,
+          "graphifyStatus": "unsupported",
+          "graphifySupport": "unsupported",
+          "nativeStatus": "ok",
+          "missingSymbols": [
+            "database",
+            "name",
+            "service",
+            "url"
+          ],
+          "extraSymbols": [
+            "config.toml"
+          ]
+        },
+        {
+          "language": "xml",
+          "category": "structured",
+          "oracleRecall": 0,
+          "oraclePrecision": 0,
+          "graphifyStatus": "unsupported",
+          "graphifySupport": "unsupported",
+          "nativeStatus": "ok",
+          "missingSymbols": [
+            "port",
+            "project",
+            "service"
+          ],
+          "extraSymbols": [
+            "config.xml"
+          ]
+        },
+        {
+          "language": "plist",
+          "category": "structured",
+          "oracleRecall": 0,
+          "oraclePrecision": 0,
+          "graphifyStatus": "unsupported",
+          "graphifySupport": "unsupported",
+          "nativeStatus": "missing",
+          "missingSymbols": [
+            "CFBundleName"
+          ],
+          "extraSymbols": [
+            "Info.plist"
+          ]
+        },
+        {
+          "language": "gomod",
+          "category": "structured",
+          "oracleRecall": 0,
+          "oraclePrecision": 0,
+          "graphifyStatus": "unsupported",
+          "graphifySupport": "unsupported",
+          "nativeStatus": "missing",
+          "missingSymbols": [
+            "example.com/atlas-fixture",
+            "github.com/google/uuid"
+          ],
+          "extraSymbols": [
+            "go.mod"
+          ]
+        },
+        {
+          "language": "gosum",
+          "category": "structured",
+          "oracleRecall": 0,
+          "oraclePrecision": 0,
+          "graphifyStatus": "unsupported",
+          "graphifySupport": "unsupported",
+          "nativeStatus": "missing",
+          "missingSymbols": [
+            "github.com/google/uuid"
+          ],
+          "extraSymbols": [
+            "go.sum"
+          ]
+        },
+        {
+          "language": "config",
+          "category": "structured",
+          "oracleRecall": 0,
+          "oraclePrecision": 0,
+          "graphifyStatus": "unsupported",
+          "graphifySupport": "unsupported",
+          "nativeStatus": "missing",
+          "missingSymbols": [
+            "ATLAS_DB",
+            "ATLAS_LOG_LEVEL"
+          ],
+          "extraSymbols": [
+            ".env.example"
+          ]
+        },
+        {
+          "language": "makefile",
+          "category": "structured",
+          "oracleRecall": 1,
+          "oraclePrecision": 1,
+          "graphifyStatus": "unsupported",
+          "graphifySupport": "unsupported",
+          "nativeStatus": "missing",
+          "missingSymbols": [],
+          "extraSymbols": []
+        },
+        {
+          "language": "batch",
+          "category": "structured",
+          "oracleRecall": 0,
+          "oraclePrecision": 0,
+          "graphifyStatus": "unsupported",
+          "graphifySupport": "unsupported",
+          "nativeStatus": "missing",
+          "missingSymbols": [
+            "ATLAS_ENV"
+          ],
+          "extraSymbols": [
+            "build.cmd"
+          ]
+        },
+        {
+          "language": "sql",
+          "category": "structured",
+          "oracleRecall": 1,
+          "oraclePrecision": 1,
+          "graphifyStatus": "ok",
+          "graphifySupport": "deterministic",
+          "nativeStatus": "missing",
+          "missingSymbols": [],
+          "extraSymbols": []
+        },
+        {
+          "language": "csv",
+          "category": "structured",
+          "oracleRecall": 0,
+          "oraclePrecision": 0,
+          "graphifyStatus": "unsupported",
+          "graphifySupport": "unsupported",
+          "nativeStatus": "ok",
+          "missingSymbols": [
+            "name",
+            "role"
+          ],
+          "extraSymbols": [
+            "data.csv"
+          ]
+        },
+        {
+          "language": "text",
+          "category": "structured",
+          "oracleRecall": 1,
+          "oraclePrecision": 1,
+          "graphifyStatus": "unsupported",
+          "graphifySupport": "unsupported",
+          "nativeStatus": "missing",
+          "missingSymbols": [],
+          "extraSymbols": []
+        },
+        {
+          "language": "dockerfile",
+          "category": "structured",
+          "oracleRecall": 0,
+          "oraclePrecision": 0,
+          "graphifyStatus": "unsupported",
+          "graphifySupport": "unsupported",
+          "nativeStatus": "missing",
+          "missingSymbols": [
+            "ARG",
+            "CMD",
+            "FROM",
+            "RUN"
+          ],
+          "extraSymbols": [
+            "Dockerfile"
+          ]
+        },
+        {
+          "language": "pptx",
+          "category": "binary",
+          "oracleRecall": 1,
+          "oraclePrecision": 1,
+          "graphifyStatus": "unsupported",
+          "graphifySupport": "unsupported",
+          "nativeStatus": "ok",
+          "missingSymbols": [],
+          "extraSymbols": []
+        },
+        {
+          "language": "docx",
+          "category": "binary",
+          "oracleRecall": 1,
+          "oraclePrecision": 1,
+          "graphifyStatus": "unsupported",
+          "graphifySupport": "unsupported",
+          "nativeStatus": "ok",
+          "missingSymbols": [],
+          "extraSymbols": []
+        },
+        {
+          "language": "xlsx",
+          "category": "binary",
+          "oracleRecall": 1,
+          "oraclePrecision": 1,
+          "graphifyStatus": "unsupported",
+          "graphifySupport": "unsupported",
+          "nativeStatus": "ok",
+          "missingSymbols": [],
+          "extraSymbols": []
+        },
+        {
+          "language": "image",
+          "category": "binary",
+          "oracleRecall": 1,
+          "oraclePrecision": 1,
+          "graphifyStatus": "unsupported",
+          "graphifySupport": "unsupported",
+          "nativeStatus": "ok",
+          "missingSymbols": [],
+          "extraSymbols": []
+        },
+        {
+          "language": "pdf",
+          "category": "binary",
+          "oracleRecall": 1,
+          "oraclePrecision": 1,
+          "graphifyStatus": "unsupported",
+          "graphifySupport": "unsupported",
+          "nativeStatus": "ok",
+          "missingSymbols": [],
+          "extraSymbols": []
+        }
+      ]
     }
   },
   "stubsAndHallucinationAudit": {
     "foundDuringFinalPass": [
+      "The supported-language fixture sweep now records 64 parser.Supported families, with Atlas indexing 64/64; Graphify is {\"detector_only\":2,\"deterministic\":40,\"unsupported\":22} and native/tool status is {\"missing\":42,\"ok\":22}.",
       "The UI previously carried a hard-coded native tool manifest; this final pass renders tool status/version from provenance data so missing tools are no longer shown as healthy.",
       "scip-java now resolves through the pinned bench/tools/scip-java-coursier launcher; Java is reported with both SCIP and JDTLS baselines present.",
       "The committed public-repo validation harness regenerates data/public-repo-validation-manifest.* from raw live artifacts and fails when a code language lacks passing three-repo evidence.",
@@ -1795,6 +2526,10 @@
     {
       "priority": "P1",
       "item": "Replace the source-counter, proxy, detector-only, and structured/project denominators listed in the weak-truth table with fuller compiler, LSP, tree-sitter, or parser-library denominators where available."
+    },
+    {
+      "priority": "P1",
+      "item": "Close supported-family fixture gaps: 43/62 rows have 100% fixture recall, 39/62 have 100% fixture precision, and 42 rows still lack an executable local native/tool baseline."
     },
     {
       "priority": "P1",

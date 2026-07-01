@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T19:52:50.403Z",
+  "generatedAt": "2026-07-01T05:39:57.345Z",
   "sourceLabel": "Atlas benchmark JSON artifacts from bench/",
   "sourceArtifacts": [
     {
@@ -289,6 +289,13 @@
       "path": "data/raw/LIVE_ZIG_BENCHMARK.json",
       "bytes": 19159,
       "sha256": "b26cf517321166d213f9c5d363ba8274951524d3cb34c62fafe7fbda10d9c7af"
+    },
+    {
+      "name": "SUPPORTED_LANGUAGE_BENCHMARK.json",
+      "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+      "path": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+      "bytes": 342216,
+      "sha256": "a500d1e3031283f1eacaca189c20e724d33fe0b76e4f781c1c2fea74a9c456a6"
     }
   ],
   "derivedArtifacts": [
@@ -968,6 +975,27 @@
       "rows": 0,
       "iterationsRequested": 0,
       "noComparableRows": 0
+    },
+    "supported": {
+      "families": 64,
+      "atlasOk": 64,
+      "fixtureOracleRows": 62,
+      "fixtureOracleRecall100": 43,
+      "fixtureOraclePrecision100": 39,
+      "fixtureOracleExact": 36,
+      "graphifySupport": {
+        "detector_only": 2,
+        "deterministic": 40,
+        "unsupported": 22
+      },
+      "graphifyStatus": {
+        "ok": 42,
+        "unsupported": 22
+      },
+      "nativeBaselineStatus": {
+        "missing": 42,
+        "ok": 22
+      }
     }
   },
   "coreMatrix": [
@@ -10473,6 +10501,6280 @@
       }
     }
   ],
+  "supportedLanguageBenchmark": {
+    "schemaVersion": 1,
+    "generatedAt": "2026-07-01T05:34:56Z",
+    "durationSeconds": 3.857,
+    "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+    "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+    "summary": {
+      "atlas_ok": 64,
+      "atlas_ok_ratio": 1,
+      "fixture_oracle_exact": 36,
+      "fixture_oracle_precision_100": 39,
+      "fixture_oracle_recall_100": 43,
+      "fixture_oracle_rows": 62,
+      "graphify_detector_only_extensions": [
+        ".ejs",
+        ".ets",
+        ".r"
+      ],
+      "graphify_dispatch_count": 89,
+      "graphify_status": {
+        "ok": 42,
+        "unsupported": 22
+      },
+      "graphify_support": {
+        "detector_only": 2,
+        "deterministic": 40,
+        "unsupported": 22
+      },
+      "graphify_version": "graphifyy 0.8.49",
+      "native_baseline_status": {
+        "missing": 42,
+        "ok": 22
+      },
+      "supported_languages": 64
+    },
+    "platform": {
+      "machine": "arm64",
+      "python": "3.14.6",
+      "system": "Darwin"
+    },
+    "atlasBinary": "./bin/atlas",
+    "graphifyBinary": "/Users/damirdarasu/.local/share/uv/tools/graphifyy/bin/graphify",
+    "rows": [
+      {
+        "language": "go",
+        "category": "code",
+        "fixturePath": "main.go",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.361,
+          "metrics": {
+            "calls": 3,
+            "edge_kinds": {
+              "calls": 3,
+              "imports": 1
+            },
+            "edges": 4,
+            "files": 1,
+            "imports": 1,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "function": 2,
+              "method": 1,
+              "method_spec": 1,
+              "type": 2
+            },
+            "symbol_names": [
+              "Run",
+              "Runner",
+              "Worker",
+              "helper",
+              "main"
+            ],
+            "symbols": 6,
+            "symbols_sample": [
+              {
+                "kind": "method_spec",
+                "line": 3,
+                "name": "Run",
+                "path": "main.go"
+              },
+              {
+                "kind": "type",
+                "line": 3,
+                "name": "Runner",
+                "path": "main.go"
+              },
+              {
+                "kind": "type",
+                "line": 4,
+                "name": "Worker",
+                "path": "main.go"
+              },
+              {
+                "kind": "method",
+                "line": 5,
+                "name": "Run",
+                "path": "main.go"
+              },
+              {
+                "kind": "function",
+                "line": 6,
+                "name": "helper",
+                "path": "main.go"
+              },
+              {
+                "kind": "function",
+                "line": 7,
+                "name": "main",
+                "path": "main.go"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_go",
+            "key": ".go",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 2,
+            "extracted_calls": 2,
+            "links": 7,
+            "nodes": 6
+          }
+        },
+        "native": {
+          "tool": "go/parser",
+          "status": "ok",
+          "ok": true,
+          "toolClass": "native-ast",
+          "metrics": {
+            "definitions": 5
+          },
+          "note": ""
+        },
+        "oracle": {
+          "expected_symbols": [
+            "Run",
+            "Runner",
+            "Worker",
+            "helper",
+            "main"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "Run",
+            "Runner",
+            "Worker",
+            "helper",
+            "main"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "python",
+        "category": "code",
+        "fixturePath": "app.py",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.402,
+          "metrics": {
+            "calls": 2,
+            "edge_kinds": {
+              "calls": 2,
+              "imports": 1
+            },
+            "edges": 3,
+            "files": 1,
+            "imports": 1,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "class": 1,
+              "function": 1,
+              "method": 1
+            },
+            "symbol_names": [
+              "Greeter",
+              "greet",
+              "helper"
+            ],
+            "symbols": 3,
+            "symbols_sample": [
+              {
+                "kind": "class",
+                "line": 2,
+                "name": "Greeter",
+                "path": "app.py"
+              },
+              {
+                "kind": "method",
+                "line": 3,
+                "name": "greet",
+                "path": "app.py"
+              },
+              {
+                "kind": "function",
+                "line": 5,
+                "name": "helper",
+                "path": "app.py"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_python",
+            "key": ".py",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 1,
+            "extracted_calls": 1,
+            "links": 4,
+            "nodes": 4
+          }
+        },
+        "native": {
+          "tool": "python ast",
+          "status": "ok",
+          "ok": true,
+          "toolClass": "native-ast",
+          "metrics": {
+            "definitions": 3
+          },
+          "note": ""
+        },
+        "oracle": {
+          "expected_symbols": [
+            "Greeter",
+            "greet",
+            "helper"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "Greeter",
+            "greet",
+            "helper"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "javascript",
+        "category": "code",
+        "fixturePath": "app.js",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.176,
+          "metrics": {
+            "calls": 1,
+            "edge_kinds": {
+              "calls": 1
+            },
+            "edges": 1,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "class": 1,
+              "function": 1,
+              "method": 1
+            },
+            "symbol_names": [
+              "Widget",
+              "helper",
+              "render"
+            ],
+            "symbols": 3,
+            "symbols_sample": [
+              {
+                "kind": "class",
+                "line": 1,
+                "name": "Widget",
+                "path": "app.js"
+              },
+              {
+                "kind": "method",
+                "line": 2,
+                "name": "render",
+                "path": "app.js"
+              },
+              {
+                "kind": "function",
+                "line": 4,
+                "name": "helper",
+                "path": "app.js"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_js",
+            "key": ".js",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 1,
+            "extracted_calls": 1,
+            "links": 4,
+            "nodes": 4
+          }
+        },
+        "native": {
+          "tool": "acorn",
+          "status": "ok",
+          "ok": true,
+          "toolClass": "native-ast",
+          "metrics": {
+            "definitions": 3
+          },
+          "note": ""
+        },
+        "oracle": {
+          "expected_symbols": [
+            "Widget",
+            "helper",
+            "render"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "Widget",
+            "helper",
+            "render"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "typescript",
+        "category": "code",
+        "fixturePath": "app.ts",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.176,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "class": 1,
+              "function": 1,
+              "interface": 1,
+              "method": 3
+            },
+            "symbol_names": [
+              "Shape",
+              "Square",
+              "area",
+              "constructor",
+              "draw"
+            ],
+            "symbols": 6,
+            "symbols_sample": [
+              {
+                "kind": "interface",
+                "line": 1,
+                "name": "Shape",
+                "path": "app.ts"
+              },
+              {
+                "kind": "method",
+                "line": 1,
+                "name": "area",
+                "path": "app.ts"
+              },
+              {
+                "kind": "class",
+                "line": 2,
+                "name": "Square",
+                "path": "app.ts"
+              },
+              {
+                "kind": "method",
+                "line": 3,
+                "name": "constructor",
+                "path": "app.ts"
+              },
+              {
+                "kind": "method",
+                "line": 4,
+                "name": "area",
+                "path": "app.ts"
+              },
+              {
+                "kind": "function",
+                "line": 6,
+                "name": "draw",
+                "path": "app.ts"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_js",
+            "key": ".ts",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 1,
+            "extracted_calls": 1,
+            "links": 7,
+            "nodes": 6
+          }
+        },
+        "native": {
+          "tool": "typescript compiler api",
+          "status": "ok",
+          "ok": true,
+          "toolClass": "native-ast",
+          "metrics": {
+            "definitions": 5
+          },
+          "note": ""
+        },
+        "oracle": {
+          "expected_symbols": [
+            "Shape",
+            "Square",
+            "area",
+            "draw"
+          ],
+          "extra_symbol_names_sample": [
+            "constructor"
+          ],
+          "matched_symbols": [
+            "Shape",
+            "Square",
+            "area",
+            "draw"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 0.8,
+          "recall": 1
+        }
+      },
+      {
+        "language": "java",
+        "category": "code",
+        "fixturePath": "App.java",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.412,
+          "metrics": {
+            "calls": 3,
+            "edge_kinds": {
+              "calls": 3,
+              "imports": 1
+            },
+            "edges": 4,
+            "files": 1,
+            "imports": 1,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "class": 1,
+              "method": 2
+            },
+            "symbol_names": [
+              "App",
+              "helper",
+              "main"
+            ],
+            "symbols": 3,
+            "symbols_sample": [
+              {
+                "kind": "class",
+                "line": 2,
+                "name": "App",
+                "path": "App.java"
+              },
+              {
+                "kind": "method",
+                "line": 3,
+                "name": "main",
+                "path": "App.java"
+              },
+              {
+                "kind": "method",
+                "line": 4,
+                "name": "helper",
+                "path": "App.java"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_java",
+            "key": ".java",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 1,
+            "extracted_calls": 1,
+            "links": 5,
+            "nodes": 5
+          }
+        },
+        "native": {
+          "tool": "javac",
+          "status": "ok",
+          "ok": true,
+          "toolClass": "syntax-or-compiler",
+          "metrics": {},
+          "note": ""
+        },
+        "oracle": {
+          "expected_symbols": [
+            "App",
+            "helper",
+            "main"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "App",
+            "helper",
+            "main"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "c",
+        "category": "code",
+        "fixturePath": "app.c",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.415,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {
+              "imports": 1
+            },
+            "edges": 1,
+            "files": 1,
+            "imports": 1,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "function": 2,
+              "struct": 1
+            },
+            "symbol_names": [
+              "Worker",
+              "helper",
+              "main"
+            ],
+            "symbols": 3,
+            "symbols_sample": [
+              {
+                "kind": "struct",
+                "line": 2,
+                "name": "Worker",
+                "path": "app.c"
+              },
+              {
+                "kind": "function",
+                "line": 3,
+                "name": "helper",
+                "path": "app.c"
+              },
+              {
+                "kind": "function",
+                "line": 4,
+                "name": "main",
+                "path": "app.c"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_c",
+            "key": ".c",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 1,
+            "extracted_calls": 1,
+            "links": 3,
+            "nodes": 3
+          }
+        },
+        "native": {
+          "tool": "clang",
+          "status": "ok",
+          "ok": true,
+          "toolClass": "syntax-or-compiler",
+          "metrics": {},
+          "note": ""
+        },
+        "oracle": {
+          "expected_symbols": [
+            "Worker",
+            "helper",
+            "main"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "Worker",
+            "helper",
+            "main"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "cpp",
+        "category": "code",
+        "fixturePath": "app.cpp",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.416,
+          "metrics": {
+            "calls": 3,
+            "edge_kinds": {
+              "calls": 3,
+              "imports": 1
+            },
+            "edges": 4,
+            "files": 1,
+            "imports": 1,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "class": 1,
+              "function": 1,
+              "method": 2
+            },
+            "symbol_names": [
+              "Worker",
+              "helper",
+              "main",
+              "run"
+            ],
+            "symbols": 4,
+            "symbols_sample": [
+              {
+                "kind": "class",
+                "line": 2,
+                "name": "Worker",
+                "path": "app.cpp"
+              },
+              {
+                "kind": "method",
+                "line": 4,
+                "name": "run",
+                "path": "app.cpp"
+              },
+              {
+                "kind": "method",
+                "line": 5,
+                "name": "helper",
+                "path": "app.cpp"
+              },
+              {
+                "kind": "function",
+                "line": 7,
+                "name": "main",
+                "path": "app.cpp"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_cpp",
+            "key": ".cpp",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 3,
+            "extracted_calls": 3,
+            "links": 7,
+            "nodes": 5
+          }
+        },
+        "native": {
+          "tool": "clang++",
+          "status": "ok",
+          "ok": true,
+          "toolClass": "syntax-or-compiler",
+          "metrics": {},
+          "note": ""
+        },
+        "oracle": {
+          "expected_symbols": [
+            "Worker",
+            "helper",
+            "main",
+            "run"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "Worker",
+            "helper",
+            "main",
+            "run"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "rust",
+        "category": "code",
+        "fixturePath": "lib.rs",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.429,
+          "metrics": {
+            "calls": 1,
+            "edge_kinds": {
+              "calls": 1
+            },
+            "edges": 1,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "class": 1,
+              "function": 2,
+              "method": 1
+            },
+            "symbol_names": [
+              "Worker",
+              "helper",
+              "run"
+            ],
+            "symbols": 4,
+            "symbols_sample": [
+              {
+                "kind": "class",
+                "line": 1,
+                "name": "Worker",
+                "path": "lib.rs"
+              },
+              {
+                "kind": "function",
+                "line": 3,
+                "name": "run",
+                "path": "lib.rs"
+              },
+              {
+                "kind": "method",
+                "line": 3,
+                "name": "run",
+                "path": "lib.rs"
+              },
+              {
+                "kind": "function",
+                "line": 5,
+                "name": "helper",
+                "path": "lib.rs"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_rust",
+            "key": ".rs",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 1,
+            "extracted_calls": 1,
+            "links": 4,
+            "nodes": 4
+          }
+        },
+        "native": {
+          "tool": "rustc",
+          "status": "ok",
+          "ok": true,
+          "toolClass": "syntax-or-compiler",
+          "metrics": {},
+          "note": ""
+        },
+        "oracle": {
+          "expected_symbols": [
+            "Worker",
+            "helper",
+            "run"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "Worker",
+            "helper",
+            "run"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "ruby",
+        "category": "code",
+        "fixturePath": "app.rb",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.119,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "class": 1,
+              "method": 2
+            },
+            "symbol_names": [
+              "Worker",
+              "helper",
+              "run"
+            ],
+            "symbols": 3,
+            "symbols_sample": [
+              {
+                "kind": "class",
+                "line": 1,
+                "name": "Worker",
+                "path": "app.rb"
+              },
+              {
+                "kind": "method",
+                "line": 2,
+                "name": "run",
+                "path": "app.rb"
+              },
+              {
+                "kind": "method",
+                "line": 5,
+                "name": "helper",
+                "path": "app.rb"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_ruby",
+            "key": ".rb",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 0,
+            "extracted_calls": 0,
+            "links": 3,
+            "nodes": 4
+          }
+        },
+        "native": {
+          "tool": "ripper",
+          "status": "ok",
+          "ok": true,
+          "toolClass": "native-ast",
+          "metrics": {
+            "definitions": 3
+          },
+          "note": ""
+        },
+        "oracle": {
+          "expected_symbols": [
+            "Worker",
+            "helper",
+            "run"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "Worker",
+            "helper",
+            "run"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "kotlin",
+        "category": "code",
+        "fixturePath": "App.kt",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.149,
+          "metrics": {
+            "calls": 1,
+            "edge_kinds": {
+              "calls": 1
+            },
+            "edges": 1,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "function": 2,
+              "type": 1
+            },
+            "symbol_names": [
+              "Worker",
+              "helper",
+              "run"
+            ],
+            "symbols": 3,
+            "symbols_sample": [
+              {
+                "kind": "type",
+                "line": 2,
+                "name": "Worker",
+                "path": "App.kt"
+              },
+              {
+                "kind": "function",
+                "line": 3,
+                "name": "run",
+                "path": "App.kt"
+              },
+              {
+                "kind": "function",
+                "line": 4,
+                "name": "helper",
+                "path": "App.kt"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_kotlin",
+            "key": ".kt",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 1,
+            "extracted_calls": 1,
+            "links": 6,
+            "nodes": 5
+          }
+        },
+        "native": {
+          "tool": "kotlin parser candidate",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for kotlin; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "Worker",
+            "helper",
+            "run"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "Worker",
+            "helper",
+            "run"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "scala",
+        "category": "code",
+        "fixturePath": "App.scala",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.249,
+          "metrics": {
+            "calls": 1,
+            "edge_kinds": {
+              "calls": 1
+            },
+            "edges": 1,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "function": 2,
+              "type": 1
+            },
+            "symbol_names": [
+              "Worker",
+              "helper",
+              "run"
+            ],
+            "symbols": 3,
+            "symbols_sample": [
+              {
+                "kind": "type",
+                "line": 2,
+                "name": "Worker",
+                "path": "App.scala"
+              },
+              {
+                "kind": "function",
+                "line": 3,
+                "name": "run",
+                "path": "App.scala"
+              },
+              {
+                "kind": "function",
+                "line": 4,
+                "name": "helper",
+                "path": "App.scala"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_scala",
+            "key": ".scala",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 1,
+            "extracted_calls": 1,
+            "links": 6,
+            "nodes": 5
+          }
+        },
+        "native": {
+          "tool": "scala parser candidate",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for scala; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "Worker",
+            "helper",
+            "run"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "Worker",
+            "helper",
+            "run"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "php",
+        "category": "code",
+        "fixturePath": "app.php",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.212,
+          "metrics": {
+            "calls": 1,
+            "edge_kinds": {
+              "calls": 1
+            },
+            "edges": 1,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "class": 1,
+              "function": 2
+            },
+            "symbol_names": [
+              "Worker",
+              "helper",
+              "run"
+            ],
+            "symbols": 3,
+            "symbols_sample": [
+              {
+                "kind": "class",
+                "line": 2,
+                "name": "Worker",
+                "path": "app.php"
+              },
+              {
+                "kind": "function",
+                "line": 3,
+                "name": "run",
+                "path": "app.php"
+              },
+              {
+                "kind": "function",
+                "line": 5,
+                "name": "helper",
+                "path": "app.php"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_php",
+            "key": ".php",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 1,
+            "extracted_calls": 1,
+            "links": 4,
+            "nodes": 4
+          }
+        },
+        "native": {
+          "tool": "php tokenizer",
+          "status": "ok",
+          "ok": true,
+          "toolClass": "native-tokenizer",
+          "metrics": {
+            "definitions": 3
+          },
+          "note": ""
+        },
+        "oracle": {
+          "expected_symbols": [
+            "Worker",
+            "helper",
+            "run"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "Worker",
+            "helper",
+            "run"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "swift",
+        "category": "code",
+        "fixturePath": "App.swift",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.282,
+          "metrics": {
+            "calls": 1,
+            "edge_kinds": {
+              "calls": 1,
+              "imports": 1
+            },
+            "edges": 2,
+            "files": 1,
+            "imports": 1,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "function": 2,
+              "type": 1
+            },
+            "symbol_names": [
+              "Worker",
+              "helper",
+              "run"
+            ],
+            "symbols": 3,
+            "symbols_sample": [
+              {
+                "kind": "type",
+                "line": 2,
+                "name": "Worker",
+                "path": "App.swift"
+              },
+              {
+                "kind": "function",
+                "line": 3,
+                "name": "run",
+                "path": "App.swift"
+              },
+              {
+                "kind": "function",
+                "line": 5,
+                "name": "helper",
+                "path": "App.swift"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_swift",
+            "key": ".swift",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 1,
+            "extracted_calls": 1,
+            "links": 7,
+            "nodes": 6
+          }
+        },
+        "native": {
+          "tool": "swift parser",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for swift; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "Worker",
+            "helper",
+            "run"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "Worker",
+            "helper",
+            "run"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "lua",
+        "category": "code",
+        "fixturePath": "app.lua",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.262,
+          "metrics": {
+            "calls": 2,
+            "edge_kinds": {
+              "calls": 2
+            },
+            "edges": 2,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "function": 2
+            },
+            "symbol_names": [
+              "M.run",
+              "helper"
+            ],
+            "symbols": 2,
+            "symbols_sample": [
+              {
+                "kind": "function",
+                "line": 2,
+                "name": "M.run",
+                "path": "app.lua"
+              },
+              {
+                "kind": "function",
+                "line": 5,
+                "name": "helper",
+                "path": "app.lua"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_lua",
+            "key": ".lua",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 1,
+            "extracted_calls": 1,
+            "links": 3,
+            "nodes": 3
+          }
+        },
+        "native": {
+          "tool": "lua parser candidate",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for lua; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "helper",
+            "run"
+          ],
+          "extra_symbol_names_sample": [
+            "M.run"
+          ],
+          "matched_symbols": [
+            "helper"
+          ],
+          "missing_symbols": [
+            "run"
+          ],
+          "oracle": "fixture name set",
+          "precision": 0.5,
+          "recall": 0.5
+        }
+      },
+      {
+        "language": "zig",
+        "category": "code",
+        "fixturePath": "main.zig",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.228,
+          "metrics": {
+            "calls": 3,
+            "edge_kinds": {
+              "calls": 3,
+              "imports": 1
+            },
+            "edges": 4,
+            "files": 1,
+            "imports": 1,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "constant": 2,
+              "function": 2,
+              "type": 1
+            },
+            "symbol_names": [
+              "Worker",
+              "_",
+              "helper",
+              "run",
+              "std"
+            ],
+            "symbols": 5,
+            "symbols_sample": [
+              {
+                "kind": "constant",
+                "line": 1,
+                "name": "std",
+                "path": "main.zig"
+              },
+              {
+                "kind": "type",
+                "line": 2,
+                "name": "Worker",
+                "path": "main.zig"
+              },
+              {
+                "kind": "constant",
+                "line": 3,
+                "name": "_",
+                "path": "main.zig"
+              },
+              {
+                "kind": "function",
+                "line": 3,
+                "name": "run",
+                "path": "main.zig"
+              },
+              {
+                "kind": "function",
+                "line": 5,
+                "name": "helper",
+                "path": "main.zig"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_zig",
+            "key": ".zig",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 1,
+            "extracted_calls": 1,
+            "links": 4,
+            "nodes": 4
+          }
+        },
+        "native": {
+          "tool": "zig parser candidate",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for zig; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "Worker",
+            "helper",
+            "run"
+          ],
+          "extra_symbol_names_sample": [
+            "_",
+            "std"
+          ],
+          "matched_symbols": [
+            "Worker",
+            "helper",
+            "run"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 0.6,
+          "recall": 1
+        }
+      },
+      {
+        "language": "elixir",
+        "category": "code",
+        "fixturePath": "app.ex",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.183,
+          "metrics": {
+            "calls": 1,
+            "edge_kinds": {
+              "calls": 1,
+              "imports": 1
+            },
+            "edges": 2,
+            "files": 1,
+            "imports": 1,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "function": 2,
+              "module": 1
+            },
+            "symbol_names": [
+              "Demo.Worker",
+              "helper",
+              "run"
+            ],
+            "symbols": 3,
+            "symbols_sample": [
+              {
+                "kind": "module",
+                "line": 1,
+                "name": "Demo.Worker",
+                "path": "app.ex"
+              },
+              {
+                "kind": "function",
+                "line": 3,
+                "name": "run",
+                "path": "app.ex"
+              },
+              {
+                "kind": "function",
+                "line": 6,
+                "name": "helper",
+                "path": "app.ex"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_elixir",
+            "key": ".ex",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 1,
+            "extracted_calls": 1,
+            "links": 4,
+            "nodes": 4
+          }
+        },
+        "native": {
+          "tool": "elixir parser candidate",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for elixir; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "Demo.Worker",
+            "helper",
+            "run"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "Demo.Worker",
+            "helper",
+            "run"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "objc",
+        "category": "code",
+        "fixturePath": "App.m",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.237,
+          "metrics": {
+            "calls": 2,
+            "edge_kinds": {
+              "calls": 2,
+              "imports": 1
+            },
+            "edges": 3,
+            "files": 1,
+            "imports": 1,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "method": 2,
+              "type": 2
+            },
+            "symbol_names": [
+              "Worker",
+              "run"
+            ],
+            "symbols": 4,
+            "symbols_sample": [
+              {
+                "kind": "type",
+                "line": 2,
+                "name": "Worker",
+                "path": "App.m"
+              },
+              {
+                "kind": "method",
+                "line": 3,
+                "name": "run",
+                "path": "App.m"
+              },
+              {
+                "kind": "type",
+                "line": 5,
+                "name": "Worker",
+                "path": "App.m"
+              },
+              {
+                "kind": "method",
+                "line": 6,
+                "name": "run",
+                "path": "App.m"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_objc",
+            "key": ".m",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 0,
+            "extracted_calls": 0,
+            "links": 3,
+            "nodes": 4
+          }
+        },
+        "native": {
+          "tool": "clang objc parse",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for objc; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "Worker",
+            "helper",
+            "run"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "Worker",
+            "run"
+          ],
+          "missing_symbols": [
+            "helper"
+          ],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 0.6667
+        }
+      },
+      {
+        "language": "julia",
+        "category": "code",
+        "fixturePath": "app.jl",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.183,
+          "metrics": {
+            "calls": 1,
+            "edge_kinds": {
+              "calls": 1
+            },
+            "edges": 1,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "function": 2,
+              "module": 1,
+              "type": 1
+            },
+            "symbol_names": [
+              "Demo",
+              "Worker",
+              "helper",
+              "run"
+            ],
+            "symbols": 4,
+            "symbols_sample": [
+              {
+                "kind": "module",
+                "line": 1,
+                "name": "Demo",
+                "path": "app.jl"
+              },
+              {
+                "kind": "type",
+                "line": 2,
+                "name": "Worker",
+                "path": "app.jl"
+              },
+              {
+                "kind": "function",
+                "line": 5,
+                "name": "run",
+                "path": "app.jl"
+              },
+              {
+                "kind": "function",
+                "line": 8,
+                "name": "helper",
+                "path": "app.jl"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_julia",
+            "key": ".jl",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 1,
+            "extracted_calls": 1,
+            "links": 6,
+            "nodes": 6
+          }
+        },
+        "native": {
+          "tool": "julia parser candidate",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for julia; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "Demo",
+            "Worker",
+            "helper",
+            "run"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "Demo",
+            "Worker",
+            "helper",
+            "run"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "fortran",
+        "category": "code",
+        "fixturePath": "app.f90",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.169,
+          "metrics": {
+            "calls": 2,
+            "edge_kinds": {
+              "calls": 2
+            },
+            "edges": 2,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "function": 2,
+              "module": 1
+            },
+            "symbol_names": [
+              "demo_mod",
+              "helper",
+              "run"
+            ],
+            "symbols": 3,
+            "symbols_sample": [
+              {
+                "kind": "module",
+                "line": 1,
+                "name": "demo_mod",
+                "path": "app.f90"
+              },
+              {
+                "kind": "function",
+                "line": 3,
+                "name": "helper",
+                "path": "app.f90"
+              },
+              {
+                "kind": "function",
+                "line": 7,
+                "name": "run",
+                "path": "app.f90"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_fortran",
+            "key": ".f90",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 0,
+            "extracted_calls": 0,
+            "links": 3,
+            "nodes": 4
+          }
+        },
+        "native": {
+          "tool": "fortran parser candidate",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for fortran; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "demo_mod",
+            "helper",
+            "run"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "demo_mod",
+            "helper",
+            "run"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "dart",
+        "category": "code",
+        "fixturePath": "app.dart",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.138,
+          "metrics": {
+            "calls": 1,
+            "edge_kinds": {
+              "calls": 1,
+              "imports": 1
+            },
+            "edges": 2,
+            "files": 1,
+            "imports": 1,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "function": 2,
+              "type": 1
+            },
+            "symbol_names": [
+              "Worker",
+              "helper",
+              "run"
+            ],
+            "symbols": 3,
+            "symbols_sample": [
+              {
+                "kind": "type",
+                "line": 2,
+                "name": "Worker",
+                "path": "app.dart"
+              },
+              {
+                "kind": "function",
+                "line": 3,
+                "name": "run",
+                "path": "app.dart"
+              },
+              {
+                "kind": "function",
+                "line": 5,
+                "name": "helper",
+                "path": "app.dart"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_dart",
+            "key": ".dart",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 0,
+            "extracted_calls": 0,
+            "links": 4,
+            "nodes": 5
+          }
+        },
+        "native": {
+          "tool": "dart analyzer candidate",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for dart; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "Worker",
+            "helper",
+            "run"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "Worker",
+            "helper",
+            "run"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "verilog",
+        "category": "code",
+        "fixturePath": "app.sv",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.273,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "function": 1,
+              "module": 1
+            },
+            "symbol_names": [
+              "helper",
+              "top"
+            ],
+            "symbols": 2,
+            "symbols_sample": [
+              {
+                "kind": "module",
+                "line": 1,
+                "name": "top",
+                "path": "app.sv"
+              },
+              {
+                "kind": "function",
+                "line": 2,
+                "name": "helper",
+                "path": "app.sv"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_verilog",
+            "key": ".sv",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 0,
+            "extracted_calls": 0,
+            "links": 2,
+            "nodes": 3
+          }
+        },
+        "native": {
+          "tool": "verilog parser candidate",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for verilog; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "helper",
+            "top"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "helper",
+            "top"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "pascal",
+        "category": "code",
+        "fixturePath": "app.pas",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.267,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "function": 2,
+              "unit": 1
+            },
+            "symbol_names": [
+              "Demo",
+              "Run",
+              "TWorker.Run"
+            ],
+            "symbols": 3,
+            "symbols_sample": [
+              {
+                "kind": "unit",
+                "line": 1,
+                "name": "Demo",
+                "path": "app.pas"
+              },
+              {
+                "kind": "function",
+                "line": 4,
+                "name": "Run",
+                "path": "app.pas"
+              },
+              {
+                "kind": "function",
+                "line": 7,
+                "name": "TWorker.Run",
+                "path": "app.pas"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_pascal",
+            "key": ".pas",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 0,
+            "extracted_calls": 0,
+            "links": 3,
+            "nodes": 4
+          }
+        },
+        "native": {
+          "tool": "pascal parser candidate",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for pascal; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "Demo",
+            "Run",
+            "TWorker"
+          ],
+          "extra_symbol_names_sample": [
+            "TWorker.Run"
+          ],
+          "matched_symbols": [
+            "Demo",
+            "Run"
+          ],
+          "missing_symbols": [
+            "TWorker"
+          ],
+          "oracle": "fixture name set",
+          "precision": 0.6667,
+          "recall": 0.6667
+        }
+      },
+      {
+        "language": "delphi",
+        "category": "code",
+        "fixturePath": "Main.dfm",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.199,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "component": 2,
+              "component_type": 2
+            },
+            "symbol_names": [
+              "MainForm",
+              "RunButton",
+              "TButton",
+              "TMainForm"
+            ],
+            "symbols": 4,
+            "symbols_sample": [
+              {
+                "kind": "component",
+                "line": 1,
+                "name": "MainForm",
+                "path": "Main.dfm"
+              },
+              {
+                "kind": "component_type",
+                "line": 1,
+                "name": "TMainForm",
+                "path": "Main.dfm"
+              },
+              {
+                "kind": "component",
+                "line": 3,
+                "name": "RunButton",
+                "path": "Main.dfm"
+              },
+              {
+                "kind": "component_type",
+                "line": 3,
+                "name": "TButton",
+                "path": "Main.dfm"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_delphi_form",
+            "key": ".dfm",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 0,
+            "extracted_calls": 0,
+            "links": 2,
+            "nodes": 3
+          }
+        },
+        "native": {
+          "tool": "delphi form parser proxy",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for delphi; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "MainForm",
+            "RunButton"
+          ],
+          "extra_symbol_names_sample": [
+            "TButton",
+            "TMainForm"
+          ],
+          "matched_symbols": [
+            "MainForm",
+            "RunButton"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 0.5,
+          "recall": 1
+        }
+      },
+      {
+        "language": "terraform",
+        "category": "code",
+        "fixturePath": "main.tf",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.213,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "module": 1,
+              "resource": 1,
+              "variable": 1
+            },
+            "symbol_names": [
+              "aws_s3_bucket.logs",
+              "network",
+              "region"
+            ],
+            "symbols": 3,
+            "symbols_sample": [
+              {
+                "kind": "variable",
+                "line": 1,
+                "name": "region",
+                "path": "main.tf"
+              },
+              {
+                "kind": "resource",
+                "line": 2,
+                "name": "aws_s3_bucket.logs",
+                "path": "main.tf"
+              },
+              {
+                "kind": "module",
+                "line": 3,
+                "name": "network",
+                "path": "main.tf"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_terraform",
+            "key": ".tf",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 0,
+            "extracted_calls": 0,
+            "links": 0,
+            "nodes": 0
+          }
+        },
+        "native": {
+          "tool": "hcl parser candidate",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for terraform; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "aws_s3_bucket.logs",
+            "network",
+            "region"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "aws_s3_bucket.logs",
+            "network",
+            "region"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "byond",
+        "category": "code",
+        "fixturePath": "app.dm",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.266,
+          "metrics": {
+            "calls": 3,
+            "edge_kinds": {
+              "calls": 3
+            },
+            "edges": 3,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "method": 1,
+              "type": 2
+            },
+            "symbol_names": [
+              "/mob/player",
+              "/proc",
+              "/proc/helper"
+            ],
+            "symbols": 3,
+            "symbols_sample": [
+              {
+                "kind": "type",
+                "line": 1,
+                "name": "/mob/player",
+                "path": "app.dm"
+              },
+              {
+                "kind": "type",
+                "line": 5,
+                "name": "/proc",
+                "path": "app.dm"
+              },
+              {
+                "kind": "method",
+                "line": 5,
+                "name": "/proc/helper",
+                "path": "app.dm"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_dm",
+            "key": ".dm",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 0,
+            "extracted_calls": 0,
+            "links": 0,
+            "nodes": 0
+          }
+        },
+        "native": {
+          "tool": "byond source parser proxy",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for byond; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "/mob/player",
+            "health",
+            "helper",
+            "run"
+          ],
+          "extra_symbol_names_sample": [
+            "/proc",
+            "/proc/helper"
+          ],
+          "matched_symbols": [
+            "/mob/player"
+          ],
+          "missing_symbols": [
+            "health",
+            "helper",
+            "run"
+          ],
+          "oracle": "fixture name set",
+          "precision": 0.3333,
+          "recall": 0.25
+        }
+      },
+      {
+        "language": "dotnet",
+        "category": "project",
+        "fixturePath": "Sample.csproj",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.217,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {
+              "imports": 2
+            },
+            "edges": 2,
+            "files": 1,
+            "imports": 2,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "package": 1,
+              "project": 1,
+              "project_reference": 1,
+              "sdk": 1
+            },
+            "symbol_names": [
+              "Core",
+              "Microsoft.NET.Sdk",
+              "Newtonsoft.Json",
+              "Sample"
+            ],
+            "symbols": 4,
+            "symbols_sample": [
+              {
+                "kind": "sdk",
+                "line": 1,
+                "name": "Microsoft.NET.Sdk",
+                "path": "Sample.csproj"
+              },
+              {
+                "kind": "project",
+                "line": 1,
+                "name": "Sample",
+                "path": "Sample.csproj"
+              },
+              {
+                "kind": "package",
+                "line": 3,
+                "name": "Newtonsoft.Json",
+                "path": "Sample.csproj"
+              },
+              {
+                "kind": "project_reference",
+                "line": 4,
+                "name": "Core",
+                "path": "Sample.csproj"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_csproj",
+            "key": ".csproj",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 0,
+            "extracted_calls": 0,
+            "links": 3,
+            "nodes": 4
+          }
+        },
+        "native": {
+          "tool": "dotnet project xml",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for dotnet; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "Core",
+            "Newtonsoft.Json"
+          ],
+          "extra_symbol_names_sample": [
+            "Microsoft.NET.Sdk",
+            "Sample"
+          ],
+          "matched_symbols": [
+            "Core",
+            "Newtonsoft.Json"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 0.5,
+          "recall": 1
+        }
+      },
+      {
+        "language": "razor",
+        "category": "template",
+        "fixturePath": "Counter.razor",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.181,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {
+              "imports": 1
+            },
+            "edges": 1,
+            "files": 1,
+            "imports": 1,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "component": 1,
+              "import": 1,
+              "method": 1,
+              "route": 1
+            },
+            "symbol_names": [
+              "/counter",
+              "Counter",
+              "Increment",
+              "Microsoft.AspNetCore.Components"
+            ],
+            "symbols": 4,
+            "symbols_sample": [
+              {
+                "kind": "route",
+                "line": 1,
+                "name": "/counter",
+                "path": "Counter.razor"
+              },
+              {
+                "kind": "component",
+                "line": 1,
+                "name": "Counter",
+                "path": "Counter.razor"
+              },
+              {
+                "kind": "import",
+                "line": 2,
+                "name": "Microsoft.AspNetCore.Components",
+                "path": "Counter.razor"
+              },
+              {
+                "kind": "method",
+                "line": 6,
+                "name": "Increment",
+                "path": "Counter.razor"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_razor",
+            "key": ".razor",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 0,
+            "extracted_calls": 0,
+            "links": 3,
+            "nodes": 4
+          }
+        },
+        "native": {
+          "tool": "razor parser proxy",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for razor; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "Increment",
+            "counter"
+          ],
+          "extra_symbol_names_sample": [
+            "/counter",
+            "Counter",
+            "Microsoft.AspNetCore.Components"
+          ],
+          "matched_symbols": [
+            "Increment"
+          ],
+          "missing_symbols": [
+            "counter"
+          ],
+          "oracle": "fixture name set",
+          "precision": 0.25,
+          "recall": 0.5
+        }
+      },
+      {
+        "language": "apex",
+        "category": "code",
+        "fixturePath": "AccountService.cls",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.173,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "method": 1,
+              "sobject": 1,
+              "type": 1
+            },
+            "symbol_names": [
+              "Account",
+              "AccountService",
+              "listAccounts"
+            ],
+            "symbols": 3,
+            "symbols_sample": [
+              {
+                "kind": "type",
+                "line": 1,
+                "name": "AccountService",
+                "path": "AccountService.cls"
+              },
+              {
+                "kind": "method",
+                "line": 2,
+                "name": "listAccounts",
+                "path": "AccountService.cls"
+              },
+              {
+                "kind": "sobject",
+                "line": 3,
+                "name": "Account",
+                "path": "AccountService.cls"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_apex",
+            "key": ".cls",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 0,
+            "extracted_calls": 0,
+            "links": 2,
+            "nodes": 3
+          }
+        },
+        "native": {
+          "tool": "apex parser candidate",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for apex; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "AccountService",
+            "listAccounts"
+          ],
+          "extra_symbol_names_sample": [
+            "Account"
+          ],
+          "matched_symbols": [
+            "AccountService",
+            "listAccounts"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 0.6667,
+          "recall": 1
+        }
+      },
+      {
+        "language": "blade",
+        "category": "template",
+        "fixturePath": "view.blade.php",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.172,
+          "metrics": {
+            "calls": 3,
+            "edge_kinds": {
+              "calls": 3,
+              "imports": 1
+            },
+            "edges": 4,
+            "files": 1,
+            "imports": 1,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "layout": 1,
+              "section": 1,
+              "template": 1
+            },
+            "symbol_names": [
+              "content",
+              "layouts.app",
+              "view"
+            ],
+            "symbols": 3,
+            "symbols_sample": [
+              {
+                "kind": "layout",
+                "line": 1,
+                "name": "layouts.app",
+                "path": "view.blade.php"
+              },
+              {
+                "kind": "template",
+                "line": 1,
+                "name": "view",
+                "path": "view.blade.php"
+              },
+              {
+                "kind": "section",
+                "line": 2,
+                "name": "content",
+                "path": "view.blade.php"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_blade",
+            "key": "*.blade.php",
+            "reason": "special filename extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 0,
+            "extracted_calls": 0,
+            "links": 0,
+            "nodes": 1
+          }
+        },
+        "native": {
+          "tool": "blade directive parser proxy",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for blade; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "content",
+            "foreach"
+          ],
+          "extra_symbol_names_sample": [
+            "layouts.app",
+            "view"
+          ],
+          "matched_symbols": [
+            "content"
+          ],
+          "missing_symbols": [
+            "foreach"
+          ],
+          "oracle": "fixture name set",
+          "precision": 0.3333,
+          "recall": 0.5
+        }
+      },
+      {
+        "language": "vue",
+        "category": "template",
+        "fixturePath": "App.vue",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.294,
+          "metrics": {
+            "calls": 1,
+            "edge_kinds": {
+              "calls": 1,
+              "imports": 1
+            },
+            "edges": 2,
+            "files": 1,
+            "imports": 1,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "function": 2
+            },
+            "symbol_names": [
+              "count",
+              "run"
+            ],
+            "symbols": 2,
+            "symbols_sample": [
+              {
+                "kind": "function",
+                "line": 4,
+                "name": "count",
+                "path": "App.vue"
+              },
+              {
+                "kind": "function",
+                "line": 5,
+                "name": "run",
+                "path": "App.vue"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_js",
+            "key": ".vue",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 0,
+            "extracted_calls": 0,
+            "links": 2,
+            "nodes": 3
+          }
+        },
+        "native": {
+          "tool": "vue sfc parser",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for vue; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "count",
+            "run"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "count",
+            "run"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "svelte",
+        "category": "template",
+        "fixturePath": "App.svelte",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.252,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "function": 1
+            },
+            "symbol_names": [
+              "run"
+            ],
+            "symbols": 1,
+            "symbols_sample": [
+              {
+                "kind": "function",
+                "line": 3,
+                "name": "run",
+                "path": "App.svelte"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_svelte",
+            "key": ".svelte",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 0,
+            "extracted_calls": 0,
+            "links": 0,
+            "nodes": 1
+          }
+        },
+        "native": {
+          "tool": "svelte compiler",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for svelte; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "name",
+            "run"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "run"
+          ],
+          "missing_symbols": [
+            "name"
+          ],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 0.5
+        }
+      },
+      {
+        "language": "astro",
+        "category": "template",
+        "fixturePath": "App.astro",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.226,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {
+              "imports": 1
+            },
+            "edges": 1,
+            "files": 1,
+            "imports": 1,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "component": 2,
+              "function": 1,
+              "variable": 1
+            },
+            "symbol_names": [
+              "App",
+              "BaseLayout",
+              "run",
+              "title"
+            ],
+            "symbols": 4,
+            "symbols_sample": [
+              {
+                "kind": "component",
+                "line": 1,
+                "name": "App",
+                "path": "App.astro"
+              },
+              {
+                "kind": "variable",
+                "line": 3,
+                "name": "title",
+                "path": "App.astro"
+              },
+              {
+                "kind": "function",
+                "line": 4,
+                "name": "run",
+                "path": "App.astro"
+              },
+              {
+                "kind": "component",
+                "line": 6,
+                "name": "BaseLayout",
+                "path": "App.astro"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_astro",
+            "key": ".astro",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 0,
+            "extracted_calls": 0,
+            "links": 2,
+            "nodes": 3
+          }
+        },
+        "native": {
+          "tool": "astro parser proxy",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for astro; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "run",
+            "title"
+          ],
+          "extra_symbol_names_sample": [
+            "App",
+            "BaseLayout"
+          ],
+          "matched_symbols": [
+            "run",
+            "title"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 0.5,
+          "recall": 1
+        }
+      },
+      {
+        "language": "ejs",
+        "category": "template",
+        "fixturePath": "view.ejs",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.215,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "function": 1,
+              "template": 1
+            },
+            "symbol_names": [
+              "renderUser",
+              "view"
+            ],
+            "symbols": 2,
+            "symbols_sample": [
+              {
+                "kind": "template",
+                "line": 1,
+                "name": "view",
+                "path": "view.ejs"
+              },
+              {
+                "kind": "function",
+                "line": 2,
+                "name": "renderUser",
+                "path": "view.ejs"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "",
+            "key": ".ejs",
+            "reason": "detected as code but no deterministic extractor",
+            "support": "detector_only"
+          },
+          "metrics": {
+            "calls": 0,
+            "extracted_calls": 0,
+            "links": 0,
+            "nodes": 0
+          }
+        },
+        "native": {
+          "tool": "ejs compiler",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for ejs; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "partials/header",
+            "renderUser"
+          ],
+          "extra_symbol_names_sample": [
+            "view"
+          ],
+          "matched_symbols": [
+            "renderUser"
+          ],
+          "missing_symbols": [
+            "partials/header"
+          ],
+          "oracle": "fixture name set",
+          "precision": 0.5,
+          "recall": 0.5
+        }
+      },
+      {
+        "language": "ets",
+        "category": "code",
+        "fixturePath": "Index.ets",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.187,
+          "metrics": {
+            "calls": 2,
+            "edge_kinds": {
+              "calls": 2,
+              "imports": 1
+            },
+            "edges": 3,
+            "files": 1,
+            "imports": 1,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "component": 1,
+              "method": 1,
+              "type": 1,
+              "variable": 1
+            },
+            "symbol_names": [
+              "Index",
+              "build",
+              "message"
+            ],
+            "symbols": 4,
+            "symbols_sample": [
+              {
+                "kind": "type",
+                "line": 2,
+                "name": "Index",
+                "path": "Index.ets"
+              },
+              {
+                "kind": "component",
+                "line": 2,
+                "name": "Index",
+                "path": "Index.ets"
+              },
+              {
+                "kind": "variable",
+                "line": 5,
+                "name": "message",
+                "path": "Index.ets"
+              },
+              {
+                "kind": "method",
+                "line": 6,
+                "name": "build",
+                "path": "Index.ets"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "",
+            "key": ".ets",
+            "reason": "detected as code but no deterministic extractor",
+            "support": "detector_only"
+          },
+          "metrics": {
+            "calls": 0,
+            "extracted_calls": 0,
+            "links": 0,
+            "nodes": 0
+          }
+        },
+        "native": {
+          "tool": "arkts parser candidate",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for ets; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "Index",
+            "build",
+            "message"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "Index",
+            "build",
+            "message"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "r",
+        "category": "code",
+        "fixturePath": "app.R",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.216,
+          "metrics": {
+            "calls": 1,
+            "edge_kinds": {
+              "calls": 1,
+              "imports": 2
+            },
+            "edges": 3,
+            "files": 1,
+            "imports": 2,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "function": 2
+            },
+            "symbol_names": [
+              "helper",
+              "run"
+            ],
+            "symbols": 2,
+            "symbols_sample": [
+              {
+                "kind": "function",
+                "line": 3,
+                "name": "run",
+                "path": "app.R"
+              },
+              {
+                "kind": "function",
+                "line": 6,
+                "name": "helper",
+                "path": "app.R"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "unsupported",
+          "ok": false,
+          "support": {
+            "extractor": "",
+            "key": ".R",
+            "reason": "not present in Graphify detector/dispatch runtime",
+            "support": "unsupported"
+          },
+          "metrics": {}
+        },
+        "native": {
+          "tool": "R parser candidate",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for r; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "helper",
+            "run"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "helper",
+            "run"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "p4",
+        "category": "code",
+        "fixturePath": "main.p4",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.145,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "control": 1,
+              "header": 1,
+              "parser": 1,
+              "state": 1
+            },
+            "symbol_names": [
+              "Ingress",
+              "ParserImpl",
+              "ethernet_t",
+              "start"
+            ],
+            "symbols": 4,
+            "symbols_sample": [
+              {
+                "kind": "header",
+                "line": 1,
+                "name": "ethernet_t",
+                "path": "main.p4"
+              },
+              {
+                "kind": "parser",
+                "line": 2,
+                "name": "ParserImpl",
+                "path": "main.p4"
+              },
+              {
+                "kind": "state",
+                "line": 3,
+                "name": "start",
+                "path": "main.p4"
+              },
+              {
+                "kind": "control",
+                "line": 5,
+                "name": "Ingress",
+                "path": "main.p4"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "unsupported",
+          "ok": false,
+          "support": {
+            "extractor": "",
+            "key": ".p4",
+            "reason": "not present in Graphify detector/dispatch runtime",
+            "support": "unsupported"
+          },
+          "metrics": {}
+        },
+        "native": {
+          "tool": "p4 parser candidate",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for p4; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "Ingress",
+            "ParserImpl",
+            "ethernet_t"
+          ],
+          "extra_symbol_names_sample": [
+            "start"
+          ],
+          "matched_symbols": [
+            "Ingress",
+            "ParserImpl",
+            "ethernet_t"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 0.75,
+          "recall": 1
+        }
+      },
+      {
+        "language": "csharp",
+        "category": "code",
+        "fixturePath": "App.cs",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.142,
+          "metrics": {
+            "calls": 1,
+            "edge_kinds": {
+              "calls": 1
+            },
+            "edges": 1,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "class": 1,
+              "method": 2
+            },
+            "symbol_names": [
+              "Helper",
+              "Run",
+              "Worker"
+            ],
+            "symbols": 3,
+            "symbols_sample": [
+              {
+                "kind": "class",
+                "line": 2,
+                "name": "Worker",
+                "path": "App.cs"
+              },
+              {
+                "kind": "method",
+                "line": 3,
+                "name": "Run",
+                "path": "App.cs"
+              },
+              {
+                "kind": "method",
+                "line": 4,
+                "name": "Helper",
+                "path": "App.cs"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_csharp",
+            "key": ".cs",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 1,
+            "extracted_calls": 1,
+            "links": 4,
+            "nodes": 4
+          }
+        },
+        "native": {
+          "tool": "csharp compiler/lsp candidate",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for csharp; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "Helper",
+            "Run",
+            "Worker"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "Helper",
+            "Run",
+            "Worker"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "groovy",
+        "category": "code",
+        "fixturePath": "App.groovy",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.218,
+          "metrics": {
+            "calls": 1,
+            "edge_kinds": {
+              "calls": 1,
+              "imports": 1
+            },
+            "edges": 2,
+            "files": 1,
+            "imports": 1,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "class": 1,
+              "method": 2
+            },
+            "symbol_names": [
+              "Worker",
+              "helper",
+              "run"
+            ],
+            "symbols": 3,
+            "symbols_sample": [
+              {
+                "kind": "class",
+                "line": 2,
+                "name": "Worker",
+                "path": "App.groovy"
+              },
+              {
+                "kind": "method",
+                "line": 3,
+                "name": "run",
+                "path": "App.groovy"
+              },
+              {
+                "kind": "method",
+                "line": 4,
+                "name": "helper",
+                "path": "App.groovy"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_groovy",
+            "key": ".groovy",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 1,
+            "extracted_calls": 1,
+            "links": 4,
+            "nodes": 4
+          }
+        },
+        "native": {
+          "tool": "groovy parser candidate",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for groovy; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "Worker",
+            "helper",
+            "run"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "Worker",
+            "helper",
+            "run"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "bash",
+        "category": "code",
+        "fixturePath": "app.sh",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.248,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {
+              "imports": 1
+            },
+            "edges": 1,
+            "files": 1,
+            "imports": 1,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "function": 2
+            },
+            "symbol_names": [
+              "helper",
+              "run"
+            ],
+            "symbols": 2,
+            "symbols_sample": [
+              {
+                "kind": "function",
+                "line": 2,
+                "name": "run",
+                "path": "app.sh"
+              },
+              {
+                "kind": "function",
+                "line": 5,
+                "name": "helper",
+                "path": "app.sh"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_bash",
+            "key": ".sh",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 1,
+            "extracted_calls": 1,
+            "links": 4,
+            "nodes": 4
+          }
+        },
+        "native": {
+          "tool": "bash -n",
+          "status": "ok",
+          "ok": true,
+          "toolClass": "syntax-or-compiler",
+          "metrics": {},
+          "note": ""
+        },
+        "oracle": {
+          "expected_symbols": [
+            "helper",
+            "run"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "helper",
+            "run"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "html",
+        "category": "markup",
+        "fixturePath": "index.html",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.212,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {},
+            "symbol_names": [],
+            "symbols": 0,
+            "symbols_sample": []
+          }
+        },
+        "graphify": {
+          "status": "unsupported",
+          "ok": false,
+          "support": {
+            "extractor": "",
+            "key": ".html",
+            "reason": "not present in Graphify detector/dispatch runtime",
+            "support": "unsupported"
+          },
+          "metrics": {}
+        },
+        "native": {
+          "tool": "html document parser",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for html; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": null,
+          "recall": null
+        }
+      },
+      {
+        "language": "css",
+        "category": "style",
+        "fixturePath": "styles.css",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.175,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {},
+            "symbol_names": [],
+            "symbols": 0,
+            "symbols_sample": []
+          }
+        },
+        "graphify": {
+          "status": "unsupported",
+          "ok": false,
+          "support": {
+            "extractor": "",
+            "key": ".css",
+            "reason": "not present in Graphify detector/dispatch runtime",
+            "support": "unsupported"
+          },
+          "metrics": {}
+        },
+        "native": {
+          "tool": "css parser candidate",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for css; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": null,
+          "recall": null
+        }
+      },
+      {
+        "language": "markdown",
+        "category": "structured",
+        "fixturePath": "README.md",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.28,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "section": 3
+            },
+            "symbol_names": [
+              "Guide",
+              "Install",
+              "Usage"
+            ],
+            "symbols": 3,
+            "symbols_sample": [
+              {
+                "kind": "section",
+                "line": 1,
+                "name": "Guide",
+                "path": "README.md"
+              },
+              {
+                "kind": "section",
+                "line": 2,
+                "name": "Install",
+                "path": "README.md"
+              },
+              {
+                "kind": "section",
+                "line": 3,
+                "name": "Usage",
+                "path": "README.md"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_markdown",
+            "key": ".md",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 0,
+            "extracted_calls": 0,
+            "links": 3,
+            "nodes": 4
+          }
+        },
+        "native": {
+          "tool": "markdown heading parser",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for markdown; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "Guide",
+            "Install",
+            "Usage"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "Guide",
+            "Install",
+            "Usage"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "mdx",
+        "category": "structured",
+        "fixturePath": "Guide.mdx",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.254,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "section": 2
+            },
+            "symbol_names": [
+              "Guide",
+              "Usage"
+            ],
+            "symbols": 2,
+            "symbols_sample": [
+              {
+                "kind": "section",
+                "line": 1,
+                "name": "Guide",
+                "path": "Guide.mdx"
+              },
+              {
+                "kind": "section",
+                "line": 3,
+                "name": "Usage",
+                "path": "Guide.mdx"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_markdown",
+            "key": ".mdx",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 0,
+            "extracted_calls": 0,
+            "links": 2,
+            "nodes": 3
+          }
+        },
+        "native": {
+          "tool": "mdx document parser",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for mdx; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "Guide",
+            "Usage"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "Guide",
+            "Usage"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "yaml",
+        "category": "structured",
+        "fixturePath": "config.yaml",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.259,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "document": 1
+            },
+            "symbol_names": [
+              "config.yaml"
+            ],
+            "symbols": 1,
+            "symbols_sample": [
+              {
+                "kind": "document",
+                "line": 1,
+                "name": "config.yaml",
+                "path": "config.yaml"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "unsupported",
+          "ok": false,
+          "support": {
+            "extractor": "",
+            "key": ".yaml",
+            "reason": "not present in Graphify detector/dispatch runtime",
+            "support": "unsupported"
+          },
+          "metrics": {}
+        },
+        "native": {
+          "tool": "yaml key parser",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for yaml; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "name",
+            "port",
+            "service"
+          ],
+          "extra_symbol_names_sample": [
+            "config.yaml"
+          ],
+          "matched_symbols": [],
+          "missing_symbols": [
+            "name",
+            "port",
+            "service"
+          ],
+          "oracle": "fixture name set",
+          "precision": 0,
+          "recall": 0
+        }
+      },
+      {
+        "language": "json",
+        "category": "structured",
+        "fixturePath": "package.json",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.281,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "key": 3
+            },
+            "symbol_names": [
+              "name",
+              "scripts",
+              "scripts.test"
+            ],
+            "symbols": 3,
+            "symbols_sample": [
+              {
+                "kind": "key",
+                "line": 2,
+                "name": "name",
+                "path": "package.json"
+              },
+              {
+                "kind": "key",
+                "line": 3,
+                "name": "scripts",
+                "path": "package.json"
+              },
+              {
+                "kind": "key",
+                "line": 3,
+                "name": "scripts.test",
+                "path": "package.json"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_json",
+            "key": ".json",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 0,
+            "extracted_calls": 0,
+            "links": 3,
+            "nodes": 4
+          }
+        },
+        "native": {
+          "tool": "python json",
+          "status": "ok",
+          "ok": true,
+          "toolClass": "structured-parser",
+          "metrics": {
+            "top_keys": 2
+          },
+          "note": ""
+        },
+        "oracle": {
+          "expected_symbols": [
+            "name",
+            "scripts",
+            "scripts.test"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "name",
+            "scripts",
+            "scripts.test"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "proto",
+        "category": "structured",
+        "fixturePath": "service.proto",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.261,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {
+              "imports": 1
+            },
+            "edges": 1,
+            "files": 1,
+            "imports": 1,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "message": 1,
+              "service": 1
+            },
+            "symbol_names": [
+              "Demo",
+              "Request"
+            ],
+            "symbols": 2,
+            "symbols_sample": [
+              {
+                "kind": "message",
+                "line": 4,
+                "name": "Request",
+                "path": "service.proto"
+              },
+              {
+                "kind": "service",
+                "line": 5,
+                "name": "Demo",
+                "path": "service.proto"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "unsupported",
+          "ok": false,
+          "support": {
+            "extractor": "",
+            "key": ".proto",
+            "reason": "not present in Graphify detector/dispatch runtime",
+            "support": "unsupported"
+          },
+          "metrics": {}
+        },
+        "native": {
+          "tool": "protoc",
+          "status": "ok",
+          "ok": true,
+          "toolClass": "syntax-or-compiler",
+          "metrics": {},
+          "note": ""
+        },
+        "oracle": {
+          "expected_symbols": [
+            "Demo",
+            "Request",
+            "Run"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "Demo",
+            "Request"
+          ],
+          "missing_symbols": [
+            "Run"
+          ],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 0.6667
+        }
+      },
+      {
+        "language": "toml",
+        "category": "structured",
+        "fixturePath": "config.toml",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.26,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "document": 1
+            },
+            "symbol_names": [
+              "config.toml"
+            ],
+            "symbols": 1,
+            "symbols_sample": [
+              {
+                "kind": "document",
+                "line": 1,
+                "name": "config.toml",
+                "path": "config.toml"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "unsupported",
+          "ok": false,
+          "support": {
+            "extractor": "",
+            "key": ".toml",
+            "reason": "not present in Graphify detector/dispatch runtime",
+            "support": "unsupported"
+          },
+          "metrics": {}
+        },
+        "native": {
+          "tool": "python tomllib",
+          "status": "ok",
+          "ok": true,
+          "toolClass": "structured-parser",
+          "metrics": {
+            "top_keys": 1
+          },
+          "note": ""
+        },
+        "oracle": {
+          "expected_symbols": [
+            "database",
+            "name",
+            "service",
+            "url"
+          ],
+          "extra_symbol_names_sample": [
+            "config.toml"
+          ],
+          "matched_symbols": [],
+          "missing_symbols": [
+            "database",
+            "name",
+            "service",
+            "url"
+          ],
+          "oracle": "fixture name set",
+          "precision": 0,
+          "recall": 0
+        }
+      },
+      {
+        "language": "xml",
+        "category": "structured",
+        "fixturePath": "config.xml",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.274,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "document": 1
+            },
+            "symbol_names": [
+              "config.xml"
+            ],
+            "symbols": 1,
+            "symbols_sample": [
+              {
+                "kind": "document",
+                "line": 1,
+                "name": "config.xml",
+                "path": "config.xml"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "unsupported",
+          "ok": false,
+          "support": {
+            "extractor": "",
+            "key": ".xml",
+            "reason": "not present in Graphify detector/dispatch runtime",
+            "support": "unsupported"
+          },
+          "metrics": {}
+        },
+        "native": {
+          "tool": "python xml",
+          "status": "ok",
+          "ok": true,
+          "toolClass": "structured-parser",
+          "metrics": {
+            "elements": 3,
+            "root": "project"
+          },
+          "note": ""
+        },
+        "oracle": {
+          "expected_symbols": [
+            "port",
+            "project",
+            "service"
+          ],
+          "extra_symbol_names_sample": [
+            "config.xml"
+          ],
+          "matched_symbols": [],
+          "missing_symbols": [
+            "port",
+            "project",
+            "service"
+          ],
+          "oracle": "fixture name set",
+          "precision": 0,
+          "recall": 0
+        }
+      },
+      {
+        "language": "plist",
+        "category": "structured",
+        "fixturePath": "Info.plist",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.251,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "document": 1
+            },
+            "symbol_names": [
+              "Info.plist"
+            ],
+            "symbols": 1,
+            "symbols_sample": [
+              {
+                "kind": "document",
+                "line": 1,
+                "name": "Info.plist",
+                "path": "Info.plist"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "unsupported",
+          "ok": false,
+          "support": {
+            "extractor": "",
+            "key": ".plist",
+            "reason": "not present in Graphify detector/dispatch runtime",
+            "support": "unsupported"
+          },
+          "metrics": {}
+        },
+        "native": {
+          "tool": "plist parser",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for plist; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "CFBundleName"
+          ],
+          "extra_symbol_names_sample": [
+            "Info.plist"
+          ],
+          "matched_symbols": [],
+          "missing_symbols": [
+            "CFBundleName"
+          ],
+          "oracle": "fixture name set",
+          "precision": 0,
+          "recall": 0
+        }
+      },
+      {
+        "language": "gomod",
+        "category": "structured",
+        "fixturePath": "go.mod",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.357,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "document": 1
+            },
+            "symbol_names": [
+              "go.mod"
+            ],
+            "symbols": 1,
+            "symbols_sample": [
+              {
+                "kind": "document",
+                "line": 1,
+                "name": "go.mod",
+                "path": "go.mod"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "unsupported",
+          "ok": false,
+          "support": {
+            "extractor": "",
+            "key": ".mod",
+            "reason": "not present in Graphify detector/dispatch runtime",
+            "support": "unsupported"
+          },
+          "metrics": {}
+        },
+        "native": {
+          "tool": "go mod parser",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for gomod; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "example.com/atlas-fixture",
+            "github.com/google/uuid"
+          ],
+          "extra_symbol_names_sample": [
+            "go.mod"
+          ],
+          "matched_symbols": [],
+          "missing_symbols": [
+            "example.com/atlas-fixture",
+            "github.com/google/uuid"
+          ],
+          "oracle": "fixture name set",
+          "precision": 0,
+          "recall": 0
+        }
+      },
+      {
+        "language": "gosum",
+        "category": "structured",
+        "fixturePath": "go.sum",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.28,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "document": 1
+            },
+            "symbol_names": [
+              "go.sum"
+            ],
+            "symbols": 1,
+            "symbols_sample": [
+              {
+                "kind": "document",
+                "line": 1,
+                "name": "go.sum",
+                "path": "go.sum"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "unsupported",
+          "ok": false,
+          "support": {
+            "extractor": "",
+            "key": ".sum",
+            "reason": "not present in Graphify detector/dispatch runtime",
+            "support": "unsupported"
+          },
+          "metrics": {}
+        },
+        "native": {
+          "tool": "go sum parser",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for gosum; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "github.com/google/uuid"
+          ],
+          "extra_symbol_names_sample": [
+            "go.sum"
+          ],
+          "matched_symbols": [],
+          "missing_symbols": [
+            "github.com/google/uuid"
+          ],
+          "oracle": "fixture name set",
+          "precision": 0,
+          "recall": 0
+        }
+      },
+      {
+        "language": "config",
+        "category": "structured",
+        "fixturePath": ".env.example",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.268,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "document": 1
+            },
+            "symbol_names": [
+              ".env.example"
+            ],
+            "symbols": 1,
+            "symbols_sample": [
+              {
+                "kind": "document",
+                "line": 1,
+                "name": ".env.example",
+                "path": ".env.example"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "unsupported",
+          "ok": false,
+          "support": {
+            "extractor": "",
+            "key": ".example",
+            "reason": "not present in Graphify detector/dispatch runtime",
+            "support": "unsupported"
+          },
+          "metrics": {}
+        },
+        "native": {
+          "tool": "config key parser",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for config; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "ATLAS_DB",
+            "ATLAS_LOG_LEVEL"
+          ],
+          "extra_symbol_names_sample": [
+            ".env.example"
+          ],
+          "matched_symbols": [],
+          "missing_symbols": [
+            "ATLAS_DB",
+            "ATLAS_LOG_LEVEL"
+          ],
+          "oracle": "fixture name set",
+          "precision": 0,
+          "recall": 0
+        }
+      },
+      {
+        "language": "makefile",
+        "category": "structured",
+        "fixturePath": "Makefile",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.225,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "target": 2
+            },
+            "symbol_names": [
+              "build",
+              "test"
+            ],
+            "symbols": 2,
+            "symbols_sample": [
+              {
+                "kind": "target",
+                "line": 2,
+                "name": "build",
+                "path": "Makefile"
+              },
+              {
+                "kind": "target",
+                "line": 4,
+                "name": "test",
+                "path": "Makefile"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "unsupported",
+          "ok": false,
+          "support": {
+            "extractor": "",
+            "key": "",
+            "reason": "not present in Graphify detector/dispatch runtime",
+            "support": "unsupported"
+          },
+          "metrics": {}
+        },
+        "native": {
+          "tool": "make target parser",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for makefile; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "build",
+            "test"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "build",
+            "test"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "batch",
+        "category": "structured",
+        "fixturePath": "build.cmd",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.225,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "document": 1
+            },
+            "symbol_names": [
+              "build.cmd"
+            ],
+            "symbols": 1,
+            "symbols_sample": [
+              {
+                "kind": "document",
+                "line": 1,
+                "name": "build.cmd",
+                "path": "build.cmd"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "unsupported",
+          "ok": false,
+          "support": {
+            "extractor": "",
+            "key": ".cmd",
+            "reason": "not present in Graphify detector/dispatch runtime",
+            "support": "unsupported"
+          },
+          "metrics": {}
+        },
+        "native": {
+          "tool": "batch parser proxy",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for batch; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "ATLAS_ENV"
+          ],
+          "extra_symbol_names_sample": [
+            "build.cmd"
+          ],
+          "matched_symbols": [],
+          "missing_symbols": [
+            "ATLAS_ENV"
+          ],
+          "oracle": "fixture name set",
+          "precision": 0,
+          "recall": 0
+        }
+      },
+      {
+        "language": "powershell",
+        "category": "code",
+        "fixturePath": "build.ps1",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.391,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "function": 2
+            },
+            "symbol_names": [
+              "Invoke-Build",
+              "Test-Atlas"
+            ],
+            "symbols": 2,
+            "symbols_sample": [
+              {
+                "kind": "function",
+                "line": 1,
+                "name": "Invoke-Build",
+                "path": "build.ps1"
+              },
+              {
+                "kind": "function",
+                "line": 4,
+                "name": "Test-Atlas",
+                "path": "build.ps1"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_powershell",
+            "key": ".ps1",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 1,
+            "extracted_calls": 1,
+            "links": 3,
+            "nodes": 3
+          }
+        },
+        "native": {
+          "tool": "powershell parser",
+          "status": "ok",
+          "ok": true,
+          "toolClass": "native-ast",
+          "metrics": {
+            "definitions": 0,
+            "errors": 1
+          },
+          "note": ""
+        },
+        "oracle": {
+          "expected_symbols": [
+            "Invoke-Build",
+            "Test-Atlas"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "Invoke-Build",
+            "Test-Atlas"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "sql",
+        "category": "structured",
+        "fixturePath": "schema.sql",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.375,
+          "metrics": {
+            "calls": 1,
+            "edge_kinds": {
+              "calls": 1
+            },
+            "edges": 1,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "index": 1,
+              "table": 1,
+              "view": 1
+            },
+            "symbol_names": [
+              "active_users",
+              "idx_users_name",
+              "users"
+            ],
+            "symbols": 3,
+            "symbols_sample": [
+              {
+                "kind": "table",
+                "line": 1,
+                "name": "users",
+                "path": "schema.sql"
+              },
+              {
+                "kind": "index",
+                "line": 2,
+                "name": "idx_users_name",
+                "path": "schema.sql"
+              },
+              {
+                "kind": "view",
+                "line": 3,
+                "name": "active_users",
+                "path": "schema.sql"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "ok",
+          "ok": true,
+          "support": {
+            "extractor": "extract_sql",
+            "key": ".sql",
+            "reason": "_DISPATCH extractor",
+            "support": "deterministic"
+          },
+          "metrics": {
+            "calls": 0,
+            "extracted_calls": 0,
+            "links": 3,
+            "nodes": 3
+          }
+        },
+        "native": {
+          "tool": "sqlite parser proxy",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for sql; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "active_users",
+            "idx_users_name",
+            "users"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "active_users",
+            "idx_users_name",
+            "users"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "csv",
+        "category": "structured",
+        "fixturePath": "data.csv",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.384,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "document": 1
+            },
+            "symbol_names": [
+              "data.csv"
+            ],
+            "symbols": 1,
+            "symbols_sample": [
+              {
+                "kind": "document",
+                "line": 1,
+                "name": "data.csv",
+                "path": "data.csv"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "unsupported",
+          "ok": false,
+          "support": {
+            "extractor": "",
+            "key": ".csv",
+            "reason": "not present in Graphify detector/dispatch runtime",
+            "support": "unsupported"
+          },
+          "metrics": {}
+        },
+        "native": {
+          "tool": "python csv",
+          "status": "ok",
+          "ok": true,
+          "toolClass": "structured-parser",
+          "metrics": {
+            "columns": 2,
+            "rows": 2
+          },
+          "note": ""
+        },
+        "oracle": {
+          "expected_symbols": [
+            "name",
+            "role"
+          ],
+          "extra_symbol_names_sample": [
+            "data.csv"
+          ],
+          "matched_symbols": [],
+          "missing_symbols": [
+            "name",
+            "role"
+          ],
+          "oracle": "fixture name set",
+          "precision": 0,
+          "recall": 0
+        }
+      },
+      {
+        "language": "text",
+        "category": "structured",
+        "fixturePath": "notes.txt",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.375,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "document": 1
+            },
+            "symbol_names": [
+              "notes.txt"
+            ],
+            "symbols": 1,
+            "symbols_sample": [
+              {
+                "kind": "document",
+                "line": 1,
+                "name": "notes.txt",
+                "path": "notes.txt"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "unsupported",
+          "ok": false,
+          "support": {
+            "extractor": "",
+            "key": ".txt",
+            "reason": "not present in Graphify detector/dispatch runtime",
+            "support": "unsupported"
+          },
+          "metrics": {}
+        },
+        "native": {
+          "tool": "plain text document parser",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for text; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "notes.txt"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "notes.txt"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "dockerfile",
+        "category": "structured",
+        "fixturePath": "Dockerfile",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.434,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "document": 1
+            },
+            "symbol_names": [
+              "Dockerfile"
+            ],
+            "symbols": 1,
+            "symbols_sample": [
+              {
+                "kind": "document",
+                "line": 1,
+                "name": "Dockerfile",
+                "path": "Dockerfile"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "unsupported",
+          "ok": false,
+          "support": {
+            "extractor": "",
+            "key": "",
+            "reason": "not present in Graphify detector/dispatch runtime",
+            "support": "unsupported"
+          },
+          "metrics": {}
+        },
+        "native": {
+          "tool": "dockerfile parser proxy",
+          "status": "missing",
+          "ok": false,
+          "toolClass": "native-or-proxy",
+          "metrics": {},
+          "note": "No executable local native/tool baseline was found for dockerfile; fixture oracle and Atlas/Graphify slots are still recorded."
+        },
+        "oracle": {
+          "expected_symbols": [
+            "ARG",
+            "CMD",
+            "FROM",
+            "RUN"
+          ],
+          "extra_symbol_names_sample": [
+            "Dockerfile"
+          ],
+          "matched_symbols": [],
+          "missing_symbols": [
+            "ARG",
+            "CMD",
+            "FROM",
+            "RUN"
+          ],
+          "oracle": "fixture name set",
+          "precision": 0,
+          "recall": 0
+        }
+      },
+      {
+        "language": "pptx",
+        "category": "binary",
+        "fixturePath": "deck.pptx",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.335,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "document": 1,
+              "slide": 2
+            },
+            "symbol_names": [
+              "Quarterly Review",
+              "Slide 1",
+              "Slide 2"
+            ],
+            "symbols": 3,
+            "symbols_sample": [
+              {
+                "kind": "document",
+                "line": 1,
+                "name": "Quarterly Review",
+                "path": "deck.pptx"
+              },
+              {
+                "kind": "slide",
+                "line": 1,
+                "name": "Slide 1",
+                "path": "deck.pptx"
+              },
+              {
+                "kind": "slide",
+                "line": 1,
+                "name": "Slide 2",
+                "path": "deck.pptx"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "unsupported",
+          "ok": false,
+          "support": {
+            "extractor": "",
+            "key": ".pptx",
+            "reason": "not present in Graphify detector/dispatch runtime",
+            "support": "unsupported"
+          },
+          "metrics": {}
+        },
+        "native": {
+          "tool": "zip office parser",
+          "status": "ok",
+          "ok": true,
+          "toolClass": "structured-parser",
+          "metrics": {
+            "zip_entries": 3
+          },
+          "note": ""
+        },
+        "oracle": {
+          "expected_symbols": [
+            "Quarterly Review",
+            "Slide 1",
+            "Slide 2"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "Quarterly Review",
+            "Slide 1",
+            "Slide 2"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "docx",
+        "category": "binary",
+        "fixturePath": "spec.docx",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.325,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "document": 1
+            },
+            "symbol_names": [
+              "spec.docx"
+            ],
+            "symbols": 1,
+            "symbols_sample": [
+              {
+                "kind": "document",
+                "line": 1,
+                "name": "spec.docx",
+                "path": "spec.docx"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "unsupported",
+          "ok": false,
+          "support": {
+            "extractor": "",
+            "key": ".docx",
+            "reason": "not present in Graphify detector/dispatch runtime",
+            "support": "unsupported"
+          },
+          "metrics": {}
+        },
+        "native": {
+          "tool": "zip office parser",
+          "status": "ok",
+          "ok": true,
+          "toolClass": "structured-parser",
+          "metrics": {
+            "zip_entries": 1
+          },
+          "note": ""
+        },
+        "oracle": {
+          "expected_symbols": [
+            "spec.docx"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "spec.docx"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "xlsx",
+        "category": "binary",
+        "fixturePath": "budget.xlsx",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.278,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "document": 1
+            },
+            "symbol_names": [
+              "budget.xlsx"
+            ],
+            "symbols": 1,
+            "symbols_sample": [
+              {
+                "kind": "document",
+                "line": 1,
+                "name": "budget.xlsx",
+                "path": "budget.xlsx"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "unsupported",
+          "ok": false,
+          "support": {
+            "extractor": "",
+            "key": ".xlsx",
+            "reason": "not present in Graphify detector/dispatch runtime",
+            "support": "unsupported"
+          },
+          "metrics": {}
+        },
+        "native": {
+          "tool": "zip office parser",
+          "status": "ok",
+          "ok": true,
+          "toolClass": "structured-parser",
+          "metrics": {
+            "zip_entries": 2
+          },
+          "note": ""
+        },
+        "oracle": {
+          "expected_symbols": [
+            "budget.xlsx"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "budget.xlsx"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "image",
+        "category": "binary",
+        "fixturePath": "flow.png",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.27,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "image": 1
+            },
+            "symbol_names": [
+              "flow.png"
+            ],
+            "symbols": 1,
+            "symbols_sample": [
+              {
+                "kind": "image",
+                "line": 1,
+                "name": "flow.png",
+                "path": "flow.png"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "unsupported",
+          "ok": false,
+          "support": {
+            "extractor": "",
+            "key": ".png",
+            "reason": "not present in Graphify detector/dispatch runtime",
+            "support": "unsupported"
+          },
+          "metrics": {}
+        },
+        "native": {
+          "tool": "image decoder",
+          "status": "ok",
+          "ok": true,
+          "toolClass": "structured-parser",
+          "metrics": {
+            "bytes": 68
+          },
+          "note": ""
+        },
+        "oracle": {
+          "expected_symbols": [
+            "flow.png"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "flow.png"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      },
+      {
+        "language": "pdf",
+        "category": "binary",
+        "fixturePath": "whitepaper.pdf",
+        "artifact": "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "source": "bench/SUPPORTED_LANGUAGE_BENCHMARK.json",
+        "atlas": {
+          "status": "ok",
+          "ok": true,
+          "seconds": 0.149,
+          "metrics": {
+            "calls": 0,
+            "edge_kinds": {},
+            "edges": 0,
+            "files": 1,
+            "imports": 0,
+            "snapshot_sid": 1,
+            "symbol_kinds": {
+              "document": 1
+            },
+            "symbol_names": [
+              "whitepaper.pdf"
+            ],
+            "symbols": 1,
+            "symbols_sample": [
+              {
+                "kind": "document",
+                "line": 1,
+                "name": "whitepaper.pdf",
+                "path": "whitepaper.pdf"
+              }
+            ]
+          }
+        },
+        "graphify": {
+          "status": "unsupported",
+          "ok": false,
+          "support": {
+            "extractor": "",
+            "key": ".pdf",
+            "reason": "not present in Graphify detector/dispatch runtime",
+            "support": "unsupported"
+          },
+          "metrics": {}
+        },
+        "native": {
+          "tool": "pdf parser",
+          "status": "ok",
+          "ok": true,
+          "toolClass": "structured-parser",
+          "metrics": {
+            "bytes": 2905,
+            "pdf_header": true
+          },
+          "note": ""
+        },
+        "oracle": {
+          "expected_symbols": [
+            "whitepaper.pdf"
+          ],
+          "extra_symbol_names_sample": [],
+          "matched_symbols": [
+            "whitepaper.pdf"
+          ],
+          "missing_symbols": [],
+          "oracle": "fixture name set",
+          "precision": 1,
+          "recall": 1
+        }
+      }
+    ],
+    "improvementAreas": [
+      {
+        "area": "fixture_oracle_precision_review",
+        "detail": "constructor",
+        "language": "typescript",
+        "priority": "P2"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for kotlin; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "kotlin",
+        "priority": "P1"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for scala; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "scala",
+        "priority": "P1"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for swift; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "swift",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_recall_gap",
+        "detail": "run",
+        "language": "lua",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_precision_review",
+        "detail": "M.run",
+        "language": "lua",
+        "priority": "P2"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for lua; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "lua",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_precision_review",
+        "detail": "_, std",
+        "language": "zig",
+        "priority": "P2"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for zig; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "zig",
+        "priority": "P1"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for elixir; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "elixir",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_recall_gap",
+        "detail": "helper",
+        "language": "objc",
+        "priority": "P1"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for objc; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "objc",
+        "priority": "P1"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for julia; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "julia",
+        "priority": "P1"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for fortran; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "fortran",
+        "priority": "P1"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for dart; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "dart",
+        "priority": "P1"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for verilog; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "verilog",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_recall_gap",
+        "detail": "TWorker",
+        "language": "pascal",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_precision_review",
+        "detail": "TWorker.Run",
+        "language": "pascal",
+        "priority": "P2"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for pascal; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "pascal",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_precision_review",
+        "detail": "TButton, TMainForm",
+        "language": "delphi",
+        "priority": "P2"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for delphi; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "delphi",
+        "priority": "P1"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for terraform; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "terraform",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_recall_gap",
+        "detail": "health, helper, run",
+        "language": "byond",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_precision_review",
+        "detail": "/proc, /proc/helper",
+        "language": "byond",
+        "priority": "P2"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for byond; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "byond",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_precision_review",
+        "detail": "Microsoft.NET.Sdk, Sample",
+        "language": "dotnet",
+        "priority": "P2"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for dotnet; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "dotnet",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_recall_gap",
+        "detail": "counter",
+        "language": "razor",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_precision_review",
+        "detail": "/counter, Counter, Microsoft.AspNetCore.Components",
+        "language": "razor",
+        "priority": "P2"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for razor; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "razor",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_precision_review",
+        "detail": "Account",
+        "language": "apex",
+        "priority": "P2"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for apex; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "apex",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_recall_gap",
+        "detail": "foreach",
+        "language": "blade",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_precision_review",
+        "detail": "layouts.app, view",
+        "language": "blade",
+        "priority": "P2"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for blade; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "blade",
+        "priority": "P1"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for vue; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "vue",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_recall_gap",
+        "detail": "name",
+        "language": "svelte",
+        "priority": "P1"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for svelte; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "svelte",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_precision_review",
+        "detail": "App, BaseLayout",
+        "language": "astro",
+        "priority": "P2"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for astro; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "astro",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_recall_gap",
+        "detail": "partials/header",
+        "language": "ejs",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_precision_review",
+        "detail": "view",
+        "language": "ejs",
+        "priority": "P2"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for ejs; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "ejs",
+        "priority": "P1"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for ets; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "ets",
+        "priority": "P1"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for r; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "r",
+        "priority": "P1"
+      },
+      {
+        "area": "graphify_unsupported",
+        "detail": "not present in Graphify detector/dispatch runtime",
+        "language": "r",
+        "priority": "P2"
+      },
+      {
+        "area": "fixture_oracle_precision_review",
+        "detail": "start",
+        "language": "p4",
+        "priority": "P2"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for p4; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "p4",
+        "priority": "P1"
+      },
+      {
+        "area": "graphify_unsupported",
+        "detail": "not present in Graphify detector/dispatch runtime",
+        "language": "p4",
+        "priority": "P2"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for csharp; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "csharp",
+        "priority": "P1"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for groovy; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "groovy",
+        "priority": "P1"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for html; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "html",
+        "priority": "P1"
+      },
+      {
+        "area": "graphify_unsupported",
+        "detail": "not present in Graphify detector/dispatch runtime",
+        "language": "html",
+        "priority": "P2"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for css; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "css",
+        "priority": "P1"
+      },
+      {
+        "area": "graphify_unsupported",
+        "detail": "not present in Graphify detector/dispatch runtime",
+        "language": "css",
+        "priority": "P2"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for markdown; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "markdown",
+        "priority": "P1"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for mdx; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "mdx",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_recall_gap",
+        "detail": "name, port, service",
+        "language": "yaml",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_precision_review",
+        "detail": "config.yaml",
+        "language": "yaml",
+        "priority": "P2"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for yaml; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "yaml",
+        "priority": "P1"
+      },
+      {
+        "area": "graphify_unsupported",
+        "detail": "not present in Graphify detector/dispatch runtime",
+        "language": "yaml",
+        "priority": "P2"
+      },
+      {
+        "area": "fixture_oracle_recall_gap",
+        "detail": "Run",
+        "language": "proto",
+        "priority": "P1"
+      },
+      {
+        "area": "graphify_unsupported",
+        "detail": "not present in Graphify detector/dispatch runtime",
+        "language": "proto",
+        "priority": "P2"
+      },
+      {
+        "area": "fixture_oracle_recall_gap",
+        "detail": "database, name, service, url",
+        "language": "toml",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_precision_review",
+        "detail": "config.toml",
+        "language": "toml",
+        "priority": "P2"
+      },
+      {
+        "area": "graphify_unsupported",
+        "detail": "not present in Graphify detector/dispatch runtime",
+        "language": "toml",
+        "priority": "P2"
+      },
+      {
+        "area": "fixture_oracle_recall_gap",
+        "detail": "port, project, service",
+        "language": "xml",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_precision_review",
+        "detail": "config.xml",
+        "language": "xml",
+        "priority": "P2"
+      },
+      {
+        "area": "graphify_unsupported",
+        "detail": "not present in Graphify detector/dispatch runtime",
+        "language": "xml",
+        "priority": "P2"
+      },
+      {
+        "area": "fixture_oracle_recall_gap",
+        "detail": "CFBundleName",
+        "language": "plist",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_precision_review",
+        "detail": "Info.plist",
+        "language": "plist",
+        "priority": "P2"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for plist; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "plist",
+        "priority": "P1"
+      },
+      {
+        "area": "graphify_unsupported",
+        "detail": "not present in Graphify detector/dispatch runtime",
+        "language": "plist",
+        "priority": "P2"
+      },
+      {
+        "area": "fixture_oracle_recall_gap",
+        "detail": "example.com/atlas-fixture, github.com/google/uuid",
+        "language": "gomod",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_precision_review",
+        "detail": "go.mod",
+        "language": "gomod",
+        "priority": "P2"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for gomod; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "gomod",
+        "priority": "P1"
+      },
+      {
+        "area": "graphify_unsupported",
+        "detail": "not present in Graphify detector/dispatch runtime",
+        "language": "gomod",
+        "priority": "P2"
+      },
+      {
+        "area": "fixture_oracle_recall_gap",
+        "detail": "github.com/google/uuid",
+        "language": "gosum",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_precision_review",
+        "detail": "go.sum",
+        "language": "gosum",
+        "priority": "P2"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for gosum; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "gosum",
+        "priority": "P1"
+      },
+      {
+        "area": "graphify_unsupported",
+        "detail": "not present in Graphify detector/dispatch runtime",
+        "language": "gosum",
+        "priority": "P2"
+      },
+      {
+        "area": "fixture_oracle_recall_gap",
+        "detail": "ATLAS_DB, ATLAS_LOG_LEVEL",
+        "language": "config",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_precision_review",
+        "detail": ".env.example",
+        "language": "config",
+        "priority": "P2"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for config; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "config",
+        "priority": "P1"
+      },
+      {
+        "area": "graphify_unsupported",
+        "detail": "not present in Graphify detector/dispatch runtime",
+        "language": "config",
+        "priority": "P2"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for makefile; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "makefile",
+        "priority": "P1"
+      },
+      {
+        "area": "graphify_unsupported",
+        "detail": "not present in Graphify detector/dispatch runtime",
+        "language": "makefile",
+        "priority": "P2"
+      },
+      {
+        "area": "fixture_oracle_recall_gap",
+        "detail": "ATLAS_ENV",
+        "language": "batch",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_precision_review",
+        "detail": "build.cmd",
+        "language": "batch",
+        "priority": "P2"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for batch; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "batch",
+        "priority": "P1"
+      },
+      {
+        "area": "graphify_unsupported",
+        "detail": "not present in Graphify detector/dispatch runtime",
+        "language": "batch",
+        "priority": "P2"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for sql; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "sql",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_recall_gap",
+        "detail": "name, role",
+        "language": "csv",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_precision_review",
+        "detail": "data.csv",
+        "language": "csv",
+        "priority": "P2"
+      },
+      {
+        "area": "graphify_unsupported",
+        "detail": "not present in Graphify detector/dispatch runtime",
+        "language": "csv",
+        "priority": "P2"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for text; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "text",
+        "priority": "P1"
+      },
+      {
+        "area": "graphify_unsupported",
+        "detail": "not present in Graphify detector/dispatch runtime",
+        "language": "text",
+        "priority": "P2"
+      },
+      {
+        "area": "fixture_oracle_recall_gap",
+        "detail": "ARG, CMD, FROM, RUN",
+        "language": "dockerfile",
+        "priority": "P1"
+      },
+      {
+        "area": "fixture_oracle_precision_review",
+        "detail": "Dockerfile",
+        "language": "dockerfile",
+        "priority": "P2"
+      },
+      {
+        "area": "native_baseline_missing",
+        "detail": "No executable local native/tool baseline was found for dockerfile; fixture oracle and Atlas/Graphify slots are still recorded.",
+        "language": "dockerfile",
+        "priority": "P1"
+      },
+      {
+        "area": "graphify_unsupported",
+        "detail": "not present in Graphify detector/dispatch runtime",
+        "language": "dockerfile",
+        "priority": "P2"
+      },
+      {
+        "area": "graphify_unsupported",
+        "detail": "not present in Graphify detector/dispatch runtime",
+        "language": "pptx",
+        "priority": "P2"
+      },
+      {
+        "area": "graphify_unsupported",
+        "detail": "not present in Graphify detector/dispatch runtime",
+        "language": "docx",
+        "priority": "P2"
+      },
+      {
+        "area": "graphify_unsupported",
+        "detail": "not present in Graphify detector/dispatch runtime",
+        "language": "xlsx",
+        "priority": "P2"
+      },
+      {
+        "area": "graphify_unsupported",
+        "detail": "not present in Graphify detector/dispatch runtime",
+        "language": "image",
+        "priority": "P2"
+      },
+      {
+        "area": "graphify_unsupported",
+        "detail": "not present in Graphify detector/dispatch runtime",
+        "language": "pdf",
+        "priority": "P2"
+      }
+    ]
+  },
   "coverageAudit": [
     {
       "family": "go",
@@ -27220,7 +33522,8 @@
     "The precision evidence manifest records sampled symbol/location matches and validation kind-count maps when raw artifacts expose them; it does not claim full precision for rows that remain count-only or proxy-denominator based.",
     "The call-edge evidence manifest records core receiver-typed calls and live call counts when raw artifacts expose them; it does not claim live receiver-type coverage where no receiver metric exists.",
     "The Graphify support manifest separates deterministic extractor support from detector-only extension support; sampled Graphify no-equivalent rows are reported separately from Atlas/native coverage.",
-    "10x target fields are strict for token and latency ratios; coverage is reported as native-definition parity/exceed and is not converted into a fabricated 10x accuracy multiplier."
+    "10x target fields are strict for token and latency ratios; coverage is reported as native-definition parity/exceed and is not converted into a fabricated 10x accuracy multiplier.",
+    "The supported-language fixture sweep covers every parser.Supported family, including structured and binary document families. It is compatibility evidence and does not replace public-repo semantic ground truth."
   ],
   "finalAudit": {
     "markdownPath": "data/final-benchmark-audit-report.md",
@@ -27281,7 +33584,22 @@
         ".ejs",
         ".ets",
         ".r"
-      ]
+      ],
+      "supportedFamilies": 64,
+      "supportedAtlasOk": 64,
+      "supportedFixtureOracleRows": 62,
+      "supportedFixtureRecall100": 43,
+      "supportedFixturePrecision100": 39,
+      "supportedFixtureExact": 36,
+      "supportedGraphifySupport": {
+        "detector_only": 2,
+        "deterministic": 40,
+        "unsupported": 22
+      },
+      "supportedNativeBaselineStatus": {
+        "missing": 42,
+        "ok": 22
+      }
     }
   }
 }

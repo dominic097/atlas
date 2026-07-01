@@ -12,8 +12,8 @@ import {
 } from "lucide-react";
 
 /* ============================================================
-   Languages Explorer — ONE unified surface over all 43
-   benchmarked languages (7 core + 36 live). Two honest lenses
+   Languages Explorer — ONE unified surface over Atlas's supported
+   parser families plus stronger public-repo evidence rows. Two honest lenses
    (Graphical | Table) share a single derived, filtered, sorted
    row set, so toggling the view is a lens change, never a
    context switch. Atlas-centric default (Coverage parity), with
@@ -57,7 +57,7 @@ function repoShort(repo) {
   return repo ? repo.replace("https://github.com/", "") : "—";
 }
 
-/* -------- ONE flat row model: 43 entries, derived once -------------------- */
+/* -------- ONE flat row model, derived once -------------------- */
 function buildAllRows(data) {
   const core = data.coreMatrix.map((r) => {
     const m = r.atlas.metrics || {};
@@ -121,7 +121,42 @@ function buildAllRows(data) {
     };
   });
 
-  return [...core, ...live].map((row) => {
+  const seen = new Set([...core, ...live].map((row) => row.language));
+  const supported = (data.supportedLanguageBenchmark?.rows || [])
+    .filter((r) => !seen.has(r.language))
+    .map((r) => {
+      const metrics = r.atlas?.metrics || {};
+      const artifactPath = r.artifact || "data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json";
+      return {
+        language: r.language,
+        label: langLabel(r.language),
+        tier: "supported",
+        category: r.category,
+        repo: "fixture sweep",
+        repoShort: r.fixturePath || "fixture",
+        commit: null,
+        indexSeconds: r.atlas?.seconds ?? null,
+        symbols: metrics.symbols ?? null,
+        edges: metrics.edges ?? null,
+        tokenRatio: null,
+        latencyRatio: null,
+        coverageRatio: null,
+        atlasDefs: metrics.symbols ?? null,
+        nativeDefs: null,
+        nativeTool: r.native?.tool || r.native?.status || "fixture oracle",
+        equivalentRows: 0,
+        rows: 0,
+        detectorOnly: r.graphify?.support?.support === "detector_only",
+        atlasTokens: null,
+        graphifyTokens: null,
+        artifactPath,
+        artifactName: artifactPath.split("/").pop(),
+        oracleRecall: r.oracle?.recall ?? null,
+        oraclePrecision: r.oracle?.precision ?? null,
+      };
+    });
+
+  return [...core, ...live, ...supported].map((row) => {
     // STATUS derivation — order matters (verified against the JSON):
     // null token (0/N equivalent) is the stronger truth → not-comparable.
     const status =
@@ -261,7 +296,8 @@ const CHIPS = [
   ["not-comparable", "Not comparable"],
   ["detector-only", "Detector-only"],
   ["exceeds-native", "Exceeds native"],
-  ["core", "Core"],
+  ["supported", "Supported-only"],
+  ["core", "Matrix"],
   ["live", "Live"],
 ];
 
@@ -554,7 +590,7 @@ function MetricBars({ rows, metric, onInspect, inspect, data, reduced }) {
                     }}
                   >
                     <span className="mono px-2" style={{ fontSize: 10, color: "var(--not-comparable)" }}>
-                      ▱ {isCoverage && r.tier === "core" ? "n/a · core (no native baseline)" : "not comparable"}
+                      ▱ {isCoverage && r.tier === "core" ? "n/a · matrix row (no native baseline)" : "not comparable"}
                     </span>
                   </div>
                 ) : (
@@ -740,9 +776,13 @@ function MatrixTable({ rows, sort, dir, onSort, onInspect, inspect }) {
                   </span>
                 </td>
                 <td>
-                  <a className="link" href={r.repo} target="_blank" rel="noreferrer">
-                    {r.repoShort}
-                  </a>
+                  {r.tier === "supported" ? (
+                    <span style={{ color: "var(--muted)" }}>{r.repoShort}</span>
+                  ) : (
+                    <a className="link" href={r.repo} target="_blank" rel="noreferrer">
+                      {r.repoShort}
+                    </a>
+                  )}
                   <div className="num" style={{ fontSize: 11, color: "var(--faint)" }}>
                     {r.commit ? shortSha(r.commit) : "—"}
                   </div>
@@ -771,7 +811,7 @@ function MatrixTable({ rows, sort, dir, onSort, onInspect, inspect }) {
                   {r.coverageRatio == null ? (
                     <span
                       style={{ color: "var(--faint)" }}
-                      title="Core rows benchmark vs graphify; native coverage is a live-suite metric"
+                      title="Matrix rows benchmark vs graphify; native coverage is a live-suite metric"
                     >
                       —
                     </span>
@@ -858,15 +898,21 @@ function RowDrawer({ row, onClose, asSheet }) {
               </span>
             )}
           </div>
-          <a
-            className="link mono mt-1 block break-words"
-            href={row.repo}
-            target="_blank"
-            rel="noreferrer"
-            style={{ fontSize: 12 }}
-          >
-            {row.repoShort} <ExternalLink className="inline h-3 w-3" aria-hidden />
-          </a>
+          {row.tier === "supported" ? (
+            <div className="mono mt-1 block break-words" style={{ fontSize: 12, color: "var(--muted)" }}>
+              {row.repoShort}
+            </div>
+          ) : (
+            <a
+              className="link mono mt-1 block break-words"
+              href={row.repo}
+              target="_blank"
+              rel="noreferrer"
+              style={{ fontSize: 12 }}
+            >
+              {row.repoShort} <ExternalLink className="inline h-3 w-3" aria-hidden />
+            </a>
+          )}
           {row.commit && (
             <div className="mono mt-0.5" style={{ fontSize: 11, color: "var(--faint)" }}>{shortSha(row.commit)}</div>
           )}
@@ -885,7 +931,7 @@ function RowDrawer({ row, onClose, asSheet }) {
         <DrawerStat label="native tool">{row.nativeTool}</DrawerStat>
         <DrawerStat label="coverage vs native">
           {row.coverageRatio == null ? (
-            <span style={{ color: "var(--faint)" }}>— (core, no native baseline)</span>
+            <span style={{ color: "var(--faint)" }}>— (no public-repo coverage row)</span>
           ) : (
             <span style={{ color: row.coverageRatio >= 1 ? "var(--success)" : "var(--text)" }}>
               {ratioStr(row.coverageRatio)}
@@ -911,6 +957,16 @@ function RowDrawer({ row, onClose, asSheet }) {
             <span style={{ color: "var(--not-comparable)" }}>not comparable</span>
           )}
         </DrawerStat>
+        {row.tier === "supported" && (
+          <>
+            <DrawerStat label="fixture recall">
+              {row.oracleRecall == null ? "—" : `${Math.round(row.oracleRecall * 100)}%`}
+            </DrawerStat>
+            <DrawerStat label="fixture precision">
+              {row.oraclePrecision == null ? "—" : `${Math.round(row.oraclePrecision * 100)}%`}
+            </DrawerStat>
+          </>
+        )}
       </div>
 
       <a
@@ -979,6 +1035,7 @@ export default function LanguagesExplorer({ data }) {
       "not-comparable": allRows.filter((r) => r.status === "not-comparable").length,
       "detector-only": allRows.filter((r) => r.status === "detector-only").length,
       "exceeds-native": allRows.filter((r) => r.exceedsNative).length,
+      supported: allRows.filter((r) => r.tier === "supported").length,
       core: allRows.filter((r) => r.tier === "core").length,
       live: allRows.filter((r) => r.tier === "live").length,
     };
@@ -992,6 +1049,7 @@ export default function LanguagesExplorer({ data }) {
     else if (filter === "not-comparable") next = next.filter((r) => r.status === "not-comparable");
     else if (filter === "detector-only") next = next.filter((r) => r.status === "detector-only");
     else if (filter === "exceeds-native") next = next.filter((r) => r.exceedsNative);
+    else if (filter === "supported") next = next.filter((r) => r.tier === "supported");
     else if (filter === "core") next = next.filter((r) => r.tier === "core");
     else if (filter === "live") next = next.filter((r) => r.tier === "live");
 
@@ -1052,6 +1110,9 @@ export default function LanguagesExplorer({ data }) {
     if (isNarrow) setSheetOpen(true);
   }
 
+  const supportedFamilies = data.summary.supported?.families ?? allRows.length;
+  const publicRepoRows = (data.coreMatrix?.length || 0) + (data.liveBenchmarks?.length || 0);
+
   // keyboard shortcuts
   useEffect(() => {
     const onKey = (e) => {
@@ -1086,7 +1147,7 @@ export default function LanguagesExplorer({ data }) {
     <section id="matrix" data-testid="matrix" className="shell py-16" aria-labelledby="matrix-title">
       <div className="mb-7 max-w-3xl">
         <div className="kicker" style={{ color: "var(--primary)" }}>
-          Languages · {allRows.length} benchmarked
+          Languages · {supportedFamilies} supported · {publicRepoRows} public-repo rows
         </div>
         <h2
           id="matrix-title"
@@ -1096,9 +1157,9 @@ export default function LanguagesExplorer({ data }) {
           Every language, every artifact
         </h2>
         <p className="mt-3" style={{ fontSize: 15, lineHeight: 1.6, color: "var(--muted)" }}>
-          One dataset, two honest lenses. The default lens is Atlas&rsquo;s own coverage-parity story; token× and
-          latency× are available but scoped &ldquo;vs graphify.&rdquo; Filter, sort and search drive both views over the
-          same {allRows.length} rows. Every row links its raw JSON.
+          One dataset, two honest lenses. The default lens is Atlas&rsquo;s public-repo coverage-parity story; token× and
+          latency× are available but scoped &ldquo;vs graphify.&rdquo; Supported-only fixture rows fill the rest of Atlas&rsquo;s
+          {supportedFamilies} parser-family surface and stay non-comparable where public-repo/native evidence is absent.
         </p>
         <p className="mono mt-2" style={{ fontSize: 11, color: "var(--faint)" }} aria-hidden>
           keys: <b>g</b>/<b>t</b> view · <b>/</b> search · <b>1–5</b> metric · <b>Esc</b> clear

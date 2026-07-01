@@ -1,8 +1,8 @@
 # Atlas Final Benchmark Audit
 
-Generated: 2026-06-30T19:52:50.403Z
+Generated: 2026-07-01T05:39:57.345Z
 
-Final pass over Atlas benchmark artifacts: core matrix against Graphify plus native SCIP/LSP tools, live language artifacts against Graphify plus language-specific native/proxy baselines, and public three-repo validation metadata.
+Final pass over Atlas benchmark artifacts: supported-language fixture sweep for every parser.Supported family, public-repo matrix artifacts against Graphify plus native SCIP/LSP tools, live language artifacts against Graphify plus language-specific native/proxy baselines, and public three-repo validation metadata.
 
 ## Summary
 
@@ -42,6 +42,13 @@ Final pass over Atlas benchmark artifacts: core matrix against Graphify plus nat
 - Graphify live detector-only artifacts: 3
 - Graphify sampled equivalent rows: 199/224
 - Graphify: graphifyy 0.8.49, dispatch count 89
+- Atlas supported parser families: 64
+- Supported-family Atlas ok: 64/64
+- Supported fixture 100% recall: 43/62
+- Supported fixture 100% precision: 39/62
+- Supported fixture exact rows: 36/62
+- Supported Graphify support: {"detector_only":2,"deterministic":40,"unsupported":22}
+- Supported native/tool status: {"missing":42,"ok":22}
 
 ## Ground Truth Closeness
 
@@ -181,6 +188,69 @@ Detector-only extensions:
 | php | deterministic-extractor | 4 | 3 | 1 | Graphify has a deterministic extractor but some sampled query rows have no Graphify equivalent. |
 | r | detector-only | 13 | 5 | 8 | Graphify detects this extension but discovery reports no deterministic _DISPATCH extractor. |
 
+### Supported-Language Fixture Sweep
+
+The supported-language fixture sweep proves every Atlas-supported parser family can be indexed and compared against Graphify/runtime support plus local native/tool availability. It is fixture evidence, not a public-repo semantic oracle.
+
+Artifact: data/raw/SUPPORTED_LANGUAGE_BENCHMARK.json, generated 2026-07-01T05:34:56Z.
+Families: 64; Atlas ok: 64/64; Graphify support: {"detector_only":2,"deterministic":40,"unsupported":22}; native/tool status: {"missing":42,"ok":22}.
+Fixture oracle: recall 100% 43/62; precision 100% 39/62; exact 36/62.
+
+| Language | Category | Recall | Precision | Graphify | Native/tool | Missing | Extra |
+|---|---|--:|--:|---|---|---|---|
+| typescript | code | 1 | 0.8 | deterministic/ok | ok | none | constructor |
+| kotlin | code | 1 | 1 | deterministic/ok | missing | none | none |
+| scala | code | 1 | 1 | deterministic/ok | missing | none | none |
+| swift | code | 1 | 1 | deterministic/ok | missing | none | none |
+| lua | code | 0.5 | 0.5 | deterministic/ok | missing | run | M.run |
+| zig | code | 1 | 0.6 | deterministic/ok | missing | none | _, std |
+| elixir | code | 1 | 1 | deterministic/ok | missing | none | none |
+| objc | code | 0.6667 | 1 | deterministic/ok | missing | helper | none |
+| julia | code | 1 | 1 | deterministic/ok | missing | none | none |
+| fortran | code | 1 | 1 | deterministic/ok | missing | none | none |
+| dart | code | 1 | 1 | deterministic/ok | missing | none | none |
+| verilog | code | 1 | 1 | deterministic/ok | missing | none | none |
+| pascal | code | 0.6667 | 0.6667 | deterministic/ok | missing | TWorker | TWorker.Run |
+| delphi | code | 1 | 0.5 | deterministic/ok | missing | none | TButton, TMainForm |
+| terraform | code | 1 | 1 | deterministic/ok | missing | none | none |
+| byond | code | 0.25 | 0.3333 | deterministic/ok | missing | health, helper, run | /proc, /proc/helper |
+| dotnet | project | 1 | 0.5 | deterministic/ok | missing | none | Microsoft.NET.Sdk, Sample |
+| razor | template | 0.5 | 0.25 | deterministic/ok | missing | counter | /counter, Counter, Microsoft.AspNetCore.Components |
+| apex | code | 1 | 0.6667 | deterministic/ok | missing | none | Account |
+| blade | template | 0.5 | 0.3333 | deterministic/ok | missing | foreach | layouts.app, view |
+| vue | template | 1 | 1 | deterministic/ok | missing | none | none |
+| svelte | template | 0.5 | 1 | deterministic/ok | missing | name | none |
+| astro | template | 1 | 0.5 | deterministic/ok | missing | none | App, BaseLayout |
+| ejs | template | 0.5 | 0.5 | detector_only/ok | missing | partials/header | view |
+| ets | code | 1 | 1 | detector_only/ok | missing | none | none |
+| r | code | 1 | 1 | unsupported/unsupported | missing | none | none |
+| p4 | code | 1 | 0.75 | unsupported/unsupported | missing | none | start |
+| csharp | code | 1 | 1 | deterministic/ok | missing | none | none |
+| groovy | code | 1 | 1 | deterministic/ok | missing | none | none |
+| html | markup | n/a | n/a | unsupported/unsupported | missing | none | none |
+| css | style | n/a | n/a | unsupported/unsupported | missing | none | none |
+| markdown | structured | 1 | 1 | deterministic/ok | missing | none | none |
+| mdx | structured | 1 | 1 | deterministic/ok | missing | none | none |
+| yaml | structured | 0 | 0 | unsupported/unsupported | missing | name, port, service | config.yaml |
+| proto | structured | 0.6667 | 1 | unsupported/unsupported | ok | Run | none |
+| toml | structured | 0 | 0 | unsupported/unsupported | ok | database, name, service, url | config.toml |
+| xml | structured | 0 | 0 | unsupported/unsupported | ok | port, project, service | config.xml |
+| plist | structured | 0 | 0 | unsupported/unsupported | missing | CFBundleName | Info.plist |
+| gomod | structured | 0 | 0 | unsupported/unsupported | missing | example.com/atlas-fixture, github.com/google/uuid | go.mod |
+| gosum | structured | 0 | 0 | unsupported/unsupported | missing | github.com/google/uuid | go.sum |
+| config | structured | 0 | 0 | unsupported/unsupported | missing | ATLAS_DB, ATLAS_LOG_LEVEL | .env.example |
+| makefile | structured | 1 | 1 | unsupported/unsupported | missing | none | none |
+| batch | structured | 0 | 0 | unsupported/unsupported | missing | ATLAS_ENV | build.cmd |
+| sql | structured | 1 | 1 | deterministic/ok | missing | none | none |
+| csv | structured | 0 | 0 | unsupported/unsupported | ok | name, role | data.csv |
+| text | structured | 1 | 1 | unsupported/unsupported | missing | none | none |
+| dockerfile | structured | 0 | 0 | unsupported/unsupported | missing | ARG, CMD, FROM, RUN | Dockerfile |
+| pptx | binary | 1 | 1 | unsupported/unsupported | ok | none | none |
+| docx | binary | 1 | 1 | unsupported/unsupported | ok | none | none |
+| xlsx | binary | 1 | 1 | unsupported/unsupported | ok | none | none |
+| image | binary | 1 | 1 | unsupported/unsupported | ok | none | none |
+| pdf | binary | 1 | 1 | unsupported/unsupported | ok | none | none |
+
 ### Weak Or Proxy Truth Rows
 
 | Language | Native tool | Risk | Coverage | Min validation coverage | Reason |
@@ -218,6 +288,7 @@ Detector-only extensions:
 
 ### Found During Final Pass
 
+- The supported-language fixture sweep now records 64 parser.Supported families, with Atlas indexing 64/64; Graphify is {"detector_only":2,"deterministic":40,"unsupported":22} and native/tool status is {"missing":42,"ok":22}.
 - The UI previously carried a hard-coded native tool manifest; this final pass renders tool status/version from provenance data so missing tools are no longer shown as healthy.
 - scip-java now resolves through the pinned bench/tools/scip-java-coursier launcher; Java is reported with both SCIP and JDTLS baselines present.
 - The committed public-repo validation harness regenerates data/public-repo-validation-manifest.* from raw live artifacts and fails when a code language lacks passing three-repo evidence.
@@ -238,6 +309,7 @@ No hidden synthetic-row finding: No published benchmark row in the final dataset
 
 - P1: Implement execution mode for validation remeasurement: the readiness manifest proves pinned Atlas/Graphify replay rows, native/proxy command candidates, and candidate-executable rows for committed helpers, but placeholder templates, remaining ephemeral helper paths, and persisted output sets still need to be replaced with executable committed commands.
 - P1: Replace the source-counter, proxy, detector-only, and structured/project denominators listed in the weak-truth table with fuller compiler, LSP, tree-sitter, or parser-library denominators where available.
+- P1: Close supported-family fixture gaps: 43/62 rows have 100% fixture recall, 39/62 have 100% fixture precision, and 42 rows still lack an executable local native/tool baseline.
 - P1: Close precision gaps by persisting full native and Atlas symbol name/kind/location sets for every validation repo; the current harness proves only sampled query name/location rows plus kind-count maps where raw artifacts expose them.
 - P1: Extend receiver-type measurement into live converted tree-sitter artifacts; the current call-edge harness proves live call counts but receiver typing is only present in the core matrix artifacts.
 - P2: Increase public-repo validation from 3 repos per language to a larger fixed sample for high-variance languages such as Objective-C, Razor, Apex, CUDA, and Swift.
